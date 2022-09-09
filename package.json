@@ -13,9 +13,11 @@
 	},
 	"license": "ISC",
 	"author": "",
-	"main": "index.js",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "rollup -c",
+		"build-watch": "rollup -c -w",
 		"build-storybook": "build-storybook",
 		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
 		"storybook": "start-storybook -p 6006 -c .storybook"
