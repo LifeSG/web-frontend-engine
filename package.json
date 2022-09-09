@@ -13,8 +13,7 @@
 	},
 	"license": "ISC",
 	"author": "",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"main": "index.js",
 	"scripts": {
 		"build": "rollup -c",
 		"build-watch": "rollup -c -w",
