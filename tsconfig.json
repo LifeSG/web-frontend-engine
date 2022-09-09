@@ -1,19 +1,23 @@
 {
-    "compilerOptions": {
-        /* Project Options */
-        "declaration": true,
-        "declarationMap": true,
-        "declarationDir": "dist",
-        "isolatedModules": true,
-        "jsx": "react",
-        /* Module Resolution */
-        "baseUrl": "./",
-        "outDir": "./dist",
-        "esModuleInterop": true,
-        "lib": ["DOM", "ESNext"],
-        "module": "ESNext",
-        "strict": true
-    },
-    "include": ["src"],
-    "exclude": ["**/node_modules/*"]
+	"compilerOptions": {
+		/* General settings */
+		"target": "ES2019",
+		/* Module settings */
+		"declaration": true,
+		"declarationMap": true,
+		"declarationDir": "dist",
+		"isolatedModules": true,
+		"jsx": "react",
+		/* Module Resolution */
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"baseUrl": "./",
+		"outDir": "./dist",
+		"esModuleInterop": true,
+		"lib": ["DOM", "ESNext"],
+		"module": "ESNext",
+		"strict": true
+	},
+	"include": ["src"],
+	"exclude": ["**/node_modules/*"]
 }
