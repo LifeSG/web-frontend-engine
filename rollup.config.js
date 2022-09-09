@@ -13,7 +13,7 @@ const overrides = {
 };
 
 export default {
-	input: "src/index.ts",
+	input: "src/index.tsx",
 	output: [
 		{
 			dir: "dist",
