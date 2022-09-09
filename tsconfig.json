@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        /* Project Options */
+        "declaration": true,
+        "declarationMap": true,
+        "declarationDir": "dist",
+        "isolatedModules": true,
+        "jsx": "react",
+        /* Module Resolution */
+        "baseUrl": "./",
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "lib": ["DOM", "ESNext"],
+        "module": "ESNext",
+        "strict": true
+    },
+    "include": ["src"],
+    "exclude": ["**/node_modules/*"]
+}

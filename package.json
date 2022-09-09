@@ -1,0 +1,80 @@
+{
+	"name": "web-frontend-engine",
+	"version": "1.0.0",
+	"description": "Repository for the web frontend engine",
+	"keywords": [],
+	"homepage": "https://github.com/LifeSG/web-frontend-engine#readme",
+	"bugs": {
+		"url": "https://github.com/LifeSG/web-frontend-engine/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/LifeSG/web-frontend-engine.git"
+	},
+	"license": "ISC",
+	"author": "",
+	"main": "index.js",
+	"scripts": {
+		"build": "rollup -c",
+		"build-storybook": "build-storybook",
+		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
+		"storybook": "start-storybook -p 6006 -c .storybook"
+	},
+	"dependencies": {
+		"@storybook/addon-a11y": "^6.5.10",
+		"react-hook-form": "^7.34.2",
+		"styled-components": "^5.3.3",
+		"yup": "^0.32.11"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.19.0",
+		"@babel/preset-env": "^7.16.11",
+		"@babel/preset-react": "^7.16.7",
+		"@babel/preset-typescript": "^7.16.7",
+		"@rollup/plugin-commonjs": "^21.0.2",
+		"@rollup/plugin-image": "^2.1.1",
+		"@rollup/plugin-json": "^4.1.0",
+		"@rollup/plugin-node-resolve": "^13.1.3",
+		"@storybook/addon-actions": "^6.5.10",
+		"@storybook/addon-essentials": "^6.5.10",
+		"@storybook/addon-interactions": "^6.5.10",
+		"@storybook/addon-links": "^6.5.10",
+		"@storybook/builder-webpack4": "^6.5.10",
+		"@storybook/manager-webpack4": "^6.5.10",
+		"@storybook/react": "^6.5.10",
+		"@storybook/testing-library": "^0.0.13",
+		"@types/jest": "^27.4.1",
+		"@types/node": "^17.0.21",
+		"@types/react": "^17.0.39",
+		"@types/react-dom": "^17.0.11",
+		"@types/styled-components": "^5.1.23",
+		"@typescript-eslint/eslint-plugin": "^5.12.1",
+		"@typescript-eslint/parser": "^5.12.1",
+		"babel-loader": "^8.2.5",
+		"eslint": "^8.10.0",
+		"eslint-config-prettier": "^8.4.0",
+		"eslint-plugin-jest": "^26.1.1",
+		"eslint-plugin-jsx-a11y": "^6.5.1",
+		"eslint-plugin-prettier": "^4.0.0",
+		"eslint-plugin-react": "^7.29.2",
+		"eslint-plugin-react-hooks": "^4.3.0",
+		"jest": "27.5.1",
+		"jest-canvas-mock": "^2.3.1",
+		"postcss": "^8.4.14",
+		"postcss-import": "^14.0.2",
+		"prettier": "^2.5.1",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"rollup": "^2.68.0",
+		"rollup-plugin-peer-deps-external": "^2.2.4",
+		"rollup-plugin-postcss": "^4.0.2",
+		"rollup-plugin-postcss-modules": "^2.0.2",
+		"rollup-plugin-terser": "^7.0.2",
+		"rollup-plugin-typescript2": "^0.31.2",
+		"style-loader": "^2.0.0",
+		"typescript": "^4.5.5"
+	},
+	"peerDependencies": {
+		"react": "^17.0.2"
+	}
+}
