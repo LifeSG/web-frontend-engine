@@ -40,9 +40,12 @@ export namespace SchemaHelper {
 			const hasCustomValidationType = validation.some((v: any): v is TFrontendEngineValidationType =>
 				VALIDATION_TYPES.includes(v)
 			);
-			const defaultValidationRules = !hasCustomValidationType ? buildDefaultValidationRule(type) : [];
-
-			yupSchema[id] = buildCustomYupSchema([...defaultValidationRules, ...validation]);
+			const defaultValidationRules: TFrontendEngineValidationSchema[] = !hasCustomValidationType
+				? buildDefaultValidationRule(type)
+				: [];
+			// NOTE: Babel cannot compile spread operators for storybook to render
+			// yupSchema[id] = buildCustomYupSchema([...defaultValidationRules. ...validation]);
+			yupSchema[id] = buildCustomYupSchema(defaultValidationRules.concat(validation));
 		});
 
 		return yupSchema;

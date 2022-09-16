@@ -5,8 +5,7 @@ module.exports = {
 		builder: "webpack5"
 	},
 	stories: [
-		"../stories/**/*.stories.mdx",
-		"../stories/**/*.stories.@(js|jsx|ts|tsx)"
+		"../stories/**/*.stories.@(ts|tsx|mdx)",
 	],
 	addons: [
 		"@storybook/addon-links",
@@ -15,6 +14,9 @@ module.exports = {
 		"@storybook/addon-a11y",
 
 	],
+	typescript: {
+		reactDocgen: "react-docgen-typescript",
+	},
 	framework: "@storybook/react",
 	webpackFinal: async (config, { configType }) => {
 		config.resolve.modules = [path.resolve(__dirname, ".."), "node_modules"];
