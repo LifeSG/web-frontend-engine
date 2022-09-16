@@ -31,6 +31,6 @@
 		/* Paths */
 		"lib": ["DOM", "ESNext"]
 	},
-	"include": ["src"],
+	"include": ["src", "stories"],
 	"exclude": ["**/node_modules/*"]
 }
