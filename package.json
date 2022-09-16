@@ -13,7 +13,7 @@
 	},
 	"license": "ISC",
 	"author": "",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"scripts": {
 		"build": "rollup -c",
 		"build-watch": "rollup -c -w",
@@ -25,6 +25,10 @@
 	"dependencies": {
 		"react-hook-form": "^7.36.1",
 		"styled-components": "^5.3.6",
+		"@hookform/resolvers": "^2.9.8",
+		"lodash": "^4.17.21",
+		"react-hook-form": "^7.34.2",
+		"react-lifesg-design-system": "git+https://mol-tech-support:NzIxMzg2NDkxMzA5OvaivGqNT4kkEaSSidtoFWw7vAHz@bitbucket.ship.gov.sg/scm/push/react-lifesg-design-system.git#semver:~6.0.0-alpha.89",
 		"yup": "^0.32.11"
 	},
 	"devDependencies": {
@@ -46,6 +50,7 @@
 		"@storybook/react": "^6.5.12",
 		"@storybook/testing-library": "^0.0.13",
 		"@types/jest": "^29.1.1",
+		"@types/lodash": "^4.14.185",
 		"@types/node": "^18.8.2",
 		"@types/react": "^18.0.21",
 		"@types/react-dom": "^18.0.6",
