@@ -78,7 +78,6 @@ export const FrontendEngine = forwardRef((props: IFrontendEngineProps, ref: Ref<
 	// ================================================
 	// HELPER FUNCTIONS
 	// ================================================
-
 	const handleOnSubmit = (data: any) => {
 		console.log(data);
 		onSubmit && onSubmit();

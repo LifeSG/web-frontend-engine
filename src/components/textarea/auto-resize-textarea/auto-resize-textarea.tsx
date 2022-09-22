@@ -1,16 +1,24 @@
 import React, { MutableRefObject, useEffect, useRef } from "react";
+import { InteractionHelper } from "../../../utils";
 import { AutoResizeTextareaContainer } from "./auto-resize-textarea.styles";
 import { IAutoResizeTextareaProps } from "./types";
 
 export const AutoResizeTextarea = React.forwardRef<HTMLTextAreaElement, IAutoResizeTextareaProps>((props, ref) => {
+	// ================================================
+	// CONST, STATE, REFS
+	// ================================================
 	const { rows, maxLength, resizable = false, id = "component", ...otherProps } = props;
 
 	const innerRef = useRef<HTMLTextAreaElement>(null);
 	const maxScrollHeightRef = useRef(0);
 
+	// ================================================
+	// EFFECTS
+	// ================================================
 	useEffect(() => {
-		innerRef.current?.addEventListener("focusout", () => innerRef?.current?.scroll({ top: 0 }));
-		return () => innerRef.current?.removeEventListener("focusout", () => innerRef?.current?.scroll({ top: 0 }));
+		innerRef.current?.addEventListener("focusout", () => InteractionHelper.scrollRefToTop(innerRef));
+		return () =>
+			innerRef.current?.removeEventListener("focusout", () => InteractionHelper.scrollRefToTop(innerRef));
 	}, []);
 
 	useEffect(() => {

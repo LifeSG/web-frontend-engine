@@ -41,7 +41,7 @@ export default {
 			},
 		},
 		validationSchema: {
-			description: "**For custom rendering only** Formik's validation schema based on `Yup`",
+			description: "**For custom rendering only:** Formik's validation schema based on `Yup`",
 			table: {
 				type: {
 					summary: "Yup.AnyObjectSchema",
@@ -114,6 +114,7 @@ const Template: Story<IFrontendEngineProps> = (args) => {
 export const Default = Template.bind({});
 Default.args = {
 	id: "Sample Form",
+	validationMode: "onSubmit",
 	data: {
 		fields: [
 			{
@@ -121,6 +122,7 @@ Default.args = {
 				title: "What is your name",
 				type: "TEXTAREA",
 				validation: ["required", "number"],
+				chipTexts: ["abc", "def"],
 			},
 		],
 	},

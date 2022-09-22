@@ -1,11 +1,16 @@
+import { kebabCase } from "lodash";
 import React, { useEffect, useRef } from "react";
 import { Form } from "react-lifesg-design-system";
 import { IGenericFieldProps } from "../../types";
+import { InteractionHelper, TestHelper } from "../../utils";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
-import { ChipContainer } from "./textarea.styles";
+import { ChipContainer, ChipItem } from "./textarea.styles";
 import { ITextareaProps } from "./types";
 
-export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps<ITextareaProps>>((props, ref) => {
+export const TextArea = (props: IGenericFieldProps<ITextareaProps>) => {
+	// ================================================
+	// CONST, STATE, REFS
+	// ================================================
 	const {
 		schema: { chipTexts, chipPosition = "top", maxLength, rows, resizable = false, id, title },
 		...otherProps
@@ -13,12 +18,19 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 
 	const innerRef = useRef<HTMLTextAreaElement>(null);
 
+	// ================================================
+	// EFFECTS
+	// ================================================
 	useEffect(() => {
-		innerRef.current?.addEventListener("focusout", () => innerRef?.current?.scroll({ top: 0 }));
-		return () => innerRef.current?.removeEventListener("focusout", () => innerRef?.current?.scroll({ top: 0 }));
+		innerRef.current?.addEventListener("focusout", () => InteractionHelper.scrollRefToTop(innerRef));
+		return () =>
+			innerRef.current?.removeEventListener("focusout", () => InteractionHelper.scrollRefToTop(innerRef));
 	}, []);
 
-	const chipOnClickHandler = (text: string) => () => {
+	// ================================================
+	// HELPER FUNCTIONS
+	// ================================================
+	const handleChipOnClick = (text: string) => () => {
 		const textareaNode = innerRef?.current;
 
 		if (textareaNode) {
@@ -47,7 +59,13 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 			chipTexts?.length && (
 				<ChipContainer>
 					{chipTexts.map((text, index) => (
-						<div key={index}>{text}</div>
+						<ChipItem
+							key={text}
+							id={TestHelper.generateId(`${id}-chip`, kebabCase(text), index)}
+							onClick={handleChipOnClick(text)}
+						>
+							{text}
+						</ChipItem>
 					))}
 				</ChipContainer>
 			)
@@ -60,6 +78,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 				{chipPosition === "top" && renderChips()}
 				<AutoResizeTextarea
 					id={id}
+					ref={innerRef}
 					maxLength={maxLength}
 					rows={rows}
 					resizable={resizable}
@@ -71,4 +90,4 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 			</>
 		</Form.CustomField>
 	);
-});
+};
