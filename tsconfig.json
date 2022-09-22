@@ -3,20 +3,32 @@
 		/* General settings */
 		"target": "ES2019",
 		/* Module settings */
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
 		"declaration": true,
 		"declarationMap": true,
 		"declarationDir": "dist",
 		"isolatedModules": true,
+		"esModuleInterop": true,
+		/* Compiler settings */
 		"jsx": "react",
-		/* Module Resolution */
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
+		"allowJs": true,
+		"skipLibCheck": true,
+		"keyofStringsOnly": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"alwaysStrict": true,
+		"strictBindCallApply": true,
+		/* Output Files */
 		"baseUrl": "./",
 		"outDir": "./dist",
-		"esModuleInterop": true,
-		"lib": ["DOM", "ESNext"],
-		"module": "ESNext",
-		"strict": true
+		"sourceMap": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"preserveConstEnums": true,
+		/* Paths */
+		"lib": ["DOM", "ESNext"]
 	},
 	"include": ["src"],
 	"exclude": ["**/node_modules/*"]

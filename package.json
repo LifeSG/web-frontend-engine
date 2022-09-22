@@ -24,7 +24,6 @@
 	},
 	"dependencies": {
 		"@storybook/addon-a11y": "^6.5.10",
-		"mol-lib-config": "git+https://mol-tech-support:NzIxMzg2NDkxMzA5OvaivGqNT4kkEaSSidtoFWw7vAHz@bitbucket.ship.gov.sg/scm/push/mol-lib-config.git#semver:~8.7.3",
 		"react-hook-form": "^7.34.2",
 		"styled-components": "^5.3.3",
 		"yup": "^0.32.11"
