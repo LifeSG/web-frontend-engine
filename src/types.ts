@@ -1,4 +1,4 @@
-import { ControllerFieldState, ValidationMode } from "react-hook-form";
+import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
 import { FormFieldProps } from "react-lifesg-design-system/components/types";
 import { AnyObjectSchema } from "yup";
 import { ITextareaSchema } from "./components/textarea/types";
@@ -64,6 +64,6 @@ export enum FieldType {
 // ================================================
 // FIELD PROPS
 // ================================================
-export interface IGenericFieldProps<T = any> extends ControllerFieldState {
+export interface IGenericFieldProps<T = any> extends ControllerFieldState, ControllerRenderProps {
 	schema: T;
 }

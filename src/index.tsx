@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { forwardRef, Ref, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AnyObjectSchema } from "yup";
 import * as FrontendEngineFields from "./components";
@@ -7,7 +7,7 @@ import { StyledForm } from "./styles";
 import { FieldType, IFrontendEngineFieldSchema, IFrontendEngineProps } from "./types";
 import { SchemaHelper } from "./utils";
 
-export const FrontendEngine = forwardRef((props: IFrontendEngineProps, ref: Ref<any>) => {
+export const FrontendEngine = (props: IFrontendEngineProps) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
@@ -30,7 +30,7 @@ export const FrontendEngine = forwardRef((props: IFrontendEngineProps, ref: Ref<
 		control,
 		register,
 		watch,
-		handleSubmit,
+		handleSubmit: reactFormHookSubmit,
 		formState: { errors },
 	} = useForm({
 		mode: validationMode,
@@ -45,14 +45,14 @@ export const FrontendEngine = forwardRef((props: IFrontendEngineProps, ref: Ref<
 			fields.map((customField) => {
 				if (Object.keys(FieldType).includes(customField.type)) {
 					const Field = FrontendEngineFields[FieldType[customField.type]];
-					// TODO: Find a way to prevent casting field as any
+
 					return (
 						<Controller
 							control={control}
 							key={customField.id}
 							name={customField.id}
 							render={({ field, fieldState }) => (
-								<Field schema={customField as any} {...field} {...fieldState} />
+								<Field schema={customField} {...field} {...fieldState} />
 							)}
 						/>
 					);
@@ -98,10 +98,10 @@ export const FrontendEngine = forwardRef((props: IFrontendEngineProps, ref: Ref<
 			data-testid={formatFormId()}
 			className={className}
 			noValidate
-			onSubmit={handleSubmit(handleOnSubmit)}
+			onSubmit={reactFormHookSubmit(handleOnSubmit)}
 		>
 			{fields}
 			<input type="submit" />
 		</StyledForm>
 	);
-});
+};

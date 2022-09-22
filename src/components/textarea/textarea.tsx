@@ -7,7 +7,7 @@ import { AutoResizeTextarea } from "./auto-resize-textarea";
 import { ChipContainer, ChipItem } from "./textarea.styles";
 import { ITextareaProps } from "./types";
 
-export const TextArea = (props: IGenericFieldProps<ITextareaProps>) => {
+export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps<ITextareaProps>>((props, ref) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
@@ -54,6 +54,10 @@ export const TextArea = (props: IGenericFieldProps<ITextareaProps>) => {
 		}
 	};
 
+	const handleRef = (element: HTMLTextAreaElement) => {
+		InteractionHelper.handleTextareaRefCallback(element, innerRef, ref);
+	};
+
 	const renderChips = () => {
 		return (
 			chipTexts?.length && (
@@ -77,17 +81,17 @@ export const TextArea = (props: IGenericFieldProps<ITextareaProps>) => {
 			<>
 				{chipPosition === "top" && renderChips()}
 				<AutoResizeTextarea
+					{...otherProps}
 					id={id}
-					ref={innerRef}
+					ref={handleRef}
 					maxLength={maxLength}
 					rows={rows}
 					resizable={resizable}
 					errorMessage={otherProps.error?.message}
-					{...otherProps}
 				/>
 
 				{chipPosition === "bottom" && renderChips()}
 			</>
 		</Form.CustomField>
 	);
-};
+});
