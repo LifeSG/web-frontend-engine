@@ -28,7 +28,7 @@ export namespace SchemaHelper {
 		}
 
 		const yupSchema: ObjectShape = buildYupSchema(data.fields);
-		console.log("schaaaema", yupSchema);
+		console.log("SCHEMA --", yupSchema);
 		return Yup.object().shape(yupSchema);
 	};
 
@@ -43,15 +43,16 @@ export namespace SchemaHelper {
 			const defaultValidationRules: TFrontendEngineValidationSchema[] = !hasCustomValidationType
 				? buildDefaultValidationRule(type)
 				: [];
+
 			// NOTE: Babel cannot compile spread operators for storybook to render
 			// yupSchema[id] = buildCustomYupSchema([...defaultValidationRules. ...validation]);
-			yupSchema[id] = buildCustomYupSchema(defaultValidationRules.concat(validation));
+			yupSchema[id] = buildFieldYupSchema(defaultValidationRules.concat(validation));
 		});
 
 		return yupSchema;
 	};
 
-	const buildCustomYupSchema = (validations: TFrontendEngineValidationSchema[]): Yup.AnySchema => {
+	const buildFieldYupSchema = (validations: TFrontendEngineValidationSchema[]): Yup.AnySchema => {
 		let yupSchema = {} as Yup.AnySchema;
 
 		const validationRules = validations.map((validation) => formatValidationRule(validation));
@@ -86,9 +87,11 @@ export namespace SchemaHelper {
 		if (isRuleString) {
 			formattedRule = { [rule]: [] };
 		} else if (rule && isRuleObject) {
+			// TODO: To clarify the purpose of this schema -> { "string": { some info here } }
 			Object.keys(rule).forEach((key) => {
 				const validationOption = key as keyof typeof rule;
 				const isRuleString = typeof rule[validationOption] === "string";
+
 				// TODO: Might be a redundant check
 				const isRuleArray = Array.isArray(rule[validationOption]);
 
