@@ -28,7 +28,7 @@
 		"@hookform/resolvers": "^2.9.8",
 		"lodash": "^4.17.21",
 		"react-hook-form": "^7.34.2",
-		"react-lifesg-design-system": "git+https://mol-tech-support:NzIxMzg2NDkxMzA5OvaivGqNT4kkEaSSidtoFWw7vAHz@bitbucket.ship.gov.sg/scm/push/react-lifesg-design-system.git#semver:~6.0.0-alpha.89",
+		"react-lifesg-design-system": "file:react-lifesg-design-system-6.0.0-alpha.91.tgz",
 		"yup": "^0.32.11"
 	},
 	"devDependencies": {
