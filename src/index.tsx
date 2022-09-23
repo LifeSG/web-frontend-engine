@@ -15,26 +15,28 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 		id,
 		className = "",
 		data,
-		initialValues,
+		defaultValues,
 		validationSchema,
 		validators,
 		conditions,
 		validationMode,
+		reValidationMode,
 		onSubmit,
 		onValidate,
 	} = props;
 
 	const [fields, setFields] = useState<JSX.Element[]>([]);
-	const [formValidationSchema, setFormValidationSchema] = useState<AnyObjectSchema>();
+	const [formValidationSchema, setFormValidationSchema] = useState<AnyObjectSchema>(null);
 	const {
 		control,
-		register,
 		watch,
 		handleSubmit: reactFormHookSubmit,
 		formState: { errors },
 	} = useForm({
 		mode: validationMode,
-		...(formValidationSchema && { resolver: yupResolver<AnyObjectSchema>(formValidationSchema) }),
+		reValidateMode: reValidationMode || "onChange",
+		defaultValues: defaultValues,
+		resolver: yupResolver(formValidationSchema),
 	});
 
 	// ================================================

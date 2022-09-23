@@ -28,7 +28,8 @@ export namespace SchemaHelper {
 		}
 
 		const yupSchema: ObjectShape = buildYupSchema(data.fields);
-		console.log("SCHEMA --", yupSchema);
+		console.log("SCHEMA --> ", yupSchema);
+
 		return Yup.object().shape(yupSchema);
 	};
 
@@ -36,17 +37,19 @@ export namespace SchemaHelper {
 		const yupSchema: ObjectShape = {};
 
 		fields.forEach((field) => {
-			const { id, type, title, validation } = field;
-			const hasCustomValidationType = validation.some((v: any): v is TFrontendEngineValidationType =>
-				VALIDATION_TYPES.includes(v)
-			);
+			// NOTE: Validation is optional field
+			const { id, type, validation } = field;
+
+			const hasCustomValidationType = validation
+				? validation.some((v: any): v is TFrontendEngineValidationType => VALIDATION_TYPES.includes(v))
+				: false;
 			const defaultValidationRules: TFrontendEngineValidationSchema[] = !hasCustomValidationType
 				? buildDefaultValidationRule(type)
 				: [];
 
 			// NOTE: Babel cannot compile spread operators for storybook to render
-			// yupSchema[id] = buildCustomYupSchema([...defaultValidationRules. ...validation]);
-			yupSchema[id] = buildFieldYupSchema(defaultValidationRules.concat(validation));
+			// yupSchema[id] = buildFieldYupSchema([...defaultValidationRules, ...validation]);
+			yupSchema[id] = buildFieldYupSchema(defaultValidationRules.concat(validation || []));
 		});
 
 		return yupSchema;
@@ -54,7 +57,6 @@ export namespace SchemaHelper {
 
 	const buildFieldYupSchema = (validations: TFrontendEngineValidationSchema[]): Yup.AnySchema => {
 		let yupSchema = {} as Yup.AnySchema;
-
 		const validationRules = validations.map((validation) => formatValidationRule(validation));
 		const validationTypes = validationRules.filter((rule) => {
 			const key = Object.keys(rule)[0] as TFrontendEngineValidationType;
@@ -69,10 +71,9 @@ export namespace SchemaHelper {
 			console.warn("Multiple validation types for this rule are provided");
 		}
 
-		yupSchema = mapYupSchema(validationTypes);
+		yupSchema = mapYupSchema(validationTypes[0]);
 
 		const validationConditions = validationRules.filter((rule) => !isEqual(rule, validationTypes[0]));
-
 		yupSchema = mapYupConditions(yupSchema, validationConditions);
 
 		return yupSchema;
@@ -108,9 +109,8 @@ export namespace SchemaHelper {
 		return formattedRule;
 	};
 
-	const mapYupSchema = (validationRules: Record<string, any>[]): Yup.AnySchema => {
-		const validationRule = validationRules[0];
-		const validationKey = Object.keys(validationRule)[0] as TFrontendEngineValidationOption;
+	const mapYupSchema = (validationType: Record<string, any>): Yup.AnySchema => {
+		const validationKey = Object.keys(validationType)[0] as TFrontendEngineValidationOption;
 
 		switch (validationKey) {
 			case "string":

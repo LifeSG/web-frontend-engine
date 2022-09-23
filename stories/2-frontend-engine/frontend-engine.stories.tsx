@@ -32,16 +32,17 @@ export default {
 				},
 			},
 		},
-		initialValues: {
-			description: "**For custom rendering only:** Fields' initial values on mount",
+		defaultValues: {
+			description: "Fields' initial values on mount",
 			table: {
 				type: {
 					summary: "TFrontendEngineValues",
 				},
 			},
 		},
+		// TODO: Update description
 		validationSchema: {
-			description: "**For custom rendering only:** Formik's validation schema based on `Yup`",
+			description: "TO BE UPDATED",
 			table: {
 				type: {
 					summary: "Yup.AnyObjectSchema",
@@ -68,8 +69,19 @@ export default {
 			description: "Form validation behaviour",
 			table: {
 				type: {
-					summary: "keyof ValidationMode",
+					summary: "TValidationMode",
 				},
+			},
+		},
+		reValidationMode: {
+			description: "Form re-validation behaviour",
+			table: {
+				type: {
+					summary: "TRevalidationMode",
+				},
+			},
+			defaultValue: {
+				summary: "onChange",
 			},
 		},
 		onSubmit: {
@@ -115,15 +127,19 @@ export const Default = Template.bind({});
 Default.args = {
 	id: "Sample Form",
 	validationMode: "onSubmit",
+	reValidationMode: "onChange",
 	data: {
 		fields: [
 			{
 				id: "name",
 				title: "What is your name",
 				type: "TEXTAREA",
-				validation: ["required", "number"],
-				chipTexts: ["abc", "def"],
+				validation: ["required", "string"],
+				chipTexts: ["John", "Doe"],
 			},
 		],
+	},
+	defaultValues: {
+		name: "Erik Tan",
 	},
 };

@@ -6,15 +6,18 @@ import { ITextareaSchema } from "./components/textarea/types";
 // ================================================
 // FRONTEND ENGINE
 // ================================================
+type TValidationMode = keyof ValidationMode;
+type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export interface IFrontendEngineProps {
 	id?: string;
 	className?: string;
 	data?: IFrontendEngineData;
-	initialValues?: TFrontendEngineValues;
+	defaultValues?: TFrontendEngineValues;
 	validationSchema?: AnyObjectSchema;
 	validators?: IFrontendEngineValidator[];
 	conditions?: IFrontendEngineCondition[];
-	validationMode: keyof ValidationMode;
+	validationMode: TValidationMode;
+	reValidationMode?: TRevalidationMode;
 	onSubmit?: () => unknown;
 	onValidate?: (isValid: boolean) => void;
 }
@@ -54,7 +57,7 @@ export type TFrontendEngineValidationSchema =
 export interface IFrontendEngineBaseFieldJsonSchema extends Omit<FormFieldProps, "type"> {
 	id: string;
 	title: string;
-	validation: TFrontendEngineValidationSchema[];
+	validation?: TFrontendEngineValidationSchema[];
 }
 
 export enum FieldType {
