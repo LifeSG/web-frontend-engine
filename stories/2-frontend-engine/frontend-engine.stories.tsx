@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs/blocks";
+import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import { FrontendEngine } from "../../src";
@@ -7,6 +7,22 @@ import { IFrontendEngineProps } from "../../src/types";
 export default {
 	title: "Form/Frontend Engine",
 	component: FrontendEngine,
+	parameters: {
+		docs: {
+			page: () => (
+				<>
+					<Title>FrontendEngine</Title>
+					<Description>
+						The main component to render a form, based on a JSON schema through the `data` prop or through
+						manually defined children (custom rendering).
+					</Description>
+					<Heading>Props</Heading>
+					<ArgsTable story={PRIMARY_STORY} />
+					<Stories includePrimary={true} title="Examples" />
+				</>
+			),
+		},
+	},
 	argTypes: {
 		id: {
 			description: "Unique HTML id attribute that is also assigned to the `data-testid`",
@@ -79,9 +95,9 @@ export default {
 				type: {
 					summary: "TRevalidationMode",
 				},
-			},
-			defaultValue: {
-				summary: "onChange",
+				defaultValue: {
+					summary: "onChange",
+				},
 			},
 		},
 		onSubmit: {
@@ -99,22 +115,6 @@ export default {
 					summary: "(isValid: boolean) => void",
 				},
 			},
-		},
-	},
-	parameters: {
-		docs: {
-			page: () => (
-				<>
-					<Title>FrontendEngine</Title>
-					<Description>
-						The main component to render a form, based on a JSON schema through the `data` prop or through
-						manually defined children (custom rendering).
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
-					<Stories includePrimary={true} title="Examples" />
-				</>
-			),
 		},
 	},
 } as Meta;

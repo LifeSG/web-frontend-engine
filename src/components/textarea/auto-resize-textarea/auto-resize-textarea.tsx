@@ -46,12 +46,12 @@ export const AutoResizeTextarea = React.forwardRef<HTMLTextAreaElement, IAutoRes
 
 	return (
 		<AutoResizeTextareaContainer
+			{...otherProps}
 			id={`textarea-${id}`}
 			ref={handleRef}
 			maxLength={maxLength}
 			rows={rows ? rows - 1 : 1}
 			resizable={resizable}
-			{...otherProps}
 		/>
 	);
 });

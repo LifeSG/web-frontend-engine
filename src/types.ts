@@ -67,6 +67,6 @@ export enum FieldType {
 // ================================================
 // FIELD PROPS
 // ================================================
-export interface IGenericFieldProps<T = any> extends ControllerFieldState, ControllerRenderProps {
+export interface IGenericFieldProps<T = any> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
 	schema: T;
 }
