@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useEffect, useRef } from "react";
-import { InteractionHelper } from "../../../utils";
+import { InteractionHelper } from "../../utils";
 import { AutoResizeTextareaContainer } from "./auto-resize-textarea.styles";
 import { IAutoResizeTextareaProps } from "./types";
 

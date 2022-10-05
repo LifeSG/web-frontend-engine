@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { AnyObjectSchema } from "yup";
 import * as FrontendEngineFields from "./components";
 import { StyledForm } from "./styles";
-import { FieldType, IFrontendEngineFieldSchema, IFrontendEngineProps } from "./types";
+import { FieldType, IFrontendEngineProps, TFrontendEngineFieldSchema } from "./types";
 import { SchemaHelper } from "./utils";
 
 export const FrontendEngine = (props: IFrontendEngineProps) => {
@@ -43,7 +43,7 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 	// EFFECTS
 	// ================================================
 	const buildFieldsFromSchema = useCallback(
-		(fields: IFrontendEngineFieldSchema[]) =>
+		(fields: TFrontendEngineFieldSchema[]) =>
 			fields.map((customField) => {
 				if (Object.keys(FieldType).includes(customField.type)) {
 					const Field = FrontendEngineFields[FieldType[customField.type]];

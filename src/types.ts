@@ -35,10 +35,10 @@ export interface IFrontendEngineCondition {
 	condition: (...values: any[]) => boolean;
 }
 
-export type IFrontendEngineFieldSchema = ITextareaSchema;
+export type TFrontendEngineFieldSchema = ITextareaSchema;
 
 export interface IFrontendEngineData {
-	fields: IFrontendEngineFieldSchema[];
+	fields: TFrontendEngineFieldSchema[];
 }
 
 // ================================================

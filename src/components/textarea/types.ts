@@ -17,3 +17,9 @@ export interface ITextareaProps extends React.TextareaHTMLAttributes<HTMLTextAre
 	resizable?: boolean;
 	rows?: number;
 }
+
+export interface IAutoResizeTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+	maxLength?: number;
+	resizable?: boolean;
+	errorMessage?: string;
+}

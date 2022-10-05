@@ -2,9 +2,10 @@
 import React from "react";
 import { Text } from "react-lifesg-design-system";
 import { ChipButton } from "./chip.styles";
-import { IChipProps } from "./types";
 
-export const Chip = ({ children, ...otherProps }: IChipProps) => (
+interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+
+export const Chip = ({ children, ...otherProps }: IProps) => (
 	<ChipButton type="button" {...otherProps}>
 		<Text.XSmall className="chipText" weight="semibold">
 			{children}

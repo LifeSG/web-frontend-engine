@@ -4,8 +4,8 @@ import { ObjectShape } from "yup/lib/object";
 import {
 	FieldType,
 	IFrontendEngineData,
-	IFrontendEngineFieldSchema,
 	IFrontendEngineValidator,
+	TFrontendEngineFieldSchema,
 	TFrontendEngineValidationCondition,
 	TFrontendEngineValidationOption,
 	TFrontendEngineValidationSchema,
@@ -33,7 +33,7 @@ export namespace SchemaHelper {
 		return Yup.object().shape(yupSchema);
 	};
 
-	const buildYupSchema = (fields: IFrontendEngineFieldSchema[]): ObjectShape => {
+	const buildYupSchema = (fields: TFrontendEngineFieldSchema[]): ObjectShape => {
 		const yupSchema: ObjectShape = {};
 
 		fields.forEach((field) => {
@@ -157,6 +157,7 @@ export namespace SchemaHelper {
 		const typeValue = FieldType[type as keyof typeof FieldType];
 
 		switch (typeValue) {
+			// TODO: Add validation against symbols
 			case String(FieldType.TEXTAREA):
 				args.push("string");
 				break;
