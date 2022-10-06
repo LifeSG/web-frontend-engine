@@ -1,7 +1,7 @@
 import React from "react";
 import { Color, Text } from "react-lifesg-design-system";
 import styled from "styled-components";
-import { version } from "../../package.json";
+import { version } from "../../../package.json";
 
 interface Props {
 	link: string;

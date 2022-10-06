@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
-import { FrontendEngine } from "../../../src";
-import { ITextareaProps, TextArea } from "../../../src/components";
+import { FrontendEngine, ITextareaProps, TextArea } from "../../..";
 import { ExcludeReactFormHookProps } from "../../common";
 
 export default {

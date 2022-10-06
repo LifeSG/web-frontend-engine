@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
-import { FrontendEngine, IFrontendEngineProps } from "../../src";
+import { FrontendEngine, IFrontendEngineProps } from "../..";
 
 export default {
 	title: "Form/Frontend Engine",
