@@ -1,11 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { Color } from "react-lifesg-design-system";
+import styled from "styled-components";
 import { AnyObjectSchema } from "yup";
-import * as FrontendEngineFields from "./components";
-import { StyledForm } from "./styles";
+import * as FrontendEngineFields from "..";
+import { SchemaHelper } from "../../helpers";
 import { FieldType, IFrontendEngineProps, TFrontendEngineFieldSchema } from "./types";
-import { SchemaHelper } from "./utils";
 
 export const FrontendEngine = (props: IFrontendEngineProps) => {
 	// ================================================
@@ -107,3 +108,10 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 		</StyledForm>
 	);
 };
+
+const StyledForm = styled.form`
+	* > ::placeholder {
+		color: ${Color.Neutral[4]};
+		opacity: 1;
+	}
+`;

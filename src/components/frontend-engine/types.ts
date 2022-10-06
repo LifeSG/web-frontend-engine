@@ -1,7 +1,7 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
 import { FormFieldProps } from "react-lifesg-design-system/components/types";
 import { AnyObjectSchema } from "yup";
-import { ITextareaSchema } from "./components/textarea/types";
+import { ITextareaSchema } from "../fields/textarea/types";
 
 // ================================================
 // FRONTEND ENGINE

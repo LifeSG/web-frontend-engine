@@ -11,7 +11,7 @@ import {
 	TFrontendEngineValidationSchema,
 	TFrontendEngineValidationType,
 	VALIDATION_TYPES,
-} from "../types";
+} from "../components/frontend-engine/types";
 
 export namespace SchemaHelper {
 	export const buildValidationFromJson = (

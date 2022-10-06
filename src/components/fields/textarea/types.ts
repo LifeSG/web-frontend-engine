@@ -1,4 +1,4 @@
-import { IFrontendEngineBaseFieldJsonSchema } from "../../types";
+import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine/types";
 
 export interface ITextareaSchema extends IFrontendEngineBaseFieldJsonSchema {
 	type: "TEXTAREA";
