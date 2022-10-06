@@ -133,7 +133,15 @@ Default.args = {
 				id: "name",
 				title: "What is your name",
 				type: "TEXTAREA",
-				validation: ["required", "string"],
+				validation: [
+					"string",
+					{
+						maxLength: {
+							message: "Maximum length of 255",
+							value: 255,
+						},
+					},
+				],
 				chipTexts: ["John", "Doe"],
 			},
 		],

@@ -1,4 +1,3 @@
-import { isEqual } from "lodash";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import {
@@ -6,13 +5,22 @@ import {
 	IFrontendEngineData,
 	IFrontendEngineValidator,
 	TFrontendEngineFieldSchema,
-	TFrontendEngineValidationCondition,
 	TFrontendEngineValidationSchema,
-	TFrontendEngineValidationType,
+	TValidationCondition,
+	TValidationRule,
+	TValidationType,
+	VALIDATION_CONDITIONS,
 	VALIDATION_TYPES,
 } from "../components/frontend-engine/types";
 
 export namespace SchemaHelper {
+	/**
+	 * Creates a yupSchema that will be used to validate against inputs in FrontendEngine
+	 *
+	 * @param data - An array of fields specified by the user with its corresponding validations
+	 * @param validators - An array of custom validators
+	 * @returns yupSchema to be applied in the engine
+	 */
 	export const buildValidationFromJson = (
 		data: IFrontendEngineData,
 		validators?: IFrontendEngineValidator[]
@@ -22,9 +30,9 @@ export namespace SchemaHelper {
 		}
 
 		// TODO: Find out where custom validator rules are applied
-		if (validators) {
-			addCustomValidatorRules(validators);
-		}
+		// if (validators) {
+		// 	addCustomValidatorRules(validators);
+		// }
 
 		const yupSchema: ObjectShape = buildYupSchema(data.fields);
 		console.log("SCHEMA --> ", yupSchema);
@@ -40,7 +48,7 @@ export namespace SchemaHelper {
 			const { id, type, validation } = field;
 
 			const hasCustomValidationType = validation
-				? validation.some((v: any): v is TFrontendEngineValidationType => VALIDATION_TYPES.includes(v))
+				? validation.some((v: TFrontendEngineValidationSchema) => VALIDATION_TYPES.includes(v))
 				: false;
 			const defaultValidationRules: TFrontendEngineValidationSchema[] = !hasCustomValidationType
 				? buildDefaultValidationRule(type)
@@ -54,95 +62,110 @@ export namespace SchemaHelper {
 		return yupSchema;
 	};
 
+	/**
+	 * Creates a yupSchema for a given field
+	 *
+	 * @param validations - List of validations specified by the user on a given field
+	 * @returns yupSchema corresponding to the specified validations and constraints
+	 */
 	const buildFieldYupSchema = (validations: TFrontendEngineValidationSchema[]): Yup.AnySchema => {
 		let yupSchema = {} as Yup.AnySchema;
 		const validationRules = validations.map((validation) => formatValidationRule(validation));
-		const validationTypes = validationRules.filter((rule) => {
-			const key = Object.keys(rule)[0] as TFrontendEngineValidationType;
-
-			return VALIDATION_TYPES.includes(key);
-		});
+		const validationType = validationRules.filter((v) =>
+			VALIDATION_TYPES.includes(Object.keys(v)[0] as TValidationType)
+		);
 
 		// TODO: Remove logging
-		if (!validationTypes.length) {
-			console.warn(`Does not provide such validation option - ${validationRules}`);
-		} else if (validationTypes.length > 1) {
+		if (!validationType.length) {
+			console.warn(`Does not provide such validation option - ${validationType}`);
+		} else if (validationType.length > 1) {
 			console.warn("Multiple validation types for this rule are provided");
 		}
 
-		yupSchema = mapYupSchema(validationTypes[0]);
+		yupSchema = mapYupSchema(validationType[0]);
 
-		const validationConditions = validationRules.filter((rule) => !isEqual(rule, validationTypes[0]));
+		const validationConditions = validationRules.filter((v) =>
+			VALIDATION_CONDITIONS.includes(Object.keys(v)[0] as TValidationCondition)
+		);
 		yupSchema = mapYupConditions(yupSchema, validationConditions);
 
 		return yupSchema;
 	};
 
-	// Returns a consistent validation structure of { rule: [value] }
-	const formatValidationRule = (rule: TFrontendEngineValidationSchema): Record<string, any> => {
-		let formattedRule: Record<string, any> = {};
+	/**
+	 * Enforces a consistent validation structure of { rule: [value] }
+	 *
+	 * @param rule - The validation type specified by the user
+	 * @returns A formatted structure of { rule: [value] }
+	 */
+	const formatValidationRule = (rule: TFrontendEngineValidationSchema): TValidationRule => {
+		let formattedRule: TValidationRule = {};
 		const isRuleString = typeof rule === "string";
 		const isRuleObject = typeof rule === "object";
 
 		if (isRuleString) {
-			formattedRule = { [rule]: [] };
-		} else if (rule && isRuleObject) {
-			// TODO: To clarify the purpose of this schema -> { "string": { some info here } }
+			formattedRule = { [rule]: {} };
+		} else if (isRuleObject) {
 			Object.keys(rule).forEach((key) => {
-				const validationOption = key as keyof typeof rule;
-				const isRuleString = typeof rule[validationOption] === "string";
-
-				// TODO: Might be a redundant check
-				const isRuleArray = Array.isArray(rule[validationOption]);
-
-				if (isRuleString && !isRuleArray) {
-					formattedRule[key] = [rule[validationOption]];
-				} else {
-					formattedRule[key] = rule[validationOption];
-				}
+				formattedRule[key] = rule[key];
 			});
-		} else {
-			formattedRule = rule;
 		}
 
 		return formattedRule;
 	};
 
-	const mapYupSchema = (validationType: Record<string, any>): Yup.AnySchema => {
-		const validationKey = Object.keys(validationType)[0] as TFrontendEngineValidationSchema;
+	/**
+	 * Creates a Yup schema for a given field
+	 *
+	 * @param validationRule - The validation type specified by user (i.e. string)
+	 * @returns yupSchema that corresponds to the validation type
+	 */
+	const mapYupSchema = (validationRule: TValidationRule): Yup.AnySchema => {
+		const validationRuleData = Object.entries(validationRule)[0];
+		const validationRuleKey = validationRuleData[0] as TValidationType;
+		const validationRuleValue = validationRuleData[1] ?? null;
 
-		switch (validationKey) {
+		switch (validationRuleKey) {
 			case "string":
-				return Yup.string();
+				return Yup.string().typeError(validationRuleValue.message || "Only string values are allowed");
 			case "number":
-				return Yup.number().typeError("Only numbers are allowed");
+				return Yup.number().typeError(validationRuleValue.message || "Only number values are allowed");
 			case "boolean":
-				return Yup.boolean();
+				return Yup.boolean().typeError(validationRuleValue.message || "Only boolean values are allowed");
 			case "array":
-				return Yup.array();
+				return Yup.array().typeError(validationRuleValue.message || "Only array values are allowed");
 			case "object":
-				return Yup.object();
+				return Yup.object().typeError(validationRuleValue.message || "Only object values are allowed");
 			default:
 				return Yup.mixed();
 		}
 	};
 
-	const mapYupConditions = (yupSchema: Yup.AnySchema, validationConditions: Record<string, any>[]): Yup.AnySchema => {
-		validationConditions.forEach((condition) => {
-			const key = Object.keys(condition)[0] as TFrontendEngineValidationCondition;
+	/**
+	 * Adds Yup validation and constraints based on specified rules
+	 *
+	 * @param yupSchema - Yup schema that was previously created from specified validation type
+	 * @param validationRules - An array of validation rules to be mapped against validation type
+	 * 								(i.e. a string schema might contain { maxLength: 255 })
+	 * @returns yupSchema with added constraints and validations
+	 */
+	const mapYupConditions = (yupSchema: Yup.AnySchema, validationRules: TValidationRule[]): Yup.AnySchema => {
+		validationRules.forEach((rule) => {
+			const validationRuleData = Object.entries(rule)[0];
+			const validationRuleKey = validationRuleData[0] as TValidationCondition;
+			const validationRuleValue = validationRuleData[1];
 
-			switch (key) {
+			switch (validationRuleKey) {
+				case "maxLength":
+					yupSchema = (yupSchema as Yup.StringSchema).max(
+						validationRuleValue.value,
+						validationRuleValue.message || `Must be less than ${validationRuleValue.value} characters`
+					);
+					break;
 				case "required":
-					if (condition.required.length) {
-						yupSchema = yupSchema.required(condition.required);
-					} else {
-						yupSchema = yupSchema.required("This field is required");
-					}
+					yupSchema = yupSchema.required(validationRuleValue.message || "This field is required");
 					break;
 				default:
-					console.warn(
-						"Something went wrong in buildingCustomYupSchema - Found condition but rule not applied"
-					);
 					break;
 			}
 		});
@@ -150,12 +173,18 @@ export namespace SchemaHelper {
 		return yupSchema;
 	};
 
-	// Builds default rules for users that miss out certain behaviourial functions (i.e. Contact field must only contain numbers)
-	const buildDefaultValidationRule = (type: string): TFrontendEngineValidationType[] => {
-		const args: TFrontendEngineValidationType[] = [];
-		const typeValue = FieldType[type as keyof typeof FieldType];
+	/**
+	 * Builds default rules for users that miss out certain behaviourial functions
+	 * (i.e. Contact field must only contain numbers)
+	 *
+	 * @param type - Name of field component supported by FrontendEngine
+	 * @returns Array of default validations for the field component
+	 */
+	const buildDefaultValidationRule = (type: string): TFrontendEngineValidationSchema[] => {
+		const args: TFrontendEngineValidationSchema[] = [];
+		const fieldType = FieldType[type as keyof typeof FieldType];
 
-		switch (typeValue) {
+		switch (fieldType) {
 			// TODO: Add validation against symbols
 			case String(FieldType.TEXTAREA):
 				args.push("string");
@@ -168,17 +197,17 @@ export namespace SchemaHelper {
 		return args;
 	};
 
-	const addCustomValidatorRules = (validators: IFrontendEngineValidator[]): void => {
-		validators.forEach((validator) => {
-			Yup.addMethod(Yup.mixed, validator.ruleName, function (errorMessage: string) {
-				return this.test({
-					name: validator.ruleName,
-					message: errorMessage || validator.errorMessage,
-					test: function (value) {
-						return value === undefined || validator.validate(value);
-					},
-				});
-			});
-		});
-	};
+	// const addCustomValidatorRules = (validators: IFrontendEngineValidator[]): void => {
+	// 	validators.forEach((validator) => {
+	// 		Yup.addMethod(Yup.mixed, validator.ruleName, function (errorMessage: string) {
+	// 			return this.test({
+	// 				name: validator.ruleName,
+	// 				message: errorMessage || validator.errorMessage,
+	// 				test: function (value) {
+	// 					return value === undefined || validator.validate(value);
+	// 				},
+	// 			});
+	// 		});
+	// 	});
+	// };
 }
