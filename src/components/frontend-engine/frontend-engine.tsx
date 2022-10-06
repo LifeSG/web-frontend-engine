@@ -21,7 +21,7 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 		validators,
 		conditions,
 		validationMode,
-		reValidationMode,
+		revalidationMode,
 		onSubmit,
 		onValidate,
 	} = props;
@@ -35,7 +35,7 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 		formState: { errors },
 	} = useForm({
 		mode: validationMode,
-		reValidateMode: reValidationMode || "onChange",
+		reValidateMode: revalidationMode || "onChange",
 		defaultValues: defaultValues,
 		resolver: yupResolver(formValidationSchema),
 	});

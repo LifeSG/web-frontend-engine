@@ -17,7 +17,7 @@ export interface IFrontendEngineProps {
 	validators?: IFrontendEngineValidator[];
 	conditions?: IFrontendEngineCondition[];
 	validationMode: TValidationMode;
-	reValidationMode?: TRevalidationMode;
+	revalidationMode?: TRevalidationMode;
 	onSubmit?: () => unknown;
 	onValidate?: (isValid: boolean) => void;
 }
@@ -48,10 +48,7 @@ export const VALIDATION_TYPES = ["string", "number", "boolean", "array", "object
 export const VALIDATION_CONDITIONS = ["required"] as const;
 export type TFrontendEngineValidationType = typeof VALIDATION_TYPES[number];
 export type TFrontendEngineValidationCondition = typeof VALIDATION_CONDITIONS[number];
-export type TFrontendEngineValidationOption = TFrontendEngineValidationType | TFrontendEngineValidationCondition;
-export type TFrontendEngineValidationSchema =
-	| TFrontendEngineValidationOption
-	| Record<TFrontendEngineValidationOption, unknown>;
+export type TFrontendEngineValidationSchema = TFrontendEngineValidationType | TFrontendEngineValidationCondition;
 
 // TODO: Add conditional rendering
 export interface IFrontendEngineBaseFieldJsonSchema extends Omit<FormFieldProps, "type"> {

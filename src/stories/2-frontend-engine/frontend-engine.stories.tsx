@@ -88,7 +88,7 @@ export default {
 				},
 			},
 		},
-		reValidationMode: {
+		revalidationMode: {
 			description: "Form re-validation behaviour",
 			table: {
 				type: {
@@ -126,7 +126,7 @@ export const Default = Template.bind({});
 Default.args = {
 	id: "Sample Form",
 	validationMode: "onSubmit",
-	reValidationMode: "onChange",
+	revalidationMode: "onChange",
 	data: {
 		fields: [
 			{

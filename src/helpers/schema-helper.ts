@@ -7,7 +7,6 @@ import {
 	IFrontendEngineValidator,
 	TFrontendEngineFieldSchema,
 	TFrontendEngineValidationCondition,
-	TFrontendEngineValidationOption,
 	TFrontendEngineValidationSchema,
 	TFrontendEngineValidationType,
 	VALIDATION_TYPES,
@@ -110,7 +109,7 @@ export namespace SchemaHelper {
 	};
 
 	const mapYupSchema = (validationType: Record<string, any>): Yup.AnySchema => {
-		const validationKey = Object.keys(validationType)[0] as TFrontendEngineValidationOption;
+		const validationKey = Object.keys(validationType)[0] as TFrontendEngineValidationSchema;
 
 		switch (validationKey) {
 			case "string":
