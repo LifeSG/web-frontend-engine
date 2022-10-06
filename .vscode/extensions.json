@@ -1,0 +1,15 @@
+{
+	"recommendations": [
+		// General
+		"naumovs.color-highlight",
+		"eamodio.gitlens",
+
+		// Documentation
+		"dinhani.divider",
+		"bierner.markdown-mermaid",
+		"davidanson.vscode-markdownlint",
+
+		// Styled-components"
+		"styled-components.vscode-styled-components"
+	]
+}
