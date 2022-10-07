@@ -1,6 +1,8 @@
+import * as Yup from "yup";
 import { kebabCase } from "lodash";
 import React, { useEffect, useRef } from "react";
 import { Form } from "react-lifesg-design-system";
+import { useValidationSchema } from "src/utils/hooks";
 import { InteractionHelper, TestHelper } from "../../../helpers";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
@@ -12,16 +14,19 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { chipTexts, chipPosition = "top", maxLength, rows, resizable = false, id, title },
+		schema: { chipTexts, chipPosition = "top", maxLength, rows, resizable = false, id, title, validation },
 		...otherProps
 	} = props;
 
 	const innerRef = useRef<HTMLTextAreaElement>(null);
+	const { setFieldValidationConfig } = useValidationSchema();
 
 	// ================================================
 	// EFFECTS
 	// ================================================
 	useEffect(() => {
+		setFieldValidationConfig(id, Yup.string(), validation);
+
 		innerRef.current?.addEventListener("focusout", () => InteractionHelper.scrollRefToTop(innerRef));
 		return () =>
 			innerRef.current?.removeEventListener("focusout", () => InteractionHelper.scrollRefToTop(innerRef));
