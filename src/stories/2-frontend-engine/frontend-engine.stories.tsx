@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
-import { FrontendEngine, IFrontendEngineProps } from "../..";
+import { FrontendEngine, IFrontendEngineProps } from "src/components/frontend-engine";
 
 export default {
 	title: "Form/Frontend Engine",
@@ -133,15 +133,7 @@ Default.args = {
 				id: "name",
 				title: "What is your name",
 				type: "TEXTAREA",
-				validation: [
-					"string",
-					{
-						maxLength: {
-							message: "Maximum length of 255",
-							value: 255,
-						},
-					},
-				],
+				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 255" }],
 				chipTexts: ["John", "Doe"],
 			},
 		],
