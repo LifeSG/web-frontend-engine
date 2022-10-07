@@ -2,6 +2,7 @@ import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "rea
 import { FormFieldProps } from "react-lifesg-design-system/components/types";
 import { AnyObjectSchema } from "yup";
 import { ITextareaSchema } from "../fields/textarea/types";
+import { IValidationRule } from "./validation-schema/types";
 
 // ================================================
 // FRONTEND ENGINE
@@ -42,22 +43,13 @@ export interface IFrontendEngineData {
 }
 
 // ================================================
-// SCHEMAS
+// JSON SCHEMA
 // ================================================
-export const VALIDATION_TYPES = ["string", "number", "boolean", "array", "object"] as const;
-export const VALIDATION_CONDITIONS = ["maxLength", "minLength", "maxValue", "minValue", "required"] as const;
-export type TValidationType = typeof VALIDATION_TYPES[number];
-export type TValidationCondition = typeof VALIDATION_CONDITIONS[number];
-export type TValidationRuleKey = TValidationCondition | TValidationType;
-export type TValidationRuleValue = { message?: string; value?: number };
-export type TValidationRule = Partial<Record<TValidationRuleKey, TValidationRuleValue>>;
-export type TFrontendEngineValidationSchema = TValidationType | TValidationRule;
-
 // TODO: Add conditional rendering
 export interface IFrontendEngineBaseFieldJsonSchema extends Omit<FormFieldProps, "type"> {
 	id: string;
 	title: string;
-	validation?: TFrontendEngineValidationSchema[];
+	validation?: IValidationRule[];
 }
 
 export enum FieldType {

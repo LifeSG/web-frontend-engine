@@ -2,13 +2,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Color } from "react-lifesg-design-system";
+import { useValidationSchema } from "src/utils/hooks";
 import styled from "styled-components";
-import { AnyObjectSchema } from "yup";
 import * as FrontendEngineFields from "..";
-import { SchemaHelper } from "../../helpers";
 import { FieldType, IFrontendEngineProps, TFrontendEngineFieldSchema } from "./types";
+import { ValidationProvider } from "./validation-schema";
 
-export const FrontendEngine = (props: IFrontendEngineProps) => {
+const FrontendEngineInner = (props: IFrontendEngineProps) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
@@ -17,7 +17,6 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 		className = "",
 		data,
 		defaultValues,
-		validationSchema,
 		validators,
 		conditions,
 		validationMode,
@@ -27,7 +26,8 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 	} = props;
 
 	const [fields, setFields] = useState<JSX.Element[]>([]);
-	const [formValidationSchema, setFormValidationSchema] = useState<AnyObjectSchema>(null);
+	const { validationSchema } = useValidationSchema();
+
 	const {
 		control,
 		watch,
@@ -37,7 +37,7 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 		mode: validationMode,
 		reValidateMode: revalidationMode || "onChange",
 		defaultValues: defaultValues,
-		resolver: yupResolver(formValidationSchema),
+		resolver: yupResolver(validationSchema),
 	});
 
 	// ================================================
@@ -67,7 +67,6 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 	useEffect(() => {
 		if (data) {
 			setFields(buildFieldsFromSchema(data.fields));
-			setFormValidationSchema(validationSchema || SchemaHelper.buildValidationFromJson(data, validators));
 		}
 	}, [buildFieldsFromSchema, data, validationSchema, validators]);
 
@@ -108,6 +107,12 @@ export const FrontendEngine = (props: IFrontendEngineProps) => {
 		</StyledForm>
 	);
 };
+
+export const FrontendEngine = (props: IFrontendEngineProps) => (
+	<ValidationProvider>
+		<FrontendEngineInner {...props} />
+	</ValidationProvider>
+);
 
 const StyledForm = styled.form`
 	* > ::placeholder {
