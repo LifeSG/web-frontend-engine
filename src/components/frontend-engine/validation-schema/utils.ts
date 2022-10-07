@@ -71,15 +71,32 @@ export namespace ValidationSchemaUtils {
 	 */
 	const mapYupConditions = (yupSchema: Yup.AnySchema, validationRules: IValidationRule[]): Yup.AnySchema => {
 		validationRules.forEach((rule) => {
+			const ruleKey = Object.keys(rule).filter((k) =>
+				VALIDATION_CONDITIONS.includes(k as TValidationCondition)
+			)?.[0] as TValidationCondition;
+
 			switch (true) {
 				case rule.required:
 					yupSchema = yupSchema.required(rule.errorMessage || "This field is required");
 					break;
-				case rule.minLength > 0:
-					yupSchema = (yupSchema as Yup.StringSchema).min(rule.minLength, rule.errorMessage);
+				case !!rule.email:
+				case !!rule.url:
+				case !!rule.uuid:
+					yupSchema = (yupSchema as unknown)[ruleKey](rule.errorMessage);
 					break;
-				case rule.maxLength > 0:
-					yupSchema = (yupSchema as Yup.StringSchema).max(rule.maxLength, rule.errorMessage);
+				case rule.length > 0:
+				case rule.min > 0:
+				case rule.max > 0:
+					yupSchema = (yupSchema as unknown)[ruleKey](rule[ruleKey], rule.errorMessage);
+					break;
+				case !!rule.matches:
+					{
+						const matches = rule.matches.match(/\/(.*)\/([a-z]+)?/);
+						yupSchema = (yupSchema as Yup.StringSchema).matches(
+							new RegExp(matches[1], matches[2]),
+							rule.errorMessage
+						);
+					}
 					break;
 			}
 		});
