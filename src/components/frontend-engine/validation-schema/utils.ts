@@ -98,6 +98,20 @@ export namespace ValidationSchemaUtils {
 						);
 					}
 					break;
+				case !!rule.when:
+					{
+						Object.keys(rule.when).forEach((fieldId) => {
+							yupSchema = yupSchema.when(fieldId, {
+								is: rule.when[fieldId].is,
+								then: buildFieldYupSchema(yupSchema.type as TValidationType, rule.when[fieldId].then),
+								otherwise: buildFieldYupSchema(
+									yupSchema.type as TValidationType,
+									rule.when[fieldId].otherwise
+								),
+							});
+						});
+					}
+					break;
 			}
 		});
 
