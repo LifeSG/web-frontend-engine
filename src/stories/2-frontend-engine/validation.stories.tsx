@@ -146,3 +146,28 @@ UUID.args = {
 	rule: { uuid: true, errorMessage: "Invalid uuid" },
 	value: { name: "lorem ipsum" },
 };
+
+export const When = Template.bind({});
+When.args = {
+	type: "string",
+	rule: {
+		when: {
+			field2: {
+				is: "something",
+				then: [
+					{
+						required: true,
+						errorMessage: "Name is required when field2=something",
+					},
+				],
+				otherwise: [
+					{
+						min: 5,
+						errorMessage: "Name must have at least 5 characters when field2!=something",
+					},
+				],
+			},
+		},
+	},
+	value: { name: undefined, field2: "something" },
+};

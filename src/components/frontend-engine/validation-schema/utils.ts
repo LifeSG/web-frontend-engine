@@ -103,9 +103,12 @@ export namespace ValidationSchemaUtils {
 						Object.keys(rule.when).forEach((fieldId) => {
 							yupSchema = yupSchema.when(fieldId, {
 								is: rule.when[fieldId].is,
-								then: buildFieldYupSchema(yupSchema.type as TValidationType, rule.when[fieldId].then),
-								otherwise: buildFieldYupSchema(
-									yupSchema.type as TValidationType,
+								then: mapYupConditions(
+									mapYupSchema(yupSchema.type as TValidationType),
+									rule.when[fieldId].then
+								),
+								otherwise: mapYupConditions(
+									mapYupSchema(yupSchema.type as TValidationType),
 									rule.when[fieldId].otherwise
 								),
 							});

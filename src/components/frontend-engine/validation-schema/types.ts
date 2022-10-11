@@ -10,6 +10,7 @@ export const VALIDATION_CONDITIONS = [
 	"email",
 	"url",
 	"uuid",
+	"when",
 ] as const;
 export type TValidationType = typeof VALIDATION_TYPES[number];
 export type TValidationCondition = typeof VALIDATION_CONDITIONS[number];
@@ -23,6 +24,13 @@ export interface IValidationRule {
 	email?: boolean;
 	url?: boolean;
 	uuid?: boolean;
+	when?: {
+		[id: string]: {
+			is: string | number | boolean | string[] | number[] | boolean[];
+			then: Omit<IValidationRule, "when">[];
+			otherwise?: Omit<IValidationRule, "when">[];
+		};
+	};
 	errorMessage?: string;
 }
 
