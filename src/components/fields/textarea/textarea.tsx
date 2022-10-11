@@ -3,7 +3,7 @@ import { kebabCase } from "lodash";
 import React, { useEffect, useRef } from "react";
 import { Form } from "react-lifesg-design-system";
 import { useValidationSchema } from "src/utils/hooks";
-import { InteractionHelper, TestHelper } from "../../../helpers";
+import { InteractionHelper, TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { AutoResizeTextarea } from "./auto-resize-textarea";
 import { ChipContainer, ChipItem } from "./textarea.styles";
