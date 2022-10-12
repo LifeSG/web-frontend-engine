@@ -1,5 +1,5 @@
+import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
-import { FormFieldProps } from "react-lifesg-design-system/components/types";
 import { AnyObjectSchema } from "yup";
 import { ITextareaSchema } from "../fields/textarea/types";
 import { IValidationRule } from "./validation-schema/types";
@@ -46,7 +46,7 @@ export interface IFrontendEngineData {
 // JSON SCHEMA
 // ================================================
 // TODO: Add conditional rendering
-export interface IFrontendEngineBaseFieldJsonSchema extends Omit<FormFieldProps, "type"> {
+export interface IFrontendEngineBaseFieldJsonSchema extends Omit<FormInputProps, "type"> {
 	id: string;
 	title: string;
 	validation?: IValidationRule[];

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { Text } from "react-lifesg-design-system";
+import { Text } from "@lifesg/react-design-system";
 import { ChipButton } from "./chip.styles";
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}

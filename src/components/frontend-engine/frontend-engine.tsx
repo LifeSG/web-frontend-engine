@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Color } from "react-lifesg-design-system";
+import { Color } from "@lifesg/react-design-system";
 import { useValidationSchema } from "src/utils/hooks";
 import styled from "styled-components";
 import * as FrontendEngineFields from "..";

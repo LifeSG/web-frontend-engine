@@ -23,12 +23,11 @@
 		"prepare": "husky install"
 	},
 	"dependencies": {
-		"react-hook-form": "^7.36.1",
-		"styled-components": "^5.3.6",
 		"@hookform/resolvers": "^2.9.8",
+		"@lifesg/react-design-system": "^1.0.0-alpha.3",
 		"lodash": "^4.17.21",
 		"react-hook-form": "^7.34.2",
-		"react-lifesg-design-system": "file:react-lifesg-design-system-6.0.0-alpha.91.tgz",
+		"styled-components": "^5.3.6",
 		"yup": "^0.32.11"
 	},
 	"devDependencies": {

@@ -1,7 +1,7 @@
 import React from "react";
 import * as Yup from "yup";
 import { ValidationSchemaUtils } from "src/components/frontend-engine/validation-schema/utils";
-import { Button } from "react-lifesg-design-system";
+import { Button } from "@lifesg/react-design-system";
 import styled from "styled-components";
 import { IValidationRule, TValidationType } from "src/components/frontend-engine/validation-schema/types";
 

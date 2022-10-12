@@ -1,4 +1,4 @@
-import { Form } from "react-lifesg-design-system";
+import { Form } from "@lifesg/react-design-system";
 import styled, { css } from "styled-components";
 import { IAutoResizeTextareaProps } from "./types";
 
