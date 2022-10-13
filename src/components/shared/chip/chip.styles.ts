@@ -37,7 +37,3 @@ export const ChipButton = styled.button<IChipButtonProps>`
 `;
 
 export const ChipText = styled(Text.XSmall)``;
-
-export const CheckboxWrapper = styled.input`
-	display: none;
-`;

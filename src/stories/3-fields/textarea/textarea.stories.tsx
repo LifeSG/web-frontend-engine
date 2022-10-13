@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React, { useState } from "react";
-import { FrontendEngine, ITextareaProps, TextArea } from "../../..";
+import { FrontendEngine, ITextareaSchema, TextArea } from "../../..";
 import { ExcludeReactFormHookProps } from "../../common";
 
 export default {
@@ -50,67 +50,62 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<ITextareaProps> = (args) => {
-	return <TextArea schema={args} />;
-};
+const Template: Story<ITextareaSchema> = (args) => (
+	<FrontendEngine
+		id="frontendEngine"
+		validationMode="onSubmit"
+		data={{
+			fields: [args],
+		}}
+	/>
+);
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+	type: "TEXTAREA",
+	id: "textarea-default",
+	title: "Textarea",
+};
 
 export const WithCounter = Template.bind({});
-WithCounter.decorators = [
-	() => {
-		const [value, setValue] = useState("");
-
-		return (
-			<TextArea
-				schema={{ id: "with-counter", maxLength: 100 }}
-				value={value}
-				onChange={(e) => setValue(e.target.value)}
-			/>
-		);
-	},
-];
+WithCounter.args = {
+	type: "TEXTAREA",
+	id: "textarea-with-counter",
+	title: "Textarea with counter",
+	maxLength: 5,
+};
 
 export const AllowResize = Template.bind({});
 AllowResize.args = {
+	type: "TEXTAREA",
+	id: "textarea-allow-resize",
+	title: "Resizable textarea",
 	resizable: true,
 	rows: 3,
 };
 
 export const WithPills = Template.bind({});
 WithPills.args = {
+	type: "TEXTAREA",
+	id: "textarea-with-pills",
+	title: "Textarea with pills",
 	chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
-	chipPosition: "top",
 };
 
-export const JSONSchema = Template.bind({});
-JSONSchema.decorators = [
-	() => (
-		<FrontendEngine
-			id="TextArea"
-			validationMode="onSubmit"
-			data={{
-				fields: [
-					{
-						id: "example",
-						title: "text-area-with-chips",
-						type: "TEXTAREA",
-						validation: ["required"],
-						chipTexts: ["chip1", "chip2"],
-						maxLength: 100,
-						rows: 3,
-						resizable: false,
-						chipPosition: "top",
-					},
-				],
-			}}
-		/>
-	),
-];
+export const WithPillsBottom = Template.bind({});
+WithPillsBottom.storyName = "With Pills (Bottom)";
+WithPillsBottom.args = {
+	type: "TEXTAREA",
+	id: "textarea-with-pills-bottom",
+	title: "Textarea with pills at the bottom",
+	chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
+	chipPosition: "bottom",
+};
 
-JSONSchema.parameters = {
-	docs: {
-		description: { story: "Define through JSON schema" },
-	},
+export const WithValidation = Template.bind({});
+WithValidation.args = {
+	type: "TEXTAREA",
+	id: "textarea-with-validation",
+	title: "Textarea with validation",
+	validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }],
 };

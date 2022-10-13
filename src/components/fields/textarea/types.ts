@@ -1,4 +1,3 @@
-import { IValidationRule } from "src/components/frontend-engine/validation-schema/types";
 import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine/types";
 
 export interface ITextareaSchema extends IFrontendEngineBaseFieldJsonSchema {
@@ -8,20 +7,4 @@ export interface ITextareaSchema extends IFrontendEngineBaseFieldJsonSchema {
 	chipPosition?: "top" | "bottom";
 	rows?: number;
 	resizable?: boolean;
-}
-
-export interface ITextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	id: string;
-	maxLength?: number;
-	chipTexts?: string[];
-	chipPosition?: "top" | "bottom";
-	resizable?: boolean;
-	rows?: number;
-	validation: IValidationRule[];
-}
-
-export interface IAutoResizeTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	maxLength?: number;
-	resizable?: boolean;
-	errorMessage?: string;
 }

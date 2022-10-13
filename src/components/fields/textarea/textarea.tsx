@@ -1,68 +1,71 @@
-import * as Yup from "yup";
-import { kebabCase } from "lodash";
-import React, { useEffect, useRef } from "react";
 import { Form } from "@lifesg/react-design-system";
+import { kebabCase } from "lodash";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
-import { InteractionHelper, TestHelper } from "../../../utils";
+import * as Yup from "yup";
+import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine/types";
-import { AutoResizeTextarea } from "./auto-resize-textarea";
-import { ChipContainer, ChipItem } from "./textarea.styles";
-import { ITextareaProps } from "./types";
+import { ChipContainer, ChipItem, StyledTextArea, Wrapper } from "./textarea.styles";
+import { ITextareaSchema } from "./types";
 
-export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps<ITextareaProps>>((props, ref) => {
-	// ================================================
-	// CONST, STATE, REFS
-	// ================================================
+export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
+	// =============================================================================
+	// CONST, STATE, REF
+	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition = "top", maxLength, rows, resizable = false, id, title, validation },
+		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, id, title, validation, value },
+		name,
+		onChange,
 		...otherProps
 	} = props;
-
-	const innerRef = useRef<HTMLTextAreaElement>(null);
+	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
+	const { setValue } = useForm();
 	const { setFieldValidationConfig } = useValidationSchema();
 
-	// ================================================
+	// =============================================================================
 	// EFFECTS
-	// ================================================
+	// =============================================================================
 	useEffect(() => {
 		setFieldValidationConfig(id, Yup.string(), validation);
-
-		innerRef.current?.addEventListener("focusout", () => InteractionHelper.scrollRefToTop(innerRef));
-		return () =>
-			innerRef.current?.removeEventListener("focusout", () => InteractionHelper.scrollRefToTop(innerRef));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// ================================================
-	// HELPER FUNCTIONS
-	// ================================================
+	useEffect(() => {
+		setStateValue(value);
+	}, [value]);
+
+	useEffect(() => {
+		setValue(name, stateValue);
+	}, [name, setValue, stateValue]);
+
+	// =============================================================================
+	// EVENT HANDLER
+	// =============================================================================
+	const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setStateValue(event.target.value);
+		onChange(event);
+	};
+
 	const handleChipOnClick = (text: string) => () => {
-		const textareaNode = innerRef?.current;
-
-		if (textareaNode) {
-			const curLength = textareaNode.value.length;
-			if (maxLength && curLength >= maxLength) {
-				return;
-			}
-
-			const newValue = (textareaNode.value + (curLength ? ` ${text}` : text)).substring(0, maxLength);
-
-			// Calling input as context because set value via `.value =` is not working
-			// Reference from https://stackoverflow.com/a/46012210
-			const nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor?.(
-				window.HTMLTextAreaElement.prototype,
-				"value"
-			)?.set;
-			nativeTextAreaValueSetter?.call(textareaNode, newValue);
-
-			const event = new Event("input", { bubbles: true });
-			textareaNode.dispatchEvent(event);
+		const curLength = (stateValue as string)?.length || 0;
+		if (maxLength && curLength >= maxLength) {
+			return;
 		}
+
+		const newValue = ((stateValue || "") + (curLength ? ` ${text}` : text)).substring(0, maxLength);
+		setStateValue(newValue);
+
+		onChange({
+			target: {
+				value: newValue,
+			},
+		});
 	};
 
-	const handleRef = (element: HTMLTextAreaElement) => {
-		InteractionHelper.handleTextareaRefCallback(element, innerRef, ref);
-	};
-
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
 	const renderChips = () => {
 		return (
 			chipTexts?.length && (
@@ -70,7 +73,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 					{chipTexts.map((text, index) => (
 						<ChipItem
 							key={text}
-							id={TestHelper.generateId(`${id}-chip`, kebabCase(text), index)}
+							id={TestHelper.generateId(id, `chip-${kebabCase(text)}`, index)}
 							onClick={handleChipOnClick(text)}
 						>
 							{text}
@@ -83,20 +86,20 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 
 	return (
 		<Form.CustomField label={title} id={id}>
-			<>
-				{chipPosition === "top" && renderChips()}
-				<AutoResizeTextarea
+			<Wrapper chipPosition={chipPosition}>
+				{renderChips()}
+				<StyledTextArea
 					{...otherProps}
-					id={id}
-					ref={handleRef}
+					id={TestHelper.generateId(id, "textarea")}
+					name={name}
 					maxLength={maxLength}
 					rows={rows}
 					resizable={resizable}
+					onChange={handleChange}
+					value={stateValue}
 					errorMessage={otherProps.error?.message}
 				/>
-
-				{chipPosition === "bottom" && renderChips()}
-			</>
+			</Wrapper>
 		</Form.CustomField>
 	);
-});
+};
