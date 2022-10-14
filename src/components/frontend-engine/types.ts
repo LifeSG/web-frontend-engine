@@ -52,6 +52,8 @@ export interface IFrontendEngineBaseFieldJsonSchema<T> {
 	validation?: IValidationRule[] | undefined;
 }
 
+export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "title" | "validation";
+
 export enum FieldType {
 	TEXTAREA = "TextArea",
 	TEXT = "TextField",

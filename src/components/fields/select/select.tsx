@@ -22,7 +22,7 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	// EFFECTS
 	// ================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, (Yup as any)[typeof options[0]](), validation);
+		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
