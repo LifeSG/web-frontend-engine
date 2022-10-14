@@ -41,6 +41,7 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 			ref={ref}
 			id={id}
 			label={title}
+			maxLength={maxLength}
 			inputMode={inputMode}
 			onChange={handleChange}
 			value={stateValue}

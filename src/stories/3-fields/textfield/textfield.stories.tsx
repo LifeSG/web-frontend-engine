@@ -4,6 +4,12 @@ import React from "react";
 import { FrontendEngine, ITextfieldSchema, TextField } from "../../..";
 import { ExcludeReactFormHookProps } from "../../common";
 
+const ExcludeDefaultProps = {
+	id: { table: { disable: true } },
+	title: { table: { disable: true } },
+	type: { table: { disable: true } },
+};
+
 export default {
 	title: "Field/TextField",
 	component: TextField,
@@ -28,20 +34,55 @@ export default {
 		},
 	},
 	argTypes: {
+		invalid: { table: { disable: true } },
 		...ExcludeReactFormHookProps,
+		...ExcludeDefaultProps,
 		schema: {
-			description: "Defined JSON schema props",
+			description:
+				"Acual component props, it is same as the schema used to define the field through the JSON schema",
 			table: {
 				type: {
 					summary: "ITextfieldSchema",
-					required: true,
-					detail: `
-{
-	id: string;
-	title: string;
-	type: "TEXT" | "NUMBER" | "EMAIL";
-	validation: IValidationRule[];
-}`,
+				},
+			},
+		},
+		"schema.id": {
+			description: "The unique identifier of the component",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
+		"schema.title": {
+			description: "A name/description of the purpose of the form element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
+		"schema.errorMessage": {
+			description: "A message that describes the error/issue with the value of the form element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
+		"schema.maxLength": {
+			description: "A specified maximum length for the value of the form element",
+			table: {
+				type: {
+					summary: "number",
+				},
+			},
+		},
+		"schema.inputMode": {
+			description: "An enumerated attribute that hints the type of data that might be entered by user",
+			table: {
+				type: {
+					summary: "none | text | tel | url | email | numeric | decimal | search | undefined",
 				},
 			},
 		},
