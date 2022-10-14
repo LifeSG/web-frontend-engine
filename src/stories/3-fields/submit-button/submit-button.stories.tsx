@@ -62,9 +62,14 @@ export default {
 		},
 		"schema.styleType": {
 			description: "The style type of the button",
+			table: {
+				type: {
+					summary: "default | secondary | light | link",
+				},
+			},
 		},
 		"schema.disabled": {
-			description: "Sets whether button is interactable",
+			description: "Specifies if the button is interactable",
 		},
 	},
 } as Meta;
@@ -93,4 +98,13 @@ Disabled.args = {
 	id: "submitbutton-disabled",
 	title: "Submit (disabled)",
 	disabled: true,
+};
+
+export const Styled = Template.bind({});
+Styled.args = {
+	type: "SUBMIT",
+	id: "submitbutton-default",
+	title: "Submit",
+	onClick: () => alert("Submitted"),
+	styleType: "light",
 };
