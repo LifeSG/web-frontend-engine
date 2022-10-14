@@ -1,6 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
 import { AnyObjectSchema } from "yup";
-import { ISubmitButtonSchema, ITextfieldSchema } from "../fields";
+import { ISubmitButtonSchema, ITextareaSchema, ITextfieldSchema } from "../fields";
 import { IValidationRule } from "./validation-schema/types";
 
 // ================================================
