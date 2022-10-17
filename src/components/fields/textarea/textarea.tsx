@@ -1,26 +1,28 @@
 import { Form } from "@lifesg/react-design-system";
 import { kebabCase } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
-import { TestHelper } from "../../../utils";
+import { InteractionHelper, TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ChipContainer, ChipItem, StyledTextArea, Wrapper } from "./textarea.styles";
 import { ITextareaSchema } from "./types";
 
-export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
+export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps<ITextareaSchema>>((props, ref) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, id, title, validation, value },
+		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, id, title, validation },
 		name,
 		onChange,
+		value,
 		...otherProps
 	} = props;
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
 	const { setValue } = useForm();
+	const innerRef = useRef<HTMLTextAreaElement>(null);
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -64,6 +66,13 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
+	const handleRef = (element: HTMLTextAreaElement) => {
+		InteractionHelper.handleRefCallback(element, innerRef, ref);
+	};
+
+	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderChips = () => {
@@ -90,6 +99,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 				{renderChips()}
 				<StyledTextArea
 					{...otherProps}
+					ref={handleRef}
 					id={TestHelper.generateId(id, "textarea")}
 					name={name}
 					maxLength={maxLength}
@@ -102,4 +112,4 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 			</Wrapper>
 		</Form.CustomField>
 	);
-};
+});

@@ -1,4 +1,3 @@
-import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
 import { AnyObjectSchema } from "yup";
 import { ITextareaSchema } from "../fields/textarea/types";
@@ -46,7 +45,8 @@ export interface IFrontendEngineData {
 // JSON SCHEMA
 // ================================================
 // TODO: Add conditional rendering
-export interface IFrontendEngineBaseFieldJsonSchema extends Omit<FormInputProps, "type"> {
+export interface IFrontendEngineBaseFieldJsonSchema<T> {
+	type: T;
 	id: string;
 	title: string;
 	validation?: IValidationRule[];

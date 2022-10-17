@@ -1,12 +1,11 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React, { useState } from "react";
-import { FrontendEngine, ITextareaSchema, TextArea } from "../../..";
+import React from "react";
+import { FrontendEngine, ITextareaSchema } from "../../..";
 import { ExcludeReactFormHookProps } from "../../common";
 
 export default {
 	title: "Field/TextArea",
-	component: TextArea,
 	parameters: {
 		docs: {
 			page: () => (
@@ -17,7 +16,7 @@ export default {
 					</Description>
 					<Heading>Props</Heading>
 					<Description>
-						This component also inherits the
+						This schema also inherits the
 						[HTMLTextAreaElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement)
 						attributes.
 					</Description>
@@ -29,23 +28,105 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		schema: {
-			description: "Defined JSON schema props",
+		type: {
+			description: "Use <code>TEXTAREA</code> to show this field",
 			table: {
 				type: {
-					summary: "ITextareaProps",
-					required: true,
-					detail: `
-{
-	id: string;
-	maxLength?: number;
-	chipTexts?: string[];
-	chipPosition?: "top" | "bottom";
-	resizable?: boolean;
-	rows?: number;
-}`,
+					summary: "string",
 				},
 			},
+			type: { name: "string", required: true },
+			options: ["TEXTAREA"],
+			control: {
+				type: "select",
+			},
+		},
+		id: {
+			description: "The unique identifier of the component",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			type: { name: "string", required: true },
+			control: {
+				type: "text",
+			},
+		},
+		title: {
+			description: "A name/description of the purpose of the form element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
+		chipTexts: {
+			description: "Adds clickable suggestion pills",
+			table: {
+				type: {
+					summary: "string[]",
+				},
+			},
+			type: { name: "object", value: {} },
+		},
+		chipPosition: {
+			description: "Whether the chips will appear above or below the textarea",
+			table: {
+				type: {
+					summary: "string",
+				},
+				defaultValue: { summary: "top" },
+			},
+			control: {
+				type: "select",
+			},
+			defaultValue: "top",
+			options: ["top", "bottom"],
+		},
+		resizable: {
+			description: "Toggle vertical resize handler in textarea",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			control: {
+				type: "boolean",
+			},
+			defaultValue: false,
+		},
+		maxLength: {
+			description:
+				"Maximum number of characters that can go into the textarea. (Inherited from HTMLTextAreaElement)",
+			table: {
+				type: {
+					summary: "number",
+				},
+			},
+			type: { name: "number" },
+		},
+		rows: {
+			description: "Visible height of a text area, in lines (Inherited from HTMLTextAreaElement)",
+			table: {
+				type: {
+					summary: "number",
+				},
+				defaultValue: { summary: 1 },
+			},
+			defaultValue: 1,
+			type: { name: "number" },
+		},
+		validation: {
+			description:
+				"Validation schema, for more info, refer to the respective stories <a href='/docs/form-validation-schema--required'>here</a>",
+			table: {
+				type: {
+					summary: "object",
+				},
+			},
+			type: { name: "object", value: {} },
 		},
 	},
 } as Meta;
