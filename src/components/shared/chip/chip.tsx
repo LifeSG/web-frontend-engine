@@ -5,8 +5,6 @@ import { ChipButton } from "./chip.styles";
 
 export const Chip = ({ children, ...otherProps }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
 	<ChipButton type="button" {...otherProps}>
-		<Text.XSmall className="chipText" weight="semibold">
-			{children}
-		</Text.XSmall>
+		<Text.XSmall weight="semibold">{children}</Text.XSmall>
 	</ChipButton>
 );

@@ -28,10 +28,10 @@ export const ChipButton = styled.button<IChipButtonProps>`
 	${(props) =>
 		props.isActive &&
 		css`
-			background-color: ${Color.Neutral[4]};
+			background-color: ${Color.Neutral[4](props)};
 
 			${ChipText} {
-				color: ${Color.Neutral[7]};
+				color: ${Color.Neutral[7](props)};
 			}
 		`}
 `;
