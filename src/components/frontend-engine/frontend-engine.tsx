@@ -1,12 +1,18 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as FrontendEngineFields from "../fields";
-import { FieldType, IFrontendEngineProps, TFrontendEngineFieldSchema, TFrontendEngineValues } from "./types";
+import {
+	FieldType,
+	IFrontendEngineProps,
+	IFrontendEngineRef,
+	TFrontendEngineFieldSchema,
+	TFrontendEngineValues,
+} from "./types";
 import { ValidationProvider } from "./validation-schema";
 
-const FrontendEngineInner = (props: IFrontendEngineProps) => {
+const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -29,8 +35,8 @@ const FrontendEngineInner = (props: IFrontendEngineProps) => {
 	const {
 		control,
 		watch,
+		formState,
 		handleSubmit: reactFormHookSubmit,
-		formState: { errors },
 	} = useForm({
 		mode: validationMode,
 		reValidateMode: revalidationMode,
@@ -77,6 +83,14 @@ const FrontendEngineInner = (props: IFrontendEngineProps) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
+	useImperativeHandle<Partial<IFrontendEngineRef>, Partial<IFrontendEngineRef>>(ref, () => ({
+		getFormState: () => {
+			return formState;
+		},
+		submit: () => {
+			reactFormHookSubmit(handleSubmit)();
+		},
+	}));
 
 	const handleSubmit = (data: TFrontendEngineValues) => {
 		console.log(data); // TODO: remove
@@ -95,14 +109,15 @@ const FrontendEngineInner = (props: IFrontendEngineProps) => {
 			className={`${className} ${dataClassName}`}
 			noValidate
 			onSubmit={reactFormHookSubmit(handleSubmit)}
+			ref={ref}
 		>
 			{fields}
 		</form>
 	);
-};
+});
 
-export const FrontendEngine = (props: IFrontendEngineProps) => (
+export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => (
 	<ValidationProvider>
-		<FrontendEngineInner {...props} />
+		<FrontendEngineInner {...props} ref={ref} />
 	</ValidationProvider>
-);
+));

@@ -1,4 +1,4 @@
-import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
+import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
 import { ISelectSchema, ISubmitButtonSchema, ITextareaSchema, ITextfieldSchema } from "../fields";
 import { IValidationRule } from "./validation-schema/types";
 
@@ -25,6 +25,13 @@ export type TFrontendEngineFieldSchema = ITextareaSchema | ITextfieldSchema | IS
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export type TValidationMode = keyof ValidationMode;
+
+export interface IFrontendEngineRef extends HTMLFormElement {
+	/** gets information about the entire form state */
+	getFormState: () => FormState<TFrontendEngineValues>;
+	/** triggers form submission */
+	submit: () => void;
+}
 
 // =============================================================================
 // JSON SCHEMA
