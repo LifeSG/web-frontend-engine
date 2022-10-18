@@ -1,6 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine, ISubmitButtonSchema } from "../../..";
+import { ISubmitButtonSchema } from "src/components/fields";
+import { FrontendEngine } from "../../..";
 import { ExcludeReactFormHookProps } from "../../common";
 
 export default {
