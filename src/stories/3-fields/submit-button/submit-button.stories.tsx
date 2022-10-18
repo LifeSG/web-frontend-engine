@@ -89,15 +89,7 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<ISubmitButtonSchema> = (args) => (
-	<FrontendEngine
-		id="frontendEngine"
-		validationMode="onSubmit"
-		data={{
-			fields: [args],
-		}}
-	/>
-);
+const Template: Story<ISubmitButtonSchema> = (args) => <FrontendEngine data={{ fields: [args] }} />;
 
 export const Default = Template.bind({});
 Default.args = {

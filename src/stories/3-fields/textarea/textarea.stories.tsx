@@ -130,18 +130,7 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<ITextareaSchema> = (args) => (
-	<FrontendEngine
-		id="frontendEngine"
-		validationMode="onSubmit"
-		data={{
-			fields: [args, SubmitButtonStorybook],
-		}}
-		defaultValues={{
-			"textarea-default-value": "This is the default value",
-		}}
-	/>
-);
+const Template: Story<ITextareaSchema> = (args) => <FrontendEngine data={{ fields: [args, SubmitButtonStorybook] }} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -150,12 +139,24 @@ Default.args = {
 	title: "Textarea",
 };
 
-export const DefaultValue = Template.bind({});
-DefaultValue.args = {
-	type: "TEXTAREA",
-	id: "textarea-default-value",
-	title: "Textarea",
-};
+export const DefaultValue = () => (
+	<FrontendEngine
+		data={{
+			fields: [
+				{
+					type: "TEXTAREA",
+					id: "textarea-default-value",
+					title: "Textarea",
+				},
+				SubmitButtonStorybook,
+			],
+			defaultValues: {
+				"textarea-default-value": "This is the default value",
+			},
+		}}
+	/>
+);
+DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const AllowResize = Template.bind({});
 AllowResize.args = {

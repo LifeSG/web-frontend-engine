@@ -99,18 +99,7 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<ITextfieldSchema> = (args) => (
-	<FrontendEngine
-		id="frontendEngine"
-		validationMode="onSubmit"
-		data={{
-			fields: [args, SubmitButtonStorybook],
-		}}
-		defaultValues={{
-			"textfield-default-value": "This is the default value",
-		}}
-	/>
-);
+const Template: Story<ITextfieldSchema> = (args) => <FrontendEngine data={{ fields: [args, SubmitButtonStorybook] }} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -119,12 +108,24 @@ Default.args = {
 	type: "TEXT",
 };
 
-export const DefaultValue = Template.bind({});
-DefaultValue.args = {
-	id: "textfield-default-value",
-	title: "Textfield",
-	type: "TEXT",
-};
+export const DefaultValue = () => (
+	<FrontendEngine
+		data={{
+			fields: [
+				{
+					type: "TEXT",
+					id: "textfield-default-value",
+					title: "Textfield",
+				},
+				SubmitButtonStorybook,
+			],
+			defaultValues: {
+				"textfield-default-value": "This is the default value",
+			},
+		}}
+	/>
+);
+DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {

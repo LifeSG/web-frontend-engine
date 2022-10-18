@@ -104,18 +104,7 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<ISelectSchema> = (args) => (
-	<StyledForm
-		id="frontendEngine"
-		validationMode="onSubmit"
-		data={{
-			fields: [args, SubmitButtonStorybook],
-		}}
-		defaultValues={{
-			"select-default-value": "Apple",
-		}}
-	/>
-);
+const Template: Story<ISelectSchema> = (args) => <StyledForm data={{ fields: [args, SubmitButtonStorybook] }} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -125,13 +114,18 @@ Default.args = {
 	options: [1, 2, 3],
 };
 
-export const DefaultValue = Template.bind({});
-DefaultValue.args = {
-	type: "SELECT",
-	id: "select-default-value",
-	title: "Fruits",
-	options: ["Apple", "Berry", "Cherry"],
-};
+export const DefaultValue = () => (
+	<StyledForm
+		data={{
+			fields: [
+				{ type: "SELECT", id: "select-default-value", title: "Fruits", options: ["Apple", "Berry", "Cherry"] },
+				SubmitButtonStorybook,
+			],
+			defaultValues: { "select-default-value": "Apple" },
+		}}
+	/>
+);
+DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {

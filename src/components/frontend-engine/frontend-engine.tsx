@@ -2,26 +2,25 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
-import * as FrontendEngineFields from "..";
-import { StyledForm } from "./frontend-engine.styles";
-import { FieldType, IFrontendEngineProps, TFrontendEngineFieldSchema } from "./types";
+import * as FrontendEngineFields from "../fields";
+import { FieldType, IFrontendEngineProps, TFrontendEngineFieldSchema, TFrontendEngineValues } from "./types";
 import { ValidationProvider } from "./validation-schema";
 
 const FrontendEngineInner = (props: IFrontendEngineProps) => {
-	// ================================================
+	// =============================================================================
 	// CONST, STATE, REFS
-	// ================================================
+	// =============================================================================
 	const {
-		id,
-		className = "",
-		data,
-		defaultValues,
-		validators,
-		conditions,
-		validationMode,
-		revalidationMode,
+		data: {
+			className: dataClassName,
+			defaultValues,
+			fields: fieldData,
+			id,
+			revalidationMode = "onChange",
+			validationMode = "onSubmit",
+		},
+		className,
 		onSubmit,
-		onValidate,
 	} = props;
 
 	const [fields, setFields] = useState<JSX.Element[]>([]);
@@ -34,14 +33,14 @@ const FrontendEngineInner = (props: IFrontendEngineProps) => {
 		formState: { errors },
 	} = useForm({
 		mode: validationMode,
-		reValidateMode: revalidationMode || "onChange",
-		defaultValues: defaultValues,
+		reValidateMode: revalidationMode,
+		defaultValues,
 		resolver: yupResolver(validationSchema),
 	});
 
-	// ================================================
+	// =============================================================================
 	// EFFECTS
-	// ================================================
+	// =============================================================================
 	const buildFieldsFromSchema = useCallback(
 		(fields: TFrontendEngineFieldSchema[]) =>
 			fields.map((customField) => {
@@ -61,13 +60,12 @@ const FrontendEngineInner = (props: IFrontendEngineProps) => {
 				}
 				return <div key={customField.id}>This component is not supported by the engine</div>;
 			}),
-		[]
+		[control]
 	);
+
 	useEffect(() => {
-		if (data) {
-			setFields(buildFieldsFromSchema(data.fields));
-		}
-	}, [buildFieldsFromSchema, data, validationSchema, validators]);
+		setFields(buildFieldsFromSchema(fieldData));
+	}, [buildFieldsFromSchema, fieldData]);
 
 	// TODO: Remove logging
 	useEffect(() => {
@@ -76,33 +74,30 @@ const FrontendEngineInner = (props: IFrontendEngineProps) => {
 		return () => subscription.unsubscribe();
 	}, [watch]);
 
-	// ================================================
+	// =============================================================================
 	// HELPER FUNCTIONS
-	// ================================================
-	const handleOnSubmit = (data: any) => {
-		console.log(data);
-		onSubmit && onSubmit();
+	// =============================================================================
+
+	const handleSubmit = (data: TFrontendEngineValues) => {
+		console.log(data); // TODO: remove
+		onSubmit?.(data);
 	};
 
-	const formatFormId = () => {
-		let formId = "frontend-engine";
-
-		if (id) formId = `frontend-engine-${id}`;
-		else if (className) formId = `frontend-engine-${className}`;
-
-		return formId;
-	};
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
+	const formId = id ? `frontend-engine-${id}` : "frontend-engine";
 
 	return (
-		<StyledForm
-			id={formatFormId()}
-			data-testid={formatFormId()}
-			className={className}
+		<form
+			id={formId}
+			data-testid={formId}
+			className={`${className} ${dataClassName}`}
 			noValidate
-			onSubmit={reactFormHookSubmit(handleOnSubmit)}
+			onSubmit={reactFormHookSubmit(handleSubmit)}
 		>
 			{fields}
-		</StyledForm>
+		</form>
 	);
 };
 
