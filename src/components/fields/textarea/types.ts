@@ -4,7 +4,7 @@ import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine/types"
 export interface ITextareaSchema
 	extends IFrontendEngineBaseFieldJsonSchema<"TEXTAREA">,
 		Omit<FormTextareaProps, "id" | "title"> {
-	chipTexts?: string[];
-	chipPosition?: "top" | "bottom";
-	resizable?: boolean;
+	chipTexts?: string[] | undefined;
+	chipPosition?: "top" | "bottom" | undefined;
+	resizable?: boolean | undefined;
 }

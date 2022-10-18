@@ -2,7 +2,7 @@ import { Color, Text } from "@lifesg/react-design-system";
 import styled, { css } from "styled-components";
 
 interface IChipButtonProps {
-	isActive?: boolean;
+	isActive?: boolean | undefined;
 }
 
 // =============================================================================

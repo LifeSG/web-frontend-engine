@@ -16,22 +16,24 @@ export type TValidationType = typeof VALIDATION_TYPES[number];
 export type TValidationCondition = typeof VALIDATION_CONDITIONS[number];
 
 export interface IValidationRule {
-	required?: boolean;
-	length?: number;
-	min?: number;
-	max?: number;
-	matches?: string;
-	email?: boolean;
-	url?: boolean;
-	uuid?: boolean;
-	when?: {
-		[id: string]: {
-			is: string | number | boolean | string[] | number[] | boolean[];
-			then: Omit<IValidationRule, "when">[];
-			otherwise?: Omit<IValidationRule, "when">[];
-		};
-	};
-	errorMessage?: string;
+	required?: boolean | undefined;
+	length?: number | undefined;
+	min?: number | undefined;
+	max?: number | undefined;
+	matches?: string | undefined;
+	email?: boolean | undefined;
+	url?: boolean | undefined;
+	uuid?: boolean | undefined;
+	when?:
+		| {
+				[id: string]: {
+					is: string | number | boolean | string[] | number[] | boolean[];
+					then: Omit<IValidationRule, "when">[];
+					otherwise?: Omit<IValidationRule, "when">[];
+				};
+		  }
+		| undefined;
+	errorMessage?: string | undefined;
 }
 
 export interface IFieldValidationConfig {

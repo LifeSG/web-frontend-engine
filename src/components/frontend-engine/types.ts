@@ -9,17 +9,17 @@ import { IValidationRule } from "./validation-schema/types";
 type TValidationMode = keyof ValidationMode;
 type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export interface IFrontendEngineProps {
-	id?: string;
+	id?: string | undefined;
 	className?: string;
-	data?: IFrontendEngineData;
-	defaultValues?: TFrontendEngineValues;
-	validationSchema?: AnyObjectSchema;
-	validators?: IFrontendEngineValidator[];
-	conditions?: IFrontendEngineCondition[];
+	data?: IFrontendEngineData | undefined;
+	defaultValues?: TFrontendEngineValues | undefined;
+	validationSchema?: AnyObjectSchema | undefined;
+	validators?: IFrontendEngineValidator[] | undefined;
+	conditions?: IFrontendEngineCondition[] | undefined;
 	validationMode: TValidationMode;
-	revalidationMode?: TRevalidationMode;
-	onSubmit?: () => unknown;
-	onValidate?: (isValid: boolean) => void;
+	revalidationMode?: TRevalidationMode | undefined;
+	onSubmit?: () => unknown | undefined;
+	onValidate?: (isValid: boolean) => void | undefined;
 }
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
@@ -49,7 +49,7 @@ export interface IFrontendEngineBaseFieldJsonSchema<T> {
 	type: T;
 	id: string;
 	title: string;
-	validation?: IValidationRule[];
+	validation?: IValidationRule[] | undefined;
 }
 
 export enum FieldType {

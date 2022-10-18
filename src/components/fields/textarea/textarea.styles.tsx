@@ -3,14 +3,14 @@ import { Chip } from "src/components/shared";
 import styled, { css } from "styled-components";
 
 interface ITextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	maxLength?: number;
-	resizable?: boolean;
+	maxLength?: number | undefined;
+	resizable?: boolean | undefined;
 }
 
 // =============================================================================
 // STYLING
 // =============================================================================
-export const Wrapper = styled.div<{ chipPosition?: "top" | "bottom" }>`
+export const Wrapper = styled.div<{ chipPosition?: "top" | "bottom" | undefined }>`
 	display: flex;
 	flex-direction: ${({ chipPosition }) => (chipPosition !== "bottom" ? "column" : "column-reverse")};
 `;

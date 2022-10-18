@@ -1,7 +1,7 @@
 // NOTE: Copied from web-common/utils
 
 export namespace TestHelper {
-	export const generateId = (block: string, element?: string, modifier?: string | number) => {
+	export const generateId = (block: string, element?: string | undefined, modifier?: string | number | undefined) => {
 		let elementName = block;
 
 		if (element) {
