@@ -1,4 +1,4 @@
-import { Form } from "@lifesg/react-design-system";
+import { Form } from "@lifesg/react-design-system/form";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";

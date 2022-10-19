@@ -1,4 +1,4 @@
-import { Form } from "@lifesg/react-design-system";
+import { Form } from "@lifesg/react-design-system/form";
 import { kebabCase } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { useValidationSchema } from "src/utils/hooks";

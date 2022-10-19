@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { Text } from "@lifesg/react-design-system";
+import { Text } from "@lifesg/react-design-system/text";
 import { ChipButton } from "./chip.styles";
 
 export const Chip = ({ children, ...otherProps }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (

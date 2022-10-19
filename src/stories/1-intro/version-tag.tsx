@@ -1,5 +1,6 @@
 import React from "react";
-import { Color, Text } from "@lifesg/react-design-system";
+import { Color } from "@lifesg/react-design-system/color";
+import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 import { version } from "../../../package.json";
 

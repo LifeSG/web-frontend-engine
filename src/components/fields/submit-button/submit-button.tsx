@@ -1,4 +1,4 @@
-import { Button } from "@lifesg/react-design-system";
+import { Button } from "@lifesg/react-design-system/button";
 import React, { useEffect } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";

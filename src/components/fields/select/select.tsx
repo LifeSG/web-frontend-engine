@@ -1,4 +1,5 @@
-import { Form, InputSelect } from "@lifesg/react-design-system";
+import { Form } from "@lifesg/react-design-system/form";
+import { InputSelect } from "@lifesg/react-design-system/input-select";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
