@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
 import { FrontendEngine, ITextareaSchema } from "../../..";
-import { ExcludeReactFormHookProps } from "../../common";
+import { ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/TextArea",
@@ -136,7 +135,7 @@ const Template: Story<ITextareaSchema> = (args) => (
 		id="frontendEngine"
 		validationMode="onSubmit"
 		data={{
-			fields: [args],
+			fields: [args, SubmitButtonStorybook],
 		}}
 	/>
 );

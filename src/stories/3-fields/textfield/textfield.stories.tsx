@@ -1,18 +1,10 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
-import { FrontendEngine, ITextfieldSchema, TextField } from "../../..";
-import { ExcludeReactFormHookProps } from "../../common";
-
-const ExcludeDefaultProps = {
-	id: { table: { disable: true } },
-	title: { table: { disable: true } },
-	type: { table: { disable: true } },
-};
+import { FrontendEngine, ITextfieldSchema } from "../../..";
+import { ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/TextField",
-	component: TextField,
 	parameters: {
 		docs: {
 			page: () => (
@@ -34,56 +26,63 @@ export default {
 		},
 	},
 	argTypes: {
-		invalid: { table: { disable: true } },
 		...ExcludeReactFormHookProps,
-		...ExcludeDefaultProps,
-		schema: {
-			description:
-				"Acual component props, it is same as the schema used to define the field through the JSON schema",
+		type: {
+			description: "Use <code>TEXTFIELD</code> to show this field",
 			table: {
 				type: {
-					summary: "ITextfieldSchema",
+					summary: "string",
 				},
 			},
+			type: { name: "string", required: true },
+			options: ["TEXTFIELD"],
+			control: {
+				type: "select",
+			},
 		},
-		"schema.id": {
+		id: {
 			description: "The unique identifier of the component",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
+			type: { name: "string", required: true },
+			control: {
+				type: "text",
+			},
 		},
-		"schema.title": {
+		title: {
 			description: "A name/description of the purpose of the form element",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
+			control: {
+				type: "text",
+			},
 		},
-		"schema.errorMessage": {
+		errorMessage: {
 			description: "A message that describes the error/issue with the value of the form element",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
+			control: {
+				type: "text",
+			},
 		},
-		"schema.maxLength": {
+		maxLength: {
 			description: "A specified maximum length for the value of the form element",
 			table: {
 				type: {
 					summary: "number",
 				},
 			},
-		},
-		"schema.inputMode": {
-			description: "An enumerated attribute that hints the type of data that might be entered by user",
-			table: {
-				type: {
-					summary: "none | text | tel | url | email | numeric | decimal | search | undefined",
-				},
+			control: {
+				type: "number",
 			},
 		},
 	},
@@ -94,7 +93,7 @@ const Template: Story<ITextfieldSchema> = (args) => (
 		id="frontendEngine"
 		validationMode="onSubmit"
 		data={{
-			fields: [args],
+			fields: [args, SubmitButtonStorybook],
 		}}
 	/>
 );

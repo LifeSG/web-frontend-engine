@@ -1,20 +1,11 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
 import styled from "styled-components";
-import { FrontendEngine, ISelectSchema, Select } from "../../..";
-import { ExcludeReactFormHookProps } from "../../common";
-
-const ExcludeDefaultProps = {
-	type: { table: { disable: true } },
-	id: { table: { disable: true } },
-	title: { table: { disable: true } },
-	options: { table: { disable: true } },
-};
+import { FrontendEngine, ISelectSchema } from "../../..";
+import { ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/Select",
-	component: Select,
 	parameters: {
 		docs: {
 			page: () => (
@@ -30,43 +21,84 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...ExcludeDefaultProps,
-		schema: {
-			description:
-				"Acual component props, it is same as the schema used to define the field through the JSON schema",
+		type: {
+			description: "Use <code>SELECT</code> to show this field",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
+			type: { name: "string", required: true },
+			options: ["SELECT"],
+			control: {
+				type: "select",
+			},
 		},
-		"schema.id": {
+		id: {
 			description: "The unique identifier of the component",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
+			type: { name: "string", required: true },
+			control: {
+				type: "text",
+			},
 		},
-		"schema.title": {
+		title: {
 			description: "A name/description of the purpose of the form element",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
+			control: {
+				type: "text",
+			},
 		},
-		"schema.disabled": {
+		disabled: {
 			description: "Specifies if the input should be disabled",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+			options: ["true", "false"],
+			control: {
+				type: "select",
+			},
 		},
-		"schema.options": {
+		options: {
 			description: "A list of options that a user can choose from",
+			table: {
+				type: {
+					summary: "string[]",
+				},
+			},
+			type: { name: "object", value: {} },
 		},
-		"schema.placeholder": {
+		placeholder: {
 			description: "Specifies the placeholder text",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
+			},
 		},
-		"schema.listStyleWidth": {
+		listStyleWidth: {
 			description: "Style option: The width of the options. You can specify e.g. 100% or 12rem",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
+			},
 		},
 	},
 } as Meta;
@@ -76,7 +108,7 @@ const Template: Story<ISelectSchema> = (args) => (
 		id="frontendEngine"
 		validationMode="onSubmit"
 		data={{
-			fields: [args],
+			fields: [args, SubmitButtonStorybook],
 		}}
 	/>
 );
@@ -114,6 +146,24 @@ CustomWidth.args = {
 	title: "Fruits",
 	options: ["Apple", "Berry", "Cherry"],
 	listStyleWidth: "12rem",
+};
+
+export const WithValidation = Template.bind({});
+WithValidation.args = {
+	type: "SELECT",
+	id: "select-with-validation",
+	title: "Fruits",
+	options: ["Apple", "Berry", "Cherry"],
+	validation: [{ required: true }],
+};
+
+export const DefaultValue = Template.bind({});
+DefaultValue.args = {
+	type: "SELECT",
+	id: "select-with-default-value",
+	title: "Fruits",
+	options: ["Apple", "Berry", "Cherry"],
+	defaultValue: "Apple",
 };
 
 const StyledForm = styled(FrontendEngine)`

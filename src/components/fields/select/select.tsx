@@ -1,6 +1,7 @@
 import { Form, InputSelect } from "@lifesg/react-design-system";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ISelectRef, ISelectSchema } from "./types";
@@ -10,14 +11,15 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, title, disabled, options, placeholder, listStyleWidth, validation },
+		schema: { id, title, validation, ...otherSchema },
+		name,
+		value,
 		onChange,
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string>("");
+	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
 	const { setFieldValidationConfig } = useValidationSchema();
-
 	// ================================================
 	// EFFECTS
 	// ================================================
@@ -25,6 +27,10 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		setStateValue(value);
+	}, [value]);
 
 	// =============================================================================
 	// EVENT HANDLER
@@ -41,13 +47,11 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	return (
 		<Form.CustomField {...otherProps} id={id} label={title} errorMessage={otherProps.error?.message}>
 			<InputSelect
-				id={id}
+				{...otherSchema}
+				id={TestHelper.generateId(id, "select")}
+				name={name}
 				onSelectOption={handleChange}
 				selectedOption={stateValue}
-				options={options}
-				placeholder={placeholder}
-				listStyleWidth={listStyleWidth}
-				disabled={disabled}
 			/>
 		</Form.CustomField>
 	);
