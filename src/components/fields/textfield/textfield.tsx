@@ -5,7 +5,7 @@ import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ITextfieldSchema, TInputMode } from "./types";
 
-export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<ITextfieldSchema>>((props, ref) => {
+export const TextField = (props: IGenericFieldProps<ITextfieldSchema>) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
@@ -78,7 +78,6 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 		<Form.Input
 			{...otherSchema}
 			{...otherProps}
-			ref={ref}
 			id={id}
 			label={title}
 			inputMode={formatInputMode()}
@@ -87,4 +86,4 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 			errorMessage={otherProps.error?.message}
 		/>
 	);
-});
+};

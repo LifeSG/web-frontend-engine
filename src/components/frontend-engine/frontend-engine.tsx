@@ -1,12 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as FrontendEngineFields from "../fields";
 import {
 	FieldType,
 	IFrontendEngineProps,
 	IFrontendEngineRef,
+	IGenericFieldProps,
 	TFrontendEngineFieldSchema,
 	TFrontendEngineValues,
 } from "./types";
@@ -32,46 +33,40 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const [fields, setFields] = useState<JSX.Element[]>([]);
 	const { validationSchema } = useValidationSchema();
 
-	const {
-		control,
-		watch,
-		formState,
-		handleSubmit: reactFormHookSubmit,
-	} = useForm({
+	const formMethods = useForm({
 		mode: validationMode,
 		reValidateMode: revalidationMode,
-		defaultValues,
+		defaultValues: defaultValues,
 		resolver: yupResolver(validationSchema),
 	});
+	const { control, watch, handleSubmit: reactFormHookSubmit, formState } = formMethods;
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-	const buildFieldsFromSchema = useCallback(
-		(fields: TFrontendEngineFieldSchema[]) =>
-			fields.map((customField) => {
-				if (Object.keys(FieldType).includes(customField.type)) {
-					const Field = FrontendEngineFields[FieldType[customField.type]];
-
-					return (
-						<Controller
-							control={control}
-							key={customField.id}
-							name={customField.id}
-							render={({ field, fieldState }) => (
-								<Field schema={customField} {...field} {...fieldState} />
-							)}
-						/>
-					);
-				}
-				return <div key={customField.id}>This component is not supported by the engine</div>;
-			}),
-		[control]
-	);
-
 	useEffect(() => {
-		setFields(buildFieldsFromSchema(fieldData));
-	}, [buildFieldsFromSchema, fieldData]);
+		const fieldComponents = fieldData.map((customField) => {
+			if (Object.keys(FieldType).includes(customField.type)) {
+				const Field = FrontendEngineFields[FieldType[customField.type]] as React.ForwardRefExoticComponent<
+					IGenericFieldProps<TFrontendEngineFieldSchema>
+				>;
+
+				return (
+					<Controller
+						control={control}
+						key={customField.id}
+						name={customField.id}
+						render={({ field, fieldState }) => {
+							const fieldProps = { ...field, ref: undefined }; // not passing ref because not all components have fields to be manipulated
+							return <Field schema={customField} {...fieldProps} {...fieldState} />;
+						}}
+					/>
+				);
+			}
+			return <div key={customField.id}>This component is not supported by the engine</div>;
+		});
+		setFields(fieldComponents);
+	}, [fieldData, control]);
 
 	// TODO: Remove logging
 	useEffect(() => {
@@ -103,16 +98,18 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const formId = id ? `frontend-engine-${id}` : "frontend-engine";
 
 	return (
-		<form
-			id={formId}
-			data-testid={formId}
-			className={`${className} ${dataClassName}`}
-			noValidate
-			onSubmit={reactFormHookSubmit(handleSubmit)}
-			ref={ref}
-		>
-			{fields}
-		</form>
+		<FormProvider {...formMethods}>
+			<form
+				id={formId}
+				data-testid={formId}
+				className={`${className} ${dataClassName}`}
+				noValidate
+				onSubmit={reactFormHookSubmit(handleSubmit)}
+				ref={ref}
+			>
+				{fields}
+			</form>
+		</FormProvider>
 	);
 });
 
