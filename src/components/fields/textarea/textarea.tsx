@@ -39,7 +39,9 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 	}, []);
 
 	useEffect(() => {
-		setStateValue(value);
+		if (value) {
+			setStateValue(value);
+		}
 	}, [value]);
 
 	// =============================================================================

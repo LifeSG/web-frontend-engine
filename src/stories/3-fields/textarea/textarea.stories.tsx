@@ -147,12 +147,12 @@ Default.args = {
 	title: "Textarea",
 };
 
-export const WithCounter = Template.bind({});
-WithCounter.args = {
+export const DefaultValue = Template.bind({});
+DefaultValue.args = {
 	type: "TEXTAREA",
-	id: "textarea-with-counter",
-	title: "Textarea with counter",
-	maxLength: 5,
+	id: "textarea-default-value",
+	title: "Textarea",
+	defaultValue: "This is a default value",
 };
 
 export const AllowResize = Template.bind({});
@@ -162,6 +162,14 @@ AllowResize.args = {
 	title: "Resizable textarea",
 	resizable: true,
 	rows: 3,
+};
+
+export const WithCounter = Template.bind({});
+WithCounter.args = {
+	type: "TEXTAREA",
+	id: "textarea-with-counter",
+	title: "Textarea with counter",
+	maxLength: 5,
 };
 
 export const WithPills = Template.bind({});

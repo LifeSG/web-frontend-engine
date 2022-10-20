@@ -1,19 +1,10 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
-import { FrontendEngine, ISubmitButtonSchema, SubmitButton } from "../../..";
+import { FrontendEngine, ISubmitButtonSchema } from "../../..";
 import { ExcludeReactFormHookProps } from "../../common";
-
-const ExcludeDefaultProps = {
-	type: { table: { disable: true } },
-	id: { table: { disable: true } },
-	title: { table: { disable: true } },
-	onClick: { table: { disable: true } },
-};
 
 export default {
 	title: "Field/SubmitButton",
-	component: SubmitButton,
 	parameters: {
 		docs: {
 			page: () => (
@@ -34,42 +25,65 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...ExcludeDefaultProps,
-		schema: {
-			description:
-				"Acual component props, it is same as the schema used to define the field through the JSON schema",
+		type: {
+			description: "Use <code>SUBMIT</code> to show this field",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
+			type: { name: "string", required: true },
+			options: ["SUBMIT"],
+			control: {
+				type: "select",
+			},
 		},
-		"schema.id": {
+		id: {
 			description: "The unique identifier of the component",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
-		},
-		"schema.title": {
-			description: "The label of the SubmitButton",
-			table: {
-				type: {
-					summary: "React.ReactNode | string",
-				},
+			type: { name: "string", required: true },
+			control: {
+				type: "text",
 			},
 		},
-		"schema.styleType": {
+		title: {
+			description: "A name/description of the purpose of the form element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
+			},
+		},
+		styleType: {
 			description: "The style type of the button",
 			table: {
 				type: {
 					summary: "default | secondary | light | link",
 				},
 			},
+			options: ["default", "secondary", "light", "link"],
+			control: {
+				type: "select",
+			},
 		},
-		"schema.disabled": {
+		disabled: {
 			description: "Specifies if the button is interactable",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+			options: [true, false],
+			control: {
+				type: "select",
+			},
 		},
 	},
 } as Meta;
@@ -87,24 +101,22 @@ const Template: Story<ISubmitButtonSchema> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	type: "SUBMIT",
-	id: "submitbutton-default",
+	id: "submit-button-default",
 	title: "Submit",
-	onClick: () => alert("Submitted"),
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
 	type: "SUBMIT",
-	id: "submitbutton-disabled",
-	title: "Submit (disabled)",
+	id: "submit-button-disabled",
+	title: "Submit",
 	disabled: true,
 };
 
 export const Styled = Template.bind({});
 Styled.args = {
 	type: "SUBMIT",
-	id: "submitbutton-default",
+	id: "submit-button-styled",
 	title: "Submit",
-	onClick: () => alert("Submitted"),
-	styleType: "light",
+	styleType: "secondary",
 };

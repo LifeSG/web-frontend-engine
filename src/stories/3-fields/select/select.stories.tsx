@@ -64,7 +64,7 @@ export default {
 					summary: "boolean",
 				},
 			},
-			options: ["true", "false"],
+			options: [true, false],
 			control: {
 				type: "select",
 			},
@@ -121,6 +121,15 @@ Default.args = {
 	options: [1, 2, 3],
 };
 
+export const DefaultValue = Template.bind({});
+DefaultValue.args = {
+	type: "SELECT",
+	id: "select-default-value",
+	title: "Fruits",
+	options: ["Apple", "Berry", "Cherry"],
+	defaultValue: "Apple",
+};
+
 export const Disabled = Template.bind({});
 Disabled.args = {
 	type: "SELECT",
@@ -128,15 +137,6 @@ Disabled.args = {
 	title: "Fruits",
 	options: ["Apple", "Berry", "Cherry"],
 	disabled: true,
-};
-
-export const CustomPlaceholder = Template.bind({});
-CustomPlaceholder.args = {
-	type: "SELECT",
-	id: "select-custom-placeholder",
-	title: "Fruits",
-	options: ["Apple", "Berry", "Cherry"],
-	placeholder: "Select your fruit",
 };
 
 export const CustomWidth = Template.bind({});
@@ -148,6 +148,15 @@ CustomWidth.args = {
 	listStyleWidth: "12rem",
 };
 
+export const Placeholder = Template.bind({});
+Placeholder.args = {
+	type: "SELECT",
+	id: "select-placeholder",
+	title: "Fruits",
+	options: ["Apple", "Berry", "Cherry"],
+	placeholder: "Select your fruit",
+};
+
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	type: "SELECT",
@@ -155,15 +164,6 @@ WithValidation.args = {
 	title: "Fruits",
 	options: ["Apple", "Berry", "Cherry"],
 	validation: [{ required: true }],
-};
-
-export const DefaultValue = Template.bind({});
-DefaultValue.args = {
-	type: "SELECT",
-	id: "select-with-default-value",
-	title: "Fruits",
-	options: ["Apple", "Berry", "Cherry"],
-	defaultValue: "Apple",
 };
 
 const StyledForm = styled(FrontendEngine)`

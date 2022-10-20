@@ -10,9 +10,7 @@ export default {
 			page: () => (
 				<>
 					<Title>TextField</Title>
-					<Description>
-						A form element that renders a multi-line textfield component with optional suggestion pills
-					</Description>
+					<Description>A form element that contains a label, input and error message</Description>
 					<Heading>Props</Heading>
 					<Description>
 						This component also inherits the
@@ -27,6 +25,18 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
+		id: {
+			description: "The unique identifier of the component",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			type: { name: "string", required: true },
+			control: {
+				type: "text",
+			},
+		},
 		type: {
 			description: "Use <code>TEXTFIELD</code> to show this field",
 			table: {
@@ -40,31 +50,8 @@ export default {
 				type: "select",
 			},
 		},
-		id: {
-			description: "The unique identifier of the component",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			type: { name: "string", required: true },
-			control: {
-				type: "text",
-			},
-		},
 		title: {
 			description: "A name/description of the purpose of the form element",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
-		errorMessage: {
-			description: "A message that describes the error/issue with the value of the form element",
 			table: {
 				type: {
 					summary: "string",
@@ -83,6 +70,17 @@ export default {
 			},
 			control: {
 				type: "number",
+			},
+		},
+		placeholder: {
+			description: "Specifies the placeholder text",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
 			},
 		},
 	},
@@ -105,10 +103,56 @@ Default.args = {
 	type: "TEXT",
 };
 
+export const DefaultValue = Template.bind({});
+DefaultValue.args = {
+	id: "textfield-default-value",
+	title: "Textfield",
+	type: "TEXT",
+	defaultValue: "Default",
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+	id: "textfield-disabled",
+	title: "Textfield",
+	type: "TEXT",
+	disabled: true,
+};
+
+export const Email = Template.bind({});
+Email.args = {
+	id: "textfield-email",
+	title: "Textfield (Email)",
+	type: "EMAIL",
+};
+
+export const MaxLength = Template.bind({});
+MaxLength.args = {
+	id: "textfield-maxlength",
+	title: "Textfield",
+	type: "TEXT",
+	maxLength: 5,
+};
+
+export const Number = Template.bind({});
+Number.args = {
+	id: "textfield-number",
+	title: "Textfield (Number)",
+	type: "NUMBER",
+};
+
+export const Placeholder = Template.bind({});
+Placeholder.args = {
+	id: "textfield-placeholder",
+	title: "Textfield",
+	type: "TEXT",
+	placeholder: "Enter text here",
+};
+
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	id: "textfield-with-validation",
-	title: "Textfield with Validation",
+	title: "Textfield",
 	type: "TEXT",
 	validation: [{ required: true }],
 };
