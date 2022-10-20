@@ -11,7 +11,7 @@ export const SubmitButton = React.forwardRef<HTMLButtonElement, IGenericFieldPro
 		// CONST, STATE, REF
 		// =============================================================================
 		const {
-			schema: { id, title, disabled, styleType, onClick },
+			schema: { id, title, disabled, styleType, onClick, ...otherSchema },
 			...otherProps
 		} = props;
 		const { setFieldValidationConfig } = useValidationSchema();
@@ -23,6 +23,7 @@ export const SubmitButton = React.forwardRef<HTMLButtonElement, IGenericFieldPro
 
 		return (
 			<Button.Default
+				{...otherSchema}
 				{...otherProps}
 				styleType={styleType}
 				ref={ref}

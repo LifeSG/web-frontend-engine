@@ -10,7 +10,7 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, title, type, value, maxLength, inputMode, validation },
+		schema: { id, title, type, value, maxLength, inputMode, validation, ...otherSchema },
 		onChange,
 		...otherProps
 	} = props;
@@ -37,6 +37,7 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 
 	return (
 		<Form.Input
+			{...otherSchema}
 			{...otherProps}
 			ref={ref}
 			id={id}

@@ -1,6 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
+import styled from "styled-components";
 import { FrontendEngine, ISelectSchema, Select } from "../../..";
 import { ExcludeReactFormHookProps } from "../../common";
 
@@ -71,7 +72,7 @@ export default {
 } as Meta;
 
 const Template: Story<ISelectSchema> = (args) => (
-	<FrontendEngine
+	<StyledForm
 		id="frontendEngine"
 		validationMode="onSubmit"
 		data={{
@@ -114,3 +115,7 @@ CustomWidth.args = {
 	options: ["Apple", "Berry", "Cherry"],
 	listStyleWidth: "12rem",
 };
+
+const StyledForm = styled(FrontendEngine)`
+	width: 300px;
+`;
