@@ -1,5 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
 import {
+	IDateInputSchema,
 	IEmailSchema,
 	IMultiSelectSchema,
 	INumberSchema,
@@ -38,6 +39,7 @@ export type TFrontendEngineFieldSchema =
 	| ISubmitButtonSchema
 	| ISelectSchema
 	| IMultiSelectSchema
+	| IDateInputSchema
 	| IWrapperSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
@@ -70,6 +72,7 @@ export enum EFieldType {
 	SUBMIT = "SubmitButton",
 	SELECT = "Select",
 	"MULTI-SELECT" = "MultiSelect",
+	DATE = "DateInput",
 	DIV = "Wrapper",
 	SPAN = "Wrapper",
 	SECTION = "Wrapper",
