@@ -24,7 +24,10 @@
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^2.9.8",
-		"@lifesg/react-design-system": "^1.0.0-alpha.3",
+		"@js-joda/core": "^5.4.2",
+		"@js-joda/locale_en": "^4.8.6",
+		"@js-joda/timezone": "^2.15.0",
+		"@lifesg/react-design-system": "^1.0.0-alpha.7",
 		"lodash": "^4.17.21",
 		"react-hook-form": "^7.34.2",
 		"styled-components": "^5.3.6",
