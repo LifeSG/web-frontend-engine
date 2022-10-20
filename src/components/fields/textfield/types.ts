@@ -1,10 +1,11 @@
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
-import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
+import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
 import { IValidationRule } from "../../frontend-engine/validation-schema/types";
 
-export interface ITextfieldSchema extends IFrontendEngineBaseFieldJsonSchema, FormInputProps {
+export interface ITextfieldSchema
+	extends IFrontendEngineBaseFieldJsonSchema<"TEXT" | "NUMBER" | "EMAIL">,
+		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys> {
 	id: string;
-	type: "TEXT" | "NUMBER" | "EMAIL";
 	title: string;
 	validation: IValidationRule[];
 }

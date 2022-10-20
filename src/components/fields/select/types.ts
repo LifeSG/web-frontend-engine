@@ -5,7 +5,5 @@ import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaK
 export interface ISelectRef extends BaseFormElementProps, InputSelectProps<string, string> {}
 
 export interface ISelectSchema
-	extends IFrontendEngineBaseFieldJsonSchema,
-		Omit<InputSelectProps<unknown, unknown>, TFrontendEngineBaseFieldJsonSchemaKeys> {
-	type: "SELECT";
-}
+	extends IFrontendEngineBaseFieldJsonSchema<"SELECT">,
+		Omit<InputSelectProps<unknown, unknown>, TFrontendEngineBaseFieldJsonSchemaKeys> {}

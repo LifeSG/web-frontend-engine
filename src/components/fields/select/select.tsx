@@ -15,7 +15,7 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string | number | readonly string[]>("");
+	const [stateValue, setStateValue] = useState<string>("");
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// ================================================
@@ -29,7 +29,7 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	// =============================================================================
 	// EVENT HANDLER
 	// =============================================================================
-	const handleChange = (_, extractedValue) => {
+	const handleChange = (_, extractedValue: string): void => {
 		setStateValue(extractedValue);
 		onChange({
 			target: {

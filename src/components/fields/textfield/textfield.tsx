@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system";
-import React, { useEffect, useState } from "react";
+import React, { HTMLAttributes, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
@@ -10,7 +10,7 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, title, type, value, maxLength, inputMode, validation, ...otherSchema },
+		schema: { id, title, type, value, validation, ...otherSchema },
 		onChange,
 		...otherProps
 	} = props;
@@ -30,9 +30,13 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 	// =============================================================================
 	// EVENT HANDLER
 	// =============================================================================
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
 		setStateValue(event.target.value);
 		onChange(event);
+	};
+
+	const formatInputType = (): Extract<HTMLAttributes<HTMLInputElement>, "inputMode"> => {
+		return type.toLowerCase() as Extract<HTMLAttributes<HTMLInputElement>, "inputMode">;
 	};
 
 	return (
@@ -42,8 +46,7 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 			ref={ref}
 			id={id}
 			label={title}
-			maxLength={maxLength}
-			inputMode={inputMode}
+			inputMode={formatInputType()}
 			onChange={handleChange}
 			value={stateValue}
 			errorMessage={otherProps.error?.message}
