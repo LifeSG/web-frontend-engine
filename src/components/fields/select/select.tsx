@@ -11,7 +11,7 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, title, validation, ...otherSchema },
+		schema: { id, title, validation, defaultValue, ...otherSchema },
 		name,
 		value,
 		onChange,
@@ -29,7 +29,17 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	}, []);
 
 	useEffect(() => {
-		setStateValue(value);
+		if (defaultValue) {
+			setStateValue(defaultValue);
+			onChange({ target: { value: defaultValue } });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		if (value) {
+			setStateValue(value);
+		}
 	}, [value]);
 
 	// =============================================================================

@@ -10,7 +10,8 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, title, type, value, validation, ...otherSchema },
+		schema: { id, title, type, validation, defaultValue, ...otherSchema },
+		value,
 		onChange,
 		...otherProps
 	} = props;
@@ -22,10 +23,35 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 	// EFFECTS
 	// ================================================
 	useEffect(() => {
-		const isString = type !== "NUMBER";
-		setFieldValidationConfig(id, isString ? Yup.string() : Yup.number(), validation);
+		switch (type) {
+			case "NUMBER":
+				setFieldValidationConfig(id, Yup.number(), validation);
+				break;
+			case "EMAIL":
+				setFieldValidationConfig(id, Yup.string().email(), validation);
+				break;
+			case "TEXT":
+				setFieldValidationConfig(id, Yup.string(), validation);
+				break;
+			default:
+				break;
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		if (defaultValue) {
+			setStateValue(defaultValue);
+			onChange({ target: { value: defaultValue } });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		if (value) {
+			setStateValue(value);
+		}
+	}, [value]);
 
 	// =============================================================================
 	// EVENT HANDLER

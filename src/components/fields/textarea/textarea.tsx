@@ -1,7 +1,6 @@
 import { Form } from "@lifesg/react-design-system";
 import { kebabCase } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
 import { InteractionHelper, TestHelper } from "../../../utils";
@@ -14,14 +13,13 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, id, title, validation },
+		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, id, title, validation, defaultValue },
 		name,
 		onChange,
 		value,
 		...otherProps
 	} = props;
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
-	const { setValue } = useForm();
 	const innerRef = useRef<HTMLTextAreaElement>(null);
 	const { setFieldValidationConfig } = useValidationSchema();
 
@@ -34,12 +32,15 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 	}, []);
 
 	useEffect(() => {
-		setStateValue(value);
-	}, [value]);
+		if (defaultValue) {
+			setStateValue(defaultValue);
+			onChange({ target: { value: defaultValue } });
+		}
+	}, []);
 
 	useEffect(() => {
-		setValue(name, stateValue);
-	}, [name, setValue, stateValue]);
+		setStateValue(value);
+	}, [value]);
 
 	// =============================================================================
 	// EVENT HANDLER
