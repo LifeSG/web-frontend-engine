@@ -1,6 +1,7 @@
 import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
 import {
 	IEmailSchema,
+	IMultiSelectSchema,
 	INumberSchema,
 	ISelectSchema,
 	ISubmitButtonSchema,
@@ -34,7 +35,8 @@ export type TFrontendEngineFieldSchema =
 	| IEmailSchema
 	| INumberSchema
 	| ISubmitButtonSchema
-	| ISelectSchema;
+	| ISelectSchema
+	| IMultiSelectSchema;
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export type TValidationMode = keyof ValidationMode;
@@ -64,6 +66,7 @@ export enum FieldType {
 	EMAIL = "TextField",
 	SUBMIT = "SubmitButton",
 	SELECT = "Select",
+	MULTISELECT = "MultiSelect",
 }
 
 // =============================================================================
