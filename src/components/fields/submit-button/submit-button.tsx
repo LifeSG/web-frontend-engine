@@ -16,6 +16,9 @@ export const SubmitButton = React.forwardRef<HTMLButtonElement, IGenericFieldPro
 		} = props;
 		const { setFieldValidationConfig } = useValidationSchema();
 
+		// =============================================================================
+		// EFFECTS
+		// =============================================================================
 		useEffect(() => {
 			setFieldValidationConfig(id, Yup.mixed());
 			// eslint-disable-next-line react-hooks/exhaustive-deps

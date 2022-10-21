@@ -11,7 +11,7 @@ export default {
 			page: () => (
 				<>
 					<Title>Select</Title>
-					<Description>This component provides a set of options for use to select</Description>
+					<Description>This component provides a set of options for user to select</Description>
 					<Heading>Props</Heading>
 					<ArgsTable story={PRIMARY_STORY} />
 					<Stories includePrimary={true} title="Examples" />

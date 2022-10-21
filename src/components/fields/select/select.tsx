@@ -7,9 +7,9 @@ import { IGenericFieldProps } from "../../frontend-engine";
 import { ISelectRef, ISelectSchema } from "./types";
 
 export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSchema>>((props, ref) => {
-	// ================================================
+	// =============================================================================
 	// CONST, STATE, REFS
-	// ================================================
+	// =============================================================================
 	const {
 		schema: { id, title, validation, ...otherSchema },
 		name,
@@ -20,9 +20,10 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const { setFieldValidationConfig } = useValidationSchema();
-	// ================================================
+
+	// =============================================================================
 	// EFFECTS
-	// ================================================
+	// =============================================================================
 	useEffect(() => {
 		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -35,7 +36,7 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	}, [value]);
 
 	// =============================================================================
-	// EVENT HANDLER
+	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (_, extractedValue: string): void => {
 		setStateValue(extractedValue);

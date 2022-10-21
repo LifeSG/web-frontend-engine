@@ -46,13 +46,16 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 	}, [value]);
 
 	// =============================================================================
-	// EVENT HANDLER
+	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
 		setStateValue(event.target.value);
 		onChange(event);
 	};
 
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
 	const formatInputMode = () => {
 		let { inputMode } = "none" as TInputMode;
 

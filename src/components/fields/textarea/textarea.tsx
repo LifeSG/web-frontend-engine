@@ -38,7 +38,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 	}, [value]);
 
 	// =============================================================================
-	// EVENT HANDLER
+	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setStateValue(event.target.value);
