@@ -11,28 +11,20 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, title, validation, defaultValue, ...otherSchema },
+		schema: { id, title, validation, ...otherSchema },
 		name,
 		value,
 		onChange,
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
+	const [stateValue, setStateValue] = useState<string>(value || "");
 	const { setFieldValidationConfig } = useValidationSchema();
 	// ================================================
 	// EFFECTS
 	// ================================================
 	useEffect(() => {
 		setFieldValidationConfig(id, Yup.string(), validation);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		if (defaultValue) {
-			setStateValue(defaultValue);
-			onChange({ target: { value: defaultValue } });
-		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

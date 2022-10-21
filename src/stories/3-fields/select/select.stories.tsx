@@ -66,8 +66,9 @@ export default {
 			},
 			options: [true, false],
 			control: {
-				type: "select",
+				type: "boolean",
 			},
+			defaultValue: false,
 		},
 		options: {
 			description: "A list of options that a user can choose from",
@@ -110,6 +111,9 @@ const Template: Story<ISelectSchema> = (args) => (
 		data={{
 			fields: [args, SubmitButtonStorybook],
 		}}
+		defaultValues={{
+			"select-default-value": "Apple",
+		}}
 	/>
 );
 
@@ -127,7 +131,6 @@ DefaultValue.args = {
 	id: "select-default-value",
 	title: "Fruits",
 	options: ["Apple", "Berry", "Cherry"],
-	defaultValue: "Apple",
 };
 
 export const Disabled = Template.bind({});

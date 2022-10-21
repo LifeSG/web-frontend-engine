@@ -82,8 +82,9 @@ export default {
 			},
 			options: [true, false],
 			control: {
-				type: "select",
+				type: "boolean",
 			},
+			defaultValue: false,
 		},
 	},
 } as Meta;

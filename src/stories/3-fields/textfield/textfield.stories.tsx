@@ -38,14 +38,14 @@ export default {
 			},
 		},
 		type: {
-			description: "Use <code>TEXTFIELD</code> to show this field",
+			description: "Use <code>TEXT</code> to show this field",
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
 			type: { name: "string", required: true },
-			options: ["TEXTFIELD"],
+			options: ["TEXT"],
 			control: {
 				type: "select",
 			},
@@ -83,6 +83,19 @@ export default {
 				type: "text",
 			},
 		},
+		disabled: {
+			description: "Specifies if the textfield is interactable",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+			defaultValue: false,
+		},
 	},
 } as Meta;
 
@@ -92,6 +105,9 @@ const Template: Story<ITextfieldSchema> = (args) => (
 		validationMode="onSubmit"
 		data={{
 			fields: [args, SubmitButtonStorybook],
+		}}
+		defaultValues={{
+			"textfield-default-value": "This is the default value",
 		}}
 	/>
 );
@@ -108,7 +124,6 @@ DefaultValue.args = {
 	id: "textfield-default-value",
 	title: "Textfield",
 	type: "TEXT",
-	defaultValue: "Default",
 };
 
 export const Disabled = Template.bind({});

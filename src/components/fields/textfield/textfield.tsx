@@ -1,16 +1,16 @@
 import { Form } from "@lifesg/react-design-system";
-import React, { HTMLAttributes, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ITextfieldSchema } from "./types";
+import { ITextfieldSchema, TInputMode } from "./types";
 
 export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<ITextfieldSchema>>((props, ref) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, title, type, validation, defaultValue, ...otherSchema },
+		schema: { id, title, type, validation, ...otherSchema },
 		value,
 		onChange,
 		...otherProps
@@ -40,14 +40,6 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 	}, []);
 
 	useEffect(() => {
-		if (defaultValue) {
-			setStateValue(defaultValue);
-			onChange({ target: { value: defaultValue } });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
 		if (value) {
 			setStateValue(value);
 		}
@@ -61,8 +53,22 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 		onChange(event);
 	};
 
-	const formatInputType = (): Extract<HTMLAttributes<HTMLInputElement>, "inputMode"> => {
-		return type.toLowerCase() as Extract<HTMLAttributes<HTMLInputElement>, "inputMode">;
+	const formatInputMode = () => {
+		let { inputMode } = "none" as TInputMode;
+
+		switch (type) {
+			case "NUMBER":
+				inputMode = "numeric";
+				break;
+			case "EMAIL":
+				inputMode = "email";
+				break;
+			case "TEXT":
+				inputMode = "text";
+				break;
+		}
+
+		return inputMode;
 	};
 
 	return (
@@ -72,7 +78,7 @@ export const TextField = React.forwardRef<HTMLInputElement, IGenericFieldProps<I
 			ref={ref}
 			id={id}
 			label={title}
-			inputMode={formatInputType()}
+			inputMode={formatInputMode()}
 			onChange={handleChange}
 			value={stateValue}
 			errorMessage={otherProps.error?.message}

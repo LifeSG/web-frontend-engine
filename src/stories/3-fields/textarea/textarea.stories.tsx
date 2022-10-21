@@ -137,6 +137,9 @@ const Template: Story<ITextareaSchema> = (args) => (
 		data={{
 			fields: [args, SubmitButtonStorybook],
 		}}
+		defaultValues={{
+			"textarea-default-value": "This is the default value",
+		}}
 	/>
 );
 
@@ -152,7 +155,6 @@ DefaultValue.args = {
 	type: "TEXTAREA",
 	id: "textarea-default-value",
 	title: "Textarea",
-	defaultValue: "This is a default value",
 };
 
 export const AllowResize = Template.bind({});

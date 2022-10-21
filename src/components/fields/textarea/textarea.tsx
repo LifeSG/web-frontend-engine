@@ -13,7 +13,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, id, title, validation, defaultValue },
+		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, id, title, validation },
 		name,
 		onChange,
 		value,
@@ -29,13 +29,6 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, IGenericFieldProps
 	useEffect(() => {
 		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		if (defaultValue) {
-			setStateValue(defaultValue);
-			onChange({ target: { value: defaultValue } });
-		}
 	}, []);
 
 	useEffect(() => {
