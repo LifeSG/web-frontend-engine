@@ -99,7 +99,7 @@ export default {
 		},
 		maxLength: {
 			description:
-				"Maximum number of characters that can go into the textarea. (Inherited from HTMLTextAreaElement)",
+				"Maximum number of characters that can go into the textarea. (Inherited from HTMLTextAreaElement). This brings up the character counter under the field.",
 			table: {
 				type: {
 					summary: "number",
@@ -200,4 +200,12 @@ WithValidation.args = {
 	id: "textarea-with-validation",
 	title: "Textarea with validation",
 	validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }],
+};
+
+export const WithPlaceholder = Template.bind({});
+WithPlaceholder.args = {
+	type: "TEXTAREA",
+	id: "textarea-with-placeholder",
+	title: "Textarea with placeholder",
+	placeholder: "Enter something...",
 };
