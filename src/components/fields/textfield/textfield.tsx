@@ -37,7 +37,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema>) => {
 				break;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [validation]);
 
 	useEffect(() => {
 		if (value) {

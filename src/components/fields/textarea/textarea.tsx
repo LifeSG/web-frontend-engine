@@ -28,7 +28,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	useEffect(() => {
 		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [validation]);
 
 	useEffect(() => {
 		if (value) {
