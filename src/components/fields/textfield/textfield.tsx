@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ITextfieldSchema, TInputMode } from "./types";
+import { ITextfieldSchema } from "./types";
 
 export const TextField = (props: IGenericFieldProps<ITextfieldSchema>) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, title, type, validation, ...otherSchema },
+		schema: { id, inputMode, title, type, validation, ...otherSchema },
 		value,
 		onChange,
 		...otherProps
@@ -56,22 +56,18 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema>) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const formatInputMode = () => {
-		let { inputMode } = "none" as TInputMode;
-
+	const formatInputMode = (): React.HTMLAttributes<HTMLInputElement>["inputMode"] => {
+		if (inputMode) return inputMode;
 		switch (type) {
 			case "NUMBER":
-				inputMode = "numeric";
-				break;
+				return "numeric";
 			case "EMAIL":
-				inputMode = "email";
-				break;
+				return "email";
 			case "TEXT":
-				inputMode = "text";
-				break;
+				return "text";
+			default:
+				return "none";
 		}
-
-		return inputMode;
 	};
 
 	return (
