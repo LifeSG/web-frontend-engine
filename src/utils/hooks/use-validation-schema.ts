@@ -14,7 +14,9 @@ export const useValidationSchema = () => {
 	const [validationSchema, setValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>();
 
 	useEffect(() => {
-		if (formValidationConfig) setValidationSchema(ValidationSchemaUtils.buildYupSchema(formValidationConfig));
+		if (formValidationConfig) {
+			setValidationSchema(ValidationSchemaUtils.buildYupSchema(formValidationConfig));
+		}
 	}, [formValidationConfig]);
 
 	/**
@@ -24,10 +26,10 @@ export const useValidationSchema = () => {
 	 * @param validationRules array validation rules passed from JSON
 	 */
 	const setFieldValidationConfig = (id: string, schema: Yup.AnySchema, validationRules: IValidationRule[] = []) => {
-		setFormValidationConfig({
-			...formValidationConfig,
+		setFormValidationConfig((oldConfig) => ({
+			...oldConfig,
 			[id]: { schema, validationRules },
-		});
+		}));
 	};
 
 	return { validationSchema, formValidationConfig, setFieldValidationConfig };

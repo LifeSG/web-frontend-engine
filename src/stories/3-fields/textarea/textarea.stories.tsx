@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
 import { FrontendEngine, ITextareaSchema } from "../../..";
-import { ExcludeReactFormHookProps } from "../../common";
+import { ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/TextArea",
@@ -136,7 +135,10 @@ const Template: Story<ITextareaSchema> = (args) => (
 		id="frontendEngine"
 		validationMode="onSubmit"
 		data={{
-			fields: [args],
+			fields: [args, SubmitButtonStorybook],
+		}}
+		defaultValues={{
+			"textarea-default-value": "This is the default value",
 		}}
 	/>
 );
@@ -148,12 +150,11 @@ Default.args = {
 	title: "Textarea",
 };
 
-export const WithCounter = Template.bind({});
-WithCounter.args = {
+export const DefaultValue = Template.bind({});
+DefaultValue.args = {
 	type: "TEXTAREA",
-	id: "textarea-with-counter",
-	title: "Textarea with counter",
-	maxLength: 5,
+	id: "textarea-default-value",
+	title: "Textarea",
 };
 
 export const AllowResize = Template.bind({});
@@ -163,6 +164,14 @@ AllowResize.args = {
 	title: "Resizable textarea",
 	resizable: true,
 	rows: 3,
+};
+
+export const WithCounter = Template.bind({});
+WithCounter.args = {
+	type: "TEXTAREA",
+	id: "textarea-with-counter",
+	title: "Textarea with counter",
+	maxLength: 5,
 };
 
 export const WithPills = Template.bind({});

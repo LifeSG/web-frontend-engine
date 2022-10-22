@@ -1,3 +1,5 @@
+import { ISubmitButtonSchema } from "../components";
+
 export const ExcludeReactFormHookProps = {
 	invalid: { table: { disable: true } },
 	isTouched: { table: { disable: true } },
@@ -7,4 +9,10 @@ export const ExcludeReactFormHookProps = {
 	onBlur: { table: { disable: true } },
 	value: { table: { disable: true } },
 	name: { table: { disable: true } },
+};
+
+export const SubmitButtonStorybook: ISubmitButtonSchema = {
+	type: "SUBMIT",
+	id: "submit-button",
+	title: "Submit",
 };

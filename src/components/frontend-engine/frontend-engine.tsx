@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as FrontendEngineFields from "..";
@@ -102,7 +102,6 @@ const FrontendEngineInner = (props: IFrontendEngineProps) => {
 			onSubmit={reactFormHookSubmit(handleOnSubmit)}
 		>
 			{fields}
-			<input type="submit" />
 		</StyledForm>
 	);
 };

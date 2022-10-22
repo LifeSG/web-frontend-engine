@@ -1,6 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
 import { AnyObjectSchema } from "yup";
-import { ITextareaSchema } from "../fields/textarea/types";
+import { ISelectSchema, ISubmitButtonSchema, ITextareaSchema, ITextfieldSchema } from "../fields";
 import { IValidationRule } from "./validation-schema/types";
 
 // ================================================
@@ -35,7 +35,7 @@ export interface IFrontendEngineCondition {
 	condition: (...values: any[]) => boolean;
 }
 
-export type TFrontendEngineFieldSchema = ITextareaSchema;
+export type TFrontendEngineFieldSchema = ITextareaSchema | ITextfieldSchema | ISubmitButtonSchema | ISelectSchema;
 
 export interface IFrontendEngineData {
 	fields: TFrontendEngineFieldSchema[];
@@ -52,8 +52,15 @@ export interface IFrontendEngineBaseFieldJsonSchema<T> {
 	validation?: IValidationRule[] | undefined;
 }
 
+export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "title" | "validation" | "type";
+
 export enum FieldType {
 	TEXTAREA = "TextArea",
+	TEXT = "TextField",
+	NUMBER = "TextField",
+	EMAIL = "TextField",
+	SUBMIT = "SubmitButton",
+	SELECT = "Select",
 }
 
 // ================================================
