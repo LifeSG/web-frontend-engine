@@ -5,7 +5,7 @@ import { FrontendEngine } from "../../..";
 import { ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/TextField",
+	title: "Field/Textfield",
 	parameters: {
 		docs: {
 			page: () => (
@@ -26,32 +26,21 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		id: {
-			description: "The unique identifier of the component",
+		textfield: { table: { disable: true } },
+		fieldType: {
+			description: `Use <code>text</code> or <code>email</code> or <code>number</code> to show this field`,
 			table: {
 				type: {
-					summary: "string",
+					summary: "text|email|number",
 				},
 			},
 			type: { name: "string", required: true },
-			control: {
-				type: "text",
-			},
-		},
-		type: {
-			description: "Use <code>TEXT</code> to show this field",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["TEXT"],
+			options: ["text", "email", "number"],
 			control: {
 				type: "select",
 			},
 		},
-		title: {
+		label: {
 			description: "A name/description of the purpose of the form element",
 			table: {
 				type: {
@@ -100,26 +89,28 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<ITextfieldSchema> = (args) => <FrontendEngine data={{ fields: [args, SubmitButtonStorybook] }} />;
+const Template: Story<Record<string, ITextfieldSchema>> = (args) => (
+	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+);
 
 export const Default = Template.bind({});
 Default.args = {
-	id: "textfield-default",
-	title: "Textfield",
-	type: "TEXT",
+	textfield: {
+		label: "Textfield",
+		fieldType: "text",
+	},
 };
 
 export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
-			fields: [
-				{
-					type: "TEXT",
-					id: "textfield-default-value",
-					title: "Textfield",
+			fields: {
+				"textfield-default-value": {
+					label: "Textfield",
+					fieldType: "text",
 				},
-				SubmitButtonStorybook,
-			],
+				...SubmitButtonStorybook,
+			},
 			defaultValues: {
 				"textfield-default-value": "This is the default value",
 			},
@@ -130,46 +121,62 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	id: "textfield-disabled",
-	title: "Textfield",
-	type: "TEXT",
-	disabled: true,
+	"textfield-disabled": {
+		label: "Textfield",
+		fieldType: "text",
+		disabled: true,
+	},
 };
 
 export const Email = Template.bind({});
 Email.args = {
-	id: "textfield-email",
-	title: "Textfield (Email)",
-	type: "EMAIL",
+	"textfield-email": {
+		label: "Textfield (Email)",
+		fieldType: "email",
+	},
+};
+
+export const EmailCustomError = Template.bind({});
+EmailCustomError.storyName = "Email with custom error message";
+EmailCustomError.args = {
+	"textfield-email-error": {
+		label: "Textfield (Email)",
+		fieldType: "email",
+		validation: [{ email: true, errorMessage: "Please use a valid email" }],
+	},
 };
 
 export const MaxLength = Template.bind({});
 MaxLength.args = {
-	id: "textfield-maxlength",
-	title: "Textfield",
-	type: "TEXT",
-	maxLength: 5,
+	"textfield-maxlength": {
+		label: "Textfield",
+		fieldType: "text",
+		maxLength: 5,
+	},
 };
 
 export const Number = Template.bind({});
 Number.args = {
-	id: "textfield-number",
-	title: "Textfield (Number)",
-	type: "NUMBER",
+	"textfield-number": {
+		label: "Textfield",
+		fieldType: "number",
+	},
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	id: "textfield-placeholder",
-	title: "Textfield",
-	type: "TEXT",
-	placeholder: "Enter text here",
+	"textfield-placeholder": {
+		label: "Textfield",
+		fieldType: "number",
+		placeholder: "Enter text here",
+	},
 };
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	id: "textfield-with-validation",
-	title: "Textfield",
-	type: "TEXT",
-	validation: [{ required: true }],
+	"textfield-with-validation": {
+		label: "Textfield",
+		fieldType: "text",
+		validation: [{ required: true }],
+	},
 };

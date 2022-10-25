@@ -12,7 +12,8 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { id, title, validation, ...otherSchema },
+		schema: { label, validation, ...otherSchema },
+		id,
 		name,
 		value,
 		error,
@@ -49,7 +50,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	};
 
 	return (
-		<Form.CustomField id={id} label={title} errorMessage={error?.message}>
+		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
 			<InputSelect
 				{...otherSchema}
 				id={TestHelper.generateId(id, "select")}

@@ -54,7 +54,7 @@ export default {
 			description: "All elements within the form. For more info, refer to individual field stories.",
 			table: {
 				type: {
-					summary: "TFrontendEngineFieldSchema[]",
+					summary: "Record<string, TFrontendEngineFieldSchema>",
 				},
 			},
 			control: {
@@ -111,19 +111,17 @@ const Template: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args
 export const Default = Template.bind({});
 Default.args = {
 	data: {
-		id: "Sample Form",
 		validationMode: "onSubmit",
 		revalidationMode: "onChange",
-		fields: [
-			{
-				id: "name",
-				title: "What is your name",
-				type: "TEXTAREA",
+		fields: {
+			name: {
+				label: "What is your name",
+				fieldType: "textarea",
 				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 				chipTexts: ["John", "Doe"],
 			},
-			SubmitButtonStorybook,
-		],
+			...SubmitButtonStorybook,
+		},
 		defaultValues: {
 			name: "Erik Tan",
 		},
@@ -133,19 +131,17 @@ Default.args = {
 export const ValidateOnChange = Template.bind({});
 ValidateOnChange.args = {
 	data: {
-		id: "Sample Form",
 		validationMode: "onChange",
 		revalidationMode: "onChange",
-		fields: [
-			{
-				id: "name",
-				title: "What is your name",
-				type: "TEXTAREA",
+		fields: {
+			name: {
+				label: "What is your name",
+				fieldType: "textarea",
 				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 				chipTexts: ["John", "Doe"],
 			},
-			SubmitButtonStorybook,
-		],
+			...SubmitButtonStorybook,
+		},
 		defaultValues: {
 			name: "Erik Tan",
 		},
@@ -155,19 +151,17 @@ ValidateOnChange.args = {
 export const ValidateOnBlur = Template.bind({});
 ValidateOnBlur.args = {
 	data: {
-		id: "Sample Form",
 		validationMode: "onBlur",
 		revalidationMode: "onChange",
-		fields: [
-			{
-				id: "name",
-				title: "What is your name",
-				type: "TEXTAREA",
+		fields: {
+			name: {
+				label: "What is your name",
+				fieldType: "textarea",
 				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 				chipTexts: ["John", "Doe"],
 			},
-			SubmitButtonStorybook,
-		],
+			...SubmitButtonStorybook,
+		},
 		defaultValues: {
 			name: "Erik Tan",
 		},
@@ -184,16 +178,14 @@ export const ExternalSubmit: Story<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine
 				data={{
-					id: "Sample Form",
-					fields: [
-						{
-							id: "name",
-							title: "What is your name",
-							type: "TEXTAREA",
+					fields: {
+						name: {
+							label: "What is your name",
+							fieldType: "textarea",
 							validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 							chipTexts: ["John", "Doe"],
 						},
-					],
+					},
 					defaultValues: {
 						name: "Erik Tan",
 					},
@@ -222,17 +214,15 @@ export const GetFormState: Story<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine
 				data={{
-					id: "Sample Form",
-					fields: [
-						{
-							id: "name",
-							title: "What is your name",
-							type: "TEXTAREA",
+					fields: {
+						name: {
+							label: "What is your name",
+							fieldType: "textarea",
 							validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 							chipTexts: ["John", "Doe"],
 						},
-						SubmitButtonStorybook,
-					],
+						...SubmitButtonStorybook,
+					},
 					defaultValues: {
 						name: "Erik Tan",
 					},

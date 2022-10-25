@@ -45,25 +45,27 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const fieldComponents = fieldData.map((customField) => {
-			if (Object.keys(FieldType).includes(customField.type)) {
-				const Field = FrontendEngineFields[FieldType[customField.type]] as React.ForwardRefExoticComponent<
+		const fieldComponents: JSX.Element[] = [];
+		Object.entries(fieldData).forEach(([id, customField]) => {
+			const fieldType = customField.fieldType?.toUpperCase();
+			if (Object.keys(FieldType).includes(fieldType)) {
+				const Field = FrontendEngineFields[FieldType[fieldType]] as React.ForwardRefExoticComponent<
 					IGenericFieldProps<TFrontendEngineFieldSchema>
 				>;
 
-				return (
+				fieldComponents.push(
 					<Controller
 						control={control}
-						key={customField.id}
-						name={customField.id}
+						key={id}
+						name={id}
 						render={({ field, fieldState }) => {
-							const fieldProps = { ...field, ref: undefined }; // not passing ref because not all components have fields to be manipulated
+							const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
 							return <Field schema={customField} {...fieldProps} {...fieldState} />;
 						}}
 					/>
 				);
 			}
-			return <div key={customField.id}>This component is not supported by the engine</div>;
+			return <div key={id}>This component is not supported by the engine</div>;
 		});
 		setFields(fieldComponents);
 	}, [fieldData, control]);

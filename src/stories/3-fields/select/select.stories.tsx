@@ -3,7 +3,7 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import { ISelectSchema } from "src/components/fields/select/types";
 import styled from "styled-components";
 import { FrontendEngine } from "../../..";
-import { ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/Select",
@@ -22,32 +22,9 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		type: {
-			description: "Use <code>SELECT</code> to show this field",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["SELECT"],
-			control: {
-				type: "select",
-			},
-		},
-		id: {
-			description: "The unique identifier of the component",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			type: { name: "string", required: true },
-			control: {
-				type: "text",
-			},
-		},
-		title: {
+		...CommonFieldStoryProps("select"),
+		select: { table: { disable: true } },
+		label: {
 			description: "A name/description of the purpose of the form element",
 			table: {
 				type: {
@@ -105,23 +82,30 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<ISelectSchema> = (args) => <StyledForm data={{ fields: [args, SubmitButtonStorybook] }} />;
+const Template: Story<Record<string, ISelectSchema>> = (args) => (
+	<StyledForm data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+);
 
 export const Default = Template.bind({});
 Default.args = {
-	type: "SELECT",
-	id: "select-default",
-	title: "Fruits",
-	options: [1, 2, 3],
+	select: {
+		fieldType: "select",
+		label: "Fruits",
+		options: [1, 2, 3],
+	},
 };
 
 export const DefaultValue = () => (
 	<StyledForm
 		data={{
-			fields: [
-				{ type: "SELECT", id: "select-default-value", title: "Fruits", options: ["Apple", "Berry", "Cherry"] },
-				SubmitButtonStorybook,
-			],
+			fields: {
+				"select-default-value": {
+					fieldType: "select",
+					label: "Fruits",
+					options: ["Apple", "Berry", "Cherry"],
+				},
+				...SubmitButtonStorybook,
+			},
 			defaultValues: { "select-default-value": "Apple" },
 		}}
 	/>
@@ -130,38 +114,42 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	type: "SELECT",
-	id: "select-disasbled",
-	title: "Fruits",
-	options: ["Apple", "Berry", "Cherry"],
-	disabled: true,
+	"select-disasbled": {
+		fieldType: "select",
+		label: "Fruits",
+		options: ["Apple", "Berry", "Cherry"],
+		disabled: true,
+	},
 };
 
 export const CustomWidth = Template.bind({});
 CustomWidth.args = {
-	type: "SELECT",
-	id: "select-custom-width",
-	title: "Fruits",
-	options: ["Apple", "Berry", "Cherry"],
-	listStyleWidth: "12rem",
+	"select-custom-width": {
+		fieldType: "select",
+		label: "Fruits",
+		options: ["Apple", "Berry", "Cherry"],
+		listStyleWidth: "12rem",
+	},
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	type: "SELECT",
-	id: "select-placeholder",
-	title: "Fruits",
-	options: ["Apple", "Berry", "Cherry"],
-	placeholder: "Select your fruit",
+	"select-placeholder": {
+		fieldType: "select",
+		label: "Fruits",
+		options: ["Apple", "Berry", "Cherry"],
+		placeholder: "Select your fruit",
+	},
 };
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	type: "SELECT",
-	id: "select-with-validation",
-	title: "Fruits",
-	options: ["Apple", "Berry", "Cherry"],
-	validation: [{ required: true }],
+	"select-with-validation": {
+		fieldType: "select",
+		label: "Fruits",
+		options: ["Apple", "Berry", "Cherry"],
+		validation: [{ required: true }],
+	},
 };
 
 const StyledForm = styled(FrontendEngine)`

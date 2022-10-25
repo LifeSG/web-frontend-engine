@@ -13,7 +13,8 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, id, title, validation },
+		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, label, validation },
+		id,
 		name,
 		onChange,
 		value,
@@ -82,7 +83,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	return (
-		<Form.CustomField label={title} id={id}>
+		<Form.CustomField label={label} id={id}>
 			<Wrapper chipPosition={chipPosition}>
 				{renderChips()}
 				<StyledTextArea

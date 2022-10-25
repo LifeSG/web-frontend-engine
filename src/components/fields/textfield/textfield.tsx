@@ -10,27 +10,35 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema>) => {
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { id, inputMode, title, type, validation, ...otherSchema },
+		schema: { inputMode, label, fieldType, validation, ...otherSchema },
+		id,
 		value,
 		onChange,
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
+	const [stateValue, setStateValue] = useState<string | number>(value || "");
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// ================================================
 	// EFFECTS
 	// ================================================
 	useEffect(() => {
-		switch (type) {
-			case "NUMBER":
+		switch (fieldType) {
+			case "number":
 				setFieldValidationConfig(id, Yup.number(), validation);
 				break;
-			case "EMAIL":
-				setFieldValidationConfig(id, Yup.string().email(), validation);
+			case "email":
+				{
+					const emailRule = validation?.find((rule) => rule.email);
+					setFieldValidationConfig(
+						id,
+						Yup.string().email(emailRule?.errorMessage || "Invalid email"),
+						validation
+					);
+				}
 				break;
-			case "TEXT":
+			case "text":
 				setFieldValidationConfig(id, Yup.string(), validation);
 				break;
 			default:
@@ -58,12 +66,12 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema>) => {
 	// =============================================================================
 	const formatInputMode = (): React.HTMLAttributes<HTMLInputElement>["inputMode"] => {
 		if (inputMode) return inputMode;
-		switch (type) {
-			case "NUMBER":
+		switch (fieldType) {
+			case "number":
 				return "numeric";
-			case "EMAIL":
+			case "email":
 				return "email";
-			case "TEXT":
+			case "text":
 				return "text";
 			default:
 				return "none";
@@ -75,7 +83,8 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema>) => {
 			{...otherSchema}
 			{...otherProps}
 			id={id}
-			label={title}
+			type={fieldType}
+			label={label}
 			inputMode={formatInputMode()}
 			onChange={handleChange}
 			value={stateValue}

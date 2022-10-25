@@ -15,7 +15,7 @@ export interface IFrontendEngineData {
 	className?: string | undefined;
 	// conditions?: IFrontendEngineCondition[]; TODO: add custom validation
 	defaultValues?: TFrontendEngineValues | undefined;
-	fields: TFrontendEngineFieldSchema[];
+	fields: Record<string, TFrontendEngineFieldSchema>;
 	id?: string | undefined;
 	revalidationMode?: TRevalidationMode | undefined;
 	validationMode?: TValidationMode | undefined;
@@ -37,13 +37,12 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // JSON SCHEMA
 // =============================================================================
 export interface IFrontendEngineBaseFieldJsonSchema<T> {
-	type: T;
-	id: string;
-	title: string;
+	fieldType: T;
+	label: string;
 	validation?: IValidationRule[] | undefined;
 }
 
-export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "title" | "validation" | "type";
+export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";
 
 export enum FieldType {
 	TEXTAREA = "TextArea",
@@ -58,5 +57,6 @@ export enum FieldType {
 // FIELD PROPS
 // =============================================================================
 export interface IGenericFieldProps<T = any> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
+	id: string;
 	schema: T;
 }

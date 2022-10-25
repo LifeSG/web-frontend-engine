@@ -11,8 +11,33 @@ export const ExcludeReactFormHookProps = {
 	name: { table: { disable: true } },
 };
 
-export const SubmitButtonStorybook: ISubmitButtonSchema = {
-	type: "SUBMIT",
-	id: "submit-button",
-	title: "Submit",
+export const CommonFieldStoryProps = (fieldType: string) => ({
+	fieldType: {
+		description: `Use <code>${fieldType}</code> to show this field`,
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		type: { name: "string", required: true },
+		options: [fieldType],
+		control: {
+			type: "select",
+		},
+	},
+	label: {
+		description: "A name/description of the purpose of the form element",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		control: {
+			type: "text",
+		},
+	},
+});
+
+export const SubmitButtonStorybook: Record<string, ISubmitButtonSchema> = {
+	"submit-button": { fieldType: "submit", label: "Submit" },
 };

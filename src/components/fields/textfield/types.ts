@@ -2,5 +2,5 @@ import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
 
 export interface ITextfieldSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"TEXT" | "NUMBER" | "EMAIL">,
-		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys> {}
+	extends IFrontendEngineBaseFieldJsonSchema<"text" | "number" | "email">,
+		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys | "type"> {}

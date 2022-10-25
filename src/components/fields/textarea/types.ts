@@ -5,7 +5,7 @@ import {
 } from "../../frontend-engine/types";
 
 export interface ITextareaSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"TEXTAREA">,
+	extends IFrontendEngineBaseFieldJsonSchema<"textarea">,
 		Omit<FormTextareaProps, TFrontendEngineBaseFieldJsonSchemaKeys> {
 	chipTexts?: string[] | undefined;
 	chipPosition?: "top" | "bottom" | undefined;
