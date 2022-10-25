@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ITextfieldSchema } from "./types";
+import { IEmailSchema, INumberSchema, ITextfieldSchema } from "./types";
 
-export const TextField = (props: IGenericFieldProps<ITextfieldSchema>) => {
+export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSchema | INumberSchema>) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================

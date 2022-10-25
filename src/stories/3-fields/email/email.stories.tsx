@@ -1,16 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { ITextfieldSchema } from "src/components/fields";
+import { IEmailSchema } from "src/components/fields";
 import { FrontendEngine } from "../../..";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/TextField",
+	title: "Field/Email",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>TextField</Title>
+					<Title>Email</Title>
 					<Description>A form element that contains a label, input and error message</Description>
 					<Heading>Props</Heading>
 					<Description>
@@ -26,32 +26,8 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("text"),
-		textfield: { table: { disable: true } },
-		fieldType: {
-			description: `Use <code>text</code> or <code>email</code> or <code>number</code> to show this field`,
-			table: {
-				type: {
-					summary: "text|email|number",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["text", "email", "number"],
-			control: {
-				type: "select",
-			},
-		},
-		label: {
-			description: "A name/description of the purpose of the form element",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
+		...CommonFieldStoryProps("email"),
+		email: { table: { disable: true } },
 		maxLength: {
 			description: "A specified maximum length for the value of the form element",
 			table: {
@@ -90,15 +66,15 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITextfieldSchema>> = (args) => (
+const Template: Story<Record<string, IEmailSchema>> = (args) => (
 	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
-	textfield: {
-		label: "Textfield",
-		fieldType: "text",
+	email: {
+		label: "Email",
+		fieldType: "email",
 	},
 };
 
@@ -106,14 +82,14 @@ export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"textfield-default-value": {
-					label: "Textfield",
-					fieldType: "text",
+				"email-default-value": {
+					label: "Email",
+					fieldType: "email",
 				},
 				...SubmitButtonStorybook,
 			},
 			defaultValues: {
-				"textfield-default-value": "This is the default value",
+				"email-default-value": "default@domain.tld",
 			},
 		}}
 	/>
@@ -122,36 +98,45 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"textfield-disabled": {
-		label: "Textfield",
-		fieldType: "text",
+	"email-disabled": {
+		label: "Email",
+		fieldType: "email",
 		disabled: true,
+	},
+};
+
+export const CustomErrorMessage = Template.bind({});
+CustomErrorMessage.args = {
+	"email-email-error": {
+		label: "Email",
+		fieldType: "email",
+		validation: [{ email: true, errorMessage: "Please use a valid email" }],
 	},
 };
 
 export const MaxLength = Template.bind({});
 MaxLength.args = {
 	"textfield-maxlength": {
-		label: "Textfield",
-		fieldType: "text",
+		label: "Email",
+		fieldType: "email",
 		maxLength: 5,
 	},
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"textfield-placeholder": {
-		label: "Textfield",
-		fieldType: "text",
-		placeholder: "Enter text here",
+	"email-placeholder": {
+		label: "Email",
+		fieldType: "email",
+		placeholder: "Enter an email",
 	},
 };
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"textfield-with-validation": {
-		label: "Textfield",
-		fieldType: "text",
+	"email-with-validation": {
+		label: "Email",
+		fieldType: "email",
 		validation: [{ required: true }],
 	},
 };

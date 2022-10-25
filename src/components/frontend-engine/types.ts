@@ -1,5 +1,12 @@
 import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
-import { ISelectSchema, ISubmitButtonSchema, ITextareaSchema, ITextfieldSchema } from "../fields";
+import {
+	IEmailSchema,
+	INumberSchema,
+	ISelectSchema,
+	ISubmitButtonSchema,
+	ITextareaSchema,
+	ITextfieldSchema,
+} from "../fields";
 import { IValidationRule } from "./validation-schema/types";
 
 // =============================================================================
@@ -21,7 +28,13 @@ export interface IFrontendEngineData {
 	validationMode?: TValidationMode | undefined;
 }
 
-export type TFrontendEngineFieldSchema = ITextareaSchema | ITextfieldSchema | ISubmitButtonSchema | ISelectSchema;
+export type TFrontendEngineFieldSchema =
+	| ITextareaSchema
+	| ITextfieldSchema
+	| IEmailSchema
+	| INumberSchema
+	| ISubmitButtonSchema
+	| ISelectSchema;
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export type TValidationMode = keyof ValidationMode;
