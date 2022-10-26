@@ -1,16 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { ITextfieldSchema } from "src/components/fields";
+import { INumberSchema } from "src/components/fields";
 import { FrontendEngine } from "../../..";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/TextField",
+	title: "Field/Number",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>TextField</Title>
+					<Title>Number</Title>
 					<Description>A form element that contains a label, input and error message</Description>
 					<Heading>Props</Heading>
 					<Description>
@@ -26,43 +26,8 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("text"),
-		textfield: { table: { disable: true } },
-		fieldType: {
-			description: `Use <code>text</code> or <code>email</code> or <code>number</code> to show this field`,
-			table: {
-				type: {
-					summary: "text|email|number",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["text", "email", "number"],
-			control: {
-				type: "select",
-			},
-		},
-		label: {
-			description: "A name/description of the purpose of the form element",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
-		maxLength: {
-			description: "A specified maximum length for the value of the form element",
-			table: {
-				type: {
-					summary: "number",
-				},
-			},
-			control: {
-				type: "number",
-			},
-		},
+		...CommonFieldStoryProps("number"),
+		number: { table: { disable: true } },
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -90,15 +55,15 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITextfieldSchema>> = (args) => (
+const Template: Story<Record<string, INumberSchema>> = (args) => (
 	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
-	textfield: {
-		label: "Textfield",
-		fieldType: "text",
+	number: {
+		label: "Number",
+		fieldType: "number",
 	},
 };
 
@@ -106,14 +71,14 @@ export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"textfield-default-value": {
-					label: "Textfield",
-					fieldType: "text",
+				"number-default-value": {
+					label: "Number",
+					fieldType: "number",
 				},
 				...SubmitButtonStorybook,
 			},
 			defaultValues: {
-				"textfield-default-value": "This is the default value",
+				"number-default-value": 1,
 			},
 		}}
 	/>
@@ -122,36 +87,27 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"textfield-disabled": {
-		label: "Textfield",
-		fieldType: "text",
+	"number-disabled": {
+		label: "Number",
+		fieldType: "number",
 		disabled: true,
-	},
-};
-
-export const MaxLength = Template.bind({});
-MaxLength.args = {
-	"textfield-maxlength": {
-		label: "Textfield",
-		fieldType: "text",
-		maxLength: 5,
 	},
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"textfield-placeholder": {
-		label: "Textfield",
-		fieldType: "text",
-		placeholder: "Enter text here",
+	"number-placeholder": {
+		label: "Number",
+		fieldType: "number",
+		placeholder: "Enter a number",
 	},
 };
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"textfield-with-validation": {
-		label: "Textfield",
-		fieldType: "text",
+	"number-with-validation": {
+		label: "Number",
+		fieldType: "number",
 		validation: [{ required: true }],
 	},
 };

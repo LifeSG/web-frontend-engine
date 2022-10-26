@@ -1,58 +1,61 @@
-import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
-import { AnyObjectSchema } from "yup";
-import { ISelectSchema, ISubmitButtonSchema, ITextareaSchema, ITextfieldSchema } from "../fields";
+import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
+import {
+	IEmailSchema,
+	INumberSchema,
+	ISelectSchema,
+	ISubmitButtonSchema,
+	ITextareaSchema,
+	ITextfieldSchema,
+} from "../fields";
 import { IValidationRule } from "./validation-schema/types";
 
-// ================================================
+// =============================================================================
 // FRONTEND ENGINE
-// ================================================
-type TValidationMode = keyof ValidationMode;
-type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
+// =============================================================================
 export interface IFrontendEngineProps {
-	id?: string | undefined;
 	className?: string;
 	data?: IFrontendEngineData | undefined;
-	defaultValues?: TFrontendEngineValues | undefined;
-	validationSchema?: AnyObjectSchema | undefined;
-	validators?: IFrontendEngineValidator[] | undefined;
-	conditions?: IFrontendEngineCondition[] | undefined;
-	validationMode: TValidationMode;
-	revalidationMode?: TRevalidationMode | undefined;
-	onSubmit?: () => unknown | undefined;
-	onValidate?: (isValid: boolean) => void | undefined;
+	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }
-
-export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
-
-export interface IFrontendEngineValidator {
-	ruleName: string;
-	errorMessage: string;
-	validate: (value: any) => boolean;
-}
-
-export interface IFrontendEngineCondition {
-	conditionIds: string[];
-	condition: (...values: any[]) => boolean;
-}
-
-export type TFrontendEngineFieldSchema = ITextareaSchema | ITextfieldSchema | ISubmitButtonSchema | ISelectSchema;
 
 export interface IFrontendEngineData {
-	fields: TFrontendEngineFieldSchema[];
+	className?: string | undefined;
+	// conditions?: IFrontendEngineCondition[]; TODO: add custom validation
+	defaultValues?: TFrontendEngineValues | undefined;
+	fields: Record<string, TFrontendEngineFieldSchema>;
+	id?: string | undefined;
+	revalidationMode?: TRevalidationMode | undefined;
+	validationMode?: TValidationMode | undefined;
 }
 
-// ================================================
+export type TFrontendEngineFieldSchema =
+	| ITextareaSchema
+	| ITextfieldSchema
+	| IEmailSchema
+	| INumberSchema
+	| ISubmitButtonSchema
+	| ISelectSchema;
+export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
+export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
+export type TValidationMode = keyof ValidationMode;
+
+export interface IFrontendEngineRef extends HTMLFormElement {
+	/** gets information about the entire form state */
+	getFormState: () => FormState<TFrontendEngineValues>;
+	/** triggers form submission */
+	submit: () => void;
+}
+
+// =============================================================================
 // JSON SCHEMA
-// ================================================
-// TODO: Add conditional rendering
+// =============================================================================
 export interface IFrontendEngineBaseFieldJsonSchema<T> {
-	type: T;
-	id: string;
-	title: string;
+	fieldType: T;
+	label: string;
 	validation?: IValidationRule[] | undefined;
 }
 
-export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "title" | "validation" | "type";
+export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";
 
 export enum FieldType {
 	TEXTAREA = "TextArea",
@@ -63,9 +66,10 @@ export enum FieldType {
 	SELECT = "Select",
 }
 
-// ================================================
+// =============================================================================
 // FIELD PROPS
-// ================================================
+// =============================================================================
 export interface IGenericFieldProps<T = any> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
+	id: string;
 	schema: T;
 }

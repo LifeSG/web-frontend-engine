@@ -1,21 +1,23 @@
-import { Form, InputSelect } from "@lifesg/react-design-system";
-import React, { useEffect, useState } from "react";
+import { Form } from "@lifesg/react-design-system/form";
+import { InputSelect } from "@lifesg/react-design-system/input-select";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ISelectRef, ISelectSchema } from "./types";
+import { ISelectSchema } from "./types";
 
-export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSchema>>((props, ref) => {
+export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { id, title, validation, ...otherSchema },
+		schema: { label, validation, ...otherSchema },
+		id,
 		name,
 		value,
+		error,
 		onChange,
-		...otherProps
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
@@ -27,7 +29,7 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	useEffect(() => {
 		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [validation]);
 
 	useEffect(() => {
 		if (value) {
@@ -48,7 +50,7 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 	};
 
 	return (
-		<Form.CustomField {...otherProps} id={id} label={title} errorMessage={otherProps.error?.message}>
+		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
 			<InputSelect
 				{...otherSchema}
 				id={TestHelper.generateId(id, "select")}
@@ -58,4 +60,4 @@ export const Select = React.forwardRef<ISelectRef, IGenericFieldProps<ISelectSch
 			/>
 		</Form.CustomField>
 	);
-});
+};

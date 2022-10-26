@@ -1,9 +1,14 @@
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
-import React from "react";
 import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
 
 export interface ITextfieldSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"TEXT" | "NUMBER" | "EMAIL">,
-		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys> {}
+	extends IFrontendEngineBaseFieldJsonSchema<"text">,
+		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys | "type"> {}
 
-export type TInputMode = Pick<React.HTMLAttributes<HTMLInputElement>, "inputMode">;
+export interface IEmailSchema
+	extends IFrontendEngineBaseFieldJsonSchema<"email">,
+		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys | "type"> {}
+
+export interface INumberSchema
+	extends IFrontendEngineBaseFieldJsonSchema<"number">,
+		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys | "type" | "maxLength" | "max" | "min"> {}

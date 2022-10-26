@@ -1,7 +1,8 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine, ISubmitButtonSchema } from "../../..";
-import { ExcludeReactFormHookProps } from "../../common";
+import { ISubmitButtonSchema } from "src/components/fields";
+import { FrontendEngine } from "../../..";
+import { CommonFieldStoryProps, ExcludeReactFormHookProps } from "../../common";
 
 export default {
 	title: "Field/SubmitButton",
@@ -25,32 +26,9 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		type: {
-			description: "Use <code>SUBMIT</code> to show this field",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["SUBMIT"],
-			control: {
-				type: "select",
-			},
-		},
-		id: {
-			description: "The unique identifier of the component",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			type: { name: "string", required: true },
-			control: {
-				type: "text",
-			},
-		},
-		title: {
+		...CommonFieldStoryProps("submit"),
+		submit: { table: { disable: true } },
+		label: {
 			description: "A name/description of the purpose of the form element",
 			table: {
 				type: {
@@ -89,35 +67,32 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<ISubmitButtonSchema> = (args) => (
-	<FrontendEngine
-		id="frontendEngine"
-		validationMode="onSubmit"
-		data={{
-			fields: [args],
-		}}
-	/>
+const Template: Story<Record<string, ISubmitButtonSchema>> = (args) => (
+	<FrontendEngine data={{ fields: { ...args } }} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
-	type: "SUBMIT",
-	id: "submit-button-default",
-	title: "Submit",
+	submit: {
+		fieldType: "submit",
+		label: "Submit",
+	},
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	type: "SUBMIT",
-	id: "submit-button-disabled",
-	title: "Submit",
-	disabled: true,
+	"submit-disabled": {
+		fieldType: "submit",
+		label: "Submit",
+		disabled: true,
+	},
 };
 
 export const Styled = Template.bind({});
 Styled.args = {
-	type: "SUBMIT",
-	id: "submit-button-styled",
-	title: "Submit",
-	styleType: "secondary",
+	"submit-styled": {
+		fieldType: "submit",
+		label: "Submit",
+		styleType: "secondary",
+	},
 };

@@ -1,4 +1,5 @@
-import { Color, Text } from "@lifesg/react-design-system";
+import { Color } from "@lifesg/react-design-system/color";
+import { Text } from "@lifesg/react-design-system/text";
 import styled, { css } from "styled-components";
 
 interface IChipButtonProps {

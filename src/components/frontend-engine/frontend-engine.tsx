@@ -1,73 +1,74 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useCallback, useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
-import * as FrontendEngineFields from "..";
-import { StyledForm } from "./frontend-engine.styles";
-import { FieldType, IFrontendEngineProps, TFrontendEngineFieldSchema } from "./types";
+import * as FrontendEngineFields from "../fields";
+import {
+	FieldType,
+	IFrontendEngineProps,
+	IFrontendEngineRef,
+	IGenericFieldProps,
+	TFrontendEngineFieldSchema,
+	TFrontendEngineValues,
+} from "./types";
 import { ValidationProvider } from "./validation-schema";
 
-const FrontendEngineInner = (props: IFrontendEngineProps) => {
-	// ================================================
+const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
+	// =============================================================================
 	// CONST, STATE, REFS
-	// ================================================
+	// =============================================================================
 	const {
-		id,
-		className = "",
-		data,
-		defaultValues,
-		validators,
-		conditions,
-		validationMode,
-		revalidationMode,
+		data: {
+			className: dataClassName,
+			defaultValues,
+			fields: fieldData,
+			id,
+			revalidationMode = "onChange",
+			validationMode = "onSubmit",
+		},
+		className,
 		onSubmit,
-		onValidate,
 	} = props;
 
 	const [fields, setFields] = useState<JSX.Element[]>([]);
 	const { validationSchema } = useValidationSchema();
 
-	const {
-		control,
-		watch,
-		handleSubmit: reactFormHookSubmit,
-		formState: { errors },
-	} = useForm({
+	const formMethods = useForm({
 		mode: validationMode,
-		reValidateMode: revalidationMode || "onChange",
+		reValidateMode: revalidationMode,
 		defaultValues: defaultValues,
 		resolver: yupResolver(validationSchema),
 	});
+	const { control, watch, handleSubmit: reactFormHookSubmit, formState } = formMethods;
 
-	// ================================================
+	// =============================================================================
 	// EFFECTS
-	// ================================================
-	const buildFieldsFromSchema = useCallback(
-		(fields: TFrontendEngineFieldSchema[]) =>
-			fields.map((customField) => {
-				if (Object.keys(FieldType).includes(customField.type)) {
-					const Field = FrontendEngineFields[FieldType[customField.type]];
-
-					return (
-						<Controller
-							control={control}
-							key={customField.id}
-							name={customField.id}
-							render={({ field, fieldState }) => (
-								<Field schema={customField} {...field} {...fieldState} />
-							)}
-						/>
-					);
-				}
-				return <div key={customField.id}>This component is not supported by the engine</div>;
-			}),
-		[]
-	);
+	// =============================================================================
 	useEffect(() => {
-		if (data) {
-			setFields(buildFieldsFromSchema(data.fields));
-		}
-	}, [buildFieldsFromSchema, data, validationSchema, validators]);
+		const fieldComponents: JSX.Element[] = [];
+		Object.entries(fieldData).forEach(([id, customField]) => {
+			const fieldType = customField.fieldType?.toUpperCase();
+			if (Object.keys(FieldType).includes(fieldType)) {
+				const Field = FrontendEngineFields[FieldType[fieldType]] as React.ForwardRefExoticComponent<
+					IGenericFieldProps<TFrontendEngineFieldSchema>
+				>;
+
+				fieldComponents.push(
+					<Controller
+						control={control}
+						key={id}
+						name={id}
+						render={({ field, fieldState }) => {
+							const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
+							return <Field schema={customField} {...fieldProps} {...fieldState} />;
+						}}
+					/>
+				);
+			}
+			return <div key={id}>This component is not supported by the engine</div>;
+		});
+		setFields(fieldComponents);
+	}, [fieldData, control]);
 
 	// TODO: Remove logging
 	useEffect(() => {
@@ -76,38 +77,46 @@ const FrontendEngineInner = (props: IFrontendEngineProps) => {
 		return () => subscription.unsubscribe();
 	}, [watch]);
 
-	// ================================================
+	// =============================================================================
 	// HELPER FUNCTIONS
-	// ================================================
-	const handleOnSubmit = (data: any) => {
-		console.log(data);
-		onSubmit && onSubmit();
+	// =============================================================================
+	useImperativeHandle<Partial<IFrontendEngineRef>, Partial<IFrontendEngineRef>>(ref, () => ({
+		getFormState: () => {
+			return formState;
+		},
+		submit: () => {
+			reactFormHookSubmit(handleSubmit)();
+		},
+	}));
+
+	const handleSubmit = (data: TFrontendEngineValues) => {
+		console.log(data); // TODO: remove
+		onSubmit?.(data);
 	};
 
-	const formatFormId = () => {
-		let formId = "frontend-engine";
-
-		if (id) formId = `frontend-engine-${id}`;
-		else if (className) formId = `frontend-engine-${className}`;
-
-		return formId;
-	};
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
+	const formId = id ? `frontend-engine-${id}` : "frontend-engine";
 
 	return (
-		<StyledForm
-			id={formatFormId()}
-			data-testid={formatFormId()}
-			className={className}
-			noValidate
-			onSubmit={reactFormHookSubmit(handleOnSubmit)}
-		>
-			{fields}
-		</StyledForm>
+		<FormProvider {...formMethods}>
+			<form
+				id={formId}
+				data-testid={formId}
+				className={`${className} ${dataClassName}`}
+				noValidate
+				onSubmit={reactFormHookSubmit(handleSubmit)}
+				ref={ref}
+			>
+				{fields}
+			</form>
+		</FormProvider>
 	);
-};
+});
 
-export const FrontendEngine = (props: IFrontendEngineProps) => (
+export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => (
 	<ValidationProvider>
-		<FrontendEngineInner {...props} />
+		<FrontendEngineInner {...props} ref={ref} />
 	</ValidationProvider>
-);
+));
