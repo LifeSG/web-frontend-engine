@@ -37,6 +37,7 @@ export type TFrontendEngineFieldSchema =
 	| ISubmitButtonSchema
 	| ISelectSchema
 	| IMultiSelectSchema;
+// | ICheckboxGroupSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -67,7 +68,8 @@ export enum FieldType {
 	EMAIL = "TextField",
 	SUBMIT = "SubmitButton",
 	SELECT = "Select",
-	MULTISELECT = "MultiSelect",
+	"MULTI-SELECT" = "MultiSelect",
+	CHECKBOX = "CheckboxGroup",
 }
 
 // =============================================================================

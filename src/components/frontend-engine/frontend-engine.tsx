@@ -1,10 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { isArray, isObject, map, some } from "lodash";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as FrontendEngineFields from "../fields";
-import { ISelectOption } from "../fields";
 import {
 	FieldType,
 	IFrontendEngineProps,
@@ -93,32 +91,8 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}));
 
 	const handleSubmit = (data: TFrontendEngineValues) => {
-		const transformedData = transformData(data);
-		console.log(transformedData); // TODO: remove
-		onSubmit?.(transformedData);
-	};
-
-	/**
-	 * NOTE: Transformation of data is required for components like
-	 * select and multi-select due to the nature of the options (i.e. refer to IOption)
-	 * */
-	const transformData = (data: TFrontendEngineValues) => {
-		const updatedData = data;
-		Object.entries(updatedData).forEach(([key, payload]) => {
-			if (payload) {
-				if (isArray(payload) && some(payload, containsLabelValue)) {
-					data[key] = map(payload, "value");
-				} else if (containsLabelValue(payload)) {
-					data[key] = payload.value;
-				}
-			}
-		});
-
-		return updatedData;
-	};
-
-	const containsLabelValue = (data: ISelectOption | unknown) => {
-		return isObject(data) && "value" in data;
+		console.log(data); // TODO: remove
+		onSubmit?.(data);
 	};
 
 	// =============================================================================
