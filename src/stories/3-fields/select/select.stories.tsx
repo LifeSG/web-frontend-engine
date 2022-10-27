@@ -22,17 +22,6 @@ export default {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("select"),
 		select: { table: { disable: true } },
-		label: {
-			description: "A name/description of the purpose of the form element",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
 		disabled: {
 			description: "Specifies if the input should be disabled",
 			table: {
