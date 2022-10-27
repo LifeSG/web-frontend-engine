@@ -1,9 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { isObject } from "lodash";
+import { isArray, isObject, map, some } from "lodash";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as FrontendEngineFields from "../fields";
+import { IOption } from "../fields";
 import {
 	FieldType,
 	IFrontendEngineProps,
@@ -49,6 +50,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		const fieldComponents: JSX.Element[] = [];
 		Object.entries(fieldData).forEach(([id, customField]) => {
 			const fieldType = customField.fieldType?.toUpperCase();
+
 			if (Object.keys(FieldType).includes(fieldType)) {
 				const Field = FrontendEngineFields[FieldType[fieldType]] as React.ForwardRefExoticComponent<
 					IGenericFieldProps<TFrontendEngineFieldSchema>
@@ -102,13 +104,21 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	 * */
 	const transformData = (data: TFrontendEngineValues) => {
 		const updatedData = data;
-		Object.entries(updatedData).forEach(([key, values]) => {
-			if (values && values.every((v) => isObject(v) && "value" in v)) {
-				data[key] = values.map((v) => v.value);
+		Object.entries(updatedData).forEach(([key, payload]) => {
+			if (payload) {
+				if (isArray(payload) && some(payload, containsLabelValue)) {
+					data[key] = map(payload, "value");
+				} else if (containsLabelValue(payload)) {
+					data[key] = payload.value;
+				}
 			}
 		});
 
 		return updatedData;
+	};
+
+	const containsLabelValue = (data: IOption | unknown) => {
+		return isObject(data) && "value" in data;
 	};
 
 	// =============================================================================
