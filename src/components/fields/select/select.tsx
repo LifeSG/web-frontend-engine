@@ -28,7 +28,14 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
+		setFieldValidationConfig(
+			id,
+			Yup.object().shape({
+				label: Yup.string(),
+				value: Yup.string(),
+			}),
+			validation
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 

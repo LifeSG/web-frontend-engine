@@ -27,7 +27,16 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
+		setFieldValidationConfig(
+			id,
+			Yup.array().of(
+				Yup.object().shape({
+					label: Yup.string(),
+					value: Yup.string(),
+				})
+			),
+			validation
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
