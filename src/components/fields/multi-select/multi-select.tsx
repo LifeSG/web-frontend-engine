@@ -1,11 +1,11 @@
-import { Form, InputMultiSelect } from "@lifesg/react-design-system";
+import { Form } from "@lifesg/react-design-system/form";
+import { InputMultiSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { IOption } from "../types";
-import { IMultiSelectSchema } from "./types";
+import { IMultiSelectOption, IMultiSelectSchema } from "./types";
 
 export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
@@ -20,7 +20,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<IOption[]>(value || []);
+	const [stateValue, setStateValue] = useState<IMultiSelectOption[]>(value || []);
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -49,7 +49,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (options: IOption[]): void => {
+	const handleChange = (options: IMultiSelectOption[]): void => {
 		setStateValue(options);
 		onChange({
 			target: {
@@ -66,8 +66,8 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 				name={name}
 				onSelectOptions={handleChange}
 				selectedOptions={stateValue}
-				valueExtractor={(item: IOption) => item.value}
-				listExtractor={(item: IOption) => item.label}
+				valueExtractor={(item: IMultiSelectOption) => item.value}
+				listExtractor={(item: IMultiSelectOption) => item.label}
 			/>
 		</Form.CustomField>
 	);

@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as FrontendEngineFields from "../fields";
-import { IOption } from "../fields";
+import { ISelectOption } from "../fields";
 import {
 	FieldType,
 	IFrontendEngineProps,
@@ -117,7 +117,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		return updatedData;
 	};
 
-	const containsLabelValue = (data: IOption | unknown) => {
+	const containsLabelValue = (data: ISelectOption | unknown) => {
 		return isObject(data) && "value" in data;
 	};
 

@@ -22,7 +22,8 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("multiselect"),
+		...CommonFieldStoryProps("multi-select"),
+		"multi-select-default": { table: { disable: true } },
 		disabled: {
 			description: "Specifies if the input should be disabled",
 			table: {
@@ -83,13 +84,13 @@ const Template: Story<Record<string, IMultiSelectSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	"multiselect-default": {
-		fieldType: "multiselect",
+	"multi-select-default": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
-			{ value: 1, label: "1" },
-			{ value: 2, label: "2" },
-			{ value: 3, label: "3" },
+			{ value: "1", label: "1" },
+			{ value: "2", label: "2" },
+			{ value: "3", label: "3" },
 		],
 	},
 };
@@ -98,8 +99,8 @@ export const DefaultValue = () => (
 	<StyledForm
 		data={{
 			fields: {
-				"multiselect-default-value": {
-					fieldType: "multiselect",
+				"multi-select-default-value": {
+					fieldType: "multi-select",
 					label: "Fruits",
 					options: [
 						{ value: "Apple", label: "Apple" },
@@ -110,7 +111,7 @@ export const DefaultValue = () => (
 				...SubmitButtonStorybook,
 			},
 			defaultValues: {
-				"multiselect-default-value": [
+				"multi-select-default-value": [
 					{ value: "Apple", label: "Apple" },
 					{ value: "Berry", label: "Berry" },
 				],
@@ -122,8 +123,8 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"multiselect-disabled": {
-		fieldType: "multiselect",
+	"multi-select-disabled": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -136,8 +137,8 @@ Disabled.args = {
 
 export const CustomWidth = Template.bind({});
 CustomWidth.args = {
-	"multiselect-custom-width": {
-		fieldType: "multiselect",
+	"multi-select-custom-width": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -150,8 +151,8 @@ CustomWidth.args = {
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"multiselect-placeholder": {
-		fieldType: "multiselect",
+	"multi-select-placeholder": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -164,8 +165,8 @@ Placeholder.args = {
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"multiselect-with-validation": {
-		fieldType: "multiselect",
+	"multi-select-with-validation": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "Apple", label: "Apple" },

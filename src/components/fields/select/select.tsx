@@ -5,8 +5,7 @@ import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { IOption } from "../types";
-import { ISelectSchema } from "./types";
+import { ISelectOption, ISelectSchema } from "./types";
 
 export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// =============================================================================
@@ -21,7 +20,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 		onChange,
 	} = props;
 
-	const [stateValue, setStateValue] = useState<IOption>(value || []);
+	const [stateValue, setStateValue] = useState<ISelectOption>(value || []);
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -48,7 +47,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (option: IOption): void => {
+	const handleChange = (option: ISelectOption): void => {
 		setStateValue(option);
 		onChange({
 			target: {
@@ -65,8 +64,8 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 				name={name}
 				onSelectOption={handleChange}
 				selectedOption={stateValue}
-				valueExtractor={(item: IOption) => item.value}
-				listExtractor={(item: IOption) => item.label}
+				valueExtractor={(item: ISelectOption) => item.value}
+				listExtractor={(item: ISelectOption) => item.label}
 			/>
 		</Form.CustomField>
 	);
