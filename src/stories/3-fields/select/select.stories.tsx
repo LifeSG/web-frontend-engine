@@ -39,7 +39,7 @@ export default {
 			description: "A list of options that a user can choose from",
 			table: {
 				type: {
-					summary: "string[]",
+					summary: "IOption[]",
 				},
 			},
 			type: { name: "object", value: {} },
