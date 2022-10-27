@@ -1,24 +1,25 @@
 import { Form, InputMultiSelect } from "@lifesg/react-design-system";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { IMultiSelectRef, IMultiSelectSchema, IOption } from "./types";
+import { IMultiSelectSchema, IOption } from "./types";
 
-export const MultiSelect = React.forwardRef<IMultiSelectRef, IGenericFieldProps<IMultiSelectSchema>>((props, ref) => {
+export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { id, title, validation, ...otherSchema },
+		schema: { label, validation, ...otherSchema },
+		id,
 		name,
 		value,
 		onChange,
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string[]>(value || "");
+	const [stateValue, setStateValue] = useState<IOption[]>(value || []);
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -38,20 +39,20 @@ export const MultiSelect = React.forwardRef<IMultiSelectRef, IGenericFieldProps<
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (extractedValue: string[]): void => {
-		setStateValue(extractedValue);
+	const handleChange = (extractedValues: IOption[]): void => {
+		setStateValue(extractedValues);
 		onChange({
 			target: {
-				value: extractedValue,
+				value: extractedValues,
 			},
 		});
 	};
 
 	return (
-		<Form.CustomField {...otherProps} id={id} label={title} errorMessage={otherProps.error?.message}>
+		<Form.CustomField {...otherProps} id={id} label={label} errorMessage={otherProps.error?.message}>
 			<InputMultiSelect
 				{...otherSchema}
-				id={TestHelper.generateId(id, "select")}
+				id={TestHelper.generateId(id, "multiselect")}
 				name={name}
 				onSelectOptions={handleChange}
 				selectedOptions={stateValue}
@@ -60,4 +61,4 @@ export const MultiSelect = React.forwardRef<IMultiSelectRef, IGenericFieldProps<
 			/>
 		</Form.CustomField>
 	);
-});
+};

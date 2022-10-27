@@ -5,10 +5,10 @@ import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaK
 export interface IMultiSelectRef extends BaseFormElementProps, InputMultiSelectProps<unknown, unknown> {}
 
 export interface IMultiSelectSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"MULTISELECT">,
+	extends IFrontendEngineBaseFieldJsonSchema<"multiselect">,
 		Omit<InputMultiSelectProps<unknown, unknown>, TFrontendEngineBaseFieldJsonSchemaKeys> {}
 
 export interface IOption {
 	label: string;
-	value: string | number;
+	value: string;
 }

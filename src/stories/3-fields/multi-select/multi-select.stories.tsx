@@ -3,7 +3,7 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import styled from "styled-components";
 import { FrontendEngine } from "../../..";
 import { IMultiSelectSchema } from "../../../components/fields/multi-select";
-import { ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/MultiSelect",
@@ -24,42 +24,7 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		type: {
-			description: "Use <code>MULTISELECT</code> to show this field",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["MULTISELECT"],
-			control: {
-				type: "select",
-			},
-		},
-		id: {
-			description: "The unique identifier of the component",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			type: { name: "string", required: true },
-			control: {
-				type: "text",
-			},
-		},
-		title: {
-			description: "A name/description of the purpose of the form element",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
+		...CommonFieldStoryProps("multiselect"),
 		disabled: {
 			description: "Specifies if the input should be disabled",
 			table: {
@@ -107,96 +72,110 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<IMultiSelectSchema> = (args) => (
+const Template: Story<Record<string, IMultiSelectSchema>> = (args) => (
 	<StyledForm
-		id="frontendEngine"
-		validationMode="onSubmit"
 		data={{
-			fields: [args, SubmitButtonStorybook],
-		}}
-		defaultValues={{
-			"multiselect-default-value": [
-				{ value: "Apple", label: "Apple" },
-				{ value: "Berry", label: "Berry" },
-			],
+			fields: {
+				...args,
+				...SubmitButtonStorybook,
+			},
 		}}
 	/>
 );
 
 export const Default = Template.bind({});
 Default.args = {
-	type: "MULTISELECT",
-	id: "multiselect-default",
-	title: "Fruits",
-	options: [
-		{ value: 1, label: "1" },
-		{ value: 2, label: "2" },
-		{ value: 3, label: "3" },
-	],
+	"multiselect-default": {
+		fieldType: "multiselect",
+		label: "Fruits",
+		options: [
+			{ value: 1, label: "1" },
+			{ value: 2, label: "2" },
+			{ value: 3, label: "3" },
+		],
+	},
 };
 
-export const DefaultValue = Template.bind({});
-DefaultValue.args = {
-	type: "MULTISELECT",
-	id: "multiselect-default-value",
-	title: "Fruits",
-	options: [
-		{ value: "Apple", label: "Apple" },
-		{ value: "Berry", label: "Berry" },
-		{ value: "Cherry", label: "Cherry" },
-	],
-};
+export const DefaultValue = () => (
+	<StyledForm
+		data={{
+			fields: {
+				"multiselect-default-value": {
+					fieldType: "multiselect",
+					label: "Fruits",
+					options: [
+						{ value: "Apple", label: "Apple" },
+						{ value: "Berry", label: "Berry" },
+						{ value: "Cherry", label: "Cherry" },
+					],
+				},
+				...SubmitButtonStorybook,
+			},
+			defaultValues: {
+				"multiselect-default-value": [
+					{ value: "Apple", label: "Apple" },
+					{ value: "Berry", label: "Berry" },
+				],
+			},
+		}}
+	/>
+);
+DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	type: "MULTISELECT",
-	id: "multiselect-disasbled",
-	title: "Fruits",
-	options: [
-		{ value: "Apple", label: "Apple" },
-		{ value: "Berry", label: "Berry" },
-		{ value: "Cherry", label: "Cherry" },
-	],
-	disabled: true,
+	"multiselect-disabled": {
+		fieldType: "multiselect",
+		label: "Fruits",
+		options: [
+			{ value: "Apple", label: "Apple" },
+			{ value: "Berry", label: "Berry" },
+			{ value: "Cherry", label: "Cherry" },
+		],
+		disabled: true,
+	},
 };
 
 export const CustomWidth = Template.bind({});
 CustomWidth.args = {
-	type: "MULTISELECT",
-	id: "multiselect-custom-width",
-	title: "Fruits",
-	options: [
-		{ value: "Apple", label: "Apple" },
-		{ value: "Berry", label: "Berry" },
-		{ value: "Cherry", label: "Cherry" },
-	],
-	listStyleWidth: "12rem",
+	"multiselect-custom-width": {
+		fieldType: "multiselect",
+		label: "Fruits",
+		options: [
+			{ value: "Apple", label: "Apple" },
+			{ value: "Berry", label: "Berry" },
+			{ value: "Cherry", label: "Cherry" },
+		],
+		listStyleWidth: "12rem",
+	},
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	type: "MULTISELECT",
-	id: "multiselect-placeholder",
-	title: "Fruits",
-	options: [
-		{ value: "Apple", label: "Apple" },
-		{ value: "Berry", label: "Berry" },
-		{ value: "Cherry", label: "Cherry" },
-	],
-	placeholder: "Select your fruit",
+	"multiselect-placeholder": {
+		fieldType: "multiselect",
+		label: "Fruits",
+		options: [
+			{ value: "Apple", label: "Apple" },
+			{ value: "Berry", label: "Berry" },
+			{ value: "Cherry", label: "Cherry" },
+		],
+		placeholder: "Select your fruit",
+	},
 };
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	type: "MULTISELECT",
-	id: "multiselect-with-validation",
-	title: "Fruits",
-	options: [
-		{ value: "Apple", label: "Apple" },
-		{ value: "Berry", label: "Berry" },
-		{ value: "Cherry", label: "Cherry" },
-	],
-	validation: [{ required: true }],
+	"multiselect-with-validation": {
+		fieldType: "multiselect",
+		label: "Fruits",
+		options: [
+			{ value: "Apple", label: "Apple" },
+			{ value: "Berry", label: "Berry" },
+			{ value: "Cherry", label: "Cherry" },
+		],
+		validation: [{ required: true }],
+	},
 };
 
 const StyledForm = styled(FrontendEngine)`
