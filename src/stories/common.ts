@@ -1,4 +1,6 @@
 import { ISubmitButtonSchema } from "src/components/fields";
+import styled from "styled-components";
+import { FrontendEngine } from "../components";
 
 export const ExcludeReactFormHookProps = {
 	invalid: { table: { disable: true } },
@@ -41,3 +43,7 @@ export const CommonFieldStoryProps = (fieldType: string) => ({
 export const SubmitButtonStorybook: Record<string, ISubmitButtonSchema> = {
 	"submit-button": { fieldType: "submit", label: "Submit" },
 };
+
+export const StyledForm = styled(FrontendEngine)`
+	width: 300px;
+`;

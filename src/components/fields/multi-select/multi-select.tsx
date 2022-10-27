@@ -4,7 +4,8 @@ import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { IMultiSelectSchema, IOption } from "./types";
+import { IOption } from "../types";
+import { IMultiSelectSchema } from "./types";
 
 export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
@@ -39,11 +40,11 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (extractedValues: IOption[]): void => {
-		setStateValue(extractedValues);
+	const handleChange = (options: IOption[]): void => {
+		setStateValue(options);
 		onChange({
 			target: {
-				value: extractedValues,
+				value: options,
 			},
 		});
 	};

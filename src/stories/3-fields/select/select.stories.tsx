@@ -1,9 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ISelectSchema } from "src/components/fields/select/types";
-import styled from "styled-components";
-import { FrontendEngine } from "../../..";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/Select",
@@ -91,7 +89,11 @@ Default.args = {
 	select: {
 		fieldType: "select",
 		label: "Fruits",
-		options: [1, 2, 3],
+		options: [
+			{ label: 1, value: 1 },
+			{ label: 2, value: 2 },
+			{ label: 3, value: 3 },
+		],
 	},
 };
 
@@ -102,11 +104,15 @@ export const DefaultValue = () => (
 				"select-default-value": {
 					fieldType: "select",
 					label: "Fruits",
-					options: ["Apple", "Berry", "Cherry"],
+					options: [
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+					],
 				},
 				...SubmitButtonStorybook,
 			},
-			defaultValues: { "select-default-value": "Apple" },
+			defaultValues: { "select-default-value": { label: "Apple", value: "Apple" } },
 		}}
 	/>
 );
@@ -117,7 +123,11 @@ Disabled.args = {
 	"select-disasbled": {
 		fieldType: "select",
 		label: "Fruits",
-		options: ["Apple", "Berry", "Cherry"],
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
 		disabled: true,
 	},
 };
@@ -127,7 +137,11 @@ CustomWidth.args = {
 	"select-custom-width": {
 		fieldType: "select",
 		label: "Fruits",
-		options: ["Apple", "Berry", "Cherry"],
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
 		listStyleWidth: "12rem",
 	},
 };
@@ -137,7 +151,11 @@ Placeholder.args = {
 	"select-placeholder": {
 		fieldType: "select",
 		label: "Fruits",
-		options: ["Apple", "Berry", "Cherry"],
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
 		placeholder: "Select your fruit",
 	},
 };
@@ -147,11 +165,11 @@ WithValidation.args = {
 	"select-with-validation": {
 		fieldType: "select",
 		label: "Fruits",
-		options: ["Apple", "Berry", "Cherry"],
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
 		validation: [{ required: true }],
 	},
 };
-
-const StyledForm = styled(FrontendEngine)`
-	width: 300px;
-`;

@@ -1,9 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import styled from "styled-components";
-import { FrontendEngine } from "../../..";
 import { IMultiSelectSchema } from "../../../components/fields/multi-select";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/MultiSelect",
@@ -177,7 +175,3 @@ WithValidation.args = {
 		validation: [{ required: true }],
 	},
 };
-
-const StyledForm = styled(FrontendEngine)`
-	width: 300px;
-`;

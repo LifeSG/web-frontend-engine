@@ -7,8 +7,3 @@ export interface IMultiSelectRef extends BaseFormElementProps, InputMultiSelectP
 export interface IMultiSelectSchema
 	extends IFrontendEngineBaseFieldJsonSchema<"multiselect">,
 		Omit<InputMultiSelectProps<unknown, unknown>, TFrontendEngineBaseFieldJsonSchemaKeys> {}
-
-export interface IOption {
-	label: string;
-	value: string;
-}
