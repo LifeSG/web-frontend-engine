@@ -22,6 +22,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
+	const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -33,7 +34,14 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value || []);
+		if (value) {
+			if (isFirstMount) {
+				handleDefaultValue(value);
+				setIsFirstMount(false);
+			} else {
+				setStateValue(value);
+			}
+		}
 	}, [value]);
 
 	// =============================================================================
@@ -52,6 +60,14 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 				value: parsedValues,
 			},
 		});
+	};
+
+	const handleDefaultValue = (options: ISelectOption[]): void => {
+		if (ObjectHelper.containsLabelValue(options, "value")) {
+			const initStateValue = options.map((option) => option.value);
+			setStateValue(initStateValue);
+			onChange({ target: { value: initStateValue } });
+		}
 	};
 
 	return (
