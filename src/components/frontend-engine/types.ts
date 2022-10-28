@@ -1,5 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
 import {
+	ICheckboxGroupSchema,
 	IDateInputSchema,
 	IEmailSchema,
 	IMultiSelectSchema,
@@ -39,6 +40,7 @@ export type TFrontendEngineFieldSchema =
 	| ISubmitButtonSchema
 	| ISelectSchema
 	| IMultiSelectSchema
+	| ICheckboxGroupSchema
 	| IDateInputSchema
 	| IWrapperSchema;
 
@@ -85,6 +87,7 @@ export enum EFieldType {
 	H5 = "Wrapper",
 	H6 = "Wrapper",
 	P = "Wrapper",
+	CHECKBOX = "CheckboxGroup",
 }
 
 // =============================================================================
