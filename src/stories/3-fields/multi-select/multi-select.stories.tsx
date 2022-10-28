@@ -111,10 +111,7 @@ export const DefaultValue = () => (
 				...SubmitButtonStorybook,
 			},
 			defaultValues: {
-				"multi-select-default-value": [
-					{ value: "Apple", label: "Apple" },
-					{ value: "Berry", label: "Berry" },
-				],
+				"multi-select-default-value": ["Apple", "Berry"],
 			},
 		}}
 	/>

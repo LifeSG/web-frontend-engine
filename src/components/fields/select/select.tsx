@@ -1,9 +1,8 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { InputSelect } from "@lifesg/react-design-system/input-select";
-import find from "lodash/find";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
-import { ObjectHelper, TestHelper } from "../../../utils";
+import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ISelectOption, ISelectSchema } from "./types";
@@ -33,29 +32,20 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		if (value) {
-			handleChange(value);
-		}
-	}, []);
+		setStateValue(value || []);
+	}, [value]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const getSelectOption = (): ISelectOption => {
-		return find(options as ISelectOption[], { label: stateValue });
-	};
+	const getSelectOption = (): ISelectOption => options.find(({ value }) => value === stateValue);
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (option: ISelectOption | string): void => {
-		if (ObjectHelper.containsKey(option, "value")) {
-			setStateValue(option.value as string);
-			onChange({ target: { value: option.value } });
-		} else {
-			setStateValue(option);
-			onChange({ target: { value: option } });
-		}
+	const handleChange = (_, option: string): void => {
+		setStateValue(option);
+		onChange({ target: { value: option } });
 	};
 
 	return (
