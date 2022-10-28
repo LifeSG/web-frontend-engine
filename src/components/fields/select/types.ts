@@ -8,4 +8,4 @@ export interface ISelectOption {
 
 export interface ISelectSchema
 	extends IFrontendEngineBaseFieldJsonSchema<"select">,
-		Omit<InputSelectProps<unknown, unknown>, TFrontendEngineBaseFieldJsonSchemaKeys> {}
+		Omit<InputSelectProps<ISelectOption, string>, TFrontendEngineBaseFieldJsonSchemaKeys> {}

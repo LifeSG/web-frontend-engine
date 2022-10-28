@@ -50,7 +50,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// =============================================================================
 	const handleChange = (option: ISelectOption | string): void => {
 		if (ObjectHelper.containsKey(option, "value")) {
-			setStateValue(option.value);
+			setStateValue(option.value as string);
 			onChange({ target: { value: option.value } });
 		} else {
 			setStateValue(option);
