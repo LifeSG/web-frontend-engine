@@ -1,13 +1,14 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { InputSelect } from "@lifesg/react-design-system/input-select";
+import { InputMultiSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ISelectOption, ISelectSchema } from "./types";
+import { ISelectOption } from "../select/types";
+import { IMultiSelectOption, IMultiSelectSchema } from "./types";
 
-export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
+export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -16,18 +17,18 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 		id,
 		name,
 		value,
-		error,
 		onChange,
+		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string>(value || "");
+	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
+		setFieldValidationConfig(id, Yup.array().of(Yup.string()), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
@@ -38,27 +39,32 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const getSelectOption = (): ISelectOption => options.find(({ value }) => value === stateValue);
+	const getSelectOptions = (): IMultiSelectOption[] => options.filter((option) => stateValue.includes(option.value));
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (_, option: string): void => {
-		setStateValue(option);
-		onChange({ target: { value: option } });
+	const handleChange = (options: ISelectOption[]): void => {
+		const parsedValues = options.map((option) => option.value);
+		setStateValue(parsedValues);
+		onChange({
+			target: {
+				value: parsedValues,
+			},
+		});
 	};
 
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			<InputSelect
+		<Form.CustomField id={id} label={label} errorMessage={otherProps.error?.message}>
+			<InputMultiSelect
 				{...otherSchema}
-				id={TestHelper.generateId(id, "select")}
+				id={TestHelper.generateId(id, "multiselect")}
 				name={name}
 				options={options}
-				onSelectOption={handleChange}
-				selectedOption={getSelectOption()}
-				valueExtractor={(item: ISelectOption) => item.value}
-				listExtractor={(item: ISelectOption) => item.label}
+				onSelectOptions={handleChange}
+				selectedOptions={getSelectOptions()}
+				valueExtractor={(item: IMultiSelectOption) => item.value}
+				listExtractor={(item: IMultiSelectOption) => item.label}
 			/>
 		</Form.CustomField>
 	);

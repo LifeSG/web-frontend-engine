@@ -48,6 +48,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		const fieldComponents: JSX.Element[] = [];
 		Object.entries(fieldData).forEach(([id, customField]) => {
 			const fieldType = customField.fieldType?.toUpperCase();
+
 			if (Object.keys(FieldType).includes(fieldType)) {
 				const Field = FrontendEngineFields[FieldType[fieldType]] as React.ForwardRefExoticComponent<
 					IGenericFieldProps<TFrontendEngineFieldSchema>

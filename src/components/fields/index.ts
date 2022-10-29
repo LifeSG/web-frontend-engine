@@ -1,3 +1,4 @@
+export * from "./multi-select";
 export * from "./select";
 export * from "./submit-button";
 export * from "./textarea";

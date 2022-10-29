@@ -1,16 +1,18 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { ISelectSchema } from "src/components/fields/select/types";
+import { IMultiSelectSchema } from "../../../components/fields/multi-select";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/Select",
+	title: "Field/MultiSelect",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>Select</Title>
-					<Description>This component provides a set of options for user to select</Description>
+					<Title>MultiSelect</Title>
+					<Description>
+						This component provides a set of options for user to select multiple preferences
+					</Description>
 					<Heading>Props</Heading>
 					<ArgsTable story={PRIMARY_STORY} />
 					<Stories includePrimary={true} title="Examples" />
@@ -20,8 +22,8 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("select"),
-		select: { table: { disable: true } },
+		...CommonFieldStoryProps("multi-select"),
+		"multi-select-default": { table: { disable: true } },
 		disabled: {
 			description: "Specifies if the input should be disabled",
 			table: {
@@ -69,19 +71,26 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ISelectSchema>> = (args) => (
-	<StyledForm data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+const Template: Story<Record<string, IMultiSelectSchema>> = (args) => (
+	<StyledForm
+		data={{
+			fields: {
+				...args,
+				...SubmitButtonStorybook,
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
 Default.args = {
-	select: {
-		fieldType: "select",
+	"multi-select-default": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
-			{ label: "1", value: "1" },
-			{ label: "2", value: "2" },
-			{ label: "3", value: "3" },
+			{ value: "1", label: "1" },
+			{ value: "2", label: "2" },
+			{ value: "3", label: "3" },
 		],
 	},
 };
@@ -90,18 +99,20 @@ export const DefaultValue = () => (
 	<StyledForm
 		data={{
 			fields: {
-				"select-default-value": {
-					fieldType: "select",
+				"multi-select-default-value": {
+					fieldType: "multi-select",
 					label: "Fruits",
 					options: [
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
+						{ value: "Apple", label: "Apple" },
+						{ value: "Berry", label: "Berry" },
+						{ value: "Cherry", label: "Cherry" },
 					],
 				},
 				...SubmitButtonStorybook,
 			},
-			defaultValues: { "select-default-value": "Apple" },
+			defaultValues: {
+				"multi-select-default-value": ["Apple", "Berry"],
+			},
 		}}
 	/>
 );
@@ -109,13 +120,13 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"select-disasbled": {
-		fieldType: "select",
+	"multi-select-disabled": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
+			{ value: "Apple", label: "Apple" },
+			{ value: "Berry", label: "Berry" },
+			{ value: "Cherry", label: "Cherry" },
 		],
 		disabled: true,
 	},
@@ -123,13 +134,13 @@ Disabled.args = {
 
 export const CustomWidth = Template.bind({});
 CustomWidth.args = {
-	"select-custom-width": {
-		fieldType: "select",
+	"multi-select-custom-width": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
+			{ value: "Apple", label: "Apple" },
+			{ value: "Berry", label: "Berry" },
+			{ value: "Cherry", label: "Cherry" },
 		],
 		listStyleWidth: "12rem",
 	},
@@ -137,13 +148,13 @@ CustomWidth.args = {
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"select-placeholder": {
-		fieldType: "select",
+	"multi-select-placeholder": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
+			{ value: "Apple", label: "Apple" },
+			{ value: "Berry", label: "Berry" },
+			{ value: "Cherry", label: "Cherry" },
 		],
 		placeholder: "Select your fruit",
 	},
@@ -151,13 +162,13 @@ Placeholder.args = {
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"select-with-validation": {
-		fieldType: "select",
+	"multi-select-with-validation": {
+		fieldType: "multi-select",
 		label: "Fruits",
 		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
+			{ value: "Apple", label: "Apple" },
+			{ value: "Berry", label: "Berry" },
+			{ value: "Cherry", label: "Cherry" },
 		],
 		validation: [{ required: true }],
 	},
