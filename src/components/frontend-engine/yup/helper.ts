@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
-import { IYupRule, TFormYupConfig, TYupCondition, TYupSchemaType, YUP_CONDITIONS } from "./types";
+import { IYupValidationRule, TFormYupConfig, TYupCondition, TYupSchemaType, YUP_CONDITIONS } from "./types";
 
 // TODO: custom validation
 export namespace YupHelper {
@@ -27,7 +27,7 @@ export namespace YupHelper {
 	 */
 	export const buildFieldSchema = (
 		yupSchemaField: Yup.AnySchema,
-		fieldValidationConfig: IYupRule[]
+		fieldValidationConfig: IYupValidationRule[]
 	): Yup.AnySchema => {
 		const validationRules = fieldValidationConfig.filter((config) =>
 			YUP_CONDITIONS.includes(Object.keys(config)[0] as TYupCondition)
@@ -64,7 +64,7 @@ export namespace YupHelper {
 	 * @param validationRules An array of validation rules to be mapped against validation type (i.e. a string schema might contain { maxLength: 255 })
 	 * @returns yupSchema with added constraints and validations
 	 */
-	const mapRules = (yupSchema: Yup.AnySchema, validationRules: IYupRule[]): Yup.AnySchema => {
+	const mapRules = (yupSchema: Yup.AnySchema, validationRules: IYupValidationRule[]): Yup.AnySchema => {
 		validationRules.forEach((rule) => {
 			const ruleKey = Object.keys(rule).filter((k) =>
 				YUP_CONDITIONS.includes(k as TYupCondition)

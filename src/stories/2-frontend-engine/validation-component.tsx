@@ -3,11 +3,11 @@ import * as Yup from "yup";
 import { YupHelper } from "src/components/frontend-engine/yup/helper";
 import { Button } from "@lifesg/react-design-system/button";
 import styled from "styled-components";
-import { IYupRule, TYupSchemaType } from "src/components/frontend-engine/yup/types";
+import { IYupValidationRule, TYupSchemaType } from "src/components/frontend-engine/yup/types";
 
 export interface IValidationComponentProps {
 	type: TYupSchemaType;
-	rule: IYupRule;
+	rule: IYupValidationRule;
 	value: Record<string, any>;
 }
 

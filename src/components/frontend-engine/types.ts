@@ -11,7 +11,7 @@ import {
 	ITextfieldSchema,
 } from "../fields";
 import { IWrapperSchema } from "../fields/wrapper";
-import { IYupRule } from "./yup/types";
+import { IYupValidationRule } from "./yup/types";
 
 // =============================================================================
 // FRONTEND ENGINE
@@ -61,7 +61,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 export interface IFrontendEngineBaseFieldJsonSchema<T> {
 	fieldType: T;
 	label: string;
-	validation?: IYupRule[] | undefined;
+	validation?: IYupValidationRule[] | undefined;
 }
 
 export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";

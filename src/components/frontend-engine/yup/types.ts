@@ -5,8 +5,7 @@ export const YUP_CONDITIONS = ["required", "length", "min", "max", "matches", "e
 export type TYupSchemaType = typeof YUP_TYPES[number];
 export type TYupCondition = typeof YUP_CONDITIONS[number];
 
-export interface IYupRule {
-	required?: boolean | undefined;
+interface IYupRule {
 	length?: number | undefined;
 	min?: number | undefined;
 	max?: number | undefined;
@@ -18,17 +17,21 @@ export interface IYupRule {
 		| {
 				[id: string]: {
 					is: string | number | boolean | string[] | number[] | boolean[];
-					then: Omit<IYupRule, "when">[];
-					otherwise?: Omit<IYupRule, "when">[];
+					then: Omit<IYupValidationRule, "when">[];
+					otherwise?: Omit<IYupValidationRule, "when">[];
 				};
 		  }
 		| undefined;
+}
+
+export interface IYupValidationRule extends IYupRule {
+	required?: boolean | undefined;
 	errorMessage?: string | undefined;
 }
 
 export interface IFieldYupConfig {
 	schema: Yup.AnySchema;
-	validationRules: IYupRule[];
+	validationRules: IYupValidationRule[];
 }
 
 export type TFormYupConfig = Record<string, IFieldYupConfig>;
