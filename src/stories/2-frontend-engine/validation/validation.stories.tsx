@@ -63,87 +63,11 @@ Required.args = {
 	value: { name: undefined },
 };
 
-export const Length = Template.bind({});
-Length.args = {
+export const Empty = Template.bind({});
+Empty.args = {
 	type: "string",
-	rule: { length: 10, errorMessage: "Invalid length" },
+	rule: { empty: true, errorMessage: "Must be empty" },
 	value: { name: "hello world" },
-};
-
-export const MinString = Template.bind({});
-MinString.storyName = "Min (String)";
-MinString.args = {
-	type: "string",
-	rule: { min: 5, errorMessage: "Min 5 characters" },
-	value: { name: "a" },
-};
-
-export const MinNumber = Template.bind({});
-MinNumber.storyName = "Min (Number)";
-MinNumber.args = {
-	type: "number",
-	rule: { min: 5, errorMessage: "Min 5" },
-	value: { name: 4 },
-};
-
-export const MinArray = Template.bind({});
-MinArray.storyName = "Min (Array)";
-MinArray.args = {
-	type: "array",
-	rule: { min: 5, errorMessage: "Min 5 items" },
-	value: { name: [1, 2, 3] },
-};
-
-export const MaxString = Template.bind({});
-MaxString.storyName = "Max (String)";
-MaxString.args = {
-	type: "string",
-	rule: { max: 5, errorMessage: "Max 5 characters" },
-	value: { name: "abcdef" },
-};
-
-export const MaxNumber = Template.bind({});
-MaxNumber.storyName = "Max (Number)";
-MaxNumber.args = {
-	type: "number",
-	rule: { max: 5, errorMessage: "Max 5" },
-	value: { name: 6 },
-};
-
-export const MaxArray = Template.bind({});
-MaxArray.storyName = "Max (Array)";
-MaxArray.args = {
-	type: "array",
-	rule: { max: 5, errorMessage: "Max 5 items" },
-	value: { name: [1, 2, 3, 4, 5, 6] },
-};
-
-export const Matches = Template.bind({});
-Matches.args = {
-	type: "string",
-	rule: { matches: "/^(hello)/", errorMessage: "Need to begin with `hello`" },
-	value: { name: "lorem ipsum" },
-};
-
-export const Email = Template.bind({});
-Email.args = {
-	type: "string",
-	rule: { email: true, errorMessage: "Invalid email" },
-	value: { name: "lorem ipsum" },
-};
-
-export const Url = Template.bind({});
-Url.args = {
-	type: "string",
-	rule: { url: true, errorMessage: "Invalid url" },
-	value: { name: "lorem ipsum" },
-};
-
-export const UUID = Template.bind({});
-UUID.args = {
-	type: "string",
-	rule: { uuid: true, errorMessage: "Invalid uuid" },
-	value: { name: "lorem ipsum" },
 };
 
 export const When = Template.bind({});
@@ -169,4 +93,18 @@ When.args = {
 		},
 	},
 	value: { name: undefined, field2: "something" },
+};
+
+export const Equals = Template.bind({});
+Equals.args = {
+	type: "string",
+	rule: { equals: "hello world", errorMessage: "Must be `hello world`" },
+	value: { name: "lorem" },
+};
+
+export const NotEquals = Template.bind({});
+NotEquals.args = {
+	type: "string",
+	rule: { notEquals: "hello world", errorMessage: "Must not be `hello world`" },
+	value: { name: "hello world" },
 };
