@@ -4,7 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import { Wrapper } from "../fields/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
-import { ValidationProvider } from "./validation-schema";
+import { YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
@@ -80,7 +80,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 });
 
 export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => (
-	<ValidationProvider>
+	<YupProvider>
 		<FrontendEngineInner {...props} ref={ref} />
-	</ValidationProvider>
+	</YupProvider>
 ));

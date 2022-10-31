@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { ValidationContext } from "src/components/frontend-engine/validation-schema";
-import { IValidationRule } from "src/components/frontend-engine/validation-schema/types";
-import { ValidationSchemaUtils } from "src/components/frontend-engine/validation-schema/utils";
+import { YupContext } from "src/components/frontend-engine/yup";
+import { IYupRule } from "src/components/frontend-engine/yup/types";
+import { YupHelper } from "src/components/frontend-engine/yup/helper";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 
@@ -10,12 +10,12 @@ import { ObjectShape } from "yup/lib/object";
  * use this hook to get/set the validationSchema and config
  */
 export const useValidationSchema = () => {
-	const { formValidationConfig, setFormValidationConfig } = useContext(ValidationContext);
+	const { formValidationConfig, setFormValidationConfig } = useContext(YupContext);
 	const [validationSchema, setValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>();
 
 	useEffect(() => {
 		if (formValidationConfig) {
-			setValidationSchema(ValidationSchemaUtils.buildYupSchema(formValidationConfig));
+			setValidationSchema(YupHelper.buildSchema(formValidationConfig));
 		}
 	}, [formValidationConfig]);
 
@@ -25,7 +25,7 @@ export const useValidationSchema = () => {
 	 * @param schema Yup schema object, add your custom validation logic here
 	 * @param validationRules array validation rules passed from JSON
 	 */
-	const setFieldValidationConfig = (id: string, schema: Yup.AnySchema, validationRules: IValidationRule[] = []) => {
+	const setFieldValidationConfig = (id: string, schema: Yup.AnySchema, validationRules: IYupRule[] = []) => {
 		setFormValidationConfig((oldConfig) => ({
 			...oldConfig,
 			[id]: { schema, validationRules },

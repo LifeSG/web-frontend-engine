@@ -1,26 +1,21 @@
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
-import {
-	IValidationRule,
-	TFormValidationConfig,
-	TValidationCondition,
-	TValidationType,
-	VALIDATION_CONDITIONS,
-} from "./types";
+import { IYupRule, TFormYupConfig, TYupCondition, TYupSchemaType, YUP_CONDITIONS } from "./types";
 
 // TODO: custom validation
-export namespace ValidationSchemaUtils {
+export namespace YupHelper {
 	/**
 	 * Constructs the entire Yup schema for frontend engine to use
-	 * @param formValidationConfig JSON representation of the eventual Yup schema
+	 * @param yupSchemaConfig JSON representation of the eventual Yup schema
 	 * @returns Yup schema ready to be used by FrontendEngine
 	 */
-	export const buildYupSchema = (formValidationConfig: TFormValidationConfig): Yup.ObjectSchema<ObjectShape> => {
+	export const buildSchema = (yupSchemaConfig: TFormYupConfig): Yup.ObjectSchema<ObjectShape> => {
 		const yupSchema: ObjectShape = {};
-		Object.keys(formValidationConfig).forEach((id) => {
-			const { schema, validationRules: fieldValidationConfig } = formValidationConfig[id];
-			yupSchema[id] = buildFieldYupSchema(schema, fieldValidationConfig);
+		Object.keys(yupSchemaConfig).forEach((id) => {
+			const { schema, validationRules: fieldValidationConfig } = yupSchemaConfig[id];
+			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
 		});
+
 		return Yup.object().shape(yupSchema);
 	};
 
@@ -30,14 +25,14 @@ export namespace ValidationSchemaUtils {
 	 * @param fieldValidationConfig JSON representation of the Yup schema
 	 * @returns yupSchema corresponding to the specified validations and constraints
 	 */
-	const buildFieldYupSchema = (
+	export const buildFieldSchema = (
 		yupSchemaField: Yup.AnySchema,
-		fieldValidationConfig: IValidationRule[]
+		fieldValidationConfig: IYupRule[]
 	): Yup.AnySchema => {
 		const validationRules = fieldValidationConfig.filter((config) =>
-			VALIDATION_CONDITIONS.includes(Object.keys(config)[0] as TValidationCondition)
+			YUP_CONDITIONS.includes(Object.keys(config)[0] as TYupCondition)
 		);
-		return mapYupConditions(yupSchemaField, validationRules);
+		return mapRules(yupSchemaField, validationRules);
 	};
 
 	/**
@@ -45,7 +40,7 @@ export namespace ValidationSchemaUtils {
 	 * @param type The schema type
 	 * @returns yupSchema that corresponds to the validation type
 	 */
-	const mapYupSchema = (type: TValidationType) => {
+	export const mapSchemaType = (type: TYupSchemaType) => {
 		// TODO: allow customising of the typeError message?
 		switch (type) {
 			case "string":
@@ -69,11 +64,11 @@ export namespace ValidationSchemaUtils {
 	 * @param validationRules An array of validation rules to be mapped against validation type (i.e. a string schema might contain { maxLength: 255 })
 	 * @returns yupSchema with added constraints and validations
 	 */
-	const mapYupConditions = (yupSchema: Yup.AnySchema, validationRules: IValidationRule[]): Yup.AnySchema => {
+	const mapRules = (yupSchema: Yup.AnySchema, validationRules: IYupRule[]): Yup.AnySchema => {
 		validationRules.forEach((rule) => {
 			const ruleKey = Object.keys(rule).filter((k) =>
-				VALIDATION_CONDITIONS.includes(k as TValidationCondition)
-			)?.[0] as TValidationCondition;
+				YUP_CONDITIONS.includes(k as TYupCondition)
+			)?.[0] as TYupCondition;
 
 			switch (true) {
 				case rule.required:
@@ -103,12 +98,12 @@ export namespace ValidationSchemaUtils {
 						Object.keys(rule.when).forEach((fieldId) => {
 							yupSchema = yupSchema.when(fieldId, {
 								is: rule.when[fieldId].is,
-								then: mapYupConditions(
-									mapYupSchema(yupSchema.type as TValidationType),
+								then: mapRules(
+									mapSchemaType(yupSchema.type as TYupSchemaType),
 									rule.when[fieldId].then
 								),
-								otherwise: mapYupConditions(
-									mapYupSchema(yupSchema.type as TValidationType),
+								otherwise: mapRules(
+									mapSchemaType(yupSchema.type as TYupSchemaType),
 									rule.when[fieldId].otherwise
 								),
 							});
