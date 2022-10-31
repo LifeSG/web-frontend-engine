@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import isEmpty from "lodash/isEmpty";
 import { ObjectShape } from "yup/lib/object";
 import {
 	IYupRenderRule,
@@ -91,6 +92,12 @@ export namespace YupHelper {
 				case rule.length > 0:
 				case rule.min > 0:
 				case rule.max > 0:
+				case !!rule.filled:
+				case !!rule.empty:
+				case !!rule.equals:
+				case !!rule.notEquals:
+				case !!rule.includes:
+				case !!rule.excludes:
 					yupSchema = (yupSchema as unknown)[ruleKey](rule[ruleKey], rule.errorMessage);
 					break;
 				case !!rule.matches:
@@ -124,4 +131,43 @@ export namespace YupHelper {
 
 		return yupSchema;
 	};
+
+	/**
+	 * Declare custom Yup schema condition
+	 * @param type The schema type
+	 * @param name Name of the condition
+	 * @param fn Validation function, it must return a boolean
+	 */
+	export const addCondition = (
+		type: TYupSchemaType | "mixed",
+		name: string,
+		fn: (value: unknown, arg: unknown, context: Yup.TestContext) => boolean
+	) => {
+		Yup.addMethod<Yup.AnySchema>(Yup[type], name, function (arg: unknown, errorMessage: string) {
+			return this.test({
+				name,
+				message: errorMessage,
+				test: (value, testContext) => fn(value, arg, testContext),
+			});
+		});
+	};
 }
+
+YupHelper.addCondition("mixed", "filled", (value) => !isEmpty(value));
+YupHelper.addCondition("mixed", "empty", (value) => isEmpty(value));
+YupHelper.addCondition("mixed", "equals", (value, match) => !isEmpty(value) && value === match);
+YupHelper.addCondition("mixed", "notEquals", (value, match) => !isEmpty(value) && value !== match);
+YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
+	if (!Array.isArray(matches)) {
+		return values.includes(matches);
+	} else {
+		return matches.filter((m) => values.includes(m)).length === matches.length;
+	}
+});
+YupHelper.addCondition("array", "excludes", (values: unknown[], matches: unknown | unknown[]) => {
+	if (!Array.isArray(matches)) {
+		return !values.includes(matches);
+	} else {
+		return values.length && matches.filter((m) => values.includes(m)).length === 0;
+	}
+});
