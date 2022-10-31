@@ -31,6 +31,7 @@
 		"lodash": "^4.17.21",
 		"react-hook-form": "^7.34.2",
 		"styled-components": "^5.3.6",
+		"use-deep-compare-effect": "^1.8.1",
 		"yup": "^0.32.11"
 	},
 	"devDependencies": {

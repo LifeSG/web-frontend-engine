@@ -13,6 +13,10 @@ interface IYupRule {
 	email?: boolean | undefined;
 	url?: boolean | undefined;
 	uuid?: boolean | undefined;
+}
+
+export interface IYupValidationRule extends IYupRule {
+	required?: boolean | undefined;
 	when?:
 		| {
 				[id: string]: {
@@ -22,12 +26,12 @@ interface IYupRule {
 				};
 		  }
 		| undefined;
-}
-
-export interface IYupValidationRule extends IYupRule {
-	required?: boolean | undefined;
 	errorMessage?: string | undefined;
 }
+
+export interface IYupRenderRule extends IYupRule {}
+
+export type TRenderRules = Record<string, IYupRenderRule[]>;
 
 export interface IFieldYupConfig {
 	schema: Yup.AnySchema;

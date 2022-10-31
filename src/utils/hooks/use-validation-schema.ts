@@ -36,5 +36,12 @@ export const useValidationSchema = () => {
 		}));
 	};
 
-	return { validationSchema, formValidationConfig, setFieldValidationConfig };
+	const removeFieldValidationConfig = (id: string) =>
+		setFormValidationConfig((oldConfig) => {
+			const newConfig = { ...oldConfig };
+			delete newConfig[id];
+			return newConfig;
+		});
+
+	return { validationSchema, formValidationConfig, setFieldValidationConfig, removeFieldValidationConfig };
 };

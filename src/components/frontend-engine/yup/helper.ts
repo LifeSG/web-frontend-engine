@@ -1,6 +1,15 @@
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
-import { IYupValidationRule, TFormYupConfig, TYupCondition, TYupSchemaType, YUP_CONDITIONS } from "./types";
+import {
+	IYupRenderRule,
+	IYupValidationRule,
+	TFormYupConfig,
+	TYupCondition,
+	TYupSchemaType,
+	YUP_CONDITIONS,
+} from "./types";
+
+interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 
 // TODO: custom validation
 export namespace YupHelper {
@@ -27,7 +36,7 @@ export namespace YupHelper {
 	 */
 	export const buildFieldSchema = (
 		yupSchemaField: Yup.AnySchema,
-		fieldValidationConfig: IYupValidationRule[]
+		fieldValidationConfig: IYupCombinedRule[]
 	): Yup.AnySchema => {
 		const validationRules = fieldValidationConfig.filter((config) =>
 			YUP_CONDITIONS.includes(Object.keys(config)[0] as TYupCondition)
@@ -61,11 +70,11 @@ export namespace YupHelper {
 	/**
 	 * Adds Yup validation and constraints based on specified rules
 	 * @param yupSchema Yup schema that was previously created from specified validation type
-	 * @param validationRules An array of validation rules to be mapped against validation type (i.e. a string schema might contain { maxLength: 255 })
+	 * @param schemaRules An array of validation rules to be mapped against validation type (i.e. a string schema might contain { maxLength: 255 })
 	 * @returns yupSchema with added constraints and validations
 	 */
-	const mapRules = (yupSchema: Yup.AnySchema, validationRules: IYupValidationRule[]): Yup.AnySchema => {
-		validationRules.forEach((rule) => {
+	const mapRules = (yupSchema: Yup.AnySchema, schemaRules: IYupCombinedRule[]): Yup.AnySchema => {
+		schemaRules.forEach((rule) => {
 			const ruleKey = Object.keys(rule).filter((k) =>
 				YUP_CONDITIONS.includes(k as TYupCondition)
 			)?.[0] as TYupCondition;
