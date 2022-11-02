@@ -41,13 +41,17 @@ export interface IYupValidationRule extends IYupRule {
 	when?:
 		| {
 				[id: string]: {
-					is: string | number | boolean | string[] | number[] | boolean[];
+					is: string | number | boolean | string[] | number[] | boolean[] | IYupConditionalValidationRule[];
 					then: Omit<IYupValidationRule, "when">[];
 					otherwise?: Omit<IYupValidationRule, "when">[];
 				};
 		  }
 		| undefined;
 	errorMessage?: string | undefined;
+}
+
+export interface IYupConditionalValidationRule extends IYupRule {
+	filled?: boolean | undefined;
 }
 
 export interface IYupRenderRule extends IYupRule {

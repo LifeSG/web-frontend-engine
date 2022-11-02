@@ -2,6 +2,7 @@ import * as Yup from "yup";
 import isEmpty from "lodash/isEmpty";
 import { ObjectShape } from "yup/lib/object";
 import {
+	IYupConditionalValidationRule,
 	IYupRenderRule,
 	IYupValidationRule,
 	TFormYupConfig,
@@ -112,17 +113,36 @@ export namespace YupHelper {
 				case !!rule.when:
 					{
 						Object.keys(rule.when).forEach((fieldId) => {
-							yupSchema = yupSchema.when(fieldId, {
-								is: rule.when[fieldId].is,
-								then: mapRules(
-									mapSchemaType(yupSchema.type as TYupSchemaType),
-									rule.when[fieldId].then
-								),
-								otherwise: mapRules(
-									mapSchemaType(yupSchema.type as TYupSchemaType),
-									rule.when[fieldId].otherwise
-								),
-							});
+							const isRule = rule.when[fieldId].is;
+							const thenRule = mapRules(
+								mapSchemaType(yupSchema.type as TYupSchemaType),
+								rule.when[fieldId].then
+							);
+							const otherwiseRule =
+								rule.when[fieldId].otherwise &&
+								mapRules(mapSchemaType(yupSchema.type as TYupSchemaType), rule.when[fieldId].otherwise);
+
+							if (Array.isArray(isRule) && (isRule as unknown[]).every((r) => typeof r === "object")) {
+								yupSchema = yupSchema.when(fieldId, (value: unknown, fieldYupSchema: Yup.AnySchema) => {
+									const localYupSchema = mapRules(
+										fieldYupSchema.clone(),
+										isRule as IYupConditionalValidationRule[]
+									);
+									let fulfilled = false;
+									try {
+										localYupSchema.validateSync(value);
+										fulfilled = true;
+									} catch (error) {}
+
+									return fulfilled ? thenRule : otherwiseRule;
+								});
+							} else {
+								yupSchema = yupSchema.when(fieldId, {
+									is: isRule,
+									then: thenRule,
+									otherwise: otherwiseRule,
+								});
+							}
 						});
 					}
 					break;
