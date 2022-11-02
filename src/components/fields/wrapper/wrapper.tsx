@@ -1,8 +1,8 @@
 import isEmpty from "lodash/isEmpty";
 import React, { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "src/components/frontend-engine/types";
 import * as FrontendEngineFields from "../";
+import { EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { IWrapperSchema } from "./types";
 
 interface IWrapperProps {
