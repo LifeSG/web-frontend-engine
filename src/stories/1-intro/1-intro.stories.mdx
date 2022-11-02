@@ -3,7 +3,7 @@ import { VersionTags } from "./version-tag.tsx";
 
 <Meta title="Introduction/Getting Started" />
 
-# LifeSG Frontend Engine v2
+# Web Frontend Engine
 
 <VersionTags link="https://github.com/LifeSG/web-frontend-engine" />
 
@@ -55,14 +55,13 @@ Frontend Engine accepts the JSON schema through the data props, the shape is def
 
 ```json
 {
-	"fields": [
-		{
-			"id": "name",
-			"title": "What is your name",
-			"type": "TEXTAREA",
+	"fields": {
+		"name": {
+			"label": "What is your name",
+			"fieldType": "textarea",
 			"validation": ["required"]
 		}
-	]
+	}
 }
 ```
 

@@ -21,11 +21,10 @@ export default {
 	{
 		//...
 		"data": {
-			"fields": [
-				{
-					id: "name",
-					title: "What is your name",
-					type: "TEXTAREA",
+			"fields": {
+				"name": {
+					label: "What is your name",
+					fieldType: "textarea",
 					validation: [
 						{ required: true },
 						{ max: 255, errorMessage: "Maximum length of 255" },
@@ -33,7 +32,7 @@ export default {
 					chipTexts: ["John", "Doe"],
 				},
 				//...
-			]
+			}
 		}
 	}
 					`}

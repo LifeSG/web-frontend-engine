@@ -1,5 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
 import {
+	IDateInputSchema,
 	IEmailSchema,
 	IMultiSelectSchema,
 	INumberSchema,
@@ -8,6 +9,7 @@ import {
 	ITextareaSchema,
 	ITextfieldSchema,
 } from "../fields";
+import { IWrapperSchema } from "../fields/wrapper";
 import { IValidationRule } from "./validation-schema/types";
 
 // =============================================================================
@@ -36,7 +38,9 @@ export type TFrontendEngineFieldSchema =
 	| INumberSchema
 	| ISubmitButtonSchema
 	| ISelectSchema
-	| IMultiSelectSchema;
+	| IMultiSelectSchema
+	| IDateInputSchema
+	| IWrapperSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -60,7 +64,7 @@ export interface IFrontendEngineBaseFieldJsonSchema<T> {
 
 export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";
 
-export enum FieldType {
+export enum EFieldType {
 	TEXTAREA = "TextArea",
 	TEXT = "TextField",
 	NUMBER = "TextField",
@@ -68,6 +72,19 @@ export enum FieldType {
 	SUBMIT = "SubmitButton",
 	SELECT = "Select",
 	"MULTI-SELECT" = "MultiSelect",
+	DATE = "DateInput",
+	DIV = "Wrapper",
+	SPAN = "Wrapper",
+	SECTION = "Wrapper",
+	HEADER = "Wrapper",
+	FOOTER = "Wrapper",
+	H1 = "Wrapper",
+	H2 = "Wrapper",
+	H3 = "Wrapper",
+	H4 = "Wrapper",
+	H5 = "Wrapper",
+	H6 = "Wrapper",
+	P = "Wrapper",
 }
 
 // =============================================================================
