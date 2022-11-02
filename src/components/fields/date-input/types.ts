@@ -1,4 +1,4 @@
-import { DateInputProps } from "@lifesg/react-design-system";
+import { DateInputProps } from "@lifesg/react-design-system/date-input";
 import {
 	IFrontendEngineBaseFieldJsonSchema,
 	TFrontendEngineBaseFieldJsonSchemaKeys,
