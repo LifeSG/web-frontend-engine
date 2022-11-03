@@ -58,14 +58,14 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // =============================================================================
 // JSON SCHEMA
 // =============================================================================
-export interface IFrontendEngineBaseFieldJsonSchema<T> {
+export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
 	fieldType: T;
 	label: string;
 	/** render conditions
 	 * - need to fulfil at least 1 object in array (OR condition)
 	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
 	showIf?: TRenderRules[] | undefined;
-	validation?: IYupValidationRule[] | undefined;
+	validation?: V[] | undefined;
 }
 
 export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";

@@ -25,10 +25,10 @@ export const useValidationSchema = () => {
 	 * @param schema Yup schema object, add your custom validation logic here
 	 * @param validationRules array validation rules passed from JSON
 	 */
-	const setFieldValidationConfig = (
+	const setFieldValidationConfig = <V = IYupValidationRule>(
 		id: string,
 		schema: Yup.AnySchema,
-		validationRules: IYupValidationRule[] = []
+		validationRules: V[] = []
 	) => {
 		setFormValidationConfig((oldConfig) => ({
 			...oldConfig,
