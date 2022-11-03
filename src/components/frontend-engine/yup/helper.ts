@@ -87,6 +87,9 @@ export namespace YupHelper {
 				case !!rule.email:
 				case !!rule.url:
 				case !!rule.uuid:
+				case !!rule.positive:
+				case !!rule.negative:
+				case !!rule.integer:
 					yupSchema = (yupSchema as unknown)[ruleKey](rule.errorMessage);
 					break;
 				case rule.length > 0:

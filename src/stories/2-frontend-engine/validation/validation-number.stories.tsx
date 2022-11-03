@@ -43,3 +43,24 @@ MaxValue.args = {
 	rule: { max: 5, errorMessage: "Max 5" },
 	value: { name: 6 },
 };
+
+export const Positive = Template.bind({});
+Positive.args = {
+	type: "number",
+	rule: { positive: true, errorMessage: "Only positive values" },
+	value: { name: -6 },
+};
+
+export const Negative = Template.bind({});
+Negative.args = {
+	type: "number",
+	rule: { negative: true, errorMessage: "Only negative values" },
+	value: { name: 6 },
+};
+
+export const Integer = Template.bind({});
+Integer.args = {
+	type: "number",
+	rule: { integer: true, errorMessage: "Must be integer" },
+	value: { name: 1.5 },
+};

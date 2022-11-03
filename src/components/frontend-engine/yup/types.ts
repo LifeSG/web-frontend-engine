@@ -10,6 +10,9 @@ export const YUP_CONDITIONS = [
 	"email",
 	"url",
 	"uuid",
+	"positive",
+	"negative",
+	"integer",
 	"when",
 	"filled",
 	"empty",
@@ -30,6 +33,9 @@ interface IYupRule {
 	email?: boolean | undefined;
 	url?: boolean | undefined;
 	uuid?: boolean | undefined;
+	positive?: boolean | undefined;
+	negative?: boolean | undefined;
+	integer?: boolean | undefined;
 	empty?: boolean | undefined;
 	equals?: unknown | undefined;
 	notEquals?: unknown | undefined;
