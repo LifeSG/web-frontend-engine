@@ -2,7 +2,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { InputMultiSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
-import { ObjectHelper, TestHelper } from "../../../utils";
+import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ISelectOption } from "../select/types";
@@ -22,7 +22,6 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
-	const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -34,14 +33,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		if (value) {
-			if (isFirstMount) {
-				handleDefaultValue(value);
-				setIsFirstMount(false);
-			} else {
-				setStateValue(value);
-			}
-		}
+		setStateValue(value || []);
 	}, [value]);
 
 	// =============================================================================
@@ -55,19 +47,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	const handleChange = (options: ISelectOption[]): void => {
 		const parsedValues = options.map((option) => option.value);
 		setStateValue(parsedValues);
-		onChange({
-			target: {
-				value: parsedValues.length > 0 ? parsedValues : undefined,
-			},
-		});
-	};
-
-	const handleDefaultValue = (options: ISelectOption[]): void => {
-		if (ObjectHelper.containsLabelValue(options, "value")) {
-			const initStateValue = options.map((option) => option.value);
-			setStateValue(initStateValue);
-			onChange({ target: { value: initStateValue } });
-		}
+		onChange({ target: { value: parsedValues } });
 	};
 
 	return (

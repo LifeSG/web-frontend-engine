@@ -104,7 +104,7 @@ export const DefaultValue = () => (
 				},
 				...SubmitButtonStorybook,
 			},
-			defaultValues: { "checkbox-default-value": [{ label: "Apple", value: "Apple" }] },
+			defaultValues: { "checkbox-default-value": ["Apple", "Berry"] },
 		}}
 	/>
 );
