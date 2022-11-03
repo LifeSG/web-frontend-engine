@@ -98,6 +98,7 @@ export namespace YupHelper {
 				case !!rule.notEquals:
 				case !!rule.includes:
 				case !!rule.excludes:
+				case !!rule.uinfin:
 					yupSchema = (yupSchema as unknown)[ruleKey](rule[ruleKey], rule.errorMessage);
 					break;
 				case !!rule.matches:

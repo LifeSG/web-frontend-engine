@@ -17,6 +17,7 @@ export const YUP_CONDITIONS = [
 	"notEquals",
 	"includes",
 	"excludes",
+	"uinfin",
 ] as const;
 export type TYupSchemaType = typeof YUP_TYPES[number];
 export type TYupCondition = typeof YUP_CONDITIONS[number];
@@ -34,6 +35,7 @@ interface IYupRule {
 	notEquals?: unknown | undefined;
 	includes?: unknown | undefined;
 	excludes?: unknown | undefined;
+	uinfin?: boolean | undefined;
 }
 
 export interface IYupValidationRule extends IYupRule {

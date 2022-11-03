@@ -3,6 +3,7 @@ import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import isNumber from "lodash/isNumber";
 import { YupHelper } from "../helper";
+import "./uinfin";
 
 /**
  * empty check that is applicable to numbers too
