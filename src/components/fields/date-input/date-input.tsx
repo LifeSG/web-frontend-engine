@@ -88,7 +88,9 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			});
 		} else {
 			onChange({
-				target: { value: formatValue([year, month, day].join("-")) },
+				target: {
+					value: formatValue([year, month.padStart(2, "0"), day.padStart(2, "0")].join("-")),
+				},
 			});
 		}
 	};
@@ -98,12 +100,11 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	// =============================================================================
 	// accepts in uuuu-MM-dd
 	const formatValue = (value: string) => {
-		let formattedDate: string;
 		try {
-			formattedDate = LocalDate.parse(value).format(dateFormatter);
-		} catch (error) {}
-
-		return formattedDate;
+			return LocalDate.parse(value).format(dateFormatter);
+		} catch (error) {
+			return INVALID_DATE;
+		}
 	};
 	// =============================================================================
 	// RENDER FUNCTIONS
