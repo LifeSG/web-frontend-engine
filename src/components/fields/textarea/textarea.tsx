@@ -32,16 +32,13 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		if (value) {
-			setStateValue(value);
-		}
+		setStateValue(value);
 	}, [value]);
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setStateValue(event.target.value);
 		onChange(event);
 	};
 
