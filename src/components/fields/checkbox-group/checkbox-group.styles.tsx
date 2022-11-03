@@ -1,4 +1,4 @@
-import { Checkbox } from "@lifesg/react-design-system";
+import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import styled from "styled-components";
 
 export const Label = styled.label`

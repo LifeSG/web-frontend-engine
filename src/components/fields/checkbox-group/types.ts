@@ -1,4 +1,4 @@
-import { CheckboxProps } from "@lifesg/react-design-system";
+import { CheckboxProps } from "@lifesg/react-design-system/checkbox";
 import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
 
 export interface IOption {
