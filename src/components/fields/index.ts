@@ -1,3 +1,4 @@
+export * from "./checkbox-group";
 export * from "./multi-select";
 export * from "./date-input";
 export * from "./select";

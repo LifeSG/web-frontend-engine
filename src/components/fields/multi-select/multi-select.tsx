@@ -28,7 +28,19 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.array().of(Yup.string()), validation);
+		const isRequiredRule = validation?.find((rule) => "required" in rule);
+
+		setFieldValidationConfig(
+			id,
+			Yup.array()
+				.of(Yup.string())
+				.test("is-empty-array", isRequiredRule?.errorMessage || "An option is required", (value) => {
+					if (!value || !isRequiredRule?.required) return true;
+
+					return value.length > 0;
+				}),
+			validation
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
@@ -47,11 +59,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	const handleChange = (options: ISelectOption[]): void => {
 		const parsedValues = options.map((option) => option.value);
 		setStateValue(parsedValues);
-		onChange({
-			target: {
-				value: parsedValues,
-			},
-		});
+		onChange({ target: { value: parsedValues } });
 	};
 
 	return (

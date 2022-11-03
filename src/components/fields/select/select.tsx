@@ -32,7 +32,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value || []);
+		setStateValue(value || "");
 	}, [value]);
 
 	// =============================================================================
