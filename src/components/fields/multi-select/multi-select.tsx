@@ -2,7 +2,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { InputMultiSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
-import { TestHelper } from "../../../utils";
+import { ObjectHelper, TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ISelectOption } from "../select/types";
@@ -57,7 +57,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 		setStateValue(parsedValues);
 		onChange({
 			target: {
-				value: parsedValues,
+				value: parsedValues.length > 0 ? parsedValues : undefined,
 			},
 		});
 	};
