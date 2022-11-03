@@ -1,11 +1,11 @@
-import { Checkbox, Form } from "@lifesg/react-design-system";
+import { Form } from "@lifesg/react-design-system";
 import pull from "lodash/pull";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ObjectHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { Label } from "./checkbox-group.styles";
+import { Label, StyledCheckbox } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema, ICheckboxOption } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
@@ -15,7 +15,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	const {
 		schema: { label, options, validation, ...otherSchema },
 		id,
-		name,
 		value,
 		error,
 		onChange,
@@ -59,7 +58,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		}
 
 		setStateValue(updatedStateValues);
-		onChange({ target: { value: updatedStateValues } });
+		onChange({ target: { value: updatedStateValues.length > 0 ? updatedStateValues : undefined } });
 	};
 
 	const handleDefaultValue = (options: ICheckboxOption[]): void => {
@@ -86,7 +85,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 			options.length > 0 &&
 			options.map((option) => (
 				<Label key={option.label}>
-					<Checkbox
+					<StyledCheckbox
 						{...otherSchema}
 						id={id}
 						name={option.label}

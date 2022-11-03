@@ -1,3 +1,4 @@
+import { Checkbox } from "@lifesg/react-design-system";
 import styled from "styled-components";
 
 export const Label = styled.label`
@@ -9,4 +10,8 @@ export const Label = styled.label`
 	&:last-child {
 		margin-bottom: 0;
 	}
+`;
+
+export const StyledCheckbox = styled(Checkbox)`
+	margin-right: 10px;
 `;
