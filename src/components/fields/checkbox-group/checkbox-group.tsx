@@ -25,9 +25,18 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.array().of(Yup.string()), validation);
+		setFieldValidationConfig(
+			id,
+			Yup.array()
+				.of(Yup.string())
+				.test("is-empty-array", "An option is required", (value) => {
+					if (!value) return true;
+
+					return value.length > 0;
+				}),
+			validation
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
