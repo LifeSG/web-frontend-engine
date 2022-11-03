@@ -21,7 +21,6 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
-	const [isFirstMount, setIsFirstMount] = useState<boolean>(true);
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -33,14 +32,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		if (value) {
-			if (isFirstMount) {
-				handleDefaultValue(value);
-				setIsFirstMount(false);
-			} else {
-				setStateValue(value);
-			}
-		}
+		setStateValue(value || "");
 	}, [value]);
 
 	// =============================================================================
@@ -54,13 +46,6 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	const handleChange = (_, option: string): void => {
 		setStateValue(option);
 		onChange({ target: { value: option } });
-	};
-
-	const handleDefaultValue = (option: ISelectOption): void => {
-		if (ObjectHelper.containsLabelValue(option, "value")) {
-			setStateValue(option.value as string);
-			onChange({ target: { value: option.value } });
-		}
 	};
 
 	return (
