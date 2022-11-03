@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import isEmpty from "lodash/isEmpty";
 import { ObjectShape } from "yup/lib/object";
 import {
 	IYupConditionalValidationRule,
@@ -172,22 +171,3 @@ export namespace YupHelper {
 		});
 	};
 }
-
-YupHelper.addCondition("mixed", "filled", (value) => !isEmpty(value));
-YupHelper.addCondition("mixed", "empty", (value) => isEmpty(value));
-YupHelper.addCondition("mixed", "equals", (value, match) => !isEmpty(value) && value === match);
-YupHelper.addCondition("mixed", "notEquals", (value, match) => !isEmpty(value) && value !== match);
-YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
-	if (!Array.isArray(matches)) {
-		return values.includes(matches);
-	} else {
-		return matches.filter((m) => values.includes(m)).length === matches.length;
-	}
-});
-YupHelper.addCondition("array", "excludes", (values: unknown[], matches: unknown | unknown[]) => {
-	if (!Array.isArray(matches)) {
-		return !values.includes(matches);
-	} else {
-		return values.length && matches.filter((m) => values.includes(m)).length === 0;
-	}
-});
