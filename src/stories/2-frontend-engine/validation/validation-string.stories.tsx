@@ -78,3 +78,10 @@ UUID.args = {
 	rule: { uuid: true, errorMessage: "Invalid uuid" },
 	value: { name: "lorem ipsum" },
 };
+
+export const Uinfin = Template.bind({});
+Uinfin.args = {
+	type: "string",
+	rule: { uinfin: true, errorMessage: "Invalid uinfin" },
+	value: { name: "hello world" },
+};

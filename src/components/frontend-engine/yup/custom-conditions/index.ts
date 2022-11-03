@@ -2,6 +2,7 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import isNaN from "lodash/isNaN";
 import { YupHelper } from "../helper";
+import "./uinfin";
 
 /**
  * empty check that is applicable to numbers too
