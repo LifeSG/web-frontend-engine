@@ -135,3 +135,39 @@ WithValidation.args = {
 		validation: [{ required: true }],
 	},
 };
+
+export const FutureDateOnly = Template.bind({});
+FutureDateOnly.args = {
+	"date-future": {
+		fieldType: "date",
+		label: "Date",
+		validation: [{ required: true }, { future: true, errorMessage: "Only future dates allowed" }],
+	},
+};
+
+export const PastDateOnly = Template.bind({});
+PastDateOnly.args = {
+	"date-past": {
+		fieldType: "date",
+		label: "Date",
+		validation: [{ required: true }, { past: true, errorMessage: "Only past dates allowed" }],
+	},
+};
+
+export const NotFutureDate = Template.bind({});
+NotFutureDate.args = {
+	"date-now-or-past": {
+		fieldType: "date",
+		label: "Date",
+		validation: [{ required: true }, { notFuture: true, errorMessage: "No future dates" }],
+	},
+};
+
+export const NotPastDate = Template.bind({});
+NotPastDate.args = {
+	"date-now-or-future": {
+		fieldType: "date",
+		label: "Date",
+		validation: [{ required: true }, { notPast: true, errorMessage: "No past dates" }],
+	},
+};
