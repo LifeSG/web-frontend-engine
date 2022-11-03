@@ -28,12 +28,14 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const isRequiredRule = validation?.find((rule) => "required" in rule);
+
 		setFieldValidationConfig(
 			id,
 			Yup.array()
 				.of(Yup.string())
-				.test("is-empty-array", "An option is required", (value) => {
-					if (!value) return true;
+				.test("is-empty-array", isRequiredRule?.errorMessage || "An option is required", (value) => {
+					if (!value || !isRequiredRule?.required) return true;
 
 					return value.length > 0;
 				}),

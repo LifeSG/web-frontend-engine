@@ -26,12 +26,14 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const isRequiredRule = validation?.find((rule) => "required" in rule);
+
 		setFieldValidationConfig(
 			id,
 			Yup.array()
 				.of(Yup.string())
-				.test("is-empty-array", "An option is required", (value) => {
-					if (!value) return true;
+				.test("is-empty-array", isRequiredRule?.errorMessage || "An option is required", (value) => {
+					if (!value || !isRequiredRule?.required) return true;
 
 					return value.length > 0;
 				}),
@@ -68,17 +70,21 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		return stateValue.includes(value);
 	};
 
+	const formatCheckboxId = (id: string, index: number): string => {
+		return `${id}-${index}`;
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderCheckboxes = () => {
 		return (
 			options.length > 0 &&
-			options.map((option) => (
+			options.map((option, index) => (
 				<Label key={option.label}>
 					<StyledCheckbox
 						{...otherSchema}
-						id={id}
+						id={formatCheckboxId(id, index)}
 						name={option.label}
 						value={option.value}
 						checked={getCheckboxStatus(option.value)}
