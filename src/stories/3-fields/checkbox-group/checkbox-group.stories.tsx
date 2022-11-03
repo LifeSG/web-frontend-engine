@@ -22,7 +22,7 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("checkbox"),
-		select: { table: { disable: true } },
+		"checkbox-default": { table: { disable: true } },
 		displaySize: {
 			description: "Specifies the display size of the checkbox",
 			table: {
@@ -35,19 +35,6 @@ export default {
 				type: "select",
 			},
 			defaultValue: "default",
-		},
-		checked: {
-			description: "Specifies if the checkbox should be checked",
-			table: {
-				type: {
-					summary: "boolean",
-				},
-			},
-			options: [true, false],
-			control: {
-				type: "boolean",
-			},
-			defaultValue: false,
 		},
 		disabled: {
 			description: "Specifies if the checkbox should be disabled",
@@ -71,8 +58,8 @@ export default {
 			},
 			type: { name: "object", value: {} },
 		},
-		placeholder: {
-			description: "Specifies the placeholder text",
+		label: {
+			description: "Specifies the label text",
 			table: {
 				type: {
 					summary: "string",
@@ -91,7 +78,7 @@ const Template: Story<Record<string, ICheckboxGroupSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	"default-checkbox": {
+	"checkbox-default": {
 		fieldType: "checkbox",
 		label: "Checkbox",
 		options: [
@@ -122,3 +109,45 @@ export const DefaultValue = () => (
 	/>
 );
 DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+	"checkbox-disabled": {
+		fieldType: "checkbox",
+		label: "Fruits",
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		disabled: true,
+	},
+};
+
+export const CustomSize = Template.bind({});
+CustomSize.args = {
+	"checkbox-custom-size": {
+		fieldType: "checkbox",
+		label: "Fruits",
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		displaySize: "small",
+	},
+};
+
+export const WithValidation = Template.bind({});
+WithValidation.args = {
+	"checkbox-with-validation": {
+		fieldType: "checkbox",
+		label: "Fruits",
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		validation: [{ required: true }],
+	},
+};
