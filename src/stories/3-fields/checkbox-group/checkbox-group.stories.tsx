@@ -10,7 +10,7 @@ export default {
 		docs: {
 			page: () => (
 				<>
-					<Title>Select</Title>
+					<Title>Checkbox</Title>
 					<Description>This component provides a set of checkboxes for user to select</Description>
 					<Heading>Props</Heading>
 					<ArgsTable story={PRIMARY_STORY} />
