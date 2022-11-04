@@ -48,6 +48,9 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 		onChange({ target: { value: option } });
 	};
 
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
 	return (
 		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
 			<InputSelect

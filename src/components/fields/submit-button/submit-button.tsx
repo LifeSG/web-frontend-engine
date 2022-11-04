@@ -24,6 +24,9 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
 	return (
 		<Button.Default {...otherSchema} {...otherProps} id={id} type="submit">
 			{label}
