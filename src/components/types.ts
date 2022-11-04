@@ -1,6 +1,7 @@
 export type {
 	IFrontendEngineData,
 	IFrontendEngineProps,
+	IFrontendEngineRef,
 	TFrontendEngineFieldSchema,
 	TFrontendEngineValues,
 	TRevalidationMode,

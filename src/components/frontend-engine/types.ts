@@ -23,6 +23,7 @@ import { IYupValidationRule, TRenderRules } from "./yup/types";
 export interface IFrontendEngineProps {
 	className?: string | undefined;
 	data?: IFrontendEngineData | undefined;
+	onChange?: (values: TFrontendEngineValues, isValid?: boolean) => unknown | undefined;
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }
 
@@ -57,8 +58,10 @@ export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all
 export type TValidationMode = keyof ValidationMode;
 
 export interface IFrontendEngineRef extends HTMLFormElement {
-	/** gets information about the entire form state */
-	getFormState: () => FormState<TFrontendEngineValues>;
+	/** gets form values */
+	getValues: () => TFrontendEngineValues;
+	/** check if form is valid */
+	isValid: () => boolean;
 	/** triggers form submission */
 	submit: () => void;
 }
