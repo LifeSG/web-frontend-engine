@@ -59,7 +59,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 			updatedStateValues.push(value);
 		}
 
-		setStateValue(updatedStateValues);
 		onChange({ target: { value: updatedStateValues } });
 	};
 
