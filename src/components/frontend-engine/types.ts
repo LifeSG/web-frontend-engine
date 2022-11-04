@@ -1,6 +1,7 @@
 import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
 import {
 	ICheckboxGroupSchema,
+	IContactNumberSchema,
 	IDateInputSchema,
 	IEmailSchema,
 	IMultiSelectSchema,
@@ -42,7 +43,8 @@ export type TFrontendEngineFieldSchema =
 	| IMultiSelectSchema
 	| ICheckboxGroupSchema
 	| IDateInputSchema
-	| IWrapperSchema;
+	| IWrapperSchema
+	| IContactNumberSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -92,6 +94,7 @@ export enum EFieldType {
 	H6 = "Wrapper",
 	P = "Wrapper",
 	CHECKBOX = "CheckboxGroup",
+	CONTACT = "ContactNumber",
 }
 
 // =============================================================================
