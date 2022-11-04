@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { forwardRef, useEffect, useImperativeHandle } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import { Wrapper } from "../fields/wrapper";
@@ -20,6 +20,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			validationMode = "onSubmit",
 		},
 		className = null,
+		onChange,
 		onSubmit,
 	} = props;
 
@@ -31,31 +32,39 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		defaultValues: defaultValues,
 		resolver: yupResolver(validationSchema),
 	});
-	const { watch, handleSubmit: reactFormHookSubmit, formState } = formMethods;
-
-	// TODO: Remove logging
-	useEffect(() => {
-		const subscription = watch((value, { name, type }) => console.log(value, name, type));
-
-		return () => subscription.unsubscribe();
-	}, [watch]);
+	const { watch, handleSubmit: reactFormHookSubmit, getValues } = formMethods;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
 	useImperativeHandle<Partial<IFrontendEngineRef>, Partial<IFrontendEngineRef>>(ref, () => ({
-		getFormState: () => {
-			return formState;
-		},
-		submit: () => {
-			reactFormHookSubmit(handleSubmit)();
-		},
+		getValues,
+		isValid: checkIsFormValid,
+		submit: reactFormHookSubmit(handleSubmit),
 	}));
+
+	const checkIsFormValid = useCallback(() => {
+		try {
+			validationSchema.validateSync(getValues());
+			return true;
+		} catch (error) {
+			return false;
+		}
+	}, [getValues, validationSchema]);
 
 	const handleSubmit = (data: TFrontendEngineValues) => {
 		console.log(data); // TODO: remove
 		onSubmit?.(data);
 	};
+
+	// =============================================================================
+	// EFFECTS
+	// =============================================================================
+	useEffect(() => {
+		const subscription = watch((value) => onChange?.(value, checkIsFormValid()));
+
+		return () => subscription.unsubscribe();
+	}, [checkIsFormValid, onChange, watch]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
