@@ -28,7 +28,7 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Button.Default {...otherSchema} {...otherProps} id={id} type="submit">
+		<Button.Default {...otherSchema} {...otherProps} data-testid={id} id={id} type="submit">
 			{label}
 		</Button.Default>
 	);
