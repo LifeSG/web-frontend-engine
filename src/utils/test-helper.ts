@@ -14,4 +14,12 @@ export namespace TestHelper {
 
 		return elementName;
 	};
+
+	export const getError = (fn: () => unknown) => {
+		try {
+			return fn();
+		} catch (error) {
+			return error;
+		}
+	};
 }
