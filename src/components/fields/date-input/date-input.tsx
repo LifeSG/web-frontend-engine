@@ -30,13 +30,34 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const futureRule = validation?.find((rule) => "future" in rule);
+		const pastRule = validation?.find((rule) => "past" in rule);
+		const notFutureRule = validation?.find((rule) => "notFuture" in rule);
+		const notPastRule = validation?.find((rule) => "notPast" in rule);
 		setFieldValidationConfig(
 			id,
-			Yup.string().test("is-date", "Invalid date", (value) => {
-				if (!value || value === "") return true;
-				const date = new Date(value);
-				return !isNaN(date.valueOf());
-			}),
+			Yup.string()
+				.test("is-date", "Invalid date", (value) => {
+					if (!value || value === "") return true;
+					const date = new Date(value);
+					return !isNaN(date.valueOf());
+				})
+				.test("future", futureRule?.errorMessage || "Date must be in the future.", (value) => {
+					if (!value || value === "" || value === INVALID_DATE || !futureRule?.future) return true;
+					return LocalDate.parse(value).isAfter(LocalDate.now());
+				})
+				.test("past", pastRule?.errorMessage || "Date must be in the past.", (value) => {
+					if (!value || value === "" || value === INVALID_DATE || !pastRule?.past) return true;
+					return LocalDate.parse(value).isBefore(LocalDate.now());
+				})
+				.test("not-future", notFutureRule?.errorMessage || "Date cannot be in the future.", (value) => {
+					if (!value || value === "" || value === INVALID_DATE || !notFutureRule?.notFuture) return true;
+					return !LocalDate.parse(value).isAfter(LocalDate.now());
+				})
+				.test("not-past", notPastRule?.errorMessage || "Date cannot be in the past.", (value) => {
+					if (!value || value === "" || value === INVALID_DATE || !notPastRule?.notPast) return true;
+					return !LocalDate.parse(value).isBefore(LocalDate.now());
+				}),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,7 +109,9 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			});
 		} else {
 			onChange({
-				target: { value: formatValue([year, month, day].join("-")) },
+				target: {
+					value: formatValue([year, month.padStart(2, "0"), day.padStart(2, "0")].join("-")),
+				},
 			});
 		}
 	};
@@ -98,12 +121,11 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	// =============================================================================
 	// accepts in uuuu-MM-dd
 	const formatValue = (value: string) => {
-		let formattedDate: string;
 		try {
-			formattedDate = LocalDate.parse(value).format(dateFormatter);
-		} catch (error) {}
-
-		return formattedDate;
+			return LocalDate.parse(value).format(dateFormatter);
+		} catch (error) {
+			return INVALID_DATE;
+		}
 	};
 	// =============================================================================
 	// RENDER FUNCTIONS

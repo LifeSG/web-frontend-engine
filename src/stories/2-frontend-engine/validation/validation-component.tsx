@@ -1,20 +1,20 @@
 import React from "react";
 import * as Yup from "yup";
-import { ValidationSchemaUtils } from "src/components/frontend-engine/validation-schema/utils";
+import { YupHelper } from "src/components/frontend-engine/yup/helper";
 import { Button } from "@lifesg/react-design-system/button";
 import styled from "styled-components";
-import { IValidationRule, TValidationType } from "src/components/frontend-engine/validation-schema/types";
+import { IYupValidationRule, TYupSchemaType } from "src/components/frontend-engine/yup/types";
 
 export interface IValidationComponentProps {
-	type: TValidationType;
-	rule: IValidationRule;
+	type: TYupSchemaType;
+	rule: IYupValidationRule;
 	value: Record<string, any>;
 }
 
 export const ValidationComponent = ({ type, rule, value }: IValidationComponentProps) => {
 	const handleClick = () => {
 		try {
-			ValidationSchemaUtils.buildYupSchema({
+			YupHelper.buildSchema({
 				name: { schema: (Yup as any)[type](), validationRules: [rule] },
 			}).validateSync(value);
 			alert("Validation passed");

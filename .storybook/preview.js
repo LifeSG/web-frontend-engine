@@ -10,6 +10,12 @@ export const parameters = {
 	controls: {
 		expanded: true,
 	},
-}
+	options: {
+		storySort: {
+			order: ["Introduction", "Form", ["Frontend Engine", "Validation Schema", "Conditional Rendering"]],
+		},
+	},
+};
 
 addDecorator(withA11y);
+//["Frontend Engine", "Validation Schema", "Conditional Rendering"]

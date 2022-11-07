@@ -1,3 +1,4 @@
+import { TRenderRules } from "src/components/frontend-engine/yup/types";
 import { TFrontendEngineBaseFieldJsonSchemaKeys, TFrontendEngineFieldSchema } from "../../frontend-engine";
 
 export type TWrapperType =
@@ -17,5 +18,6 @@ export type TWrapperType =
 export interface IWrapperSchema
 	extends Omit<React.HTMLAttributes<HTMLElement>, TFrontendEngineBaseFieldJsonSchemaKeys | "children"> {
 	fieldType: TWrapperType;
+	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema> | string;
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import * as FrontendEngineFields from "../";
 import { EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
+import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";
 
 interface IWrapperProps {
@@ -24,28 +25,35 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	/**
+	 * render direct descendants according to the type of children
+	 * - conditionally render fields through Controller
+	 * - render strings directly
+	 * - otherwise show field not supported error
+	 */
 	useEffect(() => {
-		const renderChildren = schemaChildren || children;
-		if (typeof renderChildren === "object") {
+		const wrapperChildren = schemaChildren || children;
+		if (typeof wrapperChildren === "object") {
 			const fieldTypeKeys = Object.keys(EFieldType);
 			const fieldComponents: JSX.Element[] = [];
-			Object.entries(renderChildren).forEach(([id, child]) => {
+			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child)) return;
 				const fieldType = child.fieldType?.toUpperCase();
 				if (typeof child === "object" && fieldTypeKeys.includes(fieldType)) {
 					const Field = (FrontendEngineFields[EFieldType[fieldType]] ||
 						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
-
 					fieldComponents.push(
-						<Controller
-							control={control}
-							key={id}
-							name={id}
-							render={({ field, fieldState }) => {
-								const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
-								return <Field schema={child} {...fieldProps} {...fieldState} />;
-							}}
-						/>
+						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
+							<Controller
+								control={control}
+								name={id}
+								shouldUnregister={true}
+								render={({ field, fieldState }) => {
+									const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
+									return <Field schema={child} {...fieldProps} {...fieldState} />;
+								}}
+							/>
+						</ConditionalRenderer>
 					);
 				} else if (fieldType) {
 					// need fieldType check to ignore other storybook args
@@ -53,8 +61,8 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				}
 			});
 			setFields(fieldComponents);
-		} else if (typeof renderChildren === "string") {
-			setFields(renderChildren);
+		} else if (typeof wrapperChildren === "string") {
+			setFields(wrapperChildren);
 		} else {
 			setFields("This component is not supported by the engine");
 		}
