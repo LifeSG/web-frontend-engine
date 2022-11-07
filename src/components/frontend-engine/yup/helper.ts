@@ -74,7 +74,7 @@ export namespace YupHelper {
 	 * @param schemaRules An array of validation rules to be mapped against validation type (i.e. a string schema might contain { maxLength: 255 })
 	 * @returns yupSchema with added constraints and validations
 	 */
-	const mapRules = (yupSchema: Yup.AnySchema, schemaRules: IYupCombinedRule[]): Yup.AnySchema => {
+	export const mapRules = (yupSchema: Yup.AnySchema, schemaRules: IYupCombinedRule[]): Yup.AnySchema => {
 		schemaRules.forEach((rule) => {
 			const ruleKey = Object.keys(rule).filter((k) =>
 				YUP_CONDITIONS.includes(k as TYupCondition)
