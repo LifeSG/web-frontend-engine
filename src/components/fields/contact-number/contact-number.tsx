@@ -1,12 +1,13 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { AddonProps } from "@lifesg/react-design-system/input-group/types";
+import isObject from "lodash/isObject";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
 import { getCountries, getCountryFromPrefix, getPrefix, InternationalCallingCodeMap } from "./data";
-import { IContactNumberSchema, ISelectedCountry, TCountry } from "./types";
+import { IContactNumberSchema, ISelectedCountry, ISingaporeNumberValidationRule, TCountry } from "./types";
 import { PhoneHelper } from "./utils";
 
 export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) => {
@@ -14,16 +15,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: {
-			label,
-			country,
-			allowInternationalNumbers = true,
-			disabled,
-			enableSearch,
-			validation,
-			placeholder,
-			...otherSchema
-		},
+		schema: { label, country, disabled, enableSearch, validation, placeholder, ...otherSchema },
 		id,
 		name,
 		onChange,
@@ -34,35 +26,42 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const [selectedCountry, setSelectedCountry] = useState<ISelectedCountry>();
+	const [singaporeRule, setSingaporeRule] = useState<ISingaporeNumberValidationRule>();
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const singaporeRule = validation?.find((rule) => "isSingaporeNumber" in rule);
-		const internationalRule = validation?.find((rule) => "isInternationalNumber" in rule);
+		const singaporeRule = validation?.find((rule) => "singaporeNumber" in rule);
+		const internationalRule = validation?.find((rule) => "internationalNumber" in rule);
 
+		setSingaporeRule(singaporeRule);
 		setFieldValidationConfig(
 			id,
 			Yup.string()
 				.test(
-					"is-singapore-number",
+					"singaporeNumber",
 					singaporeRule?.errorMessage || ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER,
 					(value) => {
+						// TODO : check if either home or mobile is true
 						if (!value || !singaporeRule) return true;
 
-						if (singaporeRule?.isSingaporeNumber?.isHomeNumber) {
+						if (!isObject(singaporeRule?.singaporeNumber)) {
+							return PhoneHelper.isSingaporeNumber(value, true) || PhoneHelper.isSingaporeNumber(value);
+						}
+
+						if (singaporeRule?.singaporeNumber?.isHomeNumber) {
 							return PhoneHelper.isSingaporeNumber(value, true);
 						}
 
-						if (singaporeRule?.isSingaporeNumber?.isMobileNumber) {
+						if (singaporeRule?.singaporeNumber?.isMobileNumber) {
 							return PhoneHelper.isSingaporeNumber(value);
 						}
 					}
 				)
 				.test(
-					"is-international-number",
+					"internationalNumber",
 					internationalRule?.errorMessage || ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER,
 					(value) => {
 						if (!value || !internationalRule) return true;
@@ -127,9 +126,10 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	};
 
 	const getAddOns = (): AddonProps<string, unknown> => {
-		if (!allowInternationalNumbers) {
+		if (singaporeRule) {
 			return { attributes: { value: "+65" } };
 		}
+
 		return {
 			type: "list",
 			attributes: {
@@ -143,6 +143,20 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 				valueExtractor: (item: string) => getPrefix(item),
 			},
 		};
+	};
+
+	const getPlaceholderText = (): string => {
+		if (placeholder) {
+			return placeholder;
+		}
+
+		if (isObject(singaporeRule?.singaporeNumber)) {
+			const isMobileNumber = singaporeRule?.singaporeNumber?.isMobileNumber;
+
+			return `Enter ${isMobileNumber ? "mobile" : "house"} number`;
+		}
+
+		return "Enter contact number";
 	};
 
 	// =============================================================================
@@ -162,7 +176,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 			onChange={handleChange}
 			addon={getAddOns()}
 			errorMessage={error?.message}
-			placeholder={placeholder || "Enter mobile number"}
+			placeholder={getPlaceholderText()}
 			spacing={getSpacing()}
 			maxLength={getMaxLength()}
 		/>

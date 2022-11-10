@@ -14,12 +14,21 @@ interface IContactNumberProps extends FormInputGroupProps<string, unknown> {
 	enableSearch?: boolean;
 }
 
-interface IContactNumberValidationRules extends IYupValidationRule {
-	isSingaporeNumber?: {
-		isHomeNumber?: boolean;
-		isMobileNumber?: boolean;
-	};
-	isInternationalNumber?: boolean;
+export interface ISingaporeNumberValidationRule {
+	singaporeNumber?:
+		| boolean
+		| {
+				isHomeNumber: boolean;
+				isMobileNumber?: boolean;
+		  }
+		| {
+				isMobileNumber: boolean;
+				isHomeNumber?: boolean;
+		  };
+}
+
+interface IContactNumberValidationRules extends ISingaporeNumberValidationRule, IYupValidationRule {
+	internationalNumber?: boolean;
 }
 
 export interface ISelectedCountry {

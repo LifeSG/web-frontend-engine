@@ -17,6 +17,11 @@ export namespace PhoneHelper {
 
 	export const isSingaporeNumber = (value: string, validateHomeNumber = false): boolean => {
 		const { number } = getParsedPhoneNumber(value);
+
+		if (!number) {
+			return false;
+		}
+
 		const phoneNumber = parsePhoneNumber(value, "SG");
 		const isNumberValid = phoneNumber.isValid();
 		const isMobileNumber = SINGAPORE_MOBILE_NUMBER_REGEX.test(number);
@@ -28,14 +33,16 @@ export namespace PhoneHelper {
 	};
 
 	export const isInternationalNumber = (country: string, value: string): boolean => {
-		try {
-			const countryCode = byCountry(country).iso2 as CountryCode;
-			const phoneNumber = parsePhoneNumber(value, countryCode);
+		const { number } = getParsedPhoneNumber(value);
 
-			return phoneNumber.isValid();
-		} catch (error) {
+		if (!country || !value || !number) {
 			return false;
 		}
+
+		const countryCode = byCountry(country).iso2 as CountryCode;
+		const phoneNumber = parsePhoneNumber(value, countryCode);
+
+		return phoneNumber.isValid();
 	};
 
 	export const formatPhoneNumber = (prefix: string, value: string): string => {
