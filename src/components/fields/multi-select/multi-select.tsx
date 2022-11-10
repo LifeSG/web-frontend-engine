@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
+import { ERROR_MESSAGES } from "../../shared";
 import { ISelectOption } from "../select/types";
 import { IMultiSelectOption, IMultiSelectSchema } from "./types";
 
@@ -34,11 +35,15 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 			id,
 			Yup.array()
 				.of(Yup.string())
-				.test("is-empty-array", isRequiredRule?.errorMessage || "An option is required", (value) => {
-					if (!value || !isRequiredRule?.required) return true;
+				.test(
+					"is-empty-array",
+					isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTION,
+					(value) => {
+						if (!value || !isRequiredRule?.required) return true;
 
-					return value.length > 0;
-				}),
+						return value.length > 0;
+					}
+				),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
