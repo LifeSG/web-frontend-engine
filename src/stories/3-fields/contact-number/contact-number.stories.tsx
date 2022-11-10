@@ -109,11 +109,72 @@ Default.args = {
 	},
 };
 
-export const WithValidation = Template.bind({});
-WithValidation.args = {
-	"contact-with-validation": {
+export const Disabled = Template.bind({});
+Disabled.args = {
+	"contact-disabled": {
 		fieldType: "contact",
 		label: "Contact Number",
-		validation: [{ isInternationalNumber: true }],
+		disabled: true,
+	},
+};
+
+export const Placeholder = Template.bind({});
+Placeholder.args = {
+	"contact-placeholder": {
+		fieldType: "contact",
+		label: "Contact Number",
+		placeholder: "Enter your contact number",
+	},
+};
+
+export const WithSearch = Template.bind({});
+WithSearch.args = {
+	"contact-with-search": {
+		fieldType: "contact",
+		label: "Contact Number",
+		enableSearch: true,
+	},
+};
+
+export const SGHouseNumberValidation = Template.bind({});
+SGHouseNumberValidation.args = {
+	"contact-with-singapore-house-number": {
+		fieldType: "contact",
+		label: "Contact Number",
+		validation: [
+			{
+				isSingaporeNumber: {
+					isHomeNumber: true,
+				},
+			},
+		],
+	},
+};
+
+export const SGPhoneNumberValidation = Template.bind({});
+SGPhoneNumberValidation.args = {
+	"contact-with-singapore-mobile-number": {
+		fieldType: "contact",
+		label: "Contact Number",
+		validation: [
+			{
+				isSingaporeNumber: {
+					isMobileNumber: true,
+				},
+			},
+		],
+	},
+};
+
+export const InternationalNumberValidation = Template.bind({});
+InternationalNumberValidation.args = {
+	"contact-with-international-number": {
+		fieldType: "contact",
+		label: "Contact Number",
+		validation: [
+			{
+				isInternationalNumber: true,
+			},
+		],
 	},
 };
