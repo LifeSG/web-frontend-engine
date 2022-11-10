@@ -1,3 +1,4 @@
+import isEmpty from "lodash/isEmpty";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
@@ -60,7 +61,13 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 				Object.entries(ruleGroup).forEach(([fieldId, rules]) => {
 					const yupType = formValidationConfig?.[fieldId]?.schema.type as TYupSchemaType;
 					if (yupType) {
-						const yupBaseSchema = YupHelper.mapSchemaType(yupType);
+						let yupBaseSchema = YupHelper.mapSchemaType(yupType);
+						// this is to allow empty values in Yup.number schema
+						if (yupType === "number") {
+							yupBaseSchema = yupBaseSchema
+								.nullable()
+								.transform((_, value: number) => (!isEmpty(value) ? +value : undefined));
+						}
 						renderSchemaConfig[fieldId] = { schema: yupBaseSchema, validationRules: rules };
 					}
 				});
