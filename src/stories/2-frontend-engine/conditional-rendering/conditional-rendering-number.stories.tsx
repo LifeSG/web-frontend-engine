@@ -30,6 +30,46 @@ const Template: Story<Record<string, TFrontendEngineFieldSchema>> = (args) => (
 	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
+export const Min = Template.bind({});
+Min.args = {
+	intro: {
+		fieldType: "div",
+		className: "margin--bottom",
+		children: "Show field 2 as long as field 1 is at least 5",
+	},
+	field1: {
+		label: "Field 1",
+		fieldType: "number",
+		validation: [{ required: true }],
+	},
+	field2: {
+		label: "Field 2",
+		fieldType: "text",
+		showIf: [{ field1: [{ filled: true }, { min: 5 }] }],
+		validation: [{ required: true }],
+	},
+};
+
+export const Max = Template.bind({});
+Max.args = {
+	intro: {
+		fieldType: "div",
+		className: "margin--bottom",
+		children: "Show field 2 as long as field 1 is at most 5",
+	},
+	field1: {
+		label: "Field 1",
+		fieldType: "number",
+		validation: [{ required: true }],
+	},
+	field2: {
+		label: "Field 2",
+		fieldType: "text",
+		showIf: [{ field1: [{ filled: true }, { max: 5 }] }],
+		validation: [{ required: true }],
+	},
+};
+
 export const LessThan = Template.bind({});
 LessThan.args = {
 	intro: {
@@ -45,7 +85,7 @@ LessThan.args = {
 	field2: {
 		label: "Field 2",
 		fieldType: "text",
-		showIf: [{ field1: [{ filled: true }, { max: 5 }] }],
+		showIf: [{ field1: [{ filled: true }, { lessThan: 5 }] }],
 		validation: [{ required: true }],
 	},
 };
@@ -65,7 +105,67 @@ MoreThan.args = {
 	field2: {
 		label: "Field 2",
 		fieldType: "text",
-		showIf: [{ field1: [{ filled: true }, { min: 5 }] }],
+		showIf: [{ field1: [{ filled: true }, { moreThan: 5 }] }],
+		validation: [{ required: true }],
+	},
+};
+
+export const Positive = Template.bind({});
+Positive.args = {
+	intro: {
+		fieldType: "div",
+		className: "margin--bottom",
+		children: "Show field 2 as long as field 1 is positive",
+	},
+	field1: {
+		label: "Field 1",
+		fieldType: "number",
+		validation: [{ required: true }],
+	},
+	field2: {
+		label: "Field 2",
+		fieldType: "text",
+		showIf: [{ field1: [{ filled: true }, { positive: true }] }],
+		validation: [{ required: true }],
+	},
+};
+
+export const Negative = Template.bind({});
+Negative.args = {
+	intro: {
+		fieldType: "div",
+		className: "margin--bottom",
+		children: "Show field 2 as long as field 1 is negative",
+	},
+	field1: {
+		label: "Field 1",
+		fieldType: "number",
+		validation: [{ required: true }],
+	},
+	field2: {
+		label: "Field 2",
+		fieldType: "text",
+		showIf: [{ field1: [{ filled: true }, { negative: true }] }],
+		validation: [{ required: true }],
+	},
+};
+
+export const Integer = Template.bind({});
+Integer.args = {
+	intro: {
+		fieldType: "div",
+		className: "margin--bottom",
+		children: "Show field 2 as long as field 1 is an integer",
+	},
+	field1: {
+		label: "Field 1",
+		fieldType: "number",
+		validation: [{ required: true }],
+	},
+	field2: {
+		label: "Field 2",
+		fieldType: "text",
+		showIf: [{ field1: [{ filled: true }, { integer: true }] }],
 		validation: [{ required: true }],
 	},
 };

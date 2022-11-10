@@ -13,6 +13,8 @@ export const YUP_CONDITIONS = [
 	"positive",
 	"negative",
 	"integer",
+	"lessThan",
+	"moreThan",
 	"when",
 	"filled",
 	"empty",
@@ -36,6 +38,8 @@ interface IYupRule {
 	positive?: boolean | undefined;
 	negative?: boolean | undefined;
 	integer?: boolean | undefined;
+	lessThan?: number | undefined;
+	moreThan?: number | undefined;
 	empty?: boolean | undefined;
 	equals?: unknown | undefined;
 	notEquals?: unknown | undefined;

@@ -95,6 +95,8 @@ export namespace YupHelper {
 				case rule.length > 0:
 				case rule.min > 0:
 				case rule.max > 0:
+				case !!rule.lessThan:
+				case !!rule.moreThan:
 				case !!rule.filled:
 				case !!rule.empty:
 				case !!rule.equals:

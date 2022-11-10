@@ -44,6 +44,20 @@ MaxValue.args = {
 	value: { name: 6 },
 };
 
+export const LessThan = Template.bind({});
+LessThan.args = {
+	type: "number",
+	rule: { lessThan: 5, errorMessage: "Less than 5" },
+	value: { name: 6 },
+};
+
+export const MoreThan = Template.bind({});
+MoreThan.args = {
+	type: "number",
+	rule: { min: 5, errorMessage: "More than 5" },
+	value: { name: 4 },
+};
+
 export const Positive = Template.bind({});
 Positive.args = {
 	type: "number",
