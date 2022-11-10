@@ -44,18 +44,20 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 					"singaporeNumber",
 					singaporeRule?.errorMessage || ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER,
 					(value) => {
-						// TODO : check if either home or mobile is true
 						if (!value || !singaporeRule) return true;
 
-						if (!isObject(singaporeRule?.singaporeNumber)) {
+						const validationRules = singaporeRule.singaporeNumber;
+						const hasAdditionalValidations = isObject(validationRules);
+
+						if (!hasAdditionalValidations && singaporeRule.singaporeNumber) {
 							return PhoneHelper.isSingaporeNumber(value, true) || PhoneHelper.isSingaporeNumber(value);
 						}
 
-						if (singaporeRule?.singaporeNumber?.isHomeNumber) {
+						if (hasAdditionalValidations && validationRules?.homeNumber) {
 							return PhoneHelper.isSingaporeNumber(value, true);
 						}
 
-						if (singaporeRule?.singaporeNumber?.isMobileNumber) {
+						if (hasAdditionalValidations && validationRules?.mobileNumber) {
 							return PhoneHelper.isSingaporeNumber(value);
 						}
 					}
@@ -126,7 +128,17 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	};
 
 	const getAddOns = (): AddonProps<string, unknown> => {
-		if (singaporeRule) {
+		const singaporeRuleValidation = singaporeRule?.singaporeNumber;
+
+		let isInternationalNumbers = true;
+
+		if (singaporeRuleValidation) {
+			isInternationalNumbers = false;
+		} else if (isObject(singaporeRuleValidation)) {
+			isInternationalNumbers = !(singaporeRuleValidation.homeNumber || singaporeRuleValidation.mobileNumber);
+		}
+
+		if (!isInternationalNumbers) {
 			return { attributes: { value: "+65" } };
 		}
 
@@ -151,9 +163,9 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 		}
 
 		if (isObject(singaporeRule?.singaporeNumber)) {
-			const isMobileNumber = singaporeRule?.singaporeNumber?.isMobileNumber;
+			const isMobileNumber = singaporeRule?.singaporeNumber?.mobileNumber;
 
-			return `Enter ${isMobileNumber ? "mobile" : "house"} number`;
+			return `Enter ${isMobileNumber ? "mobile" : "home"} number`;
 		}
 
 		return "Enter contact number";

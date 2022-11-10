@@ -168,7 +168,7 @@ SGHouseNumberValidation.args = {
 		validation: [
 			{
 				singaporeNumber: {
-					isHomeNumber: true,
+					homeNumber: true,
 				},
 			},
 		],
@@ -183,7 +183,7 @@ SGPhoneNumberValidation.args = {
 		validation: [
 			{
 				singaporeNumber: {
-					isMobileNumber: true,
+					mobileNumber: true,
 				},
 			},
 		],

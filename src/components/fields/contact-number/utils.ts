@@ -16,33 +16,34 @@ export namespace PhoneHelper {
 	};
 
 	export const isSingaporeNumber = (value: string, validateHomeNumber = false): boolean => {
-		const { number } = getParsedPhoneNumber(value);
+		try {
+			const { number } = getParsedPhoneNumber(value);
+			const phoneNumber = parsePhoneNumber(value, "SG");
+			const isNumberValid = phoneNumber.isValid();
+			const isMobileNumber = SINGAPORE_MOBILE_NUMBER_REGEX.test(number);
 
-		if (!number) {
+			if (validateHomeNumber) {
+				return isNumberValid && !isMobileNumber;
+			}
+			return isNumberValid && isMobileNumber;
+		} catch (error) {
 			return false;
 		}
-
-		const phoneNumber = parsePhoneNumber(value, "SG");
-		const isNumberValid = phoneNumber.isValid();
-		const isMobileNumber = SINGAPORE_MOBILE_NUMBER_REGEX.test(number);
-
-		if (validateHomeNumber) {
-			return isNumberValid && !isMobileNumber;
-		}
-		return isNumberValid && isMobileNumber;
 	};
 
 	export const isInternationalNumber = (country: string, value: string): boolean => {
-		const { number } = getParsedPhoneNumber(value);
+		try {
+			if (!country || !value) {
+				return false;
+			}
 
-		if (!country || !value || !number) {
+			const countryCode = byCountry(country).iso2 as CountryCode;
+			const phoneNumber = parsePhoneNumber(value, countryCode);
+
+			return phoneNumber.isValid();
+		} catch (error) {
 			return false;
 		}
-
-		const countryCode = byCountry(country).iso2 as CountryCode;
-		const phoneNumber = parsePhoneNumber(value, countryCode);
-
-		return phoneNumber.isValid();
 	};
 
 	export const formatPhoneNumber = (prefix: string, value: string): string => {

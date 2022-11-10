@@ -18,12 +18,12 @@ export interface ISingaporeNumberValidationRule {
 	singaporeNumber?:
 		| boolean
 		| {
-				isHomeNumber: boolean;
-				isMobileNumber?: boolean;
+				homeNumber: true;
+				mobileNumber?: boolean;
 		  }
 		| {
-				isMobileNumber: boolean;
-				isHomeNumber?: boolean;
+				mobileNumber: true;
+				homeNumber?: boolean;
 		  };
 }
 
