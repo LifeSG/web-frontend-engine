@@ -7,11 +7,12 @@ export default {
 	title: "Field/ContactNumber",
 	parameters: {
 		docs: {
-			// todo: update desc
 			page: () => (
 				<>
 					<Title>ContactNumber</Title>
-					<Description>This component provides a set of checkboxes for user to select</Description>
+					<Description>
+						This component provides the functionality for users to input their phone numbers
+					</Description>
 					<Heading>Props</Heading>
 					<ArgsTable story={PRIMARY_STORY} />
 					<Stories includePrimary={true} title="Examples" />
