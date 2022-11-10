@@ -6,7 +6,7 @@ import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
 import { getCountries, getCountryFromPrefix, getPrefix, InternationalCallingCodeMap } from "./data";
-import { IContactNumberSchema, ISelectedCountry } from "./types";
+import { IContactNumberSchema, ISelectedCountry, TCountry } from "./types";
 import { PhoneHelper } from "./utils";
 
 export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) => {
@@ -91,7 +91,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handlePrefixChange = (key: string, prefix: string): void => {
+	const handlePrefixChange = (key: TCountry, prefix: string): void => {
 		const { number: phoneNumberWithoutPrefix } = PhoneHelper.getParsedPhoneNumber(stateValue);
 		const phoneNumberWithPrefix = PhoneHelper.formatPhoneNumber(prefix, phoneNumberWithoutPrefix);
 
@@ -114,9 +114,16 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	};
 
 	const getSpacing = (): number => {
-		if (country === "Singapore") return 4;
+		if (selectedCountry?.name === "Singapore") return 4;
 
 		return 0;
+	};
+
+	const getMaxLength = (): number => {
+		if (selectedCountry?.name === "Singapore") {
+			return 9;
+		}
+		return 14;
 	};
 
 	const getAddOns = (): AddonProps<string, unknown> => {
@@ -157,7 +164,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 			errorMessage={error?.message}
 			placeholder={placeholder || "Enter mobile number"}
 			spacing={getSpacing()}
-			// maxLength={10}
+			maxLength={getMaxLength()}
 		/>
 	);
 };

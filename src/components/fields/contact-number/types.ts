@@ -6,7 +6,7 @@ import {
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
 import { InternationalCallingCodeMap } from "./data";
 
-type TCountry = keyof typeof InternationalCallingCodeMap;
+export type TCountry = keyof typeof InternationalCallingCodeMap;
 
 interface IContactNumberProps extends FormInputGroupProps<string, unknown> {
 	country?: TCountry;
@@ -24,7 +24,7 @@ interface IContactNumberValidationRules extends IYupValidationRule {
 
 export interface ISelectedCountry {
 	prefix: string;
-	name: string;
+	name: TCountry;
 }
 
 export interface IParsedPhoneNumber {
