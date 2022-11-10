@@ -23,6 +23,7 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("contact"),
+		"contact-default": { table: { disable: true } },
 		label: {
 			description: "Specifies the label text",
 			table: {
@@ -110,6 +111,15 @@ Default.args = {
 	},
 };
 
+export const DefaultCountry = Template.bind({});
+DefaultCountry.args = {
+	"contact-default-country": {
+		fieldType: "contact",
+		label: "Contact Number",
+		country: "Japan",
+	},
+};
+
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"contact-disabled": {
@@ -137,14 +147,27 @@ WithSearch.args = {
 	},
 };
 
-export const SGHouseNumberValidation = Template.bind({});
-SGHouseNumberValidation.args = {
-	"contact-with-singapore-house-number": {
+export const SGNumberValidation = Template.bind({});
+SGNumberValidation.args = {
+	"contact-singapore-number": {
 		fieldType: "contact",
 		label: "Contact Number",
 		validation: [
 			{
-				isSingaporeNumber: {
+				singaporeNumber: true,
+			},
+		],
+	},
+};
+
+export const SGHouseNumberValidation = Template.bind({});
+SGHouseNumberValidation.args = {
+	"contact-singapore-house-number": {
+		fieldType: "contact",
+		label: "Contact Number",
+		validation: [
+			{
+				singaporeNumber: {
 					isHomeNumber: true,
 				},
 			},
@@ -154,12 +177,12 @@ SGHouseNumberValidation.args = {
 
 export const SGPhoneNumberValidation = Template.bind({});
 SGPhoneNumberValidation.args = {
-	"contact-with-singapore-mobile-number": {
+	"contact-singapore-mobile-number": {
 		fieldType: "contact",
 		label: "Contact Number",
 		validation: [
 			{
-				isSingaporeNumber: {
+				singaporeNumber: {
 					isMobileNumber: true,
 				},
 			},
@@ -169,12 +192,12 @@ SGPhoneNumberValidation.args = {
 
 export const InternationalNumberValidation = Template.bind({});
 InternationalNumberValidation.args = {
-	"contact-with-international-number": {
+	"contact-international-number": {
 		fieldType: "contact",
 		label: "Contact Number",
 		validation: [
 			{
-				isInternationalNumber: true,
+				internationalNumber: true,
 			},
 		],
 	},
