@@ -45,8 +45,6 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 			toggleShow(canShow);
 		}
 
-		return () => removeFieldValidationConfig(id);
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formValidationConfig, formValues, renderRules]);
 
