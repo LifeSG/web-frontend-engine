@@ -1,17 +1,22 @@
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import styled from "styled-components";
 
-export const Label = styled.label`
-	display: flex;
-	align-items: center;
-	margin-bottom: 10px;
-	cursor: pointer;
+interface ILabelProps {
+	disabled?: boolean;
+}
 
-	&:last-child {
-		margin-bottom: 0;
-	}
+export const Label = styled.label<ILabelProps>`
+	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 
 export const StyledCheckbox = styled(Checkbox)`
-	margin-right: 10px;
+	margin-right: 5px;
+`;
+
+export const CheckboxContainer = styled.div`
+	display: flex;
+	align-items: center;
+	:not(:last-of-type) {
+		margin-bottom: 1rem;
+	}
 `;

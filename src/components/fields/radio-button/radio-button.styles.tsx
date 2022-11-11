@@ -1,7 +1,13 @@
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import styled from "styled-components";
 
-export const Label = styled.label``;
+interface ILabelProps {
+	disabled?: boolean;
+}
+
+export const Label = styled.label<ILabelProps>`
+	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+`;
 
 export const StyledRadioButton = styled(RadioButton)`
 	margin-right: 5px;

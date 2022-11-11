@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
-import { Label, StyledCheckbox } from "./checkbox-group.styles";
+import { CheckboxContainer, Label, StyledCheckbox } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
@@ -13,7 +13,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, validation, ...otherSchema },
+		schema: { label, options, validation, disabled, ...otherSchema },
 		id,
 		value,
 		error,
@@ -84,19 +84,26 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	const renderCheckboxes = () => {
 		return (
 			options.length > 0 &&
-			options.map((option, index) => (
-				<Label key={option.label}>
-					<StyledCheckbox
-						{...otherSchema}
-						id={formatCheckboxId(id, index)}
-						name={option.label}
-						value={option.value}
-						checked={getCheckboxStatus(option.value)}
-						onChange={handleChange}
-					/>
-					{option.label}
-				</Label>
-			))
+			options.map((option, index) => {
+				const checkboxId = formatCheckboxId(id, index);
+
+				return (
+					<CheckboxContainer key={index}>
+						<StyledCheckbox
+							{...otherSchema}
+							id={checkboxId}
+							disabled={disabled}
+							name={option.label}
+							value={option.value}
+							checked={getCheckboxStatus(option.value)}
+							onChange={handleChange}
+						/>
+						<Label htmlFor={checkboxId} disabled={disabled}>
+							{option.label}
+						</Label>
+					</CheckboxContainer>
+				);
+			})
 		);
 	};
 
