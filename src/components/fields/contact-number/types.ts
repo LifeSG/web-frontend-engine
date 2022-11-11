@@ -10,25 +10,21 @@ export type TCountry = keyof typeof InternationalCallingCodeMap;
 
 interface IContactNumberProps extends FormInputGroupProps<string, unknown> {
 	country?: TCountry;
-	allowInternationalNumbers?: boolean;
 	enableSearch?: boolean;
 }
 
-export interface ISingaporeNumberValidationRule {
-	singaporeNumber?:
-		| boolean
+export type TSingaporeNumberRule = "default" | "house" | "mobile";
+
+interface IContactNumberValidationRules extends IYupValidationRule {
+	contactNumber:
 		| {
-				homeNumber: true;
-				mobileNumber?: boolean;
+				internationalNumber: true;
+				singaporeNumber?: never;
 		  }
 		| {
-				mobileNumber: true;
-				homeNumber?: boolean;
+				internationalNumber?: never;
+				singaporeNumber: TSingaporeNumberRule;
 		  };
-}
-
-interface IContactNumberValidationRules extends ISingaporeNumberValidationRule, IYupValidationRule {
-	internationalNumber?: boolean;
 }
 
 export interface ISelectedCountry {

@@ -83,19 +83,6 @@ export default {
 			},
 			defaultValue: false,
 		},
-		allowInternationalNumbers: {
-			description: "Specifies if the input should provide international number prefixes",
-			table: {
-				type: {
-					summary: "boolean",
-				},
-			},
-			options: [true, false],
-			control: {
-				type: "boolean",
-			},
-			defaultValue: false,
-		},
 	},
 } as Meta;
 
@@ -154,7 +141,9 @@ SGNumberValidation.args = {
 		label: "Contact Number",
 		validation: [
 			{
-				singaporeNumber: true,
+				contactNumber: {
+					singaporeNumber: "default",
+				},
 			},
 		],
 	},
@@ -167,8 +156,8 @@ SGHouseNumberValidation.args = {
 		label: "Contact Number",
 		validation: [
 			{
-				singaporeNumber: {
-					homeNumber: true,
+				contactNumber: {
+					singaporeNumber: "house",
 				},
 			},
 		],
@@ -182,8 +171,8 @@ SGPhoneNumberValidation.args = {
 		label: "Contact Number",
 		validation: [
 			{
-				singaporeNumber: {
-					mobileNumber: true,
+				contactNumber: {
+					singaporeNumber: "mobile",
 				},
 			},
 		],
@@ -197,7 +186,9 @@ InternationalNumberValidation.args = {
 		label: "Contact Number",
 		validation: [
 			{
-				internationalNumber: true,
+				contactNumber: {
+					internationalNumber: true,
+				},
 			},
 		],
 	},
