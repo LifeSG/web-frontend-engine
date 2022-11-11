@@ -23,7 +23,7 @@ import { IYupValidationRule, TRenderRules } from "./yup/types";
 export interface IFrontendEngineProps {
 	className?: string | undefined;
 	data?: IFrontendEngineData | undefined;
-	onChange?: (values: TFrontendEngineValues, isValid?: boolean) => unknown | undefined;
+	onChange?: (values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown | undefined;
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }
 
