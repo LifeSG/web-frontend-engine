@@ -1,6 +1,6 @@
-import { ISubmitButtonSchema } from "src/components/fields";
 import styled from "styled-components";
 import { FrontendEngine } from "../components";
+import { ISubmitButtonSchema } from "../components/fields";
 
 export const ExcludeReactFormHookProps = {
 	invalid: { table: { disable: true } },

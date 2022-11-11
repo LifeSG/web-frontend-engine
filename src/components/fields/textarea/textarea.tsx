@@ -1,9 +1,9 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { kebabCase } from "lodash";
 import React, { useEffect, useState } from "react";
-import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
+import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { Chip } from "../../shared";
 import { ChipContainer, StyledTextArea, Wrapper } from "./textarea.styles";

@@ -1,7 +1,7 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "src/components";
-import { TFrontendEngineFieldSchema } from "src/components/frontend-engine";
+import { FrontendEngine } from "../../../components";
+import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
 import { SubmitButtonStorybook } from "../../common";
 
 export default {
