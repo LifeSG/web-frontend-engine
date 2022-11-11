@@ -6,6 +6,7 @@ import { useFormContext } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "../../frontend-engine/types";
+import { ERROR_MESSAGES } from "../../shared";
 import { IDateInputSchema } from "./types";
 
 const INVALID_DATE = "Invalid date";
@@ -42,19 +43,19 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 					const date = new Date(value);
 					return !isNaN(date.valueOf());
 				})
-				.test("future", futureRule?.errorMessage || "Date must be in the future.", (value) => {
+				.test("future", futureRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
 					if (!value || value === "" || value === INVALID_DATE || !futureRule?.future) return true;
 					return LocalDate.parse(value).isAfter(LocalDate.now());
 				})
-				.test("past", pastRule?.errorMessage || "Date must be in the past.", (value) => {
+				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
 					if (!value || value === "" || value === INVALID_DATE || !pastRule?.past) return true;
 					return LocalDate.parse(value).isBefore(LocalDate.now());
 				})
-				.test("not-future", notFutureRule?.errorMessage || "Date cannot be in the future.", (value) => {
+				.test("not-future", notFutureRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE, (value) => {
 					if (!value || value === "" || value === INVALID_DATE || !notFutureRule?.notFuture) return true;
 					return !LocalDate.parse(value).isAfter(LocalDate.now());
 				})
-				.test("not-past", notPastRule?.errorMessage || "Date cannot be in the past.", (value) => {
+				.test("not-past", notPastRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
 					if (!value || value === "" || value === INVALID_DATE || !notPastRule?.notPast) return true;
 					return !LocalDate.parse(value).isBefore(LocalDate.now());
 				}),

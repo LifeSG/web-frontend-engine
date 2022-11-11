@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
+import { ERROR_MESSAGES } from "../../shared";
 import { IEmailSchema, INumberSchema, ITextfieldSchema } from "./types";
 
 export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSchema | INumberSchema>) => {
@@ -33,7 +34,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 					const emailRule = validation?.find((rule) => rule.email);
 					setFieldValidationConfig(
 						id,
-						Yup.string().email(emailRule?.errorMessage || "Invalid email"),
+						Yup.string().email(emailRule?.errorMessage || ERROR_MESSAGES.EMAIL.INVALID),
 						validation
 					);
 				}
