@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { forwardRef, useCallback, useEffect, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useValidationSchema } from "src/utils/hooks";
+import { useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../fields/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
 import { YupProvider } from "./yup";

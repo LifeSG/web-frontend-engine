@@ -1,8 +1,8 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React, { useRef } from "react";
-import { FrontendEngine, IFrontendEngineProps, IFrontendEngineRef } from "src/components/frontend-engine";
+import { useRef } from "react";
+import { FrontendEngine, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { SubmitButtonStorybook } from "../common";
 
 export default {

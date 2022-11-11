@@ -1,5 +1,5 @@
-import { TRenderRules } from "src/components/frontend-engine/yup/types";
 import { TFrontendEngineBaseFieldJsonSchemaKeys, TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { TRenderRules } from "../../frontend-engine/yup";
 
 export type TWrapperType =
 	| "div"

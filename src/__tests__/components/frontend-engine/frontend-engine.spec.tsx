@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useRef } from "react";
-import { FrontendEngine } from "src/components";
+import { FrontendEngine } from "../../../components";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
 
 const ERROR_MESSAGE = "test error message";

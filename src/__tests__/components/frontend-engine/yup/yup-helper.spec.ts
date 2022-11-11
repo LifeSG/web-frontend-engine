@@ -1,9 +1,8 @@
-import * as Yup from "yup";
 import isEqual from "lodash/isEqual";
+import * as Yup from "yup";
 import { SchemaDescription } from "yup/lib/schema";
-import { YupHelper } from "../../../../components/frontend-engine/yup";
-import { IYupValidationRule, TYupSchemaType } from "src/components/frontend-engine/yup/types";
-import { TestHelper } from "src/utils";
+import { IYupValidationRule, TYupSchemaType, YupHelper } from "../../../../components/frontend-engine/yup";
+import { TestHelper } from "../../../../utils";
 
 const ERROR_MESSAGE = "test error message";
 const ERROR_MESSAGE_2 = "test error message 2";

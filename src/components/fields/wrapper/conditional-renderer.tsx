@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
-import { YupHelper } from "src/components/frontend-engine/yup";
-import { TFormYupConfig, TRenderRules, TYupSchemaType } from "src/components/frontend-engine/yup/types";
-import { useValidationSchema } from "src/utils/hooks";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
+import { useValidationSchema } from "../../../utils/hooks";
+import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
 
 interface IProps {
 	id: string;
