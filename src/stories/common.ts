@@ -45,5 +45,5 @@ export const SubmitButtonStorybook: Record<string, ISubmitButtonSchema> = {
 };
 
 export const StyledForm = styled(FrontendEngine)`
-	width: 300px;
+	width: 350px;
 `;

@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { without } from "lodash";
+import without from "lodash/without";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
@@ -51,7 +51,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
 		const value = event.target.value;
-		let updatedStateValues = stateValue;
+		let updatedStateValues = [...stateValue];
 
 		if (updatedStateValues.includes(value)) {
 			updatedStateValues = without(updatedStateValues, value);
@@ -59,7 +59,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 			updatedStateValues.push(value);
 		}
 
-		setStateValue(updatedStateValues);
 		onChange({ target: { value: updatedStateValues } });
 	};
 

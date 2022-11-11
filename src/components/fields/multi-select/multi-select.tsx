@@ -58,10 +58,12 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
 	const handleChange = (options: ISelectOption[]): void => {
 		const parsedValues = options.map((option) => option.value);
-		setStateValue(parsedValues);
 		onChange({ target: { value: parsedValues } });
 	};
 
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
 	return (
 		<Form.CustomField id={id} label={label} errorMessage={otherProps.error?.message}>
 			<InputMultiSelect

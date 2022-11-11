@@ -75,6 +75,9 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 		}
 	};
 
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
 	return (
 		<Form.Input
 			{...otherSchema}

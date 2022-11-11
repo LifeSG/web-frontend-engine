@@ -44,10 +44,12 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (_, option: string): void => {
-		setStateValue(option);
 		onChange({ target: { value: option } });
 	};
 
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
 	return (
 		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
 			<InputSelect

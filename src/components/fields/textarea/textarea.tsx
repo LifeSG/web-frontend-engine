@@ -47,9 +47,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		if (maxLength && curLength >= maxLength) {
 			return;
 		}
-
 		const newValue = ((stateValue || "") + (curLength ? ` ${text}` : text)).substring(0, maxLength);
-		setStateValue(newValue);
 
 		onChange({
 			target: {
