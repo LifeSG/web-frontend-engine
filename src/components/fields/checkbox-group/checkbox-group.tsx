@@ -2,6 +2,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import without from "lodash/without";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
@@ -74,10 +75,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		return stateValue.includes(value);
 	};
 
-	const formatCheckboxId = (id: string, index: number): string => {
-		return `${id}-${index}`;
-	};
-
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -85,7 +82,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		return (
 			options.length > 0 &&
 			options.map((option, index) => {
-				const checkboxId = formatCheckboxId(id, index);
+				const checkboxId = TestHelper.generateId(id, "checkbox");
 
 				return (
 					<CheckboxContainer key={index}>

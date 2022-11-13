@@ -76,6 +76,27 @@ Default.args = {
 	},
 };
 
+export const DefaultValue = () => (
+	<FrontendEngine
+		data={{
+			fields: {
+				"radio-button-default-value": {
+					fieldType: "radio",
+					label: "Fruits",
+					options: [
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+					],
+				},
+				...SubmitButtonStorybook,
+			},
+			defaultValues: { "radio-button-default-value": "Apple" },
+		}}
+	/>
+);
+DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"radio-button-disabled": {

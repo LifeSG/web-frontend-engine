@@ -1,6 +1,7 @@
 import { Form } from "@lifesg/react-design-system/form";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Label, RadioContainer, StyledRadioButton } from "./radio-button.styles";
@@ -30,7 +31,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value || []);
+		setStateValue(value || "");
 	}, [value]);
 
 	// =============================================================================
@@ -47,10 +48,6 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 		return stateValue === value;
 	};
 
-	const formatRadioButtonId = (id: string, index: number): string => {
-		return `${id}-${index}`;
-	};
-
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -58,7 +55,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 		return (
 			options.length > 0 &&
 			options.map((option, index) => {
-				const radioButtonId = formatRadioButtonId(id, index);
+				const radioButtonId = TestHelper.generateId(id, "radio");
 
 				return (
 					<RadioContainer key={index}>
