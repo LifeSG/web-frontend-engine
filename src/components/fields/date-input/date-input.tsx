@@ -82,8 +82,10 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	useEffect(() => {
 		if (!dateFormatter) return;
 		if (useCurrentDate && !value) {
-			// TODO: State value is not updated
-			setStateValue(DateHelper.formatDateTime(LocalDate.now().toString(), dateFormatter, true));
+			const currentDate = DateHelper.formatDateTime(LocalDate.now().toString(), dateFormatter, true);
+
+			setStateValue(currentDate);
+			onChange({ target: { value: currentDate } });
 		} else if (value === ERROR_MESSAGES.DATE.INVALID) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {

@@ -62,7 +62,7 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, IDateInputSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} onSubmit={(data) => console.log(data)} />
+	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
