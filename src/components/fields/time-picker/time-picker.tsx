@@ -60,14 +60,14 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const handleCurrentTime = (format: DateTimeFormatter): void => {
-		const currentTime = DateHelper.formatTime(LocalTime.now().toString(), format);
+		const currentTime = DateHelper.formatDateTime(LocalTime.now().toString(), format);
 
 		onChange({ target: { value: currentTime } });
 	};
 
 	const handleTimeFormat = (format: DateTimeFormatter): void => {
 		if (stateValue) {
-			onChange({ target: { value: DateHelper.formatTime(stateValue, format) } });
+			onChange({ target: { value: DateHelper.formatDateTime(stateValue, format) } });
 		}
 	};
 
