@@ -7,4 +7,5 @@ export * from "./select";
 export * from "./submit-button";
 export * from "./textarea";
 export * from "./textfield";
+export * from "./time-picker";
 // export * from "./wrapper"; // not exporting to avoid circular dependency
