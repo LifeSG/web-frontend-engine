@@ -28,26 +28,24 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const timeFormatPattern = is24HourFormat ? "H:mm" : "h:mma";
-		const newTimeFormatter = DateTimeFormatter.ofPattern(timeFormatPattern)
-			.withResolverStyle(ResolverStyle.STRICT)
-			.withLocale(Locale.ENGLISH);
-
-		useCurrentTime && handleCurrentTime(newTimeFormatter);
-		is24HourFormat && handleTimeFormat(newTimeFormatter);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [useCurrentTime, is24HourFormat]);
-
-	useEffect(() => {
 		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
 	useEffect(() => {
-		console.log(value);
-		setStateValue(formatLocalState(value));
+		const timeFormatPattern = is24HourFormat ? "H:mm" : "h:mma";
+		const timeFormatter = DateTimeFormatter.ofPattern(timeFormatPattern)
+			.withResolverStyle(ResolverStyle.STRICT)
+			.withLocale(Locale.ENGLISH);
+
+		if (useCurrentTime && !value) {
+			handleCurrentTime(timeFormatter);
+		} else {
+			setStateValue(formatLocalState(value));
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
+	}, [value, useCurrentTime, is24HourFormat]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -62,19 +60,14 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	const handleCurrentTime = (format: DateTimeFormatter): void => {
 		const currentTime = DateHelper.formatDateTime(LocalTime.now().toString(), format);
 
+		setStateValue(formatLocalState(currentTime));
 		onChange({ target: { value: currentTime } });
-	};
-
-	const handleTimeFormat = (format: DateTimeFormatter): void => {
-		if (stateValue) {
-			onChange({ target: { value: DateHelper.formatDateTime(stateValue, format) } });
-		}
 	};
 
 	const formatLocalState = (value: string): string => {
 		if (!value) return "";
 
-		if (is24HourFormat) return value;
+		if (!is24HourFormat) return value;
 
 		return value.substring(0, value.length - 2);
 	};

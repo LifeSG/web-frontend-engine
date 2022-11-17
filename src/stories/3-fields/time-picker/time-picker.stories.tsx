@@ -108,10 +108,9 @@ Disabled.args = {
 	},
 };
 
-// TODO: Fix incorrect behaviour of no default value
-export const CurrentTime = Template.bind({});
-CurrentTime.args = {
-	"timepicker-current-time": {
+export const UseCurrentTime = Template.bind({});
+UseCurrentTime.args = {
+	"timepicker-use-current-time": {
 		label: "Textfield",
 		fieldType: "time",
 		useCurrentTime: true,
