@@ -10,6 +10,7 @@ import {
 	ISubmitButtonSchema,
 	ITextareaSchema,
 	ITextfieldSchema,
+	ITimePickerSchema,
 } from "../fields";
 import { IRadioButtonGroupSchema } from "../fields/radio-button/types";
 import { IWrapperSchema } from "../fields/wrapper";
@@ -46,7 +47,8 @@ export type TFrontendEngineFieldSchema =
 	| IDateInputSchema
 	| IWrapperSchema
 	| IContactNumberSchema
-	| IRadioButtonGroupSchema;
+	| IRadioButtonGroupSchema
+	| ITimePickerSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -98,6 +100,7 @@ export enum EFieldType {
 	CHECKBOX = "CheckboxGroup",
 	CONTACT = "ContactNumber",
 	RADIO = "RadioButtonGroup",
+	TIME = "TimePicker",
 }
 
 // =============================================================================

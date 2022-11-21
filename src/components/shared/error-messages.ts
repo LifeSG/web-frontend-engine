@@ -14,5 +14,6 @@ export const ERROR_MESSAGES = {
 		MUST_BE_PAST: "Date must be in the past.",
 		CANNOT_BE_FUTURE: "Date cannot be in the future.",
 		CANNOT_BE_PAST: "Date cannot be in the past.",
+		INVALID: "Invalid date",
 	},
 };

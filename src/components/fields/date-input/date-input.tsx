@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
+import { DateHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { IDateInputSchema } from "./types";
 
-const INVALID_DATE = "Invalid date";
 export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
@@ -44,19 +44,22 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 					return !isNaN(date.valueOf());
 				})
 				.test("future", futureRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
-					if (!value || value === "" || value === INVALID_DATE || !futureRule?.future) return true;
+					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !futureRule?.future)
+						return true;
 					return LocalDate.parse(value).isAfter(LocalDate.now());
 				})
 				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
-					if (!value || value === "" || value === INVALID_DATE || !pastRule?.past) return true;
+					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !pastRule?.past) return true;
 					return LocalDate.parse(value).isBefore(LocalDate.now());
 				})
 				.test("not-future", notFutureRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE, (value) => {
-					if (!value || value === "" || value === INVALID_DATE || !notFutureRule?.notFuture) return true;
+					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !notFutureRule?.notFuture)
+						return true;
 					return !LocalDate.parse(value).isAfter(LocalDate.now());
 				})
 				.test("not-past", notPastRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
-					if (!value || value === "" || value === INVALID_DATE || !notPastRule?.notPast) return true;
+					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !notPastRule?.notPast)
+						return true;
 					return !LocalDate.parse(value).isBefore(LocalDate.now());
 				}),
 			validation
@@ -79,13 +82,20 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	useEffect(() => {
 		if (!dateFormatter) return;
 		if (useCurrentDate && !value) {
-			setStateValue(formatValue(LocalDate.now().toString()));
-		} else if (value === INVALID_DATE) {
-			setStateValue(INVALID_DATE);
+			const currentDate = DateHelper.formatDateTime(LocalDate.now().toString(), dateFormatter, true);
+
+			setStateValue(currentDate);
+			onChange({ target: { value: currentDate } });
+		} else if (value === ERROR_MESSAGES.DATE.INVALID) {
+			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
 			let formattedDate = "";
 			try {
-				formattedDate = formatValue(LocalDate.parse(value, dateFormatter).toString());
+				formattedDate = DateHelper.formatDateTime(
+					LocalDate.parse(value, dateFormatter).toString(),
+					dateFormatter,
+					true
+				);
 			} catch (error) {}
 			if (formattedDate && formattedDate !== value) setStateValue(formattedDate);
 			else if (!formattedDate) {
@@ -106,28 +116,21 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			});
 		} else if (!day.length || !month.length || year.length !== 4) {
 			onChange({
-				target: { value: INVALID_DATE },
+				target: { value: ERROR_MESSAGES.DATE.INVALID },
 			});
 		} else {
 			onChange({
 				target: {
-					value: formatValue([year, month.padStart(2, "0"), day.padStart(2, "0")].join("-")),
+					value: DateHelper.formatDateTime(
+						[year, month.padStart(2, "0"), day.padStart(2, "0")].join("-"),
+						dateFormatter,
+						true
+					),
 				},
 			});
 		}
 	};
 
-	// =============================================================================
-	// HELPER FUNCTIONS
-	// =============================================================================
-	// accepts in uuuu-MM-dd
-	const formatValue = (value: string) => {
-		try {
-			return LocalDate.parse(value).format(dateFormatter);
-		} catch (error) {
-			return INVALID_DATE;
-		}
-	};
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
