@@ -42,22 +42,19 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 					return !isNaN(date.valueOf());
 				})
 				.test("future", futureRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
-					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !futureRule?.future)
-						return true;
+					if (!isValidDate(value) || !futureRule?.future) return true;
 					return LocalDate.parse(value).isAfter(LocalDate.now());
 				})
 				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
-					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !pastRule?.past) return true;
+					if (!isValidDate(value) || !pastRule?.past) return true;
 					return LocalDate.parse(value).isBefore(LocalDate.now());
 				})
 				.test("not-future", notFutureRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE, (value) => {
-					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !notFutureRule?.notFuture)
-						return true;
+					if (!isValidDate(value) || !notFutureRule?.notFuture) return true;
 					return !LocalDate.parse(value).isAfter(LocalDate.now());
 				})
 				.test("not-past", notPastRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
-					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !notPastRule?.notPast)
-						return true;
+					if (!isValidDate(value) || !notPastRule?.notPast) return true;
 					return !LocalDate.parse(value).isBefore(LocalDate.now());
 				}),
 			validation
@@ -78,11 +75,11 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 
 			setStateValue(currentDate);
 			onChange({ target: { value: currentDate } });
-		} else if (value === ERROR_MESSAGES.DATE.INVALID) {
+		} else if (!isValidDate(value)) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
 			const formattedDate = DateTimeHelper.formatDateTime(value, dateFormat, "date");
-			if (value && value !== "" && value !== ERROR_MESSAGES.DATE.INVALID) setStateValue(formattedDate);
+			if (!isValidDate(value)) setStateValue(formattedDate);
 			else {
 				setStateValue("");
 				setValue(id, undefined);
@@ -114,6 +111,17 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 				},
 			});
 		}
+	};
+
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
+	const isValidDate = (value: string) => {
+		if (!value) return false;
+		if (value === "") return false;
+		if (value === ERROR_MESSAGES.DATE.INVALID) return false;
+
+		return true;
 	};
 
 	// =============================================================================
