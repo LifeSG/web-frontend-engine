@@ -1,11 +1,10 @@
-import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
-import { Locale } from "@js-joda/locale_en";
+import { LocalDate } from "@js-joda/core";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
-import { DateHelper } from "../../../utils";
+import { DateTimeHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { IDateInputSchema } from "./types";
@@ -22,7 +21,6 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		error,
 		...otherProps
 	} = props;
-	const [dateFormatter, setDateFormatter] = useState<DateTimeFormatter>();
 	const [stateValue, setStateValue] = useState<string>(value || ""); // adheres to dateFormat
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationSchema();
@@ -67,12 +65,6 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
-	useEffect(() => {
-		setDateFormatter(
-			DateTimeFormatter.ofPattern(dateFormat).withResolverStyle(ResolverStyle.STRICT).withLocale(Locale.ENGLISH)
-		);
-	}, [dateFormat]);
-
 	/**
 	 * update local state according to various scenarios
 	 * - prepopulate with current date if useCurrentDate=true and no value provided (value can be set via defaultValues)
@@ -80,31 +72,24 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	 * - otherwise if value cannot be parsed, clear both local state and registered value
 	 */
 	useEffect(() => {
-		if (!dateFormatter) return;
+		if (!dateFormat) return;
 		if (useCurrentDate && !value) {
-			const currentDate = DateHelper.formatDateTime(LocalDate.now().toString(), dateFormatter, true);
+			const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
 
 			setStateValue(currentDate);
 			onChange({ target: { value: currentDate } });
 		} else if (value === ERROR_MESSAGES.DATE.INVALID) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
-			let formattedDate = "";
-			try {
-				formattedDate = DateHelper.formatDateTime(
-					LocalDate.parse(value, dateFormatter).toString(),
-					dateFormatter,
-					true
-				);
-			} catch (error) {}
-			if (formattedDate && formattedDate !== value) setStateValue(formattedDate);
-			else if (!formattedDate) {
+			const formattedDate = DateTimeHelper.formatDateTime(value, dateFormat, "date");
+			if (value && value !== "" && value !== ERROR_MESSAGES.DATE.INVALID) setStateValue(formattedDate);
+			else {
 				setStateValue("");
 				setValue(id, undefined);
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [useCurrentDate, value, dateFormatter]);
+	}, [useCurrentDate, value, dateFormat]);
 
 	// =============================================================================
 	// EVENT HANDLER
@@ -121,10 +106,10 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		} else {
 			onChange({
 				target: {
-					value: DateHelper.formatDateTime(
+					value: DateTimeHelper.formatDateTime(
 						[year, month.padStart(2, "0"), day.padStart(2, "0")].join("-"),
-						dateFormatter,
-						true
+						dateFormat,
+						"date"
 					),
 				},
 			});
