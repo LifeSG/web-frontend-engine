@@ -1,4 +1,4 @@
-import { Checkbox } from "@lifesg/react-design-system/checkbox";
+import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import styled from "styled-components";
 
 interface ILabelProps {
@@ -9,11 +9,11 @@ export const Label = styled.label<ILabelProps>`
 	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 
-export const StyledCheckbox = styled(Checkbox)`
+export const StyledRadioButton = styled(RadioButton)`
 	margin-right: 5px;
 `;
 
-export const CheckboxContainer = styled.div`
+export const RadioContainer = styled.div`
 	display: flex;
 	align-items: center;
 	:not(:last-of-type) {

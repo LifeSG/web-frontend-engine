@@ -1,104 +1,77 @@
 import { Form } from "@lifesg/react-design-system/form";
-import without from "lodash/without";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ERROR_MESSAGES } from "../../shared";
-import { CheckboxContainer, Label, StyledCheckbox } from "./checkbox-group.styles";
-import { ICheckboxGroupSchema } from "./types";
+import { Label, RadioContainer, StyledRadioButton } from "./radio-button.styles";
+import { IRadioButtonGroupSchema } from "./types";
 
-export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
+export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, validation, disabled, ...otherSchema },
+		schema: { label, options, disabled, validation, ...otherSchema },
 		id,
 		value,
 		error,
 		onChange,
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string[]>(value || []);
+	const [stateValue, setStateValue] = useState<string>(value || "");
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const isRequiredRule = validation?.find((rule) => "required" in rule);
-
-		setFieldValidationConfig(
-			id,
-			Yup.array()
-				.of(Yup.string())
-				.test(
-					"is-empty-array",
-					isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTION,
-					(value) => {
-						if (!value || !isRequiredRule?.required) return true;
-
-						return value.length > 0;
-					}
-				),
-			validation
-		);
+		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value || []);
+		setStateValue(value || "");
 	}, [value]);
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-		const value = event.target.value;
-		let updatedStateValues = [...stateValue];
-
-		if (updatedStateValues.includes(value)) {
-			updatedStateValues = without(updatedStateValues, value);
-		} else {
-			updatedStateValues.push(value);
-		}
-
-		onChange({ target: { value: updatedStateValues } });
+		onChange(event);
 	};
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const getCheckboxStatus = (value: string): boolean => {
-		return stateValue.includes(value);
+	const getRadioButtonStatus = (value: string): boolean => {
+		return stateValue === value;
 	};
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderCheckboxes = () => {
+	const renderRadioButtons = () => {
 		return (
 			options.length > 0 &&
 			options.map((option, index) => {
-				const checkboxId = TestHelper.generateId(id, "checkbox");
+				const radioButtonId = TestHelper.generateId(id, "radio");
 
 				return (
-					<CheckboxContainer key={index}>
-						<StyledCheckbox
+					<RadioContainer key={index}>
+						<StyledRadioButton
 							{...otherSchema}
-							id={checkboxId}
+							id={radioButtonId}
 							disabled={disabled}
 							name={option.label}
 							value={option.value}
-							checked={getCheckboxStatus(option.value)}
+							checked={getRadioButtonStatus(option.value)}
 							onChange={handleChange}
 						/>
-						<Label htmlFor={checkboxId} disabled={disabled}>
+						<Label htmlFor={radioButtonId} disabled={disabled}>
 							{option.label}
 						</Label>
-					</CheckboxContainer>
+					</RadioContainer>
 				);
 			})
 		);
@@ -106,7 +79,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 
 	return (
 		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			{renderCheckboxes()}
+			{renderRadioButtons()}
 		</Form.CustomField>
 	);
 };

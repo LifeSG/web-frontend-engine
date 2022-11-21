@@ -11,6 +11,7 @@ import {
 	ITextareaSchema,
 	ITextfieldSchema,
 } from "../fields";
+import { IRadioButtonGroupSchema } from "../fields/radio-button/types";
 import { IWrapperSchema } from "../fields/wrapper";
 import { IYupValidationRule, TRenderRules } from "./yup/types";
 
@@ -44,7 +45,8 @@ export type TFrontendEngineFieldSchema =
 	| ICheckboxGroupSchema
 	| IDateInputSchema
 	| IWrapperSchema
-	| IContactNumberSchema;
+	| IContactNumberSchema
+	| IRadioButtonGroupSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -95,6 +97,7 @@ export enum EFieldType {
 	P = "Wrapper",
 	CHECKBOX = "CheckboxGroup",
 	CONTACT = "ContactNumber",
+	RADIO = "RadioButtonGroup",
 }
 
 // =============================================================================
