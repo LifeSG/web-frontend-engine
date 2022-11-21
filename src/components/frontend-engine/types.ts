@@ -21,7 +21,7 @@ import { IYupValidationRule, TRenderRules } from "./yup/types";
 // FRONTEND ENGINE
 // =============================================================================
 export interface IFrontendEngineProps {
-	className?: string;
+	className?: string | undefined;
 	data?: IFrontendEngineData | undefined;
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }

@@ -4,6 +4,6 @@ import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaK
 export interface ITimePickerSchema
 	extends IFrontendEngineBaseFieldJsonSchema<"time">,
 		Omit<TimepickerProps, TFrontendEngineBaseFieldJsonSchemaKeys> {
-	useCurrentTime?: boolean;
-	is24HourFormat?: boolean;
+	useCurrentTime?: boolean | undefined;
+	is24HourFormat?: boolean | undefined;
 }
