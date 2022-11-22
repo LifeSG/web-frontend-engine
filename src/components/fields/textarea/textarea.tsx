@@ -14,7 +14,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, label, validation },
+		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, label, validation, ...otherSchema },
 		id,
 		name,
 		onChange,
@@ -83,6 +83,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 			<Wrapper chipPosition={chipPosition}>
 				{renderChips()}
 				<StyledTextArea
+					{...otherSchema}
 					{...otherProps}
 					id={TestHelper.generateId(id, "textarea")}
 					name={name}
