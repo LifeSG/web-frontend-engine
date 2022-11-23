@@ -1,11 +1,12 @@
 import { InputMultiSelectProps } from "@lifesg/react-design-system";
-import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine";
+import { IYupValidationRule } from "../../frontend-engine/yup/types";
+import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 export interface IMultiSelectOption {
 	label: string;
 	value: string;
 }
 
-export interface IMultiSelectSchema
-	extends IFrontendEngineFieldJsonSchema<"multi-select">,
-		TComponentNativeProps<InputMultiSelectProps<IMultiSelectOption, string>> {}
+export interface IMultiSelectSchema<V = IYupValidationRule>
+	extends IFrontendEngineBaseFieldJsonSchema<"multi-select", V>,
+		TComponentOmitProps<InputMultiSelectProps<IMultiSelectOption, string>> {}

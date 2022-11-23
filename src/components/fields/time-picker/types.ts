@@ -1,9 +1,10 @@
 import { TimepickerProps } from "@lifesg/react-design-system/timepicker";
-import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine";
+import { IYupValidationRule } from "../../frontend-engine/yup/types";
+import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
-export interface ITimePickerSchema
-	extends IFrontendEngineFieldJsonSchema<"time">,
-		TComponentNativeProps<TimepickerProps> {
+export interface ITimePickerSchema<V = IYupValidationRule>
+	extends IFrontendEngineBaseFieldJsonSchema<"time", V>,
+		TComponentOmitProps<TimepickerProps> {
 	useCurrentTime?: boolean | undefined;
 	is24HourFormat?: boolean | undefined;
 }

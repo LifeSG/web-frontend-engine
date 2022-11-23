@@ -1,11 +1,12 @@
 import { InputSelectProps } from "@lifesg/react-design-system/input-select/types";
-import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine";
+import { IYupValidationRule } from "../../frontend-engine/yup/types";
+import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 export interface ISelectOption {
 	label: string;
 	value: string;
 }
 
-export interface ISelectSchema
-	extends IFrontendEngineFieldJsonSchema<"select">,
-		TComponentNativeProps<InputSelectProps<ISelectOption, string>> {}
+export interface ISelectSchema<V = IYupValidationRule>
+	extends IFrontendEngineBaseFieldJsonSchema<"select", V>,
+		TComponentOmitProps<InputSelectProps<ISelectOption, string>> {}

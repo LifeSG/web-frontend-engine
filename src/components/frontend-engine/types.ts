@@ -16,7 +16,7 @@ import {
 	ITextfieldSchema,
 	ITimePickerSchema,
 } from "../fields";
-import { IYupValidationRule, TRenderRules } from "./yup";
+import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 
 // =============================================================================
 // FRONTEND ENGINE
@@ -28,31 +28,30 @@ export interface IFrontendEngineProps {
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }
 
-export interface IFrontendEngineData {
+export interface IFrontendEngineData<V = IYupValidationRule> {
 	className?: string | undefined;
-	// conditions?: IFrontendEngineCondition[]; TODO: add custom validation
 	defaultValues?: TFrontendEngineValues | undefined;
-	fields: Record<string, TFrontendEngineFieldSchema>;
+	fields: Record<string, TFrontendEngineFieldSchema<V>>;
 	id?: string | undefined;
 	revalidationMode?: TRevalidationMode | undefined;
 	validationMode?: TValidationMode | undefined;
 }
 
-export type TFrontendEngineFieldSchema =
-	| ITextareaSchema
-	| ITextfieldSchema
-	| IEmailSchema
-	| INumberSchema
+export type TFrontendEngineFieldSchema<V = IYupValidationRule> =
+	| ITextareaSchema<V>
+	| ITextfieldSchema<V>
+	| IEmailSchema<V>
+	| INumberSchema<V>
 	| ISubmitButtonSchema
-	| ISelectSchema
-	| IMultiSelectSchema
-	| ICheckboxGroupSchema
-	| IDateInputSchema
+	| ISelectSchema<V>
+	| IMultiSelectSchema<V>
+	| ICheckboxGroupSchema<V>
+	| IDateInputSchema<V>
 	| IWrapperSchema
-	| IContactNumberSchema
-	| IRadioButtonGroupSchema
-	| ITimePickerSchema
-	| IChipsSchema
+	| IContactNumberSchema<V>
+	| IRadioButtonGroupSchema<V>
+	| ITimePickerSchema<V>
+	| IChipsSchema<V>
 	| IAlertSchema
 	| ITextSchema;
 
@@ -78,7 +77,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // =============================================================================
 // JSON SCHEMA
 // =============================================================================
-export interface IFrontendEngineFieldJsonSchema<T, V = IYupValidationRule> {
+export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
 	fieldType: T;
 	label: string;
 	/** render conditions
@@ -88,19 +87,19 @@ export interface IFrontendEngineFieldJsonSchema<T, V = IYupValidationRule> {
 	validation?: V[] | undefined;
 }
 
-export type TFrontendEngineSchemaKeys = "id" | "label" | "validation" | "fieldType";
+export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";
 
 // NOTE: Form elements should not support validation nor contain labels
 export interface IFrontendEngineElementJsonSchema<T>
-	extends Omit<IFrontendEngineFieldJsonSchema<T>, "label" | "validation"> {}
+	extends Omit<IFrontendEngineBaseFieldJsonSchema<T>, "label" | "validation"> {}
 
 // NOTE: undefined allows aggregation of keys if exists
 type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
-	? TFrontendEngineSchemaKeys | T
-	: TFrontendEngineSchemaKeys;
+	? TFrontendEngineBaseFieldJsonSchemaKeys | T
+	: TFrontendEngineBaseFieldJsonSchemaKeys;
 
 // NOTE: Omit clashing keys between native props and frontend engine
-export type TComponentNativeProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
+export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
 
 export enum EFieldType {
 	TEXTAREA = "TextArea",

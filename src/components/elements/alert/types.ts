@@ -1,6 +1,6 @@
 import { AlertProps, AlertType } from "@lifesg/react-design-system";
-import { IFrontendEngineElementJsonSchema, TComponentNativeProps } from "../../frontend-engine";
+import { IFrontendEngineElementJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
-export interface IAlertSchema extends IFrontendEngineElementJsonSchema<"alert">, TComponentNativeProps<AlertProps> {
+export interface IAlertSchema extends IFrontendEngineElementJsonSchema<"alert">, TComponentOmitProps<AlertProps> {
 	type: AlertType;
 }
