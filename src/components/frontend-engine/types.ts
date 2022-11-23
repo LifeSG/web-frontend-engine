@@ -19,21 +19,36 @@ import {
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 
 // =============================================================================
+// YUP SCHEMA
+// =============================================================================
+export type { IYupValidationRule } from "./yup";
+
+// =============================================================================
 // FRONTEND ENGINE
 // =============================================================================
-export interface IFrontendEngineProps {
-	className?: string | undefined;
-	data?: IFrontendEngineData | undefined;
+export interface IFrontendEngineProps<V = IYupValidationRule> {
+	/** HTML class attribute that is applied on the `<form>` element */
+	className?: string;
+	/** JSON configuration to define the fields and functionalities of the form */
+	data?: IFrontendEngineData<V> | undefined;
+	/** Fires every time a value changes in any fields */
 	onChange?: ((values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown) | undefined;
+	/** Submit event handler, will receive the form data if form validation is successful */
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }
 
 export interface IFrontendEngineData<V = IYupValidationRule> {
+	/** HTML class attribute */
 	className?: string | undefined;
+	/** Fields' initial values on mount. The key of each field needs to match the id used in the field */
 	defaultValues?: TFrontendEngineValues | undefined;
+	/** All elements within the form in key-value format, key refers to the id of the field while value refers to the JSON schema of the field */
 	fields: Record<string, TFrontendEngineFieldSchema<V>>;
+	/** Unique HTML id attribute that is applied on the `<form>` element */
 	id?: string | undefined;
+	/** Validation strategy when inputs with errors get re-validated after a user submits the form (onSubmit event) */
 	revalidationMode?: TRevalidationMode | undefined;
+	/** Validation strategy before a user submits the form (onSubmit event) */
 	validationMode?: TValidationMode | undefined;
 }
 
@@ -78,12 +93,15 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // JSON SCHEMA
 // =============================================================================
 export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
+	/** defines what kind of field to be rendered */
 	fieldType: T;
+	/** caption for the field */
 	label: string;
 	/** render conditions
 	 * - need to fulfil at least 1 object in array (OR condition)
 	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
 	showIf?: TRenderRules[] | undefined;
+	/** validation config, can be extended by passing generics */
 	validation?: V[] | undefined;
 }
 

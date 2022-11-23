@@ -2,6 +2,7 @@ export type {
 	IFrontendEngineData,
 	IFrontendEngineProps,
 	IFrontendEngineRef,
+	IYupValidationRule,
 	TFrontendEngineFieldSchema,
 	TFrontendEngineValues,
 	TRevalidationMode,

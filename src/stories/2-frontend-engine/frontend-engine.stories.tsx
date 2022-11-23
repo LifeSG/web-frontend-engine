@@ -34,8 +34,16 @@ export default {
 			},
 			type: { name: "object", value: {}, required: true },
 		},
+		className: {
+			description: "HTML class attribute that is applied on the `<form>` element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
 		"data.className": {
-			description: "HTML class attribute",
+			description: "HTML class attribute that is applied on the `<form>` element",
 			table: {
 				type: {
 					summary: "string",
@@ -64,7 +72,8 @@ export default {
 			type: { name: "object", value: {}, required: true },
 		},
 		"data.id": {
-			description: "Unique HTML id attribute that is also assigned to the `data-testid`",
+			description:
+				"Unique HTML id attribute that is also used by the `data-testid`. Applied on the `<form>` element",
 			table: {
 				type: {
 					summary: "string",
@@ -93,6 +102,14 @@ export default {
 				},
 				defaultValue: {
 					summary: "onSubmit",
+				},
+			},
+		},
+		onChange: {
+			description: "Fires every time a value changes in any fields",
+			table: {
+				type: {
+					summary: "(values: TFrontendEngineValues<any>, isValid?: boolean) => unknown",
 				},
 			},
 		},
