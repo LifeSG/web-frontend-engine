@@ -1,7 +1,8 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { IYupValidationRule } from "../../components/frontend-engine/yup/types";
 import { FrontendEngine, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { SubmitButtonStorybook } from "../common";
 
@@ -296,5 +297,38 @@ export const CheckIsValid: Story<IFrontendEngineProps> = () => {
 	);
 };
 CheckIsValid.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+interface IYupCustomValidationRule extends IYupValidationRule {
+	mustBeHello?: boolean | undefined;
+}
+export const AddCustomValidation: Story = () => {
+	const ref = useRef<IFrontendEngineRef>();
+
+	useEffect(() => {
+		ref.current?.addCustomValidation("string", "mustBeHello", (value) => value === "hello");
+	}, [ref]);
+
+	return (
+		<FrontendEngine<IYupCustomValidationRule>
+			data={{
+				fields: {
+					text: {
+						label: "Only accepts hello",
+						fieldType: "text",
+						validation: [{ mustBeHello: true, errorMessage: "Please key in hello" }],
+					},
+					...SubmitButtonStorybook,
+				},
+				defaultValues: {
+					text: "Hi",
+				},
+			}}
+			ref={ref}
+		/>
+	);
+};
+AddCustomValidation.parameters = {
 	controls: { hideNoControlsWarning: true },
 };

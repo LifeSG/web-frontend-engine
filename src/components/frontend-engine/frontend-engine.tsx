@@ -1,11 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { forwardRef, useCallback, useEffect, useImperativeHandle } from "react";
+import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../elements/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
-import { YupProvider } from "./yup";
+import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
@@ -93,8 +93,13 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	);
 });
 
-export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => (
-	<YupProvider>
-		<FrontendEngineInner {...props} ref={ref} />
-	</YupProvider>
-));
+type NoInfer<T, U> = [T][T extends U ? 0 : never];
+export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
+	return (
+		<YupProvider>
+			<FrontendEngineInner {...props} ref={ref} />
+		</YupProvider>
+	);
+}) as <V = IYupValidationRule>(
+	props: IFrontendEngineProps<IYupValidationRule | NoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
+) => ReactElement;

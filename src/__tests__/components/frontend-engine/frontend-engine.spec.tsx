@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../components";
+import { IYupValidationRule } from "../../../components/frontend-engine/yup";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
 import { TestHelper } from "../../../utils";
 import {
@@ -146,6 +147,45 @@ describe("frontend-engine", () => {
 		await waitFor(() => fireEvent.click(getCustomSubmitButton()));
 
 		expect(submitFn).toBeCalled();
+	});
+
+	it("should support custom validation", async () => {
+		interface IYupCustomValidationRule extends IYupValidationRule {
+			mustBeHello?: boolean | undefined;
+		}
+
+		const FrontendEngineWithCustomRule = () => {
+			const ref = useRef<IFrontendEngineRef>();
+			useEffect(() => {
+				ref.current?.addCustomValidation("string", "mustBeHello", (value) => value === "hello");
+			}, [ref]);
+
+			return (
+				<FrontendEngine<IYupCustomValidationRule>
+					ref={ref}
+					data={{
+						...JSON_SCHEMA,
+						fields: {
+							...JSON_SCHEMA.fields,
+							[fieldOneId]: {
+								label: fieldOneLabel,
+								fieldType,
+								validation: [{ mustBeHello: true, errorMessage: ERROR_MESSAGE }],
+							},
+						},
+					}}
+				/>
+			);
+		};
+		render(<FrontendEngineWithCustomRule />);
+
+		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(getErrorMessage()).toBeInTheDocument();
+
+		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(getErrorMessage(true)).not.toBeInTheDocument();
 	});
 
 	describe("validationMode", () => {
