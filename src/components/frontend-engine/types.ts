@@ -67,6 +67,12 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	isValid: () => boolean;
 	/** triggers form submission */
 	submit: () => void;
+
+	addCustomValidation: (
+		type: TYupSchemaType | "mixed",
+		name: string,
+		fn: (value: unknown, arg: unknown) => boolean
+	) => void;
 }
 
 // =============================================================================

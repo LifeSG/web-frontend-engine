@@ -12,8 +12,9 @@ import {
 
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 
-// TODO: custom validation
 export namespace YupHelper {
+	const customYupConditions: string[] = [];
+
 	/**
 	 * Constructs the entire Yup schema for frontend engine to use
 	 * @param yupSchemaConfig JSON representation of the eventual Yup schema
@@ -39,8 +40,10 @@ export namespace YupHelper {
 		yupSchemaField: Yup.AnySchema,
 		fieldValidationConfig: IYupCombinedRule[]
 	): Yup.AnySchema => {
-		const validationRules = fieldValidationConfig.filter((config) =>
-			YUP_CONDITIONS.includes(Object.keys(config)[0] as TYupCondition)
+		const validationRules = fieldValidationConfig.filter(
+			(config) =>
+				YUP_CONDITIONS.includes(Object.keys(config)[0] as TYupCondition) ||
+				customYupConditions.includes(Object.keys(config)[0] as TYupCondition)
 		);
 		return mapRules(yupSchemaField, validationRules);
 	};
@@ -71,10 +74,10 @@ export namespace YupHelper {
 	/**
 	 * Adds Yup validation and constraints based on specified rules
 	 * @param yupSchema Yup schema that was previously created from specified validation type
-	 * @param schemaRules An array of validation rules to be mapped against validation type (i.e. a string schema might contain { maxLength: 255 })
+	 * @param schemaRules An array of validation rules to be mapped against validation type (e.g. a string schema might contain { maxLength: 255 })
 	 * @returns yupSchema with added constraints and validations
 	 */
-	export const mapRules = (yupSchema: Yup.AnySchema, schemaRules: IYupCombinedRule[]): Yup.AnySchema => {
+	export const mapRules = <V extends IYupCombinedRule>(yupSchema: Yup.AnySchema, schemaRules: V[]): Yup.AnySchema => {
 		schemaRules.forEach((rule) => {
 			const ruleKey = Object.keys(rule).filter((k) =>
 				YUP_CONDITIONS.includes(k as TYupCondition)
@@ -97,13 +100,6 @@ export namespace YupHelper {
 				case rule.max > 0:
 				case !!rule.lessThan:
 				case !!rule.moreThan:
-				case !!rule.filled:
-				case !!rule.empty:
-				case !!rule.equals:
-				case !!rule.notEquals:
-				case !!rule.includes:
-				case !!rule.excludes:
-				case !!rule.uinfin:
 					yupSchema = (yupSchema as unknown)[ruleKey](rule[ruleKey], rule.errorMessage);
 					break;
 				case !!rule.matches:
@@ -152,6 +148,14 @@ export namespace YupHelper {
 					}
 					break;
 			}
+
+			// for custom defined rules
+			const customRuleKey = Object.keys(rule).filter((k) =>
+				customYupConditions.includes(k as TYupCondition)
+			)?.[0] as TYupCondition;
+			if (customRuleKey) {
+				yupSchema = (yupSchema as unknown)[customRuleKey](rule[customRuleKey], rule.errorMessage);
+			}
 		});
 
 		return yupSchema;
@@ -168,6 +172,7 @@ export namespace YupHelper {
 		name: string,
 		fn: (value: unknown, arg: unknown, context: Yup.TestContext) => boolean
 	) => {
+		customYupConditions.push(name);
 		Yup.addMethod<Yup.AnySchema>(Yup[type], name, function (arg: unknown, errorMessage: string) {
 			return this.test({
 				name,
