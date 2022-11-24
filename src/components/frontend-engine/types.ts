@@ -105,7 +105,19 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
 	validation?: V[] | undefined;
 }
 
-export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";
+/**
+ * JSON keys to omit from field schema when extending from other interfaces
+ * - keys already defined in `IFrontendEngineBaseFieldJsonSchema` to prevent collision
+ * - some inherited HTML attributes
+ */
+export type TFrontendEngineFieldJsonSchemaOmitKeys =
+	| "id"
+	| "label"
+	| "validation"
+	| "fieldType"
+	| "showIf"
+	| "children"
+	| "value";
 
 // NOTE: Form elements should not support validation nor contain labels
 export interface IFrontendEngineElementJsonSchema<T>
@@ -113,8 +125,8 @@ export interface IFrontendEngineElementJsonSchema<T>
 
 // NOTE: undefined allows aggregation of keys if exists
 type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
-	? TFrontendEngineBaseFieldJsonSchemaKeys | T
-	: TFrontendEngineBaseFieldJsonSchemaKeys;
+	? TFrontendEngineFieldJsonSchemaOmitKeys | T
+	: TFrontendEngineFieldJsonSchemaOmitKeys;
 
 // NOTE: Omit clashing keys between native props and frontend engine
 export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
