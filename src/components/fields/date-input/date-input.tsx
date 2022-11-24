@@ -139,6 +139,7 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		<Form.DateInput
 			{...otherSchema}
 			{...otherProps}
+			id={id}
 			label={label}
 			errorMessage={error?.message}
 			onChangeRaw={handleChange}
