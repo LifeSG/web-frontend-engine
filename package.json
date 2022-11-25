@@ -40,6 +40,7 @@
 		"country-code-lookup": "^0.0.20",
 		"libphonenumber-js": "^1.10.14",
 		"lodash": "^4.17.21",
+		"react-dropzone": "^14.2.3",
 		"react-hook-form": "^7.34.2",
 		"sanitize-html": "^2.8.1",
 		"use-deep-compare-effect": "^1.8.1",
