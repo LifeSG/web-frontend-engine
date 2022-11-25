@@ -1,3 +1,6 @@
+import capitalize from "lodash/capitalize";
+import { FileHelper } from "../../utils";
+
 export const ERROR_MESSAGES = {
 	COMMON: {
 		REQUIRED_OPTION: "An option is required",
@@ -25,4 +28,11 @@ export const ERROR_MESSAGES = {
 		INVALID: "Invalid input",
 		UNSUPPORTED: "This component is not supported by the engine",
 	},
+	UPLOAD: (unit = "file", unitPlural = `${unit}s`) => ({
+		EXCEEDS_MAX_FILE_SIZE: (maxSize: number) =>
+			`Upload failed. ${capitalize(unit)} exceeds the maximum size of ${maxSize} KB.`,
+		GENERIC: "Upload failed. Please try again.",
+		INCORRECT_DOC_TYPE: (acceptedFileTypes: string[]) =>
+			`Upload failed. Only ${FileHelper.extensionsToSentence(acceptedFileTypes)} files are accepted.`,
+	}),
 };
