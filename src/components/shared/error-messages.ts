@@ -29,6 +29,12 @@ export const ERROR_MESSAGES = {
 		UNSUPPORTED: "This component is not supported by the engine",
 	},
 	UPLOAD: (unit = "file", unitPlural = `${unit}s`) => ({
+		BULK_UPLOAD_EXCEEDS_MAX: (max: number, unit = "file(s)") =>
+			`Upload failed. You can only upload maximum of ${max} ${unit}.`,
+		BULK_UPLOAD_EXCEEDS_MAX_WITH_REMAINING: (remaining: number) =>
+			`Upload failed. You can only upload ${remaining} more ${
+				remaining === 1 ? unit : unitPlural
+			}. To upload more ${unitPlural}, you may wish to delete your previously uploaded ${unitPlural}.`,
 		EXCEEDS_MAX_FILE_SIZE: (maxSize: number) =>
 			`Upload failed. ${capitalize(unit)} exceeds the maximum size of ${maxSize} KB.`,
 		GENERIC: "Upload failed. Please try again.",
