@@ -25,15 +25,6 @@ export namespace FileHelper {
 		return Number(bytes / Math.pow(1024, i)).toFixed(rounding) + " " + sizes[i];
 	};
 
-	export const dataURLtoImage = async (dataURL: string): Promise<HTMLImageElement> => {
-		return new Promise((resolve, reject) => {
-			const img = new Image();
-			img.onload = () => resolve(img);
-			img.onerror = () => reject(new Error("dataURLtoImage(): dataURL is illegal"));
-			img.src = dataURL;
-		});
-	};
-
 	/**
 	 * estimate filesize from base64 string
 	 * https://stackoverflow.com/questions/53228948/how-to-get-image-file-size-from-base-64-string-in-javascript#answer-53229045
