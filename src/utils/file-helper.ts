@@ -1,3 +1,5 @@
+import { fromBlob } from "file-type/browser";
+
 export namespace FileHelper {
 	/**
 	 * truncate file name according to wrapping element width
@@ -16,6 +18,9 @@ export namespace FileHelper {
 		return fileName;
 	};
 
+	/**
+	 * formats bytes to bigger units
+	 */
 	export const bytesToSize = (bytes: number) => {
 		const sizes = ["B", "KB", "MB", "GB", "TB"];
 		let rounding = 1;
@@ -23,6 +28,26 @@ export namespace FileHelper {
 		const i: number = Math.floor(Math.log(bytes) / Math.log(1024));
 		if (i === 0 || i === 1) rounding = 0;
 		return Number(bytes / Math.pow(1024, i)).toFixed(rounding) + " " + sizes[i];
+	};
+
+	/**
+	 * converts file/blob to dataURL
+	 */
+	export const fileToDataUrl = async (file: File | Blob): Promise<string> => {
+		if (!window || !window.FileReader) return; // do not run in SSR
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result as string);
+			reader.onerror = (error) => reject(error);
+		});
+	};
+
+	/**
+	 * converts dataURL to blob
+	 */
+	export const dataUrlToBlob = async (dataUrl: string): Promise<Blob> => {
+		return (await fetch(dataUrl)).blob();
 	};
 
 	/**
@@ -47,5 +72,34 @@ export namespace FileHelper {
 		const jpgIndex = formattedList.indexOf(".JPG");
 		if (jpgIndex > -1) formattedList.splice(jpgIndex + 1, 0, ".JPEG");
 		return new Intl.ListFormat("en-GB", { style: "long", type: "disjunction" }).format(formattedList);
+	};
+
+	/**
+	 * converts file extension to mime type
+	 */
+	export const fileExtensionToMimeType = (ext: string): string | undefined => {
+		switch (ext.toLowerCase()) {
+			case "jpg":
+			case "jpeg":
+				return "image/jpeg";
+			case "png":
+				return "image/png";
+			case "gif":
+				return "image/gif";
+			case "heic":
+				return "image/heic";
+			case "heif":
+				return "image/heif";
+			case "webp":
+				return "image/webp";
+		}
+	};
+
+	/**
+	 * reliably derive mime type by checking magic number of the buffer
+	 */
+	export const getMimeType = async (blob: Blob | File) => {
+		const result = await fromBlob(blob);
+		return result?.mime;
 	};
 }
