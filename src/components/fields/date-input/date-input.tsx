@@ -71,14 +71,23 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	useEffect(() => {
 		if (!dateFormat) return;
 		if (useCurrentDate && !value) {
-			const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
-
+			let currentDate: string;
+			try {
+				currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
+			} catch (error) {
+				currentDate = ERROR_MESSAGES.DATE.INVALID;
+			}
 			setStateValue(currentDate);
 			onChange({ target: { value: currentDate } });
 		} else if (!isValidDate(value)) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
-			const formattedDate = DateTimeHelper.formatDateTime(value, dateFormat, "date");
+			let formattedDate: string;
+			try {
+				formattedDate = DateTimeHelper.formatDateTime(value, dateFormat, "date");
+			} catch (error) {
+				formattedDate = ERROR_MESSAGES.DATE.INVALID;
+			}
 			if (!isValidDate(value)) setStateValue(formattedDate);
 			else {
 				setStateValue("");
