@@ -1,4 +1,5 @@
 import capitalize from "lodash/capitalize";
+import { ReactNode } from "react";
 import { FileHelper } from "../../utils";
 
 export const ERROR_MESSAGES = {
@@ -40,5 +41,28 @@ export const ERROR_MESSAGES = {
 		GENERIC: "Upload failed. Please try again.",
 		INCORRECT_DOC_TYPE: (acceptedFileTypes: string[]) =>
 			`Upload failed. Only ${FileHelper.extensionsToSentence(acceptedFileTypes)} files are accepted.`,
+		MODAL: {
+			INCORRECT_DOC_TYPE: {
+				TITLE: `Unsupported ${unit} format`,
+				DESCRIPTION: (filename: ReactNode, acceptedFileTypes: string[]) => (
+					<>
+						{filename} could not be uploaded. Try again with a{" "}
+						{FileHelper.extensionsToSentence(acceptedFileTypes)} file.
+					</>
+				),
+			},
+			GENERIC_ERROR: {
+				TITLE: `${capitalize(unit)} not uploaded`,
+				DESCRIPTION: (filename: ReactNode) => <>There was a problem uploading {filename}. Please try again.</>,
+			},
+			EXCEEDS_MAX_FILE_SIZE: {
+				TITLE: `${capitalize(unit)} exceeds maximum size`,
+				DESCRIPTION: (filename: ReactNode, maxSize: number) => (
+					<>
+						{filename} exceeds the maximum size of {maxSize} KB.
+					</>
+				),
+			},
+		},
 	}),
 };
