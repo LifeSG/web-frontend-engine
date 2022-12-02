@@ -17,7 +17,9 @@
 		"test-watch": "jest --config jest/jest.config.js --watch",
 		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
 		"storybook": "start-storybook -p 6006 -c .storybook",
-		"prepare": "(test -d ./.git && npx husky install) || true"
+		"prepare": "(test -d ./.git && npx husky install) || true",
+		"build-fabric": "test -d ./node_modules/fabric && cd ./node_modules/fabric && node build.js modules=ALL exclude=assessors || true",
+		"postinstall": "npm run build-fabric"
 	},
 	"repository": {
 		"type": "git",
@@ -37,7 +39,9 @@
 		"@js-joda/core": "^5.4.2",
 		"@js-joda/locale_en-us": "^4.8.6",
 		"@js-joda/timezone": "^2.15.0",
+		"axios": "^1.2.2",
 		"country-code-lookup": "^0.0.20",
+		"fabric": "^5.2.4",
 		"file-type": "^16.5.4",
 		"heic2any": "^0.0.3",
 		"libphonenumber-js": "^1.10.14",
@@ -76,6 +80,7 @@
 		"@testing-library/jest-dom": "^5.16.5",
 		"@testing-library/react": "^12.1.5",
 		"@testing-library/user-event": "^14.4.3",
+		"@types/fabric": "^4.5.13",
 		"@types/jest": "^29.2.1",
 		"@types/lodash": "^4.14.185",
 		"@types/node": "^18.8.2",

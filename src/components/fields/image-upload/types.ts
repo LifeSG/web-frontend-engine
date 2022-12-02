@@ -60,7 +60,7 @@ export interface IImage {
 	dataURL?: string;
 	thumbnailDataURL?: string;
 	drawingDataURL?: string;
-	// drawing?: fabric.Object[];
+	drawing?: fabric.Object[];
 	status: EImageStatus;
 	addedFrom?: "dragInput" | "reviewModal" | "schema";
 	uploadProgress: number;
