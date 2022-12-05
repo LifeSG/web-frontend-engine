@@ -118,9 +118,10 @@ export const ImageReview = (props: IProps) => {
 	// =============================================================================
 	const handleSelectFile = (selectedFile: File) => {
 		if (
-			selectedFile &&
-			images.filter(({ addedFrom, status }) => status >= EImageStatus.NONE || addedFrom === "reviewModal")
-				.length < maxFiles
+			!maxFiles ||
+			(selectedFile &&
+				images.filter(({ addedFrom, status }) => status >= EImageStatus.NONE || addedFrom === "reviewModal")
+					.length < maxFiles)
 		) {
 			// image manager will handle the rest
 			setImages((prev) => {
@@ -344,7 +345,7 @@ export const ImageReview = (props: IProps) => {
 						id={`${id}-image-thumbnails`}
 						activeFileIndex={activeFileIndex}
 						accepts={accepts}
-						maxFiles={maxFiles || 3}
+						maxFiles={maxFiles}
 						images={images}
 						onClickThumbnail={setActiveFileIndex}
 						onSelectFile={handleSelectFile}

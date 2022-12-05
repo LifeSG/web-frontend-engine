@@ -58,7 +58,7 @@ export const ImageInput = (props: IProps) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setRemainingPhotos(maxFiles - files.length);
+		if (maxFiles > 0) setRemainingPhotos(maxFiles - files.length);
 	}, [maxFiles, files.length]);
 
 	const previousExceededFiles = usePrevious(exceededFiles);
@@ -84,7 +84,7 @@ export const ImageInput = (props: IProps) => {
 
 	const handleInput = (inputFiles: File[]): void => {
 		if (!inputFiles || !inputFiles.length) return;
-		if (inputFiles.length + files.length < maxFiles) {
+		if (!maxFiles || inputFiles.length + files.length <= maxFiles) {
 			setFiles([
 				...files,
 				...inputFiles.map(
@@ -101,7 +101,7 @@ export const ImageInput = (props: IProps) => {
 				),
 			]);
 			setExceedError(false);
-		} else {
+		} else if (maxFiles > 0) {
 			setExceedError(true);
 		}
 	};
@@ -109,7 +109,8 @@ export const ImageInput = (props: IProps) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderFiles = (): JSX.Element[] => {
+	const renderFiles = () => {
+		if (!files || !files.length) return null;
 		return files.map((fileItem: IImage, i: number) => {
 			return (
 				<FileItem
@@ -123,6 +124,24 @@ export const ImageInput = (props: IProps) => {
 				/>
 			);
 		});
+	};
+
+	// render uploader as long as there are available slots or maxFiles is not defined
+	const renderUploader = () => {
+		if (maxFiles && remainingPhotos <= 0) return null;
+		return (
+			<UploadWrapper>
+				<AddButton
+					onClick={handleClick}
+					styleType="secondary"
+					id={TestHelper.generateId(id, "file-input-add-button")}
+					data-testid={TestHelper.generateId(id, "file-input-add-button")}
+				>
+					{buttonAdd}
+				</AddButton>
+				<DropThemHereText weight="semibold"> {inputHint} </DropThemHereText>
+			</UploadWrapper>
+		);
 	};
 
 	const renderFileExceededAlert = () => {
@@ -148,22 +167,10 @@ export const ImageInput = (props: IProps) => {
 			<DragUpload id={`${id}-drag-upload`} ref={dragUploadRef} hint={dragAndDropHint} onInput={handleInput}>
 				<Subtitle weight="semibold">{title}</Subtitle>
 				<Content weight="semibold">{description}</Content>
-				{files && remainingPhotos < maxFiles ? renderFiles() : null}
+				{renderFiles()}
 				{exceededFiles ? renderFileExceededAlert() : null}
 				{errorMessage && renderCustomError(errorMessage)}
-				{remainingPhotos > 0 ? (
-					<UploadWrapper>
-						<AddButton
-							onClick={handleClick}
-							styleType="secondary"
-							id={TestHelper.generateId(id, "file-input-add-button")}
-							data-testid={TestHelper.generateId(id, "file-input-add-button")}
-						>
-							{buttonAdd}
-						</AddButton>
-						<DropThemHereText weight="semibold"> {inputHint} </DropThemHereText>
-					</UploadWrapper>
-				) : null}
+				{renderUploader()}
 			</DragUpload>
 		</Wrapper>
 	);
