@@ -12,6 +12,7 @@ import {
 	ITextfieldSchema,
 	ITimePickerSchema,
 } from "../fields";
+import { IChipsSchema } from "../fields/chips";
 import { IRadioButtonGroupSchema } from "../fields/radio-button/types";
 import { IWrapperSchema } from "../fields/wrapper";
 import { IYupValidationRule, TRenderRules } from "./yup/types";
@@ -48,7 +49,8 @@ export type TFrontendEngineFieldSchema =
 	| IWrapperSchema
 	| IContactNumberSchema
 	| IRadioButtonGroupSchema
-	| ITimePickerSchema;
+	| ITimePickerSchema
+	| IChipsSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -101,6 +103,7 @@ export enum EFieldType {
 	CONTACT = "ContactNumber",
 	RADIO = "RadioButtonGroup",
 	TIME = "TimePicker",
+	CHIPS = "Chips",
 }
 
 // =============================================================================
