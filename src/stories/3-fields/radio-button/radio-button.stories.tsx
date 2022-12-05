@@ -45,17 +45,6 @@ export default {
 			},
 			type: { name: "object", value: {} },
 		},
-		label: {
-			description: "Specifies the label text",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
 	},
 } as Meta;
 
