@@ -148,8 +148,8 @@ export const ImageInput = (props: IProps) => {
 		return (
 			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "file-exceeded-error")}>
 				{remainingPhotos < 1 || files.length === 0
-					? ERROR_MESSAGES.UPLOAD("photo").BULK_UPLOAD_EXCEEDS_MAX(maxFiles)
-					: ERROR_MESSAGES.UPLOAD("photo").BULK_UPLOAD_EXCEEDS_MAX_WITH_REMAINING(remainingPhotos)}
+					? ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles)
+					: ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos)}
 			</AlertContainer>
 		);
 	};

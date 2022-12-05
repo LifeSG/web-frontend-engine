@@ -35,19 +35,17 @@ export const ImageError = (props: IProps) => {
 		const filename = <NameWrapper>{FileHelper.truncateFileName(name || "", 300)}</NameWrapper>;
 		switch (status) {
 			case EImageStatus.ERROR_FORMAT:
-				setErrorTitle(ERROR_MESSAGES.UPLOAD("photo").MODAL.INCORRECT_DOC_TYPE.TITLE);
-				setErrorDescription(
-					ERROR_MESSAGES.UPLOAD("photo").MODAL.INCORRECT_DOC_TYPE.DESCRIPTION(filename, accepts)
-				);
+				setErrorTitle(ERROR_MESSAGES.UPLOAD("photo").MODAL.FILE_TYPE.TITLE);
+				setErrorDescription(ERROR_MESSAGES.UPLOAD("photo").MODAL.FILE_TYPE.DESCRIPTION(filename, accepts));
 				break;
 			case EImageStatus.ERROR_GENERIC:
 				setErrorTitle(ERROR_MESSAGES.UPLOAD("photo").MODAL.GENERIC_ERROR.TITLE);
 				setErrorDescription(ERROR_MESSAGES.UPLOAD("photo").MODAL.GENERIC_ERROR.DESCRIPTION(filename));
 				break;
 			case EImageStatus.ERROR_SIZE:
-				setErrorTitle(ERROR_MESSAGES.UPLOAD("photo").MODAL.EXCEEDS_MAX_FILE_SIZE.TITLE);
+				setErrorTitle(ERROR_MESSAGES.UPLOAD("photo").MODAL.MAX_FILE_SIZE.TITLE);
 				setErrorDescription(
-					ERROR_MESSAGES.UPLOAD("photo").MODAL.EXCEEDS_MAX_FILE_SIZE.DESCRIPTION(filename, maxSizeInKb)
+					ERROR_MESSAGES.UPLOAD("photo").MODAL.MAX_FILE_SIZE.DESCRIPTION(filename, maxSizeInKb)
 				);
 				break;
 		}

@@ -30,19 +30,20 @@ export const ERROR_MESSAGES = {
 		UNSUPPORTED: "This component is not supported by the engine",
 	},
 	UPLOAD: (unit = "file", unitPlural = `${unit}s`) => ({
-		BULK_UPLOAD_EXCEEDS_MAX: (max: number, unit = "file(s)") =>
-			`Upload failed. You can only upload maximum of ${max} ${unit}.`,
-		BULK_UPLOAD_EXCEEDS_MAX_WITH_REMAINING: (remaining: number) =>
+		REQUIRED: `Upload at least 1 ${unit}`,
+		MAX_FILES: (max: number) =>
+			`Upload failed. You can only upload maximum of ${max} ${max !== 1 ? unitPlural : unit}.`,
+		MAX_FILES_WITH_REMAINING: (remaining: number) =>
 			`Upload failed. You can only upload ${remaining} more ${
 				remaining === 1 ? unit : unitPlural
 			}. To upload more ${unitPlural}, you may wish to delete your previously uploaded ${unitPlural}.`,
-		EXCEEDS_MAX_FILE_SIZE: (maxSize: number) =>
+		MAX_FILE_SIZE: (maxSize: number) =>
 			`Upload failed. ${capitalize(unit)} exceeds the maximum size of ${maxSize} KB.`,
 		GENERIC: "Upload failed. Please try again.",
-		INCORRECT_DOC_TYPE: (acceptedFileTypes: string[]) =>
+		FILE_TYPE: (acceptedFileTypes: string[]) =>
 			`Upload failed. Only ${FileHelper.extensionsToSentence(acceptedFileTypes)} files are accepted.`,
 		MODAL: {
-			INCORRECT_DOC_TYPE: {
+			FILE_TYPE: {
 				TITLE: `Unsupported ${unit} format`,
 				DESCRIPTION: (filename: ReactNode, acceptedFileTypes: string[]) => (
 					<>
@@ -55,7 +56,7 @@ export const ERROR_MESSAGES = {
 				TITLE: `${capitalize(unit)} not uploaded`,
 				DESCRIPTION: (filename: ReactNode) => <>There was a problem uploading {filename}. Please try again.</>,
 			},
-			EXCEEDS_MAX_FILE_SIZE: {
+			MAX_FILE_SIZE: {
 				TITLE: `${capitalize(unit)} exceeds maximum size`,
 				DESCRIPTION: (filename: ReactNode, maxSize: number) => (
 					<>

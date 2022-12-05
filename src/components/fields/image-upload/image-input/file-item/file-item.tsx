@@ -60,7 +60,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, 
 		switch (status) {
 			case EImageStatus.ERROR_FORMAT:
 				setError(true);
-				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").INCORRECT_DOC_TYPE(accepts));
+				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").FILE_TYPE(accepts));
 				break;
 			case EImageStatus.ERROR_GENERIC:
 				setError(true);
@@ -68,7 +68,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, 
 				break;
 			case EImageStatus.ERROR_SIZE:
 				setError(true);
-				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").EXCEEDS_MAX_FILE_SIZE(maxSize));
+				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxSize));
 				break;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
