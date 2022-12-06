@@ -88,7 +88,7 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			} catch (error) {
 				formattedDate = ERROR_MESSAGES.DATE.INVALID;
 			}
-			if (!isValidDate(value)) setStateValue(formattedDate);
+			if (isValidDate(value)) setStateValue(formattedDate);
 			else {
 				setStateValue("");
 				setValue(id, undefined);
@@ -105,20 +105,22 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			onChange({
 				target: { value: undefined },
 			});
-		} else if (!day.length || !month.length || year.length !== 4) {
+		} else if (day.length < 2 || month.length < 2 || year.length < 4) {
 			onChange({
 				target: { value: ERROR_MESSAGES.DATE.INVALID },
 			});
 		} else {
-			onChange({
-				target: {
-					value: DateTimeHelper.formatDateTime(
-						[year, month.padStart(2, "0"), day.padStart(2, "0")].join("-"),
-						dateFormat,
-						"date"
-					),
-				},
-			});
+			try {
+				onChange({
+					target: {
+						value: DateTimeHelper.formatDateTime([year, month, day].join("-"), dateFormat, "date"),
+					},
+				});
+			} catch (error) {
+				onChange({
+					target: { value: ERROR_MESSAGES.DATE.INVALID },
+				});
+			}
 		}
 	};
 

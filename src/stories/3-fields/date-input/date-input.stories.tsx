@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IDateInputSchema } from "src/components/fields/date-input/types";
 import { FrontendEngine } from "../../..";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/DateInput",
@@ -62,7 +62,7 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, IDateInputSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<StyledForm data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
@@ -83,7 +83,7 @@ UseCurrentDate.args = {
 };
 
 export const WithDefaultValue = () => (
-	<FrontendEngine
+	<StyledForm
 		data={{
 			fields: {
 				"date-default": { fieldType: "date", label: "Date with default value" },
@@ -107,7 +107,7 @@ DateFormat.args = {
 };
 
 export const DateFormatDefaultValues = () => (
-	<FrontendEngine
+	<StyledForm
 		data={{
 			id: "frontendEngine",
 			fields: {
