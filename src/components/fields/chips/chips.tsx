@@ -22,7 +22,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextArea, setShowTextArea] = useState<boolean>(false);
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
 	// EFFECTS
@@ -82,9 +82,18 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		onChange({ target: { value: updatedStateValues } });
 	};
 
+	const getTextAreaId = () => {
+		return `chips-${textarea.name}`;
+	};
+
 	const handleTextareaChipClick = (name: string) => {
 		handleChange(name);
-		setShowTextArea(!showTextArea);
+		setShowTextArea((prevState) => {
+			if (prevState) {
+				removeFieldValidationConfig(getTextAreaId());
+			}
+			return !prevState;
+		});
 	};
 
 	// =============================================================================
@@ -123,12 +132,11 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		if (!textarea && !textarea?.name) {
 			return;
 		}
-		const textAreaId = `chips-${textarea.name}`;
 		const { name: label, ...textAreaSchema } = textarea;
 		const wrapperSchema: IWrapperSchema = {
 			fieldType: "div",
 			children: {
-				[textAreaId]: {
+				[getTextAreaId()]: {
 					fieldType: "textarea",
 					label,
 					...textAreaSchema,
