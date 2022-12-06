@@ -27,7 +27,7 @@
 		"@js-joda/core": "^5.4.2",
 		"@js-joda/locale_en": "^4.8.6",
 		"@js-joda/timezone": "^2.15.0",
-		"@lifesg/react-design-system": "^1.0.0-alpha.10",
+		"@lifesg/react-design-system": "^1.0.0-alpha.14",
 		"country-code-lookup": "^0.0.20",
 		"libphonenumber-js": "^1.10.14",
 		"lodash": "^4.17.21",
