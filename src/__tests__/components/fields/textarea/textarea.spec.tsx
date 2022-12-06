@@ -2,8 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ITextareaSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-
-const ERROR_MESSAGE = "test error message";
+import { ERROR_MESSAGE } from "../../../common";
 
 const renderComponent = (
 	overrideField?: Partial<Omit<ITextareaSchema, "fieldType" | "label">> | undefined,

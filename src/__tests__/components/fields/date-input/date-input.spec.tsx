@@ -3,8 +3,8 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IDateInputSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
+import { ERROR_MESSAGE } from "../../../common";
 
-const ERROR_MESSAGE = "test error message";
 const submitFn = jest.fn();
 
 const renderComponent = (
