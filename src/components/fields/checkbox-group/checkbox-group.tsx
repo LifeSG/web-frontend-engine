@@ -89,6 +89,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 						<StyledCheckbox
 							{...otherSchema}
 							id={checkboxId}
+							data-testid={id}
 							disabled={disabled}
 							name={option.label}
 							value={option.value}
