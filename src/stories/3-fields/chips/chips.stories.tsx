@@ -30,7 +30,7 @@ export default {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("chips"),
 		"chips-default": { table: { disable: true } },
-		chipTexts: {
+		options: {
 			description: "A list of text chips for users to select",
 			table: {
 				type: {
@@ -129,7 +129,11 @@ Default.args = {
 	"chips-default": {
 		fieldType: "chips",
 		label: "Fruits",
-		chipTexts: ["Apple", "Berry", "Cherry"],
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
 	},
 };
 
@@ -140,7 +144,11 @@ export const DefaultValue = () => (
 				"chips-default-value": {
 					fieldType: "chips",
 					label: "Fruits",
-					chipTexts: ["Apple", "Berry", "Cherry"],
+					options: [
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+					],
 				},
 				...SubmitButtonStorybook,
 			},
@@ -157,8 +165,26 @@ Disabled.args = {
 	"chips-disabled": {
 		fieldType: "chips",
 		label: "Fruits",
-		chipTexts: ["Apple", "Berry", "Cherry"],
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
 		disabled: true,
+	},
+};
+
+export const WithValidation = Template.bind({});
+WithValidation.args = {
+	"chips-with-validation": {
+		fieldType: "chips",
+		label: "Fruits",
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		validation: [{ required: true }],
 	},
 };
 
@@ -167,9 +193,26 @@ WithTextArea.args = {
 	"chips-with-textarea": {
 		fieldType: "chips",
 		label: "Fruits",
-		chipTexts: ["Apple", "Berry", "Cherry"],
-		textAreaChipName: "Durian",
-		showTextAreaChip: true,
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		textarea: { name: "Durian" },
+	},
+};
+
+export const WithTextAreaValidation = Template.bind({});
+WithTextAreaValidation.args = {
+	"chips-with-textarea-validation": {
+		fieldType: "chips",
+		label: "Fruits",
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		textarea: { name: "Durian", validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }] },
 	},
 };
 
@@ -178,7 +221,11 @@ SingleSelection.args = {
 	"chips-single-selection": {
 		fieldType: "chips",
 		label: "Fruits",
-		chipTexts: ["Apple", "Berry", "Cherry"],
-		isSingleSelection: true,
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		multi: false,
 	},
 };
