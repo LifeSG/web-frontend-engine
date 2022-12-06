@@ -13,9 +13,9 @@ export interface IChipsSchema
 	textarea?: {
 		name: string;
 		validation?: IYupValidationRule[];
+		resizable?: boolean;
+		maxLength?: number;
+		rows?: number;
 	};
 	multi?: boolean;
-	resizable?: boolean;
-	maxLength?: number;
-	rows?: number;
 }

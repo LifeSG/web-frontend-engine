@@ -1,11 +1,11 @@
 import { Form } from "@lifesg/react-design-system/form";
-import clone from "lodash/clone";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Chip, ERROR_MESSAGES } from "../../shared";
 import { IWrapperSchema, Wrapper } from "../wrapper";
+import { ChipContainer } from "./chips.styles";
 import { IChipsSchema } from "./types";
 
 export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
@@ -13,7 +13,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, textarea, multi = true, resizable, maxLength, rows, ...otherSchema },
+		schema: { label, validation, options, textarea, multi = true, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -63,7 +63,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (text: string): void => {
-		let updatedStateValues = clone(stateValue); // Prevent mutation to original state value
+		let updatedStateValues = [...stateValue]; // Prevent mutation to original state value
 		const isExistingValue = updatedStateValues.includes(text);
 
 		// Removal of value from state
@@ -124,18 +124,14 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			return;
 		}
 		const textAreaId = `chips-${textarea.name}`;
+		const { name: label, ...textAreaSchema } = textarea;
 		const wrapperSchema: IWrapperSchema = {
 			fieldType: "div",
 			children: {
 				[textAreaId]: {
 					fieldType: "textarea",
-					label: textarea.name,
-					maxLength,
-					rows,
-					resizable,
-					...(textarea?.validation?.length > 0 && {
-						validation: textarea.validation,
-					}),
+					label,
+					...textAreaSchema,
 				},
 			},
 		};
@@ -144,11 +140,11 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	return (
 		<Form.CustomField label={label} errorMessage={otherProps?.error?.message} {...otherProps}>
-			<div>
+			<ChipContainer>
 				{renderChips()}
 				{renderTextAreaChip()}
-				{renderTextArea()}
-			</div>
+			</ChipContainer>
+			{renderTextArea()}
 		</Form.CustomField>
 	);
 };
