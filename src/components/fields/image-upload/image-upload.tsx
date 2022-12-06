@@ -227,6 +227,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			<ImageReview
 				accepts={acceptedFileTypes}
 				dimensions={dimensions}
+				id={id}
 				maxFiles={maxFiles}
 				maxSizeInKb={maxFileSize}
 				onExit={() => setShowReviewModal(false)}
@@ -254,6 +255,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				title={label}
 				description={description}
 				buttonAdd={buttonAdd}
+				id={id}
 				inputHint={inputHint}
 				dragAndDropHint={dragAndDropHint}
 				accepts={acceptedFileTypes}
