@@ -15,6 +15,7 @@ import {
 	IContactFieldSchema,
 	IDateFieldSchema,
 	IEmailFieldSchema,
+	IImageUploadSchema,
 	IMultiSelectSchema,
 	INumericFieldSchema,
 	IRadioButtonGroupSchema,
@@ -89,7 +90,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextSchema
 	| IResetButtonSchema
 	| IFilterSchema
-	| ICustomComponentJsonSchema<V>;
+	| ICustomComponentJsonSchema<V>
+	| IImageUploadSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -214,6 +216,7 @@ export enum EFieldType {
 	CHIPS = "Chips",
 	RESET = "ResetButton",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
+	"IMAGE-UPLOAD" = "ImageUpload",
 }
 
 /**

@@ -2,6 +2,7 @@ export * from "./checkbox-group";
 export * from "./chips";
 export * from "./contact-field";
 export * from "./date-field";
+export * from "./image-upload";
 export * from "./multi-select";
 export * from "./radio-button";
 export * from "./select";
