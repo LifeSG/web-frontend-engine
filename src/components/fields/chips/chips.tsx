@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ChipWithState, ERROR_MESSAGES } from "../../shared";
+import { Chip, ERROR_MESSAGES } from "../../shared";
 import { IWrapperSchema, Wrapper } from "../wrapper";
 import { IChipsSchema } from "./types";
 
@@ -56,11 +56,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const isChipSelected = (text: string): boolean => {
-		return stateValue.includes(text);
-	};
-
-	const isChipEnabled = (text: string): boolean => {
-		return multi || isChipSelected(text);
+		return multi && stateValue.includes(text);
 	};
 
 	// =============================================================================
@@ -86,7 +82,8 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		onChange({ target: { value: updatedStateValues } });
 	};
 
-	const handleToggleTextArea = () => {
+	const handleTextareaChipClick = (name: string) => {
+		handleChange(name);
 		setShowTextArea(!showTextArea);
 	};
 
@@ -94,18 +91,16 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderChips = (): JSX.Element[] => {
-		return options.map((option, index) => {
-			return (
-				<ChipWithState
-					{...otherSchema}
-					key={index}
-					text={option.label}
-					isEnabled={isChipEnabled(option.value)}
-					isInitiallyActive={isChipSelected(option.value)}
-					onChange={() => handleChange(option.value)}
-				/>
-			);
-		});
+		return options.map((option, index) => (
+			<Chip
+				{...otherSchema}
+				key={index}
+				onClick={() => handleChange(option.value)}
+				isActive={isChipSelected(option.value)}
+			>
+				{option.label}
+			</Chip>
+		));
 	};
 
 	const renderTextAreaChip = (): JSX.Element => {
@@ -113,15 +108,14 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			return;
 		}
 		return (
-			<ChipWithState
+			<Chip
 				{...otherSchema}
 				id={id}
-				toggleShowTextArea={handleToggleTextArea}
-				text={textarea.name}
-				isEnabled={isChipEnabled(textarea.name)}
-				isInitiallyActive={isChipSelected(textarea.name)}
-				onChange={() => handleChange(textarea.name)}
-			/>
+				onClick={() => handleTextareaChipClick(textarea.name)}
+				isActive={isChipSelected(textarea.name)}
+			>
+				{textarea.name}
+			</Chip>
 		);
 	};
 
