@@ -215,13 +215,12 @@ WithResizableTextArea.args = {
 			{ label: "Berry", value: "Berry" },
 			{ label: "Cherry", value: "Cherry" },
 		],
-		resizable: true,
-		textarea: { name: "Durian" },
+		textarea: { name: "Durian", resizable: true },
 	},
 };
 
-export const WithResizableCustomRows = Template.bind({});
-WithResizableCustomRows.args = {
+export const WithTextAreaCustomRows = Template.bind({});
+WithTextAreaCustomRows.args = {
 	"chips-with-textarea-custom-rows": {
 		fieldType: "chips",
 		label: "Fruits",
@@ -230,8 +229,7 @@ WithResizableCustomRows.args = {
 			{ label: "Berry", value: "Berry" },
 			{ label: "Cherry", value: "Cherry" },
 		],
-		rows: 1,
-		textarea: { name: "Durian" },
+		textarea: { name: "Durian", rows: 1 },
 	},
 };
 
