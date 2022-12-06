@@ -11,8 +11,8 @@ export default {
 				<>
 					<Title>Chips</Title>
 					<Description>
-						This component renders a list of selectable chip, with an additional configurable textarea that
-						renders based on the selected chip.
+						This component renders a list of selectable chip, with an additional configurable textarea
+						component that renders based on the selected chip.
 					</Description>
 					<Heading>Props</Heading>
 					<Description>
@@ -39,16 +39,15 @@ export default {
 			},
 			type: { name: "object", value: {} },
 		},
-		textAreaChipName: {
-			description: "Specifies a chip name that will conditionally renders the text area component",
+		textarea: {
+			description:
+				"Specifies the configuration (including validation rules) for a conditionally rendered <code>textarea</code> component",
 			table: {
 				type: {
-					summary: "string",
+					summary: "{ name: string, validation: IYupValidationRule[] }",
 				},
 			},
-			control: {
-				type: "text",
-			},
+			type: { name: "object", value: {} },
 		},
 		showTextAreaChip: {
 			description: "Specifies if the text area chip should be rendered",
@@ -88,16 +87,6 @@ export default {
 				type: "boolean",
 			},
 			defaultValue: false,
-		},
-		maxLength: {
-			description:
-				"Maximum number of characters that can go into the textarea. (Inherited from HTMLTextAreaElement). This brings up the character counter under the field.",
-			table: {
-				type: {
-					summary: "number",
-				},
-			},
-			type: { name: "number" },
 		},
 		rows: {
 			description: "Visible height of a text area, in lines (Inherited from HTMLTextAreaElement)",
@@ -213,6 +202,36 @@ WithTextAreaValidation.args = {
 			{ label: "Cherry", value: "Cherry" },
 		],
 		textarea: { name: "Durian", validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }] },
+	},
+};
+
+export const WithResizableTextArea = Template.bind({});
+WithResizableTextArea.args = {
+	"chips-with-textarea-resizable": {
+		fieldType: "chips",
+		label: "Fruits",
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		resizable: true,
+		textarea: { name: "Durian" },
+	},
+};
+
+export const WithResizableCustomRows = Template.bind({});
+WithResizableCustomRows.args = {
+	"chips-with-textarea-custom-rows": {
+		fieldType: "chips",
+		label: "Fruits",
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		rows: 1,
+		textarea: { name: "Durian" },
 	},
 };
 
