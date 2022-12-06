@@ -1,6 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
 import clone from "lodash/clone";
-import isEmpty from "lodash/isEmpty";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
@@ -9,36 +8,19 @@ import { ChipWithState, ERROR_MESSAGES } from "../../shared";
 import { IWrapperSchema, Wrapper } from "../wrapper";
 import { IChipsSchema } from "./types";
 
-interface ISelectedChips {
-	[key: string]: boolean;
-}
-
 export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: {
-			label,
-			validation,
-			chipTexts,
-			showTextAreaChip,
-			textAreaChipName,
-			isTextAreaRequired,
-			isSingleSelection,
-			resizable,
-			maxLength,
-			rows,
-			...otherSchema
-		},
+		schema: { label, validation, options, textarea, multi = true, resizable, maxLength, rows, ...otherSchema },
 		id,
-		name,
 		value,
 		onChange,
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<ISelectedChips>({});
+	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextArea, setShowTextArea] = useState<boolean>(false);
 	const { setFieldValidationConfig } = useValidationSchema();
 
@@ -50,40 +32,35 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 		setFieldValidationConfig(
 			id,
-			Yup.object().test(
-				"is-empty-object",
-				isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTION,
-				(value) => {
-					if (!value || !isRequiredRule?.required) return true;
+			Yup.array()
+				.of(Yup.string())
+				.test(
+					"is-empty-array",
+					isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTION,
+					(value) => {
+						if (!value || !isRequiredRule?.required) return true;
 
-					return isEmpty(value);
-				}
-			),
+						return value.length > 0;
+					}
+				),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(formatValues(value) || {});
+		setStateValue(value || []);
 	}, [value]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const isChipSelected = (text: string): boolean => {
-		return text in stateValue;
+		return stateValue.includes(text);
 	};
 
 	const isChipEnabled = (text: string): boolean => {
-		return !isSingleSelection || isChipSelected(text);
-	};
-
-	const formatValues = (values: string[] | ISelectedChips): ISelectedChips => {
-		if (!Array.isArray(values)) {
-			return values;
-		}
-		return Object.fromEntries(values.map((value) => [value, true]));
+		return multi || isChipSelected(text);
 	};
 
 	// =============================================================================
@@ -91,29 +68,21 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// =============================================================================
 	const handleChange = (text: string): void => {
 		let updatedStateValues = clone(stateValue); // Prevent mutation to original state value
-		const isExistingValue = text in updatedStateValues;
+		const isExistingValue = updatedStateValues.includes(text);
 
+		// Removal of value from state
 		if (isExistingValue) {
-			delete updatedStateValues[text];
+			updatedStateValues = updatedStateValues.filter((value) => value !== text);
 			onChange({ target: { value: updatedStateValues } });
 			return;
 		}
 
-		if (!isSingleSelection) {
-			updatedStateValues = {
-				...updatedStateValues,
-				[text]: true,
-			};
-			onChange({ target: { value: updatedStateValues } });
-			return;
+		// Adding values to state
+		if (multi) {
+			updatedStateValues.push(text);
+		} else {
+			updatedStateValues = [text];
 		}
-
-		// if (textAreaChipName in updatedStateValues) {
-		// 	setShowTextArea(false);
-		// }
-		updatedStateValues = {
-			[text]: true,
-		};
 		onChange({ target: { value: updatedStateValues } });
 	};
 
@@ -125,49 +94,53 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderChips = (): JSX.Element[] => {
-		return chipTexts.map((text, index) => {
+		return options.map((option, index) => {
 			return (
 				<ChipWithState
 					{...otherSchema}
 					key={index}
-					text={text}
-					isEnabled={isChipEnabled(text)}
-					isInitiallyActive={isChipSelected(text)}
-					onChange={() => handleChange(text)}
+					text={option.label}
+					isEnabled={isChipEnabled(option.value)}
+					isInitiallyActive={isChipSelected(option.value)}
+					onChange={() => handleChange(option.value)}
 				/>
 			);
 		});
 	};
 
 	const renderTextAreaChip = (): JSX.Element => {
+		if (!textarea && !textarea?.name) {
+			return;
+		}
 		return (
-			showTextAreaChip && (
-				<ChipWithState
-					{...otherSchema}
-					id={id}
-					toggleShowTextArea={handleToggleTextArea}
-					text={textAreaChipName}
-					isEnabled={isChipEnabled(textAreaChipName)}
-					isInitiallyActive={isChipSelected(textAreaChipName)}
-					onChange={() => handleChange(textAreaChipName)}
-				/>
-			)
+			<ChipWithState
+				{...otherSchema}
+				id={id}
+				toggleShowTextArea={handleToggleTextArea}
+				text={textarea.name}
+				isEnabled={isChipEnabled(textarea.name)}
+				isInitiallyActive={isChipSelected(textarea.name)}
+				onChange={() => handleChange(textarea.name)}
+			/>
 		);
 	};
 
 	const renderTextArea = (): JSX.Element => {
-		const textAreaId = `chips-${textAreaChipName}`;
+		if (!textarea && !textarea?.name) {
+			return;
+		}
+		const textAreaId = `chips-${textarea.name}`;
 		const wrapperSchema: IWrapperSchema = {
 			fieldType: "div",
 			children: {
 				[textAreaId]: {
 					fieldType: "textarea",
-					label: textAreaChipName,
+					label: textarea.name,
 					maxLength,
 					rows,
 					resizable,
-					...(isTextAreaRequired && {
-						validation: [{ required: true }],
+					...(textarea?.validation?.length > 0 && {
+						validation: textarea.validation,
 					}),
 				},
 			},
@@ -177,11 +150,11 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	return (
 		<Form.CustomField label={label} errorMessage={otherProps?.error?.message} {...otherProps}>
-			<>
+			<div>
 				{renderChips()}
 				{renderTextAreaChip()}
 				{renderTextArea()}
-			</>
+			</div>
 		</Form.CustomField>
 	);
 };

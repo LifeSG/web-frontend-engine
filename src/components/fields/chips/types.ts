@@ -1,13 +1,20 @@
 import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
+import { IYupValidationRule } from "../../frontend-engine/yup/types";
+
+export interface IChipOption {
+	label: string;
+	value: string;
+}
 
 export interface IChipsSchema
 	extends IFrontendEngineBaseFieldJsonSchema<"chips">,
 		React.ButtonHTMLAttributes<HTMLButtonElement> {
-	chipTexts: string[];
-	textAreaChipName?: string;
-	showTextAreaChip?: boolean;
-	isTextAreaRequired?: boolean;
-	isSingleSelection?: boolean;
+	options: IChipOption[];
+	textarea?: {
+		name: string;
+		validation?: IYupValidationRule[];
+	};
+	multi?: boolean;
 	resizable?: boolean;
 	maxLength?: number;
 	rows?: number;
