@@ -1,16 +1,19 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ICheckboxGroupSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
+import { TestHelper } from "../../../../utils";
 import { TOverrideField, TOverrideSchema } from "../../../common";
 import { ERROR_MESSAGE } from "../../../common/error";
 
 const submitFn = jest.fn();
+const componentId = "field";
+const componentTestId = TestHelper.generateId("field", "checkbox");
 
 const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: "test",
 		fields: {
-			field: {
+			[componentId]: {
 				label: "Checkbox",
 				fieldType: "checkbox",
 				options: [
@@ -37,7 +40,7 @@ describe("checkbox-group", () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		expect(screen.getAllByTestId("field")).toHaveLength(2);
+		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
