@@ -17,7 +17,7 @@ const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideS
 	const json: IFrontendEngineData = {
 		id: "test",
 		fields: {
-			field: {
+			[componentId]: {
 				label: "Chips",
 				fieldType,
 				options: [
