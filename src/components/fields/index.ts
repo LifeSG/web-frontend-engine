@@ -1,4 +1,5 @@
 export * from "./checkbox-group";
+export * from "./chips";
 export * from "./contact-number";
 export * from "./date-input";
 export * from "./multi-select";

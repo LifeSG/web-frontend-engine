@@ -1,5 +1,4 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { Chip } from "src/components/shared";
 import styled, { css } from "styled-components";
 
 interface ITextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -16,12 +15,9 @@ export const Wrapper = styled.div<{ chipPosition?: "top" | "bottom" | undefined 
 `;
 
 export const ChipContainer = styled.div`
-	margin-top: 0.438rem;
-`;
-
-export const ChipItem = styled(Chip)`
-	margin-bottom: 0.5rem;
-	margin-right: 0.5rem;
+	margin: 0.5rem 0rem;
+	display: flex;
+	gap: 0.5rem;
 `;
 
 export const StyledTextArea = styled(Form.Textarea)<ITextAreaProps>`

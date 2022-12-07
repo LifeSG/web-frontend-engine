@@ -1,2 +1,2 @@
-export * from "./chip";
+export * from "./chips";
 export * from "./types";

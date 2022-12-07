@@ -1,10 +1,7 @@
 import { Color } from "@lifesg/react-design-system/color";
 import { Text } from "@lifesg/react-design-system/text";
 import styled, { css } from "styled-components";
-
-interface IChipButtonProps {
-	isActive?: boolean | undefined;
-}
+import { IChipButtonProps } from "./types";
 
 // =============================================================================
 // STYLING
@@ -18,7 +15,7 @@ export const ChipButton = styled.button<IChipButtonProps>`
 
 	:hover {
 		box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.2);
-		cursor: pointer;
+		cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 	}
 
 	:focus-visible {
@@ -26,15 +23,17 @@ export const ChipButton = styled.button<IChipButtonProps>`
 		box-shadow: 0 0 0 1px #024fa9;
 	}
 
-	${(props) =>
-		props.isActive &&
-		css`
-			background-color: ${Color.Neutral[4](props)};
+	${(props) => {
+		if (props.isActive) {
+			return css`
+				background-color: ${Color.Neutral[4](props)};
 
-			${ChipText} {
-				color: ${Color.Neutral[7](props)};
-			}
-		`}
+				${ChipText} {
+					color: ${Color.Neutral[7](props)};
+				}
+			`;
+		}
+	}}
 `;
 
 export const ChipText = styled(Text.XSmall)``;

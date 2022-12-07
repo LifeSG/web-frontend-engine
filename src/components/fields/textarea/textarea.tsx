@@ -5,7 +5,8 @@ import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine/types";
-import { ChipContainer, ChipItem, StyledTextArea, Wrapper } from "./textarea.styles";
+import { Chip } from "../../shared";
+import { ChipContainer, StyledTextArea, Wrapper } from "./textarea.styles";
 import { ITextareaSchema } from "./types";
 
 export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
@@ -64,13 +65,13 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 			chipTexts?.length && (
 				<ChipContainer>
 					{chipTexts.map((text, index) => (
-						<ChipItem
+						<Chip
 							key={text}
 							id={TestHelper.generateId(id, `chip-${kebabCase(text)}`, index)}
 							onClick={handleChipOnClick(text)}
 						>
 							{text}
-						</ChipItem>
+						</Chip>
 					))}
 				</ChipContainer>
 			)
