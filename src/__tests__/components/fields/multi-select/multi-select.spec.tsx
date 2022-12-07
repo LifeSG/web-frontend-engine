@@ -105,7 +105,9 @@ describe("mutli-select", () => {
 		const selectAllButton = screen.getByText("Select all");
 
 		await waitFor(() => fireEvent.click(selectAllButton));
-
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: ["A", "B"] }));
+
+		await waitFor(() => fireEvent.click(selectAllButton));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: [] }));
 	});
 });
