@@ -42,19 +42,18 @@ describe("checkbox-group", () => {
 		expect(screen.getAllByTestId("field")).toHaveLength(2);
 	});
 
-	it("should support default values", async () => {
+	it("should be able to support default values", async () => {
 		const defaultValues = ["A"];
-		renderComponent(undefined, {
-			defaultValues: {
-				field: defaultValues,
-			},
-		});
+		renderComponent(undefined, { defaultValues: { field: defaultValues } });
+
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: defaultValues }));
 	});
 
-	it("should support validation schema", async () => {
+	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
+
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
@@ -62,6 +61,7 @@ describe("checkbox-group", () => {
 
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
+
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
 
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: undefined }));
@@ -89,7 +89,7 @@ describe("checkbox-group", () => {
 		displaySize  | expected
 		${"small"}   | ${"1.5rem"}
 		${"default"} | ${"2rem"}
-	`("should be support different displaySizes", async ({ displaySize, expected }) => {
+	`("should be support different displaySizes", ({ displaySize, expected }) => {
 		renderComponent({ displaySize: displaySize });
 
 		expect(
