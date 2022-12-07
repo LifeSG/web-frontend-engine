@@ -2,14 +2,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IMultiSelectSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { ERROR_MESSAGE } from "../../../common";
+import { ERROR_MESSAGE, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 
-const renderComponent = (
-	overrideField?: Partial<Omit<IMultiSelectSchema, "fieldType" | "label">> | undefined,
-	overrideSchema?: Partial<Omit<IFrontendEngineData, "fields">> | undefined
-) => {
+const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: "test",
 		fields: {
