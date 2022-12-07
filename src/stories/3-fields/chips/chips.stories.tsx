@@ -44,13 +44,13 @@ export default {
 				"Specifies the configuration (including validation rules) for a conditionally rendered <code>textarea</code> component",
 			table: {
 				type: {
-					summary: "{ name: string, validation: IYupValidationRule[] }",
+					summary: "{ name: string, validation: IYupValidationRule[], resizable: boolean, rows: number }",
 				},
 			},
 			type: { name: "object", value: {} },
 		},
-		showTextAreaChip: {
-			description: "Specifies if the text area chip should be rendered",
+		multi: {
+			description: "Specifies if the component supports multiple selection",
 			table: {
 				type: {
 					summary: "boolean",
@@ -60,44 +60,7 @@ export default {
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
-		},
-		isSingleSelection: {
-			description: "Specifies if the component only allows single value",
-			table: {
-				type: {
-					summary: "boolean",
-				},
-			},
-			options: [true, false],
-			control: {
-				type: "boolean",
-			},
-			defaultValue: false,
-		},
-		resizable: {
-			description: "Toggle vertical resize handler in textarea",
-			table: {
-				type: {
-					summary: "boolean",
-				},
-				defaultValue: { summary: false },
-			},
-			control: {
-				type: "boolean",
-			},
-			defaultValue: false,
-		},
-		rows: {
-			description: "Visible height of a text area, in lines (Inherited from HTMLTextAreaElement)",
-			table: {
-				type: {
-					summary: "number",
-				},
-				defaultValue: { summary: 1 },
-			},
-			defaultValue: 1,
-			type: { name: "number" },
+			defaultValue: true,
 		},
 	},
 } as Meta;
