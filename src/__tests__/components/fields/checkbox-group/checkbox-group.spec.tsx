@@ -36,7 +36,7 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+		expect(screen.getAllByTestId(componentTestId)).toHaveLength(2);
 	});
 
 	it("should be able to support default values", async () => {

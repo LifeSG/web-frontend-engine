@@ -86,6 +86,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 					<CheckboxContainer key={index}>
 						<StyledCheckbox
 							{...otherSchema}
+							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={id}
 							disabled={disabled}
 							name={option.label}
@@ -104,7 +105,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 
 	return (
 		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			<div data-testid={TestHelper.generateId(id, "checkbox")}>{renderCheckboxes()}</div>
+			{renderCheckboxes()}
 		</Form.CustomField>
 	);
 };
