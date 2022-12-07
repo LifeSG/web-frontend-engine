@@ -7,7 +7,8 @@ import { ERROR_MESSAGE, TOverrideField, TOverrideSchema } from "../../../common"
 
 const submitFn = jest.fn();
 const componentId = "field";
-const componentTestId = TestHelper.generateId(componentId, "multi-select");
+const fieldType = "multi-select";
+const componentTestId = TestHelper.generateId(componentId, fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -15,7 +16,7 @@ const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, ove
 		fields: {
 			[componentId]: {
 				label: "Multiselect",
-				fieldType: "multi-select",
+				fieldType,
 				options: [
 					{ label: "A", value: "A" },
 					{ label: "B", value: "B" },
@@ -32,7 +33,7 @@ const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, ove
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
-describe("mutli-select", () => {
+describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		jest.restoreAllMocks();

@@ -7,7 +7,8 @@ import { ERROR_MESSAGE } from "../../../common/error";
 
 const submitFn = jest.fn();
 const componentId = "field";
-const componentTestId = TestHelper.generateId("field", "checkbox");
+const fieldType = "checkbox";
+const componentTestId = TestHelper.generateId("field", fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -15,7 +16,7 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 		fields: {
 			[componentId]: {
 				label: "Checkbox",
-				fieldType: "checkbox",
+				fieldType,
 				options: [
 					{ label: "A", value: "A" },
 					{ label: "B", value: "B" },
@@ -32,7 +33,7 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
-describe("checkbox-group", () => {
+describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		jest.restoreAllMocks();
