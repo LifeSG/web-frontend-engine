@@ -3,14 +3,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IDateInputSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-import { ERROR_MESSAGE } from "../../../common";
+import { ERROR_MESSAGE, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 
-const renderComponent = (
-	overrideField?: Partial<Omit<IDateInputSchema, "fieldType" | "label">> | undefined,
-	overrideSchema?: Partial<Omit<IFrontendEngineData, "fields">> | undefined
-) => {
+const renderComponent = (overrideField?: TOverrideField<IDateInputSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: "test",
 		fields: {

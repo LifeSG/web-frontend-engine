@@ -2,12 +2,9 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ITextareaSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-import { ERROR_MESSAGE } from "../../../common";
+import { ERROR_MESSAGE, TOverrideField, TOverrideSchema } from "../../../common";
 
-const renderComponent = (
-	overrideField?: Partial<Omit<ITextareaSchema, "fieldType" | "label">> | undefined,
-	overrideSchema?: Partial<Omit<IFrontendEngineData, "fields">> | undefined
-) => {
+const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: "test",
 		fields: {

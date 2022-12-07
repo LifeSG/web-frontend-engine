@@ -1,14 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ICheckboxGroupSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
+import { TOverrideField, TOverrideSchema } from "../../../common";
 import { ERROR_MESSAGE } from "../../../common/error";
 
 const submitFn = jest.fn();
 
-const renderComponent = (
-	overrideField?: Partial<Omit<ICheckboxGroupSchema, "fieldType" | "label">> | undefined,
-	overrideSchema?: Partial<Omit<IFrontendEngineData, "fields">> | undefined
-) => {
+const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: "test",
 		fields: {
