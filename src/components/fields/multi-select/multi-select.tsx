@@ -73,8 +73,8 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 		<Form.CustomField id={id} label={label} errorMessage={otherProps.error?.message}>
 			<InputMultiSelect
 				{...otherSchema}
-				id={TestHelper.generateId(id)}
-				data-testid={TestHelper.generateId(id)}
+				id={id}
+				data-testid={TestHelper.generateId(id, "multi-select")}
 				name={name}
 				options={options}
 				onSelectOptions={handleChange}

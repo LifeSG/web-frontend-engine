@@ -2,15 +2,18 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IMultiSelectSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
+import { TestHelper } from "../../../../utils";
 import { ERROR_MESSAGE, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
+const componentId = "field";
+const componentTestId = TestHelper.generateId(componentId, "multi-select");
 
 const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: "test",
 		fields: {
-			field: {
+			[componentId]: {
 				label: "Multiselect",
 				fieldType: "multi-select",
 				options: [
@@ -37,7 +40,7 @@ describe("mutli-select", () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		expect(screen.getAllByTestId("list-item")).toHaveLength(2);
+		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
