@@ -44,7 +44,7 @@ describe(fieldType, () => {
 
 	it("should be able to support default values", async () => {
 		const defaultValues = ["A"];
-		renderComponent(undefined, { defaultValues: { field: defaultValues } });
+		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
 
