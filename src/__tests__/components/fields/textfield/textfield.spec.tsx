@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IEmailSchema, INumberSchema, ITextfieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-import { ERROR_MESSAGE, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideSchema } from "../../../common";
 
 const renderComponent = (
 	overrideField?: Partial<ITextfieldSchema | IEmailSchema | INumberSchema> | undefined,
@@ -35,7 +35,7 @@ describe("textfield", () => {
 
 		it("should support validation schema", async () => {
 			renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -79,14 +79,14 @@ describe("textfield", () => {
 		it("should validate email format", async () => {
 			renderComponent({ fieldType: "email" });
 			fireEvent.change(screen.getByTestId("field"), { target: { value: "hello" } });
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 			expect(screen.queryByTestId("field-error-message")).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
 			renderComponent({ fieldType: "email", validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -134,7 +134,7 @@ describe("textfield", () => {
 
 		it("should support validation schema", async () => {
 			renderComponent({ fieldType: "number", validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
