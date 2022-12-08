@@ -63,7 +63,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	const getTextAreaId = () => {
-		return `chips-${textarea.name}`;
+		return `chips-${textarea.label}`;
 	};
 
 	// =============================================================================
@@ -116,25 +116,26 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	const renderTextAreaChip = (): JSX.Element => {
-		if (!textarea && !textarea?.name) {
+		const textareaLabel = textarea?.label;
+		if (!textarea && !textareaLabel) {
 			return;
 		}
 		return (
 			<Chip
 				{...otherSchema}
-				onClick={() => handleTextareaChipClick(textarea.name)}
-				isActive={isChipSelected(textarea.name)}
+				onClick={() => handleTextareaChipClick(textareaLabel)}
+				isActive={isChipSelected(textareaLabel)}
 			>
-				{textarea.name}
+				{textareaLabel}
 			</Chip>
 		);
 	};
 
 	const renderTextArea = (): JSX.Element => {
-		if (!textarea && !textarea?.name) {
+		if (!textarea && !textarea?.label) {
 			return;
 		}
-		const { name: label, ...textAreaSchema } = textarea;
+		const { label, ...textAreaSchema } = textarea;
 		const textAreaId = getTextAreaId();
 		const schema: ITextareaSchema = {
 			fieldType: "textarea",
