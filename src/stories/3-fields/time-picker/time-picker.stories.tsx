@@ -94,7 +94,7 @@ const Template: Story<Record<string, ITimePickerSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	timepicker: {
-		label: "Textfield",
+		label: "Timepicker",
 		fieldType: "time",
 	},
 };
@@ -102,16 +102,32 @@ Default.args = {
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"timepicker-disabled": {
-		label: "Textfield",
+		label: "Timepicker",
 		fieldType: "time",
 		disabled: true,
 	},
 };
 
+export const DefaultValue = () => (
+	<FrontendEngine
+		data={{
+			fields: {
+				"timepicker-default-value": {
+					fieldType: "time",
+					label: "Timepicker",
+				},
+				...SubmitButtonStorybook,
+			},
+			defaultValues: { "timepicker-default-value": "11:11am" },
+		}}
+	/>
+);
+DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+
 export const UseCurrentTime = Template.bind({});
 UseCurrentTime.args = {
 	"timepicker-use-current-time": {
-		label: "Textfield",
+		label: "Timepicker",
 		fieldType: "time",
 		useCurrentTime: true,
 	},
@@ -120,7 +136,7 @@ UseCurrentTime.args = {
 export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"timepicker-placeholder": {
-		label: "Textfield",
+		label: "Timepicker",
 		fieldType: "time",
 		placeholder: "Select a preferred time",
 	},
@@ -129,7 +145,7 @@ Placeholder.args = {
 export const Use24HoursFormat = Template.bind({});
 Use24HoursFormat.args = {
 	"timepicker-24hr-format": {
-		label: "Textfield",
+		label: "Timepicker",
 		fieldType: "time",
 		is24HourFormat: true,
 	},
