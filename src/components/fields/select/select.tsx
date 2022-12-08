@@ -54,7 +54,8 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
 			<InputSelect
 				{...otherSchema}
-				id={TestHelper.generateId(id, "select")}
+				id={id}
+				data-testid={TestHelper.generateId(id, "select")}
 				name={name}
 				options={options}
 				onSelectOption={handleChange}
