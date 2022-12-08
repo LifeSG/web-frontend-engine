@@ -8,7 +8,7 @@ import { ERROR_MESSAGE } from "../../../common/error";
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "checkbox";
-const componentTestId = TestHelper.generateId("field", fieldType);
+const componentTestId = TestHelper.generateId(componentId, fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
