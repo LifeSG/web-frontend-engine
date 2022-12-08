@@ -48,7 +48,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
 
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: defaultValues }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -64,7 +64,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
 
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: undefined }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
 	});
 
 	it("should be able to toggle the chips", async () => {
@@ -74,15 +74,15 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(chips[0]));
 		await waitFor(() => fireEvent.click(chips[1]));
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: ["A", "B"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["A", "B"] }));
 
 		await waitFor(() => fireEvent.click(chips[0]));
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: ["B"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["B"] }));
 
 		await waitFor(() => fireEvent.click(chips[1]));
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: [] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 
 	it("should be able to support single selection", async () => {
@@ -91,11 +91,11 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(chips[0]));
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: ["A"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["A"] }));
 
 		await waitFor(() => fireEvent.click(chips[1]));
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: ["B"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["B"] }));
 	});
 
 	it("should be able to render textarea upon selection", async () => {
