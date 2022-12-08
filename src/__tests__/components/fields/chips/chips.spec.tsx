@@ -9,8 +9,8 @@ const componentId = "field";
 const fieldType = "chips";
 const componentTestId = TestHelper.generateId(componentId, fieldType);
 
-const textareaChipName = "Durian";
-const textareaId = `chips-${textareaChipName}`;
+const textareaLabel = "Durian";
+const textareaId = `chips-${textareaLabel}`;
 const textareaTestId = TestHelper.generateId(textareaId, "textarea");
 
 const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideSchema?: TOverrideSchema) => {
@@ -99,11 +99,11 @@ describe(fieldType, () => {
 	});
 
 	it("should be able to render textarea upon selection", async () => {
-		renderComponent({ textarea: { name: textareaChipName } });
+		renderComponent({ textarea: { label: textareaLabel } });
 
 		expect(screen.queryByTestId(textareaTestId)).not.toBeInTheDocument();
 
-		const chip = screen.getByText(textareaChipName);
+		const chip = screen.getByText(textareaLabel);
 		await waitFor(() => fireEvent.click(chip));
 		expect(screen.queryByTestId(textareaTestId)).toBeInTheDocument();
 	});
@@ -111,10 +111,10 @@ describe(fieldType, () => {
 	describe("textarea", () => {
 		it("should be able to support validation schema", async () => {
 			renderComponent({
-				textarea: { name: textareaChipName, validation: [{ required: true, errorMessage: ERROR_MESSAGE }] },
+				textarea: { label: textareaLabel, validation: [{ required: true, errorMessage: ERROR_MESSAGE }] },
 			});
 
-			const chip = screen.getByText(textareaChipName);
+			const chip = screen.getByText(textareaLabel);
 			await waitFor(() => fireEvent.click(chip));
 			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
 
@@ -123,10 +123,10 @@ describe(fieldType, () => {
 
 		it("should be able to resize vertically", async () => {
 			renderComponent({
-				textarea: { name: textareaChipName, resizable: true },
+				textarea: { label: textareaLabel, resizable: true },
 			});
 
-			const chip = screen.getByText(textareaChipName);
+			const chip = screen.getByText(textareaLabel);
 			await waitFor(() => fireEvent.click(chip));
 
 			expect(screen.getByTestId(textareaTestId)).toHaveStyle({ resize: "vertical" });
@@ -134,10 +134,10 @@ describe(fieldType, () => {
 
 		it("should be able to support custom rows", async () => {
 			renderComponent({
-				textarea: { name: textareaChipName, rows: 1 },
+				textarea: { label: textareaLabel, rows: 1 },
 			});
 
-			const chip = screen.getByText(textareaChipName);
+			const chip = screen.getByText(textareaLabel);
 			await waitFor(() => fireEvent.click(chip));
 
 			expect(screen.getByTestId(textareaTestId)).toHaveAttribute("rows", "1");
