@@ -71,7 +71,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const getCheckboxStatus = (value: string): boolean => {
+	const isCheckboxChecked = (value: string): boolean => {
 		return stateValue.includes(value);
 	};
 
@@ -91,7 +91,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 							disabled={disabled}
 							name={option.label}
 							value={option.value}
-							checked={getCheckboxStatus(option.value)}
+							checked={isCheckboxChecked(option.value)}
 							onChange={handleChange}
 						/>
 						<Label htmlFor={id} disabled={disabled}>
