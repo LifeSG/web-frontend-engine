@@ -16,7 +16,7 @@ interface IContactNumberProps extends FormInputGroupProps<string, unknown> {
 export type TSingaporeNumberRule = "default" | "house" | "mobile";
 
 interface IContactNumberValidationRules extends IYupValidationRule {
-	contactNumber:
+	contactNumber?:
 		| {
 				internationalNumber: true;
 				singaporeNumber?: never;

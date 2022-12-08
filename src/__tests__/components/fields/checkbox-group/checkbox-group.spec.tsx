@@ -45,7 +45,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
 
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: defaultValues }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -61,7 +61,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
 
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: undefined }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
 	});
 
 	it("should be able to toggle the checkboxes", async () => {
@@ -71,15 +71,15 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(checkboxes[0].querySelector("input")));
 		await waitFor(() => fireEvent.click(checkboxes[1].querySelector("input")));
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: ["A", "B"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["A", "B"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[0].querySelector("input")));
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: ["B"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["B"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[1].querySelector("input")));
 		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field: [] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 
 	it.each`
