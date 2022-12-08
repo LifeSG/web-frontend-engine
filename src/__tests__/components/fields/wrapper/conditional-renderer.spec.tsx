@@ -4,6 +4,7 @@ import {
 	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
 } from "../../../../components/frontend-engine";
+import { SUBMIT_BUTTON_ID } from "../../../common";
 
 const submitFn = jest.fn();
 const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
@@ -212,11 +213,11 @@ describe("conditional-renderer", () => {
 		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hello" } });
 		fireEvent.change(screen.getByTestId("field2"), { target: { value: "hi" } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(screen.getByText(errorMessage)).toBeInTheDocument();
 
 		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hi" } });
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
 	});
 
@@ -240,7 +241,7 @@ describe("conditional-renderer", () => {
 		fireEvent.change(screen.getByTestId("field2"), { target: { value: "world" } });
 		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hi" } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ field1: "hi" }));
 		expect(submitFn).toBeCalledWith(expect.not.objectContaining({ field2: expect.anything() }));
 	});

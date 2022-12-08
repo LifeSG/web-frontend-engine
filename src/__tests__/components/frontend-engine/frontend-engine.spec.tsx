@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useRef } from "react";
 import { FrontendEngine } from "../../../components";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
+import { SUBMIT_BUTTON_ID } from "../../common";
 
 const ERROR_MESSAGE = "test error message";
 const JSON_SCHEMA: IFrontendEngineData = {
@@ -69,7 +70,7 @@ describe("frontend-engine", () => {
 			onChange,
 		});
 		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(onChange).toBeCalledWith(expect.objectContaining({ field1: "hello" }), true);
 	});
@@ -80,7 +81,7 @@ describe("frontend-engine", () => {
 			onSubmit,
 		});
 		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(onSubmit).toBeCalled();
 	});
@@ -130,7 +131,7 @@ describe("frontend-engine", () => {
 			fireEvent.change(screen.getByTestId("field1"), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 
@@ -156,7 +157,7 @@ describe("frontend-engine", () => {
 		it("should revalidate on change by default", async () => {
 			renderComponent();
 			fireEvent.change(screen.getByTestId("field1"), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
 			await waitFor(() => fireEvent.change(screen.getByTestId("field1"), { target: { value: "h" } }));
@@ -166,7 +167,7 @@ describe("frontend-engine", () => {
 		it("should support onBlur revalidationMode", async () => {
 			renderComponent(undefined, { revalidationMode: "onBlur" });
 			fireEvent.change(screen.getByTestId("field1"), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 			fireEvent.change(screen.getByTestId("field1"), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
@@ -177,11 +178,11 @@ describe("frontend-engine", () => {
 		it("should support onSubmit revalidationMode", async () => {
 			renderComponent(undefined, { revalidationMode: "onSubmit" });
 			fireEvent.change(screen.getByTestId("field1"), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 			fireEvent.change(screen.getByTestId("field1"), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
-			await waitFor(() => fireEvent.submit(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.submit(screen.getByTestId(SUBMIT_BUTTON_ID)));
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 	});

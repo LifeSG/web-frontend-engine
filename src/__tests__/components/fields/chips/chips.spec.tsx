@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { IChipsSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, TOverrideField, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
@@ -46,7 +46,7 @@ describe(fieldType, () => {
 		const defaultValues = ["A"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
@@ -54,7 +54,7 @@ describe(fieldType, () => {
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -62,7 +62,7 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
 	});
@@ -73,15 +73,15 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(chips[0]));
 		await waitFor(() => fireEvent.click(chips[1]));
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["A", "B"] }));
 
 		await waitFor(() => fireEvent.click(chips[0]));
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["B"] }));
 
 		await waitFor(() => fireEvent.click(chips[1]));
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 
@@ -90,11 +90,11 @@ describe(fieldType, () => {
 		const chips = screen.getByTestId(componentTestId).querySelectorAll("button");
 
 		await waitFor(() => fireEvent.click(chips[0]));
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["A"] }));
 
 		await waitFor(() => fireEvent.click(chips[1]));
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["B"] }));
 	});
 
@@ -116,7 +116,7 @@ describe(fieldType, () => {
 
 			const chip = screen.getByText(textareaLabel);
 			await waitFor(() => fireEvent.click(chip));
-			await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});

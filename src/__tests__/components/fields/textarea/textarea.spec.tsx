@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ITextareaSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-import { ERROR_MESSAGE, TOverrideField, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
 
 const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -31,7 +31,7 @@ describe("textarea", () => {
 
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
-		await waitFor(() => fireEvent.click(screen.getByTestId("submit")));
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
