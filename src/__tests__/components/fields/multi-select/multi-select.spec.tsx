@@ -18,8 +18,8 @@ const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, ove
 				label: "Multiselect",
 				fieldType,
 				options: [
-					{ label: "A", value: "A" },
-					{ label: "B", value: "B" },
+					{ label: "A", value: "Apple" },
+					{ label: "B", value: "Berry" },
 				],
 				...overrideField,
 			},
@@ -44,7 +44,7 @@ describe(fieldType, () => {
 	});
 
 	it("should be able to support default values", async () => {
-		const defaultValues = ["A"];
+		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
@@ -81,11 +81,11 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(dropdownButtons[0]));
 		await waitFor(() => fireEvent.click(dropdownButtons[1]));
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["A", "B"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(dropdownButtons[0]));
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["B"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(dropdownButtons[1]));
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
@@ -97,7 +97,7 @@ describe(fieldType, () => {
 		const selectAllButton = screen.getByText("Select all");
 
 		await waitFor(() => fireEvent.click(selectAllButton));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["A", "B"] }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(selectAllButton));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
