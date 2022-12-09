@@ -19,6 +19,7 @@
 		"build-watch": "rollup -c -w",
 		"build-storybook": "build-storybook",
 		"test": "jest --config jest/jest.config.js --coverage",
+		"test-watch": "jest --config jest/jest.config.js --watch",
 		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
 		"storybook": "start-storybook -p 6006 -c .storybook",
 		"prepare": "husky install"
