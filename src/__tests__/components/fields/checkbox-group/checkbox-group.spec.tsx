@@ -62,6 +62,12 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
+		expect(
+			screen.getAllByTestId(componentTestId).forEach((input) => {
+				expect(input).toHaveAttribute("disabled");
+			})
+		);
+
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));

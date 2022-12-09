@@ -56,14 +56,6 @@ describe(fieldType, () => {
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
 
-	it("should be disabled if configured", async () => {
-		renderComponent({ disabled: true });
-
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
-	});
-
 	it("should be able to select another country code", async () => {
 		renderComponent();
 

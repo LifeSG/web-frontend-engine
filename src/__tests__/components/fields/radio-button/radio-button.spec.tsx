@@ -63,8 +63,10 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
+		expect(
+			screen.getAllByTestId(componentTestId).forEach((radio) => {
+				expect(radio).toHaveAttribute("disabled");
+			})
+		);
 	});
 });
