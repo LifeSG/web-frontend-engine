@@ -37,6 +37,10 @@ const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideS
 };
 
 describe(fieldType, () => {
+	beforeEach(() => {
+		jest.resetAllMocks();
+	});
+
 	it("should be able to render the field", () => {
 		renderComponent();
 		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();

@@ -24,6 +24,10 @@ const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overri
 };
 
 describe("textarea", () => {
+	beforeEach(() => {
+		jest.resetAllMocks();
+	});
+
 	it("should be able to render the field", () => {
 		const component = renderComponent();
 		expect(component.container.querySelector(`textarea#field__textarea-base`)).toBeInTheDocument();

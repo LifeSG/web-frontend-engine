@@ -28,6 +28,10 @@ const renderComponent = (
 
 describe("textfield", () => {
 	describe("text", () => {
+		beforeEach(() => {
+			jest.resetAllMocks();
+		});
+
 		it("should be able to render the field", () => {
 			const component = renderComponent();
 			expect(component.container.querySelector(`input[type=text]#field-base`)).toBeInTheDocument();
@@ -71,6 +75,10 @@ describe("textfield", () => {
 	});
 
 	describe("email", () => {
+		beforeEach(() => {
+			jest.resetAllMocks();
+		});
+
 		it("should be able to render the field", () => {
 			const component = renderComponent({ fieldType: "email" });
 			expect(component.container.querySelector(`input[type=email]#field-base`)).toBeInTheDocument();
@@ -126,6 +134,10 @@ describe("textfield", () => {
 	});
 
 	describe("number", () => {
+		beforeEach(() => {
+			jest.resetAllMocks();
+		});
+
 		it("should be able to render the field", () => {
 			const component = renderComponent({ fieldType: "number" });
 

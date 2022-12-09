@@ -33,7 +33,6 @@ const renderComponent = (overrideField?: TOverrideField<IContactNumberSchema>, o
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
-		jest.restoreAllMocks();
 	});
 
 	it("should be able to render the field", () => {
