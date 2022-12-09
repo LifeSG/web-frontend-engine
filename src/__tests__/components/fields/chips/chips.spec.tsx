@@ -66,9 +66,14 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
+		expect(
+			screen
+				.getByTestId(componentTestId)
+				.querySelectorAll("button")
+				.forEach((button) => {
+					expect(button).toHaveAttribute("disabled");
+				})
+		);
 	});
 
 	it("should be able to toggle the chips", async () => {
