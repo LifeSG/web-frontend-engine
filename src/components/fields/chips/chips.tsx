@@ -59,7 +59,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const isChipSelected = (text: string): boolean => {
-		return multi && stateValue.includes(text);
+		return stateValue.includes(text);
 	};
 
 	const getTextAreaId = () => {
