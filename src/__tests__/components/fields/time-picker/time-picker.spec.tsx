@@ -6,13 +6,6 @@ import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
 import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
 
-// NOTE: Timepicker internally uses ResizeObserver
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-	observe: jest.fn(),
-	unobserve: jest.fn(),
-	disconnect: jest.fn(),
-}));
-
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "time";
@@ -41,6 +34,17 @@ const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, over
 };
 
 describe(fieldType, () => {
+	beforeEach(() => {
+		jest.resetAllMocks();
+
+		// NOTE: Timepicker internally uses ResizeObserver
+		global.ResizeObserver = jest.fn().mockImplementation(() => ({
+			observe: jest.fn(),
+			unobserve: jest.fn(),
+			disconnect: jest.fn(),
+		}));
+	});
+
 	it("should be able to render the field", () => {
 		renderComponent();
 		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();

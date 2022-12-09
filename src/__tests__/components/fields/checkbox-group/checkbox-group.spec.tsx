@@ -33,6 +33,10 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 };
 
 describe(fieldType, () => {
+	beforeEach(() => {
+		jest.resetAllMocks();
+	});
+
 	it("should be able to render the field", () => {
 		renderComponent();
 		expect(screen.getAllByTestId(componentTestId)).toHaveLength(2);
