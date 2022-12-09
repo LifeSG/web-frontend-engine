@@ -23,6 +23,7 @@
 		"publish-lib": "npm publish ./dist",
 		"rollup": "rm -rf dist && rollup -c",
 		"test": "jest --config jest/jest.config.js --coverage",
+		"test-watch": "jest --config jest/jest.config.js --watch",
 		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
 		"storybook": "start-storybook -p 6006 -c .storybook",
 		"prepare": "(test -d ./.git && npx husky install) || true"
