@@ -18,8 +18,8 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 				label: "Select",
 				fieldType,
 				options: [
-					{ label: "A", value: "A" },
-					{ label: "B", value: "B" },
+					{ label: "A", value: "Apple" },
+					{ label: "B", value: "Berry" },
 				],
 				...overrideField,
 			},
@@ -44,7 +44,7 @@ describe(fieldType, () => {
 	});
 
 	it("should be able to support default values", async () => {
-		const defaultValue = "A";
+		const defaultValue = "Apple";
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
