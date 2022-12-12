@@ -7,8 +7,12 @@ import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideSchema } from "../../../commo
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "text";
-const componentTestId = TestHelper.generateId(componentId, fieldType);
+const defaultFieldType = "text";
+const emailFieldType = "email";
+const numberFieldType = "numeric";
+const defaultTestId = TestHelper.generateId(componentId, defaultFieldType);
+const emailTestId = TestHelper.generateId(componentId, emailFieldType);
+const numberTestId = TestHelper.generateId(componentId, numberFieldType);
 
 const renderComponent = (
 	overrideField?: Partial<ITextfieldSchema | IEmailSchema | INumberSchema> | undefined,
@@ -19,7 +23,7 @@ const renderComponent = (
 		fields: {
 			[componentId]: {
 				label: "Textfield",
-				fieldType,
+				fieldType: defaultFieldType,
 				...overrideField,
 			},
 			submit: {
@@ -33,15 +37,15 @@ const renderComponent = (
 };
 
 describe("textfield", () => {
-	describe("text", () => {
+	describe(defaultFieldType, () => {
 		beforeEach(() => {
 			jest.resetAllMocks();
 		});
 
 		it("should be able to render the field", () => {
-			const component = renderComponent();
+			renderComponent();
 
-			expect(component.container.querySelector(`input[type=text]#field-base`)).toBeInTheDocument();
+			expect(screen.getByTestId(defaultTestId)).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
@@ -53,8 +57,9 @@ describe("textfield", () => {
 		});
 
 		it("should apply inputMode according to its type", () => {
-			const component = renderComponent();
-			expect(component.container.querySelector(`input[inputMode=text]#field-base`)).toBeInTheDocument();
+			renderComponent();
+
+			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("inputMode", defaultFieldType);
 		});
 
 		it("should support default value", async () => {
@@ -74,35 +79,39 @@ describe("textfield", () => {
 				readOnly: true,
 				disabled: true,
 			});
-			expect(screen.getByTestId("field").getAttribute("maxLength")).toBe("10");
-			expect(screen.getByTestId("field").getAttribute("placeholder")).toBe("placeholder");
-			expect(screen.getByTestId("field").getAttribute("readOnly")).toBeDefined();
-			expect(screen.getByTestId("field").getAttribute("disabled")).toBeDefined();
+
+			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("maxLength", "10");
+			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("readonly");
+			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("disabled");
 		});
 	});
 
-	describe("email", () => {
+	describe(emailFieldType, () => {
 		beforeEach(() => {
 			jest.resetAllMocks();
 		});
 
 		it("should be able to render the field", () => {
-			const component = renderComponent({ fieldType: "email" });
+			renderComponent({ fieldType: emailFieldType });
 
-			expect(component.container.querySelector(`input[type=email]#field-base`)).toBeInTheDocument();
+			expect(screen.getByTestId(emailTestId)).toBeInTheDocument();
 		});
 
 		it("should validate email format", async () => {
-			renderComponent({ fieldType: "email" });
-			fireEvent.change(screen.getByTestId("field"), { target: { value: "hello" } });
+			renderComponent({ fieldType: emailFieldType });
 
+			fireEvent.change(screen.getByTestId(emailTestId), { target: { value: "hello" } });
 			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 			expect(screen.queryByTestId("field-error-message")).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
-			renderComponent({ fieldType: "email", validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
+			renderComponent({
+				fieldType: emailFieldType,
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+			});
 
 			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
@@ -110,13 +119,14 @@ describe("textfield", () => {
 		});
 
 		it("should apply inputMode according to its type", () => {
-			const component = renderComponent({ fieldType: "email" });
-			expect(component.container.querySelector(`input[inputMode=email]#field-base`)).toBeInTheDocument();
+			renderComponent({ fieldType: emailFieldType });
+
+			expect(screen.getByTestId(emailTestId)).toHaveAttribute("inputMode", emailFieldType);
 		});
 
 		it("should support default value", async () => {
 			const defaultValue = "john@doe.tld";
-			renderComponent({ fieldType: "email" }, { defaultValues: { [componentId]: defaultValue } });
+			renderComponent({ fieldType: emailFieldType }, { defaultValues: { [componentId]: defaultValue } });
 
 			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
@@ -126,32 +136,36 @@ describe("textfield", () => {
 
 		it("should pass other props into the field", () => {
 			renderComponent({
-				fieldType: "email",
+				fieldType: emailFieldType,
 				maxLength: 10,
 				placeholder: "placeholder",
 				readOnly: true,
 				disabled: true,
 			});
-			expect(screen.getByTestId("field").getAttribute("maxLength")).toBe("10");
-			expect(screen.getByTestId("field").getAttribute("placeholder")).toBe("placeholder");
-			expect(screen.getByTestId("field").getAttribute("readOnly")).toBeDefined();
-			expect(screen.getByTestId("field").getAttribute("disabled")).toBeDefined();
+
+			expect(screen.getByTestId(emailTestId)).toHaveAttribute("maxLength", "10");
+			expect(screen.getByTestId(emailTestId)).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByTestId(emailTestId)).toHaveAttribute("readOnly");
+			expect(screen.getByTestId(emailTestId)).toHaveAttribute("disabled");
 		});
 	});
 
-	describe("number", () => {
+	describe(numberFieldType, () => {
 		beforeEach(() => {
 			jest.resetAllMocks();
 		});
 
 		it("should be able to render the field", () => {
-			const component = renderComponent({ fieldType: "number" });
+			renderComponent({ fieldType: numberFieldType });
 
-			expect(component.container.querySelector("input[type=number]#field-base")).toBeInTheDocument();
+			expect(screen.getByTestId(numberTestId)).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
-			renderComponent({ fieldType: "number", validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
+			renderComponent({
+				fieldType: numberFieldType,
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+			});
 
 			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
@@ -159,13 +173,14 @@ describe("textfield", () => {
 		});
 
 		it("should apply inputMode according to its type", () => {
-			const component = renderComponent({ fieldType: "number" });
-			expect(component.container.querySelector(`input[inputMode=numeric]#field-base`)).toBeInTheDocument();
+			renderComponent({ fieldType: numberFieldType });
+
+			expect(screen.getByTestId(numberTestId)).toHaveAttribute("inputMode", numberFieldType);
 		});
 
 		it("should support default value", async () => {
 			const defaultValue = 1;
-			renderComponent({ fieldType: "number" }, { defaultValues: { [componentId]: defaultValue } });
+			renderComponent({ fieldType: numberFieldType }, { defaultValues: { [componentId]: defaultValue } });
 
 			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
@@ -175,14 +190,15 @@ describe("textfield", () => {
 
 		it("should pass other props into the field", () => {
 			renderComponent({
-				fieldType: "number",
+				fieldType: numberFieldType,
 				placeholder: "placeholder",
 				readOnly: true,
 				disabled: true,
 			});
-			expect(screen.getByTestId("field").getAttribute("placeholder")).toBe("placeholder");
-			expect(screen.getByTestId("field").getAttribute("readOnly")).toBeDefined();
-			expect(screen.getByTestId("field").getAttribute("disabled")).toBeDefined();
+
+			expect(screen.getByTestId(numberTestId)).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByTestId(numberTestId)).toHaveAttribute("readOnly");
+			expect(screen.getByTestId(numberTestId)).toHaveAttribute("disabled");
 		});
 	});
 });
