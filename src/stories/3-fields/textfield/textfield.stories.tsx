@@ -29,14 +29,14 @@ export default {
 		...CommonFieldStoryProps("text"),
 		textfield: { table: { disable: true } },
 		fieldType: {
-			description: `Use <code>text</code> or <code>email</code> or <code>number</code> to show this field`,
+			description: `Use <code>text</code> or <code>email</code> or <code>numeric</code> to show this field`,
 			table: {
 				type: {
-					summary: "text|email|number",
+					summary: "text|email|numeric",
 				},
 			},
 			type: { name: "string", required: true },
-			options: ["text", "email", "number"],
+			options: ["text", "email", "numeric"],
 			control: {
 				type: "select",
 			},

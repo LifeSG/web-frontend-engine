@@ -84,7 +84,7 @@ export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validatio
 export enum EFieldType {
 	TEXTAREA = "TextArea",
 	TEXT = "TextField",
-	NUMBER = "TextField",
+	NUMERIC = "TextField",
 	EMAIL = "TextField",
 	SUBMIT = "SubmitButton",
 	SELECT = "Select",

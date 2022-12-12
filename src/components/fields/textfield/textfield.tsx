@@ -1,6 +1,7 @@
 import { Form } from "@lifesg/react-design-system/form";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
@@ -18,7 +19,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string | number>(value);
+	const [stateValue, setStateValue] = useState<string | number>(value || "");
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// ================================================
@@ -26,7 +27,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 	// ================================================
 	useEffect(() => {
 		switch (fieldType) {
-			case "number":
+			case "numeric":
 				setFieldValidationConfig(id, Yup.number(), validation);
 				break;
 			case "email":
@@ -64,8 +65,9 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 	// =============================================================================
 	const formatInputMode = (): React.HTMLAttributes<HTMLInputElement>["inputMode"] => {
 		if (inputMode) return inputMode;
+
 		switch (fieldType) {
-			case "number":
+			case "numeric":
 				return "numeric";
 			case "email":
 				return "email";
@@ -84,11 +86,12 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			data-testid={TestHelper.generateId(id, fieldType)}
 			type={fieldType}
 			label={label}
 			inputMode={formatInputMode()}
 			onChange={handleChange}
-			value={stateValue || ""}
+			value={stateValue}
 			errorMessage={otherProps.error?.message}
 		/>
 	);
