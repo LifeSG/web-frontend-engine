@@ -4,13 +4,19 @@ import {
 	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
 } from "../../../../components/frontend-engine";
+import { TestHelper } from "../../../../utils";
 import { SUBMIT_BUTTON_ID } from "../../../common";
 
 const submitFn = jest.fn();
+const parentId = "fields";
+const fieldOneId = "field1";
+const fieldTwoId = "field2";
+const fieldThreeId = "field3";
+
 const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
 	const json: IFrontendEngineData = {
 		id: "test",
-		fields: {
+		[parentId]: {
 			...fields,
 			submit: {
 				label: "Submit",
@@ -23,6 +29,10 @@ const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => 
 };
 
 describe("conditional-renderer", () => {
+	beforeEach(() => {
+		jest.resetAllMocks();
+	});
+
 	it.each`
 		condition      | config                       | invalid    | valid
 		${"filled"}    | ${{ filled: true }}          | ${null}    | ${"hello"}
@@ -36,24 +46,27 @@ describe("conditional-renderer", () => {
 		${"url"}       | ${{ url: true }}             | ${"hello"} | ${"https://domain.tld"}
 		${"uuid"}      | ${{ uuid: true }}            | ${"hello"} | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"}
 	`("should support $condition condition for string conditional rendering", ({ config, invalid, valid }) => {
+		const fieldType = "text";
+		const fieldOneTestId = TestHelper.generateId(fieldOneId, fieldType);
+		const fieldTwoTestId = TestHelper.generateId(fieldTwoId, fieldType);
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			field1: {
+			[fieldOneId]: {
 				label: "Field 1",
-				fieldType: "text",
+				fieldType,
 			},
-			field2: {
+			[fieldTwoId]: {
 				label: "Field 2",
-				fieldType: "text",
-				showIf: [{ field1: [config] }],
+				fieldType,
+				showIf: [{ [fieldOneId]: [config] }],
 			},
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: invalid } });
-		expect(screen.queryByTestId("field2")).not.toBeInTheDocument();
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: invalid } });
+		expect(screen.queryByTestId(fieldTwoTestId)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: valid } });
-		expect(screen.getByTestId("field2")).toBeInTheDocument();
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: valid } });
+		expect(screen.getByTestId(fieldTwoTestId)).toBeInTheDocument();
 	});
 
 	it.each`
@@ -70,24 +83,27 @@ describe("conditional-renderer", () => {
 		${"negative"}  | ${{ negative: true }} | ${1}    | ${-1}
 		${"integer"}   | ${{ integer: true }}  | ${1.1}  | ${1}
 	`("should support $condition condition for number conditional rendering", ({ config, invalid, valid }) => {
+		const fieldType = "numeric";
+		const fieldOneTestId = TestHelper.generateId(fieldOneId, fieldType);
+		const fieldTwoTestId = TestHelper.generateId(fieldTwoId, fieldType);
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			field1: {
+			[fieldOneId]: {
 				label: "Field 1",
-				fieldType: "number",
+				fieldType,
 			},
-			field2: {
+			[fieldTwoId]: {
 				label: "Field 2",
-				fieldType: "number",
-				showIf: [{ field1: [config] }],
+				fieldType,
+				showIf: [{ [fieldOneId]: [config] }],
 			},
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: invalid } });
-		expect(screen.queryByTestId("field2")).not.toBeInTheDocument();
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: invalid } });
+		expect(screen.queryByTestId(fieldTwoTestId)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: valid } });
-		expect(screen.getByTestId("field2")).toBeInTheDocument();
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: valid } });
+		expect(screen.getByTestId(fieldTwoTestId)).toBeInTheDocument();
 	});
 
 	it.each`
@@ -103,20 +119,23 @@ describe("conditional-renderer", () => {
 		${"excludes (string)"} | ${{ excludes: "Berry" }}             | ${["Apple", "Berry"]}           | ${["Apple", "Cherry"]}
 		${"excludes (array)"}  | ${{ excludes: ["Berry", "Cherry"] }} | ${["Apple", "Berry"]}           | ${["Apple"]}
 	`("should support $condition condition for array conditional rendering", ({ config, invalid, valid }) => {
+		const fieldOneType = "multi-select";
+		const fieldTwoType = "text";
+		const fieldTwoTestId = TestHelper.generateId(fieldTwoId, fieldTwoType);
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			field1: {
+			[fieldOneId]: {
 				label: "Field 1",
-				fieldType: "multi-select",
+				fieldType: fieldOneType,
 				options: [
 					{ value: "Apple", label: "Apple" },
 					{ value: "Berry", label: "Berry" },
 					{ value: "Cherry", label: "Cherry" },
 				],
 			},
-			field2: {
+			[fieldTwoId]: {
 				label: "Field 2",
-				fieldType: "text",
-				showIf: [{ field1: [config] }],
+				fieldType: fieldTwoType,
+				showIf: [{ [fieldOneId]: [config] }],
 			},
 		};
 		renderComponent(fields);
@@ -124,7 +143,7 @@ describe("conditional-renderer", () => {
 		invalid?.forEach((value) => {
 			fireEvent.click(screen.getByText(value).closest("button"));
 		});
-		expect(screen.queryByTestId("field2")).not.toBeInTheDocument();
+		expect(screen.queryByTestId(fieldTwoTestId)).not.toBeInTheDocument();
 
 		// fire invalid again to deselect values
 		invalid?.forEach((value) => {
@@ -133,75 +152,86 @@ describe("conditional-renderer", () => {
 		valid?.forEach((value) => {
 			fireEvent.click(screen.getByText(value).closest("button"));
 		});
-		expect(screen.getByTestId("field2")).toBeInTheDocument();
+		expect(screen.getByTestId(fieldTwoTestId)).toBeInTheDocument();
 	});
 
 	it("should support AND conditions", () => {
+		const fieldType = "text";
+		const fieldOneTestId = TestHelper.generateId(fieldOneId, fieldType);
+		const fieldTwoTestId = TestHelper.generateId(fieldTwoId, fieldType);
+		const fieldThreeTestId = TestHelper.generateId(fieldThreeId, fieldType);
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			field1: {
+			[fieldOneId]: {
 				label: "Field 1",
-				fieldType: "text",
+				fieldType,
 			},
-			field2: {
+			[fieldTwoId]: {
 				label: "Field 1",
-				fieldType: "text",
+				fieldType,
 			},
-			field3: {
+			[fieldThreeId]: {
 				label: "Field 2",
-				fieldType: "text",
-				showIf: [{ field1: [{ filled: true }], field2: [{ filled: true }] }],
+				fieldType,
+				showIf: [{ [fieldOneId]: [{ filled: true }], [fieldTwoId]: [{ filled: true }] }],
 			},
 		};
 		renderComponent(fields);
 
-		expect(screen.queryByTestId("field3")).not.toBeInTheDocument();
+		expect(screen.queryByTestId(fieldThreeTestId)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hello" } });
-		expect(screen.queryByTestId("field3")).not.toBeInTheDocument();
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: "hello" } });
+		expect(screen.queryByTestId(fieldThreeTestId)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId("field2"), { target: { value: "hello" } });
-		expect(screen.getByTestId("field3")).toBeInTheDocument();
+		fireEvent.change(screen.getByTestId(fieldTwoTestId), { target: { value: "hello" } });
+		expect(screen.getByTestId(fieldThreeTestId)).toBeInTheDocument();
 	});
 
 	it("should support OR conditions", () => {
+		const fieldType = "text";
+		const fieldOneTestId = TestHelper.generateId(fieldOneId, fieldType);
+		const fieldTwoTestId = TestHelper.generateId(fieldTwoId, fieldType);
+		const fieldThreeTestId = TestHelper.generateId(fieldThreeId, fieldType);
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			field1: {
+			[fieldOneId]: {
 				label: "Field 1",
-				fieldType: "text",
+				fieldType,
 			},
-			field2: {
+			[fieldTwoId]: {
 				label: "Field 1",
-				fieldType: "text",
+				fieldType,
 			},
-			field3: {
+			[fieldThreeId]: {
 				label: "Field 2",
-				fieldType: "text",
-				showIf: [{ field1: [{ filled: true }] }, { field2: [{ filled: true }] }],
+				fieldType,
+				showIf: [{ [fieldOneId]: [{ filled: true }] }, { [fieldTwoId]: [{ filled: true }] }],
 			},
 		};
 		renderComponent(fields);
 
-		expect(screen.queryByTestId("field3")).not.toBeInTheDocument();
+		expect(screen.queryByTestId(fieldThreeTestId)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hello" } });
-		expect(screen.getByTestId("field3")).toBeInTheDocument();
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: "hello" } });
+		expect(screen.getByTestId(fieldThreeTestId)).toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: null } });
-		fireEvent.change(screen.getByTestId("field2"), { target: { value: "hello" } });
-		expect(screen.getByTestId("field3")).toBeInTheDocument();
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: null } });
+		fireEvent.change(screen.getByTestId(fieldTwoTestId), { target: { value: "hello" } });
+		expect(screen.getByTestId(fieldThreeTestId)).toBeInTheDocument();
 	});
 
 	it("should remove validation schema for fields that are conditionally hidden", async () => {
 		const errorMessage = "error message";
+		const fieldType = "text";
+		const fieldOneTestId = TestHelper.generateId(fieldOneId, fieldType);
+		const fieldTwoTestId = TestHelper.generateId(fieldTwoId, fieldType);
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			field1: {
+			[fieldOneId]: {
 				label: "Field 1",
 				fieldType: "text",
 			},
-			field2: {
+			[fieldTwoId]: {
 				label: "Field 2",
 				fieldType: "text",
-				showIf: [{ field1: [{ filled: true }, { min: 5 }] }],
+				showIf: [{ [fieldOneId]: [{ filled: true }, { min: 5 }] }],
 				validation: [
 					{ required: true, errorMessage },
 					{ min: 5, errorMessage },
@@ -210,39 +240,40 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hello" } });
-		fireEvent.change(screen.getByTestId("field2"), { target: { value: "hi" } });
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: "hello" } });
+		fireEvent.change(screen.getByTestId(fieldTwoTestId), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(screen.getByText(errorMessage)).toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hi" } });
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: "hi" } });
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 		expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
 	});
 
 	it("should not submit fields that are conditionally hidden", async () => {
-		jest.clearAllMocks();
-
+		const fieldType = "text";
+		const fieldOneTestId = TestHelper.generateId(fieldOneId, fieldType);
+		const fieldTwoTestId = TestHelper.generateId(fieldTwoId, fieldType);
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			field1: {
+			[fieldOneId]: {
 				label: "Field 1",
-				fieldType: "text",
+				fieldType,
 			},
-			field2: {
+			[fieldTwoId]: {
 				label: "Field 2",
-				fieldType: "text",
-				showIf: [{ field1: [{ min: 5 }] }],
+				fieldType,
+				showIf: [{ [fieldOneId]: [{ min: 5 }] }],
 			},
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hello" } });
-		fireEvent.change(screen.getByTestId("field2"), { target: { value: "world" } });
-		fireEvent.change(screen.getByTestId("field1"), { target: { value: "hi" } });
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: "hello" } });
+		fireEvent.change(screen.getByTestId(fieldTwoTestId), { target: { value: "world" } });
+		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ field1: "hi" }));
-		expect(submitFn).toBeCalledWith(expect.not.objectContaining({ field2: expect.anything() }));
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hi" }));
+		expect(submitFn).toBeCalledWith(expect.not.objectContaining({ [fieldTwoId]: expect.anything() }));
 	});
 });
