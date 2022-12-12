@@ -26,7 +26,7 @@ const renderComponent = (
 				fieldType: defaultFieldType,
 				...overrideField,
 			},
-			submit: {
+			[SUBMIT_BUTTON_ID]: {
 				label: "Submit",
 				fieldType: "submit",
 			},

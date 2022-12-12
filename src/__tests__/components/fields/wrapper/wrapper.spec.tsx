@@ -3,6 +3,7 @@ import { FrontendEngine } from "../../../../components";
 import { TWrapperType } from "../../../../components/fields/wrapper";
 import { IFrontendEngineData, TFrontendEngineFieldSchema } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
+import { SUBMIT_BUTTON_ID } from "../../../common";
 
 const parentId = "wrapper";
 const parentFieldType = "div";
@@ -27,7 +28,7 @@ const renderComponent = (
 				fieldType: wrapperType,
 				children,
 			},
-			submit: {
+			[SUBMIT_BUTTON_ID]: {
 				label: "Submit",
 				fieldType: "submit",
 			},

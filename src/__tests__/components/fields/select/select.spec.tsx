@@ -23,7 +23,7 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 				],
 				...overrideField,
 			},
-			submit: {
+			[SUBMIT_BUTTON_ID]: {
 				label: "Submit",
 				fieldType: "submit",
 			},

@@ -26,7 +26,7 @@ const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideS
 				],
 				...overrideField,
 			},
-			submit: {
+			[SUBMIT_BUTTON_ID]: {
 				label: "Submit",
 				fieldType: "submit",
 			},
