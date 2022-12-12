@@ -53,21 +53,10 @@ export default {
 			description: "A list of options that a user can choose from",
 			table: {
 				type: {
-					summary: "IOption[]",
+					summary: "{label: string, value: string}[]",
 				},
 			},
 			type: { name: "object", value: {} },
-		},
-		label: {
-			description: "Specifies the label text",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
 		},
 	},
 } as Meta;

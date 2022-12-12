@@ -22,18 +22,7 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("time"),
-		timepicker: { table: { disable: true } },
-		label: {
-			description: "A name/description of the purpose of the form element",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
+		"time-default": { table: { disable: true } },
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -93,7 +82,7 @@ const Template: Story<Record<string, ITimePickerSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	timepicker: {
+	"time-default": {
 		label: "Timepicker",
 		fieldType: "time",
 	},
@@ -101,7 +90,7 @@ Default.args = {
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"timepicker-disabled": {
+	"time-disabled": {
 		label: "Timepicker",
 		fieldType: "time",
 		disabled: true,
@@ -112,13 +101,13 @@ export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"timepicker-default-value": {
+				"time-default-value": {
 					fieldType: "time",
 					label: "Timepicker",
 				},
 				...SubmitButtonStorybook,
 			},
-			defaultValues: { "timepicker-default-value": "11:11am" },
+			defaultValues: { "time-default-value": "11:11am" },
 		}}
 	/>
 );
@@ -126,7 +115,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const UseCurrentTime = Template.bind({});
 UseCurrentTime.args = {
-	"timepicker-use-current-time": {
+	"time-use-current-time": {
 		label: "Timepicker",
 		fieldType: "time",
 		useCurrentTime: true,
@@ -150,7 +139,7 @@ WithDefaultValue.parameters = {
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"timepicker-placeholder": {
+	"time-placeholder": {
 		label: "Timepicker",
 		fieldType: "time",
 		placeholder: "Select a preferred time",
@@ -159,7 +148,7 @@ Placeholder.args = {
 
 export const Use24HoursFormat = Template.bind({});
 Use24HoursFormat.args = {
-	"timepicker-24hr-format": {
+	"time-24hr-format": {
 		label: "Timepicker",
 		fieldType: "time",
 		is24HourFormat: true,

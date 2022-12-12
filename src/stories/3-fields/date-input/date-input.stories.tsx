@@ -10,9 +10,11 @@ export default {
 			page: () => (
 				<>
 					<Title>DateInput</Title>
-					<Description></Description>
+					<Description>
+						This component provides the functionality for users to input a specific date according to the
+						date format
+					</Description>
 					<Heading>Props</Heading>
-					<Description></Description>
 					<ArgsTable story={PRIMARY_STORY} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

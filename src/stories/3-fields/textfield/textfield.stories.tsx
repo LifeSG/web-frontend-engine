@@ -27,7 +27,7 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("text"),
-		textfield: { table: { disable: true } },
+		"textfield-default": { table: { disable: true } },
 		fieldType: {
 			description: `Use <code>text</code> or <code>email</code> or <code>numeric</code> to show this field`,
 			table: {
@@ -39,17 +39,6 @@ export default {
 			options: ["text", "email", "numeric"],
 			control: {
 				type: "select",
-			},
-		},
-		label: {
-			description: "A name/description of the purpose of the form element",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
 			},
 		},
 		maxLength: {
@@ -96,7 +85,7 @@ const Template: Story<Record<string, ITextfieldSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	textfield: {
+	"textfield-default": {
 		label: "Textfield",
 		fieldType: "text",
 	},

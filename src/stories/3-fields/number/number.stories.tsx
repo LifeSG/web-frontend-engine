@@ -5,12 +5,12 @@ import { INumberSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/Number",
+	title: "Field/Numeric",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>Number</Title>
+					<Title>Numeric</Title>
 					<Description>A form element that contains a label, input and error message</Description>
 					<Heading>Props</Heading>
 					<Description>
@@ -26,8 +26,8 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("number"),
-		number: { table: { disable: true } },
+		...CommonFieldStoryProps("numeric"),
+		"numeric-default": { table: { disable: true } },
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -61,9 +61,9 @@ const Template: Story<Record<string, INumberSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	number: {
+	"numeric-fault": {
 		label: "Number",
-		fieldType: "number",
+		fieldType: "numeric",
 	},
 };
 
@@ -71,14 +71,14 @@ export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"number-default-value": {
+				"numeric-default-value": {
 					label: "Number",
-					fieldType: "number",
+					fieldType: "numeric",
 				},
 				...SubmitButtonStorybook,
 			},
 			defaultValues: {
-				"number-default-value": 1,
+				"numeric-default-value": 1,
 			},
 		}}
 	/>
@@ -87,27 +87,27 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"number-disabled": {
+	"numeric-disabled": {
 		label: "Number",
-		fieldType: "number",
+		fieldType: "numeric",
 		disabled: true,
 	},
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"number-placeholder": {
+	"numeric-placeholder": {
 		label: "Number",
-		fieldType: "number",
+		fieldType: "numeric",
 		placeholder: "Enter a number",
 	},
 };
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"number-with-validation": {
+	"numeric-with-validation": {
 		label: "Number",
-		fieldType: "number",
+		fieldType: "numeric",
 		validation: [{ required: true }],
 	},
 };

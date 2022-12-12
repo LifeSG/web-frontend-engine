@@ -44,7 +44,7 @@ export default {
 				"Specifies the configuration (including validation rules) for a conditionally rendered <code>textarea</code> component",
 			table: {
 				type: {
-					summary: "{ label: string, validation: IYupValidationRule[], resizable: boolean, rows: number }",
+					summary: "{ label: string, validation?: IYupValidationRule[], resizable?: boolean, rows?: number }",
 				},
 			},
 			type: { name: "object", value: {} },

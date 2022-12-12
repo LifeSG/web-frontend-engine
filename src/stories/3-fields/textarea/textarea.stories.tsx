@@ -28,8 +28,8 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("textara"),
-		textarea: { table: { disable: true } },
+		...CommonFieldStoryProps("textarea"),
+		"textarea-default": { table: { disable: true } },
 		chipTexts: {
 			description: "Adds clickable suggestion pills",
 			table: {
@@ -106,7 +106,7 @@ const Template: Story<Record<string, ITextareaSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	textarea: {
+	"textarea-default": {
 		fieldType: "textarea",
 		label: "Textarea",
 	},
