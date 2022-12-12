@@ -48,6 +48,13 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
+		expect(
+			screen.getAllByTestId("checkbox").forEach((checkbox) => {
+				if (defaultValues.includes(checkbox.querySelector("input").value)) {
+					expect(checkbox.querySelector("svg")).toBeInTheDocument();
+				}
+			})
+		);
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 

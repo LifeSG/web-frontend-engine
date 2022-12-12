@@ -3,7 +3,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
-import { DateTimeHelper } from "../../../utils";
+import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
@@ -142,6 +142,7 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			data-testid={TestHelper.generateId(id, "date")}
 			label={label}
 			errorMessage={error?.message}
 			onChangeRaw={handleChange}

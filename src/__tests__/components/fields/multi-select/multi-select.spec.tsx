@@ -49,6 +49,16 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
+		expect(
+			screen
+				.getByTestId("dropdown-list")
+				.querySelectorAll("li")
+				.forEach((list) => {
+					if (defaultValues.includes(list.textContent)) {
+						expect(list.querySelector("input")).toBeChecked();
+					}
+				})
+		);
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
@@ -58,6 +68,12 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+	});
+
+	it("should be disabled if configured", async () => {
+		renderComponent({ disabled: true });
+
+		expect(screen.getByTestId(componentTestId)).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom list style width", () => {

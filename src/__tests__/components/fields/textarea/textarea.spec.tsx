@@ -2,13 +2,19 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ITextareaSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
+import { TestHelper } from "../../../../utils";
 import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
+
+const submitFn = jest.fn();
+const componentId = "field";
+const fieldType = "textarea";
+const componentTestId = TestHelper.generateId(componentId, fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: "test",
 		fields: {
-			field: {
+			[componentId]: {
 				label: "Textarea",
 				fieldType: "textarea",
 				...overrideField,
@@ -20,34 +26,35 @@ const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overri
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={() => null} />);
+	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
-describe("textarea", () => {
+describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
 
 	it("should be able to render the field", () => {
 		const component = renderComponent();
+
 		expect(component.container.querySelector(`textarea#field__textarea-base`)).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
+
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
 
-	it("should support default value", () => {
+	it("should support default value", async () => {
 		const defaultValue = "hello";
-		renderComponent(undefined, {
-			defaultValues: {
-				field: defaultValue,
-			},
-		});
+		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
+		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+
+		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 	});
 

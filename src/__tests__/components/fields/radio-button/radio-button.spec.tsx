@@ -49,6 +49,13 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
+		expect(
+			screen.getAllByTestId(componentTestId).forEach((radio) => {
+				if (radio.nodeValue === defaultValue) {
+					expect(radio).toBeChecked();
+				}
+			})
+		);
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
 
