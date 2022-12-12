@@ -36,6 +36,7 @@ const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, over
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
+		jest.restoreAllMocks();
 
 		// NOTE: Timepicker internally uses ResizeObserver
 		global.ResizeObserver = jest.fn().mockImplementation(() => ({

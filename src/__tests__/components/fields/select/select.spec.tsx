@@ -49,6 +49,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
+		expect(screen.getByTestId(componentTestId)).toHaveTextContent(defaultValue);
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
 

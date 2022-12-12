@@ -52,6 +52,16 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
+		expect(
+			screen
+				.getByTestId(componentTestId)
+				.querySelectorAll("button")
+				.forEach((button) => {
+					if (defaultValues.includes(button.querySelector("span").textContent)) {
+						expect(button).toHaveStyle({ "background-color": "#A4A4A4" });
+					}
+				})
+		);
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
