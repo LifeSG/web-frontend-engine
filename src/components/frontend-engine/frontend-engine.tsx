@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { forwardRef, useCallback, useEffect, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../fields/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
@@ -76,7 +77,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		<FormProvider {...formMethods}>
 			<form
 				id={formId}
-				data-testid={formId}
+				data-testid={TestHelper.generateId(id, "frontend-engine")}
 				className={formClassNames}
 				noValidate
 				onSubmit={reactFormHookSubmit(handleSubmit)}

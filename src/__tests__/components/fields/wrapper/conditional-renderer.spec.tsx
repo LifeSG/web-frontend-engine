@@ -8,7 +8,6 @@ import { TestHelper } from "../../../../utils";
 import { SUBMIT_BUTTON_ID } from "../../../common";
 
 const submitFn = jest.fn();
-const parentId = "fields";
 const fieldOneId = "field1";
 const fieldTwoId = "field2";
 const fieldThreeId = "field3";
@@ -16,7 +15,7 @@ const fieldThreeId = "field3";
 const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
 	const json: IFrontendEngineData = {
 		id: "test",
-		[parentId]: {
+		fields: {
 			...fields,
 			submit: {
 				label: "Submit",
