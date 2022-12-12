@@ -23,7 +23,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("multi-select"),
-		"multi-select-default": { table: { disable: true } },
 		disabled: {
 			description: "Specifies if the input should be disabled",
 			table: {

@@ -23,7 +23,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("contact"),
-		"contact-default": { table: { disable: true } },
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {

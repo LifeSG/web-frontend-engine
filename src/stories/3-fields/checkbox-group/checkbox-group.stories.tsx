@@ -22,7 +22,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("checkbox"),
-		"checkbox-default": { table: { disable: true } },
 		displaySize: {
 			description: "Specifies the display size of the checkbox",
 			table: {

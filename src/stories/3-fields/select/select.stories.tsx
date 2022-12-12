@@ -21,7 +21,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("select"),
-		select: { table: { disable: true } },
 		disabled: {
 			description: "Specifies if the input should be disabled",
 			table: {
@@ -75,7 +74,7 @@ const Template: Story<Record<string, ISelectSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	select: {
+	"select-default": {
 		fieldType: "select",
 		label: "Fruits",
 		options: [

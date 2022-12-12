@@ -29,7 +29,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("textarea"),
-		"textarea-default": { table: { disable: true } },
 		chipTexts: {
 			description: "Adds clickable suggestion pills",
 			table: {

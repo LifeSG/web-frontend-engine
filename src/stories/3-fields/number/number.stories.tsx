@@ -27,7 +27,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("numeric"),
-		"numeric-default": { table: { disable: true } },
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -61,7 +60,7 @@ const Template: Story<Record<string, INumberSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	"numeric-fault": {
+	"numeric-default": {
 		label: "Number",
 		fieldType: "numeric",
 	},
