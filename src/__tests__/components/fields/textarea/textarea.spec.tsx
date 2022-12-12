@@ -35,9 +35,9 @@ describe(fieldType, () => {
 	});
 
 	it("should be able to render the field", () => {
-		const component = renderComponent();
+		renderComponent();
 
-		expect(component.container.querySelector(`textarea#field__textarea-base`)).toBeInTheDocument();
+		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
@@ -75,8 +75,9 @@ describe(fieldType, () => {
 	it("should append text upon clicking a pill", () => {
 		renderComponent({ chipTexts: ["Pill 1", "Pill 2", "Pill 3"] });
 
-		fireEvent.change(screen.getByTestId("field__textarea"), { target: { value: "Hello" } });
+		fireEvent.change(screen.getByTestId(componentTestId), { target: { value: "Hello" } });
 		fireEvent.click(screen.getByText("Pill 1"));
+
 		expect(screen.getByDisplayValue("Hello Pill 1")).toBeInTheDocument();
 	});
 
@@ -87,9 +88,9 @@ describe(fieldType, () => {
 			readOnly: true,
 			disabled: true,
 		});
-		expect(screen.getByTestId("field__textarea").getAttribute("rows")).toBe("5");
-		expect(screen.getByTestId("field__textarea").getAttribute("placeholder")).toBe("placeholder");
-		expect(screen.getByTestId("field__textarea").getAttribute("readOnly")).toBeDefined();
-		expect(screen.getByTestId("field__textarea").getAttribute("disabled")).toBeDefined();
+		expect(screen.getByTestId(componentTestId)).toHaveAttribute("rows", "5");
+		expect(screen.getByTestId(componentTestId)).toHaveAttribute("placeholder", "placeholder");
+		expect(screen.getByTestId(componentTestId)).toHaveAttribute("readonly");
+		expect(screen.getByTestId(componentTestId)).toHaveAttribute("disabled");
 	});
 });
