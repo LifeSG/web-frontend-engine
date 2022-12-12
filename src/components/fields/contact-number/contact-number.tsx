@@ -109,8 +109,9 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	};
 
 	const getSpacing = (): number => {
-		if (selectedCountry?.name === "Singapore") return 4;
-
+		if (selectedCountry?.name === "Singapore") {
+			return 4;
+		}
 		return 0;
 	};
 

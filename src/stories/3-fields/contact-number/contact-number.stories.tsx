@@ -24,17 +24,6 @@ export default {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("contact"),
 		"contact-default": { table: { disable: true } },
-		label: {
-			description: "Specifies the label text",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -50,6 +39,7 @@ export default {
 			description: "Specifies a default country for the input field",
 			table: {
 				type: {
+					// NOTE: change to explicit??
 					summary: "TCountry",
 				},
 			},

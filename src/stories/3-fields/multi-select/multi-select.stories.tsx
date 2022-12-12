@@ -41,7 +41,7 @@ export default {
 			description: "A list of options that a user can choose from",
 			table: {
 				type: {
-					summary: "IOption[]",
+					summary: "{ label: string, value: string }[]",
 				},
 			},
 			type: { name: "object", value: {} },

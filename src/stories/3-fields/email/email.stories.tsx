@@ -27,7 +27,7 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("email"),
-		email: { table: { disable: true } },
+		"email-default": { table: { disable: true } },
 		maxLength: {
 			description: "A specified maximum length for the value of the form element",
 			table: {
@@ -72,7 +72,7 @@ const Template: Story<Record<string, IEmailSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	email: {
+	"email-default": {
 		label: "Email",
 		fieldType: "email",
 	},
