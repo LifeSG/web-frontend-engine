@@ -10,5 +10,5 @@ export interface IEmailSchema
 		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys | "type"> {}
 
 export interface INumberSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"number">,
+	extends IFrontendEngineBaseFieldJsonSchema<"numeric">,
 		Omit<FormInputProps, TFrontendEngineBaseFieldJsonSchemaKeys | "type" | "maxLength" | "max" | "min"> {}
