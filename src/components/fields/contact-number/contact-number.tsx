@@ -60,7 +60,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 					"internationalNumber",
 					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER,
 					(value) => {
-						if (!value || !internationalRule) return true;
+						if (!value || (contactNumberRule && !internationalRule)) return true;
 
 						return PhoneHelper.isInternationalNumber(selectedCountry?.name, value);
 					}
