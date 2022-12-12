@@ -27,7 +27,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("submit"),
-		submit: { table: { disable: true } },
 		styleType: {
 			description: "The style type of the button",
 			table: {
@@ -62,7 +61,7 @@ const Template: Story<Record<string, ISubmitButtonSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	submit: {
+	"submit-default": {
 		fieldType: "submit",
 		label: "Submit",
 	},

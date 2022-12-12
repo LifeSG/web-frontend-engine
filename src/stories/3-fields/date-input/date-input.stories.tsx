@@ -25,7 +25,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("date"),
-		date: { table: { disable: true } },
 		useCurrentDate: {
 			description: "Indicates if field should be prefilled with current system date",
 			table: {
@@ -69,7 +68,7 @@ const Template: Story<Record<string, IDateInputSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	date: {
+	"date-default": {
 		fieldType: "date",
 		label: "Date",
 	},

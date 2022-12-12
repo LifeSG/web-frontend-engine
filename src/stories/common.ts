@@ -14,6 +14,7 @@ export const ExcludeReactFormHookProps = {
 };
 
 export const CommonFieldStoryProps = (fieldType: string) => ({
+	[`${fieldType}-default`]: { table: { disable: true } },
 	fieldType: {
 		description: `Use <code>${fieldType}</code> to show this field`,
 		table: {

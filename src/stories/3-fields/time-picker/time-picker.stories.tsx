@@ -22,7 +22,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("time"),
-		"time-default": { table: { disable: true } },
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {

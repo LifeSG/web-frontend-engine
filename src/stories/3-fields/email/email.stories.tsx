@@ -27,7 +27,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("email"),
-		"email-default": { table: { disable: true } },
 		maxLength: {
 			description: "A specified maximum length for the value of the form element",
 			table: {

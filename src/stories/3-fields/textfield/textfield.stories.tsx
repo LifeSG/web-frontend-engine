@@ -27,7 +27,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("text"),
-		"textfield-default": { table: { disable: true } },
 		fieldType: {
 			description: `Use <code>text</code> or <code>email</code> or <code>numeric</code> to show this field`,
 			table: {
@@ -85,7 +84,7 @@ const Template: Story<Record<string, ITextfieldSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	"textfield-default": {
+	"text-default": {
 		label: "Textfield",
 		fieldType: "text",
 	},
@@ -95,14 +94,14 @@ export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"textfield-default-value": {
+				"text-default-value": {
 					label: "Textfield",
 					fieldType: "text",
 				},
 				...SubmitButtonStorybook,
 			},
 			defaultValues: {
-				"textfield-default-value": "This is the default value",
+				"text-default-value": "This is the default value",
 			},
 		}}
 	/>
@@ -111,7 +110,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"textfield-disabled": {
+	"text-disabled": {
 		label: "Textfield",
 		fieldType: "text",
 		disabled: true,
@@ -120,7 +119,7 @@ Disabled.args = {
 
 export const MaxLength = Template.bind({});
 MaxLength.args = {
-	"textfield-maxlength": {
+	"text-maxlength": {
 		label: "Textfield",
 		fieldType: "text",
 		maxLength: 5,
@@ -129,7 +128,7 @@ MaxLength.args = {
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"textfield-placeholder": {
+	"text-placeholder": {
 		label: "Textfield",
 		fieldType: "text",
 		placeholder: "Enter text here",
@@ -138,7 +137,7 @@ Placeholder.args = {
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"textfield-with-validation": {
+	"text-with-validation": {
 		label: "Textfield",
 		fieldType: "text",
 		validation: [{ required: true }],

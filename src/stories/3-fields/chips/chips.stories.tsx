@@ -29,7 +29,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("chips"),
-		"chips-default": { table: { disable: true } },
 		options: {
 			description: "A list of text chips for users to select",
 			table: {
