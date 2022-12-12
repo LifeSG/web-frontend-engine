@@ -2,15 +2,22 @@ import { render, screen } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { TWrapperType } from "../../../../components/fields/wrapper";
 import { IFrontendEngineData, TFrontendEngineFieldSchema } from "../../../../components/frontend-engine";
+import { TestHelper } from "../../../../utils";
+
+const parentId = "wrapper";
+const parentFieldType = "div";
+const childId = "field1";
+const childFieldType = "text";
+const childTestId = TestHelper.generateId(childId, childFieldType);
 
 const renderComponent = (
 	wrapperType: TWrapperType = "div",
 	wrapperChildren?: Record<string, TFrontendEngineFieldSchema> | string
 ) => {
 	const children = wrapperChildren || {
-		field1: {
+		[childId]: {
 			label: "Field 1",
-			fieldType: "text",
+			fieldType: childFieldType,
 		},
 	};
 	const json: IFrontendEngineData = {
@@ -33,8 +40,8 @@ describe("wrapper", () => {
 	it("should be able to render other fields as children", () => {
 		renderComponent();
 
-		expect(screen.getByTestId("field1")).toBeInTheDocument();
-		expect(screen.getByTestId("field1").tagName).toBe("INPUT");
+		expect(screen.getByTestId(childTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
 	});
 
 	it("should be able to render string as children", () => {
@@ -45,30 +52,32 @@ describe("wrapper", () => {
 	});
 
 	it("should be able to render nested children", () => {
+		const nestedId = "nested";
+		const nestedTestId = TestHelper.generateId(nestedId, parentFieldType);
 		renderComponent(undefined, {
-			nested: {
-				fieldType: "div",
+			[nestedId]: {
+				fieldType: parentFieldType,
 				children: {
-					field1: {
+					[childId]: {
 						label: "Field 1",
-						fieldType: "text",
+						fieldType: childFieldType,
 					},
 				},
 			},
 		});
 
-		expect(screen.getByTestId("nested")).toBeInTheDocument();
-		expect(screen.getByTestId("field1")).toBeInTheDocument();
-		expect(screen.getByTestId("field1").tagName).toBe("INPUT");
+		expect(screen.getByTestId(nestedTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(childTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
 	});
 
 	it.each<TWrapperType>(["div", "span", "section", "header", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "p"])(
 		"should be able to render with %s element type",
 		(type) => {
 			const text = "hello world";
-			const component = renderComponent(type, text);
+			renderComponent(type, text);
 
-			expect(component.container.querySelector(`${type.toLowerCase()}#wrapper`)).toBeInTheDocument();
+			expect(screen.getByTestId(TestHelper.generateId(parentId, type))).toBeInTheDocument();
 			expect(screen.getByText(text)).toBeInTheDocument();
 		}
 	);
