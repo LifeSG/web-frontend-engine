@@ -22,7 +22,7 @@ const JSON_SCHEMA: IFrontendEngineData = {
 				{ min: 2, errorMessage: ERROR_MESSAGE },
 			],
 		},
-		submit: {
+		[SUBMIT_BUTTON_ID]: {
 			label: "Submit",
 			fieldType: "submit",
 		},

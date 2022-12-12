@@ -20,7 +20,7 @@ const renderComponent = (overrideField?: TOverrideField<IDateInputSchema>, overr
 				fieldType,
 				...overrideField,
 			},
-			submit: {
+			[SUBMIT_BUTTON_ID]: {
 				label: "Submit",
 				fieldType: "submit",
 			},
@@ -51,7 +51,6 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
 
-		console.log(screen.getByTestId("day-input"));
 		expect(screen.getByTestId("day-input")).toHaveAttribute("value", defaultDay);
 		expect(screen.getByTestId("month-input")).toHaveAttribute("value", defaultMonth);
 		expect(screen.getByTestId("year-input")).toHaveAttribute("value", defaultYear);

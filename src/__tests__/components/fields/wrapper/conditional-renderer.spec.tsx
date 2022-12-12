@@ -17,7 +17,7 @@ const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => 
 		id: "test",
 		fields: {
 			...fields,
-			submit: {
+			[SUBMIT_BUTTON_ID]: {
 				label: "Submit",
 				fieldType: "submit",
 			},

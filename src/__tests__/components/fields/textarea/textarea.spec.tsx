@@ -19,7 +19,7 @@ const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overri
 				fieldType: "textarea",
 				...overrideField,
 			},
-			submit: {
+			[SUBMIT_BUTTON_ID]: {
 				label: "Submit",
 				fieldType: "submit",
 			},
