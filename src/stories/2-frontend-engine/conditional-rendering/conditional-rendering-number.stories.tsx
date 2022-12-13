@@ -12,7 +12,7 @@ export default {
 			page: () => (
 				<>
 					<Title>Conditional Rendering for Numbers</Title>
-					<Description>These rendering rules are for `number` type only.</Description>
+					<Description>These rendering rules are for `numeric` type only.</Description>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -39,7 +39,7 @@ Min.args = {
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "number",
+		fieldType: "numeric",
 		validation: [{ required: true }],
 	},
 	field2: {
@@ -59,7 +59,7 @@ Max.args = {
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "number",
+		fieldType: "numeric",
 		validation: [{ required: true }],
 	},
 	field2: {
@@ -79,7 +79,7 @@ LessThan.args = {
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "number",
+		fieldType: "numeric",
 		validation: [{ required: true }],
 	},
 	field2: {
@@ -99,7 +99,7 @@ MoreThan.args = {
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "number",
+		fieldType: "numeric",
 		validation: [{ required: true }],
 	},
 	field2: {
@@ -119,7 +119,7 @@ Positive.args = {
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "number",
+		fieldType: "numeric",
 		validation: [{ required: true }],
 	},
 	field2: {
@@ -139,7 +139,7 @@ Negative.args = {
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "number",
+		fieldType: "numeric",
 		validation: [{ required: true }],
 	},
 	field2: {
@@ -159,7 +159,7 @@ Integer.args = {
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "number",
+		fieldType: "numeric",
 		validation: [{ required: true }],
 	},
 	field2: {
