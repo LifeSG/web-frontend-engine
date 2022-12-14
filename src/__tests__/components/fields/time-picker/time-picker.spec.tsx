@@ -3,16 +3,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ITimePickerSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "time";
-const componentTestId = TestHelper.generateId(componentId, fieldType);
-const hourButtonId = `${componentId}-base-hour-increment-button`;
-const minuteButtonId = `${componentId}-base-minute-increment-button`;
-const confirmButtonId = `${componentId}-base-confirm-button`;
 
 const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -36,7 +31,6 @@ const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, over
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
-		jest.restoreAllMocks();
 
 		// NOTE: Timepicker internally uses ResizeObserver
 		global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -48,14 +42,15 @@ describe(fieldType, () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+
+		expect(screen.getByRole("generic", { name: componentId })).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
 		const defaultValue = "11:11am";
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
@@ -63,7 +58,7 @@ describe(fieldType, () => {
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -71,28 +66,29 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(screen.getByTestId("field-base-timepicker-selector")).toHaveAttribute("disabled");
+		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
+		expect(picker).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom placeholder", () => {
 		const placeholder = "select item";
 		renderComponent({ placeholder });
 
-		expect(screen.getByTestId(componentTestId).querySelector("input")).toHaveAttribute("placeholder", placeholder);
+		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
+		expect(picker).toHaveAttribute("placeholder", placeholder);
 	});
 
 	it("should be able to select hour and minutes", async () => {
 		renderComponent();
 
-		const picker = screen.getByTestId(componentTestId).querySelector("input");
+		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
 		await waitFor(() => fireEvent.click(picker));
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(hourButtonId))); // Increment hours
-		await waitFor(() => fireEvent.click(screen.getByTestId(minuteButtonId))); // Increment minutes
-		await waitFor(() => fireEvent.click(screen.getByTestId(confirmButtonId)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase minute" })));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase hour" })));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "confirm selection" })));
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: "01:00am" }));
 	});
 
@@ -101,21 +97,21 @@ describe(fieldType, () => {
 		jest.spyOn(LocalTime, "now").mockReturnValue(LocalTime.parse(time));
 		renderComponent({ useCurrentTime: true });
 
-		expect(screen.getByTestId(componentTestId).querySelector("input")).toHaveAttribute("value", `${time}pm`);
+		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
+		expect(picker).toHaveAttribute("value", `${time}pm`);
 	});
 
 	it("should be able to support 24 hour time format", async () => {
 		renderComponent({ is24HourFormat: true });
 
-		const picker = screen.getByTestId(componentTestId).querySelector("input");
+		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
 		await waitFor(() => fireEvent.click(picker));
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(hourButtonId))); // Increment hours
-		await waitFor(() => fireEvent.click(screen.getByTestId(minuteButtonId))); // Increment minutes
-		await waitFor(() => fireEvent.click(screen.getByTestId(confirmButtonId)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase minute" })));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase hour" })));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "confirm selection" })));
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: "01:00" }));
 	});
 });
