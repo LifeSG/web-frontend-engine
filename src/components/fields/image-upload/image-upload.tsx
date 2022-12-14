@@ -263,6 +263,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				maxSizeInKb={maxFileSize}
 				dimensions={dimensions}
 				errorMessage={otherProps.error?.message}
+				validation={validation}
 			/>
 			{renderReviewPrompt()}
 			{renderImageReviewModal()}

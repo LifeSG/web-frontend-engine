@@ -4,7 +4,7 @@ import { usePrevious } from "../../../../utils/hooks";
 import { DragUpload, ERROR_MESSAGES, IDragUploadRef } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, TImageUploadAcceptedFileType } from "../types";
+import { EImageStatus, IImage, IImageUploadValidationRule, TImageUploadAcceptedFileType } from "../types";
 import { FileItem } from "./file-item";
 import {
 	AddButton,
@@ -28,6 +28,7 @@ interface IProps {
 	maxFiles: number;
 	maxSizeInKb: number;
 	title: string;
+	validation: IImageUploadValidationRule[];
 }
 
 /**
@@ -49,6 +50,7 @@ export const ImageInput = (props: IProps) => {
 		maxFiles,
 		maxSizeInKb,
 		title,
+		validation,
 	} = props;
 	const { images: files, setImages: setFiles, setErrorCount } = useContext(ImageContext);
 	const dragUploadRef = createRef<IDragUploadRef>();
@@ -120,6 +122,7 @@ export const ImageInput = (props: IProps) => {
 					fileItem={fileItem}
 					maxSize={maxSizeInKb}
 					accepts={accepts}
+					validation={validation}
 					onDelete={handleDeleteFile}
 				/>
 			);
@@ -145,11 +148,20 @@ export const ImageInput = (props: IProps) => {
 	};
 
 	const renderFileExceededAlert = () => {
+		const lengthRule = validation?.find((rule) => "length" in rule);
+		const maxRule = validation?.find((rule) => "max" in rule);
+		let errorMessage = lengthRule?.errorMessage || maxRule?.errorMessage;
+		if (!errorMessage) {
+			if (remainingPhotos < 1 || files.length) {
+				errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles);
+			} else {
+				errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
+			}
+		}
+
 		return (
 			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "file-exceeded-error")}>
-				{remainingPhotos < 1 || files.length === 0
-					? ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles)
-					: ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos)}
+				{errorMessage}
 			</AlertContainer>
 		);
 	};

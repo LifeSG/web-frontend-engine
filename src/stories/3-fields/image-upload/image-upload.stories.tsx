@@ -228,7 +228,7 @@ AcceptedFileTypes.args = {
 		label: "Provide images",
 		fieldType: "image-upload",
 		description: "Accepts only png format",
-		validation: [{ fileType: ["png"] }],
+		validation: [{ fileType: ["png"], errorMessage: "Accepts only png format" }],
 	},
 };
 
@@ -295,7 +295,7 @@ MaxImages.args = {
 		label: "Provide images",
 		fieldType: "image-upload",
 		description: "Upload up to 2 images",
-		validation: [{ max: 2 }],
+		validation: [{ max: 2, errorMessage: "Upload up to 2 images" }],
 	},
 };
 
@@ -305,7 +305,7 @@ MaxFileSize.args = {
 		label: "Provide images",
 		fieldType: "image-upload",
 		description: "Max 100kb",
-		validation: [{ maxSize: 100 }],
+		validation: [{ maxSize: 100, errorMessage: "Max 100kb" }],
 	},
 };
 

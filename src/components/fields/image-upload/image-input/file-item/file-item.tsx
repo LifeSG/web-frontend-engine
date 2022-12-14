@@ -3,7 +3,7 @@ import { Text } from "@lifesg/react-design-system/text";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
-import { EImageStatus, IImage, TImageUploadAcceptedFileType } from "../../types";
+import { EImageStatus, IImage, IImageUploadValidationRule, TImageUploadAcceptedFileType } from "../../types";
 import {
 	CellDeleteButton,
 	CellFileSize,
@@ -24,10 +24,11 @@ interface IProps {
 	fileItem: IImage;
 	maxSize: number;
 	accepts: TImageUploadAcceptedFileType[];
+	validation: IImageUploadValidationRule[];
 	onDelete: (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, onDelete }: IProps) => {
+export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, onDelete, validation }: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -58,18 +59,25 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, 
 	// =============================================================================
 	useEffect(() => {
 		switch (status) {
-			case EImageStatus.ERROR_FORMAT:
+			case EImageStatus.ERROR_FORMAT: {
+				const fileTypeRule = validation?.find((rule) => "fileType" in rule);
+				const errorMessage = fileTypeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").FILE_TYPE(accepts);
 				setError(true);
-				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").FILE_TYPE(accepts));
+				setErrorMessage(errorMessage);
 				break;
+			}
 			case EImageStatus.ERROR_GENERIC:
 				setError(true);
 				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").GENERIC);
 				break;
-			case EImageStatus.ERROR_SIZE:
+			case EImageStatus.ERROR_SIZE: {
+				const fileSizeRule = validation?.find((rule) => "maxSize" in rule);
+				const errorMessage =
+					fileSizeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxSize);
 				setError(true);
-				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxSize));
+				setErrorMessage(errorMessage);
 				break;
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [status, dataURL, file.type, maxSize]);
