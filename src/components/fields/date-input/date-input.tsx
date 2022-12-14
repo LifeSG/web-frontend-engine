@@ -140,6 +140,7 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			aria-label={id}
 			data-testid={TestHelper.generateId(id, "date")}
 			label={label}
 			errorMessage={error?.message}
