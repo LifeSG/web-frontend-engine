@@ -5,7 +5,7 @@ import {
 	TFrontendEngineFieldSchema,
 } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME } from "../../../common";
+import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME } from "../../../common";
 
 const submitFn = jest.fn();
 const fieldOneId = "field1";
@@ -14,7 +14,7 @@ const fieldThreeId = "field3";
 
 const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
 	const json: IFrontendEngineData = {
-		id: "test",
+		id: FRONTEND_ENGINE_ID,
 		fields: {
 			...fields,
 			[SUBMIT_BUTTON_ID]: {

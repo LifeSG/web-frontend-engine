@@ -3,7 +3,14 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ITimePickerSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideField, TOverrideSchema } from "../../../common";
+import {
+	ERROR_MESSAGE,
+	FRONTEND_ENGINE_ID,
+	SUBMIT_BUTTON_ID,
+	SUBMIT_BUTTON_NAME,
+	TOverrideField,
+	TOverrideSchema,
+} from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
@@ -11,7 +18,7 @@ const fieldType = "time";
 
 const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
-		id: "test",
+		id: FRONTEND_ENGINE_ID,
 		fields: {
 			[componentId]: {
 				label: "TimePicker",
