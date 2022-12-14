@@ -1,13 +1,11 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ICheckboxGroupSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
-import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "checkbox";
-const componentTestId = TestHelper.generateId(componentId, fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -39,18 +37,23 @@ describe(fieldType, () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		expect(screen.getAllByTestId(componentTestId)).toHaveLength(2);
+		const checkboxes = screen
+			.getAllByRole("checkbox")
+			.map((checkbox) => checkbox.querySelector("input"))
+			.filter(Boolean);
+
+		expect(checkboxes).toHaveLength(2);
 	});
 
 	it("should be able to support default values", async () => {
 		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(
-			screen.getAllByTestId("checkbox").forEach((checkbox) => {
-				if (defaultValues.includes(checkbox.querySelector("input").value)) {
+			screen.getAllByRole("checkbox").forEach((checkbox) => {
+				if (defaultValues.includes(checkbox.nodeValue)) {
 					expect(checkbox.querySelector("svg")).toBeInTheDocument();
 				}
 			})
@@ -61,7 +64,7 @@ describe(fieldType, () => {
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -69,32 +72,34 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+
 		expect(
-			screen.getAllByTestId(componentTestId).forEach((input) => {
-				expect(input).toHaveAttribute("disabled");
+			screen.getAllByRole("checkbox").forEach((checkbox) => {
+				expect(checkbox).toHaveAttribute("disabled");
 			})
 		);
-
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
 	});
 
 	it("should be able to toggle the checkboxes", async () => {
 		renderComponent();
-		const checkboxes = screen.getAllByTestId("checkbox");
+		const checkboxes = screen
+			.getAllByRole("checkbox")
+			.map((checkbox) => checkbox.querySelector("input"))
+			.filter(Boolean);
 
-		await waitFor(() => fireEvent.click(checkboxes[0].querySelector("input")));
-		await waitFor(() => fireEvent.click(checkboxes[1].querySelector("input")));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(checkboxes[0]));
+		await waitFor(() => fireEvent.click(checkboxes[1]));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
 
-		await waitFor(() => fireEvent.click(checkboxes[0].querySelector("input")));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(checkboxes[0]));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 
-		await waitFor(() => fireEvent.click(checkboxes[1].querySelector("input")));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(checkboxes[1]));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 
@@ -104,9 +109,13 @@ describe(fieldType, () => {
 		${"default"} | ${"2rem"}
 	`("should be support different displaySizes", ({ displaySize, expected }) => {
 		renderComponent({ displaySize: displaySize });
+		const checkboxes = screen
+			.getAllByRole("checkbox")
+			.map((checkbox) => checkbox.querySelector("div"))
+			.filter(Boolean);
 
 		expect(
-			screen.getAllByTestId("checkbox").forEach((checkbox) => {
+			checkboxes.forEach((checkbox) => {
 				expect(checkbox).toHaveStyle({ width: expected, height: expected });
 			})
 		);
