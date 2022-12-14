@@ -164,6 +164,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			aria-label={id}
 			data-testid={TestHelper.generateId(id, "contact")}
 			name={name}
 			disabled={disabled}
