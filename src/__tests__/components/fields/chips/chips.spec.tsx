@@ -1,17 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { IChipsSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
-import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "chips";
-const componentTestId = TestHelper.generateId(componentId, fieldType);
 
-const textareaLabel = "Durian";
-const textareaId = `chips-${textareaLabel}`;
-const textareaTestId = TestHelper.generateId(textareaId, "textarea");
+const textareaLabel = "D";
+const textareaRoleName = `chips-${textareaLabel}`;
 
 const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -43,32 +40,25 @@ describe(fieldType, () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+
+		expect(screen.getByRole("button", { name: "A" })).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "B" })).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
 		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
-		expect(
-			screen
-				.getByTestId(componentTestId)
-				.querySelectorAll("button")
-				.forEach((button) => {
-					if (defaultValues.includes(button.querySelector("span").textContent)) {
-						expect(button).toHaveStyle({ "background-color": "#A4A4A4" });
-					}
-				})
-		);
+		expect(screen.getByRole("button", { name: "A" })).toHaveStyle({ "background-color": "#A4A4A4" });
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -76,55 +66,51 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(
-			screen
-				.getByTestId(componentTestId)
-				.querySelectorAll("button")
-				.forEach((button) => {
-					expect(button).toHaveAttribute("disabled");
-				})
-		);
+		expect(screen.getByRole("button", { name: "A" })).toHaveAttribute("disabled");
+		expect(screen.getByRole("button", { name: "B" })).toHaveAttribute("disabled");
 	});
 
 	it("should be able to toggle the chips", async () => {
 		renderComponent();
-		const chips = screen.getByTestId(componentTestId).querySelectorAll("button");
+		const apple = screen.getByRole("button", { name: "A" });
+		const berry = screen.getByRole("button", { name: "B" });
 
-		await waitFor(() => fireEvent.click(chips[0]));
-		await waitFor(() => fireEvent.click(chips[1]));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(apple));
+		await waitFor(() => fireEvent.click(berry));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
 
-		await waitFor(() => fireEvent.click(chips[0]));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(apple));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 
-		await waitFor(() => fireEvent.click(chips[1]));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(berry));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 
 	it("should be able to support single selection", async () => {
 		renderComponent({ multi: false });
-		const chips = screen.getByTestId(componentTestId).querySelectorAll("button");
+		const apple = screen.getByRole("button", { name: "A" });
+		const berry = screen.getByRole("button", { name: "B" });
 
-		await waitFor(() => fireEvent.click(chips[0]));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(apple));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple"] }));
 
-		await waitFor(() => fireEvent.click(chips[1]));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(berry));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 	});
 
 	it("should be able to render textarea upon selection", async () => {
 		renderComponent({ textarea: { label: textareaLabel } });
+		const chip = screen.getByRole("button", { name: textareaLabel });
 
-		expect(screen.queryByTestId(textareaTestId)).not.toBeInTheDocument();
+		expect(screen.queryByRole("textbox", { name: textareaRoleName })).not.toBeInTheDocument();
 
-		const chip = screen.getByText(textareaLabel);
 		await waitFor(() => fireEvent.click(chip));
-		expect(screen.queryByTestId(textareaTestId)).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: textareaRoleName })).toBeInTheDocument();
 	});
 
 	describe("textarea", () => {
@@ -133,9 +119,9 @@ describe(fieldType, () => {
 				textarea: { label: textareaLabel, validation: [{ required: true, errorMessage: ERROR_MESSAGE }] },
 			});
 
-			const chip = screen.getByText(textareaLabel);
+			const chip = screen.getByRole("button", { name: textareaLabel });
 			await waitFor(() => fireEvent.click(chip));
-			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -145,10 +131,10 @@ describe(fieldType, () => {
 				textarea: { label: textareaLabel, resizable: true },
 			});
 
-			const chip = screen.getByText(textareaLabel);
+			const chip = screen.getByRole("button", { name: textareaLabel });
 			await waitFor(() => fireEvent.click(chip));
 
-			expect(screen.getByTestId(textareaTestId)).toHaveStyle({ resize: "vertical" });
+			expect(screen.getByRole("textbox", { name: textareaRoleName })).toHaveStyle({ resize: "vertical" });
 		});
 
 		it("should be able to support custom rows", async () => {
@@ -156,10 +142,10 @@ describe(fieldType, () => {
 				textarea: { label: textareaLabel, rows: 1 },
 			});
 
-			const chip = screen.getByText(textareaLabel);
+			const chip = screen.getByRole("button", { name: textareaLabel });
 			await waitFor(() => fireEvent.click(chip));
 
-			expect(screen.getByTestId(textareaTestId)).toHaveAttribute("rows", "1");
+			expect(screen.getByRole("textbox", { name: textareaRoleName })).toHaveAttribute("rows", "1");
 		});
 	});
 });
