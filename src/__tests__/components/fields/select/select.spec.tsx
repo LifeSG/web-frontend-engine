@@ -2,17 +2,22 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ICheckboxGroupSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideField, TOverrideSchema } from "../../../common";
+import {
+	ERROR_MESSAGE,
+	FRONTEND_ENGINE_ID,
+	SUBMIT_BUTTON_ID,
+	SUBMIT_BUTTON_NAME,
+	TOverrideField,
+	TOverrideSchema,
+} from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "select";
-const componentTestId = TestHelper.generateId(componentId, fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
-		id: "test",
+		id: FRONTEND_ENGINE_ID,
 		fields: {
 			[componentId]: {
 				label: "Select",
