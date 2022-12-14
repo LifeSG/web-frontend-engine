@@ -2,13 +2,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IMultiSelectSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "multi-select";
-const componentTestId = TestHelper.generateId(componentId, fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -40,32 +38,25 @@ describe(fieldType, () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+
+		expect(screen.getByRole("button", { name: componentId })).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
 		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: componentId })));
+		expect(screen.getByRole("button", { name: "A" }).querySelector("svg")).toBeInTheDocument();
 
-		expect(
-			screen
-				.getByTestId("dropdown-list")
-				.querySelectorAll("li")
-				.forEach((list) => {
-					if (defaultValues.includes(list.textContent)) {
-						expect(list.querySelector("input")).toBeChecked();
-					}
-				})
-		);
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -73,14 +64,14 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(screen.getByTestId(componentTestId)).toHaveAttribute("disabled");
+		expect(screen.getByRole("button", { name: componentId }).parentElement).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom list style width", () => {
 		const width = "24rem";
 		renderComponent({ listStyleWidth: width });
 
-		expect(screen.getByTestId("dropdown-list")).toHaveStyle({ width });
+		expect(screen.getByRole("list")).toHaveStyle({ width });
 	});
 
 	it("should be able to support custom placeholder", () => {
@@ -92,25 +83,30 @@ describe(fieldType, () => {
 
 	it("should be able to toggle the checkboxes", async () => {
 		renderComponent();
-		const dropdownButtons = screen.getAllByTestId("list-item");
 
-		await waitFor(() => fireEvent.click(dropdownButtons[0]));
-		await waitFor(() => fireEvent.click(dropdownButtons[1]));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: componentId })));
+		const apple = screen.getByRole("button", { name: "A" });
+		const berry = screen.getByRole("button", { name: "B" });
+
+		await waitFor(() => fireEvent.click(apple));
+		await waitFor(() => fireEvent.click(berry));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
 
-		await waitFor(() => fireEvent.click(dropdownButtons[0]));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(apple));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 
-		await waitFor(() => fireEvent.click(dropdownButtons[1]));
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(berry));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 
 	it("should be able to toggle all the checkboxes at once", async () => {
 		renderComponent();
-		const selectAllButton = screen.getByText("Select all");
+
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: componentId })));
+		const selectAllButton = screen.getByRole("button", { name: "Select all" });
 
 		await waitFor(() => fireEvent.click(selectAllButton));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));

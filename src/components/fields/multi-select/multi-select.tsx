@@ -74,6 +74,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 			<InputMultiSelect
 				{...otherSchema}
 				id={id}
+				aria-label={id}
 				data-testid={TestHelper.generateId(id, "multi-select")}
 				name={name}
 				options={options}
