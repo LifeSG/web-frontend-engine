@@ -67,6 +67,7 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			aria-label={id}
 			data-testid={TestHelper.generateId(id, "time")}
 			label={label}
 			errorMessage={error?.message}
