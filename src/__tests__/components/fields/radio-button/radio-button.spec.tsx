@@ -2,13 +2,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IRadioButtonGroupSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "radio";
-const componentTestId = TestHelper.generateId(componentId, fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<IRadioButtonGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -40,29 +38,30 @@ describe(fieldType, () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		expect(screen.getAllByTestId(componentTestId)).toHaveLength(2);
+
+		expect(screen.getAllByRole("radio", { name: componentId })).toHaveLength(2);
 	});
 
 	it("should be able to support default values", async () => {
 		const defaultValue = "Apple";
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
 		expect(
-			screen.getAllByTestId(componentTestId).forEach((radio) => {
+			screen.getAllByRole("radio", { name: componentId }).forEach((radio) => {
 				if (radio.nodeValue === defaultValue) {
 					expect(radio).toBeChecked();
 				}
 			})
 		);
+
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
 
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -71,7 +70,7 @@ describe(fieldType, () => {
 		renderComponent({ disabled: true });
 
 		expect(
-			screen.getAllByTestId(componentTestId).forEach((radio) => {
+			screen.getAllByRole("radio", { name: componentId }).forEach((radio) => {
 				expect(radio).toHaveAttribute("disabled");
 			})
 		);
