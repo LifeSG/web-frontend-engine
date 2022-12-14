@@ -9,7 +9,6 @@ const parentId = "wrapper";
 const parentFieldType = "div";
 const childId = "field1";
 const childFieldType = "text";
-const childTestId = TestHelper.generateId(childId, childFieldType);
 
 const renderComponent = (
 	wrapperType: TWrapperType = "div",
@@ -41,8 +40,8 @@ describe("wrapper", () => {
 	it("should be able to render other fields as children", () => {
 		renderComponent();
 
-		expect(screen.getByTestId(childTestId)).toBeInTheDocument();
-		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
+		expect(screen.getByRole("textbox", { name: childId })).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: childId }).tagName).toBe("INPUT");
 	});
 
 	it("should be able to render string as children", () => {
@@ -54,7 +53,6 @@ describe("wrapper", () => {
 
 	it("should be able to render nested children", () => {
 		const nestedId = "nested";
-		const nestedTestId = TestHelper.generateId(nestedId, parentFieldType);
 		renderComponent(undefined, {
 			[nestedId]: {
 				fieldType: parentFieldType,
@@ -67,19 +65,35 @@ describe("wrapper", () => {
 			},
 		});
 
-		expect(screen.getByTestId(nestedTestId)).toBeInTheDocument();
-		expect(screen.getByTestId(childTestId)).toBeInTheDocument();
-		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
+		expect(screen.getByRole("generic", { name: nestedId })).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: childId })).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: childId }).tagName).toBe("INPUT");
 	});
 
-	it.each<TWrapperType>(["div", "span", "section", "header", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "p"])(
-		"should be able to render with %s element type",
-		(type) => {
-			const text = "hello world";
-			renderComponent(type, text);
+	it.each`
+		role             | element
+		${"generic"}     | ${"div"}
+		${"generic"}     | ${"span"}
+		${"region"}      | ${"section"}
+		${"banner"}      | ${"header"}
+		${"contentinfo"} | ${"footer"}
+		${"heading"}     | ${"h1"}
+		${"heading"}     | ${"h2"}
+		${"heading"}     | ${"h3"}
+		${"heading"}     | ${"h4"}
+		${"heading"}     | ${"h5"}
+		${"heading"}     | ${"h6"}
+		${null}          | ${"p"}
+	`("should be able to render with $element element type", ({ role, element }) => {
+		const text = "hello world";
+		renderComponent(element, text);
 
-			expect(screen.getByTestId(TestHelper.generateId(parentId, type))).toBeInTheDocument();
-			expect(screen.getByText(text)).toBeInTheDocument();
+		if (role) {
+			expect(screen.getByRole(role, { name: parentId })).toBeInTheDocument();
+		} else {
+			expect(screen.getByTestId(TestHelper.generateId(parentId, element))).toBeInTheDocument();
 		}
-	);
+
+		expect(screen.getByText(text)).toBeInTheDocument();
+	});
 });
