@@ -2,17 +2,13 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IEmailSchema, INumberSchema, ITextfieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
 const defaultFieldType = "text";
 const emailFieldType = "email";
 const numberFieldType = "numeric";
-const defaultTestId = TestHelper.generateId(componentId, defaultFieldType);
-const emailTestId = TestHelper.generateId(componentId, emailFieldType);
-const numberTestId = TestHelper.generateId(componentId, numberFieldType);
 
 const renderComponent = (
 	overrideField?: Partial<ITextfieldSchema | IEmailSchema | INumberSchema> | undefined,
@@ -45,13 +41,13 @@ describe("textfield", () => {
 		it("should be able to render the field", () => {
 			renderComponent();
 
-			expect(screen.getByTestId(defaultTestId)).toBeInTheDocument();
+			expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
 			renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -59,17 +55,17 @@ describe("textfield", () => {
 		it("should apply inputMode according to its type", () => {
 			renderComponent();
 
-			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("inputMode", defaultFieldType);
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("inputMode", defaultFieldType);
 		});
 
 		it("should support default value", async () => {
 			const defaultValue = "hello";
 			renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
-			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
-			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 
 		it("should pass other props into the field", () => {
@@ -80,10 +76,10 @@ describe("textfield", () => {
 				disabled: true,
 			});
 
-			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("maxLength", "10");
-			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("placeholder", "placeholder");
-			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("readonly");
-			expect(screen.getByTestId(defaultTestId)).toHaveAttribute("disabled");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("maxLength", "10");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("readonly");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("disabled");
 		});
 	});
 
@@ -95,16 +91,16 @@ describe("textfield", () => {
 		it("should be able to render the field", () => {
 			renderComponent({ fieldType: emailFieldType });
 
-			expect(screen.getByTestId(emailTestId)).toBeInTheDocument();
+			expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
 		});
 
 		it("should validate email format", async () => {
 			renderComponent({ fieldType: emailFieldType });
 
-			fireEvent.change(screen.getByTestId(emailTestId), { target: { value: "hello" } });
-			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+			fireEvent.change(screen.getByRole("textbox", { name: componentId }), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
-			expect(screen.queryByTestId("field-error-message")).toBeInTheDocument();
+			expect(screen.getByRole("heading", { name: "Invalid email address" })).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
@@ -113,7 +109,7 @@ describe("textfield", () => {
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -121,17 +117,17 @@ describe("textfield", () => {
 		it("should apply inputMode according to its type", () => {
 			renderComponent({ fieldType: emailFieldType });
 
-			expect(screen.getByTestId(emailTestId)).toHaveAttribute("inputMode", emailFieldType);
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("inputMode", emailFieldType);
 		});
 
 		it("should support default value", async () => {
 			const defaultValue = "john@doe.tld";
 			renderComponent({ fieldType: emailFieldType }, { defaultValues: { [componentId]: defaultValue } });
 
-			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
-			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 
 		it("should pass other props into the field", () => {
@@ -143,10 +139,10 @@ describe("textfield", () => {
 				disabled: true,
 			});
 
-			expect(screen.getByTestId(emailTestId)).toHaveAttribute("maxLength", "10");
-			expect(screen.getByTestId(emailTestId)).toHaveAttribute("placeholder", "placeholder");
-			expect(screen.getByTestId(emailTestId)).toHaveAttribute("readOnly");
-			expect(screen.getByTestId(emailTestId)).toHaveAttribute("disabled");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("maxLength", "10");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("readOnly");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("disabled");
 		});
 	});
 
@@ -158,7 +154,7 @@ describe("textfield", () => {
 		it("should be able to render the field", () => {
 			renderComponent({ fieldType: numberFieldType });
 
-			expect(screen.getByTestId(numberTestId)).toBeInTheDocument();
+			expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
@@ -167,7 +163,7 @@ describe("textfield", () => {
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -175,17 +171,17 @@ describe("textfield", () => {
 		it("should apply inputMode according to its type", () => {
 			renderComponent({ fieldType: numberFieldType });
 
-			expect(screen.getByTestId(numberTestId)).toHaveAttribute("inputMode", numberFieldType);
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("inputMode", numberFieldType);
 		});
 
 		it("should support default value", async () => {
 			const defaultValue = 1;
 			renderComponent({ fieldType: numberFieldType }, { defaultValues: { [componentId]: defaultValue } });
 
-			await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
-
-			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 
 		it("should pass other props into the field", () => {
@@ -196,9 +192,9 @@ describe("textfield", () => {
 				disabled: true,
 			});
 
-			expect(screen.getByTestId(numberTestId)).toHaveAttribute("placeholder", "placeholder");
-			expect(screen.getByTestId(numberTestId)).toHaveAttribute("readOnly");
-			expect(screen.getByTestId(numberTestId)).toHaveAttribute("disabled");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("readOnly");
+			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("disabled");
 		});
 	});
 });
