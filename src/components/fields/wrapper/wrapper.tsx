@@ -83,7 +83,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		return <>{fields}</>;
 	}
 	return (
-		<Element {...otherSchema} {...{ id, "data-testid": TestHelper.generateId(id, fieldType) }}>
+		<Element {...otherSchema} {...{ id, "data-testid": TestHelper.generateId(id, fieldType), "aria-label": id }}>
 			{fields}
 		</Element>
 	);
