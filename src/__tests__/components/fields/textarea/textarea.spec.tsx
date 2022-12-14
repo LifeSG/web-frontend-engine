@@ -2,13 +2,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ITextareaSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-import { TestHelper } from "../../../../utils";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, TOverrideField, TOverrideSchema } from "../../../common";
+import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME, TOverrideField, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "textarea";
-const componentTestId = TestHelper.generateId(componentId, fieldType);
 
 const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -37,13 +35,13 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -52,10 +50,10 @@ describe(fieldType, () => {
 		const defaultValue = "hello";
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
-		await waitFor(() => fireEvent.click(screen.getByTestId(SUBMIT_BUTTON_ID)));
+		expect(screen.getByText(defaultValue)).toBeInTheDocument();
 
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
-		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 	});
 
 	it("should be able to show character counter if maxLength is defined", () => {
@@ -75,10 +73,10 @@ describe(fieldType, () => {
 	it("should append text upon clicking a pill", () => {
 		renderComponent({ chipTexts: ["Pill 1", "Pill 2", "Pill 3"] });
 
-		fireEvent.change(screen.getByTestId(componentTestId), { target: { value: "Hello" } });
+		fireEvent.change(screen.getByRole("textbox", { name: componentId }), { target: { value: "Hello" } });
 		fireEvent.click(screen.getByText("Pill 1"));
 
-		expect(screen.getByDisplayValue("Hello Pill 1")).toBeInTheDocument();
+		expect(screen.getByText("Hello Pill 1")).toBeInTheDocument();
 	});
 
 	it("should pass other props into the field", () => {
@@ -88,9 +86,10 @@ describe(fieldType, () => {
 			readOnly: true,
 			disabled: true,
 		});
-		expect(screen.getByTestId(componentTestId)).toHaveAttribute("rows", "5");
-		expect(screen.getByTestId(componentTestId)).toHaveAttribute("placeholder", "placeholder");
-		expect(screen.getByTestId(componentTestId)).toHaveAttribute("readonly");
-		expect(screen.getByTestId(componentTestId)).toHaveAttribute("disabled");
+
+		expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("rows", "5");
+		expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("placeholder", "placeholder");
+		expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("readonly");
+		expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("disabled");
 	});
 });
