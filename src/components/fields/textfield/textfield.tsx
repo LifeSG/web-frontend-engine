@@ -86,6 +86,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			aria-label={id}
 			data-testid={TestHelper.generateId(id, fieldType)}
 			type={fieldType}
 			label={label}
