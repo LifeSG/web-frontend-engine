@@ -108,7 +108,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"select-disasbled": {
+	"select-disabled": {
 		fieldType: "select",
 		label: "Fruits",
 		options: [
