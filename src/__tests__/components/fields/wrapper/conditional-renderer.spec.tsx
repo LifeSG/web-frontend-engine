@@ -4,7 +4,7 @@ import {
 	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
 } from "../../../../components/frontend-engine";
-import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getSubmitButton, SUBMIT_BUTTON_ID } from "../../../common";
+import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getSubmitButton, getSubmitButtonProps } from "../../../common";
 
 const submitFn = jest.fn();
 const fieldOneId = "field1";
@@ -19,10 +19,7 @@ const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => 
 		id: FRONTEND_ENGINE_ID,
 		fields: {
 			...fields,
-			[SUBMIT_BUTTON_ID]: {
-				label: "Submit",
-				fieldType: "submit",
-			},
+			...getSubmitButtonProps(),
 		},
 	};
 

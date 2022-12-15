@@ -2,7 +2,13 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IEmailSchema, INumberSchema, ITextfieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getSubmitButton, SUBMIT_BUTTON_ID, TOverrideSchema } from "../../../common";
+import {
+	ERROR_MESSAGE,
+	FRONTEND_ENGINE_ID,
+	getSubmitButton,
+	getSubmitButtonProps,
+	TOverrideSchema,
+} from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
@@ -23,10 +29,7 @@ const renderComponent = (
 				fieldType: defaultFieldType,
 				...overrideField,
 			},
-			[SUBMIT_BUTTON_ID]: {
-				label: "Submit",
-				fieldType: "submit",
-			},
+			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
