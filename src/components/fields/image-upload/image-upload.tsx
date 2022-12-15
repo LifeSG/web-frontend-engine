@@ -118,15 +118,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					}
 				)
 				.test(
-					"max-files",
-					maxFilesRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles),
-					(value) => {
-						if (!value || !Array.isArray(value) || !maxFilesRule?.maxFiles) return true;
-
-						return value.length <= maxFilesRule?.maxFiles;
-					}
-				)
-				.test(
 					"max-size",
 					maxFileSizeRule?.errorMessage ||
 						ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxFileSizeRule?.maxSize),
@@ -135,7 +126,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 						return value.reduce((accumulator, file) => {
 							if (
 								!accumulator ||
-								FileHelper.getFilesizeFromBase64(file.dataURL) > maxFileSizeRule?.maxSize
+								FileHelper.getFilesizeFromBase64(file.dataURL) > maxFileSizeRule?.maxSize * 1024
 							)
 								return false;
 							return true;

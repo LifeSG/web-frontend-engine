@@ -190,7 +190,7 @@ export const ImageManager = (props: IProps) => {
 			const dataURL = await ImageHelper.convertBlob(image.file, FileHelper.fileExtensionToMimeType(outputType));
 			const filesize = FileHelper.getFilesizeFromBase64(dataURL);
 
-			if (maxSizeInKb && filesize > maxSizeInKb * 1000) {
+			if (maxSizeInKb && filesize > maxSizeInKb * 1024) {
 				setImages((prev) => {
 					const updatedImages = [...prev];
 					updatedImages[index] = {
