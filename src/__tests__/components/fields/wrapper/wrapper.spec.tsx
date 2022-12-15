@@ -3,7 +3,7 @@ import { FrontendEngine } from "../../../../components";
 import { TWrapperType } from "../../../../components/fields/wrapper";
 import { IFrontendEngineData, TFrontendEngineFieldSchema } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
-import { SUBMIT_BUTTON_ID } from "../../../common";
+import { FRONTEND_ENGINE_ID, getSubmitButtonProps } from "../../../common";
 
 const parentId = "wrapper";
 const parentFieldType = "div";
@@ -22,16 +22,13 @@ const renderComponent = (
 		},
 	};
 	const json: IFrontendEngineData = {
-		id: "test",
+		id: FRONTEND_ENGINE_ID,
 		fields: {
 			wrapper: {
 				fieldType: wrapperType,
 				children,
 			},
-			[SUBMIT_BUTTON_ID]: {
-				label: "Submit",
-				fieldType: "submit",
-			},
+			...getSubmitButtonProps(),
 		},
 	};
 	return render(<FrontendEngine data={json} />);

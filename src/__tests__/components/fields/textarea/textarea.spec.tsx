@@ -6,7 +6,7 @@ import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	getSubmitButton,
-	SUBMIT_BUTTON_ID,
+	getSubmitButtonProps,
 	TOverrideField,
 	TOverrideSchema,
 } from "../../../common";
@@ -25,10 +25,7 @@ const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overri
 				fieldType: "textarea",
 				...overrideField,
 			},
-			[SUBMIT_BUTTON_ID]: {
-				label: "Submit",
-				fieldType: "submit",
-			},
+			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
