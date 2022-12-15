@@ -1,6 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IContactNumberSchema } from "../../../components/fields";
+import { getCountries } from "../../../components/fields/contact-number/data";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
@@ -38,13 +39,13 @@ export default {
 			description: "Specifies a default country for the input field",
 			table: {
 				type: {
-					// NOTE: change to explicit??
 					summary: "TCountry",
 				},
 			},
 			control: {
-				type: "text",
+				type: "select",
 			},
+			options: getCountries(),
 		},
 		enableSearch: {
 			description: "Specifies if the given list of country codes can be searched",
