@@ -3,12 +3,13 @@ import { FrontendEngine } from "../../../../components";
 import { TWrapperType } from "../../../../components/fields/wrapper";
 import { IFrontendEngineData, TFrontendEngineFieldSchema } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
-import { FRONTEND_ENGINE_ID, SUBMIT_BUTTON_ID } from "../../../common";
+import { SUBMIT_BUTTON_ID } from "../../../common";
 
 const parentId = "wrapper";
 const parentFieldType = "div";
 const childId = "field1";
 const childFieldType = "text";
+const childTestId = TestHelper.generateId(childId, childFieldType);
 
 const renderComponent = (
 	wrapperType: TWrapperType = "div",
@@ -21,7 +22,7 @@ const renderComponent = (
 		},
 	};
 	const json: IFrontendEngineData = {
-		id: FRONTEND_ENGINE_ID,
+		id: "test",
 		fields: {
 			wrapper: {
 				fieldType: wrapperType,
@@ -40,8 +41,8 @@ describe("wrapper", () => {
 	it("should be able to render other fields as children", () => {
 		renderComponent();
 
-		expect(screen.getByRole("textbox", { name: childId })).toBeInTheDocument();
-		expect(screen.getByRole("textbox", { name: childId }).tagName).toBe("INPUT");
+		expect(screen.getByTestId(childTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
 	});
 
 	it("should be able to render string as children", () => {
@@ -53,6 +54,7 @@ describe("wrapper", () => {
 
 	it("should be able to render nested children", () => {
 		const nestedId = "nested";
+		const nestedTestId = TestHelper.generateId(nestedId, parentFieldType);
 		renderComponent(undefined, {
 			[nestedId]: {
 				fieldType: parentFieldType,
@@ -65,35 +67,19 @@ describe("wrapper", () => {
 			},
 		});
 
-		expect(screen.getByRole("generic", { name: nestedId })).toBeInTheDocument();
-		expect(screen.getByRole("textbox", { name: childId })).toBeInTheDocument();
-		expect(screen.getByRole("textbox", { name: childId }).tagName).toBe("INPUT");
+		expect(screen.getByTestId(nestedTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(childTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
 	});
 
-	it.each`
-		role             | element
-		${"generic"}     | ${"div"}
-		${"generic"}     | ${"span"}
-		${"region"}      | ${"section"}
-		${"banner"}      | ${"header"}
-		${"contentinfo"} | ${"footer"}
-		${"heading"}     | ${"h1"}
-		${"heading"}     | ${"h2"}
-		${"heading"}     | ${"h3"}
-		${"heading"}     | ${"h4"}
-		${"heading"}     | ${"h5"}
-		${"heading"}     | ${"h6"}
-		${null}          | ${"p"}
-	`("should be able to render with $element element type", ({ role, element }) => {
-		const text = "hello world";
-		renderComponent(element, text);
+	it.each<TWrapperType>(["div", "span", "section", "header", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "p"])(
+		"should be able to render with %s element type",
+		(type) => {
+			const text = "hello world";
+			renderComponent(type, text);
 
-		if (role) {
-			expect(screen.getByRole(role, { name: parentId })).toBeInTheDocument();
-		} else {
-			expect(screen.getByTestId(TestHelper.generateId(parentId, element))).toBeInTheDocument();
+			expect(screen.getByTestId(TestHelper.generateId(parentId, type))).toBeInTheDocument();
+			expect(screen.getByText(text)).toBeInTheDocument();
 		}
-
-		expect(screen.getByText(text)).toBeInTheDocument();
-	});
+	);
 });

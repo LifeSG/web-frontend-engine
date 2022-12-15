@@ -4,13 +4,15 @@ import {
 	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
 } from "../../../../components/frontend-engine";
-import { TestHelper } from "../../../../utils";
 import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME } from "../../../common";
 
 const submitFn = jest.fn();
 const fieldOneId = "field1";
 const fieldTwoId = "field2";
 const fieldThreeId = "field3";
+const fieldOneLabel = "Field 1";
+const fieldTwoLabel = "Field 2";
+const fieldThreeLabel = "Field 3";
 
 const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
 	const json: IFrontendEngineData = {
@@ -48,22 +50,22 @@ describe("conditional-renderer", () => {
 		const fieldType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
-				label: "Field 1",
+				label: fieldOneLabel,
 				fieldType,
 			},
 			[fieldTwoId]: {
-				label: "Field 2",
+				label: fieldTwoLabel,
 				fieldType,
 				showIf: [{ [fieldOneId]: [config] }],
 			},
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: invalid } });
-		expect(screen.queryByRole("textbox", { name: fieldTwoId })).not.toBeInTheDocument();
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: invalid } });
+		expect(screen.queryByRole("textbox", { name: fieldTwoLabel })).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: valid } });
-		expect(screen.getByRole("textbox", { name: fieldTwoId })).toBeInTheDocument();
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: valid } });
+		expect(screen.getByRole("textbox", { name: fieldTwoLabel })).toBeInTheDocument();
 	});
 
 	it.each`
@@ -83,22 +85,22 @@ describe("conditional-renderer", () => {
 		const fieldType = "numeric";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
-				label: "Field 1",
+				label: fieldOneLabel,
 				fieldType,
 			},
 			[fieldTwoId]: {
-				label: "Field 2",
+				label: fieldTwoLabel,
 				fieldType,
 				showIf: [{ [fieldOneId]: [config] }],
 			},
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: invalid } });
-		expect(screen.queryByRole("textbox", { name: fieldTwoId })).not.toBeInTheDocument();
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: invalid } });
+		expect(screen.queryByRole("textbox", { name: fieldTwoLabel })).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: valid } });
-		expect(screen.getByRole("textbox", { name: fieldTwoId })).toBeInTheDocument();
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: valid } });
+		expect(screen.getByRole("textbox", { name: fieldTwoLabel })).toBeInTheDocument();
 	});
 
 	it.each`
@@ -118,7 +120,7 @@ describe("conditional-renderer", () => {
 		const fieldTwoType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
-				label: "Field 1",
+				label: fieldOneLabel,
 				fieldType: fieldOneType,
 				options: [
 					{ value: "Apple", label: "Apple" },
@@ -127,7 +129,7 @@ describe("conditional-renderer", () => {
 				],
 			},
 			[fieldTwoId]: {
-				label: "Field 2",
+				label: fieldTwoLabel,
 				fieldType: fieldTwoType,
 				showIf: [{ [fieldOneId]: [config] }],
 			},
@@ -137,7 +139,7 @@ describe("conditional-renderer", () => {
 		invalid?.forEach((value: string) => {
 			fireEvent.click(screen.getByText(value).closest("button"));
 		});
-		expect(screen.queryByRole("textbox", { name: fieldTwoId })).not.toBeInTheDocument();
+		expect(screen.queryByRole("textbox", { name: fieldTwoLabel })).not.toBeInTheDocument();
 
 		// fire invalid again to deselect values
 		invalid?.forEach((value: string) => {
@@ -146,77 +148,75 @@ describe("conditional-renderer", () => {
 		valid?.forEach((value: string) => {
 			fireEvent.click(screen.getByText(value).closest("button"));
 		});
-		expect(screen.getByRole("textbox", { name: fieldTwoId })).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: fieldTwoLabel })).toBeInTheDocument();
 	});
 
 	it("should support AND conditions", () => {
 		const fieldType = "text";
-		const fieldOneTestId = TestHelper.generateId(fieldOneId, fieldType);
-		const fieldTwoTestId = TestHelper.generateId(fieldTwoId, fieldType);
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
-				label: "Field 1",
+				label: fieldOneLabel,
 				fieldType,
 			},
 			[fieldTwoId]: {
-				label: "Field 1",
+				label: fieldTwoLabel,
 				fieldType,
 			},
 			[fieldThreeId]: {
-				label: "Field 2",
+				label: fieldThreeLabel,
 				fieldType,
 				showIf: [{ [fieldOneId]: [{ filled: true }], [fieldTwoId]: [{ filled: true }] }],
 			},
 		};
 		renderComponent(fields);
 
-		expect(screen.queryByRole("textbox", { name: fieldThreeId })).not.toBeInTheDocument();
+		expect(screen.queryByRole("textbox", { name: fieldThreeLabel })).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId(fieldOneTestId), { target: { value: "hello" } });
-		expect(screen.queryByRole("textbox", { name: fieldThreeId })).not.toBeInTheDocument();
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
+		expect(screen.queryByRole("textbox", { name: fieldThreeLabel })).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByTestId(fieldTwoTestId), { target: { value: "hello" } });
-		expect(screen.getByRole("textbox", { name: fieldThreeId })).toBeInTheDocument();
+		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "hello" } });
+		expect(screen.getByRole("textbox", { name: fieldThreeLabel })).toBeInTheDocument();
 	});
 
 	it("should support OR conditions", () => {
 		const fieldType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
-				label: "Field 1",
+				label: fieldOneLabel,
 				fieldType,
 			},
 			[fieldTwoId]: {
-				label: "Field 1",
+				label: fieldTwoLabel,
 				fieldType,
 			},
 			[fieldThreeId]: {
-				label: "Field 2",
+				label: fieldThreeLabel,
 				fieldType,
 				showIf: [{ [fieldOneId]: [{ filled: true }] }, { [fieldTwoId]: [{ filled: true }] }],
 			},
 		};
 		renderComponent(fields);
 
-		expect(screen.queryByRole("textbox", { name: fieldThreeId })).not.toBeInTheDocument();
+		expect(screen.queryByRole("textbox", { name: fieldThreeLabel })).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: "hello" } });
-		expect(screen.getByRole("textbox", { name: fieldThreeId })).toBeInTheDocument();
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
+		expect(screen.getByRole("textbox", { name: fieldThreeLabel })).toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: null } });
-		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoId }), { target: { value: "hello" } });
-		expect(screen.getByRole("textbox", { name: fieldThreeId })).toBeInTheDocument();
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: null } });
+		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "hello" } });
+		expect(screen.getByRole("textbox", { name: fieldThreeLabel })).toBeInTheDocument();
 	});
 
 	it("should remove validation schema for fields that are conditionally hidden", async () => {
 		const fieldType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
-				label: "Field 1",
+				label: fieldOneLabel,
 				fieldType,
 			},
 			[fieldTwoId]: {
-				label: "Field 2",
+				label: fieldTwoLabel,
 				fieldType,
 				showIf: [{ [fieldOneId]: [{ filled: true }, { min: 5 }] }],
 				validation: [
@@ -227,13 +227,13 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: "hello" } });
-		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoId }), { target: { value: "hi" } });
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
+		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: "hi" } });
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hi" } });
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 	});
@@ -242,20 +242,20 @@ describe("conditional-renderer", () => {
 		const fieldType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
-				label: "Field 1",
+				label: fieldOneLabel,
 				fieldType,
 			},
 			[fieldTwoId]: {
-				label: "Field 2",
+				label: fieldTwoLabel,
 				fieldType,
 				showIf: [{ [fieldOneId]: [{ min: 5 }] }],
 			},
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: "hello" } });
-		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoId }), { target: { value: "world" } });
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneId }), { target: { value: "hi" } });
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
+		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "world" } });
+		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hi" }));
