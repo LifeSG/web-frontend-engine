@@ -58,13 +58,17 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
-		expect(
-			screen.getAllByRole("checkbox").forEach((checkbox) => {
-				if (defaultValues.includes(checkbox.nodeValue)) {
-					expect(checkbox.querySelector("svg")).toBeInTheDocument();
+		screen
+			.getAllByRole("checkbox")
+			.map((checkbox) => checkbox.querySelector("input"))
+			.filter(Boolean)
+			.forEach((checkbox) => {
+				if (defaultValues.includes((checkbox as HTMLInputElement).value)) {
+					expect(checkbox.nextElementSibling.tagName).toBe("svg");
+				} else {
+					expect(checkbox.nextElementSibling).not.toBeInTheDocument();
 				}
-			})
-		);
+			});
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
@@ -81,11 +85,14 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
-		expect(
-			screen.getAllByRole("checkbox").forEach((checkbox) => {
-				expect(checkbox).toHaveAttribute("disabled");
-			})
-		);
+		screen
+			.getAllByRole("checkbox")
+			.map((checkbox) => checkbox.querySelector("input"))
+			.filter(Boolean)
+			.forEach((checkbox) => {
+				expect(checkbox).toBeDisabled();
+			});
+
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
 	});
 
