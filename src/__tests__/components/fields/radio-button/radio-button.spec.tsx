@@ -46,20 +46,15 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getAllByRole("radio", { name: componentId })).toHaveLength(2);
+		expect(screen.getByRole("radio", { name: "A" })).toBeInTheDocument();
+		expect(screen.getByRole("radio", { name: "B" })).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
 		const defaultValue = "Apple";
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
-		expect(
-			screen.getAllByRole("radio", { name: componentId }).forEach((radio) => {
-				if (radio.nodeValue === defaultValue) {
-					expect(radio).toBeChecked();
-				}
-			})
-		);
+		expect(screen.getByRole("radio", { name: "A" })).toBeChecked();
 
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
@@ -76,10 +71,7 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(
-			screen.getAllByRole("radio", { name: componentId }).forEach((radio) => {
-				expect(radio).toHaveAttribute("disabled");
-			})
-		);
+		expect(screen.getByRole("radio", { name: "A" })).toBeDisabled();
+		expect(screen.getByRole("radio", { name: "B" })).toBeDisabled();
 	});
 });

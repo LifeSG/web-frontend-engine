@@ -59,7 +59,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 					<StyledRadioButton
 						{...otherSchema}
 						id={id}
-						aria-label={id}
+						aria-label={option.label}
 						data-testid={TestHelper.generateId(id, "radio")}
 						disabled={disabled}
 						name={option.label}
