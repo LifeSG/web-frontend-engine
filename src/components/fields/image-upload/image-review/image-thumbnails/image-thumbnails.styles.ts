@@ -10,12 +10,13 @@ export const ThumbnailsWrapper = styled.div`
 	max-height: 5rem;
 `;
 
-export const ThumbnailItem = styled.div<{ src?: string; error?: boolean }>`
+export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 	position: relative;
-	display: flex;
 	cursor: pointer;
 	width: 3rem;
 	height: 3rem;
+	padding: 0;
+	border: none;
 	border-radius: 2px;
 	${({ src }) => `background-image: url(${src});`}
 	background-color: ${({ error }) => error && "#eee"};
@@ -83,8 +84,8 @@ export const LoadingBox = styled.div`
 export const BorderOverlay = styled.div<{ isSelected: boolean }>`
 	border: ${(props) => (props.isSelected ? "solid  2px" : "none")};
 	border-color: ${Color.Primary};
-	width: inherit;
-	height: inherit;
+	width: 100%;
+	height: 100%;
 `;
 
 export const HiddenFileSelect = styled.input`

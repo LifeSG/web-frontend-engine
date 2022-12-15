@@ -70,6 +70,8 @@ export const ImageThumbnails = (props: IProps) => {
 						id={TestHelper.generateId(id, `item-${index + 1}`)}
 						data-testid={TestHelper.generateId(id, `item-${index + 1}`)}
 						src={image.thumbnailDataURL || image.dataURL || AddPlaceholderIcon}
+						type="button"
+						aria-label={`thumbnail of ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
 					>
 						<BorderOverlay isSelected={activeFileIndex === index} />
@@ -81,6 +83,8 @@ export const ImageThumbnails = (props: IProps) => {
 						key={index}
 						id={TestHelper.generateId(id, `item-${index + 1}`)}
 						data-testid={TestHelper.generateId(id, `item-${index + 1}`)}
+						type="button"
+						aria-label={`error with ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
 						error
 					>
@@ -111,6 +115,7 @@ export const ImageThumbnails = (props: IProps) => {
 					type="button"
 					id={TestHelper.generateId(id, "add-image-button")}
 					data-testid={TestHelper.generateId(id, "add-image-button")}
+					aria-label="add image"
 					onClick={handleButtonClick}
 				>
 					<img alt="add" src={AddPlaceholderIcon} />

@@ -43,12 +43,12 @@ import { ImageThumbnails } from "./image-thumbnails";
 const ImageEditor = lazy(() => import("./image-editor"));
 
 const PALETTE_COLORS = [
-	{ color: "#282828" },
-	{ color: "#FFF", colorScheme: "light" },
-	{ color: "#017cd3" },
-	{ color: "#fb0101" },
-	{ color: "#22910c" },
-	{ color: "#f8e821" },
+	{ color: "#282828", label: "black" },
+	{ color: "#FFF", colorScheme: "light", label: "white" },
+	{ color: "#017cd3", label: "blue" },
+	{ color: "#fb0101", label: "red" },
+	{ color: "#22910c", label: "green" },
+	{ color: "#f8e821", label: "yellow" },
 ];
 interface IProps {
 	id?: string;
@@ -255,6 +255,7 @@ export const ImageReview = (props: IProps) => {
 					<ReviewCloseButton
 						id={TestHelper.generateId(id, "close-button")}
 						data-testid={TestHelper.generateId(id, "close-button")}
+						aria-label="exit review modal"
 						onClick={() => setActivePrompt("exit")}
 					>
 						<Icon type="cross" />
@@ -364,15 +365,17 @@ export const ImageReview = (props: IProps) => {
 					<EraserButton
 						id={TestHelper.generateId(id, "eraser-button")}
 						data-testid={TestHelper.generateId(id, "eraser-button")}
+						aria-label="eraser"
 						onClick={handleEraseMode}
 						active={eraseMode}
 					>
-						<ButtonIcon src={!eraseMode ? IconEraserBlack : IconEraserBlue} alt="Eraser" />
+						<ButtonIcon src={!eraseMode ? IconEraserBlack : IconEraserBlue} alt="" />
 					</EraserButton>
 					<PaletteHolder>
-						{PALETTE_COLORS.map(({ color, colorScheme }, i) => (
+						{PALETTE_COLORS.map(({ color, colorScheme, label }, i) => (
 							<Palette
 								id={TestHelper.generateId(id, `palette-color-${i}`)}
+								aria-label={`${label} brush`}
 								color={color}
 								colorScheme={colorScheme}
 								key={color}

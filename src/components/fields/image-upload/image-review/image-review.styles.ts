@@ -211,7 +211,7 @@ export const PaletteHolder = styled.div`
 	flex-direction: flex-end;
 `;
 
-export const Palette = styled.div<{ color: string; colorScheme?: string }>`
+export const Palette = styled.button<{ color: string; colorScheme?: string }>`
 	width: 3rem;
 	height: 3rem;
 	border-radius: 0.25rem;
