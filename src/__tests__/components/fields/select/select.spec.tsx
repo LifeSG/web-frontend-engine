@@ -46,7 +46,7 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("button", { name: componentId })).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "Select" })).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
@@ -65,6 +65,12 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+	});
+
+	it("should be disabled if configured", async () => {
+		renderComponent({ disabled: true });
+
+		expect(screen.getByRole("button", { name: "Select" }).parentElement).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom placeholder", () => {
