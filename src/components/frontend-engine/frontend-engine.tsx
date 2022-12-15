@@ -76,7 +76,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		<FormProvider {...formMethods}>
 			<form
 				id={formId}
-				aria-label={formId}
 				data-testid={TestHelper.generateId(id, "frontend-engine")}
 				className={formClassNames}
 				noValidate
