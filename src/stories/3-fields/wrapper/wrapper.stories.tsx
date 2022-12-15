@@ -29,6 +29,7 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("wrapper"),
+		label: { table: { disable: true } },
 		fieldType: {
 			description: "Actual HTML element type to render the component as",
 			table: {
