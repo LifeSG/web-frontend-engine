@@ -15,6 +15,7 @@ import {
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "time";
+const accessibilityName = "HH:MMam";
 
 const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -50,7 +51,7 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("generic", { name: componentId })).toBeInTheDocument();
+		expect(screen.getByRole("textbox")).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
@@ -73,22 +74,22 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
-		expect(picker).toHaveAttribute("disabled");
+		const picker = screen.getByRole("textbox");
+		expect(picker).toBeDisabled();
 	});
 
 	it("should be able to support custom placeholder", () => {
 		const placeholder = "select item";
 		renderComponent({ placeholder });
 
-		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
+		const picker = screen.getByRole("textbox");
 		expect(picker).toHaveAttribute("placeholder", placeholder);
 	});
 
 	it("should be able to select hour and minutes", async () => {
 		renderComponent();
 
-		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
+		const picker = screen.getByRole("textbox");
 		await waitFor(() => fireEvent.click(picker));
 
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase minute" })));
@@ -104,14 +105,14 @@ describe(fieldType, () => {
 		jest.spyOn(LocalTime, "now").mockReturnValue(LocalTime.parse(time));
 		renderComponent({ useCurrentTime: true });
 
-		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
+		const picker = screen.getByRole("textbox");
 		expect(picker).toHaveAttribute("value", `${time}pm`);
 	});
 
 	it("should be able to support 24 hour time format", async () => {
 		renderComponent({ is24HourFormat: true });
 
-		const picker = screen.getByRole("generic", { name: componentId }).querySelector("input");
+		const picker = screen.getByRole("textbox");
 		await waitFor(() => fireEvent.click(picker));
 
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase minute" })));

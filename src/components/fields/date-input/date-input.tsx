@@ -142,7 +142,8 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			{...otherSchema}
 			{...otherProps}
 			id={id}
-			aria-label={id}
+			// NOTE: DS does not support overwriting aria-label
+			aria-label={label}
 			data-testid={TestHelper.generateId(id, "date")}
 			label={label}
 			errorMessage={error?.message}
