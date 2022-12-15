@@ -15,13 +15,14 @@ import {
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "contact";
+const componentLabel = "Contact Number";
 
 const renderComponent = (overrideField?: TOverrideField<IContactNumberSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
 			[componentId]: {
-				label: "Contact",
+				label: componentLabel,
 				fieldType,
 				...overrideField,
 			},
@@ -43,7 +44,7 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: componentLabel })).toBeInTheDocument();
 	});
 
 	it("should be able to support default country", async () => {
@@ -78,7 +79,7 @@ describe(fieldType, () => {
 		const placeholder = "custom placeholder";
 		renderComponent({ placeholder });
 
-		const input = screen.getByRole("textbox", { name: componentId });
+		const input = screen.getByRole("textbox", { name: componentLabel });
 
 		expect(input).toHaveAttribute("placeholder", placeholder);
 	});
@@ -97,7 +98,7 @@ describe(fieldType, () => {
 			const contactNumber = "98123456";
 			renderComponent({ validation: [{ contactNumber: { singaporeNumber: "default" } }] });
 
-			const input = screen.getByRole("textbox", { name: componentId });
+			const input = screen.getByRole("textbox", { name: componentLabel });
 			fireEvent.change(input, { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
@@ -108,7 +109,7 @@ describe(fieldType, () => {
 			const contactNumber = "12345678";
 			renderComponent({ validation: [{ contactNumber: { singaporeNumber: "default" } }] });
 
-			const input = screen.getByRole("textbox", { name: componentId });
+			const input = screen.getByRole("textbox", { name: componentLabel });
 			fireEvent.change(input, { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
@@ -130,7 +131,7 @@ describe(fieldType, () => {
 					validation: [{ contactNumber: { singaporeNumber: singaporeRule } }],
 				});
 
-				const input = screen.getByRole("textbox", { name: componentId });
+				const input = screen.getByRole("textbox", { name: componentLabel });
 				fireEvent.change(input, { target: { value: contactNumber } });
 				await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
@@ -151,7 +152,7 @@ describe(fieldType, () => {
 			const japanCode = screen.getByRole("button", { name: "Japan (+81)" });
 			await waitFor(() => fireEvent.click(japanCode));
 
-			const input = screen.getByRole("textbox", { name: componentId });
+			const input = screen.getByRole("textbox", { name: componentLabel });
 			fireEvent.change(input, { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
@@ -165,7 +166,7 @@ describe(fieldType, () => {
 			const japanCode = screen.getByRole("button", { name: "Japan (+81)" });
 			await waitFor(() => fireEvent.click(japanCode));
 
-			const input = screen.getByRole("textbox", { name: componentId });
+			const input = screen.getByRole("textbox", { name: componentLabel });
 			fireEvent.change(input, { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
