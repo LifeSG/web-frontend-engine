@@ -1,6 +1,6 @@
 {
 	"name": "web-frontend-engine",
-	"version": "1.0.0",
+	"version": "1.0.0-alpha.1",
 	"description": "Repository for the web frontend engine",
 	"keywords": [],
 	"homepage": "https://github.com/LifeSG/web-frontend-engine#readme",
@@ -15,12 +15,16 @@
 	"author": "",
 	"main": "dist/index.js",
 	"scripts": {
-		"build": "rollup -c",
+		"build": "npm run rollup && npm run post:build",
 		"build-watch": "rollup -c -w",
 		"build-storybook": "build-storybook",
+		"build-check": "npm run rollup",
+		"post:build": "node ./scripts/post-build.js",
+		"publish-lib": "npm publish ./dist",
+		"rollup": "rm -rf dist && rollup -c",
 		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
 		"storybook": "start-storybook -p 6006 -c .storybook",
-		"prepare": "husky install"
+		"prepare": "(test -d ./.git && npx husky install) || true"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^2.9.8",
