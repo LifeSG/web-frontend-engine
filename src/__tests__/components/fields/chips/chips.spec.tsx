@@ -1,9 +1,11 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { IChipsSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getErrorMessage,
+	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
 	TOverrideField,
@@ -35,6 +37,22 @@ const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideS
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
+const getChipA = (): HTMLElement => {
+	return getField("button", "A");
+};
+
+const getChipB = (): HTMLElement => {
+	return getField("button", "B");
+};
+
+const getTextareaChip = (): HTMLElement => {
+	return getField("button", textareaLabel);
+};
+
+const getTextarea = (isQuery = false): HTMLElement => {
+	return getField("textbox", textareaLabel, isQuery);
+};
+
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -43,8 +61,8 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("button", { name: "A" })).toBeInTheDocument();
-		expect(screen.getByRole("button", { name: "B" })).toBeInTheDocument();
+		expect(getChipA()).toBeInTheDocument();
+		expect(getChipB()).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
@@ -53,7 +71,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByRole("button", { name: "A" })).toHaveStyle({ "background-color": "#A4A4A4" });
+		expect(getChipA()).toHaveStyle({ "background-color": "#A4A4A4" });
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
@@ -62,20 +80,20 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(screen.getByRole("button", { name: "A" })).toBeDisabled();
-		expect(screen.getByRole("button", { name: "B" })).toBeDisabled();
+		expect(getChipA()).toBeDisabled();
+		expect(getChipB()).toBeDisabled();
 	});
 
 	it("should be able to toggle the chips", async () => {
 		renderComponent();
-		const apple = screen.getByRole("button", { name: "A" });
-		const berry = screen.getByRole("button", { name: "B" });
+		const apple = getChipA();
+		const berry = getChipB();
 
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(berry));
@@ -93,8 +111,8 @@ describe(fieldType, () => {
 
 	it("should be able to support single selection", async () => {
 		renderComponent({ multi: false });
-		const apple = screen.getByRole("button", { name: "A" });
-		const berry = screen.getByRole("button", { name: "B" });
+		const apple = getChipA();
+		const berry = getChipB();
 
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -107,12 +125,11 @@ describe(fieldType, () => {
 
 	it("should be able to render textarea upon selection", async () => {
 		renderComponent({ textarea: { label: textareaLabel } });
-		const chip = screen.getByRole("button", { name: textareaLabel });
 
-		expect(screen.queryByRole("textbox", { name: textareaLabel })).not.toBeInTheDocument();
+		expect(getTextarea(true)).not.toBeInTheDocument();
 
-		await waitFor(() => fireEvent.click(chip));
-		expect(screen.getByRole("textbox", { name: textareaLabel })).toBeInTheDocument();
+		await waitFor(() => fireEvent.click(getTextareaChip()));
+		expect(getTextarea()).toBeInTheDocument();
 	});
 
 	describe("textarea", () => {
@@ -121,11 +138,10 @@ describe(fieldType, () => {
 				textarea: { label: textareaLabel, validation: [{ required: true, errorMessage: ERROR_MESSAGE }] },
 			});
 
-			const chip = screen.getByRole("button", { name: textareaLabel });
-			await waitFor(() => fireEvent.click(chip));
+			await waitFor(() => fireEvent.click(getTextareaChip()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+			expect(getErrorMessage()).toBeInTheDocument();
 		});
 
 		it("should be able to resize vertically", async () => {
@@ -133,10 +149,9 @@ describe(fieldType, () => {
 				textarea: { label: textareaLabel, resizable: true },
 			});
 
-			const chip = screen.getByRole("button", { name: textareaLabel });
-			await waitFor(() => fireEvent.click(chip));
+			await waitFor(() => fireEvent.click(getTextareaChip()));
 
-			expect(screen.getByRole("textbox", { name: textareaLabel })).toHaveStyle({ resize: "vertical" });
+			expect(getTextarea()).toHaveStyle({ resize: "vertical" });
 		});
 
 		it("should be able to support custom rows", async () => {
@@ -144,10 +159,9 @@ describe(fieldType, () => {
 				textarea: { label: textareaLabel, rows: 1 },
 			});
 
-			const chip = screen.getByRole("button", { name: textareaLabel });
-			await waitFor(() => fireEvent.click(chip));
+			await waitFor(() => fireEvent.click(getTextareaChip()));
 
-			expect(screen.getByRole("textbox", { name: textareaLabel })).toHaveAttribute("rows", "1");
+			expect(getTextarea()).toHaveAttribute("rows", "1");
 		});
 	});
 });

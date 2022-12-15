@@ -1,11 +1,13 @@
 import { LocalTime } from "@js-joda/core";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ITimePickerSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getErrorMessage,
+	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
 	TOverrideField,
@@ -32,6 +34,22 @@ const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, over
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
+const getTimePicker = (): HTMLElement => {
+	return getField("textbox");
+};
+
+const getMinuteButton = (): HTMLElement => {
+	return getField("button", "increase minute");
+};
+
+const getHourButton = (): HTMLElement => {
+	return getField("button", "increase hour");
+};
+
+const getConfirmButton = (): HTMLElement => {
+	return getField("button", "confirm selection");
+};
+
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -47,7 +65,7 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("textbox")).toBeInTheDocument();
+		expect(getTimePicker()).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
@@ -64,33 +82,30 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		const picker = screen.getByRole("textbox");
-		expect(picker).toBeDisabled();
+		expect(getTimePicker()).toBeDisabled();
 	});
 
 	it("should be able to support custom placeholder", () => {
 		const placeholder = "select item";
 		renderComponent({ placeholder });
 
-		const picker = screen.getByRole("textbox");
-		expect(picker).toHaveAttribute("placeholder", placeholder);
+		expect(getTimePicker()).toHaveAttribute("placeholder", placeholder);
 	});
 
 	it("should be able to select hour and minutes", async () => {
 		renderComponent();
 
-		const picker = screen.getByRole("textbox");
-		await waitFor(() => fireEvent.click(picker));
+		await waitFor(() => fireEvent.click(getTimePicker()));
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase minute" })));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase hour" })));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "confirm selection" })));
+		await waitFor(() => fireEvent.click(getMinuteButton()));
+		await waitFor(() => fireEvent.click(getHourButton()));
+		await waitFor(() => fireEvent.click(getConfirmButton()));
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: "01:00am" }));
@@ -101,19 +116,17 @@ describe(fieldType, () => {
 		jest.spyOn(LocalTime, "now").mockReturnValue(LocalTime.parse(time));
 		renderComponent({ useCurrentTime: true });
 
-		const picker = screen.getByRole("textbox");
-		expect(picker).toHaveAttribute("value", `${time}pm`);
+		expect(getTimePicker()).toHaveAttribute("value", `${time}pm`);
 	});
 
 	it("should be able to support 24 hour time format", async () => {
 		renderComponent({ is24HourFormat: true });
 
-		const picker = screen.getByRole("textbox");
-		await waitFor(() => fireEvent.click(picker));
+		await waitFor(() => fireEvent.click(getTimePicker()));
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase minute" })));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase hour" })));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "confirm selection" })));
+		await waitFor(() => fireEvent.click(getMinuteButton()));
+		await waitFor(() => fireEvent.click(getHourButton()));
+		await waitFor(() => fireEvent.click(getConfirmButton()));
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: "01:00" }));

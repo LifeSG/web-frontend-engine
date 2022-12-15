@@ -5,6 +5,8 @@ import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getErrorMessage,
+	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
 	TOverrideField,
@@ -32,6 +34,10 @@ const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overri
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
+const getTextarea = (): HTMLElement => {
+	return getField("textbox", componentLabel);
+};
+
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -40,7 +46,7 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("textbox", { name: componentLabel })).toBeInTheDocument();
+		expect(getTextarea()).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
@@ -48,7 +54,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
 	it("should support default value", async () => {
@@ -78,7 +84,7 @@ describe(fieldType, () => {
 	it("should append text upon clicking a pill", () => {
 		renderComponent({ chipTexts: ["Pill 1", "Pill 2", "Pill 3"] });
 
-		fireEvent.change(screen.getByRole("textbox", { name: componentLabel }), {
+		fireEvent.change(getTextarea(), {
 			target: { value: "Hello" },
 		});
 		fireEvent.click(screen.getByText("Pill 1"));
@@ -94,9 +100,9 @@ describe(fieldType, () => {
 			disabled: true,
 		});
 
-		expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("rows", "5");
-		expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("placeholder", "placeholder");
-		expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("readonly");
-		expect(screen.getByRole("textbox", { name: componentLabel })).toBeDisabled();
+		expect(getTextarea()).toHaveAttribute("rows", "5");
+		expect(getTextarea()).toHaveAttribute("placeholder", "placeholder");
+		expect(getTextarea()).toHaveAttribute("readonly");
+		expect(getTextarea()).toBeDisabled();
 	});
 });

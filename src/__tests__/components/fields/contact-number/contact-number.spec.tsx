@@ -6,6 +6,8 @@ import { ERROR_MESSAGES } from "../../../../components/shared";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getErrorMessage,
+	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
 	TOverrideField,
@@ -33,6 +35,14 @@ const renderComponent = (overrideField?: TOverrideField<IContactNumberSchema>, o
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
+const getContactField = (): HTMLElement => {
+	return getField("textbox", componentLabel);
+};
+
+const getDefaultDropdownToggle = (): HTMLElement => {
+	return getField("button", "+65");
+};
+
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -41,7 +51,7 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("textbox", { name: componentLabel })).toBeInTheDocument();
+		expect(getContactField()).toBeInTheDocument();
 	});
 
 	it("should be able to support default country", async () => {
@@ -57,16 +67,15 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
 	it("should be able to select another country code", async () => {
 		renderComponent();
 
-		const dropdownToggle = screen.getByRole("button", { name: "+65" });
-		await waitFor(() => fireEvent.click(dropdownToggle));
+		await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-		const afghanCode = screen.getByRole("button", { name: "Afghanistan (+93)" });
+		const afghanCode = getField("button", "Afghanistan (+93)");
 		await waitFor(() => fireEvent.click(afghanCode));
 
 		expect(screen.getByText("+93")).toBeInTheDocument();
@@ -76,18 +85,15 @@ describe(fieldType, () => {
 		const placeholder = "custom placeholder";
 		renderComponent({ placeholder });
 
-		const input = screen.getByRole("textbox", { name: componentLabel });
-
-		expect(input).toHaveAttribute("placeholder", placeholder);
+		expect(getContactField()).toHaveAttribute("placeholder", placeholder);
 	});
 
 	it("should be able to support search bar", async () => {
 		renderComponent({ enableSearch: true });
 
-		const dropdownToggle = screen.getByRole("button", { name: "+65" });
-		await waitFor(() => fireEvent.click(dropdownToggle));
+		await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-		expect(screen.getByRole("textbox", { name: "search-input" })).toBeInTheDocument();
+		expect(getField("textbox", "search-input")).toBeInTheDocument();
 	});
 
 	describe("it should be able to verify Singapore numbers", () => {
@@ -95,8 +101,7 @@ describe(fieldType, () => {
 			const contactNumber = "98123456";
 			renderComponent({ validation: [{ contactNumber: { singaporeNumber: "default" } }] });
 
-			const input = screen.getByRole("textbox", { name: componentLabel });
-			fireEvent.change(input, { target: { value: contactNumber } });
+			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: `+65 ${contactNumber}` }));
@@ -106,8 +111,7 @@ describe(fieldType, () => {
 			const contactNumber = "12345678";
 			renderComponent({ validation: [{ contactNumber: { singaporeNumber: "default" } }] });
 
-			const input = screen.getByRole("textbox", { name: componentLabel });
-			fireEvent.change(input, { target: { value: contactNumber } });
+			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER)).toBeInTheDocument();
@@ -120,7 +124,7 @@ describe(fieldType, () => {
 			${"mobile"}    | ${"98123456"} | ${"+65 98123456"}
 			${"mobile"}    | ${"67661234"} | ${"error"}
 		`(
-			"should support validation for house and phone numbers",
+			"$contactNumber ($validationType number) should return $expected",
 			async ({ validationType, contactNumber, expected }) => {
 				const isHouseValidation = validationType === "house";
 				const singaporeRule: TSingaporeNumberRule = isHouseValidation ? "house" : "mobile";
@@ -128,8 +132,7 @@ describe(fieldType, () => {
 					validation: [{ contactNumber: { singaporeNumber: singaporeRule } }],
 				});
 
-				const input = screen.getByRole("textbox", { name: componentLabel });
-				fireEvent.change(input, { target: { value: contactNumber } });
+				fireEvent.change(getContactField(), { target: { value: contactNumber } });
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
 				if (expected === "error") {
@@ -146,11 +149,10 @@ describe(fieldType, () => {
 			const contactNumber = "97-958-4362 ";
 			renderComponent({ validation: [{ contactNumber: { internationalNumber: true } }] });
 
-			const japanCode = screen.getByRole("button", { name: "Japan (+81)" });
+			const japanCode = getField("button", "Japan (+81)");
 			await waitFor(() => fireEvent.click(japanCode));
 
-			const input = screen.getByRole("textbox", { name: componentLabel });
-			fireEvent.change(input, { target: { value: contactNumber } });
+			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: `+81 ${contactNumber}` }));
@@ -160,11 +162,10 @@ describe(fieldType, () => {
 			const contactNumber = "12345678";
 			renderComponent({ validation: [{ contactNumber: { internationalNumber: true } }] });
 
-			const japanCode = screen.getByRole("button", { name: "Japan (+81)" });
+			const japanCode = getField("button", "Japan (+81)");
 			await waitFor(() => fireEvent.click(japanCode));
 
-			const input = screen.getByRole("textbox", { name: componentLabel });
-			fireEvent.change(input, { target: { value: contactNumber } });
+			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER)).toBeInTheDocument();

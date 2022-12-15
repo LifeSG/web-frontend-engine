@@ -1,11 +1,13 @@
 import { LocalDate } from "@js-joda/core";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IDateInputSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getErrorMessage,
+	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
 	TOverrideField,
@@ -33,6 +35,18 @@ const renderComponent = (overrideField?: TOverrideField<IDateInputSchema>, overr
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
+const getDayInput = (): HTMLElement => {
+	return getField("spinbutton", "day-input");
+};
+
+const getMonthInput = (): HTMLElement => {
+	return getField("spinbutton", "month-input");
+};
+
+const getYearInput = (): HTMLElement => {
+	return getField("spinbutton", "year-input");
+};
+
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -41,9 +55,9 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		formats.forEach((type) => {
-			expect(screen.getByRole("spinbutton", { name: `${type}-input` })).toBeInTheDocument();
-		});
+		expect(getDayInput()).toBeInTheDocument();
+		expect(getMonthInput()).toBeInTheDocument();
+		expect(getYearInput()).toBeInTheDocument();
 	});
 
 	it("should be able to support default value", async () => {
@@ -55,9 +69,9 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByRole("spinbutton", { name: "day-input" })).toHaveAttribute("value", defaultDay);
-		expect(screen.getByRole("spinbutton", { name: "month-input" })).toHaveAttribute("value", defaultMonth);
-		expect(screen.getByRole("spinbutton", { name: "year-input" })).toHaveAttribute("value", defaultYear);
+		expect(getDayInput()).toHaveAttribute("value", defaultDay);
+		expect(getMonthInput()).toHaveAttribute("value", defaultMonth);
+		expect(getYearInput()).toHaveAttribute("value", defaultYear);
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
 
@@ -77,9 +91,9 @@ describe(fieldType, () => {
 
 	it("should support other date formats", async () => {
 		renderComponent({ dateFormat: "d MMMM uuuu" });
-		fireEvent.change(screen.getByRole("spinbutton", { name: "day-input" }), { target: { value: "1" } });
-		fireEvent.change(screen.getByRole("spinbutton", { name: "month-input" }), { target: { value: "1" } });
-		fireEvent.change(screen.getByRole("spinbutton", { name: "year-input" }), { target: { value: "2022" } });
+		fireEvent.change(getDayInput(), { target: { value: "1" } });
+		fireEvent.change(getMonthInput(), { target: { value: "1" } });
+		fireEvent.change(getYearInput(), { target: { value: "2022" } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -107,7 +121,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
 	it.each`
@@ -120,18 +134,18 @@ describe(fieldType, () => {
 		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
 		renderComponent({ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] });
 
-		fireEvent.change(screen.getByRole("spinbutton", { name: "day-input" }), { target: { value: invalid[0] } });
-		fireEvent.change(screen.getByRole("spinbutton", { name: "month-input" }), { target: { value: invalid[1] } });
-		fireEvent.change(screen.getByRole("spinbutton", { name: "year-input" }), { target: { value: invalid[2] } });
+		fireEvent.change(getDayInput(), { target: { value: invalid[0] } });
+		fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
+		fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 
 		await waitFor(() => {
-			fireEvent.change(screen.getByRole("spinbutton", { name: "day-input" }), { target: { value: valid[0] } });
-			fireEvent.change(screen.getByRole("spinbutton", { name: "month-input" }), { target: { value: valid[1] } });
-			fireEvent.change(screen.getByRole("spinbutton", { name: "year-input" }), { target: { value: valid[2] } });
+			fireEvent.change(getDayInput(), { target: { value: valid[0] } });
+			fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
+			fireEvent.change(getYearInput(), { target: { value: valid[2] } });
 		});
-		expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
+		expect(getErrorMessage(true)).not.toBeInTheDocument();
 	});
 });
