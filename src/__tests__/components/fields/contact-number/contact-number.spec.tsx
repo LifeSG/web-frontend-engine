@@ -6,8 +6,8 @@ import { ERROR_MESSAGES } from "../../../../components/shared";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getSubmitButton,
 	SUBMIT_BUTTON_ID,
-	SUBMIT_BUTTON_NAME,
 	TOverrideField,
 	TOverrideSchema,
 } from "../../../common";
@@ -58,7 +58,7 @@ describe(fieldType, () => {
 			validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 		});
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -100,7 +100,7 @@ describe(fieldType, () => {
 
 			const input = screen.getByRole("textbox", { name: componentLabel });
 			fireEvent.change(input, { target: { value: contactNumber } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: `+65 ${contactNumber}` }));
 		});
@@ -111,7 +111,7 @@ describe(fieldType, () => {
 
 			const input = screen.getByRole("textbox", { name: componentLabel });
 			fireEvent.change(input, { target: { value: contactNumber } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER)).toBeInTheDocument();
 		});
@@ -133,7 +133,7 @@ describe(fieldType, () => {
 
 				const input = screen.getByRole("textbox", { name: componentLabel });
 				fireEvent.change(input, { target: { value: contactNumber } });
-				await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+				await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 				if (expected === "error") {
 					expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER)).toBeInTheDocument();
@@ -154,7 +154,7 @@ describe(fieldType, () => {
 
 			const input = screen.getByRole("textbox", { name: componentLabel });
 			fireEvent.change(input, { target: { value: contactNumber } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: `+81 ${contactNumber}` }));
 		});
@@ -168,7 +168,7 @@ describe(fieldType, () => {
 
 			const input = screen.getByRole("textbox", { name: componentLabel });
 			fireEvent.change(input, { target: { value: contactNumber } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER)).toBeInTheDocument();
 		});

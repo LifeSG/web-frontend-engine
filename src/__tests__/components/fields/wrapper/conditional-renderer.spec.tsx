@@ -4,7 +4,7 @@ import {
 	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
 } from "../../../../components/frontend-engine";
-import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME } from "../../../common";
+import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getSubmitButton, SUBMIT_BUTTON_ID } from "../../../common";
 
 const submitFn = jest.fn();
 const fieldOneId = "field1";
@@ -230,11 +230,11 @@ describe("conditional-renderer", () => {
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
 		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "hi" } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hi" } });
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 	});
 
@@ -257,7 +257,7 @@ describe("conditional-renderer", () => {
 		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "world" } });
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hi" } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hi" }));
 		expect(submitFn).toBeCalledWith(expect.not.objectContaining({ [fieldTwoId]: expect.anything() }));
 	});
