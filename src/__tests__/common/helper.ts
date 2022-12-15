@@ -52,3 +52,5 @@ export const getErrorMessage = (isQuery = false): HTMLElement => {
 	}
 	return screen.getByText(ERROR_MESSAGE);
 };
+
+export const flushPromise = (delay = 0) => new Promise((resolve) => setTimeout(resolve, delay));
