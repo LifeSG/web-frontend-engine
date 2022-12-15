@@ -46,14 +46,14 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("button", { name: componentId })).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "Select" })).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
 		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: componentId })));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "1 selected" })));
 		expect(screen.getByRole("button", { name: "A" }).querySelector("svg")).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
@@ -71,7 +71,7 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(screen.getByRole("button", { name: componentId }).parentElement).toHaveAttribute("disabled");
+		expect(screen.getByRole("button", { name: "Select" }).parentElement).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom list style width", () => {
@@ -91,7 +91,7 @@ describe(fieldType, () => {
 	it("should be able to toggle the checkboxes", async () => {
 		renderComponent();
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: componentId })));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Select" })));
 		const apple = screen.getByRole("button", { name: "A" });
 		const berry = screen.getByRole("button", { name: "B" });
 
@@ -112,7 +112,7 @@ describe(fieldType, () => {
 	it("should be able to toggle all the checkboxes at once", async () => {
 		renderComponent();
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: componentId })));
+		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Select" })));
 		const selectAllButton = screen.getByRole("button", { name: "Select all" });
 
 		await waitFor(() => fireEvent.click(selectAllButton));

@@ -55,7 +55,6 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 			<InputSelect
 				{...otherSchema}
 				id={id}
-				aria-label={id}
 				data-testid={TestHelper.generateId(id, "select")}
 				name={name}
 				options={options}
