@@ -48,6 +48,8 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 				data-testid={TestHelper.generateId(id, "hidden-input")}
 				ref={hiddenInputRef}
 				type="file"
+				aria-hidden="true"
+				tabIndex={-1}
 				accept={accept?.map((type) => `.${type}`).join(",")}
 				onChange={handleInputChange}
 				onClick={(event) => {

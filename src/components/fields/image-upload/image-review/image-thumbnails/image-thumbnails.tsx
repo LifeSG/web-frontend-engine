@@ -101,6 +101,8 @@ export const ImageThumbnails = (props: IProps) => {
 					id={TestHelper.generateId(id, "file-input")}
 					data-testid={TestHelper.generateId(id, "file-input")}
 					type="file"
+					aria-hidden="true"
+					tabIndex={-1}
 					ref={fileInputRef}
 					accept={accepts.join(", ")}
 					onChange={handleInputChange}
