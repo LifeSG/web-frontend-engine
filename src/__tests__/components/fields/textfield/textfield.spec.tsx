@@ -48,7 +48,7 @@ describe("textfield", () => {
 		it("should support validation schema", async () => {
 			renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -68,7 +68,7 @@ describe("textfield", () => {
 
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 
@@ -102,9 +102,9 @@ describe("textfield", () => {
 			renderComponent({ fieldType: emailFieldType });
 
 			fireEvent.change(screen.getByRole("textbox", { name: componentLabel }), { target: { value: "hello" } });
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByRole("heading", { name: "Invalid email address" })).toBeInTheDocument();
+			expect(screen.getByText("Invalid email address")).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
@@ -113,7 +113,7 @@ describe("textfield", () => {
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
 
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -130,7 +130,7 @@ describe("textfield", () => {
 
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 
@@ -167,7 +167,7 @@ describe("textfield", () => {
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
 
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -184,7 +184,7 @@ describe("textfield", () => {
 
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 

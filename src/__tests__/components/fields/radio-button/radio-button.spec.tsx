@@ -56,14 +56,14 @@ describe(fieldType, () => {
 
 		expect(screen.getByRole("radio", { name: "A" })).toBeChecked();
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
 
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});

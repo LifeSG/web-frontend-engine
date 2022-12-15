@@ -49,7 +49,7 @@ describe(fieldType, () => {
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -60,7 +60,7 @@ describe(fieldType, () => {
 
 		expect(screen.getByText(defaultValue)).toBeInTheDocument();
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
 

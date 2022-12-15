@@ -78,7 +78,7 @@ describe("frontend-engine", () => {
 		});
 
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(onChange).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hello" }), true);
 	});
@@ -90,7 +90,7 @@ describe("frontend-engine", () => {
 		});
 
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(onSubmit).toBeCalled();
 	});
@@ -141,7 +141,7 @@ describe("frontend-engine", () => {
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 
@@ -172,7 +172,7 @@ describe("frontend-engine", () => {
 			renderComponent();
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
 			await waitFor(() =>
@@ -185,7 +185,7 @@ describe("frontend-engine", () => {
 			renderComponent(undefined, { revalidationMode: "onBlur" });
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
@@ -198,12 +198,12 @@ describe("frontend-engine", () => {
 			renderComponent(undefined, { revalidationMode: "onSubmit" });
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 	});

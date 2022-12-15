@@ -53,7 +53,7 @@ describe(fieldType, () => {
 		const defaultValue = "Apple";
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(screen.getByText(defaultValue)).toBeInTheDocument();
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
@@ -62,7 +62,7 @@ describe(fieldType, () => {
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
