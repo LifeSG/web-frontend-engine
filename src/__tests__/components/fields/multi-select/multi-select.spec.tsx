@@ -5,8 +5,8 @@ import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getSubmitButton,
 	SUBMIT_BUTTON_ID,
-	SUBMIT_BUTTON_NAME,
 	TOverrideField,
 	TOverrideSchema,
 } from "../../../common";
@@ -56,14 +56,14 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "1 selected" })));
 		expect(screen.getByRole("button", { name: "A" }).querySelector("svg")).toBeInTheDocument();
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -97,15 +97,15 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(berry));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(apple));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(berry));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 

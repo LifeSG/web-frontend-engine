@@ -2,13 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IEmailSchema, INumberSchema, ITextfieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
-import {
-	ERROR_MESSAGE,
-	FRONTEND_ENGINE_ID,
-	SUBMIT_BUTTON_ID,
-	SUBMIT_BUTTON_NAME,
-	TOverrideSchema,
-} from "../../../common";
+import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getSubmitButton, SUBMIT_BUTTON_ID, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
@@ -54,7 +48,7 @@ describe("textfield", () => {
 		it("should support validation schema", async () => {
 			renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -74,7 +68,7 @@ describe("textfield", () => {
 
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 
@@ -108,7 +102,7 @@ describe("textfield", () => {
 			renderComponent({ fieldType: emailFieldType });
 
 			fireEvent.change(screen.getByRole("textbox", { name: componentLabel }), { target: { value: "hello" } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			expect(screen.getByRole("heading", { name: "Invalid email address" })).toBeInTheDocument();
 		});
@@ -119,7 +113,7 @@ describe("textfield", () => {
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -136,7 +130,7 @@ describe("textfield", () => {
 
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 
@@ -173,7 +167,7 @@ describe("textfield", () => {
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
@@ -190,7 +184,7 @@ describe("textfield", () => {
 
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 		});
 

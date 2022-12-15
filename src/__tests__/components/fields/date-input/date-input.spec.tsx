@@ -6,8 +6,8 @@ import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getSubmitButton,
 	SUBMIT_BUTTON_ID,
-	SUBMIT_BUTTON_NAME,
 	TOverrideField,
 	TOverrideSchema,
 } from "../../../common";
@@ -56,7 +56,7 @@ describe(fieldType, () => {
 		const defaultValue = `${defaultYear}-${defaultMonth}-${defaultDay}`;
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(screen.getByRole("spinbutton", { name: "day-input" })).toHaveAttribute("value", defaultDay);
 		expect(screen.getByRole("spinbutton", { name: "month-input" })).toHaveAttribute("value", defaultMonth);
@@ -69,7 +69,7 @@ describe(fieldType, () => {
 		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse(date));
 		renderComponent({ useCurrentDate: true });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(submitFn).toBeCalledWith(
 			expect.objectContaining({
@@ -84,7 +84,7 @@ describe(fieldType, () => {
 		fireEvent.change(screen.getByRole("spinbutton", { name: "month-input" }), { target: { value: "1" } });
 		fireEvent.change(screen.getByRole("spinbutton", { name: "year-input" }), { target: { value: "2022" } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(submitFn).toBeCalledWith(
 			expect.objectContaining({
@@ -96,7 +96,7 @@ describe(fieldType, () => {
 	it("should accept defaultValue in the format as defined by dateFormat", async () => {
 		renderComponent({ dateFormat: "d MMMM uuuu" }, { defaultValues: { [componentId]: "1 January 2022" } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(submitFn).toBeCalledWith(
 			expect.objectContaining({
@@ -108,7 +108,7 @@ describe(fieldType, () => {
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -127,7 +127,7 @@ describe(fieldType, () => {
 		fireEvent.change(screen.getByTestId("month-input"), { target: { value: invalid[1] } });
 		fireEvent.change(screen.getByTestId("year-input"), { target: { value: invalid[2] } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 
 		await waitFor(() => {

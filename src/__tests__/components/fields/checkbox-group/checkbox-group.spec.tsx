@@ -4,8 +4,8 @@ import { FrontendEngine, IFrontendEngineData } from "../../../../components/fron
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getSubmitButton,
 	SUBMIT_BUTTON_ID,
-	SUBMIT_BUTTON_NAME,
 	TOverrideField,
 	TOverrideSchema,
 } from "../../../common";
@@ -56,7 +56,7 @@ describe(fieldType, () => {
 		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		screen
 			.getAllByRole("checkbox")
@@ -75,7 +75,7 @@ describe(fieldType, () => {
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -83,7 +83,7 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		screen
 			.getAllByRole("checkbox")
@@ -105,15 +105,15 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(checkboxes[1]));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[0]));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[1]));
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 

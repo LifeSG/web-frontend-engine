@@ -6,8 +6,8 @@ import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getSubmitButton,
 	SUBMIT_BUTTON_ID,
-	SUBMIT_BUTTON_NAME,
 	TOverrideField,
 	TOverrideSchema,
 } from "../../../common";
@@ -15,7 +15,6 @@ import {
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "time";
-const accessibilityName = "HH:MMam";
 
 const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -58,7 +57,7 @@ describe(fieldType, () => {
 		const defaultValue = "11:11am";
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
@@ -66,7 +65,7 @@ describe(fieldType, () => {
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -96,7 +95,7 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase hour" })));
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "confirm selection" })));
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: "01:00am" }));
 	});
 
@@ -119,7 +118,7 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "increase hour" })));
 		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "confirm selection" })));
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: "01:00" }));
 	});
 });

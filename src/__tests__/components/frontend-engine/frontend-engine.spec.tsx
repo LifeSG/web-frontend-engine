@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { FrontendEngine } from "../../../components";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
 import { TestHelper } from "../../../utils";
-import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_NAME } from "../../common";
+import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getSubmitButton, SUBMIT_BUTTON_ID } from "../../common";
 
 const fieldType = "text";
 const fieldOneId = "field1";
@@ -78,7 +78,7 @@ describe("frontend-engine", () => {
 		});
 
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(onChange).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hello" }), true);
 	});
@@ -90,7 +90,7 @@ describe("frontend-engine", () => {
 		});
 
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 		expect(onSubmit).toBeCalled();
 	});
@@ -141,7 +141,7 @@ describe("frontend-engine", () => {
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 
@@ -172,7 +172,7 @@ describe("frontend-engine", () => {
 			renderComponent();
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
 			await waitFor(() =>
@@ -185,7 +185,7 @@ describe("frontend-engine", () => {
 			renderComponent(undefined, { revalidationMode: "onBlur" });
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
@@ -198,12 +198,12 @@ describe("frontend-engine", () => {
 			renderComponent(undefined, { revalidationMode: "onSubmit" });
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "he" } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 
 			fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "h" } });
 			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
+			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 	});
