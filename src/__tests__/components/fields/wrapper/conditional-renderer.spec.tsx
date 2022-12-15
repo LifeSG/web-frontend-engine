@@ -4,15 +4,15 @@ import {
 	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
 } from "../../../../components/frontend-engine";
-import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getSubmitButton, getSubmitButtonProps } from "../../../common";
+import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getField, getSubmitButton, getSubmitButtonProps } from "../../../common";
 
 const submitFn = jest.fn();
 const fieldOneId = "field1";
 const fieldTwoId = "field2";
 const fieldThreeId = "field3";
-const fieldOneLabel = "Field 1";
-const fieldTwoLabel = "Field 2";
-const fieldThreeLabel = "Field 3";
+const fieldOneLabel = "Field one";
+const fieldTwoLabel = "Field two";
+const fieldThreeLabel = "Field three";
 
 const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
 	const json: IFrontendEngineData = {
@@ -24,6 +24,18 @@ const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => 
 	};
 
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+};
+
+const getFieldOne = (): HTMLElement => {
+	return getField("textbox", fieldOneLabel);
+};
+
+const getFieldTwo = (isQuery = false): HTMLElement => {
+	return getField("textbox", fieldTwoLabel, isQuery);
+};
+
+const getFieldThree = (isQuery = false): HTMLElement => {
+	return getField("textbox", fieldThreeLabel, isQuery);
 };
 
 describe("conditional-renderer", () => {
@@ -58,11 +70,11 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: invalid } });
-		expect(screen.queryByRole("textbox", { name: fieldTwoLabel })).not.toBeInTheDocument();
+		fireEvent.change(getFieldOne(), { target: { value: invalid } });
+		expect(getFieldTwo(true)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: valid } });
-		expect(screen.getByRole("textbox", { name: fieldTwoLabel })).toBeInTheDocument();
+		fireEvent.change(getFieldOne(), { target: { value: valid } });
+		expect(getFieldTwo()).toBeInTheDocument();
 	});
 
 	it.each`
@@ -93,11 +105,11 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: invalid } });
-		expect(screen.queryByRole("textbox", { name: fieldTwoLabel })).not.toBeInTheDocument();
+		fireEvent.change(getFieldOne(), { target: { value: invalid } });
+		expect(getFieldTwo(true)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: valid } });
-		expect(screen.getByRole("textbox", { name: fieldTwoLabel })).toBeInTheDocument();
+		fireEvent.change(getFieldOne(), { target: { value: valid } });
+		expect(getFieldTwo()).toBeInTheDocument();
 	});
 
 	it.each`
@@ -136,7 +148,7 @@ describe("conditional-renderer", () => {
 		invalid?.forEach((value: string) => {
 			fireEvent.click(screen.getByText(value).closest("button"));
 		});
-		expect(screen.queryByRole("textbox", { name: fieldTwoLabel })).not.toBeInTheDocument();
+		expect(getFieldTwo(true)).not.toBeInTheDocument();
 
 		// fire invalid again to deselect values
 		invalid?.forEach((value: string) => {
@@ -145,7 +157,7 @@ describe("conditional-renderer", () => {
 		valid?.forEach((value: string) => {
 			fireEvent.click(screen.getByText(value).closest("button"));
 		});
-		expect(screen.getByRole("textbox", { name: fieldTwoLabel })).toBeInTheDocument();
+		expect(getFieldTwo()).toBeInTheDocument();
 	});
 
 	it("should support AND conditions", () => {
@@ -167,13 +179,13 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		expect(screen.queryByRole("textbox", { name: fieldThreeLabel })).not.toBeInTheDocument();
+		expect(getFieldThree(true)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
-		expect(screen.queryByRole("textbox", { name: fieldThreeLabel })).not.toBeInTheDocument();
+		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		expect(getFieldThree(true)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "hello" } });
-		expect(screen.getByRole("textbox", { name: fieldThreeLabel })).toBeInTheDocument();
+		fireEvent.change(getFieldTwo(), { target: { value: "hello" } });
+		expect(getFieldThree()).toBeInTheDocument();
 	});
 
 	it("should support OR conditions", () => {
@@ -195,14 +207,14 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		expect(screen.queryByRole("textbox", { name: fieldThreeLabel })).not.toBeInTheDocument();
+		expect(getFieldThree(true)).not.toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
-		expect(screen.getByRole("textbox", { name: fieldThreeLabel })).toBeInTheDocument();
+		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		expect(getFieldThree()).toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: null } });
-		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "hello" } });
-		expect(screen.getByRole("textbox", { name: fieldThreeLabel })).toBeInTheDocument();
+		fireEvent.change(getFieldOne(), { target: { value: null } });
+		fireEvent.change(getFieldTwo(), { target: { value: "hello" } });
+		expect(getFieldThree()).toBeInTheDocument();
 	});
 
 	it("should remove validation schema for fields that are conditionally hidden", async () => {
@@ -224,13 +236,13 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
-		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "hi" } });
+		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		fireEvent.change(getFieldTwo(), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hi" } });
+		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 	});
@@ -250,9 +262,9 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
-		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "world" } });
-		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hi" } });
+		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		fireEvent.change(getFieldTwo(), { target: { value: "world" } });
+		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hi" }));

@@ -5,6 +5,8 @@ import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getErrorMessage,
+	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
 	TOverrideField,
@@ -35,6 +37,10 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
+const getSelectToggle = (): HTMLElement => {
+	return getField("button", "Select");
+};
+
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -43,7 +49,7 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("button", { name: "Select" })).toBeInTheDocument();
+		expect(getSelectToggle()).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
@@ -61,13 +67,13 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(screen.getByRole("button", { name: "Select" }).parentElement).toHaveAttribute("disabled");
+		expect(getSelectToggle().parentElement).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom placeholder", () => {

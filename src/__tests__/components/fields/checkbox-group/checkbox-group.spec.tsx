@@ -4,6 +4,7 @@ import { FrontendEngine, IFrontendEngineData } from "../../../../components/fron
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getErrorMessage,
 	getSubmitButton,
 	getSubmitButtonProps,
 	TOverrideField,
@@ -34,6 +35,13 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
+const getCheckboxes = (): HTMLElement[] => {
+	return screen
+		.getAllByRole("checkbox")
+		.map((checkbox) => checkbox.querySelector("input"))
+		.filter(Boolean);
+};
+
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -41,12 +49,8 @@ describe(fieldType, () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		const checkboxes = screen
-			.getAllByRole("checkbox")
-			.map((checkbox) => checkbox.querySelector("input"))
-			.filter(Boolean);
 
-		expect(checkboxes).toHaveLength(2);
+		expect(getCheckboxes()).toHaveLength(2);
 	});
 
 	it("should be able to support default values", async () => {
@@ -55,17 +59,14 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		screen
-			.getAllByRole("checkbox")
-			.map((checkbox) => checkbox.querySelector("input"))
-			.filter(Boolean)
-			.forEach((checkbox) => {
-				if (defaultValues.includes((checkbox as HTMLInputElement).value)) {
-					expect(checkbox.nextElementSibling.tagName).toBe("svg");
-				} else {
-					expect(checkbox.nextElementSibling).not.toBeInTheDocument();
-				}
-			});
+		const checkboxes = getCheckboxes();
+		checkboxes.forEach((checkbox) => {
+			if (defaultValues.includes((checkbox as HTMLInputElement).value)) {
+				expect(checkbox.nextElementSibling.tagName).toBe("svg");
+			} else {
+				expect(checkbox.nextElementSibling).not.toBeInTheDocument();
+			}
+		});
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 
@@ -74,7 +75,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
 	it("should be disabled if configured", async () => {
@@ -82,23 +83,17 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		screen
-			.getAllByRole("checkbox")
-			.map((checkbox) => checkbox.querySelector("input"))
-			.filter(Boolean)
-			.forEach((checkbox) => {
-				expect(checkbox).toBeDisabled();
-			});
+		const checkboxes = getCheckboxes();
+		checkboxes.forEach((checkbox) => {
+			expect(checkbox).toBeDisabled();
+		});
 
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
 	});
 
 	it("should be able to toggle the checkboxes", async () => {
 		renderComponent();
-		const checkboxes = screen
-			.getAllByRole("checkbox")
-			.map((checkbox) => checkbox.querySelector("input"))
-			.filter(Boolean);
+		const checkboxes = getCheckboxes();
 
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(checkboxes[1]));
@@ -120,10 +115,7 @@ describe(fieldType, () => {
 		${"default"} | ${"2rem"}
 	`("should be support different displaySizes", ({ displaySize, expected }) => {
 		renderComponent({ displaySize: displaySize });
-		const checkboxes = screen
-			.getAllByRole("checkbox")
-			.map((checkbox) => checkbox.querySelector("div"))
-			.filter(Boolean);
+		const checkboxes = getCheckboxes().map((checkbox) => checkbox.parentElement);
 
 		expect(
 			checkboxes.forEach((checkbox) => {

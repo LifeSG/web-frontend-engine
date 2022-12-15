@@ -5,6 +5,8 @@ import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	getErrorMessage,
+	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
 	TOverrideField,
@@ -35,6 +37,18 @@ const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, ove
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
+const getComponent = (): HTMLElement => {
+	return getField("button", "Select");
+};
+
+const getCheckboxA = (): HTMLElement => {
+	return getField("button", "A");
+};
+
+const getCheckboxB = (): HTMLElement => {
+	return getField("button", "B");
+};
+
 describe(fieldType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -43,15 +57,16 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("button", { name: "Select" })).toBeInTheDocument();
+		expect(getComponent()).toBeInTheDocument();
 	});
 
 	it("should be able to support default values", async () => {
 		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "1 selected" })));
-		expect(screen.getByRole("button", { name: "A" }).querySelector("svg")).toBeInTheDocument();
+		const toggle = getField("button", "1 selected");
+		await waitFor(() => fireEvent.click(toggle));
+		expect(getCheckboxA().querySelector("svg")).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
@@ -62,20 +77,20 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(screen.getByRole("button", { name: "Select" }).parentElement).toHaveAttribute("disabled");
+		expect(getComponent().parentElement).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom list style width", () => {
 		const width = "24rem";
 		renderComponent({ listStyleWidth: width });
 
-		expect(screen.getByRole("list")).toHaveStyle({ width });
+		expect(getField("list")).toHaveStyle({ width });
 	});
 
 	it("should be able to support custom placeholder", () => {
@@ -88,9 +103,9 @@ describe(fieldType, () => {
 	it("should be able to toggle the checkboxes", async () => {
 		renderComponent();
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Select" })));
-		const apple = screen.getByRole("button", { name: "A" });
-		const berry = screen.getByRole("button", { name: "B" });
+		await waitFor(() => fireEvent.click(getComponent()));
+		const apple = getCheckboxA();
+		const berry = getCheckboxB();
 
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(berry));
@@ -109,8 +124,8 @@ describe(fieldType, () => {
 	it("should be able to toggle all the checkboxes at once", async () => {
 		renderComponent();
 
-		await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Select" })));
-		const selectAllButton = screen.getByRole("button", { name: "Select all" });
+		await waitFor(() => fireEvent.click(getComponent()));
+		const selectAllButton = getField("button", "Select all");
 
 		await waitFor(() => fireEvent.click(selectAllButton));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
