@@ -230,11 +230,11 @@ describe("conditional-renderer", () => {
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hello" } });
 		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "hi" } });
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hi" } });
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
 	});
 
@@ -257,7 +257,7 @@ describe("conditional-renderer", () => {
 		fireEvent.change(screen.getByRole("textbox", { name: fieldTwoLabel }), { target: { value: "world" } });
 		fireEvent.change(screen.getByRole("textbox", { name: fieldOneLabel }), { target: { value: "hi" } });
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hi" }));
 		expect(submitFn).toBeCalledWith(expect.not.objectContaining({ [fieldTwoId]: expect.anything() }));
 	});

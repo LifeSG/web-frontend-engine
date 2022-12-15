@@ -54,7 +54,7 @@ describe(fieldType, () => {
 		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(screen.getByRole("button", { name: "A" })).toHaveStyle({ "background-color": "#A4A4A4" });
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
@@ -63,7 +63,7 @@ describe(fieldType, () => {
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
@@ -82,15 +82,15 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(berry));
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(apple));
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(berry));
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
 	});
 
@@ -100,11 +100,11 @@ describe(fieldType, () => {
 		const berry = screen.getByRole("button", { name: "B" });
 
 		await waitFor(() => fireEvent.click(apple));
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple"] }));
 
 		await waitFor(() => fireEvent.click(berry));
-		await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
 	});
 
@@ -126,7 +126,7 @@ describe(fieldType, () => {
 
 			const chip = screen.getByRole("button", { name: textareaLabel });
 			await waitFor(() => fireEvent.click(chip));
-			await waitFor(() => fireEvent.click(getSubmitButton(screen)));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
