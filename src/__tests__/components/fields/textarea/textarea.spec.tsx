@@ -14,13 +14,14 @@ import {
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "textarea";
+const componentLabel = "Textarea";
 
 const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
 			[componentId]: {
-				label: "Textarea",
+				label: componentLabel,
 				fieldType: "textarea",
 				...overrideField,
 			},
@@ -42,7 +43,7 @@ describe(fieldType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: componentLabel })).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
@@ -80,7 +81,9 @@ describe(fieldType, () => {
 	it("should append text upon clicking a pill", () => {
 		renderComponent({ chipTexts: ["Pill 1", "Pill 2", "Pill 3"] });
 
-		fireEvent.change(screen.getByRole("textbox", { name: componentId }), { target: { value: "Hello" } });
+		fireEvent.change(screen.getByRole("textbox", { name: componentLabel }), {
+			target: { value: "Hello" },
+		});
 		fireEvent.click(screen.getByText("Pill 1"));
 
 		expect(screen.getByText("Hello Pill 1")).toBeInTheDocument();
@@ -94,9 +97,9 @@ describe(fieldType, () => {
 			disabled: true,
 		});
 
-		expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("rows", "5");
-		expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("placeholder", "placeholder");
-		expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("readonly");
-		expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("disabled");
+		expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("rows", "5");
+		expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("placeholder", "placeholder");
+		expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("readonly");
+		expect(screen.getByRole("textbox", { name: componentLabel })).toBeDisabled();
 	});
 });
