@@ -12,6 +12,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
+const componentLabel = "Textfield";
 const defaultFieldType = "text";
 const emailFieldType = "email";
 const numberFieldType = "numeric";
@@ -47,7 +48,7 @@ describe("textfield", () => {
 		it("should be able to render the field", () => {
 			renderComponent();
 
-			expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
+			expect(screen.getByRole("textbox", { name: componentLabel })).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
@@ -61,7 +62,10 @@ describe("textfield", () => {
 		it("should apply inputMode according to its type", () => {
 			renderComponent();
 
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("inputMode", defaultFieldType);
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute(
+				"inputMode",
+				defaultFieldType
+			);
 		});
 
 		it("should support default value", async () => {
@@ -82,10 +86,10 @@ describe("textfield", () => {
 				disabled: true,
 			});
 
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("maxLength", "10");
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("placeholder", "placeholder");
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("readonly");
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("disabled");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("maxLength", "10");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("readonly");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toBeDisabled();
 		});
 	});
 
@@ -97,13 +101,13 @@ describe("textfield", () => {
 		it("should be able to render the field", () => {
 			renderComponent({ fieldType: emailFieldType });
 
-			expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
+			expect(screen.getByRole("textbox", { name: componentLabel })).toBeInTheDocument();
 		});
 
 		it("should validate email format", async () => {
 			renderComponent({ fieldType: emailFieldType });
 
-			fireEvent.change(screen.getByRole("textbox", { name: componentId }), { target: { value: "hello" } });
+			fireEvent.change(screen.getByRole("textbox", { name: componentLabel }), { target: { value: "hello" } });
 			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_NAME })));
 
 			expect(screen.getByRole("heading", { name: "Invalid email address" })).toBeInTheDocument();
@@ -123,7 +127,7 @@ describe("textfield", () => {
 		it("should apply inputMode according to its type", () => {
 			renderComponent({ fieldType: emailFieldType });
 
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("inputMode", emailFieldType);
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("inputMode", emailFieldType);
 		});
 
 		it("should support default value", async () => {
@@ -145,10 +149,10 @@ describe("textfield", () => {
 				disabled: true,
 			});
 
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("maxLength", "10");
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("placeholder", "placeholder");
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("readOnly");
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("disabled");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("maxLength", "10");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("readOnly");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toBeDisabled();
 		});
 	});
 
@@ -160,7 +164,7 @@ describe("textfield", () => {
 		it("should be able to render the field", () => {
 			renderComponent({ fieldType: numberFieldType });
 
-			expect(screen.getByRole("textbox", { name: componentId })).toBeInTheDocument();
+			expect(screen.getByRole("textbox", { name: componentLabel })).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
@@ -177,7 +181,7 @@ describe("textfield", () => {
 		it("should apply inputMode according to its type", () => {
 			renderComponent({ fieldType: numberFieldType });
 
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("inputMode", numberFieldType);
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("inputMode", numberFieldType);
 		});
 
 		it("should support default value", async () => {
@@ -198,9 +202,9 @@ describe("textfield", () => {
 				disabled: true,
 			});
 
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("placeholder", "placeholder");
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("readOnly");
-			expect(screen.getByRole("textbox", { name: componentId })).toHaveAttribute("disabled");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("placeholder", "placeholder");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toHaveAttribute("readOnly");
+			expect(screen.getByRole("textbox", { name: componentLabel })).toBeDisabled();
 		});
 	});
 });
