@@ -75,6 +75,10 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		return stateValue.includes(value);
 	};
 
+	const formatId = (index: number): string => {
+		return `${id}-${index}`;
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -82,20 +86,21 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		return (
 			options.length > 0 &&
 			options.map((option, index) => {
+				const checkboxId = formatId(index);
+
 				return (
 					<CheckboxContainer key={index}>
 						<StyledCheckbox
 							{...otherSchema}
 							data-testid={TestHelper.generateId(id, "checkbox")}
-							aria-label={option.label}
-							id={id}
+							id={checkboxId}
 							disabled={disabled}
 							name={option.label}
 							value={option.value}
 							checked={isCheckboxChecked(option.value)}
 							onChange={handleChange}
 						/>
-						<Label htmlFor={id} disabled={disabled}>
+						<Label htmlFor={checkboxId} disabled={disabled}>
 							{option.label}
 						</Label>
 					</CheckboxContainer>
