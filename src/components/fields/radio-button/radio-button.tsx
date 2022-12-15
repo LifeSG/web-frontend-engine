@@ -48,30 +48,37 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 		return stateValue === value;
 	};
 
+	const formatId = (index: number) => {
+		return `${id}-${index}`;
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderRadioButtons = () => {
 		return (
 			options.length > 0 &&
-			options.map((option, index) => (
-				<RadioContainer key={index}>
-					<StyledRadioButton
-						{...otherSchema}
-						id={id}
-						aria-label={option.label}
-						data-testid={TestHelper.generateId(id, "radio")}
-						disabled={disabled}
-						name={option.label}
-						value={option.value}
-						checked={isRadioButtonChecked(option.value)}
-						onChange={handleChange}
-					/>
-					<Label htmlFor={id} disabled={disabled}>
-						{option.label}
-					</Label>
-				</RadioContainer>
-			))
+			options.map((option, index) => {
+				const radioButtonId = formatId(index);
+
+				return (
+					<RadioContainer key={index}>
+						<StyledRadioButton
+							{...otherSchema}
+							id={radioButtonId}
+							data-testid={TestHelper.generateId(id, "radio")}
+							disabled={disabled}
+							name={option.label}
+							value={option.value}
+							checked={isRadioButtonChecked(option.value)}
+							onChange={handleChange}
+						/>
+						<Label htmlFor={radioButtonId} disabled={disabled}>
+							{option.label}
+						</Label>
+					</RadioContainer>
+				);
+			})
 		);
 	};
 
