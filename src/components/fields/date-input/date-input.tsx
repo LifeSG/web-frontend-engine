@@ -128,9 +128,7 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const isValidDate = (value: string) => {
-		if (!value) return false;
-		if (value === "") return false;
-		if (value === ERROR_MESSAGES.DATE.INVALID) return false;
+		if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID) return false;
 
 		return true;
 	};
