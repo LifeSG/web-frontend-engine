@@ -13,9 +13,7 @@ import {
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "chips";
-
 const textareaLabel = "D";
-const textareaRoleName = `chips-${textareaLabel}`;
 
 const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -73,8 +71,8 @@ describe(fieldType, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(screen.getByRole("button", { name: "A" })).toHaveAttribute("disabled");
-		expect(screen.getByRole("button", { name: "B" })).toHaveAttribute("disabled");
+		expect(screen.getByRole("button", { name: "A" })).toBeDisabled();
+		expect(screen.getByRole("button", { name: "B" })).toBeDisabled();
 	});
 
 	it("should be able to toggle the chips", async () => {
@@ -114,10 +112,10 @@ describe(fieldType, () => {
 		renderComponent({ textarea: { label: textareaLabel } });
 		const chip = screen.getByRole("button", { name: textareaLabel });
 
-		expect(screen.queryByRole("textbox", { name: textareaRoleName })).not.toBeInTheDocument();
+		expect(screen.queryByRole("textbox", { name: textareaLabel })).not.toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(chip));
-		expect(screen.getByRole("textbox", { name: textareaRoleName })).toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: textareaLabel })).toBeInTheDocument();
 	});
 
 	describe("textarea", () => {
@@ -141,7 +139,7 @@ describe(fieldType, () => {
 			const chip = screen.getByRole("button", { name: textareaLabel });
 			await waitFor(() => fireEvent.click(chip));
 
-			expect(screen.getByRole("textbox", { name: textareaRoleName })).toHaveStyle({ resize: "vertical" });
+			expect(screen.getByRole("textbox", { name: textareaLabel })).toHaveStyle({ resize: "vertical" });
 		});
 
 		it("should be able to support custom rows", async () => {
@@ -152,7 +150,7 @@ describe(fieldType, () => {
 			const chip = screen.getByRole("button", { name: textareaLabel });
 			await waitFor(() => fireEvent.click(chip));
 
-			expect(screen.getByRole("textbox", { name: textareaRoleName })).toHaveAttribute("rows", "1");
+			expect(screen.getByRole("textbox", { name: textareaLabel })).toHaveAttribute("rows", "1");
 		});
 	});
 });

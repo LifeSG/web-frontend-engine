@@ -105,7 +105,6 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			<Chip
 				{...otherSchema}
 				key={index}
-				aria-label={option.label}
 				onClick={() => handleChange(option.value)}
 				isActive={isChipSelected(option.value)}
 			>
@@ -122,7 +121,6 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		return (
 			<Chip
 				{...otherSchema}
-				aria-label={textareaLabel}
 				onClick={() => handleTextareaChipClick(textareaLabel)}
 				isActive={isChipSelected(textareaLabel)}
 			>
@@ -145,7 +143,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 				},
 			},
 		};
-		return showTextArea && <Wrapper id={id} schema={wrapperSchema} aria-label={`${textareaLabel}-textarea`} />;
+		return showTextArea && <Wrapper id={id} schema={wrapperSchema} />;
 	};
 
 	return (
