@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { ByRoleOptions, screen } from "@testing-library/react";
 import { TFrontendEngineFieldSchema } from "../../components/frontend-engine";
 import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
 
@@ -11,18 +11,26 @@ export const getSubmitButton = (): HTMLElement => {
 export const getSubmitButtonProps = (): Record<string, TFrontendEngineFieldSchema> => {
 	return {
 		[SUBMIT_BUTTON_ID]: {
-			label: "Submit",
+			label: SUBMIT_BUTTON_LABEL,
 			fieldType: "submit",
 		},
 	};
 };
 
-export const getField = (role: TAriaRoles, label?: string, isQuery = false): HTMLElement => {
+export const getField = (role: TAriaRoles, config?: string | ByRoleOptions, isQuery = false): HTMLElement => {
+	let options: ByRoleOptions = {};
+
+	if (typeof config === "string") {
+		options = { name: config };
+	} else {
+		options = { ...config };
+	}
+
 	// NOTE: Query does not throw an error if not exist
 	if (isQuery) {
-		return screen.queryByRole(role, label && { name: label });
+		return screen.queryByRole(role, options);
 	}
-	return screen.getByRole(role, label && { name: label });
+	return screen.getByRole(role, options);
 };
 
 export const getErrorMessage = (isQuery = false): HTMLElement => {
