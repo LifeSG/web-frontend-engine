@@ -1,5 +1,5 @@
 import { DateInputProps } from "@lifesg/react-design-system/date-input";
-import { IYupValidationRule } from "src/components/frontend-engine/yup/types";
+import { IYupValidationRule } from "../../frontend-engine/yup";
 import {
 	IFrontendEngineBaseFieldJsonSchema,
 	TFrontendEngineBaseFieldJsonSchemaKeys,

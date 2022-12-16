@@ -1,9 +1,9 @@
+import isEmpty from "lodash/isEmpty";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
-import { YupHelper } from "src/components/frontend-engine/yup";
-import { TFormYupConfig, TRenderRules, TYupSchemaType } from "src/components/frontend-engine/yup/types";
-import { useValidationSchema } from "src/utils/hooks";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
+import { useValidationSchema } from "../../../utils/hooks";
+import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
 
 interface IProps {
 	id: string;
@@ -45,8 +45,6 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 			toggleShow(canShow);
 		}
 
-		return () => removeFieldValidationConfig(id);
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formValidationConfig, formValues, renderRules]);
 
@@ -61,7 +59,13 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 				Object.entries(ruleGroup).forEach(([fieldId, rules]) => {
 					const yupType = formValidationConfig?.[fieldId]?.schema.type as TYupSchemaType;
 					if (yupType) {
-						const yupBaseSchema = YupHelper.mapSchemaType(yupType);
+						let yupBaseSchema = YupHelper.mapSchemaType(yupType);
+						// this is to allow empty values in Yup.number schema
+						if (yupType === "number") {
+							yupBaseSchema = yupBaseSchema
+								.nullable()
+								.transform((_, value: number) => (!isEmpty(value) ? +value : undefined));
+						}
 						renderSchemaConfig[fieldId] = { schema: yupBaseSchema, validationRules: rules };
 					}
 				});

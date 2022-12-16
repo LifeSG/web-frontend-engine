@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { ITextareaSchema } from "src/components/fields";
-import { FrontendEngine } from "../../..";
+import { FrontendEngine } from "../../../components";
+import { ITextareaSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
@@ -28,8 +28,7 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("textara"),
-		textarea: { table: { disable: true } },
+		...CommonFieldStoryProps("textarea"),
 		chipTexts: {
 			description: "Adds clickable suggestion pills",
 			table: {
@@ -106,7 +105,7 @@ const Template: Story<Record<string, ITextareaSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	textarea: {
+	"textarea-default": {
 		fieldType: "textarea",
 		label: "Textarea",
 	},

@@ -1,9 +1,7 @@
-import React from "react";
-import * as Yup from "yup";
-import { YupHelper } from "src/components/frontend-engine/yup/helper";
 import { Button } from "@lifesg/react-design-system/button";
 import styled from "styled-components";
-import { IYupValidationRule, TYupSchemaType } from "src/components/frontend-engine/yup/types";
+import * as Yup from "yup";
+import { IYupValidationRule, TYupSchemaType, YupHelper } from "../../../components/frontend-engine/yup";
 
 export interface IValidationComponentProps {
 	type: TYupSchemaType;

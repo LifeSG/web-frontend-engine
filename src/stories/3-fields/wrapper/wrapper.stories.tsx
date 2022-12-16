@@ -1,8 +1,8 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { IWrapperSchema } from "src/components/fields/wrapper";
-import { FrontendEngine } from "../../..";
-import { ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { FrontendEngine } from "../../../components";
+import { IWrapperSchema } from "../../../components/fields/wrapper";
+import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/Wrapper",
@@ -28,7 +28,8 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		wrapper: { table: { disable: true } },
+		...CommonFieldStoryProps("wrapper"),
+		label: { table: { disable: true } },
 		fieldType: {
 			description: "Actual HTML element type to render the component as",
 			table: {
@@ -58,7 +59,7 @@ const Template: Story<Record<string, IWrapperSchema>> = (args) => <FrontendEngin
 
 export const Default = Template.bind({});
 Default.args = {
-	wrapper: {
+	"wrapper-default": {
 		fieldType: "div",
 		children: {
 			name: {

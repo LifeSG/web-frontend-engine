@@ -2,6 +2,7 @@ import isEmpty from "lodash/isEmpty";
 import React, { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import * as FrontendEngineFields from "../";
+import { TestHelper } from "../../../utils";
 import { EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";
@@ -36,12 +37,16 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		if (typeof wrapperChildren === "object") {
 			const fieldTypeKeys = Object.keys(EFieldType);
 			const fieldComponents: JSX.Element[] = [];
+
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child)) return;
+
 				const fieldType = child.fieldType?.toUpperCase();
+
 				if (typeof child === "object" && fieldTypeKeys.includes(fieldType)) {
 					const Field = (FrontendEngineFields[EFieldType[fieldType]] ||
 						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
+
 					fieldComponents.push(
 						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
 							<Controller
@@ -78,7 +83,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		return <>{fields}</>;
 	}
 	return (
-		<Element {...otherSchema} {...{ id }}>
+		<Element {...otherSchema} {...{ id, "data-testid": TestHelper.generateId(id, fieldType) }}>
 			{fields}
 		</Element>
 	);

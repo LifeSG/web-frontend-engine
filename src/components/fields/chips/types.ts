@@ -11,7 +11,7 @@ export interface IChipsSchema
 		React.ButtonHTMLAttributes<HTMLButtonElement> {
 	options: IChipOption[];
 	textarea?: {
-		name: string;
+		label: string;
 		validation?: IYupValidationRule[];
 		resizable?: boolean;
 		maxLength?: number;

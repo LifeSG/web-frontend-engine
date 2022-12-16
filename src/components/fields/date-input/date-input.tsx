@@ -2,9 +2,9 @@ import { LocalDate } from "@js-joda/core";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
-import { DateTimeHelper } from "../../../utils";
+import { DateTimeHelper, TestHelper } from "../../../utils";
+import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { IDateInputSchema } from "./types";
@@ -141,6 +141,8 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		<Form.DateInput
 			{...otherSchema}
 			{...otherProps}
+			id={id}
+			data-testid={TestHelper.generateId(id, "date")}
 			label={label}
 			errorMessage={error?.message}
 			onChangeRaw={handleChange}

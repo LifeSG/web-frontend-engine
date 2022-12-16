@@ -2,6 +2,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { AddonProps } from "@lifesg/react-design-system/input-group/types";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
@@ -59,7 +60,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 					"internationalNumber",
 					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER,
 					(value) => {
-						if (!value || !internationalRule) return true;
+						if (!value || (contactNumberRule && !internationalRule)) return true;
 
 						return PhoneHelper.isInternationalNumber(selectedCountry?.name, value);
 					}
@@ -108,8 +109,9 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	};
 
 	const getSpacing = (): number => {
-		if (selectedCountry?.name === "Singapore") return 4;
-
+		if (selectedCountry?.name === "Singapore") {
+			return 4;
+		}
 		return 0;
 	};
 
@@ -162,6 +164,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			data-testid={TestHelper.generateId(id, "contact")}
 			name={name}
 			disabled={disabled}
 			type="tel"

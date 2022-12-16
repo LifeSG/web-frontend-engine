@@ -1,6 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IContactNumberSchema } from "../../../components/fields";
+import { getCountries } from "../../../components/fields/contact-number/data";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
@@ -23,18 +24,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("contact"),
-		"contact-default": { table: { disable: true } },
-		label: {
-			description: "Specifies the label text",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -54,8 +43,9 @@ export default {
 				},
 			},
 			control: {
-				type: "text",
+				type: "select",
 			},
+			options: getCountries(),
 		},
 		enableSearch: {
 			description: "Specifies if the given list of country codes can be searched",

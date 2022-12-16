@@ -71,8 +71,12 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const getCheckboxStatus = (value: string): boolean => {
+	const isCheckboxChecked = (value: string): boolean => {
 		return stateValue.includes(value);
+	};
+
+	const formatId = (index: number): string => {
+		return `${id}-${index}`;
 	};
 
 	// =============================================================================
@@ -82,17 +86,18 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		return (
 			options.length > 0 &&
 			options.map((option, index) => {
-				const checkboxId = TestHelper.generateId(id, "checkbox");
+				const checkboxId = formatId(index);
 
 				return (
 					<CheckboxContainer key={index}>
 						<StyledCheckbox
 							{...otherSchema}
+							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={checkboxId}
 							disabled={disabled}
 							name={option.label}
 							value={option.value}
-							checked={getCheckboxStatus(option.value)}
+							checked={isCheckboxChecked(option.value)}
 							onChange={handleChange}
 						/>
 						<Label htmlFor={checkboxId} disabled={disabled}>

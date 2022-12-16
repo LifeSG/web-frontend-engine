@@ -1,7 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IDateInputSchema } from "src/components/fields/date-input/types";
-import { FrontendEngine } from "../../..";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
@@ -11,9 +10,11 @@ export default {
 			page: () => (
 				<>
 					<Title>DateInput</Title>
-					<Description></Description>
+					<Description>
+						This component provides the functionality for users to input a specific date according to the
+						date format
+					</Description>
 					<Heading>Props</Heading>
-					<Description></Description>
 					<ArgsTable story={PRIMARY_STORY} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
@@ -23,7 +24,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("date"),
-		date: { table: { disable: true } },
 		useCurrentDate: {
 			description: "Indicates if field should be prefilled with current system date",
 			table: {
@@ -67,7 +67,7 @@ const Template: Story<Record<string, IDateInputSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	date: {
+	"date-default": {
 		fieldType: "date",
 		label: "Date",
 	},

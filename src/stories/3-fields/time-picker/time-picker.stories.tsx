@@ -22,18 +22,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("time"),
-		timepicker: { table: { disable: true } },
-		label: {
-			description: "A name/description of the purpose of the form element",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -93,25 +81,41 @@ const Template: Story<Record<string, ITimePickerSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	timepicker: {
-		label: "Textfield",
+	"time-default": {
+		label: "Timepicker",
 		fieldType: "time",
 	},
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"timepicker-disabled": {
-		label: "Time",
+	"time-disabled": {
+		label: "Timepicker",
 		fieldType: "time",
 		disabled: true,
 	},
 };
 
+export const DefaultValue = () => (
+	<FrontendEngine
+		data={{
+			fields: {
+				"time-default-value": {
+					fieldType: "time",
+					label: "Timepicker",
+				},
+				...SubmitButtonStorybook,
+			},
+			defaultValues: { "time-default-value": "11:11am" },
+		}}
+	/>
+);
+DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+
 export const UseCurrentTime = Template.bind({});
 UseCurrentTime.args = {
-	"timepicker-use-current-time": {
-		label: "Time",
+	"time-use-current-time": {
+		label: "Timepicker",
 		fieldType: "time",
 		useCurrentTime: true,
 	},
@@ -134,8 +138,8 @@ WithDefaultValue.parameters = {
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"timepicker-placeholder": {
-		label: "Time",
+	"time-placeholder": {
+		label: "Timepicker",
 		fieldType: "time",
 		placeholder: "Select a preferred time",
 	},
@@ -143,8 +147,8 @@ Placeholder.args = {
 
 export const Use24HoursFormat = Template.bind({});
 Use24HoursFormat.args = {
-	"timepicker-24hr-format": {
-		label: "Time",
+	"time-24hr-format": {
+		label: "Timepicker",
 		fieldType: "time",
 		is24HourFormat: true,
 	},

@@ -44,8 +44,12 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const getRadioButtonStatus = (value: string): boolean => {
+	const isRadioButtonChecked = (value: string): boolean => {
 		return stateValue === value;
+	};
+
+	const formatId = (index: number) => {
+		return `${id}-${index}`;
 	};
 
 	// =============================================================================
@@ -55,17 +59,18 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 		return (
 			options.length > 0 &&
 			options.map((option, index) => {
-				const radioButtonId = TestHelper.generateId(id, "radio");
+				const radioButtonId = formatId(index);
 
 				return (
 					<RadioContainer key={index}>
 						<StyledRadioButton
 							{...otherSchema}
 							id={radioButtonId}
+							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled}
 							name={option.label}
 							value={option.value}
-							checked={getRadioButtonStatus(option.value)}
+							checked={isRadioButtonChecked(option.value)}
 							onChange={handleChange}
 						/>
 						<Label htmlFor={radioButtonId} disabled={disabled}>

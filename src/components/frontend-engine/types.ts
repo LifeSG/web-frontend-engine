@@ -1,4 +1,4 @@
-import { ControllerFieldState, ControllerRenderProps, FormState, ValidationMode } from "react-hook-form";
+import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
 import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
@@ -15,7 +15,7 @@ import {
 	ITimePickerSchema,
 } from "../fields";
 import { IWrapperSchema } from "../fields/wrapper";
-import { IYupValidationRule, TRenderRules } from "./yup/types";
+import { IYupValidationRule, TRenderRules } from "./yup";
 
 // =============================================================================
 // FRONTEND ENGINE
@@ -23,6 +23,7 @@ import { IYupValidationRule, TRenderRules } from "./yup/types";
 export interface IFrontendEngineProps {
 	className?: string | undefined;
 	data?: IFrontendEngineData | undefined;
+	onChange?: (values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown | undefined;
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }
 
@@ -57,8 +58,10 @@ export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all
 export type TValidationMode = keyof ValidationMode;
 
 export interface IFrontendEngineRef extends HTMLFormElement {
-	/** gets information about the entire form state */
-	getFormState: () => FormState<TFrontendEngineValues>;
+	/** gets form values */
+	getValues: () => TFrontendEngineValues;
+	/** check if form is valid */
+	isValid: () => boolean;
 	/** triggers form submission */
 	submit: () => void;
 }
@@ -81,7 +84,7 @@ export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validatio
 export enum EFieldType {
 	TEXTAREA = "TextArea",
 	TEXT = "TextField",
-	NUMBER = "TextField",
+	NUMERIC = "TextField",
 	EMAIL = "TextField",
 	SUBMIT = "SubmitButton",
 	SELECT = "Select",

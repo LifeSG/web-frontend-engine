@@ -1,8 +1,8 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React, { useRef } from "react";
-import { FrontendEngine, IFrontendEngineProps, IFrontendEngineRef } from "src/components/frontend-engine";
+import { useRef } from "react";
+import { FrontendEngine, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { SubmitButtonStorybook } from "../common";
 
 export default {
@@ -168,6 +168,29 @@ ValidateOnBlur.args = {
 	},
 };
 
+export const OnChange: Story<IFrontendEngineProps> = () => (
+	<FrontendEngine
+		data={{
+			fields: {
+				name: {
+					label: "What is your name",
+					fieldType: "textarea",
+					validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+					chipTexts: ["John", "Doe"],
+				},
+				...SubmitButtonStorybook,
+			},
+			defaultValues: {
+				name: "Erik Tan",
+			},
+		}}
+		onChange={(values, isValid) => console.log({ values, isValid })}
+	/>
+);
+OnChange.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
 export const ExternalSubmit: Story<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
@@ -204,10 +227,10 @@ ExternalSubmit.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-export const GetFormState: Story<IFrontendEngineProps> = () => {
+export const GetValues: Story<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
-		console.log(ref.current.getFormState());
+		console.log(ref.current.getValues());
 	};
 
 	return (
@@ -236,6 +259,42 @@ export const GetFormState: Story<IFrontendEngineProps> = () => {
 		</>
 	);
 };
-GetFormState.parameters = {
+GetValues.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+export const CheckIsValid: Story<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const handleClick = () => {
+		console.log(ref.current.isValid());
+	};
+
+	return (
+		<>
+			<FrontendEngine
+				data={{
+					fields: {
+						name: {
+							label: "What is your name",
+							fieldType: "textarea",
+							validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+							chipTexts: ["John", "Doe"],
+						},
+						...SubmitButtonStorybook,
+					},
+					defaultValues: {
+						name: "Erik Tan",
+					},
+				}}
+				ref={ref}
+			/>
+			<br />
+			<Button.Default styleType="secondary" onClick={handleClick}>
+				Get form state (check console)
+			</Button.Default>
+		</>
+	);
+};
+CheckIsValid.parameters = {
 	controls: { hideNoControlsWarning: true },
 };

@@ -1,6 +1,6 @@
-import { ISubmitButtonSchema } from "src/components/fields";
 import styled from "styled-components";
 import { FrontendEngine } from "../components";
+import { ISubmitButtonSchema } from "../components/fields";
 
 export const ExcludeReactFormHookProps = {
 	invalid: { table: { disable: true } },
@@ -14,6 +14,7 @@ export const ExcludeReactFormHookProps = {
 };
 
 export const CommonFieldStoryProps = (fieldType: string) => ({
+	[`${fieldType}-default`]: { table: { disable: true } },
 	fieldType: {
 		description: `Use <code>${fieldType}</code> to show this field`,
 		table: {
@@ -37,6 +38,26 @@ export const CommonFieldStoryProps = (fieldType: string) => ({
 		control: {
 			type: "text",
 		},
+	},
+	validation: {
+		description:
+			"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='/docs/form-validation-schema--required'>Validation Schema</a> stories",
+		table: {
+			type: {
+				summary: "array",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
+	showIf: {
+		description:
+			"A set of conditions to render the field. For more info, refer to the <a href='/docs/form-conditional-rendering--filled'>Conditional Rendering</a> stories",
+		table: {
+			type: {
+				summary: "array",
+			},
+		},
+		type: { name: "object", value: {} },
 	},
 });
 

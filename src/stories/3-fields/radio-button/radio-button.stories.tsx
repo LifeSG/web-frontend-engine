@@ -22,7 +22,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("radio"),
-		"radio-button-default": { table: { disable: true } },
 		disabled: {
 			description: "Specifies if the radio buttons should be disabled",
 			table: {
@@ -40,7 +39,7 @@ export default {
 			description: "A list of options that a user can choose from",
 			table: {
 				type: {
-					summary: "IOption[]",
+					summary: "{ label: string, value: string }[]",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -54,7 +53,7 @@ const Template: Story<Record<string, IRadioButtonGroupSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	"radio-button-default": {
+	"radio-default": {
 		fieldType: "radio",
 		label: "Radio Button",
 		options: [
@@ -69,7 +68,7 @@ export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"radio-button-default-value": {
+				"radio-default-value": {
 					fieldType: "radio",
 					label: "Fruits",
 					options: [
@@ -80,7 +79,7 @@ export const DefaultValue = () => (
 				},
 				...SubmitButtonStorybook,
 			},
-			defaultValues: { "radio-button-default-value": "Apple" },
+			defaultValues: { "radio-default-value": "Apple" },
 		}}
 	/>
 );
@@ -88,7 +87,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"radio-button-disabled": {
+	"radio-disabled": {
 		fieldType: "radio",
 		label: "Radio Button",
 		options: [
@@ -102,7 +101,7 @@ Disabled.args = {
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"radio-button-with-validation": {
+	"radio-with-validation": {
 		fieldType: "radio",
 		label: "Radio Button",
 		options: [

@@ -1,9 +1,8 @@
 import { LocalTime } from "@js-joda/core";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
-import { ERROR_MESSAGES } from "src/components/shared";
 import * as Yup from "yup";
-import { DateTimeHelper } from "../../../utils";
+import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ITimePickerSchema } from "./types";
@@ -37,7 +36,7 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 			const timeFormatPattern = is24HourFormat ? "H:mm" : "h:mma";
 			handleCurrentTime(timeFormatPattern);
 		} else {
-			setStateValue(formatLocalState(value));
+			setStateValue(value);
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,16 +55,8 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	const handleCurrentTime = (format: string): void => {
 		const currentTime = DateTimeHelper.formatDateTime(LocalTime.now().toString(), format, "time");
 
-		setStateValue(formatLocalState(currentTime));
+		setStateValue(currentTime);
 		onChange({ target: { value: currentTime } });
-	};
-
-	const formatLocalState = (value: string): string => {
-		if (!value) return "";
-
-		if (!is24HourFormat) return value;
-
-		return value.substring(0, value.length - 2);
 	};
 
 	// =============================================================================
@@ -76,6 +67,7 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			data-testid={TestHelper.generateId(id, "time")}
 			label={label}
 			errorMessage={error?.message}
 			value={stateValue}

@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { ISelectSchema } from "src/components/fields/select/types";
+import { ISelectSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
@@ -21,7 +21,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("select"),
-		select: { table: { disable: true } },
 		disabled: {
 			description: "Specifies if the input should be disabled",
 			table: {
@@ -39,7 +38,7 @@ export default {
 			description: "A list of options that a user can choose from",
 			table: {
 				type: {
-					summary: "IOption[]",
+					summary: "{ label: string, value: string }[]",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -75,7 +74,7 @@ const Template: Story<Record<string, ISelectSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	select: {
+	"select-default": {
 		fieldType: "select",
 		label: "Fruits",
 		options: [
@@ -109,7 +108,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"select-disasbled": {
+	"select-disabled": {
 		fieldType: "select",
 		label: "Fruits",
 		options: [

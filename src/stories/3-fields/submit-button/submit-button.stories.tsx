@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { ISubmitButtonSchema } from "src/components/fields";
-import { FrontendEngine } from "../../..";
+import { FrontendEngine } from "../../../components";
+import { ISubmitButtonSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps } from "../../common";
 
 export default {
@@ -27,7 +27,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("submit"),
-		submit: { table: { disable: true } },
 		styleType: {
 			description: "The style type of the button",
 			table: {
@@ -62,7 +61,7 @@ const Template: Story<Record<string, ISubmitButtonSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	submit: {
+	"submit-default": {
 		fieldType: "submit",
 		label: "Submit",
 	},

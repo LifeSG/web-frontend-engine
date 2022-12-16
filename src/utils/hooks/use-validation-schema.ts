@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { YupContext } from "src/components/frontend-engine/yup";
-import { YupHelper } from "src/components/frontend-engine/yup/helper";
-import { IYupValidationRule } from "src/components/frontend-engine/yup/types";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
+import { IYupValidationRule, YupContext, YupHelper } from "../../components/frontend-engine/yup";
 
 /**
  * Hook that interacts with the validation schema context provider

@@ -1,5 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import styled, { css } from "styled-components";
+import { Chip } from "../../shared";
 
 interface ITextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
 	maxLength?: number | undefined;

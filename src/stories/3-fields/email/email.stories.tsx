@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { IEmailSchema } from "src/components/fields";
-import { FrontendEngine } from "../../..";
+import { FrontendEngine } from "../../../components";
+import { IEmailSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
@@ -27,7 +27,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("email"),
-		email: { table: { disable: true } },
 		maxLength: {
 			description: "A specified maximum length for the value of the form element",
 			table: {
@@ -72,7 +71,7 @@ const Template: Story<Record<string, IEmailSchema>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-	email: {
+	"email-default": {
 		label: "Email",
 		fieldType: "email",
 	},

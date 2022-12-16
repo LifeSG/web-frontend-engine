@@ -1,9 +1,9 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { kebabCase } from "lodash";
 import React, { useEffect, useState } from "react";
-import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
+import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { Chip } from "../../shared";
 import { ChipContainer, StyledTextArea, Wrapper } from "./textarea.styles";
@@ -14,7 +14,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, label, validation },
+		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, label, validation, ...otherSchema },
 		id,
 		name,
 		onChange,
@@ -83,8 +83,10 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 			<Wrapper chipPosition={chipPosition}>
 				{renderChips()}
 				<StyledTextArea
+					{...otherSchema}
 					{...otherProps}
-					id={TestHelper.generateId(id, "textarea")}
+					id={id}
+					data-testid={TestHelper.generateId(id, "textarea")}
 					name={name}
 					maxLength={maxLength}
 					rows={rows}
