@@ -61,9 +61,11 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const subscription = watch((value) => onChange?.(value, checkIsFormValid()));
+		if (onChange) {
+			const subscription = watch((value) => onChange(value, checkIsFormValid()));
 
-		return () => subscription.unsubscribe();
+			return () => subscription.unsubscribe();
+		}
 	}, [checkIsFormValid, onChange, watch]);
 
 	// =============================================================================
