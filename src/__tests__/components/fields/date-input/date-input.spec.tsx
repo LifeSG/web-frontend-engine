@@ -17,7 +17,6 @@ import {
 const submitFn = jest.fn();
 const componentId = "field";
 const fieldType = "date";
-const formats = ["day", "month", "year"];
 
 const renderComponent = (overrideField?: TOverrideField<IDateInputSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -36,15 +35,15 @@ const renderComponent = (overrideField?: TOverrideField<IDateInputSchema>, overr
 };
 
 const getDayInput = (): HTMLElement => {
-	return getField("spinbutton", "day-input");
+	return getField("textbox", "day-input");
 };
 
 const getMonthInput = (): HTMLElement => {
-	return getField("spinbutton", "month-input");
+	return getField("textbox", "month-input");
 };
 
 const getYearInput = (): HTMLElement => {
-	return getField("spinbutton", "year-input");
+	return getField("textbox", "year-input");
 };
 
 describe(fieldType, () => {
@@ -91,8 +90,8 @@ describe(fieldType, () => {
 
 	it("should support other date formats", async () => {
 		renderComponent({ dateFormat: "d MMMM uuuu" });
-		fireEvent.change(getDayInput(), { target: { value: "1" } });
-		fireEvent.change(getMonthInput(), { target: { value: "1" } });
+		fireEvent.change(getDayInput(), { target: { value: "01" } });
+		fireEvent.change(getMonthInput(), { target: { value: "01" } });
 		fireEvent.change(getYearInput(), { target: { value: "2022" } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -125,11 +124,11 @@ describe(fieldType, () => {
 	});
 
 	it.each`
-		condition       | config                 | invalid           | valid
-		${"future"}     | ${{ future: true }}    | ${[1, 1, 2022]}   | ${[2, 1, 2022]}
-		${"past"}       | ${{ past: true }}      | ${[1, 1, 2022]}   | ${[12, 31, 2021]}
-		${"non-future"} | ${{ notFuture: true }} | ${[2, 1, 2022]}   | ${[1, 1, 2022]}
-		${"non-past"}   | ${{ notPast: true }}   | ${[31, 12, 2021]} | ${[1, 1, 2022]}
+		condition       | config                 | invalid                 | valid
+		${"future"}     | ${{ future: true }}    | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"past"}       | ${{ past: true }}      | ${["01", "01", "2022"]} | ${["12", "31", "2021"]}
+		${"non-future"} | ${{ notFuture: true }} | ${["02", "01", "2022"]} | ${["01", "01", "2022"]}
+		${"non-past"}   | ${{ notPast: true }}   | ${["31", "12", "2021"]} | ${["01", "01", "2022"]}
 	`("should be able to validate for $condition dates", async ({ config, invalid, valid }) => {
 		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
 		renderComponent({ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] });
