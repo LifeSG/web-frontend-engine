@@ -16,6 +16,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 		id,
 		value,
 		onChange,
+		error,
 		...otherProps
 	} = props;
 
@@ -92,7 +93,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 			inputMode={formatInputMode()}
 			onChange={handleChange}
 			value={stateValue}
-			errorMessage={otherProps.error?.message}
+			errorMessage={error?.message}
 		/>
 	);
 };

@@ -19,6 +19,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		name,
 		onChange,
 		value,
+		error,
 		...otherProps
 	} = props;
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
@@ -93,7 +94,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 					resizable={resizable}
 					onChange={handleChange}
 					value={stateValue}
-					errorMessage={otherProps.error?.message}
+					errorMessage={error?.message}
 				/>
 			</Wrapper>
 		</Form.CustomField>

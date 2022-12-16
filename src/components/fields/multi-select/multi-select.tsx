@@ -19,7 +19,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 		name,
 		value,
 		onChange,
-		...otherProps
+		error,
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
@@ -70,7 +70,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={otherProps.error?.message}>
+		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
 			<InputMultiSelect
 				{...otherSchema}
 				id={id}
