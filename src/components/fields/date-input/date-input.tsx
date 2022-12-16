@@ -1,7 +1,6 @@
 import { LocalDate } from "@js-joda/core";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
@@ -22,7 +21,6 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		...otherProps
 	} = props;
 	const [stateValue, setStateValue] = useState<string>(value || ""); // adheres to dateFormat
-	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -33,6 +31,7 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		const pastRule = validation?.find((rule) => "past" in rule);
 		const notFutureRule = validation?.find((rule) => "notFuture" in rule);
 		const notPastRule = validation?.find((rule) => "notPast" in rule);
+
 		setFieldValidationConfig(
 			id,
 			Yup.string()
@@ -70,29 +69,15 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	 */
 	useEffect(() => {
 		if (!dateFormat) return;
+
 		if (useCurrentDate && !value) {
-			let currentDate: string;
-			try {
-				currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
-			} catch (error) {
-				currentDate = ERROR_MESSAGES.DATE.INVALID;
-			}
-			setStateValue(currentDate);
+			const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
 			onChange({ target: { value: currentDate } });
+			setStateValue(currentDate);
 		} else if (!isValidDate(value)) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
-			let formattedDate: string;
-			try {
-				formattedDate = DateTimeHelper.formatDateTime(value, dateFormat, "date");
-			} catch (error) {
-				formattedDate = ERROR_MESSAGES.DATE.INVALID;
-			}
-			if (isValidDate(value)) setStateValue(formattedDate);
-			else {
-				setStateValue("");
-				setValue(id, undefined);
-			}
+			setStateValue(value);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [useCurrentDate, value, dateFormat]);
@@ -110,27 +95,24 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 				target: { value: ERROR_MESSAGES.DATE.INVALID },
 			});
 		} else {
-			try {
-				onChange({
-					target: {
-						value: DateTimeHelper.formatDateTime([year, month, day].join("-"), dateFormat, "date"),
-					},
-				});
-			} catch (error) {
-				onChange({
-					target: { value: ERROR_MESSAGES.DATE.INVALID },
-				});
-			}
+			onChange({
+				target: {
+					value: DateTimeHelper.formatDateTime(
+						[year, month, day].join("-"),
+						dateFormat,
+						"date",
+						ERROR_MESSAGES.DATE.INVALID
+					),
+				},
+			});
 		}
 	};
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const isValidDate = (value: string) => {
-		if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID) return false;
-
-		return true;
+	const isValidDate = (value: string): boolean => {
+		return value && value !== ERROR_MESSAGES.DATE.INVALID;
 	};
 
 	// =============================================================================
