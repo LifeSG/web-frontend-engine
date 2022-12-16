@@ -7,10 +7,10 @@ import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";
 
 interface IWrapperProps {
-	id?: string;
+	id?: string | undefined;
 	schema?: IWrapperSchema | undefined;
 	/** only used internally by FrontendEngine */
-	children?: Record<string, TFrontendEngineFieldSchema>;
+	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
 }
 
 export const Wrapper = (props: IWrapperProps): JSX.Element | null => {

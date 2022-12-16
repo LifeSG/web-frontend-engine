@@ -1,10 +1,11 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Chip, ERROR_MESSAGES } from "../../shared";
-import { IWrapperSchema, Wrapper } from "../wrapper";
+import { ITextareaSchema, TextArea } from "../textarea";
 import { ChipContainer } from "./chips.styles";
 import { IChipsSchema } from "./types";
 
@@ -22,6 +23,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextArea, setShowTextArea] = useState<boolean>(false);
+	const { control } = useFormContext();
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationSchema();
 
 	// =============================================================================
@@ -133,17 +135,25 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			return;
 		}
 		const { name: label, ...textAreaSchema } = textarea;
-		const wrapperSchema: IWrapperSchema = {
-			fieldType: "div",
-			children: {
-				[getTextAreaId()]: {
-					fieldType: "textarea",
-					label,
-					...textAreaSchema,
-				},
-			},
+		const textAreaId = getTextAreaId();
+		const schema: ITextareaSchema = {
+			fieldType: "textarea",
+			label,
+			...textAreaSchema,
 		};
-		return showTextArea && <Wrapper id={id} schema={wrapperSchema} />;
+		return (
+			showTextArea && (
+				<Controller
+					control={control}
+					name={textAreaId}
+					shouldUnregister={true}
+					render={({ field, fieldState }) => {
+						const fieldProps = { ...field, id: textAreaId, ref: undefined };
+						return <TextArea schema={schema} {...fieldProps} {...fieldState} />;
+					}}
+				/>
+			)
+		);
 	};
 
 	return (

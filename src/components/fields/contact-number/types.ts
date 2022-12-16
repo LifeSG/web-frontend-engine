@@ -10,7 +10,7 @@ export type TCountry = keyof typeof InternationalCallingCodeMap;
 
 interface IContactNumberProps extends FormInputGroupProps<string, unknown> {
 	country?: TCountry;
-	enableSearch?: boolean;
+	enableSearch?: boolean | undefined;
 }
 
 export type TSingaporeNumberRule = "default" | "house" | "mobile";

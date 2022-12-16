@@ -1,9 +1,9 @@
-import { DateTimeFormatter, LocalTime, ResolverStyle } from "@js-joda/core";
-import { Locale } from "@js-joda/locale_en";
+import { LocalTime } from "@js-joda/core";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
+import { ERROR_MESSAGES } from "src/components/shared";
 import * as Yup from "yup";
-import { DateHelper } from "../../../utils";
+import { DateTimeHelper } from "../../../utils";
 import { useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ITimePickerSchema } from "./types";
@@ -33,13 +33,9 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		const timeFormatPattern = is24HourFormat ? "H:mm" : "h:mma";
-		const timeFormatter = DateTimeFormatter.ofPattern(timeFormatPattern)
-			.withResolverStyle(ResolverStyle.STRICT)
-			.withLocale(Locale.ENGLISH);
-
 		if (useCurrentTime && !value) {
-			handleCurrentTime(timeFormatter);
+			const timeFormatPattern = is24HourFormat ? "H:mm" : "h:mma";
+			handleCurrentTime(timeFormatPattern);
 		} else {
 			setStateValue(formatLocalState(value));
 		}
@@ -57,8 +53,8 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const handleCurrentTime = (format: DateTimeFormatter): void => {
-		const currentTime = DateHelper.formatDateTime(LocalTime.now().toString(), format);
+	const handleCurrentTime = (format: string): void => {
+		const currentTime = DateTimeHelper.formatDateTime(LocalTime.now().toString(), format, "time");
 
 		setStateValue(formatLocalState(currentTime));
 		onChange({ target: { value: currentTime } });

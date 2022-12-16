@@ -28,6 +28,7 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
+		wrapper: { table: { disable: true } },
 		fieldType: {
 			description: "Actual HTML element type to render the component as",
 			table: {

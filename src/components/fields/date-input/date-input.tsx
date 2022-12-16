@@ -1,11 +1,10 @@
-import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
-import { Locale } from "@js-joda/locale_en";
+import { LocalDate } from "@js-joda/core";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useValidationSchema } from "src/utils/hooks";
 import * as Yup from "yup";
-import { DateHelper } from "../../../utils";
+import { DateTimeHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { IDateInputSchema } from "./types";
@@ -22,7 +21,6 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		error,
 		...otherProps
 	} = props;
-	const [dateFormatter, setDateFormatter] = useState<DateTimeFormatter>();
 	const [stateValue, setStateValue] = useState<string>(value || ""); // adheres to dateFormat
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationSchema();
@@ -44,34 +42,25 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 					return !isNaN(date.valueOf());
 				})
 				.test("future", futureRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
-					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !futureRule?.future)
-						return true;
+					if (!isValidDate(value) || !futureRule?.future) return true;
 					return LocalDate.parse(value).isAfter(LocalDate.now());
 				})
 				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
-					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !pastRule?.past) return true;
+					if (!isValidDate(value) || !pastRule?.past) return true;
 					return LocalDate.parse(value).isBefore(LocalDate.now());
 				})
 				.test("not-future", notFutureRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE, (value) => {
-					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !notFutureRule?.notFuture)
-						return true;
+					if (!isValidDate(value) || !notFutureRule?.notFuture) return true;
 					return !LocalDate.parse(value).isAfter(LocalDate.now());
 				})
 				.test("not-past", notPastRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
-					if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID || !notPastRule?.notPast)
-						return true;
+					if (!isValidDate(value) || !notPastRule?.notPast) return true;
 					return !LocalDate.parse(value).isBefore(LocalDate.now());
 				}),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
-
-	useEffect(() => {
-		setDateFormatter(
-			DateTimeFormatter.ofPattern(dateFormat).withResolverStyle(ResolverStyle.STRICT).withLocale(Locale.ENGLISH)
-		);
-	}, [dateFormat]);
 
 	/**
 	 * update local state according to various scenarios
@@ -80,31 +69,33 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	 * - otherwise if value cannot be parsed, clear both local state and registered value
 	 */
 	useEffect(() => {
-		if (!dateFormatter) return;
+		if (!dateFormat) return;
 		if (useCurrentDate && !value) {
-			const currentDate = DateHelper.formatDateTime(LocalDate.now().toString(), dateFormatter, true);
-
+			let currentDate: string;
+			try {
+				currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
+			} catch (error) {
+				currentDate = ERROR_MESSAGES.DATE.INVALID;
+			}
 			setStateValue(currentDate);
 			onChange({ target: { value: currentDate } });
-		} else if (value === ERROR_MESSAGES.DATE.INVALID) {
+		} else if (!isValidDate(value)) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
-			let formattedDate = "";
+			let formattedDate: string;
 			try {
-				formattedDate = DateHelper.formatDateTime(
-					LocalDate.parse(value, dateFormatter).toString(),
-					dateFormatter,
-					true
-				);
-			} catch (error) {}
-			if (formattedDate && formattedDate !== value) setStateValue(formattedDate);
-			else if (!formattedDate) {
+				formattedDate = DateTimeHelper.formatDateTime(value, dateFormat, "date");
+			} catch (error) {
+				formattedDate = ERROR_MESSAGES.DATE.INVALID;
+			}
+			if (isValidDate(value)) setStateValue(formattedDate);
+			else {
 				setStateValue("");
 				setValue(id, undefined);
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [useCurrentDate, value, dateFormatter]);
+	}, [useCurrentDate, value, dateFormat]);
 
 	// =============================================================================
 	// EVENT HANDLER
@@ -114,21 +105,32 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 			onChange({
 				target: { value: undefined },
 			});
-		} else if (!day.length || !month.length || year.length !== 4) {
+		} else if (day.length < 2 || month.length < 2 || year.length < 4) {
 			onChange({
 				target: { value: ERROR_MESSAGES.DATE.INVALID },
 			});
 		} else {
-			onChange({
-				target: {
-					value: DateHelper.formatDateTime(
-						[year, month.padStart(2, "0"), day.padStart(2, "0")].join("-"),
-						dateFormatter,
-						true
-					),
-				},
-			});
+			try {
+				onChange({
+					target: {
+						value: DateTimeHelper.formatDateTime([year, month, day].join("-"), dateFormat, "date"),
+					},
+				});
+			} catch (error) {
+				onChange({
+					target: { value: ERROR_MESSAGES.DATE.INVALID },
+				});
+			}
 		}
+	};
+
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
+	const isValidDate = (value: string) => {
+		if (!value || value === "" || value === ERROR_MESSAGES.DATE.INVALID) return false;
+
+		return true;
 	};
 
 	// =============================================================================

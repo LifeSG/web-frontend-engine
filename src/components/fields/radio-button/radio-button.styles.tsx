@@ -2,7 +2,7 @@ import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import styled from "styled-components";
 
 interface ILabelProps {
-	disabled?: boolean;
+	disabled?: boolean | undefined;
 }
 
 export const Label = styled.label<ILabelProps>`

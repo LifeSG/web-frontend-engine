@@ -2,7 +2,7 @@ import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import styled from "styled-components";
 
 interface ILabelProps {
-	disabled?: boolean;
+	disabled?: boolean | undefined;
 }
 
 export const Label = styled.label<ILabelProps>`

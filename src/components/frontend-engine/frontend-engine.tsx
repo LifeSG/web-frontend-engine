@@ -31,14 +31,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		defaultValues: defaultValues,
 		resolver: yupResolver(validationSchema),
 	});
-	const { watch, handleSubmit: reactFormHookSubmit, formState } = formMethods;
-
-	// TODO: Remove logging
-	useEffect(() => {
-		const subscription = watch((value, { name, type }) => console.log(value, name, type));
-
-		return () => subscription.unsubscribe();
-	}, [watch]);
+	const { handleSubmit: reactFormHookSubmit, formState } = formMethods;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -53,7 +46,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}));
 
 	const handleSubmit = (data: TFrontendEngineValues) => {
-		console.log(data); // TODO: remove
 		onSubmit?.(data);
 	};
 
