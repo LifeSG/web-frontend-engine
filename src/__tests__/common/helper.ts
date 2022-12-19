@@ -17,13 +17,13 @@ export const getSubmitButtonProps = (): Record<string, TFrontendEngineFieldSchem
 	};
 };
 
-export const getField = (role: TAriaRoles, config?: string | ByRoleOptions, isQuery = false): HTMLElement => {
+export const getField = (role: TAriaRoles, nameOrConfig?: string | ByRoleOptions, isQuery = false): HTMLElement => {
 	let options: ByRoleOptions = {};
 
-	if (typeof config === "string") {
-		options = { name: config };
+	if (typeof nameOrConfig === "string") {
+		options = { name: nameOrConfig };
 	} else {
-		options = { ...config };
+		options = { ...nameOrConfig };
 	}
 
 	// NOTE: Query does not throw an error if not exist
