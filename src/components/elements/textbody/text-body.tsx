@@ -9,7 +9,7 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 	// =============================================================================
 	const {
 		id,
-		schema: { children, hasNestedFields: hasMultipleFields = false, ...otherSchema },
+		schema: { children, ...otherSchema },
 	} = props;
 
 	// =============================================================================
@@ -19,8 +19,8 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 		return TestHelper.generateId(id, "textbody");
 	};
 
-	const validateMultipleFields = (): boolean => {
-		return hasMultipleFields || typeof children !== "string";
+	const hasNestedFields = (): boolean => {
+		return typeof children !== "string";
 	};
 
 	// =============================================================================
@@ -28,19 +28,18 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 	// =============================================================================
 	const renderTextBody = (): JSX.Element[] | string[] | string => {
 		if (Array.isArray(children)) {
-			return children.map((text, index) => (
-				<Text.Body key={index} id={id} data-testid={getTestId(id)}>
-					{text}
-				</Text.Body>
-			));
+			return children.map((text, index) => {
+				const childrenId = `${id}-${index}`;
+
+				return (
+					<Text.Body key={index} id={childrenId} data-testid={getTestId(childrenId)}>
+						{text}
+					</Text.Body>
+				);
+			});
 		} else if (typeof children === "object") {
 			return Object.entries(children).map(([id, childSchema], index) => (
-				<TextBody
-					key={index}
-					id={id}
-					data-testid={getTestId(id)}
-					schema={{ ...childSchema, hasNestedFields: true }}
-				/>
+				<TextBody key={index} id={id} schema={childSchema} />
 			));
 		}
 		return children;
@@ -51,7 +50,8 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 			id={id}
 			data-testid={getTestId(id)}
 			{...otherSchema}
-			{...(validateMultipleFields() && { as: "div" })}
+			// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
+			{...(hasNestedFields() && { as: "div" })}
 		>
 			{renderTextBody()}
 		</Text.Body>
