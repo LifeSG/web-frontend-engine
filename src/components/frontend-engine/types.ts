@@ -1,5 +1,5 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
-import { ITextbodySchema } from "../elements";
+import { ITextbodySchema, IWrapperSchema } from "../elements";
 import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
@@ -15,7 +15,6 @@ import {
 	ITextfieldSchema,
 	ITimePickerSchema,
 } from "../fields";
-import { IWrapperSchema } from "../fields/wrapper";
 import { IYupValidationRule, TRenderRules } from "./yup";
 
 // =============================================================================

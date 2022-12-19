@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
-import { TWrapperType } from "../../../../components/fields/wrapper";
+import { TWrapperType } from "../../../../components/elements/wrapper";
 import { IFrontendEngineData, TFrontendEngineFieldSchema } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, getSubmitButtonProps } from "../../../common";

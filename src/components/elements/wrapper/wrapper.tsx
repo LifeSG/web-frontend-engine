@@ -1,9 +1,9 @@
 import isEmpty from "lodash/isEmpty";
 import React, { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import * as FrontendEngineFields from "../";
+import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
-import * as FrontendEngineElements from "../../elements";
+import * as FrontendEngineFields from "../../fields";
 import { EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";

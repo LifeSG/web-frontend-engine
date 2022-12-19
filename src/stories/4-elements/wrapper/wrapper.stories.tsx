@@ -1,11 +1,11 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
-import { IWrapperSchema } from "../../../components/fields/wrapper";
+import { IWrapperSchema } from "../../../components/elements/wrapper";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/Wrapper",
+	title: "Element/Wrapper",
 	parameters: {
 		docs: {
 			page: () => (
