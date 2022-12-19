@@ -13,53 +13,73 @@ export const ExcludeReactFormHookProps = {
 	name: { table: { disable: true } },
 };
 
-export const CommonFieldStoryProps = (fieldType: string) => ({
-	[`${fieldType}-default`]: { table: { disable: true } },
-	fieldType: {
-		description: `Use <code>${fieldType}</code> to show this field`,
-		table: {
-			type: {
-				summary: "string",
+export const CommonFieldStoryProps = (fieldType: string, onlyFieldType = false) => {
+	if (onlyFieldType) {
+		return {
+			[`${fieldType}-default`]: { table: { disable: true } },
+			fieldType: {
+				description: `Use <code>${fieldType}</code> to show this field`,
+				table: {
+					type: {
+						summary: "string",
+					},
+				},
+				type: { name: "string", required: true },
+				options: [fieldType],
+				control: {
+					type: "select",
+				},
+			},
+		};
+	}
+	return {
+		[`${fieldType}-default`]: { table: { disable: true } },
+		fieldType: {
+			description: `Use <code>${fieldType}</code> to show this field`,
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			type: { name: "string", required: true },
+			options: [fieldType],
+			control: {
+				type: "select",
 			},
 		},
-		type: { name: "string", required: true },
-		options: [fieldType],
-		control: {
-			type: "select",
-		},
-	},
-	label: {
-		description: "A name/description of the purpose of the form element",
-		table: {
-			type: {
-				summary: "string",
+		label: {
+			description: "A name/description of the purpose of the form element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
 			},
 		},
-		control: {
-			type: "text",
-		},
-	},
-	validation: {
-		description:
-			"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='/docs/form-validation-schema--required'>Validation Schema</a> stories",
-		table: {
-			type: {
-				summary: "array",
+		validation: {
+			description:
+				"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='/docs/form-validation-schema--required'>Validation Schema</a> stories",
+			table: {
+				type: {
+					summary: "array",
+				},
 			},
+			type: { name: "object", value: {} },
 		},
-		type: { name: "object", value: {} },
-	},
-	showIf: {
-		description:
-			"A set of conditions to render the field. For more info, refer to the <a href='/docs/form-conditional-rendering--filled'>Conditional Rendering</a> stories",
-		table: {
-			type: {
-				summary: "array",
+		showIf: {
+			description:
+				"A set of conditions to render the field. For more info, refer to the <a href='/docs/form-conditional-rendering--filled'>Conditional Rendering</a> stories",
+			table: {
+				type: {
+					summary: "array",
+				},
 			},
+			type: { name: "object", value: {} },
 		},
-		type: { name: "object", value: {} },
-	},
-});
+	};
+};
 
 export const SubmitButtonStorybook: Record<string, ISubmitButtonSchema> = {
 	"submit-button": { fieldType: "submit", label: "Submit" },
