@@ -35,7 +35,6 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	useEffect(() => {
 		const contactNumberRule = validation?.find((rule) => "contactNumber" in rule);
 		const singaporeRule = contactNumberRule?.contactNumber?.singaporeNumber;
-		const internationalRule = contactNumberRule?.contactNumber?.internationalNumber;
 		const errorMessage = contactNumberRule?.errorMessage;
 
 		setSingaporeRule(singaporeRule);
@@ -60,7 +59,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 					"internationalNumber",
 					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER,
 					(value) => {
-						if (!value || (contactNumberRule && !internationalRule)) return true;
+						if (!value || singaporeRule) return true;
 
 						return PhoneHelper.isInternationalNumber(selectedCountry?.name, value);
 					}

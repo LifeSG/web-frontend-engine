@@ -19,6 +19,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		id,
 		value,
 		onChange,
+		error,
 		...otherProps
 	} = props;
 
@@ -159,7 +160,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	return (
-		<Form.CustomField label={label} errorMessage={otherProps?.error?.message} {...otherProps}>
+		<Form.CustomField label={label} errorMessage={error?.message} {...otherProps}>
 			<ChipContainer data-testid={TestHelper.generateId(id, "chips")}>
 				{renderChips()}
 				{renderTextAreaChip()}

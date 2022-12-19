@@ -46,7 +46,11 @@ export namespace PhoneHelper {
 		}
 	};
 
-	export const formatPhoneNumber = (prefix: string, value: string): string => {
+	export const formatPhoneNumber = (prefix: string, value: string): string | undefined => {
+		if (!value) {
+			return undefined;
+		}
+
 		if (!prefix) {
 			return value;
 		}

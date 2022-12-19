@@ -37,8 +37,8 @@ const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideS
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
-const getChipA = (): HTMLElement => {
-	return getField("button", "A");
+const getChipA = (pressed = false): HTMLElement => {
+	return getField("button", pressed ? { name: "A", pressed: true } : "A");
 };
 
 const getChipB = (): HTMLElement => {
@@ -71,7 +71,7 @@ describe(fieldType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(getChipA()).toHaveStyle({ "background-color": "#A4A4A4" });
+		expect(getChipA(true)).toBeInTheDocument();
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
 	});
 

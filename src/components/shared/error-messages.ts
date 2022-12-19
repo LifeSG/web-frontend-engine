@@ -16,4 +16,7 @@ export const ERROR_MESSAGES = {
 		CANNOT_BE_PAST: "Date cannot be in the past.",
 		INVALID: "Invalid date",
 	},
+	GENERIC: {
+		INVALID: "Invalid input",
+	},
 };
