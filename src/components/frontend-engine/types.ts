@@ -1,4 +1,5 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
+import { ITextBodySchema } from "../elements";
 import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
@@ -51,7 +52,8 @@ export type TFrontendEngineFieldSchema =
 	| IContactNumberSchema
 	| IRadioButtonGroupSchema
 	| ITimePickerSchema
-	| IChipsSchema;
+	| IChipsSchema
+	| ITextBodySchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -107,6 +109,7 @@ export enum EFieldType {
 	RADIO = "RadioButtonGroup",
 	TIME = "TimePicker",
 	CHIPS = "Chips",
+	TEXTBODY = "TextBody",
 }
 
 // =============================================================================

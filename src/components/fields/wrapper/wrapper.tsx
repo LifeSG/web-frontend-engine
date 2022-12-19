@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import * as FrontendEngineFields from "../";
 import { TestHelper } from "../../../utils";
+import * as FrontendEngineElements from "../../elements";
 import { EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";
@@ -44,7 +45,8 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				const fieldType = child.fieldType?.toUpperCase();
 
 				if (typeof child === "object" && fieldTypeKeys.includes(fieldType)) {
-					const Field = (FrontendEngineFields[EFieldType[fieldType]] ||
+					const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
+					const Field = (frontendEngineComponents[EFieldType[fieldType]] ||
 						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
 
 					fieldComponents.push(
