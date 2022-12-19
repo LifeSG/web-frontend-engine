@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
-import { ITextBodySchema } from "../../../components/elements/textbody";
+import { ITextbodySchema } from "../../../components/elements/textbody";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps } from "../../common";
 
 export default {
@@ -33,7 +33,7 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITextBodySchema>> = (args) => <FrontendEngine data={{ fields: { ...args } }} />;
+const Template: Story<Record<string, ITextbodySchema>> = (args) => <FrontendEngine data={{ fields: { ...args } }} />;
 
 export const Default = Template.bind({});
 Default.args = {

@@ -1,9 +1,9 @@
 import { Text } from "@lifesg/react-design-system/text";
 import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ITextBodySchema } from "./types";
+import { ITextbodySchema } from "./types";
 
-export const TextBody = (props: IGenericFieldProps<ITextBodySchema>) => {
+export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
