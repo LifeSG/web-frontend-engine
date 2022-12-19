@@ -6,4 +6,5 @@ export interface ITextbodySchema
 		Omit<TextProps, TFrontendEngineBaseFieldJsonSchemaKeys | "children"> {
 	validation?: never;
 	children: string | string[] | Record<string, ITextbodySchema>;
+	hasNestedFields?: boolean; // NOTE: Used to explicitly change <p> to <div> upon creation of component
 }

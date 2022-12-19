@@ -9,7 +9,7 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 	// =============================================================================
 	const {
 		id,
-		schema: { children, ...otherSchema },
+		schema: { children, hasNestedFields: hasMultipleFields = false, ...otherSchema },
 	} = props;
 
 	// =============================================================================
@@ -17,6 +17,10 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 	// =============================================================================
 	const getTestId = (id: string): string => {
 		return TestHelper.generateId(id, "textbody");
+	};
+
+	const validateMultipleFields = (): boolean => {
+		return hasMultipleFields || typeof children !== "string";
 	};
 
 	// =============================================================================
@@ -30,15 +34,25 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 				</Text.Body>
 			));
 		} else if (typeof children === "object") {
-			return Object.entries(children).map(([id, childSchema], index) => {
-				return <TextBody key={index} id={id} data-testid={getTestId(id)} schema={childSchema} />;
-			});
+			return Object.entries(children).map(([id, childSchema], index) => (
+				<TextBody
+					key={index}
+					id={id}
+					data-testid={getTestId(id)}
+					schema={{ ...childSchema, hasNestedFields: true }}
+				/>
+			));
 		}
 		return children;
 	};
 
 	return (
-		<Text.Body id={id} data-testid={getTestId(id)} {...otherSchema} as="div">
+		<Text.Body
+			id={id}
+			data-testid={getTestId(id)}
+			{...otherSchema}
+			{...(validateMultipleFields() && { as: "div" })}
+		>
 			{renderTextBody()}
 		</Text.Body>
 	);
