@@ -54,7 +54,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [getValues, validationSchema]);
 
 	const handleSubmit = (data: TFrontendEngineValues) => {
-		console.log(data, "submitted");
 		onSubmit?.(data);
 	};
 
@@ -63,8 +62,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// =============================================================================
 	useEffect(() => {
 		if (onChange) {
-			const subscription = watch((value, { name, type }) => {
-				console.log(value, name, type, getValues());
+			const subscription = watch((value) => {
 				onChange(value, checkIsFormValid());
 			});
 
