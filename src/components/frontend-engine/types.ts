@@ -1,5 +1,5 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
-import { ITextbodySchema } from "../elements";
+import { IAlertSchema, ITextbodySchema } from "../elements";
 import { IWrapperSchema } from "../elements/wrapper";
 import {
 	ICheckboxGroupSchema,
@@ -53,7 +53,8 @@ export type TFrontendEngineFieldSchema =
 	| IRadioButtonGroupSchema
 	| ITimePickerSchema
 	| IChipsSchema
-	| ITextbodySchema;
+	| ITextbodySchema
+	| IAlertSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -110,12 +111,15 @@ export enum EFieldType {
 	TIME = "TimePicker",
 	CHIPS = "Chips",
 	TEXTBODY = "TextBody",
+	ALERT = "Alert",
 }
 
 // =============================================================================
 // FIELD PROPS
 // =============================================================================
-export interface IGenericFieldProps<T = any> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
+export interface IGenericFieldProps<T = TFrontendEngineFieldSchema>
+	extends Partial<ControllerFieldState>,
+		Partial<ControllerRenderProps> {
 	id: string;
 	schema: T;
 }
