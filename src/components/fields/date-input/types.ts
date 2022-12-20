@@ -1,9 +1,6 @@
 import { DateInputProps } from "@lifesg/react-design-system/date-input";
+import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine/types";
 import { IYupValidationRule } from "../../frontend-engine/yup";
-import {
-	IFrontendEngineBaseFieldJsonSchema,
-	TFrontendEngineBaseFieldJsonSchemaKeys,
-} from "../../frontend-engine/types";
 
 interface IDateInputValidationRule extends IYupValidationRule {
 	future?: boolean | undefined;
@@ -13,8 +10,8 @@ interface IDateInputValidationRule extends IYupValidationRule {
 }
 
 export interface IDateInputSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"date", IDateInputValidationRule>,
-		Omit<DateInputProps, TFrontendEngineBaseFieldJsonSchemaKeys> {
+	extends IFrontendEngineFieldJsonSchema<"date", IDateInputValidationRule>,
+		TComponentNativeProps<DateInputProps> {
 	useCurrentDate?: boolean | undefined;
 	dateFormat?: string | undefined;
 }

@@ -1,8 +1,5 @@
 import { FormInputGroupProps } from "@lifesg/react-design-system/form/types";
-import {
-	IFrontendEngineBaseFieldJsonSchema,
-	TFrontendEngineBaseFieldJsonSchemaKeys,
-} from "../../frontend-engine/types";
+import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine/types";
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
 import { InternationalCallingCodeMap } from "./data";
 
@@ -38,5 +35,5 @@ export interface IParsedPhoneNumber {
 }
 
 export interface IContactNumberSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"contact", IContactNumberValidationRules>,
-		Omit<IContactNumberProps, TFrontendEngineBaseFieldJsonSchemaKeys> {}
+	extends IFrontendEngineFieldJsonSchema<"contact", IContactNumberValidationRules>,
+		TComponentNativeProps<IContactNumberProps> {}

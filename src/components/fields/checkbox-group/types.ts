@@ -1,5 +1,5 @@
 import { CheckboxProps } from "@lifesg/react-design-system/checkbox";
-import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
+import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine";
 
 interface IOption {
 	label: string;
@@ -7,7 +7,7 @@ interface IOption {
 }
 
 export interface ICheckboxGroupSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"checkbox">,
-		Omit<CheckboxProps, TFrontendEngineBaseFieldJsonSchemaKeys> {
+	extends IFrontendEngineFieldJsonSchema<"checkbox">,
+		TComponentNativeProps<CheckboxProps> {
 	options: IOption[];
 }

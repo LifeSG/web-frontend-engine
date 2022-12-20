@@ -1,8 +1,6 @@
-import { AlertProps, AlertType } from "@lifesg/react-design-system/alert";
-import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
+import { AlertProps, AlertType } from "@lifesg/react-design-system";
+import { IFrontendEngineElementJsonSchema, TComponentNativeProps } from "../../frontend-engine";
 
-export interface IAlertSchema
-	extends Omit<IFrontendEngineBaseFieldJsonSchema<"alert">, "label" | "validation">,
-		Omit<AlertProps, TFrontendEngineBaseFieldJsonSchemaKeys> {
+export interface IAlertSchema extends IFrontendEngineElementJsonSchema<"alert">, TComponentNativeProps<AlertProps> {
 	type: AlertType;
 }

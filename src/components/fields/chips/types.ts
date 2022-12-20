@@ -1,4 +1,4 @@
-import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
+import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine";
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
 
 export interface IChipOption {
@@ -7,8 +7,8 @@ export interface IChipOption {
 }
 
 export interface IChipsSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"chips">,
-		React.ButtonHTMLAttributes<HTMLButtonElement> {
+	extends IFrontendEngineFieldJsonSchema<"chips">,
+		TComponentNativeProps<React.ButtonHTMLAttributes<HTMLButtonElement>> {
 	options: IChipOption[];
 	textarea?: {
 		label: string;

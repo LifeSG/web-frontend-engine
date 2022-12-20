@@ -1,9 +1,8 @@
 import { TextProps } from "@lifesg/react-design-system/text";
-import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
+import { IFrontendEngineElementJsonSchema, TComponentNativeProps } from "../../frontend-engine";
 
 export interface ITextbodySchema
-	extends Omit<IFrontendEngineBaseFieldJsonSchema<"textbody">, "label">,
-		Omit<TextProps, TFrontendEngineBaseFieldJsonSchemaKeys | "children"> {
-	validation?: never;
+	extends IFrontendEngineElementJsonSchema<"textbody">,
+		TComponentNativeProps<TextProps, "children"> {
 	children: string | string[] | Record<string, ITextbodySchema>;
 }

@@ -72,7 +72,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // =============================================================================
 // JSON SCHEMA
 // =============================================================================
-export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
+export interface IFrontendEngineFieldJsonSchema<T, V = IYupValidationRule> {
 	fieldType: T;
 	label: string;
 	/** render conditions
@@ -82,7 +82,19 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
 	validation?: V[] | undefined;
 }
 
-export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";
+export type TFrontendEngineSchemaKeys = "id" | "label" | "validation" | "fieldType";
+
+// NOTE: Form elements should not support validation nor contain labels
+export interface IFrontendEngineElementJsonSchema<T>
+	extends Omit<IFrontendEngineFieldJsonSchema<T>, "label" | "validation"> {}
+
+// NOTE: undefined allows aggregation of keys if exists
+type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
+	? TFrontendEngineSchemaKeys | T
+	: TFrontendEngineSchemaKeys;
+
+// NOTE: Omit clashing keys between native props and frontend engine
+export type TComponentNativeProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
 
 export enum EFieldType {
 	TEXTAREA = "TextArea",
