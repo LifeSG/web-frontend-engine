@@ -1,1 +1,1 @@
-export * from "./textbody";
+export * from "./text-body";

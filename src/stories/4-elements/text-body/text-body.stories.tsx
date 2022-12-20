@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
-import { ITextbodySchema } from "../../../components/elements/textbody";
+import { ITextbodySchema } from "../../../components/elements/text-body";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps } from "../../common";
 
 export default {
