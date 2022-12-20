@@ -1,6 +1,6 @@
 import { Icon } from "@lifesg/react-design-system/icon";
 import { Modal } from "@lifesg/react-design-system/modal";
-import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useContext, useEffect, useRef, useState } from "react";
 import IconEraserBlack from "../../../../assets/img/icons/eraser-black.svg";
 import IconEraserBlue from "../../../../assets/img/icons/eraser-blue.svg";
 import IconDeleteDisabled from "../../../../assets/img/icons/image-delete-disabled.svg";
@@ -10,6 +10,7 @@ import IconDraw from "../../../../assets/img/icons/image-draw.svg";
 import IconPencilGrey from "../../../../assets/img/icons/pencil-grey.svg";
 import IconPencilWhite from "../../../../assets/img/icons/pencil-white.svg";
 import { FileHelper, ImageHelper, TestHelper, WebviewHelper } from "../../../../utils";
+import { TFileCapture } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
 import { EImageStatus, IImage, TImageUploadAcceptedFileType } from "../types";
@@ -51,15 +52,16 @@ const PALETTE_COLORS = [
 	{ color: "#f8e821", label: "yellow" },
 ];
 interface IProps {
-	id?: string;
-	show: boolean;
+	accepts: TImageUploadAcceptedFileType[];
+	capture?: TFileCapture;
+	compress?: boolean | undefined;
+	dimensions: { width: number; height: number };
+	id?: string | undefined;
 	maxFiles: number;
 	maxSizeInKb: number;
-	compress?: boolean;
-	dimensions: { width: number; height: number };
-	accepts: TImageUploadAcceptedFileType[];
-	outputType: string;
 	onExit: () => void;
+	outputType: string;
+	show: boolean;
 }
 
 export const ImageReview = (props: IProps) => {
@@ -68,6 +70,7 @@ export const ImageReview = (props: IProps) => {
 	//  =============================================================================
 	const {
 		accepts,
+		capture,
 		compress,
 		dimensions,
 		id = "image-review",
@@ -346,6 +349,7 @@ export const ImageReview = (props: IProps) => {
 						id={`${id}-image-thumbnails`}
 						activeFileIndex={activeFileIndex}
 						accepts={accepts}
+						capture={capture}
 						maxFiles={maxFiles}
 						images={images}
 						onClickThumbnail={setActiveFileIndex}

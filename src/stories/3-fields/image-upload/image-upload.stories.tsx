@@ -232,6 +232,16 @@ AcceptedFileTypes.args = {
 	},
 };
 
+export const Capture = Template.bind({});
+Capture.args = {
+	"upload-compress": {
+		label: "Provide images",
+		fieldType: "image-upload",
+		description: "Use outward facing camera only",
+		capture: "environment",
+	},
+};
+
 export const Compress = Template.bind({});
 Compress.args = {
 	"upload-compress": {

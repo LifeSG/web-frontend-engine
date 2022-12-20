@@ -1,5 +1,6 @@
 import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
+import { TFileCapture } from "../../shared";
 
 export type TUploadMethod = "post" | "get" | "put" | "patch";
 export const ACCEPTED_FILE_TYPES = ["jpg", "gif", "png", "heic", "heif", "webp"];
@@ -15,6 +16,7 @@ export interface IImageUploadValidationRule extends IYupValidationRule {
 
 export interface IImageUploadSchema<V = IImageUploadValidationRule>
 	extends IFrontendEngineBaseFieldJsonSchema<"image-upload", V> {
+	capture?: TFileCapture;
 	copies?: {
 		buttonAdd?: string | undefined;
 		dragAndDropHint?: string | undefined;

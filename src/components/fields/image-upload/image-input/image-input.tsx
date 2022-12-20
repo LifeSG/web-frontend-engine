@@ -1,7 +1,7 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
 import { TestHelper } from "../../../../utils";
 import { usePrevious } from "../../../../utils/hooks";
-import { DragUpload, ERROR_MESSAGES, IDragUploadRef } from "../../../shared";
+import { DragUpload, ERROR_MESSAGES, IDragUploadRef, TFileCapture } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
 import { EImageStatus, IImage, IImageUploadValidationRule, TImageUploadAcceptedFileType } from "../types";
@@ -19,6 +19,7 @@ import {
 interface IProps {
 	accepts: TImageUploadAcceptedFileType[];
 	buttonAdd?: string;
+	capture?: TFileCapture;
 	description: string;
 	dimensions: { width: number; height: number };
 	inputHint?: string;
@@ -41,6 +42,7 @@ export const ImageInput = (props: IProps) => {
 	const {
 		accepts,
 		buttonAdd = "Add photos",
+		capture,
 		description,
 		dimensions,
 		inputHint = "or drop them here",
@@ -176,7 +178,13 @@ export const ImageInput = (props: IProps) => {
 
 	return (
 		<Wrapper id={TestHelper.generateId(id)} data-testid={TestHelper.generateId(id)}>
-			<DragUpload id={`${id}-drag-upload`} ref={dragUploadRef} hint={dragAndDropHint} onInput={handleInput}>
+			<DragUpload
+				capture={capture}
+				hint={dragAndDropHint}
+				id={`${id}-drag-upload`}
+				onInput={handleInput}
+				ref={dragUploadRef}
+			>
 				<Subtitle weight="semibold">{title}</Subtitle>
 				<Content weight="semibold">{description}</Content>
 				{renderFiles()}

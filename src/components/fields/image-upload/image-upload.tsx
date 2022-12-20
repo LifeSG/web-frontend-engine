@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import { FileHelper, WebviewHelper, WindowHelper } from "../../../utils";
-import { usePrevious, useValidationSchema } from "../../../utils/hooks";
+import { useFieldEvent, usePrevious, useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
@@ -18,6 +18,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	//  =============================================================================
 	const {
 		schema: {
+			capture,
 			copies,
 			compress,
 			description,
@@ -217,6 +218,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		return (
 			<ImageReview
 				accepts={acceptedFileTypes}
+				capture={capture}
 				dimensions={dimensions}
 				id={id}
 				maxFiles={maxFiles}
@@ -244,6 +246,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			</Suspense>
 			<ImageInput
 				title={label}
+				capture={capture}
 				description={description}
 				buttonAdd={buttonAdd}
 				id={id}

@@ -2,6 +2,7 @@ import { ChangeEvent, useRef } from "react";
 import AddPlaceholderIcon from "../../../../../assets/img/icons/photo-placeholder-add.svg";
 import WarningIcon from "../../../../../assets/img/icons/warning-grey.svg";
 import { TestHelper } from "../../../../../utils";
+import { TFileCapture } from "../../../../shared";
 import { EImageStatus, IImage, TImageUploadAcceptedFileType } from "../../types";
 import {
 	AddImageButton,
@@ -15,10 +16,11 @@ import {
 } from "./image-thumbnails.styles";
 
 interface IProps {
-	id?: string;
-	activeFileIndex: number;
-	images: IImage[];
 	accepts: TImageUploadAcceptedFileType[];
+	activeFileIndex: number;
+	capture?: TFileCapture;
+	id?: string | undefined;
+	images: IImage[];
 	maxFiles: number;
 	onClickThumbnail: (index: number) => void;
 	onSelectFile: (file: File) => void;
@@ -29,10 +31,11 @@ export const ImageThumbnails = (props: IProps) => {
 	// CONST, STATE, REFS
 	//  =============================================================================
 	const {
-		activeFileIndex,
-		images,
 		accepts,
+		activeFileIndex,
+		capture,
 		id = "image-thumbnails",
+		images,
 		maxFiles,
 		onClickThumbnail,
 		onSelectFile,
@@ -107,6 +110,7 @@ export const ImageThumbnails = (props: IProps) => {
 					type="file"
 					aria-hidden="true"
 					tabIndex={-1}
+					capture={capture}
 					ref={fileInputRef}
 					accept={accepts.join(", ")}
 					onChange={handleInputChange}

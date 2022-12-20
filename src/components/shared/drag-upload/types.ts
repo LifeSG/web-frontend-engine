@@ -1,9 +1,12 @@
+export type TFileCapture = boolean | "user" | "environment" | undefined;
+
 export interface IDragUploadRef {
 	fileDialog: () => unknown;
 }
 
 export interface IDragUploadProps {
 	id?: string | undefined;
+	capture?: TFileCapture;
 	className?: string | undefined;
 	/** applies to input field only and not for drag & drop */
 	accept?: string[] | undefined;
