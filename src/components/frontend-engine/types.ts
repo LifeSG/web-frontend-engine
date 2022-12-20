@@ -1,5 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
-import { ITextbodySchema, IWrapperSchema } from "../elements";
+import { ITextbodySchema } from "../elements";
+import { IWrapperSchema } from "../elements/wrapper";
 import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
