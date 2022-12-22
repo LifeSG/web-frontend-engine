@@ -29,6 +29,7 @@ export const CommonFieldStoryProps = (fieldType: string, onlyFieldType = false) 
 				control: {
 					type: "select",
 				},
+				defaultValue: fieldType,
 			},
 		};
 	}

@@ -30,6 +30,58 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("textbody", true),
+		children: {
+			type: {
+				name: "string",
+				required: true,
+			},
+			description: "The content of the textbody component",
+			table: {
+				type: {
+					summary: "string | string[] | Record<string, ITextbodySchema>",
+				},
+			},
+		},
+		weight: {
+			description: "The weight of the text component",
+			table: {
+				type: {
+					summary: '"regular" | "semibold" | "bold" | "light"',
+				},
+			},
+			options: ["regular", "semibold", "bold", "light"],
+			control: {
+				type: "select",
+			},
+			defaultValue: "regular",
+		},
+		inline: {
+			description: "Sets the text to an inline display to allow a combination of components in a single line",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+			defaultValue: false,
+		},
+		paragraph: {
+			description:
+				"Adds an extra bottom margin to non header text to allow a better separation of blocks of text",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+			defaultValue: false,
+		},
 	},
 } as Meta;
 

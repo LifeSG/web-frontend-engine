@@ -1,4 +1,6 @@
 import { Text } from "@lifesg/react-design-system/text";
+import isArray from "lodash/isArray";
+import isObject from "lodash/isObject";
 import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ITextbodySchema } from "./types";
@@ -20,14 +22,16 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 	};
 
 	const hasNestedFields = (): boolean => {
-		return typeof children !== "string";
+		const isArrayWithChild = isArray(children) && children.length > 1;
+		const isObjectWithChild = isObject(children) && Object.keys(children).length > 1;
+		return isArrayWithChild || isObjectWithChild;
 	};
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderTextBody = (): JSX.Element[] | string[] | string => {
-		if (Array.isArray(children)) {
+		if (isArray(children)) {
 			return children.map((text, index) => {
 				const childrenId = `${id}-${index}`;
 
