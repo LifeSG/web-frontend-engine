@@ -30,6 +30,42 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("alert", true),
+		children: {
+			type: {
+				name: "string",
+				required: true,
+			},
+			description: "The content of the alert component",
+			table: {
+				type: {
+					summary: "string | React.ReactNode",
+				},
+			},
+		},
+		actionLink: {
+			description: "The action link to render at the end of the the alert component",
+			table: {
+				type: {
+					summary: "React.AnchorHTMLAttributes",
+				},
+			},
+		},
+		type: {
+			description: "The style of the alert component",
+			type: {
+				name: "string",
+				required: true,
+			},
+			table: {
+				type: {
+					summary: '"success" | "warning" | "error"',
+				},
+			},
+			options: ["success", "warning", "error"],
+			control: {
+				type: "select",
+			},
+		},
 	},
 } as Meta;
 
