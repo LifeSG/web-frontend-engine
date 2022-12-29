@@ -55,6 +55,6 @@ describe(fieldType, () => {
 		});
 
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
-		expect(consoleSpy).toBeCalledTimes(0);
+		expect(consoleSpy).not.toBeCalled();
 	});
 });

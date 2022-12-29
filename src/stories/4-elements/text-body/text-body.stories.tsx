@@ -125,7 +125,7 @@ export const ArrayOfPlainAndStyledText = Template.bind({});
 ArrayOfPlainAndStyledText.args = {
 	"textbody-array-plain-styled": {
 		fieldType: "textbody",
-		children: ["This", "is", "a", "<strong>styled</strong>", "<i>word</i>"],
+		children: ["This", "<mark>is</mark>", "<u>a</u>", "<strong>styled</strong>", "<i>sentence</i>"],
 	},
 };
 
