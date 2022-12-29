@@ -113,11 +113,19 @@ SemiBoldText.args = {
 	},
 };
 
-export const ArrayOfText = Template.bind({});
-ArrayOfText.args = {
-	"textbody-array": {
+export const ArrayOfPlainText = Template.bind({});
+ArrayOfPlainText.args = {
+	"textbody-array-plain": {
 		fieldType: "textbody",
 		children: ["This", "is", "an", "array", "of", "text"],
+	},
+};
+
+export const ArrayOfPlainAndStyledText = Template.bind({});
+ArrayOfPlainAndStyledText.args = {
+	"textbody-array-plain-styled": {
+		fieldType: "textbody",
+		children: ["This", "is", "a", "<strong>styled</strong>", "<i>word</i>"],
 	},
 };
 
@@ -159,7 +167,7 @@ export const ParagraphText = () => (
 					children: {
 						"textbody-paragraph-one": {
 							fieldType: "textbody",
-							children: "This is the first paragraph",
+							children: "<strong>This is the first paragraph</strong>",
 							paragraph: true,
 						},
 						"textbody-paragraph-two": {
@@ -167,7 +175,25 @@ export const ParagraphText = () => (
 							children: "This is the second paragraph",
 							paragraph: true,
 						},
+						"textbody-paragraph-three": {
+							fieldType: "textbody",
+							children: "<i>This is the third paragraph</i>",
+							paragraph: true,
+						},
 					},
+				},
+			},
+		}}
+	/>
+);
+
+export const HTMLString = () => (
+	<FrontendEngine
+		data={{
+			fields: {
+				"textbody-html-string": {
+					fieldType: "textbody",
+					children: `<p>This is a paragraph in a HTML string</p>`,
 				},
 			},
 		}}

@@ -3,6 +3,7 @@ import isArray from "lodash/isArray";
 import isObject from "lodash/isObject";
 import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine";
+import { Sanitize } from "../../shared";
 import { ITextbodySchema } from "./types";
 
 export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
@@ -30,14 +31,14 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderTextBody = (): JSX.Element[] | string[] | string => {
+	const renderTextBody = (): JSX.Element[] | JSX.Element | string[] | string => {
 		if (isArray(children)) {
 			return children.map((text, index) => {
 				const childrenId = `${id}-${index}`;
 
 				return (
 					<Text.Body key={index} id={childrenId} data-testid={getTestId(childrenId)}>
-						{text}
+						<Sanitize id={childrenId} htmlString={text} />
 					</Text.Body>
 				);
 			});
@@ -57,7 +58,7 @@ export const TextBody = (props: IGenericFieldProps<ITextbodySchema>) => {
 			// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 			{...(hasNestedFields() && { as: "div" })}
 		>
-			{renderTextBody()}
+			<Sanitize id={id} htmlString={renderTextBody()} />
 		</Text.Body>
 	);
 };
