@@ -97,3 +97,21 @@ ReactNodeChildren.args = {
 		),
 	},
 };
+
+export const ReactNodeStringChildren = Template.bind({});
+ReactNodeStringChildren.args = {
+	"alert-react-node": {
+		fieldType: "alert",
+		type: "success",
+		children: `<p>This is a <i>HTML</i> string</p>`,
+	},
+};
+
+export const HTMLString = Template.bind({});
+HTMLString.args = {
+	"alert-react-node": {
+		fieldType: "alert",
+		type: "success",
+		children: `<p>This component should not contain a script tag<script>console.log('hello world')</script></p>`,
+	},
+};
