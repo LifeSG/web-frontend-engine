@@ -69,6 +69,11 @@ export default {
 	},
 } as Meta;
 
+const anchorProps = {
+	href: "https://www.google.com",
+	target: "_blank",
+	rel: "noopener noreferrer",
+};
 const Template: Story<Record<string, IAlertSchema>> = (args) => <FrontendEngine data={{ fields: { ...args } }} />;
 
 export const Default = Template.bind({});
@@ -77,6 +82,37 @@ Default.args = {
 		fieldType: "alert",
 		type: "success",
 		children: "This is a success message",
+	},
+};
+
+export const Warning = Template.bind({});
+Warning.args = {
+	"alert-warning": {
+		fieldType: "alert",
+		type: "warning",
+		children: "This is a warning message",
+	},
+};
+
+export const Error = Template.bind({});
+Error.args = {
+	"alert-error": {
+		fieldType: "alert",
+		type: "error",
+		children: "This is a error message",
+	},
+};
+
+export const ActionLink = Template.bind({});
+ActionLink.args = {
+	"alert-action-link": {
+		fieldType: "alert",
+		type: "success",
+		children: "This contains an action link that redirects to another page",
+		actionLink: {
+			...anchorProps,
+			children: "Click here",
+		},
 	},
 };
 
@@ -89,9 +125,7 @@ ReactNodeChildren.args = {
 			<p>
 				You can add <strong>bold text</strong> to signify or highlight certain information. Or perhaps even add
 				a&nbsp;
-				<a href="https://life.gov.sg" target="_blank" rel="noreferrer">
-					hyperlink
-				</a>
+				<a {...anchorProps}>hyperlink</a>
 				&nbsp;to direct users to some external source.
 			</p>
 		),
