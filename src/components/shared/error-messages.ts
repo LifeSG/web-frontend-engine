@@ -18,5 +18,6 @@ export const ERROR_MESSAGES = {
 	},
 	GENERIC: {
 		INVALID: "Invalid input",
+		UNSUPPORTED: "This component is not supported by the engine",
 	},
 };
