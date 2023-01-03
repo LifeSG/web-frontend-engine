@@ -2,18 +2,18 @@ import { TextProps } from "@lifesg/react-design-system/text";
 import { IFrontendEngineElementJsonSchema, TComponentNativeProps } from "../../frontend-engine";
 
 export type TTextType =
-	| "text-d1"
-	| "text-d2"
-	| "text-dbody"
-	| "text-h1"
-	| "text-h2"
-	| "text-h3"
-	| "text-h4"
-	| "text-h5"
-	| "text-h6"
-	| "text-body"
-	| "text-bodysmall"
-	| "text-xsmall";
+	| "D1"
+	| "D2"
+	| "DBody"
+	| "H1"
+	| "H2"
+	| "H3"
+	| "H4"
+	| "H5"
+	| "H6"
+	| "Body"
+	| "BodySmall"
+	| "XSmall";
 
 export interface ITextSchema
 	extends IFrontendEngineElementJsonSchema<TTextType>,
