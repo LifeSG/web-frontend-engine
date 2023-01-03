@@ -89,3 +89,5 @@ export const SubmitButtonStorybook: Record<string, ISubmitButtonSchema> = {
 export const StyledForm = styled(FrontendEngine)`
 	width: 350px;
 `;
+
+export const LOREM_IPSUM = (prefix: string) => `${prefix && prefix + " :"} Lorem ipsum dolor sit amet`;
