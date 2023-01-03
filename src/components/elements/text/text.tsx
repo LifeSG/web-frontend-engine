@@ -40,7 +40,7 @@ export const Text = (props: IGenericFieldProps<ITextSchema>) => {
 
 				return (
 					<Element key={index} id={childrenId} data-testid={getTestId(childrenId)}>
-						<Sanitize id={childrenId} htmlString={text} />
+						<Sanitize id={childrenId} content={text} />
 					</Element>
 				);
 			});
@@ -60,7 +60,7 @@ export const Text = (props: IGenericFieldProps<ITextSchema>) => {
 			// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 			{...(hasNestedFields() && { as: "div" })}
 		>
-			<Sanitize id={id} htmlString={renderText()} />
+			<Sanitize id={id} content={renderText()} />
 		</Element>
 	);
 };
