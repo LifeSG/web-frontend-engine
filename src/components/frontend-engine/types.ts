@@ -1,5 +1,5 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
-import { IAlertSchema, ITextbodySchema, ITextSchema } from "../elements";
+import { IAlertSchema, ITextSchema } from "../elements";
 import { IWrapperSchema } from "../elements/wrapper";
 import {
 	ICheckboxGroupSchema,
@@ -53,7 +53,6 @@ export type TFrontendEngineFieldSchema =
 	| IRadioButtonGroupSchema
 	| ITimePickerSchema
 	| IChipsSchema
-	| ITextbodySchema
 	| IAlertSchema
 	| ITextSchema;
 
