@@ -34,11 +34,11 @@ export default {
 			description: "Actual HTML element type to render the component as",
 			table: {
 				type: {
-					summary: "div|span|section|header|footer|h1|h2|h3|h4|h5|h6|p",
+					summary: "div|span|section|header|footer|p",
 				},
 			},
 			type: { name: "string", required: true },
-			options: ["div", "span", "section", "header", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "p"],
+			options: ["div", "span", "section", "header", "footer", "p"],
 			control: {
 				type: "select",
 			},
