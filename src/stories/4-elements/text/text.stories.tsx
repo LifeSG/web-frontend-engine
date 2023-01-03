@@ -47,36 +47,10 @@ export default {
 			description: "The type of the text component to be rendered",
 			table: {
 				type: {
-					summary: `
-						"text-d1" |
-						"text-d2" |
-						"text-dbody" |
-						"text-h1" |
-						"text-h2" |
-						"text-h3" |
-						"text-h4" |
-						"text-h5" |
-						"text-h6" |
-						"text-body" |
-						"text-bodysmall" |
-						"text-xsmall"
-						`,
+					summary: `"D1" | "D2" | "DBody" | "H1" | "H2" | "H3" | "H4" | "H5" | "H6" | "Body" | "BodySmall" | "XSmall"`,
 				},
 			},
-			options: [
-				"text-d1",
-				"text-d2",
-				"text-dbody",
-				"text-h1",
-				"text-h2",
-				"text-h3",
-				"text-h4",
-				"text-h5",
-				"text-h6",
-				"text-body",
-				"text-bodysmall",
-				"text-xsmall",
-			],
+			options: ["D1", "D2", "DBody", "H1", "H2", "H3", "H4", "H5", "H6", "Body", "BodySmall", "XSmall"],
 			control: {
 				type: "select",
 			},
@@ -130,55 +104,55 @@ const Template: Story<Record<string, ITextSchema>> = (args) => <FrontendEngine d
 export const Variants = Template.bind({});
 Variants.args = {
 	"text-variants": {
-		fieldType: "text-body",
+		fieldType: "Body",
 		children: {
-			"text-d1": {
-				fieldType: "text-d1",
-				children: LOREM_IPSUM("d1"),
+			d1: {
+				fieldType: "D1",
+				children: LOREM_IPSUM("D1"),
 			},
-			"text-d2": {
-				fieldType: "text-d2",
-				children: LOREM_IPSUM("d2"),
+			d2: {
+				fieldType: "D2",
+				children: LOREM_IPSUM("D2"),
 			},
-			"text-dbody": {
-				fieldType: "text-dbody",
-				children: LOREM_IPSUM("dbody"),
+			dbody: {
+				fieldType: "DBody",
+				children: LOREM_IPSUM("DBody"),
 			},
-			"text-h1": {
-				fieldType: "text-h1",
-				children: LOREM_IPSUM("h1"),
+			h1: {
+				fieldType: "H1",
+				children: LOREM_IPSUM("H1"),
 			},
-			"text-h2": {
-				fieldType: "text-h2",
-				children: LOREM_IPSUM("h2"),
+			h2: {
+				fieldType: "H2",
+				children: LOREM_IPSUM("H2"),
 			},
-			"text-h3": {
-				fieldType: "text-h3",
-				children: LOREM_IPSUM("h3"),
+			h3: {
+				fieldType: "H3",
+				children: LOREM_IPSUM("H3"),
 			},
-			"text-h4": {
-				fieldType: "text-h4",
-				children: LOREM_IPSUM("h4"),
+			h4: {
+				fieldType: "H4",
+				children: LOREM_IPSUM("H4"),
 			},
-			"text-h5": {
-				fieldType: "text-h5",
-				children: LOREM_IPSUM("h5"),
+			h5: {
+				fieldType: "H5",
+				children: LOREM_IPSUM("H5"),
 			},
-			"text-h6": {
-				fieldType: "text-h6",
-				children: LOREM_IPSUM("h6"),
+			h6: {
+				fieldType: "H6",
+				children: LOREM_IPSUM("H6"),
 			},
-			"text-body": {
-				fieldType: "text-body",
+			body: {
+				fieldType: "Body",
 				children: LOREM_IPSUM("body"),
 			},
-			"text-bodysmall": {
-				fieldType: "text-bodysmall",
-				children: LOREM_IPSUM("bodysmall"),
+			bodysmall: {
+				fieldType: "BodySmall",
+				children: LOREM_IPSUM("BodySmall"),
 			},
-			"text-xsmall": {
-				fieldType: "text-xsmall",
-				children: LOREM_IPSUM("xsmall"),
+			xsmall: {
+				fieldType: "XSmall",
+				children: LOREM_IPSUM("XSmall"),
 			},
 		},
 	},
@@ -187,24 +161,24 @@ Variants.args = {
 export const Weights = Template.bind({});
 Weights.args = {
 	"text-weights": {
-		fieldType: "text-body",
+		fieldType: "Body",
 		children: {
-			"text-default": {
-				fieldType: "text-body",
+			default: {
+				fieldType: "Body",
 				children: LOREM_IPSUM("Default"),
 			},
-			"text-bold": {
-				fieldType: "text-body",
+			bold: {
+				fieldType: "Body",
 				children: LOREM_IPSUM("Bold"),
 				weight: "bold",
 			},
-			"text-semibold": {
-				fieldType: "text-body",
+			semibold: {
+				fieldType: "Body",
 				children: LOREM_IPSUM("Semibold"),
 				weight: "semibold",
 			},
-			"text-light": {
-				fieldType: "text-body",
+			light: {
+				fieldType: "Body",
 				children: LOREM_IPSUM("Light"),
 				weight: "light",
 			},
@@ -215,7 +189,7 @@ Weights.args = {
 export const ArrayOfText = Template.bind({});
 ArrayOfText.args = {
 	"text-array": {
-		fieldType: "text-body",
+		fieldType: "Body",
 		children: ["This", "is", "an", "array", "of", "text"],
 	},
 };
@@ -223,7 +197,7 @@ ArrayOfText.args = {
 export const ArrayOfStyledText = Template.bind({});
 ArrayOfStyledText.args = {
 	"text-array-plain-styled": {
-		fieldType: "text-body",
+		fieldType: "Body",
 		children: ["This", "<mark>is</mark>", "<u>a</u>", "<strong>styled</strong>", "<i>sentence</i>"],
 	},
 };
@@ -231,20 +205,20 @@ ArrayOfStyledText.args = {
 export const InlineText = Template.bind({});
 InlineText.args = {
 	"text-inline": {
-		fieldType: "text-body",
+		fieldType: "Body",
 		children: {
 			"text-start": {
-				fieldType: "text-body",
+				fieldType: "Body",
 				children: "This is ",
 				inline: true,
 			},
 			"text-body": {
-				fieldType: "text-body",
+				fieldType: "Body",
 				children: "an inline ",
 				inline: true,
 			},
 			"text-end": {
-				fieldType: "text-body",
+				fieldType: "Body",
 				children: "text",
 				inline: true,
 			},
@@ -255,21 +229,21 @@ InlineText.args = {
 export const ParagraphText = Template.bind({});
 ParagraphText.args = {
 	"text-paragraph": {
-		fieldType: "text-body",
+		fieldType: "Body",
 		children: {
 			"text-paragraph-one": {
-				fieldType: "text-body",
-				children: "<strong>This is the first paragraph</strong>",
+				fieldType: "Body",
+				children: "This is the first paragraph",
 				paragraph: true,
 			},
 			"text-paragraph-two": {
-				fieldType: "text-body",
+				fieldType: "Body",
 				children: "This is the second paragraph",
 				paragraph: true,
 			},
 			"text-paragraph-three": {
-				fieldType: "text-body",
-				children: "<i>This is the third paragraph</i>",
+				fieldType: "Body",
+				children: "This is the third paragraph",
 				paragraph: true,
 			},
 		},
@@ -279,7 +253,7 @@ ParagraphText.args = {
 export const HTMLString = Template.bind({});
 HTMLString.args = {
 	"text-html-string": {
-		fieldType: "text-body",
+		fieldType: "Body",
 		children: "<p>This is a paragraph in a HTML string</p>",
 	},
 };
@@ -287,7 +261,7 @@ HTMLString.args = {
 export const SanitizedHTMLString = Template.bind({});
 SanitizedHTMLString.args = {
 	"text-sanitized-html-string": {
-		fieldType: "text-body",
+		fieldType: "Body",
 		children: "<p>This component should not contain a script tag<script>console.log('hello world')</script></p>",
 	},
 };
