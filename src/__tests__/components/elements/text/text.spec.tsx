@@ -54,7 +54,7 @@ describe(fieldType, () => {
 		});
 	});
 
-	it("should be able to render an object of textbody", () => {
+	it("should be able to render an object of text", () => {
 		const fieldOneId = "field1";
 		const fieldTwoId = "field2";
 		const fields: Record<string, ITextSchema> = {
@@ -71,8 +71,8 @@ describe(fieldType, () => {
 
 		// NOTE: Parent container should be transformed into a div
 		expect(screen.getByTestId(componentTestId).tagName).toBe("DIV");
-		expect(screen.getByTestId(TestHelper.generateId(fieldOneId, "text"))).toBeInTheDocument();
-		expect(screen.getByTestId(TestHelper.generateId(fieldTwoId, "text"))).toBeInTheDocument();
+		expect(screen.getByText("field one")).toBeInTheDocument();
+		expect(screen.getByText("field two")).toBeInTheDocument();
 	});
 
 	it("should be able to render a HTML string", () => {

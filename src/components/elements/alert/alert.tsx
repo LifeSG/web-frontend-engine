@@ -18,7 +18,7 @@ export const Alert = (props: IGenericFieldProps<IAlertSchema>) => {
 	// =============================================================================
 	return (
 		<DSAlert id={id} data-testid={TestHelper.generateId(id, "alert")} {...otherSchema}>
-			<Sanitize>{children}</Sanitize>
+			<Sanitize id={id}>{children}</Sanitize>
 		</DSAlert>
 	);
 };
