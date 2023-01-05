@@ -3,7 +3,7 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
-import { Wrapper } from "../fields/wrapper";
+import { Wrapper } from "../elements/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
 import { YupProvider } from "./yup";
 

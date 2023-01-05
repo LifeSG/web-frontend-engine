@@ -1,5 +1,5 @@
 import { InputSelectProps } from "@lifesg/react-design-system/input-select/types";
-import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
+import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine";
 
 export interface ISelectOption {
 	label: string;
@@ -7,5 +7,5 @@ export interface ISelectOption {
 }
 
 export interface ISelectSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"select">,
-		Omit<InputSelectProps<ISelectOption, string>, TFrontendEngineBaseFieldJsonSchemaKeys> {}
+	extends IFrontendEngineFieldJsonSchema<"select">,
+		TComponentNativeProps<InputSelectProps<ISelectOption, string>> {}

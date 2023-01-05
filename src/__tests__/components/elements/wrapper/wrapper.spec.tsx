@@ -1,7 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
-import { TWrapperType } from "../../../../components/fields/wrapper";
+import { TWrapperType } from "../../../../components/elements/wrapper";
 import { IFrontendEngineData, TFrontendEngineFieldSchema } from "../../../../components/frontend-engine";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, getSubmitButtonProps } from "../../../common";
 
@@ -47,6 +48,16 @@ describe("wrapper", () => {
 		renderComponent(undefined, text);
 
 		expect(screen.getByText(text)).toBeInTheDocument();
+	});
+
+	it("should not render unsupported components", () => {
+		renderComponent(undefined, {
+			unsupported: {
+				fieldType: "unknown",
+			},
+		} as any);
+
+		expect(screen.getByText(ERROR_MESSAGES.GENERIC.UNSUPPORTED)).toBeInTheDocument();
 	});
 
 	it("should be able to render nested children", () => {

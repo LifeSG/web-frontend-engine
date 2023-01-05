@@ -12,11 +12,11 @@ export namespace DateTimeHelper {
 	): string | undefined => {
 		if (!value) return undefined;
 
-		const timeFormatter = DateTimeFormatter.ofPattern(format)
-			.withResolverStyle(ResolverStyle.STRICT)
-			.withLocale(Locale.ENGLISH);
-
 		try {
+			const timeFormatter = DateTimeFormatter.ofPattern(format)
+				.withResolverStyle(ResolverStyle.STRICT)
+				.withLocale(Locale.ENGLISH);
+
 			switch (type) {
 				case "date":
 					return LocalDate.parse(value).format(timeFormatter);

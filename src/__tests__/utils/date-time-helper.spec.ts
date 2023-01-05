@@ -27,4 +27,36 @@ describe("date-time-helper", () => {
 
 		expect(result).toBe(expected);
 	});
+
+	it("should be able to support datetime formats", () => {
+		const date = "2020-01-25T12:34";
+		const expected = "25 January 2020 12:34";
+
+		const result = DateTimeHelper.formatDateTime(date, "d MMMM uuuu HH:mm", "datetime");
+
+		expect(result).toBe(expected);
+	});
+
+	it.each`
+		scenario                   | type
+		${"wrong date pattern"}    | ${"pattern"}
+		${"unsupported date type"} | ${"type"}
+	`("should return an error message if $scenario", ({ type }) => {
+		const date = "2020-01-25";
+		const expected = ERROR_MESSAGES.GENERIC.INVALID;
+		let result: string;
+
+		switch (type) {
+			case "pattern": {
+				result = DateTimeHelper.formatDateTime(date, "unknown", "date");
+				break;
+			}
+			case "type": {
+				result = DateTimeHelper.formatDateTime(date, "d MMMM uuuu", "unknown" as any);
+				break;
+			}
+		}
+
+		expect(result).toBe(expected);
+	});
 });

@@ -1,4 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
+import { IAlertSchema, ITextbodySchema } from "../elements";
+import { IWrapperSchema } from "../elements/wrapper";
 import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
@@ -14,7 +16,6 @@ import {
 	ITextfieldSchema,
 	ITimePickerSchema,
 } from "../fields";
-import { IWrapperSchema } from "../fields/wrapper";
 import { IYupValidationRule, TRenderRules } from "./yup";
 
 // =============================================================================
@@ -51,7 +52,9 @@ export type TFrontendEngineFieldSchema =
 	| IContactNumberSchema
 	| IRadioButtonGroupSchema
 	| ITimePickerSchema
-	| IChipsSchema;
+	| IChipsSchema
+	| ITextbodySchema
+	| IAlertSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -69,7 +72,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // =============================================================================
 // JSON SCHEMA
 // =============================================================================
-export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
+export interface IFrontendEngineFieldJsonSchema<T, V = IYupValidationRule> {
 	fieldType: T;
 	label: string;
 	/** render conditions
@@ -79,7 +82,19 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
 	validation?: V[] | undefined;
 }
 
-export type TFrontendEngineBaseFieldJsonSchemaKeys = "id" | "label" | "validation" | "fieldType";
+export type TFrontendEngineSchemaKeys = "id" | "label" | "validation" | "fieldType";
+
+// NOTE: Form elements should not support validation nor contain labels
+export interface IFrontendEngineElementJsonSchema<T>
+	extends Omit<IFrontendEngineFieldJsonSchema<T>, "label" | "validation"> {}
+
+// NOTE: undefined allows aggregation of keys if exists
+type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
+	? TFrontendEngineSchemaKeys | T
+	: TFrontendEngineSchemaKeys;
+
+// NOTE: Omit clashing keys between native props and frontend engine
+export type TComponentNativeProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
 
 export enum EFieldType {
 	TEXTAREA = "TextArea",
@@ -107,12 +122,16 @@ export enum EFieldType {
 	RADIO = "RadioButtonGroup",
 	TIME = "TimePicker",
 	CHIPS = "Chips",
+	TEXTBODY = "TextBody",
+	ALERT = "Alert",
 }
 
 // =============================================================================
 // FIELD PROPS
 // =============================================================================
-export interface IGenericFieldProps<T = any> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
+export interface IGenericFieldProps<T = TFrontendEngineFieldSchema>
+	extends Partial<ControllerFieldState>,
+		Partial<ControllerRenderProps> {
 	id: string;
 	schema: T;
 }

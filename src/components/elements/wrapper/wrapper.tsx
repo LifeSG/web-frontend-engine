@@ -1,9 +1,11 @@
 import isEmpty from "lodash/isEmpty";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import * as FrontendEngineFields from "../";
+import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
+import * as FrontendEngineFields from "../../fields";
 import { EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
+import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";
 
@@ -44,7 +46,8 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				const fieldType = child.fieldType?.toUpperCase();
 
 				if (typeof child === "object" && fieldTypeKeys.includes(fieldType)) {
-					const Field = (FrontendEngineFields[EFieldType[fieldType]] ||
+					const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
+					const Field = (frontendEngineComponents[EFieldType[fieldType]] ||
 						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
 
 					fieldComponents.push(
@@ -62,14 +65,14 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 					);
 				} else if (fieldType) {
 					// need fieldType check to ignore other storybook args
-					fieldComponents.push(<>This component is not supported by the engine</>);
+					fieldComponents.push(<Fragment key={id}>{ERROR_MESSAGES.GENERIC.UNSUPPORTED}</Fragment>);
 				}
 			});
 			setFields(fieldComponents);
 		} else if (typeof wrapperChildren === "string") {
 			setFields(wrapperChildren);
 		} else {
-			setFields("This component is not supported by the engine");
+			setFields(ERROR_MESSAGES.GENERIC.UNSUPPORTED);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [schemaChildren || children, control]);

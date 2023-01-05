@@ -1,4 +1,4 @@
-import { TFrontendEngineBaseFieldJsonSchemaKeys, TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { TComponentNativeProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TRenderRules } from "../../frontend-engine/yup";
 
 export type TWrapperType =
@@ -15,8 +15,7 @@ export type TWrapperType =
 	| "h6"
 	| "p";
 
-export interface IWrapperSchema
-	extends Omit<React.HTMLAttributes<HTMLElement>, TFrontendEngineBaseFieldJsonSchemaKeys | "children"> {
+export interface IWrapperSchema extends TComponentNativeProps<React.HTMLAttributes<HTMLElement>, "children"> {
 	fieldType: TWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema> | string;

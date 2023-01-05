@@ -1,5 +1,5 @@
 import { RadioButtonProps } from "@lifesg/react-design-system/radio-button";
-import { IFrontendEngineBaseFieldJsonSchema, TFrontendEngineBaseFieldJsonSchemaKeys } from "../../frontend-engine";
+import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine";
 
 interface IOption {
 	label: string;
@@ -7,7 +7,7 @@ interface IOption {
 }
 
 export interface IRadioButtonGroupSchema
-	extends IFrontendEngineBaseFieldJsonSchema<"radio">,
-		Omit<RadioButtonProps, TFrontendEngineBaseFieldJsonSchemaKeys> {
+	extends IFrontendEngineFieldJsonSchema<"radio">,
+		TComponentNativeProps<RadioButtonProps> {
 	options: IOption[];
 }
