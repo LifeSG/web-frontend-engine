@@ -22,6 +22,7 @@ interface IProps {
 		method: TUploadMethod;
 		url: string;
 	};
+	value: any;
 }
 
 /**
@@ -32,10 +33,11 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { accepts, compress, dimensions, editImage, maxSizeInKb, onChange, outputType, upload } = props;
+	const { accepts, compress, dimensions, editImage, maxSizeInKb, onChange, outputType, upload, value } = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const [managerErrorCount, setManagerErrorCount] = useState(0);
+	const previousValue = usePrevious(value);
 	const sessionId = useRef<string>();
 
 	// =============================================================================
@@ -152,6 +154,13 @@ export const ImageManager = (props: IProps) => {
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [images.map((image) => image.status).join(",")]);
+
+	useEffect(() => {
+		if (previousValue !== undefined && value === undefined && images.length) {
+			setImages([]);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [previousValue === undefined, value === undefined, images.length]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
