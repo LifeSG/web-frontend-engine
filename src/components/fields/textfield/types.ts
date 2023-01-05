@@ -1,15 +1,14 @@
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
-import { IYupValidationRule } from "../../frontend-engine/yup/types";
 
-export interface ITextfieldSchema<V = IYupValidationRule>
+export interface ITextfieldSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"text", V>,
 		TComponentOmitProps<FormInputProps, "type"> {}
 
-export interface IEmailSchema<V = IYupValidationRule>
+export interface IEmailSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"email", V>,
 		TComponentOmitProps<FormInputProps, "type"> {}
 
-export interface INumberSchema<V = IYupValidationRule>
+export interface INumberSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"numeric", V>,
 		TComponentOmitProps<FormInputProps, "type" | "maxLength" | "max" | "min"> {}

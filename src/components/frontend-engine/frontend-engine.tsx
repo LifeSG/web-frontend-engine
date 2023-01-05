@@ -109,8 +109,8 @@ export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProp
 			<FrontendEngineInner {...props} ref={ref} />
 		</YupProvider>
 	);
-}) as <V = IYupValidationRule>(
-	props: IFrontendEngineProps<IYupValidationRule | NoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
+}) as <V = undefined>(
+	props: IFrontendEngineProps<NoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
 ) => ReactElement;
 
 /**

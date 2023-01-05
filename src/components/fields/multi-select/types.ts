@@ -1,5 +1,4 @@
 import { InputMultiSelectProps } from "@lifesg/react-design-system";
-import { IYupValidationRule } from "../../frontend-engine/yup/types";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 export interface IMultiSelectOption {
@@ -7,6 +6,6 @@ export interface IMultiSelectOption {
 	value: string;
 }
 
-export interface IMultiSelectSchema<V = IYupValidationRule>
+export interface IMultiSelectSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"multi-select", V>,
 		TComponentOmitProps<InputMultiSelectProps<IMultiSelectOption, string>> {}

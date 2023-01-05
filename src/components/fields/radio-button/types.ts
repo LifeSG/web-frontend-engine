@@ -1,5 +1,4 @@
 import { RadioButtonProps } from "@lifesg/react-design-system/radio-button";
-import { IYupValidationRule } from "../../frontend-engine/yup/types";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 interface IOption {
@@ -7,7 +6,7 @@ interface IOption {
 	value: string;
 }
 
-export interface IRadioButtonGroupSchema<V = IYupValidationRule>
+export interface IRadioButtonGroupSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"radio", V>,
 		TComponentOmitProps<RadioButtonProps> {
 	options: IOption[];

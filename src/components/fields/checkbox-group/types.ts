@@ -1,5 +1,4 @@
 import { CheckboxProps } from "@lifesg/react-design-system/checkbox";
-import { IYupValidationRule } from "../../frontend-engine/yup/types";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 interface IOption {
@@ -7,7 +6,7 @@ interface IOption {
 	value: string;
 }
 
-export interface ICheckboxGroupSchema<V = IYupValidationRule>
+export interface ICheckboxGroupSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"checkbox", V>,
 		TComponentOmitProps<CheckboxProps> {
 	options: IOption[];

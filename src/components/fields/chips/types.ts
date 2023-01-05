@@ -6,13 +6,13 @@ export interface IChipOption {
 	value: string;
 }
 
-export interface IChipsSchema<V = IYupValidationRule>
+export interface IChipsSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"chips", V>,
 		TComponentOmitProps<React.ButtonHTMLAttributes<HTMLButtonElement>> {
 	options: IChipOption[];
 	textarea?: {
 		label: string;
-		validation?: IYupValidationRule[];
+		validation?: (V | IYupValidationRule)[];
 		resizable?: boolean;
 		maxLength?: number;
 		rows?: number;

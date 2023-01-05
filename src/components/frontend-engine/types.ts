@@ -26,7 +26,7 @@ export type { IYupValidationRule } from "./yup";
 // =============================================================================
 // FRONTEND ENGINE
 // =============================================================================
-export interface IFrontendEngineProps<V = IYupValidationRule> {
+export interface IFrontendEngineProps<V = undefined> {
 	/** HTML class attribute that is applied on the `<form>` element */
 	className?: string;
 	/** JSON configuration to define the fields and functionalities of the form */
@@ -37,7 +37,7 @@ export interface IFrontendEngineProps<V = IYupValidationRule> {
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }
 
-export interface IFrontendEngineData<V = IYupValidationRule> {
+export interface IFrontendEngineData<V = undefined> {
 	/** HTML class attribute */
 	className?: string | undefined;
 	/** Fields' initial values on mount. The key of each field needs to match the id used in the field */
@@ -52,7 +52,7 @@ export interface IFrontendEngineData<V = IYupValidationRule> {
 	validationMode?: TValidationMode | undefined;
 }
 
-export type TFrontendEngineFieldSchema<V = IYupValidationRule> =
+export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextareaSchema<V>
 	| ITextfieldSchema<V>
 	| IEmailSchema<V>
@@ -92,7 +92,8 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // =============================================================================
 // JSON SCHEMA
 // =============================================================================
-export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
+// NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
+export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefined> {
 	/** defines what kind of field to be rendered */
 	fieldType: T;
 	/** caption for the field */
@@ -101,8 +102,8 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = IYupValidationRule> {
 	 * - need to fulfil at least 1 object in array (OR condition)
 	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
 	showIf?: TRenderRules[] | undefined;
-	/** validation config, can be extended by passing generics */
-	validation?: V[] | undefined;
+	/** validation config, can be customised by passing generics */
+	validation?: (V | U | IYupValidationRule)[];
 }
 
 /**

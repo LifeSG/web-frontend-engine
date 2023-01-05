@@ -2,7 +2,6 @@ import { Button } from "@lifesg/react-design-system/button";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { useEffect, useRef } from "react";
-import { IYupValidationRule } from "../../components/frontend-engine/yup/types";
 import { FrontendEngine, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { SubmitButtonStorybook } from "../common";
 
@@ -317,7 +316,7 @@ CheckIsValid.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-interface IYupCustomValidationRule extends IYupValidationRule {
+interface IYupCustomValidationRule {
 	mustBeHello?: boolean | undefined;
 }
 export const AddCustomValidation: Story = () => {
@@ -334,7 +333,7 @@ export const AddCustomValidation: Story = () => {
 					text: {
 						label: "Only accepts hello",
 						fieldType: "text",
-						validation: [{ mustBeHello: true, errorMessage: "Please key in hello" }],
+						validation: [{ required: true }, { mustBeHello: true, errorMessage: "Please key in hello" }],
 					},
 					...SubmitButtonStorybook,
 				},
