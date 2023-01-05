@@ -4,23 +4,23 @@ import { TestHelper } from "../../../utils";
 
 interface IProps {
 	id?: string;
-	content: string | React.ReactNode;
+	children: string | React.ReactNode;
 }
 
 export const Sanitize = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { id, content } = props;
+	const { id, children } = props;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const formatHTMLString = (): string => {
-		if (typeof content !== "string") {
-			return renderToStaticMarkup(content as JSX.Element);
+		if (typeof children !== "string") {
+			return renderToStaticMarkup(children as JSX.Element);
 		}
-		return content;
+		return children;
 	};
 
 	const getSanitizedHtml = (): string => {
