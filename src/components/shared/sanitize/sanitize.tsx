@@ -1,5 +1,5 @@
-import { sanitize } from "dompurify";
 import { renderToStaticMarkup } from "react-dom/server";
+import sanitize from "sanitize-html";
 import { TestHelper } from "../../../utils";
 
 interface IProps {
