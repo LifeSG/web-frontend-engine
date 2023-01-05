@@ -56,8 +56,8 @@ describe(fieldType, () => {
 		renderComponent({ children: fields });
 
 		expect(screen.getByTestId(componentTestId).tagName).toBe("DIV");
-		expect(screen.getByTestId(TestHelper.generateId(fieldOneId, "textbody"))).toBeInTheDocument();
-		expect(screen.getByTestId(TestHelper.generateId(fieldTwoId, "textbody"))).toBeInTheDocument();
+		expect(screen.getByText("field one")).toBeInTheDocument();
+		expect(screen.getByText("field two")).toBeInTheDocument();
 	});
 
 	it("should be able to render a HTML string", () => {
