@@ -94,8 +94,8 @@ export const HiddenFileSelect = styled.input`
 
 export const AddImageButton = styled(IconButton)`
 	padding: 0;
-	width: inherit;
-	height: inherit;
+	width: 3rem;
+	height: 3rem;
 
 	> img {
 		width: inherit;
