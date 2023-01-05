@@ -34,8 +34,8 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	// =============================================================================
 	useEffect(() => {
 		const contactNumberRule = validation?.find((rule) => "contactNumber" in rule);
-		const singaporeRule = contactNumberRule?.contactNumber?.singaporeNumber;
-		const errorMessage = contactNumberRule?.errorMessage;
+		const singaporeRule = contactNumberRule?.["contactNumber"]?.["singaporeNumber"];
+		const errorMessage = contactNumberRule?.["errorMessage"];
 
 		setSingaporeRule(singaporeRule);
 		setFieldValidationConfig(

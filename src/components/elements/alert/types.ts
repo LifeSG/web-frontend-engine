@@ -3,4 +3,5 @@ import { IFrontendEngineElementJsonSchema, TComponentOmitProps } from "../../fro
 
 export interface IAlertSchema extends IFrontendEngineElementJsonSchema<"alert">, TComponentOmitProps<AlertProps> {
 	type: AlertType;
+	children: React.ReactNode;
 }
