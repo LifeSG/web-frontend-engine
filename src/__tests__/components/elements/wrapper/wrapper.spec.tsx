@@ -25,7 +25,7 @@ const renderComponent = (
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			wrapper: {
+			[parentId]: {
 				fieldType: wrapperType,
 				children,
 			},

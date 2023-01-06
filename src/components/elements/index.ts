@@ -1,2 +1,2 @@
 export * from "./alert";
-export * from "./text-body";
+export * from "./text";
