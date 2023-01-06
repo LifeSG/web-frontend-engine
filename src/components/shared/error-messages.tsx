@@ -1,6 +1,6 @@
 import capitalize from "lodash/capitalize";
 import { ReactNode } from "react";
-import { FileHelper } from "../../utils";
+import { FileHelper } from "../../utils/file-helper"; // import directly to avoid circular dependency
 
 export const ERROR_MESSAGES = {
 	COMMON: {
