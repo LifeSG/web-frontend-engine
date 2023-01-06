@@ -54,7 +54,7 @@ export const ImageInput = (props: IProps) => {
 		title,
 		validation,
 	} = props;
-	const { images: files, setImages: setFiles, setErrorCount } = useContext(ImageContext);
+	const { images: files, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
 	const dragUploadRef = createRef<IDragUploadRef>();
 	const [remainingPhotos, setRemainingPhotos] = useState<number>(0);
@@ -84,14 +84,14 @@ export const ImageInput = (props: IProps) => {
 
 	const handleDeleteFile = (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
-		setFiles((prev) => prev.filter((f, i) => i !== index));
+		setImages((prev) => prev.filter((f, i) => i !== index));
 		setExceedError(false);
 	};
 
 	const handleInput = (inputFiles: File[]): void => {
 		if (!inputFiles || !inputFiles.length) return;
 		if (!maxFiles || inputFiles.length + files.length <= maxFiles) {
-			setFiles([
+			setImages([
 				...files,
 				...inputFiles.map(
 					(inputFile) =>
