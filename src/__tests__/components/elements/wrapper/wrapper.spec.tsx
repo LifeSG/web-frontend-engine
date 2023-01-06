@@ -80,7 +80,7 @@ describe("wrapper", () => {
 		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
 	});
 
-	it.each<TWrapperType>(["div", "span", "section", "header", "footer", "p"])(
+	it.each<TWrapperType>(["div", "span", "section", "header", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "p"])(
 		"should be able to render with %s element type",
 		(type) => {
 			const text = "hello world";

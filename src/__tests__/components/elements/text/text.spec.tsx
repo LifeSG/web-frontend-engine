@@ -6,7 +6,7 @@ import { FRONTEND_ENGINE_ID, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "Body";
+const fieldType = "text-body";
 const componentTestId = TestHelper.generateId(componentId, "text");
 
 const renderComponent = (
@@ -34,16 +34,26 @@ describe(fieldType, () => {
 		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
 	});
 
-	it.each<TTextType>(["D1", "D2", "DBody", "H1", "H2", "H3", "H4", "H5", "H6", "Body", "BodySmall", "XSmall"])(
-		"should be able to render Text.%s component",
-		(type) => {
-			const text = "hello world";
-			renderComponent({ fieldType: type, children: text });
+	it.each<TTextType>([
+		"text-d1",
+		"text-d2",
+		"text-dbody",
+		"text-h1",
+		"text-h2",
+		"text-h3",
+		"text-h4",
+		"text-h5",
+		"text-h6",
+		"text-body",
+		"text-bodysmall",
+		"text-xsmall",
+	])("should be able to render Text.%s component", (type) => {
+		const text = "hello world";
+		renderComponent({ fieldType: type, children: text });
 
-			expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
-			expect(screen.getByText(text)).toBeInTheDocument();
-		}
-	);
+		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+		expect(screen.getByText(text)).toBeInTheDocument();
+	});
 
 	it("should be able to render an array of strings", () => {
 		const childrenContent = ["apple", "berry", "cherry"];

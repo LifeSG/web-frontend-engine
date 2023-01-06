@@ -1,9 +1,9 @@
-import { Text as DSText } from "@lifesg/react-design-system/text";
 import isArray from "lodash/isArray";
 import isObject from "lodash/isObject";
 import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Sanitize } from "../../shared";
+import { TEXT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
 
 export const Text = (props: IGenericFieldProps<ITextSchema>) => {
@@ -15,7 +15,7 @@ export const Text = (props: IGenericFieldProps<ITextSchema>) => {
 		schema: { children, fieldType, ...otherSchema },
 	} = props;
 
-	const Element = DSText[fieldType] || undefined;
+	const Element = TEXT_MAPPING[fieldType.toUpperCase()] || undefined;
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
