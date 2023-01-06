@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
-import { FileHelper, WebviewHelper, WindowHelper } from "../../../utils";
+import { FileHelper, WindowHelper } from "../../../utils";
 import { useFieldEvent, usePrevious, useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
@@ -43,16 +43,13 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [showReviewPrompt, setShowReviewPrompt] = useState(false);
 	const [showReviewModal, setShowReviewModal] = useState(false);
 	const { setFieldValidationConfig } = useValidationSchema();
+	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		// need to explicitly request for camera access when in android webview
-		// this can only be requested on page load and not on demand
-		if (WebviewHelper.isLifeSgApp()) {
-			WebviewHelper.postWebviewMessage("triggerCameraPermission");
-		}
+		dispatchFieldEvent("mount", id);
 	}, []);
 
 	// handle `defaultValue`
@@ -242,6 +239,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					onChange={onChange}
 					outputType={outputType}
 					upload={uploadOnAdd}
+					value={value}
 				/>
 			</Suspense>
 			<ImageInput

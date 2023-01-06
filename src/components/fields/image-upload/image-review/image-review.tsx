@@ -9,7 +9,8 @@ import IconDrawDisabled from "../../../../assets/img/icons/image-draw-disabled.s
 import IconDraw from "../../../../assets/img/icons/image-draw.svg";
 import IconPencilGrey from "../../../../assets/img/icons/pencil-grey.svg";
 import IconPencilWhite from "../../../../assets/img/icons/pencil-white.svg";
-import { FileHelper, ImageHelper, TestHelper, WebviewHelper } from "../../../../utils";
+import { FileHelper, ImageHelper, TestHelper } from "../../../../utils";
+import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { TFileCapture } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
@@ -81,7 +82,8 @@ export const ImageReview = (props: IProps) => {
 		show,
 	} = props;
 	const { images, setImages } = useContext(ImageContext);
-	const isLifeSgApp = WebviewHelper.isLifeSgApp();
+	const { dispatchFieldEvent } = useFieldEvent();
+	const previousShow = usePrevious(show);
 
 	// review image
 	const [activeFileIndex, setActiveFileIndex] = useState(images.length - 1);
@@ -107,12 +109,10 @@ export const ImageReview = (props: IProps) => {
 	}, [images.length]);
 
 	useEffect(() => {
-		if (WebviewHelper.isLifeSgApp()) {
-			if (show) {
-				WebviewHelper.postWebviewMessage("hideMasthead");
-			} else {
-				WebviewHelper.postWebviewMessage("showMasthead");
-			}
+		if (show) {
+			dispatchFieldEvent("show-review-modal", id);
+		} else if (previousShow) {
+			dispatchFieldEvent("hide-review-modal", id);
 		}
 	}, [show]);
 
@@ -172,23 +172,25 @@ export const ImageReview = (props: IProps) => {
 	};
 
 	const handleSave = () => {
-		setImages(
-			images
-				.filter(({ status }) => status >= EImageStatus.NONE)
-				.map((file) => {
-					const editedFile: IImage = { ...file };
-					if (file.drawingDataURL) {
-						editedFile.dataURL = file.drawingDataURL;
-					}
-					if (file.status < EImageStatus.UPLOAD_READY && file.status > EImageStatus.NONE) {
-						editedFile.status = EImageStatus.UPLOAD_READY;
-					}
-					editedFile.drawingDataURL = undefined;
-					editedFile.drawing = undefined;
-					return editedFile;
-				})
-		);
-		onExit();
+		if (dispatchFieldEvent("save-review-images", id, { images, retry: handleSave })) {
+			setImages(
+				images
+					.filter(({ status }) => status >= EImageStatus.NONE)
+					.map((file) => {
+						const editedFile: IImage = { ...file };
+						if (file.drawingDataURL) {
+							editedFile.dataURL = file.drawingDataURL;
+						}
+						if (file.status < EImageStatus.UPLOAD_READY && file.status > EImageStatus.NONE) {
+							editedFile.status = EImageStatus.UPLOAD_READY;
+						}
+						editedFile.drawingDataURL = undefined;
+						editedFile.drawing = undefined;
+						return editedFile;
+					})
+			);
+			onExit();
+		}
 	};
 
 	// =============================================================================
@@ -398,7 +400,7 @@ export const ImageReview = (props: IProps) => {
 
 	return (
 		<Modal id={TestHelper.generateId(id, undefined, show ? "show" : "hide")} show={show}>
-			<ModalBox statusBarHeight={isLifeSgApp ? window.lifeSgView?.statusBarHeight : 0} showCloseButton={false}>
+			<ModalBox className={TestHelper.generateId(id, "modal-box")} statusBarHeight={0} showCloseButton={false}>
 				{show ? (
 					<>
 						{renderHeader()}

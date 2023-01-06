@@ -1,6 +1,6 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
 import { TestHelper } from "../../../../utils";
-import { usePrevious } from "../../../../utils/hooks";
+import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { DragUpload, ERROR_MESSAGES, IDragUploadRef, TFileCapture } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
@@ -55,6 +55,7 @@ export const ImageInput = (props: IProps) => {
 		validation,
 	} = props;
 	const { images: files, setImages: setFiles, setErrorCount } = useContext(ImageContext);
+	const { dispatchFieldEvent } = useFieldEvent();
 	const dragUploadRef = createRef<IDragUploadRef>();
 	const [remainingPhotos, setRemainingPhotos] = useState<number>(0);
 	const [exceededFiles, setExceedError] = useState<boolean>();
@@ -77,6 +78,7 @@ export const ImageInput = (props: IProps) => {
 	// ===========================================================================
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
 		event?.preventDefault();
+		dispatchFieldEvent("file-dialog", id);
 		dragUploadRef?.current?.fileDialog();
 	};
 

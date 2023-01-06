@@ -1,8 +1,9 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IImageUploadSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
-import { IFrontendEngineData } from "../../../../components/types";
+import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
 import { AxiosApiClient, FileHelper, ImageHelper, WindowHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
@@ -25,9 +26,27 @@ const FILE_2 = new File(["file"], "test2.jpg", {
 const submitFn = jest.fn();
 let uploadSpy: jest.SpyInstance;
 
-const getSaveButton = (): HTMLElement => getField("button", "Save");
+const getSaveButton = (isQuery = false): HTMLElement => getField("button", "Save", isQuery);
 const getDragInputUploadField = (): HTMLElement => screen.getByTestId("field-drag-upload__hidden-input");
 const getReviewModalUploadField = (): HTMLElement => screen.getByTestId("field-image-thumbnails__file-input");
+
+interface ICustomFrontendEngineProps extends IFrontendEngineProps {
+	eventType: string;
+	eventListener: (this: Element, ev: Event) => any;
+}
+const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
+	const { eventType, eventListener, ...otherProps } = props;
+	const formRef = useRef<IFrontendEngineRef>();
+	useEffect(() => {
+		if (eventType && eventListener) {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(eventType, "field", eventListener);
+			return () => currentFormRef.removeFieldEventListener(eventType, "field", eventListener);
+		}
+	}, [eventListener, eventType]);
+
+	return <FrontendEngine {...otherProps} ref={formRef} />;
+};
 
 interface IRenderAndPerformActionsOptions {
 	overrideField?: Partial<Omit<IImageUploadSchema, "fieldType" | "label">> | undefined;
@@ -35,7 +54,10 @@ interface IRenderAndPerformActionsOptions {
 	files?: { name: string; type: string }[];
 	uploadType?: "input" | "drag & drop";
 	reviewImage?: boolean;
+	eventType?: string;
+	eventListener?: (this: Element, ev: Event) => any;
 }
+
 /**
  * render component
  * upload with file(s) specified
@@ -45,7 +67,15 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 	jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
 	jest.spyOn(FileHelper, "getMimeType").mockResolvedValue("image/jpeg");
 
-	const { overrideField, overrideSchema, files = [], uploadType = "input", reviewImage } = options;
+	const {
+		overrideField,
+		overrideSchema,
+		eventType,
+		eventListener,
+		files = [],
+		uploadType = "input",
+		reviewImage,
+	} = options;
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
@@ -65,7 +95,14 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		},
 		...overrideSchema,
 	};
-	render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	render(
+		<FrontendEngineWithEventListener
+			data={json}
+			onSubmit={submitFn}
+			eventType={eventType}
+			eventListener={eventListener}
+		/>
+	);
 
 	const uploadField = await waitFor(() =>
 		uploadType === "input" ? getDragInputUploadField() : screen.getByTestId("field-drag-upload")
@@ -683,6 +720,110 @@ describe("image-upload", () => {
 				expect(screen.getByText("Review photos")).toBeInTheDocument();
 				expect(getField("button", /^thumbnail/i)).toBeInTheDocument();
 			});
+		});
+	});
+
+	describe("events", () => {
+		it("should fire mount event on mount", async () => {
+			const handleMount = jest.fn();
+			await renderComponent({ eventType: "mount", eventListener: handleMount });
+
+			expect(handleMount).toBeCalled();
+		});
+
+		it("should fire show-review-modal event on showing review modal", async () => {
+			const handleShowReviewModal = jest.fn();
+			await renderComponent({
+				eventType: "show-review-modal",
+				eventListener: handleShowReviewModal,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+
+			expect(handleShowReviewModal).toBeCalled();
+		});
+
+		it("should fire hide-review-modal event on hiding review modal", async () => {
+			const handleHideReviewModal = jest.fn();
+			await renderComponent({
+				eventType: "hide-review-modal",
+				eventListener: handleHideReviewModal,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+			await waitFor(() => fireEvent.click(getSaveButton()));
+
+			expect(handleHideReviewModal).toBeCalled();
+		});
+
+		it("should fire file-dialog event on showing file-dialog", async () => {
+			const handleFileDialog = jest.fn();
+			await renderComponent({
+				eventType: "file-dialog",
+				eventListener: handleFileDialog,
+			});
+			await act(async () => {
+				await waitFor(() => fireEvent.click(getField("button", "Add photos")));
+			});
+
+			expect(handleFileDialog).toBeCalled();
+		});
+
+		it("should fire save-review-images event on clicking save button in review modal", async () => {
+			const handleSaveImages = jest.fn();
+			await renderComponent({
+				eventType: "save-review-images",
+				eventListener: handleSaveImages,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+			await waitFor(() => fireEvent.click(getSaveButton()));
+
+			expect(handleSaveImages).toBeCalled();
+		});
+
+		it("should not save images / close modal if save-review-images event is prevented", async () => {
+			const handleSaveImages = (event: CustomEvent) => {
+				event.preventDefault();
+			};
+			await renderComponent({
+				eventType: "save-review-images",
+				eventListener: handleSaveImages,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+			await waitFor(() => fireEvent.click(getSaveButton()));
+
+			expect(getSaveButton()).toBeInTheDocument();
+			expect(uploadSpy).not.toBeCalled();
+		});
+
+		it("should allow retry through save-review-images event detail", async () => {
+			const mockCounter = { value: () => 1 };
+			jest.spyOn(mockCounter, "value").mockReturnValueOnce(0);
+
+			const handleSaveImages = (event: CustomEvent) => {
+				if (mockCounter.value() < 1) {
+					event.preventDefault();
+					event.detail.retry();
+				}
+			};
+			await renderComponent({
+				eventType: "save-review-images",
+				eventListener: handleSaveImages,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+			await waitFor(() => fireEvent.click(getSaveButton()));
+
+			expect(mockCounter.value).toBeCalledTimes(2);
+			expect(getSaveButton(true)).not.toBeInTheDocument();
+			expect(uploadSpy).toBeCalled();
 		});
 	});
 });
