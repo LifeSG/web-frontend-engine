@@ -79,10 +79,10 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 		const acceptedFileTypeRule = validation?.find((rule) => "fileType" in rule);
 		const maxFileSizeRule = validation?.find((rule) => "maxSize" in rule);
-		if (acceptedFileTypeRule?.fileType && acceptedFileTypeRule.fileType !== acceptedFileTypes)
-			setAcceptedFileTypes(acceptedFileTypeRule?.fileType);
-		if (maxFileSizeRule?.maxSize && maxFileSizeRule.maxSize !== maxFileSize)
-			setMaxFileSize(maxFileSizeRule?.maxSize);
+		if (acceptedFileTypeRule?.["fileType"] && acceptedFileTypeRule?.["fileType"] !== acceptedFileTypes)
+			setAcceptedFileTypes(acceptedFileTypeRule?.["fileType"]);
+		if (maxFileSizeRule?.["maxSize"] && maxFileSizeRule?.["maxSize"] !== maxFileSize)
+			setMaxFileSize(maxFileSizeRule?.["maxSize"]);
 
 		const lengthRule = validation?.find((rule) => "length" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
@@ -118,13 +118,13 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				.test(
 					"max-size",
 					maxFileSizeRule?.errorMessage ||
-						ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxFileSizeRule?.maxSize),
+						ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxFileSizeRule?.["maxSize"]),
 					(value) => {
-						if (!value || !Array.isArray(value) || !maxFileSizeRule?.maxSize) return true;
+						if (!value || !Array.isArray(value) || !maxFileSizeRule?.["maxSize"]) return true;
 						return value.reduce((accumulator, file) => {
 							if (
 								!accumulator ||
-								FileHelper.getFilesizeFromBase64(file.dataURL) > maxFileSizeRule?.maxSize * 1024
+								FileHelper.getFilesizeFromBase64(file.dataURL) > maxFileSizeRule?.["maxSize"] * 1024
 							)
 								return false;
 							return true;
