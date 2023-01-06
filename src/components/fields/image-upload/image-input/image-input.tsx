@@ -54,7 +54,7 @@ export const ImageInput = (props: IProps) => {
 		title,
 		validation,
 	} = props;
-	const { images: files, setImages: setFiles, setErrorCount } = useContext(ImageContext);
+	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
 	const dragUploadRef = createRef<IDragUploadRef>();
 	const [remainingPhotos, setRemainingPhotos] = useState<number>(0);
@@ -63,8 +63,8 @@ export const ImageInput = (props: IProps) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		if (maxFiles > 0) setRemainingPhotos(maxFiles - files.length);
-	}, [maxFiles, files.length]);
+		if (maxFiles > 0) setRemainingPhotos(maxFiles - images.length);
+	}, [maxFiles, images.length]);
 
 	const previousExceededFiles = usePrevious(exceededFiles);
 	useEffect(() => {
@@ -84,15 +84,15 @@ export const ImageInput = (props: IProps) => {
 
 	const handleDeleteFile = (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
-		setFiles((prev) => prev.filter((f, i) => i !== index));
+		setImages((prev) => prev.filter((f, i) => i !== index));
 		setExceedError(false);
 	};
 
 	const handleInput = (inputFiles: File[]): void => {
 		if (!inputFiles || !inputFiles.length) return;
-		if (!maxFiles || inputFiles.length + files.length <= maxFiles) {
-			setFiles([
-				...files,
+		if (!maxFiles || inputFiles.length + images.length <= maxFiles) {
+			setImages([
+				...images,
 				...inputFiles.map(
 					(inputFile) =>
 						({
@@ -102,7 +102,7 @@ export const ImageInput = (props: IProps) => {
 							status: EImageStatus.NONE,
 							uploadProgress: 0,
 							addedFrom: "dragInput",
-							slot: ImageUploadHelper.findAvailableSlot(maxFiles, files),
+							slot: ImageUploadHelper.findAvailableSlot(maxFiles, images),
 						} as IImage)
 				),
 			]);
@@ -116,8 +116,8 @@ export const ImageInput = (props: IProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderFiles = () => {
-		if (!files || !files.length) return null;
-		return files.map((fileItem: IImage, i: number) => {
+		if (!images || !images.length) return null;
+		return images.map((fileItem: IImage, i: number) => {
 			return (
 				<FileItem
 					id={`${id}-file-item`}
@@ -156,7 +156,7 @@ export const ImageInput = (props: IProps) => {
 		const maxRule = validation?.find((rule) => "max" in rule);
 		let errorMessage = lengthRule?.errorMessage || maxRule?.errorMessage;
 		if (!errorMessage) {
-			if (remainingPhotos < 1 || files.length) {
+			if (remainingPhotos < 1 || images.length) {
 				errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles);
 			} else {
 				errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
