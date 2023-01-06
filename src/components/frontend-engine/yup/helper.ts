@@ -172,6 +172,10 @@ export namespace YupHelper {
 		name: string,
 		fn: (value: unknown, arg: unknown, context: Yup.TestContext) => boolean
 	) => {
+		if (customYupConditions.includes(name)) {
+			console.error(`the validation condition "${name}" is not added because it already exists!`);
+			return;
+		}
 		customYupConditions.push(name);
 		Yup.addMethod<Yup.AnySchema>(Yup[type], name, function (arg: unknown, errorMessage: string) {
 			return this.test({
