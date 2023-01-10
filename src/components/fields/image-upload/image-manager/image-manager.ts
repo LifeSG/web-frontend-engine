@@ -80,7 +80,11 @@ export const ImageManager = (props: IProps) => {
 									const updatedImages = [...prev];
 									updatedImages[index] = {
 										...image,
-										name: modifyDuplicateFilename(index, image.name),
+										name: FileHelper.deduplicateFileName(
+											images.map(({ name }) => name),
+											index,
+											image.name
+										),
 										type: mimeType,
 										status: image.addedFrom !== "schema" ? image.status : EImageStatus.UPLOADED,
 									};
@@ -165,27 +169,6 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const modifyDuplicateFilename = (
-		index: number,
-		fileName: string,
-		originalFilename = fileName,
-		counter = 1
-	): string => {
-		const hasSameName = images
-			.map((f) => f.name)
-			.filter((f, i) => i !== index)
-			.includes(fileName);
-		if (hasSameName) {
-			const name = originalFilename.split(".");
-			const ext = name.pop();
-			if (!ext) return fileName;
-			fileName = name.join().concat(` (${counter}).`).concat(ext);
-			return modifyDuplicateFilename(index, fileName, originalFilename, ++counter);
-		} else {
-			return fileName;
-		}
-	};
-
 	const getScale = (origWidth: number, origHeight: number): number => {
 		let scale = dimensions.width / origWidth;
 		if (origHeight * scale > dimensions.height) {
