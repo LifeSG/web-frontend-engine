@@ -14,13 +14,14 @@ interface IWrapperProps {
 	schema?: IWrapperSchema | undefined;
 	/** only used internally by FrontendEngine */
 	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
+	warnings?: Record<string, string> | undefined;
 }
 
 export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { id, schema, children } = props;
+	const { id, schema, children, warnings } = props;
 	const { fieldType, children: schemaChildren, ...otherSchema } = schema || {};
 	const [fields, setFields] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
@@ -84,7 +85,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 			setFields(ERROR_MESSAGES.GENERIC.UNSUPPORTED);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [schemaChildren || children, control]);
+	}, [schemaChildren || children, control, warnings]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
