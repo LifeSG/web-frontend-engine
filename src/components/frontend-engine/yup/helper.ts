@@ -11,6 +11,10 @@ import {
 } from "./types";
 
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
+interface ISchema {
+	hardSchema: Yup.ObjectSchema<ObjectShape>;
+	softSchema: Yup.ObjectSchema<ObjectShape>;
+}
 
 export namespace YupHelper {
 	const customYupConditions: string[] = [];
@@ -18,16 +22,26 @@ export namespace YupHelper {
 	/**
 	 * Constructs the entire Yup schema for frontend engine to use
 	 * @param yupSchemaConfig JSON representation of the eventual Yup schema
+	 * @param allowSoftValidation boolean indicating whether rules should be included in the schema
 	 * @returns Yup schema ready to be used by FrontendEngine
 	 */
-	export const buildSchema = (yupSchemaConfig: TFormYupConfig): Yup.ObjectSchema<ObjectShape> => {
-		const yupSchema: ObjectShape = {};
+	export const buildSchema = (yupSchemaConfig: TFormYupConfig): ISchema => {
+		const softYupSchema: ObjectShape = {};
+		const hardYupSchema: ObjectShape = {};
 		Object.keys(yupSchemaConfig).forEach((id) => {
-			const { schema, validationRules: fieldValidationConfig } = yupSchemaConfig[id];
-			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
+			const { schema, validationRules: fieldValidationConfig, allowSoftValidation } = yupSchemaConfig[id];
+
+			if (allowSoftValidation) {
+				softYupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
+			} else {
+				hardYupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
+			}
 		});
 
-		return Yup.object().shape(yupSchema);
+		return {
+			hardSchema: Yup.object().shape(hardYupSchema),
+			softSchema: Yup.object().shape(softYupSchema),
+		};
 	};
 
 	/**

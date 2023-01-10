@@ -75,6 +75,7 @@ export type TRenderRules = Record<string, IYupRenderRule[]>;
 export interface IFieldYupConfig {
 	schema: Yup.AnySchema;
 	validationRules: IYupValidationRule[];
+	allowSoftValidation?: boolean | undefined;
 }
 
 export type TFormYupConfig = Record<string, IFieldYupConfig>;
