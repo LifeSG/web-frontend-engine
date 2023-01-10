@@ -1,7 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { FrontendEngine, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { SubmitButtonStorybook } from "../common";
 
@@ -33,8 +33,16 @@ export default {
 			},
 			type: { name: "object", value: {}, required: true },
 		},
+		className: {
+			description: "HTML class attribute that is applied on the `<form>` element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
 		"data.className": {
-			description: "HTML class attribute",
+			description: "HTML class attribute that is applied on the `<form>` element",
 			table: {
 				type: {
 					summary: "string",
@@ -63,7 +71,8 @@ export default {
 			type: { name: "object", value: {}, required: true },
 		},
 		"data.id": {
-			description: "Unique HTML id attribute that is also assigned to the `data-testid`",
+			description:
+				"Unique HTML id attribute that is also used by the `data-testid`. Applied on the `<form>` element",
 			table: {
 				type: {
 					summary: "string",
@@ -92,6 +101,14 @@ export default {
 				},
 				defaultValue: {
 					summary: "onSubmit",
+				},
+			},
+		},
+		onChange: {
+			description: "Fires every time a value changes in any fields",
+			table: {
+				type: {
+					summary: "(values: TFrontendEngineValues<any>, isValid?: boolean) => unknown",
 				},
 			},
 		},
@@ -296,5 +313,38 @@ export const CheckIsValid: Story<IFrontendEngineProps> = () => {
 	);
 };
 CheckIsValid.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+interface IYupCustomValidationRule {
+	mustBeHello?: boolean | undefined;
+}
+export const AddCustomValidation: Story = () => {
+	const ref = useRef<IFrontendEngineRef>();
+
+	useEffect(() => {
+		ref.current?.addCustomValidation("string", "mustBeHello", (value) => value === "hello");
+	}, [ref]);
+
+	return (
+		<FrontendEngine<IYupCustomValidationRule>
+			data={{
+				fields: {
+					text: {
+						label: "Only accepts hello",
+						fieldType: "text",
+						validation: [{ required: true }, { mustBeHello: true, errorMessage: "Please key in hello" }],
+					},
+					...SubmitButtonStorybook,
+				},
+				defaultValues: {
+					text: "Hi",
+				},
+			}}
+			ref={ref}
+		/>
+	);
+};
+AddCustomValidation.parameters = {
 	controls: { hideNoControlsWarning: true },
 };

@@ -16,43 +16,57 @@ import {
 	ITextfieldSchema,
 	ITimePickerSchema,
 } from "../fields";
-import { IYupValidationRule, TRenderRules } from "./yup";
+import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
+
+// =============================================================================
+// YUP SCHEMA
+// =============================================================================
+export type { IYupValidationRule } from "./yup";
 
 // =============================================================================
 // FRONTEND ENGINE
 // =============================================================================
-export interface IFrontendEngineProps {
-	className?: string | undefined;
-	data?: IFrontendEngineData | undefined;
-	onChange?: (values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown | undefined;
+export interface IFrontendEngineProps<V = undefined> {
+	/** HTML class attribute that is applied on the `<form>` element */
+	className?: string;
+	/** JSON configuration to define the fields and functionalities of the form */
+	data?: IFrontendEngineData<V> | undefined;
+	/** Fires every time a value changes in any fields */
+	onChange?: ((values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown) | undefined;
+	/** Submit event handler, will receive the form data if form validation is successful */
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 }
 
-export interface IFrontendEngineData {
+export interface IFrontendEngineData<V = undefined> {
+	/** HTML class attribute */
 	className?: string | undefined;
-	// conditions?: IFrontendEngineCondition[]; TODO: add custom validation
+	/** Fields' initial values on mount. The key of each field needs to match the id used in the field */
 	defaultValues?: TFrontendEngineValues | undefined;
-	fields: Record<string, TFrontendEngineFieldSchema>;
+	/** All elements within the form in key-value format, key refers to the id of the field while value refers to the JSON schema of the field */
+	fields: Record<string, TFrontendEngineFieldSchema<V>>;
+	/** Unique HTML id attribute that is applied on the `<form>` element */
 	id?: string | undefined;
+	/** Validation strategy when inputs with errors get re-validated after a user submits the form (onSubmit event) */
 	revalidationMode?: TRevalidationMode | undefined;
+	/** Validation strategy before a user submits the form (onSubmit event) */
 	validationMode?: TValidationMode | undefined;
 }
 
-export type TFrontendEngineFieldSchema =
-	| ITextareaSchema
-	| ITextfieldSchema
-	| IEmailSchema
-	| INumberSchema
+export type TFrontendEngineFieldSchema<V = undefined> =
+	| ITextareaSchema<V>
+	| ITextfieldSchema<V>
+	| IEmailSchema<V>
+	| INumberSchema<V>
 	| ISubmitButtonSchema
-	| ISelectSchema
-	| IMultiSelectSchema
-	| ICheckboxGroupSchema
-	| IDateInputSchema
+	| ISelectSchema<V>
+	| IMultiSelectSchema<V>
+	| ICheckboxGroupSchema<V>
+	| IDateInputSchema<V>
 	| IWrapperSchema
-	| IContactNumberSchema
-	| IRadioButtonGroupSchema
-	| ITimePickerSchema
-	| IChipsSchema
+	| IContactNumberSchema<V>
+	| IRadioButtonGroupSchema<V>
+	| ITimePickerSchema<V>
+	| IChipsSchema<V>
 	| IAlertSchema
 	| ITextSchema;
 
@@ -67,34 +81,56 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	isValid: () => boolean;
 	/** triggers form submission */
 	submit: () => void;
+
+	addCustomValidation: (
+		type: TYupSchemaType | "mixed",
+		name: string,
+		fn: (value: unknown, arg: unknown) => boolean
+	) => void;
 }
 
 // =============================================================================
 // JSON SCHEMA
 // =============================================================================
-export interface IFrontendEngineFieldJsonSchema<T, V = IYupValidationRule> {
+// NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
+export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefined> {
+	/** defines what kind of field to be rendered */
 	fieldType: T;
+	/** caption for the field */
 	label: string;
 	/** render conditions
 	 * - need to fulfil at least 1 object in array (OR condition)
 	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
 	showIf?: TRenderRules[] | undefined;
-	validation?: V[] | undefined;
+	/** validation config, can be customised by passing generics */
+	validation?: (V | U | IYupValidationRule)[];
 }
 
-export type TFrontendEngineSchemaKeys = "id" | "label" | "validation" | "fieldType";
+/**
+ * JSON keys to omit from field schema when extending from other interfaces
+ * - keys already defined in `IFrontendEngineBaseFieldJsonSchema` to prevent collision
+ * - some inherited HTML attributes
+ */
+export type TFrontendEngineFieldJsonSchemaOmitKeys =
+	| "id"
+	| "label"
+	| "validation"
+	| "fieldType"
+	| "showIf"
+	| "children"
+	| "value";
 
 // NOTE: Form elements should not support validation nor contain labels
 export interface IFrontendEngineElementJsonSchema<T>
-	extends Omit<IFrontendEngineFieldJsonSchema<T>, "label" | "validation"> {}
+	extends Omit<IFrontendEngineBaseFieldJsonSchema<T>, "label" | "validation"> {}
 
 // NOTE: undefined allows aggregation of keys if exists
 type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
-	? TFrontendEngineSchemaKeys | T
-	: TFrontendEngineSchemaKeys;
+	? TFrontendEngineFieldJsonSchemaOmitKeys | T
+	: TFrontendEngineFieldJsonSchemaOmitKeys;
 
 // NOTE: Omit clashing keys between native props and frontend engine
-export type TComponentNativeProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
+export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
 
 export enum EFieldType {
 	TEXTAREA = "TextArea",

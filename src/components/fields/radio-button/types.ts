@@ -1,13 +1,13 @@
 import { RadioButtonProps } from "@lifesg/react-design-system/radio-button";
-import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine";
+import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 interface IOption {
 	label: string;
 	value: string;
 }
 
-export interface IRadioButtonGroupSchema
-	extends IFrontendEngineFieldJsonSchema<"radio">,
-		TComponentNativeProps<RadioButtonProps> {
+export interface IRadioButtonGroupSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"radio", V>,
+		TComponentOmitProps<RadioButtonProps> {
 	options: IOption[];
 }

@@ -40,20 +40,24 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 					const date = new Date(value);
 					return !isNaN(date.valueOf());
 				})
-				.test("future", futureRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
-					if (!isValidDate(value) || !futureRule?.future) return true;
+				.test("future", futureRule?.["errorMessage"] || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
+					if (!isValidDate(value) || !futureRule?.["future"]) return true;
 					return LocalDate.parse(value).isAfter(LocalDate.now());
 				})
-				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
-					if (!isValidDate(value) || !pastRule?.past) return true;
+				.test("past", pastRule?.["errorMessage"] || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
+					if (!isValidDate(value) || !pastRule?.["past"]) return true;
 					return LocalDate.parse(value).isBefore(LocalDate.now());
 				})
-				.test("not-future", notFutureRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE, (value) => {
-					if (!isValidDate(value) || !notFutureRule?.notFuture) return true;
-					return !LocalDate.parse(value).isAfter(LocalDate.now());
-				})
-				.test("not-past", notPastRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
-					if (!isValidDate(value) || !notPastRule?.notPast) return true;
+				.test(
+					"not-future",
+					notFutureRule?.["errorMessage"] || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE,
+					(value) => {
+						if (!isValidDate(value) || !notFutureRule?.["notFuture"]) return true;
+						return !LocalDate.parse(value).isAfter(LocalDate.now());
+					}
+				)
+				.test("not-past", notPastRule?.["errorMessage"] || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
+					if (!isValidDate(value) || !notPastRule?.["notPast"]) return true;
 					return !LocalDate.parse(value).isBefore(LocalDate.now());
 				}),
 			validation

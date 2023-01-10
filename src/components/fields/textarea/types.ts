@@ -1,9 +1,9 @@
 import { FormTextareaProps } from "@lifesg/react-design-system/form/types";
-import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine/types";
+import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine/types";
 
-export interface ITextareaSchema
-	extends IFrontendEngineFieldJsonSchema<"textarea">,
-		TComponentNativeProps<FormTextareaProps> {
+export interface ITextareaSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"textarea", V>,
+		TComponentOmitProps<FormTextareaProps> {
 	chipTexts?: string[] | undefined;
 	chipPosition?: "top" | "bottom" | undefined;
 	resizable?: boolean | undefined;

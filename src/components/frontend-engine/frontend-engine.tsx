@@ -1,11 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { forwardRef, useCallback, useEffect, useImperativeHandle } from "react";
+import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../elements/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
-import { YupProvider } from "./yup";
+import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
@@ -42,6 +42,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		getValues,
 		isValid: checkIsFormValid,
 		submit: reactFormHookSubmit(handleSubmit),
+		addCustomValidation: YupHelper.addCondition,
 	}));
 
 	const checkIsFormValid = useCallback(() => {
@@ -92,8 +93,30 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	);
 });
 
-export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => (
-	<YupProvider>
-		<FrontendEngineInner {...props} ref={ref} />
-	</YupProvider>
-));
+/**
+ * prevents inferrence
+ * https://stackoverflow.com/questions/56687668/a-way-to-disable-type-argument-inference-in-generics
+ */
+type NoInfer<T, U> = [T][T extends U ? 0 : never];
+/**
+ * The one and only component needed to create your form
+ *
+ * Minimally you will need to set the `data` props which is the JSON schema to define the form
+ */
+export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
+	return (
+		<YupProvider>
+			<FrontendEngineInner {...props} ref={ref} />
+		</YupProvider>
+	);
+}) as <V = undefined>(
+	props: IFrontendEngineProps<NoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
+) => ReactElement;
+
+/**
+ * casting as a function with generics as a way to define generics with forwardRef
+ * the generics are a way to set custom definition of Yup validation config
+ * `NoInfer` typing is to ensure validation config is either the default `IYupValidationRule` or explicitly typed
+ * this prevent inferring from the data props entered by devs
+ * can refer to `Add Custom Validation` story for more info
+ */

@@ -1,18 +1,17 @@
-import { FormInputGroupProps } from "@lifesg/react-design-system/form/types";
-import { IFrontendEngineFieldJsonSchema, TComponentNativeProps } from "../../frontend-engine/types";
-import { IYupValidationRule } from "../../frontend-engine/yup/types";
+import { FormInputProps } from "@lifesg/react-design-system/form/types";
+import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine/types";
 import { InternationalCallingCodeMap } from "./data";
 
 export type TCountry = keyof typeof InternationalCallingCodeMap;
 
-interface IContactNumberProps extends FormInputGroupProps<string, unknown> {
+interface IContactNumberProps extends FormInputProps {
 	country?: TCountry;
 	enableSearch?: boolean | undefined;
 }
 
 export type TSingaporeNumberRule = "default" | "house" | "mobile";
 
-interface IContactNumberValidationRules extends IYupValidationRule {
+export interface IContactNumberValidationRule {
 	contactNumber?:
 		| {
 				internationalNumber: true;
@@ -34,6 +33,6 @@ export interface IParsedPhoneNumber {
 	number: string;
 }
 
-export interface IContactNumberSchema
-	extends IFrontendEngineFieldJsonSchema<"contact", IContactNumberValidationRules>,
-		TComponentNativeProps<IContactNumberProps> {}
+export interface IContactNumberSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"contact", V, IContactNumberValidationRule>,
+		TComponentOmitProps<IContactNumberProps> {}
