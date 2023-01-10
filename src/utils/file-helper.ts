@@ -102,4 +102,26 @@ export namespace FileHelper {
 		const result = await fromBlob(blob);
 		return result?.mime;
 	};
+
+	/**
+	 * ensure file name is unique against a list of file names
+	 */
+	export const deduplicateFileName = (
+		fileNameList: string[],
+		index: number,
+		fileName: string,
+		originalFilename = fileName,
+		counter = 1
+	): string => {
+		const hasSameName = fileNameList.filter((f, i) => i !== index).includes(fileName);
+		if (hasSameName) {
+			const name = originalFilename.split(".");
+			const ext = name.pop();
+			if (!ext) return fileName;
+			fileName = name.join().concat(` (${counter}).`).concat(ext);
+			return deduplicateFileName(fileNameList, index, fileName, originalFilename, ++counter);
+		} else {
+			return fileName;
+		}
+	};
 }
