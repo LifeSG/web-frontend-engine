@@ -186,5 +186,4 @@ export interface IGenericFieldProps<T = TFrontendEngineFieldSchema>
 		Partial<ControllerRenderProps> {
 	id: string;
 	schema: T;
-	warning?: string | undefined;
 }

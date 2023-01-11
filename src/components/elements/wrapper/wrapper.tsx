@@ -8,6 +8,7 @@ import { EElementType, EFieldType, IGenericFieldProps, TFrontendEngineFieldSchem
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";
+import { DSAlert } from "./warpper.styles";
 
 interface IWrapperProps {
 	id?: string | undefined;
@@ -58,7 +59,17 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 									shouldUnregister={true}
 									render={({ field, fieldState }) => {
 										const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
-										return <Field schema={child} {...fieldProps} {...fieldState} />;
+										const warning = warnings[id];
+
+										if (!warning) {
+											return <Field schema={child} {...fieldProps} {...fieldState} />;
+										}
+										return (
+											<>
+												<Field schema={child} {...fieldProps} {...fieldState} />
+												<DSAlert type="warning">{warning}</DSAlert>
+											</>
+										);
 									}}
 								/>
 							</ConditionalRenderer>
