@@ -33,17 +33,16 @@
 		"@js-joda/core": "^5.4.2",
 		"@js-joda/locale_en": "^4.8.6",
 		"@js-joda/timezone": "^2.15.0",
-		"@lifesg/react-design-system": "^1.0.0-alpha.14",
 		"country-code-lookup": "^0.0.20",
 		"libphonenumber-js": "^1.10.14",
 		"lodash": "^4.17.21",
 		"react-hook-form": "^7.34.2",
 		"sanitize-html": "^2.8.1",
-		"styled-components": "^5.3.5",
 		"use-deep-compare-effect": "^1.8.1",
 		"yup": "^0.32.11"
 	},
 	"peerDependencies": {
+		"@lifesg/react-design-system": "^1.0.0-alpha.14",
 		"react": "^17.0.2 || ^18.0.0",
 		"react-dom": "^17.0.2 || ^18.0.0",
 		"styled-components": "^5.3.5"
@@ -53,6 +52,7 @@
 		"@babel/preset-env": "^7.19.3",
 		"@babel/preset-react": "^7.18.6",
 		"@babel/preset-typescript": "^7.18.6",
+		"@lifesg/react-design-system": "^1.0.0-alpha.14",
 		"@rollup/plugin-commonjs": "^22.0.2",
 		"@rollup/plugin-image": "^2.1.1",
 		"@rollup/plugin-json": "^4.1.0",
@@ -101,6 +101,7 @@
 		"rollup-plugin-postcss-modules": "^1.0.10",
 		"rollup-plugin-terser": "^7.0.2",
 		"rollup-plugin-typescript2": "^0.34.1",
+		"styled-components": "^5.3.5",
 		"style-loader": "^3.3.1",
 		"typescript": "^4.8.4"
 	},
@@ -110,6 +111,7 @@
 		]
 	},
 	"overrides": {
+		"debug@<3.1.0": "3.1.0",
 		"glob-parent@<5.1.2": "5.1.2",
 		"json5@<2.2.2": "2.2.2",
 		"loader-utils@>=1.0.0 <1.4.2": "1.4.2",
