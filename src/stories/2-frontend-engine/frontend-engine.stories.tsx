@@ -2,8 +2,48 @@ import { Button } from "@lifesg/react-design-system/button";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { useEffect, useRef } from "react";
-import { FrontendEngine, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
+import {
+	FrontendEngine,
+	IFrontendEngineData,
+	IFrontendEngineProps,
+	IFrontendEngineRef,
+} from "../../components/frontend-engine";
 import { SubmitButtonStorybook } from "../common";
+
+const DATA: IFrontendEngineData = {
+	fields: {
+		name: {
+			label: "What is your name",
+			fieldType: "text",
+			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+		},
+		email: {
+			label: "Email address",
+			fieldType: "email",
+			validation: [{ required: true }],
+		},
+		sex: {
+			fieldType: "radio",
+			label: "Sex",
+			options: [
+				{ label: "Male", value: "male" },
+				{ label: "Female", value: "female" },
+			],
+		},
+		description: {
+			label: "Feedback",
+			fieldType: "textarea",
+			rows: 3,
+			resizable: true,
+			validation: [{ required: true }],
+			chipTexts: ["Best", "Good", "Bad", "Horrible"],
+		},
+		...SubmitButtonStorybook,
+	},
+	defaultValues: {
+		name: "Erik Tan",
+	},
+};
 
 export default {
 	title: "Form/Frontend Engine",
@@ -130,18 +170,7 @@ Default.args = {
 	data: {
 		validationMode: "onSubmit",
 		revalidationMode: "onChange",
-		fields: {
-			name: {
-				label: "What is your name",
-				fieldType: "textarea",
-				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-				chipTexts: ["John", "Doe"],
-			},
-			...SubmitButtonStorybook,
-		},
-		defaultValues: {
-			name: "Erik Tan",
-		},
+		...DATA,
 	},
 };
 
@@ -150,18 +179,7 @@ ValidateOnChange.args = {
 	data: {
 		validationMode: "onChange",
 		revalidationMode: "onChange",
-		fields: {
-			name: {
-				label: "What is your name",
-				fieldType: "textarea",
-				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-				chipTexts: ["John", "Doe"],
-			},
-			...SubmitButtonStorybook,
-		},
-		defaultValues: {
-			name: "Erik Tan",
-		},
+		...DATA,
 	},
 };
 
@@ -170,39 +188,12 @@ ValidateOnBlur.args = {
 	data: {
 		validationMode: "onBlur",
 		revalidationMode: "onChange",
-		fields: {
-			name: {
-				label: "What is your name",
-				fieldType: "textarea",
-				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-				chipTexts: ["John", "Doe"],
-			},
-			...SubmitButtonStorybook,
-		},
-		defaultValues: {
-			name: "Erik Tan",
-		},
+		...DATA,
 	},
 };
 
 export const OnChange: Story<IFrontendEngineProps> = () => (
-	<FrontendEngine
-		data={{
-			fields: {
-				name: {
-					label: "What is your name",
-					fieldType: "textarea",
-					validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-					chipTexts: ["John", "Doe"],
-				},
-				...SubmitButtonStorybook,
-			},
-			defaultValues: {
-				name: "Erik Tan",
-			},
-		}}
-		onChange={(values, isValid) => console.log({ values, isValid })}
-	/>
+	<FrontendEngine data={DATA} onChange={(values, isValid) => console.log({ values, isValid })} />
 );
 OnChange.parameters = {
 	controls: { hideNoControlsWarning: true },
@@ -216,22 +207,7 @@ export const ExternalSubmit: Story<IFrontendEngineProps> = () => {
 
 	return (
 		<>
-			<FrontendEngine
-				data={{
-					fields: {
-						name: {
-							label: "What is your name",
-							fieldType: "textarea",
-							validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-							chipTexts: ["John", "Doe"],
-						},
-					},
-					defaultValues: {
-						name: "Erik Tan",
-					},
-				}}
-				ref={ref}
-			/>
+			<FrontendEngine data={DATA} ref={ref} />
 			<br />
 			<Button.Default styleType="secondary" onClick={handleClick}>
 				My custom submit button
@@ -252,23 +228,7 @@ export const GetValues: Story<IFrontendEngineProps> = () => {
 
 	return (
 		<>
-			<FrontendEngine
-				data={{
-					fields: {
-						name: {
-							label: "What is your name",
-							fieldType: "textarea",
-							validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-							chipTexts: ["John", "Doe"],
-						},
-						...SubmitButtonStorybook,
-					},
-					defaultValues: {
-						name: "Erik Tan",
-					},
-				}}
-				ref={ref}
-			/>
+			<FrontendEngine data={DATA} ref={ref} />
 			<br />
 			<Button.Default styleType="secondary" onClick={handleClick}>
 				Get form state (check console)
@@ -288,23 +248,7 @@ export const CheckIsValid: Story<IFrontendEngineProps> = () => {
 
 	return (
 		<>
-			<FrontendEngine
-				data={{
-					fields: {
-						name: {
-							label: "What is your name",
-							fieldType: "textarea",
-							validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-							chipTexts: ["John", "Doe"],
-						},
-						...SubmitButtonStorybook,
-					},
-					defaultValues: {
-						name: "Erik Tan",
-					},
-				}}
-				ref={ref}
-			/>
+			<FrontendEngine data={DATA} ref={ref} />
 			<br />
 			<Button.Default styleType="secondary" onClick={handleClick}>
 				Get form state (check console)
