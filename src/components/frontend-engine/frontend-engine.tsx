@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../elements/wrapper";
@@ -30,10 +31,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const formMethods = useForm({
 		mode: validationMode,
 		reValidateMode: revalidationMode,
-		defaultValues: defaultValues,
+		defaultValues,
 		resolver: yupResolver(validationSchema),
 	});
-	const { watch, handleSubmit: reactFormHookSubmit, getValues } = formMethods;
+	const { reset, watch, handleSubmit: reactFormHookSubmit, getValues } = formMethods;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -70,6 +71,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			return () => subscription.unsubscribe();
 		}
 	}, [checkIsFormValid, onChange, watch]);
+
+	useDeepCompareEffectNoCheck(() => {
+		reset({ ...defaultValues, ...getValues() });
+	}, [defaultValues, getValues]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
