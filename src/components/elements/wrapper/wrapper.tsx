@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
 import * as FrontendEngineFields from "../../fields";
-import { EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
+import { EElementType, EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";
@@ -38,31 +38,40 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		const wrapperChildren = schemaChildren || children;
 		if (typeof wrapperChildren === "object") {
 			const fieldTypeKeys = Object.keys(EFieldType);
+			const elementTypeKeys = Object.keys(EElementType);
 			const fieldComponents: JSX.Element[] = [];
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child)) return;
-
 				const fieldType = child.fieldType?.toUpperCase();
-
-				if (typeof child === "object" && fieldTypeKeys.includes(fieldType)) {
+				if (typeof child === "object") {
 					const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
-					const Field = (frontendEngineComponents[EFieldType[fieldType]] ||
-						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
-
-					fieldComponents.push(
-						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
-							<Controller
-								control={control}
-								name={id}
-								shouldUnregister={true}
-								render={({ field, fieldState }) => {
-									const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
-									return <Field schema={child} {...fieldProps} {...fieldState} />;
-								}}
-							/>
-						</ConditionalRenderer>
-					);
+					if (fieldTypeKeys.includes(fieldType)) {
+						// render fields with controller to register them into react-hook-form
+						const Field = frontendEngineComponents[EFieldType[fieldType]];
+						fieldComponents.push(
+							<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
+								<Controller
+									control={control}
+									name={id}
+									shouldUnregister={true}
+									render={({ field, fieldState }) => {
+										const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
+										return <Field schema={child} {...fieldProps} {...fieldState} />;
+									}}
+								/>
+							</ConditionalRenderer>
+						);
+					} else if (elementTypeKeys.includes(fieldType)) {
+						// render other elements as normal components
+						const Element = (frontendEngineComponents[EElementType[fieldType]] ||
+							Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
+						fieldComponents.push(
+							<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
+								<Element schema={child} id={id} />
+							</ConditionalRenderer>
+						);
+					}
 				} else if (fieldType) {
 					// need fieldType check to ignore other storybook args
 					fieldComponents.push(<Fragment key={id}>{ERROR_MESSAGES.GENERIC.UNSUPPORTED}</Fragment>);
