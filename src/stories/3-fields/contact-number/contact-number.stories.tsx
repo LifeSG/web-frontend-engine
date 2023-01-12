@@ -97,6 +97,36 @@ DefaultCountry.args = {
 	},
 };
 
+export const DefaultValue = () => (
+	<StyledForm
+		data={{
+			fields: {
+				"contact-default-value": {
+					fieldType: "contact",
+					label: "Contact Number",
+					validation: [
+						{
+							required: true,
+							errorMessage: "Enter mobile number",
+						},
+						{
+							contactNumber: {
+								singaporeNumber: "default",
+							},
+							errorMessage: "Invalid mobile number. Try again.",
+						},
+					],
+				},
+				...SubmitButtonStorybook,
+			},
+			defaultValues: {
+				"contact-default-value": "91234567",
+			},
+		}}
+	/>
+);
+DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"contact-disabled": {
