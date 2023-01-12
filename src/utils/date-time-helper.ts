@@ -1,5 +1,5 @@
 import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime, ResolverStyle } from "@js-joda/core";
-import { Locale } from "@js-joda/locale_en";
+import { Locale } from "@js-joda/locale_en-us";
 import { ERROR_MESSAGES } from "../components/shared/error-messages"; // import directly to avoid circular dependency
 
 export namespace DateTimeHelper {
