@@ -93,6 +93,15 @@ Disabled.args = {
 	},
 };
 
+export const MaxLength = Template.bind({});
+MaxLength.args = {
+	"numeric-maxlength": {
+		label: "Number",
+		fieldType: "numeric",
+		maxLength: 2,
+	},
+};
+
 export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"numeric-placeholder": {
