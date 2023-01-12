@@ -16,6 +16,7 @@ export interface IChipsSchema<V = undefined>
 		resizable?: boolean;
 		maxLength?: number;
 		rows?: number;
+		placeholder?: string;
 	};
 	multi?: boolean;
 }
