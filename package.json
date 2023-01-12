@@ -1,19 +1,10 @@
 {
-	"name": "web-frontend-engine",
+	"name": "@lifesg/web-frontend-engine",
 	"version": "1.0.0-alpha.1",
-	"description": "Repository for the web frontend engine",
-	"keywords": [],
-	"homepage": "https://github.com/LifeSG/web-frontend-engine#readme",
-	"bugs": {
-		"url": "https://github.com/LifeSG/web-frontend-engine/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/LifeSG/web-frontend-engine.git"
-	},
-	"license": "ISC",
-	"author": "",
-	"main": "dist/index.js",
+	"description": "A frontend engine for LifeSG React apps",
+	"main": "dist/cjs/index.js",
+	"module": "dist/index.js",
+	"typings": "dist/index.d.ts",
 	"scripts": {
 		"build": "npm run rollup && npm run post:build",
 		"build-watch": "rollup -c -w",
@@ -28,6 +19,19 @@
 		"storybook": "start-storybook -p 6006 -c .storybook",
 		"prepare": "(test -d ./.git && npx husky install) || true"
 	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/LifeSG/web-frontend-engine.git"
+	},
+	"keywords": [
+		"frontend-engine"
+	],
+	"author": "LifeSG",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/LifeSG/web-frontend-engine/issues"
+	},
+	"homepage": "https://github.com/LifeSG/web-frontend-engine#readme",
 	"dependencies": {
 		"@hookform/resolvers": "^2.9.8",
 		"@js-joda/core": "^5.4.2",
@@ -97,12 +101,10 @@
 		"react-dom": "^17.0.2",
 		"rollup": "^2.79.1",
 		"rollup-plugin-peer-deps-external": "^2.2.4",
-		"rollup-plugin-postcss": "^4.0.2",
-		"rollup-plugin-postcss-modules": "^1.0.10",
 		"rollup-plugin-terser": "^7.0.2",
 		"rollup-plugin-typescript2": "^0.34.1",
-		"styled-components": "^5.3.5",
 		"style-loader": "^3.3.1",
+		"styled-components": "^5.3.5",
 		"typescript": "^4.8.4"
 	},
 	"lint-staged": {
