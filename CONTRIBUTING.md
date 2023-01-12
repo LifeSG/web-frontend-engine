@@ -27,40 +27,6 @@ Do also adhere to the guidelines mentioned below.
 -   Type names should be prepended with `T`
 -   Adhere to the folder structure
 
-```
-├── src
-	│── __mocks__
-	│── __tests__
-	│── assets
-	│── components
-	│	├── shared								// shared components for internal use only
-	│	│	├── component-name
-	│	│	│	├── component-name.tsx
-	│	│	│	├── component-name.styles.tsx
-	│	│	│	├── index.ts					// barrel export
-	│	│	│	└── types.ts					// only necessary if the typings need to be exported / there are a lot of typings
-	│	│	├── index.ts						// barrel export
-	│	│	└── types.ts
-	│	├── fields								// frontend engine fields that can be used in the schema
-	│	│	├── field-name
-	│	│	│	├── field-name.tsx
-	│	│	│	├── field-name.styles.tsx
-	│	│	│	├── index.ts					// barrel export
-	│	│	│	└── types.ts					// only necessary if the typings need to be exported / there are a lot of typings
-	│	│	├── index.ts						// barrel export
-	│	│	└── types.ts
-	│	└── frontend-engine						// main exported component
-	│		├── frontend-engine.tsx
-	│		├── index.ts						// barrel export
-	│		├── types.ts
-	│		└── validation-schema				// validation schema
-	│── custom-types
-	│── services
-	│── stories
-	└── utils									// common stateless functions
-		└── hooks								// common hooks
-```
-
 ---
 
 <a id="contributor"></a>
@@ -72,30 +38,40 @@ Do also adhere to the guidelines mentioned below.
 
 ### **1. Creating a branch**
 
-Now that you are starting off, first create a branch following these conventions:
-
--   If you have a ticket, `<ticket_num>-a-short-description` (e.g. `MOL-1234-fix-navbar`)
--   If you do not have a ticket, `just-a-short-description` (e.g. `fix-navbar`)
-
-> Note that branches are to be created in kebab-case
+Now that you are starting off, first create a branch with a short and easy description in **kebab-case**
+e.g. `update-navbar-style`
 
 <a id="adding-components"></a>
 <br />
 
 ### **2. Adding components**
 
-Components are to be added in the `src/components` directory in a structure like this
+There are two kinds of components: `fields` and `elements`.
+
+Fields are components that add values to the form, i.e. they accept values that will get submitted. Examples of fields are `textarea`, `select` and `radio-button`.
+
+Elements are the opposite, they do not have values and are typically used for layouts and messages. Examples are `div`, `h1` and `alert`.
+
+These components are to be added in their respective directories (`src/components/fields` or `src/components/elements`) in a structure like this
 
 ```
 ├── src
    ├── __tests__
    └── components
-		├── component-name
-    	│   ├── component-name.tsx
-    	│   ├── component-name.styles.tsx
-		│	├── index.tsx
-		│   └── types.ts
- 	 	└── dir-2
+		├── elements
+		│	├── component-name
+		│	│   ├── component-name.tsx
+		│	│   ├── component-name.styles.tsx
+		│	│	├── index.tsx
+		│	│   └── types.ts
+		│	└── dir-2
+		└── fields
+			├── component-name
+			│   ├── component-name.tsx
+			│   ├── component-name.styles.tsx
+			│	├── index.tsx
+			│   └── types.ts
+			└── dir-2
 ```
 
 Where
@@ -142,19 +118,7 @@ Some principles include:
 
 Once you have committed and pushed your code, you are to create a pull request to have it approved to be in the `master` branch.
 
-Simply create a pull request with a meaningful title and description of the change. This will be used in the `Changelog` document when the code owner publishes a new version.
-
-An example of a good title is
-
-```
-Add a new event handler prop for <ComponentName>
-```
-
-Some of the changes could result in some breaking changes or things to note for users of the component. You can add the `[WARNING]` or `[BREAKING]` indicator so that the repository owner can help indicate these in the `Changelog` document.
-
-```
-[BREAKING] Rename `data` prop for <ComponentName> for better clarity
-```
+Add a meaningful title to your pull request and follow the template provided.
 
 ---
 
@@ -168,47 +132,50 @@ Some of the changes could result in some breaking changes or things to note for 
 
 ### **1. Version management**
 
+There are different types of versions that we can include in the frontend engine.
+
+For larger features/changes such as migrations, we would introduce
+alpha versions to inform others of the potential breakages in these versions. We can denote alpha versions as such
+
+```
+v1.x.x-alpha.x
+
+e.g.
+v1.2.0-alpha.2
+```
+
+Where `v1.2.0` is the version that we will eventually release to.
+
+> It is advisable to work in a separate branch for alpha releases so as not to disrupt the `master` branch which is
+> always a reflection of the latest in production
+
+For all other changes, we follow the **canary release system**. This allows us to test new features/fixes before we roll out the official version to the other users. The version tags are as such:
+
+-   `canary` v1.0.1-canary.1
+-   `stable` v1.0.1
+
 In terms of versioning, you may follow the guidelines as such:
 
 -   If it is breaking change (not backward compatible), increase the major version (e.g. `x.0.0`)
--   If it is a regular enhancement, increase the minor version (e.g. `6.x.0`)
--   If it is a bug fix, increase thepatch version (e.g. `6.1.x`)
+-   If it is a regular enhancement, increase the minor version (e.g. `1.x.0`)
+-   If it is a bug fix, increase thepatch version (e.g. `1.1.x`)
 
 <a id="documenting-change"></a>
 <br />
 
 ### **2. Documenting change**
 
-Like all libraries, documenting changes are extremely important for users to note of the changes being made in the code. This is done in `CHANGELOG.md`. Some principles include:
+Like all libraries, documenting changes are extremely important for users to note of the changes being made in the code. This is done in the [Changelog Wiki](https://github.com/LifeSG/web-frontend-engine/wiki/Changelog). Some principles include:
 
 -   Indicate version number and date of release
--   State the type if it is `Fixes` or `Changes`
+-   State the type if it is `New features` or `Bug fixes`
 -   State purpose clearly. Indicate if it is Breaking change by indicating the tag `[BREAKING]`
 -   If you would warn users of the change you can indicate using the tag `[WARNING]`
-
-Here is an example of the changelog entry
-
-```markdown
-## v6.0.1-canary.1 (27 June, 2022)
-
-### Changes
-
--   Introduce `Masonry` component
-
-### Fixes
-
--   Fix fonts not being accessible on `index.css` of library
-```
-
-#### **Updating the version in storybook**
-
-As we have a Storybook documentation to document the components, it is required to also update the `VersionTag` component's `currentStable` prop in `src/stories/intro/intro-stories.mdx`. The beta will always reference the `package.json` version. So your job is just to indicate the stable version.
-
-<a id="updating"></a>
-<br />
 
 ### **3. How to update this library?**
 
 1. Create a branch with a signature as such `bump-v6.0.1-canary.1`
-2. Update the `CHANGELOG.md`
+2. Update the version number in `package.json` and `package-lock.json`
 3. Create a pull request to have it merged
+4. Update the [Changelog Wiki](https://github.com/LifeSG/web-frontend-engine/wiki/Changelog)
+5. Code owner will proceed to create a release
