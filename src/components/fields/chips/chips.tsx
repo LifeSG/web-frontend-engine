@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Chip, ERROR_MESSAGES } from "../../shared";
 import { ITextareaSchema, TextArea } from "../textarea";
@@ -26,7 +26,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextArea, setShowTextArea] = useState<boolean>(false);
 	const { control } = useFormContext();
-	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS

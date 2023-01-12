@@ -2,7 +2,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Label, RadioContainer, StyledRadioButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
@@ -20,7 +20,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS

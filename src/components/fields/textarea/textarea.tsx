@@ -3,7 +3,7 @@ import { kebabCase } from "lodash";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { Chip } from "../../shared";
 import { ChipContainer, StyledTextArea, Wrapper } from "./textarea.styles";
@@ -23,7 +23,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		...otherProps
 	} = props;
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS

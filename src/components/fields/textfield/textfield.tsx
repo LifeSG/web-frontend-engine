@@ -3,7 +3,7 @@ import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
 import { IEmailSchema, INumberSchema, ITextfieldSchema } from "./types";
@@ -23,7 +23,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 
 	const [stateValue, setStateValue] = useState<string | number>(value || "");
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig } = useValidationConfig();
 
 	// ================================================
 	// EFFECTS

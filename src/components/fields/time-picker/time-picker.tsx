@@ -3,7 +3,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { DateTimeHelper, TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ITimePickerSchema } from "./types";
 
@@ -21,7 +21,7 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
