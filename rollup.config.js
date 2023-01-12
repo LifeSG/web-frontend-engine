@@ -1,39 +1,47 @@
 import commonjs from "@rollup/plugin-commonjs";
 import image from "@rollup/plugin-image";
 import json from "@rollup/plugin-json";
-import resolve from "@rollup/plugin-node-resolve";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
+import pkg from "./package.json";
 
-// Override the base tsconfig.json during build
-const overrides = {
-	exclude: ["**/stories/**", "**/__tests__/**", "**/__mocks__/**", "**/util/**"],
-};
+const plugins = [
+	peerDepsExternal(), // Add the externals for me. [react, react-dom]
+	nodeResolve({ browser: true }),
+	commonjs(), // converts CommonJS to ES6 modules
+	typescript({
+		useTsconfigDeclarationDir: true,
+		tsconfig: "tsconfig.json",
+		tsconfigOverride: {
+			// Override base tsconfig.json during build
+			exclude: ["**/stories/**", "**/__tests__/**", "**/__mocks__/**", "**/util/**"],
+		},
+	}),
+	image(),
+	json(),
+	terser(), // Helps remove comments, whitespace or logging codes
+];
 
 export default {
 	input: "src/index.ts",
 	output: [
 		{
-			dir: "dist",
+			file: pkg.module,
+			format: "esm",
+			sourcemap: true,
+			exports: "named",
+			chunkFileNames: "chunks/[name].[hash].js",
+		},
+		{
+			file: pkg.main,
 			format: "cjs",
 			sourcemap: true,
+			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
 		},
 	],
-	plugins: [
-		peerDepsExternal(), // Add the externals for me. [react, react-dom]
-		resolve({ browser: true }),
-		commonjs(),
-		typescript({
-			useTsconfigDeclarationDir: true,
-			tsconfig: "tsconfig.json",
-			tsconfigOverride: overrides,
-		}),
-		postcss(),
-		image(),
-		json(),
-		terser(),
-	],
+	plugins,
+	external: ["react", "react-dom", "styled-components"],
 };
