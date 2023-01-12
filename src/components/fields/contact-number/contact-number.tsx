@@ -3,7 +3,7 @@ import { AddonProps } from "@lifesg/react-design-system/input-group/types";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
 import { getCountries, getCountryFromPrefix, getPrefix, InternationalCallingCodeMap } from "./data";
@@ -27,7 +27,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const [selectedCountry, setSelectedCountry] = useState<ISelectedCountry>();
 	const [singaporeRule, setSingaporeRule] = useState<TSingaporeNumberRule>();
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS

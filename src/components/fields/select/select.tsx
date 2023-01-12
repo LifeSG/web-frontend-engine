@@ -3,7 +3,7 @@ import { InputSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ISelectOption, ISelectSchema } from "./types";
 
@@ -21,7 +21,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS

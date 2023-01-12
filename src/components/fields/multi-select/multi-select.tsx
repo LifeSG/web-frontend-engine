@@ -3,7 +3,7 @@ import { InputMultiSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
 import { ISelectOption } from "../select/types";
@@ -23,7 +23,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS

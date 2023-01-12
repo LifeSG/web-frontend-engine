@@ -26,7 +26,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		onSubmit,
 	} = props;
 
-	const { validationSchema } = useValidationSchema();
+	const validationSchema = useValidationSchema();
 
 	const formMethods = useForm({
 		mode: validationMode,

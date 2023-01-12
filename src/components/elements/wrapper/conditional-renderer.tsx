@@ -2,7 +2,7 @@ import isEmpty from "lodash/isEmpty";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
 
 interface IProps {
@@ -21,7 +21,7 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const { watch } = useFormContext();
-	const { formValidationConfig, removeFieldValidationConfig } = useValidationSchema();
+	const { formValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 	const [show, toggleShow] = useState(false);
 	const [formValues, setFormValues] = useState<FieldValues>();
 
