@@ -23,7 +23,7 @@ const DATA: IFrontendEngineData = {
 			validation: [{ required: true }],
 		},
 		sex: {
-			fieldType: "radio",
+			fieldType: "select",
 			label: "Sex",
 			options: [
 				{ label: "Male", value: "male" },
