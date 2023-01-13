@@ -80,7 +80,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, 
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [status, dataURL, file.type, maxSize]);
+	}, [status, maxSize]);
 
 	useEffect(() => {
 		setFileNameToWidth();
