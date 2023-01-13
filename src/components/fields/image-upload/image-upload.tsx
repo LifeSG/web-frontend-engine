@@ -37,7 +37,9 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const { buttonAdd, dragAndDropHint, inputHint } = copies || {};
 	const { images, setImages } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
-	const [acceptedFileTypes, setAcceptedFileTypes] = useState<TImageUploadAcceptedFileType[]>(ACCEPTED_FILE_TYPES);
+	const [acceptedFileTypes, setAcceptedFileTypes] = useState<TImageUploadAcceptedFileType[]>([
+		...ACCEPTED_FILE_TYPES,
+	]);
 	const [maxFiles, setMaxFiles] = useState(0);
 	const [maxFileSize, setMaxFileSize] = useState(0);
 	const [showReviewPrompt, setShowReviewPrompt] = useState(false);
