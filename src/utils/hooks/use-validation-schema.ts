@@ -29,6 +29,7 @@ export const useValidationSchema = () => {
 	const performSoftValidation = (schema: Yup.ObjectSchema<ObjectShape>, data: TFrontendEngineValues<any>): void => {
 		try {
 			schema.validateSync(data, { abortEarly: false });
+			setWarnings({});
 		} catch (error) {
 			const validationError = error as Yup.ValidationError;
 
