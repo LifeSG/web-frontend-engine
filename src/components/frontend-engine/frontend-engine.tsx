@@ -60,7 +60,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [getValues, hardValidationSchema]);
 
 	const handleSubmit = (data: TFrontendEngineValues): void => {
-		console.log("submitted", data);
 		onSubmit?.(data);
 	};
 
