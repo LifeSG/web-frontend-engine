@@ -137,7 +137,7 @@ export const ImageReview = (props: IProps) => {
 						status: EImageStatus.NONE,
 						uploadProgress: 0,
 						addedFrom: "reviewModal",
-						slot: ImageUploadHelper.findAvailableSlot(maxFiles, prev),
+						slot: ImageUploadHelper.findAvailableSlot(prev),
 					},
 				];
 			});
