@@ -102,7 +102,7 @@ export const ImageInput = (props: IProps) => {
 							status: EImageStatus.NONE,
 							uploadProgress: 0,
 							addedFrom: "dragInput",
-							slot: ImageUploadHelper.findAvailableSlot(maxFiles, images),
+							slot: ImageUploadHelper.findAvailableSlot(images),
 						} as IImage)
 				),
 			]);
