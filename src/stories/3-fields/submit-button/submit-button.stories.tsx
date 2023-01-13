@@ -27,6 +27,8 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("submit"),
+		validation: { table: { disable: true } },
+		submit: { table: { disable: true } },
 		styleType: {
 			description: "The style type of the button",
 			table: {

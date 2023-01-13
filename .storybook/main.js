@@ -1,18 +1,16 @@
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
 	core: {
-		builder: "webpack5"
+		builder: "webpack5",
 	},
-	stories: [
-		"../src/stories/**/*.stories.@(ts|tsx|mdx)",
-	],
+	stories: ["../src/stories/**/*.stories.@(ts|tsx|mdx)"],
 	addons: [
 		"@storybook/addon-links",
 		"@storybook/addon-essentials",
 		"@storybook/addon-interactions",
 		"@storybook/addon-a11y",
-
 	],
 	typescript: {
 		reactDocgen: "react-docgen-typescript",
@@ -41,6 +39,11 @@ module.exports = {
 			],
 			include: path.resolve(__dirname, "../"),
 		});
+		config.plugins.push(
+			new webpack.ProvidePlugin({
+				Buffer: ["buffer", "Buffer"],
+			})
+		);
 		return config;
 	},
-}
+};

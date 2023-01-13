@@ -48,16 +48,6 @@ export default {
 			},
 			defaultValue: "uuuu-MM-dd",
 		},
-		validation: {
-			description:
-				"Validation schema, for more info, refer to the respective stories <a href='/docs/form-validation-schema--required'>here</a>",
-			table: {
-				type: {
-					summary: "object",
-				},
-			},
-			type: { name: "object", value: {} },
-		},
 	},
 } as Meta;
 

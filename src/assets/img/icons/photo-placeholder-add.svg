@@ -1,0 +1,13 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <rect id="a" x="0" y="0" width="40" height="40" rx="2"/>
+        <mask id="b" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="40" height="40" fill="#fff">
+            <use xlink:href="#a"/>
+        </mask>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <use stroke="#1C76D5" mask="url(#b)" stroke-width="2" stroke-dasharray="5,1.5" fill-rule="nonzero" xlink:href="#a"/>
+        <path d="M32 8v24H8V8z"/>
+        <path d="M28.575 18.017c.236 0 .425.189.425.425v3.119a.419.419 0 0 1-.423.422l-6.169.003a.423.423 0 0 0-.425.425v6.166a.419.419 0 0 1-.422.423h-3.12a.423.423 0 0 1-.424-.425v-6.167a.423.423 0 0 0-.425-.425h-6.167a.423.423 0 0 1-.425-.425V18.44a.419.419 0 0 1 .423-.422h6.166a.423.423 0 0 0 .425-.425l.003-6.17a.419.419 0 0 1 .422-.422h3.12c.235 0 .424.189.424.425v6.167c0 .236.19.425.425.425h6.167z" fill="#1C76D5" fill-rule="nonzero"/>
+    </g>
+</svg>

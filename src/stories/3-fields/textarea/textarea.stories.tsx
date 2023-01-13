@@ -86,16 +86,6 @@ export default {
 			defaultValue: 1,
 			type: { name: "number" },
 		},
-		validation: {
-			description:
-				"Validation schema, for more info, refer to the respective stories <a href='/docs/form-validation-schema--required'>here</a>",
-			table: {
-				type: {
-					summary: "object",
-				},
-			},
-			type: { name: "object", value: {} },
-		},
 	},
 } as Meta;
 

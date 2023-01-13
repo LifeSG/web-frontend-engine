@@ -17,10 +17,14 @@ export const getSubmitButtonProps = (): Record<string, TFrontendEngineFieldSchem
 	};
 };
 
-export const getField = (role: TAriaRoles, nameOrConfig?: string | ByRoleOptions, isQuery = false): HTMLElement => {
+export const getField = (
+	role: TAriaRoles,
+	nameOrConfig?: string | RegExp | ByRoleOptions,
+	isQuery = false
+): HTMLElement => {
 	let options: ByRoleOptions = {};
 
-	if (typeof nameOrConfig === "string") {
+	if (typeof nameOrConfig === "string" || nameOrConfig instanceof RegExp) {
 		options = { name: nameOrConfig };
 	} else {
 		options = { ...nameOrConfig };
@@ -39,3 +43,5 @@ export const getErrorMessage = (isQuery = false): HTMLElement => {
 	}
 	return screen.getByText(ERROR_MESSAGE);
 };
+
+export const flushPromise = (delay = 0) => new Promise((resolve) => setTimeout(resolve, delay));

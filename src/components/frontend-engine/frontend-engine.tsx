@@ -3,10 +3,11 @@ import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHan
 import { FormProvider, useForm } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { TestHelper } from "../../utils";
-import { useValidationSchema } from "../../utils/hooks";
+import { useFieldEvent, useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../elements/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
+import { EventProvider } from "./event";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
@@ -27,6 +28,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	} = props;
 
 	const { validationSchema } = useValidationSchema();
+	const { addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 
 	const formMethods = useForm({
 		mode: validationMode,
@@ -40,10 +42,12 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// HELPER FUNCTIONS
 	// =============================================================================
 	useImperativeHandle<Partial<IFrontendEngineRef>, Partial<IFrontendEngineRef>>(ref, () => ({
+		addCustomValidation: YupHelper.addCondition,
+		addFieldEventListener,
 		getValues,
 		isValid: checkIsFormValid,
+		removeFieldEventListener,
 		submit: reactFormHookSubmit(handleSubmit),
-		addCustomValidation: YupHelper.addCondition,
 	}));
 
 	const checkIsFormValid = useCallback(() => {
@@ -111,7 +115,9 @@ type NoInfer<T, U> = [T][T extends U ? 0 : never];
 export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	return (
 		<YupProvider>
-			<FrontendEngineInner {...props} ref={ref} />
+			<EventProvider>
+				<FrontendEngineInner {...props} ref={ref} />
+			</EventProvider>
 		</YupProvider>
 	);
 }) as <V = undefined>(

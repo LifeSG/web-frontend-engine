@@ -7,6 +7,7 @@ import {
 	IContactNumberSchema,
 	IDateInputSchema,
 	IEmailSchema,
+	IImageUploadSchema,
 	IMultiSelectSchema,
 	INumberSchema,
 	IRadioButtonGroupSchema,
@@ -68,13 +69,27 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITimePickerSchema<V>
 	| IChipsSchema<V>
 	| IAlertSchema
-	| ITextSchema;
+	| ITextSchema
+	| IImageUploadSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export type TValidationMode = keyof ValidationMode;
 
 export interface IFrontendEngineRef extends HTMLFormElement {
+	addFieldEventListener: (
+		type: string,
+		id: string,
+		listener: (this: Element, ev: Event) => any,
+		options?: boolean | AddEventListenerOptions
+	) => void;
+	removeFieldEventListener: (
+		type: string,
+		id: string,
+		listener: (this: Element, ev: Event) => any,
+		options?: boolean | EventListenerOptions
+	) => void;
+	dispatchFieldEvent: (event: Event) => boolean;
 	/** gets form values */
 	getValues: () => TFrontendEngineValues;
 	/** check if form is valid */
@@ -171,6 +186,7 @@ export enum EFieldType {
 	"TEXT-BODY" = "Text",
 	"TEXT-BODYSMALL" = "Text",
 	"TEXT-XSMALL" = "Text",
+	"IMAGE-UPLOAD" = "ImageUpload",
 }
 
 // =============================================================================
