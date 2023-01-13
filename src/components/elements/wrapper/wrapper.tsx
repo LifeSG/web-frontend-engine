@@ -59,7 +59,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 									shouldUnregister={true}
 									render={({ field, fieldState }) => {
 										const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
-										const warning = warnings[id];
+										const warning = warnings ? warnings[id] : "";
 
 										if (!warning) {
 											return <Field schema={child} {...fieldProps} {...fieldState} />;
