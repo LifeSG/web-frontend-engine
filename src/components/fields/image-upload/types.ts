@@ -23,8 +23,8 @@ export interface IImageUploadSchema<V = IImageUploadValidationRule>
 		inputHint?: string | undefined;
 	};
 	compress?: boolean | undefined;
-	/** refers to preview dimensions and eventual output dimensions */
 	description?: string | undefined;
+	/** refers to preview dimensions and eventual output dimensions */
 	dimensions?: { width: number; height: number } | undefined;
 	editImage?: boolean | undefined;
 	outputType?: TImageUploadOutputFileType | undefined;
