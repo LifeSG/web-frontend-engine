@@ -93,18 +93,15 @@ export const ImageInput = (props: IProps) => {
 		if (!maxFiles || inputFiles.length + images.length <= maxFiles) {
 			setImages([
 				...images,
-				...inputFiles.map(
-					(inputFile) =>
-						({
-							file: inputFile,
-							name: inputFile.name,
-							dimensions,
-							status: EImageStatus.NONE,
-							uploadProgress: 0,
-							addedFrom: "dragInput",
-							slot: ImageUploadHelper.findAvailableSlot(images),
-						} as IImage)
-				),
+				...inputFiles.map<IImage>((inputFile) => ({
+					file: inputFile,
+					name: inputFile.name,
+					dimensions,
+					status: EImageStatus.NONE,
+					uploadProgress: 0,
+					addedFrom: "dragInput",
+					slot: ImageUploadHelper.findAvailableSlot(images),
+				})),
 			]);
 			setExceedError(false);
 		} else if (maxFiles > 0) {
