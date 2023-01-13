@@ -1,3 +1,4 @@
+import isEmpty from "lodash/isEmpty";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
@@ -20,6 +21,8 @@ export const useValidationSchema = () => {
 
 			Object.entries(formValidationConfig).forEach(([key, value]) => {
 				if (!value.validationRules || value.validationRules.length === 0) {
+					// NOTE: Fallback to default yup validators that's being set in component level
+					upsertValidationConfig(hardValidationConfig, key, [], value.schema);
 					return;
 				}
 
@@ -31,8 +34,8 @@ export const useValidationSchema = () => {
 					}
 				});
 			});
-			setHardValidationSchema(YupHelper.buildSchema(hardValidationConfig));
 			setSoftValidationSchema(YupHelper.buildSchema(softValidationConfig));
+			setHardValidationSchema(YupHelper.buildSchema(hardValidationConfig));
 		}
 	}, [formValidationConfig]);
 
@@ -67,6 +70,11 @@ export const useValidationSchema = () => {
 			setWarnings({});
 		} catch (error) {
 			const validationError = error as Yup.ValidationError;
+			console.log(JSON.stringify(error));
+
+			if (isEmpty(validationError)) {
+				return;
+			}
 			const updatedWarnings = validationError.inner.reduce((acc, value) => {
 				acc[value.path] = value.message;
 
