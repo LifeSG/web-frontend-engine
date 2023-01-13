@@ -8,7 +8,7 @@ import { EElementType, EFieldType, IGenericFieldProps, TFrontendEngineFieldSchem
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperSchema } from "./types";
-import { DSAlert } from "./warpper.styles";
+import { DSAlert } from "./wrapper.styles";
 
 interface IWrapperProps {
 	id?: string | undefined;
