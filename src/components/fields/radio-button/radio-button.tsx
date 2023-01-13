@@ -12,7 +12,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, disabled, validation, ...otherSchema },
+		schema: { label, options, disabled, validation, allowSoftValidation, ...otherSchema },
 		id,
 		value,
 		error,
@@ -26,7 +26,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
+		setFieldValidationConfig(id, Yup.string(), validation, allowSoftValidation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 

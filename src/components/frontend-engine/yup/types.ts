@@ -24,8 +24,8 @@ export const YUP_CONDITIONS = [
 	"excludes",
 	"uinfin",
 ] as const;
-export type TYupSchemaType = typeof YUP_TYPES[number];
-export type TYupCondition = typeof YUP_CONDITIONS[number];
+export type TYupSchemaType = (typeof YUP_TYPES)[number];
+export type TYupCondition = (typeof YUP_CONDITIONS)[number];
 
 interface IYupRule {
 	length?: number | undefined;
@@ -75,6 +75,7 @@ export type TRenderRules = Record<string, IYupRenderRule[]>;
 export interface IFieldYupConfig {
 	schema: Yup.AnySchema;
 	validationRules: IYupValidationRule[];
+	allowSoftValidation?: boolean | undefined;
 }
 
 export type TFormYupConfig = Record<string, IFieldYupConfig>;
