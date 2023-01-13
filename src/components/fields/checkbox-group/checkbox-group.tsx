@@ -14,7 +14,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, validation, disabled, ...otherSchema },
+		schema: { label, options, validation, disabled, allowSoftValidation, ...otherSchema },
 		id,
 		value,
 		error,
@@ -43,7 +43,8 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 						return value.length > 0;
 					}
 				),
-			validation
+			validation,
+			allowSoftValidation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);

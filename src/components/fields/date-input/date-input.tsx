@@ -13,7 +13,7 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, useCurrentDate, dateFormat = "uuuu-MM-dd", validation, ...otherSchema },
+		schema: { label, useCurrentDate, dateFormat = "uuuu-MM-dd", validation, allowSoftValidation, ...otherSchema },
 		id,
 		onChange,
 		value,
@@ -60,7 +60,8 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 					if (!isValidDate(value) || !notPastRule?.["notPast"]) return true;
 					return !LocalDate.parse(value).isBefore(LocalDate.now());
 				}),
-			validation
+			validation,
+			allowSoftValidation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
