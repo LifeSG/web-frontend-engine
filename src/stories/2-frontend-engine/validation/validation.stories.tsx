@@ -1,6 +1,7 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
+import { FrontendEngine, IFrontendEngineProps } from "../../../components";
+import { SubmitButtonStorybook } from "../../common";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
 export default {
@@ -82,4 +83,35 @@ NotEquals.args = {
 	type: "string",
 	rule: { notEquals: "hello world", errorMessage: "Must not be `hello world`" },
 	value: { name: "hello world" },
+};
+
+export const SoftValidation: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
+SoftValidation.args = {
+	data: {
+		fields: {
+			name: {
+				label: "What is your name",
+				fieldType: "text",
+				validation: [{ required: true }, { max: 5, soft: true, errorMessage: "Maximum length of 5" }],
+			},
+			email: {
+				label: "Email address",
+				fieldType: "email",
+				validation: [{ required: true }],
+			},
+			sex: {
+				fieldType: "select",
+				label: "Sex",
+				options: [
+					{ label: "Male", value: "male" },
+					{ label: "Female", value: "female" },
+				],
+				validation: [{ required: true, soft: true, errorMessage: "This field is optional" }],
+			},
+			...SubmitButtonStorybook,
+		},
+		defaultValues: {
+			name: "Erik Tan",
+		},
+	},
 };
