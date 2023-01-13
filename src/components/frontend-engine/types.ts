@@ -104,8 +104,6 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefi
 	showIf?: TRenderRules[] | undefined;
 	/** validation config, can be customised by passing generics */
 	validation?: (V | U | IYupValidationRule)[];
-	/** flag to toggle soft validation */
-	allowSoftValidation?: boolean | undefined;
 }
 
 /**

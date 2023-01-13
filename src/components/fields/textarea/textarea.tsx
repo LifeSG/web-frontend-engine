@@ -14,17 +14,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: {
-			chipTexts,
-			chipPosition,
-			maxLength,
-			rows = 1,
-			resizable,
-			label,
-			validation,
-			allowSoftValidation,
-			...otherSchema
-		},
+		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, label, validation, ...otherSchema },
 		id,
 		name,
 		onChange,
@@ -39,7 +29,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation, allowSoftValidation);
+		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 

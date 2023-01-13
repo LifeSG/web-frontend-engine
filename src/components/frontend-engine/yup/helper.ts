@@ -1,3 +1,4 @@
+import isEmpty from "lodash/isEmpty";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import {
@@ -22,19 +23,22 @@ export namespace YupHelper {
 	/**
 	 * Constructs the entire Yup schema for frontend engine to use
 	 * @param yupSchemaConfig JSON representation of the eventual Yup schema
-	 * @param allowSoftValidation boolean indicating whether rules should be included in the schema
 	 * @returns Yup schema ready to be used by FrontendEngine
 	 */
 	export const buildSchema = (yupSchemaConfig: TFormYupConfig): ISchema => {
 		const softYupSchema: ObjectShape = {};
 		const hardYupSchema: ObjectShape = {};
 		Object.keys(yupSchemaConfig).forEach((id) => {
-			const { schema, validationRules: fieldValidationConfig, allowSoftValidation } = yupSchemaConfig[id];
+			const { schema, validationRules: fieldValidationConfig } = yupSchemaConfig[id];
+			const softValidationRules = fieldValidationConfig.filter((rule) => rule.soft);
+			const hardValidationRules = fieldValidationConfig.filter((rule) => !rule.soft);
 
-			if (allowSoftValidation) {
-				softYupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
-			} else {
-				hardYupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
+			if (!isEmpty(softValidationRules)) {
+				softYupSchema[id] = buildFieldSchema(schema, softValidationRules);
+			}
+
+			if (!isEmpty(hardValidationRules)) {
+				hardYupSchema[id] = buildFieldSchema(schema, hardValidationRules);
 			}
 		});
 

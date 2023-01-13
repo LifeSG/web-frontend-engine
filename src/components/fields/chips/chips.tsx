@@ -15,7 +15,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, textarea, multi = true, allowSoftValidation, ...otherSchema },
+		schema: { label, validation, options, textarea, multi = true, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -47,8 +47,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 						return value.length > 0;
 					}
 				),
-			validation,
-			allowSoftValidation
+			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);

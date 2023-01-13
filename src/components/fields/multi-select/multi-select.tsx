@@ -14,7 +14,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, allowSoftValidation, ...otherSchema },
+		schema: { label, validation, options, ...otherSchema },
 		id,
 		name,
 		value,
@@ -44,8 +44,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 						return value.length > 0;
 					}
 				),
-			validation,
-			allowSoftValidation
+			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);

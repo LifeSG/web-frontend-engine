@@ -12,7 +12,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, allowSoftValidation, ...otherSchema },
+		schema: { label, validation, options, ...otherSchema },
 		id,
 		name,
 		value,
@@ -27,7 +27,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation, allowSoftValidation);
+		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 

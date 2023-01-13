@@ -12,7 +12,7 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, placeholder, is24HourFormat, useCurrentTime, allowSoftValidation, ...otherSchema },
+		schema: { label, validation, placeholder, is24HourFormat, useCurrentTime, ...otherSchema },
 		id,
 		value,
 		error,
@@ -27,7 +27,7 @@ export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation, allowSoftValidation);
+		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 

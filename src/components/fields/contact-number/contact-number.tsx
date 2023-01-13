@@ -15,16 +15,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: {
-			label,
-			country,
-			disabled,
-			enableSearch,
-			validation,
-			placeholder,
-			allowSoftValidation,
-			...otherSchema
-		},
+		schema: { label, country, disabled, enableSearch, validation, placeholder, ...otherSchema },
 		id,
 		name,
 		onChange,
@@ -73,8 +64,7 @@ export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) =
 						return PhoneHelper.isInternationalNumber(selectedCountry?.name, value);
 					}
 				),
-			validation,
-			allowSoftValidation
+			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation, selectedCountry]);

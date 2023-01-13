@@ -60,6 +60,7 @@ export interface IYupValidationRule extends IYupRule {
 		  }
 		| undefined;
 	errorMessage?: string | undefined;
+	soft?: boolean | undefined;
 }
 
 export interface IYupConditionalValidationRule extends IYupRule {
@@ -75,7 +76,6 @@ export type TRenderRules = Record<string, IYupRenderRule[]>;
 export interface IFieldYupConfig {
 	schema: Yup.AnySchema;
 	validationRules: IYupValidationRule[];
-	allowSoftValidation?: boolean | undefined;
 }
 
 export type TFormYupConfig = Record<string, IFieldYupConfig>;

@@ -13,7 +13,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { inputMode, label, fieldType, validation, allowSoftValidation, ...otherSchema },
+		schema: { inputMode, label, fieldType, validation, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -50,13 +50,12 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 					setFieldValidationConfig(
 						id,
 						Yup.string().email(emailRule?.errorMessage || ERROR_MESSAGES.EMAIL.INVALID),
-						validation,
-						allowSoftValidation
+						validation
 					);
 				}
 				break;
 			case "text":
-				setFieldValidationConfig(id, Yup.string(), validation, allowSoftValidation);
+				setFieldValidationConfig(id, Yup.string(), validation);
 				break;
 			default:
 				break;
