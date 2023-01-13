@@ -3,7 +3,7 @@ import { IYupValidationRule } from "../../frontend-engine/yup/types";
 import { TFileCapture } from "../../shared";
 
 export type TUploadMethod = "post" | "get" | "put" | "patch";
-export const ACCEPTED_FILE_TYPES = ["jpg", "gif", "png", "heic", "heif", "webp"];
+export const ACCEPTED_FILE_TYPES = ["jpg", "gif", "png", "heic", "heif", "webp"] as const;
 export type TImageUploadAcceptedFileType = typeof ACCEPTED_FILE_TYPES[number];
 export type TImageUploadOutputFileType = "jpg" | "png";
 
