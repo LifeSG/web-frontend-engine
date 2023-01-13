@@ -15,7 +15,7 @@ describe("YupHelper", () => {
 				field1: undefined,
 				field2: 1,
 			};
-			const { hardSchema: schema } = YupHelper.buildSchema({
+			const schema = YupHelper.buildSchema({
 				field1: {
 					schema: Yup.string(),
 					validationRules: [
