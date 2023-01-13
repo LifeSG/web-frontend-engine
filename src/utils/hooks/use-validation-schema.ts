@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { TFrontendEngineValues } from "../../components/frontend-engine/types";
-import { YupContext, YupHelper } from "../../components/frontend-engine/yup";
+import { IYupValidationRule, TFormYupConfig, YupContext, YupHelper } from "../../components/frontend-engine/yup";
 
 /**
  * Hook that handles the generation of the validationSchema
@@ -15,11 +15,46 @@ export const useValidationSchema = () => {
 
 	useEffect(() => {
 		if (formValidationConfig) {
-			const { softSchema, hardSchema } = YupHelper.buildSchema(formValidationConfig);
-			setHardValidationSchema(hardSchema);
-			setSoftValidationSchema(softSchema);
+			const hardValidationConfig: TFormYupConfig = {};
+			const softValidationConfig: TFormYupConfig = {};
+
+			Object.entries(formValidationConfig).forEach(([key, value]) => {
+				if (!value.validationRules || value.validationRules.length === 0) {
+					return;
+				}
+
+				value.validationRules.forEach((rule) => {
+					if (rule.soft) {
+						upsertValidationConfig(softValidationConfig, key, rule, value.schema);
+					} else {
+						upsertValidationConfig(hardValidationConfig, key, rule, value.schema);
+					}
+				});
+			});
+			setHardValidationSchema(YupHelper.buildSchema(hardValidationConfig));
+			setSoftValidationSchema(YupHelper.buildSchema(softValidationConfig));
 		}
 	}, [formValidationConfig]);
+
+	/**
+	 * Update if exists, else insert an entry in validation config
+	 * @param config yup config passed by reference
+	 * @param id unique field id
+	 * @param rule validation rule
+	 * @param schema yup schema
+	 */
+	const upsertValidationConfig = (
+		config: TFormYupConfig,
+		id: string,
+		rule: IYupValidationRule,
+		schema: Yup.AnySchema
+	): void => {
+		if (!(id in config)) {
+			config[id] = { schema, validationRules: [rule] };
+		} else {
+			config[id]["validationRules"].push(rule);
+		}
+	};
 
 	/**
 	 * Executes validation based on allowSoftValidation flag provided in the schema to generate warning messages
@@ -32,13 +67,13 @@ export const useValidationSchema = () => {
 			setWarnings({});
 		} catch (error) {
 			const validationError = error as Yup.ValidationError;
+			const updatedWarnings = validationError.inner.reduce((acc, value) => {
+				acc[value.path] = value.message;
 
-			validationError.inner.forEach((field) => {
-				setWarnings((prev) => ({
-					...prev,
-					[field.path]: field.message,
-				}));
-			});
+				return acc;
+			}, {});
+
+			setWarnings(updatedWarnings);
 		}
 	};
 

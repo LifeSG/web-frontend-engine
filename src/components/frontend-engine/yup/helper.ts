@@ -1,4 +1,3 @@
-import isEmpty from "lodash/isEmpty";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import {
@@ -12,10 +11,6 @@ import {
 } from "./types";
 
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
-interface ISchema {
-	hardSchema: Yup.ObjectSchema<ObjectShape>;
-	softSchema: Yup.ObjectSchema<ObjectShape>;
-}
 
 export namespace YupHelper {
 	const customYupConditions: string[] = [];
@@ -25,26 +20,14 @@ export namespace YupHelper {
 	 * @param yupSchemaConfig JSON representation of the eventual Yup schema
 	 * @returns Yup schema ready to be used by FrontendEngine
 	 */
-	export const buildSchema = (yupSchemaConfig: TFormYupConfig): ISchema => {
-		const softYupSchema: ObjectShape = {};
-		const hardYupSchema: ObjectShape = {};
+	export const buildSchema = (yupSchemaConfig: TFormYupConfig): Yup.ObjectSchema<ObjectShape> => {
+		const yupSchema: ObjectShape = {};
 		Object.keys(yupSchemaConfig).forEach((id) => {
 			const { schema, validationRules: fieldValidationConfig } = yupSchemaConfig[id];
-			const softValidationRules = fieldValidationConfig.filter((rule) => rule.soft);
-			const hardValidationRules = fieldValidationConfig.filter((rule) => !rule.soft);
-
-			/** only create if soft validation is specifically enabled
-			 * else default to hard validation to support yup validators */
-			if (!isEmpty(softValidationRules)) {
-				softYupSchema[id] = buildFieldSchema(schema, softValidationRules);
-			}
-			hardYupSchema[id] = buildFieldSchema(schema, hardValidationRules);
+			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
 		});
 
-		return {
-			hardSchema: Yup.object().shape(hardYupSchema),
-			softSchema: Yup.object().shape(softYupSchema),
-		};
+		return Yup.object().shape(yupSchema);
 	};
 
 	/**

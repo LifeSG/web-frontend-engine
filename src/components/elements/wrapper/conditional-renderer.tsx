@@ -69,7 +69,7 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 						renderSchemaConfig[fieldId] = { schema: yupBaseSchema, validationRules: rules };
 					}
 				});
-				const { hardSchema: renderSchema } = YupHelper.buildSchema(renderSchemaConfig);
+				const renderSchema = YupHelper.buildSchema(renderSchemaConfig);
 				try {
 					renderSchema.validateSync(formValues);
 					isValid = true;
