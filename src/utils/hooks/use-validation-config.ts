@@ -17,12 +17,11 @@ export const useValidationConfig = () => {
 	const setFieldValidationConfig = <V = IYupValidationRule>(
 		id: string,
 		schema: Yup.AnySchema,
-		validationRules: V[] = [],
-		allowSoftValidation?: boolean
+		validationRules: V[] = []
 	) => {
 		setFormValidationConfig((oldConfig) => ({
 			...oldConfig,
-			[id]: { schema, validationRules, allowSoftValidation },
+			[id]: { schema, validationRules },
 		}));
 	};
 

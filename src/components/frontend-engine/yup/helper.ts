@@ -33,13 +33,12 @@ export namespace YupHelper {
 			const softValidationRules = fieldValidationConfig.filter((rule) => rule.soft);
 			const hardValidationRules = fieldValidationConfig.filter((rule) => !rule.soft);
 
+			/** only create if soft validation is specifically enabled
+			 * else default to hard validation to support yup validators */
 			if (!isEmpty(softValidationRules)) {
 				softYupSchema[id] = buildFieldSchema(schema, softValidationRules);
 			}
-
-			if (!isEmpty(hardValidationRules)) {
-				hardYupSchema[id] = buildFieldSchema(schema, hardValidationRules);
-			}
+			hardYupSchema[id] = buildFieldSchema(schema, hardValidationRules);
 		});
 
 		return {
