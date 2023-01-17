@@ -3,7 +3,8 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { TFrontendEngineValues } from "../../components/frontend-engine/types";
-import { IYupValidationRule, TFormYupConfig, YupContext, YupHelper } from "../../components/frontend-engine/yup";
+import { IFieldYupConfig, TFormYupConfig, YupContext, YupHelper } from "../../components/frontend-engine/yup";
+import { ObjectHelper } from "../object-helper";
 
 /**
  * Hook that handles the generation of the validationSchema
@@ -16,21 +17,30 @@ export const useValidationSchema = () => {
 
 	useEffect(() => {
 		if (formValidationConfig) {
-			const hardValidationConfig: TFormYupConfig = {};
-			const softValidationConfig: TFormYupConfig = {};
+			let hardValidationConfig: TFormYupConfig = {};
+			let softValidationConfig: TFormYupConfig = {};
 
 			Object.entries(formValidationConfig).forEach(([key, value]) => {
 				if (!value.validationRules || value.validationRules.length === 0) {
 					// NOTE: Fallback to default yup validators that's being set in component level
-					upsertValidationConfig(hardValidationConfig, key, [], value.schema);
+					hardValidationConfig = ObjectHelper.upsert(hardValidationConfig, key, {
+						schema: value.schema,
+						validationRules: [],
+					});
 					return;
 				}
 
 				value.validationRules.forEach((rule) => {
 					if (rule.soft) {
-						upsertValidationConfig(softValidationConfig, key, rule, value.schema);
+						softValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(softValidationConfig, key, {
+							schema: value.schema,
+							validationRules: [rule],
+						});
 					} else {
-						upsertValidationConfig(hardValidationConfig, key, rule, value.schema);
+						hardValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(hardValidationConfig, key, {
+							schema: value.schema,
+							validationRules: [rule],
+						});
 					}
 				});
 			});
@@ -40,37 +50,16 @@ export const useValidationSchema = () => {
 	}, [formValidationConfig]);
 
 	/**
-	 * Update if exists, else insert an entry in validation config
-	 * @param config yup config passed by reference
-	 * @param id unique field id
-	 * @param rule validation rule
-	 * @param schema yup schema
-	 */
-	const upsertValidationConfig = (
-		config: TFormYupConfig,
-		id: string,
-		rule: IYupValidationRule,
-		schema: Yup.AnySchema
-	): void => {
-		if (!(id in config)) {
-			config[id] = { schema, validationRules: [rule] };
-		} else {
-			config[id]["validationRules"].push(rule);
-		}
-	};
-
-	/**
 	 * Executes validation based on allowSoftValidation flag provided in the schema to generate warning messages
 	 * @param schema soft validation schema
 	 * @param data user input data
 	 */
-	const performSoftValidation = (schema: Yup.ObjectSchema<ObjectShape>, data: TFrontendEngineValues<any>): void => {
+	const performSoftValidation = (schema: Yup.ObjectSchema<ObjectShape>, data: TFrontendEngineValues): void => {
 		try {
 			schema.validateSync(data, { abortEarly: false });
 			setWarnings({});
 		} catch (error) {
 			const validationError = error as Yup.ValidationError;
-			console.log(JSON.stringify(error));
 
 			if (isEmpty(validationError)) {
 				return;
