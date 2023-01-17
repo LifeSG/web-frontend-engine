@@ -12,9 +12,10 @@ export interface IValidationComponentProps {
 export const ValidationComponent = ({ type, rule, value }: IValidationComponentProps) => {
 	const handleClick = () => {
 		try {
-			YupHelper.buildSchema({
+			const hardSchema = YupHelper.buildSchema({
 				name: { schema: (Yup as any)[type](), validationRules: [rule] },
-			}).validateSync(value);
+			});
+			hardSchema.validateSync(value);
 			alert("Validation passed");
 		} catch (e) {
 			alert(e.message);

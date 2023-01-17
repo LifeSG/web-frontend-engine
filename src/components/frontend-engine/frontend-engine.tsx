@@ -26,13 +26,17 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		onSubmit,
 	} = props;
 
-	const validationSchema = useValidationSchema();
+	const { warnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
 
 	const formMethods = useForm({
 		mode: validationMode,
 		reValidateMode: revalidationMode,
-		defaultValues,
-		resolver: yupResolver(validationSchema),
+		defaultValues: defaultValues,
+		resolver: async (data, context, options) => {
+			performSoftValidation(softValidationSchema, data);
+
+			return await yupResolver(hardValidationSchema)(data, context, options);
+		},
 	});
 	const { reset, watch, handleSubmit: reactFormHookSubmit, getValues } = formMethods;
 
@@ -48,14 +52,14 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const checkIsFormValid = useCallback(() => {
 		try {
-			validationSchema.validateSync(getValues());
+			hardValidationSchema.validateSync(getValues());
 			return true;
 		} catch (error) {
 			return false;
 		}
-	}, [getValues, validationSchema]);
+	}, [getValues, hardValidationSchema]);
 
-	const handleSubmit = (data: TFrontendEngineValues) => {
+	const handleSubmit = (data: TFrontendEngineValues): void => {
 		onSubmit?.(data);
 	};
 
@@ -92,7 +96,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				onSubmit={reactFormHookSubmit(handleSubmit)}
 				ref={ref}
 			>
-				<Wrapper>{fields}</Wrapper>
+				<Wrapper warnings={warnings}>{fields}</Wrapper>
 			</form>
 		</FormProvider>
 	);
