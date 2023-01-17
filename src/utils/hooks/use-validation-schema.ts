@@ -31,16 +31,14 @@ export const useValidationSchema = () => {
 				}
 
 				value.validationRules.forEach((rule) => {
+					const config = {
+						schema: value.schema,
+						validationRules: [rule],
+					};
 					if (rule.soft) {
-						softValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(softValidationConfig, key, {
-							schema: value.schema,
-							validationRules: [rule],
-						});
+						softValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(softValidationConfig, key, config);
 					} else {
-						hardValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(hardValidationConfig, key, {
-							schema: value.schema,
-							validationRules: [rule],
-						});
+						hardValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(hardValidationConfig, key, config);
 					}
 				});
 			});
