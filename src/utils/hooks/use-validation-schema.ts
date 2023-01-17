@@ -33,7 +33,7 @@ export const useValidationSchema = () => {
 				value.validationRules.forEach((rule) => {
 					const config = {
 						schema: value.schema,
-						validationRules: [rule],
+						validationRules: value.validationRules ? [...value.validationRules, rule] : [rule],
 					};
 					if (rule.soft) {
 						softValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(softValidationConfig, key, config);
