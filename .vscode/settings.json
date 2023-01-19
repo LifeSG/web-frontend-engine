@@ -3,14 +3,14 @@
 // =============================================================================
 {
 	"editor.codeActionsOnSave": {
-		"source.fixAll.tslint": true
+		"source.fixAll.eslint": true
 	},
 	"editor.detectIndentation": false,
 	"editor.formatOnSave": true,
 	"editor.insertSpaces": false,
 	"files.associations": {
 		"*.tsconfig.json": "jsonc",
-		"*.tslint.json": "jsonc"
+		".eslintrc": "jsonc"
 	},
 	"files.insertFinalNewline": true,
 	"files.trimTrailingWhitespace": true,
