@@ -30,18 +30,22 @@ export const useValidationSchema = () => {
 					return;
 				}
 
-				value.validationRules.forEach((rule) => {
-					const config = {
+				const softValidationRules = value.validationRules.filter(({ soft }) => soft);
+				const hardValidationRules = value.validationRules.filter(({ soft }) => !soft);
+				if (softValidationRules.length) {
+					softValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(softValidationConfig, key, {
 						schema: value.schema,
-						validationRules: value.validationRules ? [...value.validationRules, rule] : [rule],
-					};
-					if (rule.soft) {
-						softValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(softValidationConfig, key, config);
-					} else {
-						hardValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(hardValidationConfig, key, config);
-					}
-				});
+						validationRules: softValidationRules,
+					});
+				}
+				if (hardValidationRules.length) {
+					hardValidationConfig = ObjectHelper.upsert<IFieldYupConfig>(hardValidationConfig, key, {
+						schema: value.schema,
+						validationRules: hardValidationRules,
+					});
+				}
 			});
+
 			setSoftValidationSchema(YupHelper.buildSchema(softValidationConfig));
 			setHardValidationSchema(YupHelper.buildSchema(hardValidationConfig));
 		}
