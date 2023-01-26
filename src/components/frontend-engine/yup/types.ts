@@ -60,6 +60,7 @@ export interface IYupValidationRule extends IYupRule {
 		  }
 		| undefined;
 	errorMessage?: string | undefined;
+	soft?: boolean | undefined;
 }
 
 export interface IYupConditionalValidationRule extends IYupRule {

@@ -7,13 +7,45 @@ Repository for the web frontend engine
 
 The intention of frontend engine is to take out the heavy lifting of form development and offer a collection of common fields so engineers can develop forms quickly. The form will be defined through a JSON schema so non-engineers can customise the form as well.
 
+## Dependencies
+
+Developers are expected to have the following packages installed:
+
+-   @lifesg/react-design-system alpha.14
+-   react 17.0.2 or 18
+-   react-dom 17.0.2 or 18
+-   styled-components 5.3.5
+
 ## Installation
 
-TBA
+`npm i @lifesg/web-frontend-engine`
 
 ## Usage
 
-TBA
+```tsx
+import { FrontendEngine } from "web-frontend-engine";
+
+const App = () => {
+	return (
+		<FrontendEngine
+			data={{
+				fields: {
+					myField: {
+						fieldType: "text",
+						label: "My field",
+					},
+					submit: {
+						fieldType: "submit",
+						label: "Submit",
+					},
+				},
+			}}
+		/>
+	);
+};
+
+export default App;
+```
 
 ## Component Documentation
 

@@ -11,4 +11,4 @@ export interface IEmailSchema<V = undefined>
 
 export interface INumberSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"numeric", V>,
-		TComponentOmitProps<FormInputProps, "type" | "maxLength" | "max" | "min"> {}
+		TComponentOmitProps<FormInputProps, "type" | "max" | "min"> {}

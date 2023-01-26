@@ -1,8 +1,9 @@
 import { Form } from "@lifesg/react-design-system/form";
+import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationSchema } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
 import { IEmailSchema, INumberSchema, ITextfieldSchema } from "./types";
@@ -21,16 +22,28 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string | number>(value || "");
-	const { setFieldValidationConfig } = useValidationSchema();
+	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
+	const { setFieldValidationConfig } = useValidationConfig();
 
 	// ================================================
 	// EFFECTS
 	// ================================================
 	useEffect(() => {
 		switch (fieldType) {
-			case "numeric":
+			case "numeric": {
 				setFieldValidationConfig(id, Yup.number(), validation);
+				const minRule = validation?.find((rule) => "min" in rule);
+				const maxRule = validation?.find((rule) => "max" in rule);
+				const attributes = { ...derivedAttributes };
+				if (minRule) {
+					attributes.min = minRule.min;
+				}
+				if (maxRule) {
+					attributes.max = maxRule.max;
+				}
+				setDerivedAttributes(attributes);
 				break;
+			}
 			case "email":
 				{
 					const emailRule = validation?.find((rule) => rule.email);
@@ -86,6 +99,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 		<Form.Input
 			{...otherSchema}
 			{...otherProps}
+			{...derivedAttributes}
 			id={id}
 			data-testid={TestHelper.generateId(id, fieldType)}
 			type={fieldType}
