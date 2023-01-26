@@ -58,20 +58,20 @@ These components are to be added in their respective directories (`src/component
 ├── src
    ├── __tests__
    └── components
-		├── elements
-		│	├── component-name
-		│	│   ├── component-name.tsx
-		│	│   ├── component-name.styles.tsx
-		│	│	├── index.tsx
-		│	│   └── types.ts
-		│	└── dir-2
-		└── fields
-			├── component-name
-			│   ├── component-name.tsx
-			│   ├── component-name.styles.tsx
-			│	├── index.tsx
-			│   └── types.ts
-			└── dir-2
+       ├── elements
+       │   ├── component-name
+       │   │   ├── component-name.tsx
+       │   │   ├── component-name.styles.tsx
+       │   │   ├── index.tsx
+       │   │   └── types.ts
+       │   └── dir-2
+       └── fields
+            ├── component-name
+            │   ├── component-name.tsx
+            │   ├── component-name.styles.tsx
+            │   ├── index.tsx
+            │   └── types.ts
+            └── dir-2
 ```
 
 Where
