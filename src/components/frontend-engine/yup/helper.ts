@@ -122,22 +122,34 @@ export namespace YupHelper {
 				case !!rule.positive:
 				case !!rule.negative:
 				case !!rule.integer:
-					yupSchema = (yupSchema as unknown)[ruleKey](rule.errorMessage);
+					try {
+						yupSchema = (yupSchema as unknown)[ruleKey](rule.errorMessage);
+					} catch (error) {
+						console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+					}
 					break;
 				case rule.length > 0:
 				case rule.min > 0:
 				case rule.max > 0:
 				case !!rule.lessThan:
 				case !!rule.moreThan:
-					yupSchema = (yupSchema as unknown)[ruleKey](rule[ruleKey], rule.errorMessage);
+					try {
+						yupSchema = (yupSchema as unknown)[ruleKey](rule[ruleKey], rule.errorMessage);
+					} catch (error) {
+						console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+					}
 					break;
 				case !!rule.matches:
 					{
 						const matches = rule.matches.match(/\/(.*)\/([a-z]+)?/);
-						yupSchema = (yupSchema as Yup.StringSchema).matches(
-							new RegExp(matches[1], matches[2]),
-							rule.errorMessage
-						);
+						try {
+							yupSchema = (yupSchema as Yup.StringSchema).matches(
+								new RegExp(matches[1], matches[2]),
+								rule.errorMessage
+							);
+						} catch (error) {
+							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+						}
 					}
 					break;
 				case !!rule.when:
@@ -202,7 +214,7 @@ export namespace YupHelper {
 		fn: (value: unknown, arg: unknown, context: Yup.TestContext) => boolean
 	) => {
 		if (customYupConditions.includes(name)) {
-			console.error(`the validation condition "${name}" is not added because it already exists!`);
+			console.warn(`the validation condition "${name}" is not added because it already exists!`);
 			return;
 		}
 		customYupConditions.push(name);
