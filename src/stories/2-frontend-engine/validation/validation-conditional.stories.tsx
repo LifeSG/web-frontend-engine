@@ -1,3 +1,4 @@
+import * as Yup from "yup";
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
@@ -29,7 +30,7 @@ export default {
 } as Meta;
 
 const Template: Story<IValidationComponentProps> = (args) => (
-	<ValidationComponent type={args.type} rule={args.rule} value={args.value} />
+	<ValidationComponent type={args.type} rule={args.rule} value={args.value} extraFields={args.extraFields} />
 );
 
 export const IfExactValue = Template.bind({});
@@ -55,6 +56,7 @@ IfExactValue.args = {
 		},
 	},
 	value: { name: undefined, field2: "something" },
+	extraFields: { field2: { schema: Yup.string(), validationRules: [] } },
 };
 
 export const SchemaAsCondition = Template.bind({});
@@ -80,4 +82,5 @@ SchemaAsCondition.args = {
 		},
 	},
 	value: { field2: "something" },
+	extraFields: { field2: { schema: Yup.string(), validationRules: [] } },
 };

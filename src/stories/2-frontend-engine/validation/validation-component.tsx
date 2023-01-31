@@ -1,19 +1,26 @@
 import { Button } from "@lifesg/react-design-system/button";
 import styled from "styled-components";
 import * as Yup from "yup";
-import { IYupValidationRule, TYupSchemaType, YupHelper } from "../../../components/frontend-engine/yup";
+import {
+	IFieldYupConfig,
+	IYupValidationRule,
+	TYupSchemaType,
+	YupHelper,
+} from "../../../components/frontend-engine/yup";
 
 export interface IValidationComponentProps {
 	type: TYupSchemaType;
 	rule: IYupValidationRule;
 	value: Record<string, any>;
+	extraFields?: Record<string, IFieldYupConfig>;
 }
 
-export const ValidationComponent = ({ type, rule, value }: IValidationComponentProps) => {
+export const ValidationComponent = ({ type, rule, value, extraFields }: IValidationComponentProps) => {
 	const handleClick = () => {
 		try {
 			const hardSchema = YupHelper.buildSchema({
 				name: { schema: (Yup as any)[type](), validationRules: [rule] },
+				...(extraFields || {}),
 			});
 			hardSchema.validateSync(value);
 			alert("Validation passed");

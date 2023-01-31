@@ -159,7 +159,7 @@ describe("YupHelper", () => {
 			);
 		});
 
-		const generateConditionalSchema = (type: TYupSchemaType, is: any) =>
+		const generateConditionalSchema = (type: TYupSchemaType, is: any, sourceFieldType: TYupSchemaType) =>
 			Yup.object().shape({
 				field1: YupHelper.mapRules(YupHelper.mapSchemaType(type), [
 					{
@@ -168,6 +168,7 @@ describe("YupHelper", () => {
 								is,
 								then: [{ required: true, errorMessage: ERROR_MESSAGE }],
 								otherwise: [{ min: 5, errorMessage: ERROR_MESSAGE_2 }],
+								yupSchema: YupHelper.mapSchemaType(sourceFieldType),
 							},
 						},
 					},
@@ -175,7 +176,7 @@ describe("YupHelper", () => {
 			});
 
 		it("should support conditional validation for Yup string type", () => {
-			const schema = generateConditionalSchema("string", "hello");
+			const schema = generateConditionalSchema("string", "hello", "string");
 
 			expect(() => schema.validateSync({ field1: "hi", field2: "hello" })).not.toThrowError();
 			expect(TestHelper.getError(() => schema.validateSync({ field1: undefined, field2: "hello" })).message).toBe(
@@ -187,7 +188,7 @@ describe("YupHelper", () => {
 		});
 
 		it("should support conditional validation for Yup number type", () => {
-			const schema = generateConditionalSchema("number", 1);
+			const schema = generateConditionalSchema("number", 1, "number");
 
 			expect(() => schema.validateSync({ field1: 5, field2: 1 })).not.toThrowError();
 			expect(TestHelper.getError(() => schema.validateSync({ field1: undefined, field2: 1 })).message).toBe(
@@ -198,41 +199,27 @@ describe("YupHelper", () => {
 			);
 		});
 
-		it("should support conditional validation with config as condition for Yup string type", () => {
-			const schema = generateConditionalSchema("string", [{ filled: true }, { min: 3 }]);
+		it.each`
+			fieldType   | sourceFieldType | valid                                     | then                                        | otherwise
+			${"string"} | ${"string"}     | ${{ field1: "hello", field2: "world" }}   | ${{ field1: undefined, field2: "world" }}   | ${{ field1: "hi", field2: "hi" }}
+			${"number"} | ${"string"}     | ${{ field1: 1, field2: "world" }}         | ${{ field1: undefined, field2: "world" }}   | ${{ field1: 2, field2: "hi" }}
+			${"array"}  | ${"string"}     | ${{ field1: [1], field2: "world" }}       | ${{ field1: undefined, field2: "world" }}   | ${{ field1: [1, 2], field2: "hi" }}
+			${"string"} | ${"number"}     | ${{ field1: "hello", field2: 3 }}         | ${{ field1: undefined, field2: 3 }}         | ${{ field1: "hi", field2: 2 }}
+			${"number"} | ${"number"}     | ${{ field1: 1, field2: 3 }}               | ${{ field1: undefined, field2: 3 }}         | ${{ field1: 3, field2: 2 }}
+			${"array"}  | ${"number"}     | ${{ field1: [1], field2: 3 }}             | ${{ field1: undefined, field2: 3 }}         | ${{ field1: [1, 2], field2: 2 }}
+			${"string"} | ${"array"}      | ${{ field1: "hello", field2: [1, 2, 3] }} | ${{ field1: undefined, field2: [1, 2, 3] }} | ${{ field1: "hi", field2: [1] }}
+			${"number"} | ${"array"}      | ${{ field1: 1, field2: [1, 2, 3] }}       | ${{ field1: undefined, field2: [1, 2, 3] }} | ${{ field1: [1], field2: [1] }}
+			${"array"}  | ${"array"}      | ${{ field1: [1], field2: [1, 2, 3] }}     | ${{ field1: undefined, field2: [1, 2, 3] }} | ${{ field1: [1, 2, 3], field2: [1] }}
+		`(
+			"should support Yup $fieldType conditional validation with config as condition for Yup $sourceFieldType type",
+			({ fieldType, sourceFieldType, valid, then, otherwise }) => {
+				const schema = generateConditionalSchema(fieldType, [{ filled: true }, { min: 3 }], sourceFieldType);
 
-			expect(() => schema.validateSync({ field1: "hi", field2: "hello" })).not.toThrowError();
-			expect(TestHelper.getError(() => schema.validateSync({ field1: undefined, field2: "hello" })).message).toBe(
-				ERROR_MESSAGE
-			);
-			expect(TestHelper.getError(() => schema.validateSync({ field1: "hi", field2: "hi" })).message).toBe(
-				ERROR_MESSAGE_2
-			);
-		});
-
-		it("should support conditional validation with config as condition for Yup number type", () => {
-			const schema = generateConditionalSchema("number", [{ filled: true }, { min: 3 }]);
-
-			expect(() => schema.validateSync({ field1: 1, field2: 3 })).not.toThrowError();
-			expect(TestHelper.getError(() => schema.validateSync({ field1: undefined, field2: 3 })).message).toBe(
-				ERROR_MESSAGE
-			);
-			expect(TestHelper.getError(() => schema.validateSync({ field1: 1, field2: 1 })).message).toBe(
-				ERROR_MESSAGE_2
-			);
-		});
-
-		it("should support conditional validation with config as condition for Yup array type", () => {
-			const schema = generateConditionalSchema("array", [{ filled: true }, { min: 3 }]);
-
-			expect(() => schema.validateSync({ field1: ["a"], field2: ["a", "b", "c"] })).not.toThrowError();
-			expect(
-				TestHelper.getError(() => schema.validateSync({ field1: undefined, field2: ["a", "b", "c"] })).message
-			).toBe(ERROR_MESSAGE);
-			expect(TestHelper.getError(() => schema.validateSync({ field1: ["a"], field2: ["a", "b"] })).message).toBe(
-				ERROR_MESSAGE_2
-			);
-		});
+				expect(() => schema.validateSync(valid)).not.toThrowError();
+				expect(TestHelper.getError(() => schema.validateSync(then)).message).toBe(ERROR_MESSAGE);
+				expect(TestHelper.getError(() => schema.validateSync(otherwise)).message).toBe(ERROR_MESSAGE_2);
+			}
+		);
 	});
 
 	describe("addCondition", () => {
