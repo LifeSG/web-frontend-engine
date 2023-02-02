@@ -14,7 +14,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition, maxLength, rows = 1, resizable, label, validation, ...otherSchema },
+		schema: { chipTexts, chipPosition, rows = 1, resizable, label, validation, ...otherSchema },
 		id,
 		name,
 		onChange,
@@ -23,12 +23,18 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		...otherProps
 	} = props;
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
+	const [maxLength, setMaxLength] = useState<number>();
 	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const maxRule = validation?.find((rule) => "max" in rule);
+		const lengthRule = validation?.find((rule) => "length" in rule);
+		if (maxRule?.max > 0) setMaxLength(maxRule.max);
+		else if (lengthRule?.length > 0) setMaxLength(lengthRule.length);
+
 		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);

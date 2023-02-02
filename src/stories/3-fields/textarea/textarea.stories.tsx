@@ -141,7 +141,7 @@ WithCounter.args = {
 	"textarea-with-counter": {
 		fieldType: "textarea",
 		label: "Textarea with counter",
-		maxLength: 5,
+		validation: [{ max: 5 }],
 	},
 };
 

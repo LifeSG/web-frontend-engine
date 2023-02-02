@@ -5,12 +5,12 @@ import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideField,
-	TOverrideSchema,
 } from "../../../common";
 
 const submitFn = jest.fn();
@@ -67,8 +67,20 @@ describe(fieldType, () => {
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
 
-	it("should be able to show character counter if maxLength is defined", () => {
-		renderComponent({ maxLength: 100 });
+	it("should apply maxLength attribute if max validation is specified", () => {
+		renderComponent({ validation: [{ max: 100 }] });
+
+		expect(getTextarea()).toHaveAttribute("maxLength", "100");
+	});
+
+	it("should apply maxLength attribute if length validation is specified", () => {
+		renderComponent({ validation: [{ length: 100 }] });
+
+		expect(getTextarea()).toHaveAttribute("maxLength", "100");
+	});
+
+	it("should be able to show character counter if max validation is defined", () => {
+		renderComponent({ validation: [{ max: 100 }] });
 
 		expect(screen.getByText("100 characters left")).toBeInTheDocument();
 	});

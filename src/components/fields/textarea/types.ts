@@ -3,7 +3,7 @@ import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../f
 
 export interface ITextareaSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"textarea", V>,
-		TComponentOmitProps<FormTextareaProps> {
+		TComponentOmitProps<FormTextareaProps, "maxLength"> {
 	chipTexts?: string[] | undefined;
 	chipPosition?: "top" | "bottom" | undefined;
 	resizable?: boolean | undefined;
