@@ -195,6 +195,20 @@ WithTextAreaCustomRows.args = {
 	},
 };
 
+export const WithTextAreaMaxLength = Template.bind({});
+WithTextAreaMaxLength.args = {
+	"chips-with-textarea-max-length": {
+		fieldType: "chips",
+		label: "Fruits",
+		options: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+		],
+		textarea: { label: "Durian", rows: 1, validation: [{ max: 10 }] },
+	},
+};
+
 export const SingleSelection = Template.bind({});
 SingleSelection.args = {
 	"chips-single-selection": {
@@ -205,6 +219,6 @@ SingleSelection.args = {
 			{ label: "Berry", value: "Berry" },
 			{ label: "Cherry", value: "Cherry" },
 		],
-		multi: false,
+		validation: [{ max: 1 }],
 	},
 };

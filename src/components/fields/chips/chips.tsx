@@ -1,4 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
+import kebabCase from "lodash/kebabCase";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
@@ -15,7 +16,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, textarea, multi = true, ...otherSchema },
+		schema: { label, validation, options, textarea, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -25,6 +26,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextArea, setShowTextArea] = useState<boolean>(false);
+	const [multi, setMulti] = useState(true);
 	const { control } = useFormContext();
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 
@@ -33,6 +35,8 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// =============================================================================
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
+		const maxRule = validation?.find((rule) => "max" in rule);
+		const lengthRule = validation?.find((rule) => "length" in rule);
 
 		setFieldValidationConfig(
 			id,
@@ -49,6 +53,11 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 				),
 			validation
 		);
+
+		if (maxRule?.max === 1 || lengthRule?.length === 1) {
+			setMulti(false);
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
@@ -64,7 +73,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	const getTextAreaId = () => {
-		return `chips-${textarea.label}`;
+		return `chips-${kebabCase(textarea.label)}`;
 	};
 
 	// =============================================================================

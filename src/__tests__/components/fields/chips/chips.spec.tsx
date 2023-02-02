@@ -4,12 +4,12 @@ import { FrontendEngine, IFrontendEngineData } from "../../../../components/fron
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideField,
-	TOverrideSchema,
 } from "../../../common";
 
 const submitFn = jest.fn();
@@ -110,7 +110,7 @@ describe(fieldType, () => {
 	});
 
 	it("should be able to support single selection", async () => {
-		renderComponent({ multi: false });
+		renderComponent({ validation: [{ max: 1 }] });
 		const apple = getChipA();
 		const berry = getChipB();
 
