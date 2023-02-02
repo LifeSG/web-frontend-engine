@@ -53,12 +53,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 		disabled: {
 			description: "Specifies if the input should be disabled",
@@ -66,12 +66,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 	},
 } as Meta;

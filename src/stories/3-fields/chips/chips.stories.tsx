@@ -54,12 +54,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: true },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: true,
 		},
 	},
 } as Meta;

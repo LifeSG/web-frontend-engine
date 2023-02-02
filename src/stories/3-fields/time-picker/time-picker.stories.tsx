@@ -39,12 +39,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 		useCurrentTime: {
 			description: "Specifies if the form element should default to current time",
@@ -52,12 +52,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 		is24HourFormat: {
 			description: "Specifies if the form element should use 24 hours time format",
@@ -65,12 +65,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 	},
 } as Meta;

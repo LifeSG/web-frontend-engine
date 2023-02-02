@@ -80,7 +80,6 @@ export default {
 			control: {
 				type: "select",
 			},
-			defaultValue: "text-bodynbp",
 		},
 		weight: {
 			description: "The weight of the text component",
@@ -88,12 +87,12 @@ export default {
 				type: {
 					summary: '"regular" | "semibold" | "bold" | "light"',
 				},
+				defaultValue: { summary: "regular" },
 			},
 			options: ["regular", "semibold", "bold", "light"],
 			control: {
 				type: "select",
 			},
-			defaultValue: "regular",
 		},
 		inline: {
 			description: "Sets the text to an inline display to allow a combination of components in a single line",
@@ -101,12 +100,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 		paragraph: {
 			description:
@@ -115,12 +114,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 	},
 } as Meta;

@@ -28,12 +28,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: "default" },
 			},
 			options: ["default", "small"],
 			control: {
 				type: "select",
 			},
-			defaultValue: "default",
 		},
 		disabled: {
 			description: "Specifies if the checkbox should be disabled",
@@ -41,12 +41,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 		options: {
 			description: "A list of options that a user can choose from",

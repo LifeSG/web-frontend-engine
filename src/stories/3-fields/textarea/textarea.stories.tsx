@@ -49,7 +49,6 @@ export default {
 			control: {
 				type: "select",
 			},
-			defaultValue: "top",
 			options: ["top", "bottom"],
 		},
 		resizable: {
@@ -63,7 +62,6 @@ export default {
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 		maxLength: {
 			description:
@@ -83,7 +81,6 @@ export default {
 				},
 				defaultValue: { summary: 1 },
 			},
-			defaultValue: 1,
 			type: { name: "number" },
 		},
 		validation: {
