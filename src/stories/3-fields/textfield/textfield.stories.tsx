@@ -122,7 +122,7 @@ MaxLength.args = {
 	"text-maxlength": {
 		label: "Textfield",
 		fieldType: "text",
-		maxLength: 5,
+		validation: [{ max: 5 }],
 	},
 };
 

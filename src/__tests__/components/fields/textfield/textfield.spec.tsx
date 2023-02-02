@@ -5,11 +5,11 @@ import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideSchema,
 } from "../../../common";
 
 const submitFn = jest.fn();
@@ -68,6 +68,18 @@ describe("textfield", () => {
 			expect(getTextfield()).toHaveAttribute("inputMode", defaultFieldType);
 		});
 
+		it("should apply maxLength attribute if max validation is specified", () => {
+			renderComponent({ validation: [{ max: 5 }] });
+
+			expect(getTextfield()).toHaveAttribute("maxLength", "5");
+		});
+
+		it("should apply maxLength attribute if length validation is specified", () => {
+			renderComponent({ validation: [{ length: 5 }] });
+
+			expect(getTextfield()).toHaveAttribute("maxLength", "5");
+		});
+
 		it("should support default value", async () => {
 			const defaultValue = "hello";
 			renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
@@ -80,13 +92,11 @@ describe("textfield", () => {
 
 		it("should pass other props into the field", () => {
 			renderComponent({
-				maxLength: 10,
 				placeholder: "placeholder",
 				readOnly: true,
 				disabled: true,
 			});
 
-			expect(getTextfield()).toHaveAttribute("maxLength", "10");
 			expect(getTextfield()).toHaveAttribute("placeholder", "placeholder");
 			expect(getTextfield()).toHaveAttribute("readonly");
 			expect(getTextfield()).toBeDisabled();
@@ -130,6 +140,18 @@ describe("textfield", () => {
 			expect(getTextfield()).toHaveAttribute("inputMode", emailFieldType);
 		});
 
+		it("should apply maxLength attribute if max validation is specified", () => {
+			renderComponent({ fieldType: emailFieldType, validation: [{ max: 5 }] });
+
+			expect(getTextfield()).toHaveAttribute("maxLength", "5");
+		});
+
+		it("should apply maxLength attribute if length validation is specified", () => {
+			renderComponent({ fieldType: emailFieldType, validation: [{ length: 5 }] });
+
+			expect(getTextfield()).toHaveAttribute("maxLength", "5");
+		});
+
 		it("should support default value", async () => {
 			const defaultValue = "john@doe.tld";
 			renderComponent({ fieldType: emailFieldType }, { defaultValues: { [componentId]: defaultValue } });
@@ -143,13 +165,11 @@ describe("textfield", () => {
 		it("should pass other props into the field", () => {
 			renderComponent({
 				fieldType: emailFieldType,
-				maxLength: 10,
 				placeholder: "placeholder",
 				readOnly: true,
 				disabled: true,
 			});
 
-			expect(getTextfield()).toHaveAttribute("maxLength", "10");
 			expect(getTextfield()).toHaveAttribute("placeholder", "placeholder");
 			expect(getTextfield()).toHaveAttribute("readOnly");
 			expect(getTextfield()).toBeDisabled();
@@ -182,6 +202,18 @@ describe("textfield", () => {
 			renderComponent({ fieldType: numberFieldType });
 
 			expect(getTextfield()).toHaveAttribute("inputMode", numberFieldType);
+		});
+
+		it("should apply min attribute if min validation is specified", () => {
+			renderComponent({ fieldType: numberFieldType, validation: [{ min: 5 }] });
+
+			expect(getTextfield()).toHaveAttribute("min", "5");
+		});
+
+		it("should apply max attribute if max validation is specified", () => {
+			renderComponent({ fieldType: numberFieldType, validation: [{ max: 5 }] });
+
+			expect(getTextfield()).toHaveAttribute("max", "5");
 		});
 
 		it("should support default value", async () => {

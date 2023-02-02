@@ -35,28 +35,48 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 				const minRule = validation?.find((rule) => "min" in rule);
 				const maxRule = validation?.find((rule) => "max" in rule);
 				const attributes = { ...derivedAttributes };
-				if (minRule) {
+				if (minRule?.min > 0) {
 					attributes.min = minRule.min;
 				}
-				if (maxRule) {
+				if (maxRule?.max > 0) {
 					attributes.max = maxRule.max;
 				}
 				setDerivedAttributes(attributes);
 				break;
 			}
-			case "email":
-				{
-					const emailRule = validation?.find((rule) => rule.email);
-					setFieldValidationConfig(
-						id,
-						Yup.string().email(emailRule?.errorMessage || ERROR_MESSAGES.EMAIL.INVALID),
-						validation
-					);
+			case "email": {
+				const emailRule = validation?.find((rule) => rule.email);
+				setFieldValidationConfig(
+					id,
+					Yup.string().email(emailRule?.errorMessage || ERROR_MESSAGES.EMAIL.INVALID),
+					validation
+				);
+
+				const maxRule = validation?.find((rule) => "max" in rule);
+				const lengthRule = validation?.find((rule) => "length" in rule);
+				const attributes = { ...derivedAttributes };
+				if (maxRule?.max > 0) {
+					attributes.maxLength = maxRule.max;
+				} else if (lengthRule?.length > 0) {
+					attributes.maxLength = lengthRule.length;
 				}
+				setDerivedAttributes(attributes);
 				break;
-			case "text":
+			}
+			case "text": {
 				setFieldValidationConfig(id, Yup.string(), validation);
+
+				const maxRule = validation?.find((rule) => "max" in rule);
+				const lengthRule = validation?.find((rule) => "length" in rule);
+				const attributes = { ...derivedAttributes };
+				if (maxRule?.max > 0) {
+					attributes.maxLength = maxRule.max;
+				} else if (lengthRule?.length > 0) {
+					attributes.maxLength = lengthRule.length;
+				}
+				setDerivedAttributes(attributes);
 				break;
+			}
 			default:
 				break;
 		}

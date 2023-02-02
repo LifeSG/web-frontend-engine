@@ -118,7 +118,7 @@ MaxLength.args = {
 	"textfield-maxlength": {
 		label: "Email",
 		fieldType: "email",
-		maxLength: 5,
+		validation: [{ max: 5 }],
 	},
 };
 
