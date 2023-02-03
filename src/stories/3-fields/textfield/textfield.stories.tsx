@@ -40,17 +40,6 @@ export default {
 				type: "select",
 			},
 		},
-		maxLength: {
-			description: "A specified maximum length for the value of the form element",
-			table: {
-				type: {
-					summary: "number",
-				},
-			},
-			control: {
-				type: "number",
-			},
-		},
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {

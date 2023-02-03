@@ -63,16 +63,6 @@ export default {
 				type: "boolean",
 			},
 		},
-		maxLength: {
-			description:
-				"Maximum number of characters that can go into the textarea. (Inherited from HTMLTextAreaElement). This brings up the character counter under the field.",
-			table: {
-				type: {
-					summary: "number",
-				},
-			},
-			type: { name: "number" },
-		},
 		rows: {
 			description: "Visible height of a text area, in lines (Inherited from HTMLTextAreaElement)",
 			table: {

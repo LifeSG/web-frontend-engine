@@ -48,19 +48,6 @@ export default {
 			},
 			type: { name: "object", value: {} },
 		},
-		multi: {
-			description: "Specifies if the component supports multiple selection",
-			table: {
-				type: {
-					summary: "boolean",
-				},
-				defaultValue: { summary: true },
-			},
-			options: [true, false],
-			control: {
-				type: "boolean",
-			},
-		},
 	},
 } as Meta;
 
