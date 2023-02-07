@@ -27,17 +27,6 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("email"),
-		maxLength: {
-			description: "A specified maximum length for the value of the form element",
-			table: {
-				type: {
-					summary: "number",
-				},
-			},
-			control: {
-				type: "number",
-			},
-		},
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -55,12 +44,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 	},
 } as Meta;
@@ -118,7 +107,7 @@ MaxLength.args = {
 	"textfield-maxlength": {
 		label: "Email",
 		fieldType: "email",
-		maxLength: 5,
+		validation: [{ max: 5 }],
 	},
 };
 

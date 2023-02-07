@@ -49,7 +49,6 @@ export default {
 			control: {
 				type: "select",
 			},
-			defaultValue: "top",
 			options: ["top", "bottom"],
 		},
 		resizable: {
@@ -63,17 +62,6 @@ export default {
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
-		},
-		maxLength: {
-			description:
-				"Maximum number of characters that can go into the textarea. (Inherited from HTMLTextAreaElement). This brings up the character counter under the field.",
-			table: {
-				type: {
-					summary: "number",
-				},
-			},
-			type: { name: "number" },
 		},
 		rows: {
 			description: "Visible height of a text area, in lines (Inherited from HTMLTextAreaElement)",
@@ -83,7 +71,6 @@ export default {
 				},
 				defaultValue: { summary: 1 },
 			},
-			defaultValue: 1,
 			type: { name: "number" },
 		},
 		validation: {
@@ -144,7 +131,7 @@ WithCounter.args = {
 	"textarea-with-counter": {
 		fieldType: "textarea",
 		label: "Textarea with counter",
-		maxLength: 5,
+		validation: [{ max: 5 }],
 	},
 };
 

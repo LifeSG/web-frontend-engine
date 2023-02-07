@@ -29,12 +29,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 		options: {
 			description: "A list of options that a user can choose from",

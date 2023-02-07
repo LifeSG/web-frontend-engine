@@ -30,11 +30,11 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 		dateFormat: {
 			description: `Date input and output format pattern string using <a href="https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank" rel="noopener noreferrer">Java SimpleDateFormat code</a><br>Note: This does not change the date format presented in the field.`,
@@ -42,11 +42,11 @@ export default {
 				type: {
 					summary: "string",
 				},
+				defaultValue: { summary: "uuuu-MM-dd" },
 			},
 			control: {
 				type: "text",
 			},
-			defaultValue: "uuuu-MM-dd",
 		},
 		validation: {
 			description:

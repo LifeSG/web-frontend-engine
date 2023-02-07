@@ -3,11 +3,11 @@ import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../f
 
 export interface ITextfieldSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"text", V>,
-		TComponentOmitProps<FormInputProps, "type"> {}
+		TComponentOmitProps<FormInputProps, "type" | "maxLength"> {}
 
 export interface IEmailSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"email", V>,
-		TComponentOmitProps<FormInputProps, "type"> {}
+		TComponentOmitProps<FormInputProps, "type" | "maxLength"> {}
 
 export interface INumberSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"numeric", V>,

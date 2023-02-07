@@ -22,12 +22,41 @@ export namespace YupHelper {
 	 */
 	export const buildSchema = (yupSchemaConfig: TFormYupConfig): Yup.ObjectSchema<ObjectShape> => {
 		const yupSchema: ObjectShape = {};
-		Object.keys(yupSchemaConfig).forEach((id) => {
+		const parsedYupSchemaConfig = parseWhenKeys(yupSchemaConfig);
+		Object.keys(parsedYupSchemaConfig).forEach((id) => {
 			const { schema, validationRules: fieldValidationConfig } = yupSchemaConfig[id];
 			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
 		});
 
 		return Yup.object().shape(yupSchema);
+	};
+
+	/**
+	 * Iterates through field configs to look for conditional validation rules (`when` condition)
+	 * For each conditional validation rule, it will refer to the source field to generate the corresponding yup schema
+	 * @param fieldConfigs config containing the yup schema and validation config on each field
+	 * @returns parsed field config
+	 */
+	const parseWhenKeys = (yupSchemaConfig: TFormYupConfig) => {
+		const parsedFieldConfigs = { ...yupSchemaConfig };
+		Object.entries(parsedFieldConfigs).forEach(([id, { validationRules }]) => {
+			const notWhenRules = validationRules?.filter((rule) => !("when" in rule)) || [];
+			const whenRules =
+				validationRules
+					?.filter((rule) => "when" in rule)
+					.map((rule) => {
+						const parsedRule = { ...rule };
+						Object.keys(parsedRule.when).forEach((whenFieldId) => {
+							parsedRule.when[whenFieldId] = {
+								...parsedRule.when[whenFieldId],
+								yupSchema: parsedFieldConfigs[whenFieldId].schema,
+							};
+						});
+						return parsedRule;
+					}) || [];
+			parsedFieldConfigs[id].validationRules = [...notWhenRules, ...whenRules];
+		});
+		return parsedFieldConfigs;
 	};
 
 	/**
@@ -93,22 +122,34 @@ export namespace YupHelper {
 				case !!rule.positive:
 				case !!rule.negative:
 				case !!rule.integer:
-					yupSchema = (yupSchema as unknown)[ruleKey](rule.errorMessage);
+					try {
+						yupSchema = (yupSchema as unknown)[ruleKey](rule.errorMessage);
+					} catch (error) {
+						console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+					}
 					break;
 				case rule.length > 0:
 				case rule.min > 0:
 				case rule.max > 0:
 				case !!rule.lessThan:
 				case !!rule.moreThan:
-					yupSchema = (yupSchema as unknown)[ruleKey](rule[ruleKey], rule.errorMessage);
+					try {
+						yupSchema = (yupSchema as unknown)[ruleKey](rule[ruleKey], rule.errorMessage);
+					} catch (error) {
+						console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+					}
 					break;
 				case !!rule.matches:
 					{
 						const matches = rule.matches.match(/\/(.*)\/([a-z]+)?/);
-						yupSchema = (yupSchema as Yup.StringSchema).matches(
-							new RegExp(matches[1], matches[2]),
-							rule.errorMessage
-						);
+						try {
+							yupSchema = (yupSchema as Yup.StringSchema).matches(
+								new RegExp(matches[1], matches[2]),
+								rule.errorMessage
+							);
+						} catch (error) {
+							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+						}
 					}
 					break;
 				case !!rule.when:
@@ -124,9 +165,9 @@ export namespace YupHelper {
 								mapRules(mapSchemaType(yupSchema.type as TYupSchemaType), rule.when[fieldId].otherwise);
 
 							if (Array.isArray(isRule) && (isRule as unknown[]).every((r) => typeof r === "object")) {
-								yupSchema = yupSchema.when(fieldId, (value: unknown, fieldYupSchema: Yup.AnySchema) => {
+								yupSchema = yupSchema.when(fieldId, (value: unknown) => {
 									const localYupSchema = mapRules(
-										fieldYupSchema.clone(),
+										rule.when[fieldId].yupSchema.clone(),
 										isRule as IYupConditionalValidationRule[]
 									);
 									let fulfilled = false;
@@ -173,7 +214,7 @@ export namespace YupHelper {
 		fn: (value: unknown, arg: unknown, context: Yup.TestContext) => boolean
 	) => {
 		if (customYupConditions.includes(name)) {
-			console.error(`the validation condition "${name}" is not added because it already exists!`);
+			console.warn(`the validation condition "${name}" is not added because it already exists!`);
 			return;
 		}
 		customYupConditions.push(name);

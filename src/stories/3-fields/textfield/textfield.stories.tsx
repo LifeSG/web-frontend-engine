@@ -40,17 +40,6 @@ export default {
 				type: "select",
 			},
 		},
-		maxLength: {
-			description: "A specified maximum length for the value of the form element",
-			table: {
-				type: {
-					summary: "number",
-				},
-			},
-			control: {
-				type: "number",
-			},
-		},
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -68,12 +57,12 @@ export default {
 				type: {
 					summary: "boolean",
 				},
+				defaultValue: { summary: false },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: false,
 		},
 	},
 } as Meta;
@@ -122,7 +111,7 @@ MaxLength.args = {
 	"text-maxlength": {
 		label: "Textfield",
 		fieldType: "text",
-		maxLength: 5,
+		validation: [{ max: 5 }],
 	},
 };
 
