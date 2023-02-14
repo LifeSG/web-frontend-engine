@@ -38,7 +38,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			return await yupResolver(hardValidationSchema)(data, context, options);
 		},
 	});
-	const { reset, watch, handleSubmit: reactFormHookSubmit, getValues, setError } = formMethods;
+	const {
+		reset,
+		watch,
+		handleSubmit: reactFormHookSubmit,
+		getValues,
+		setError,
+		formState: { errors },
+		getFieldState,
+		clearErrors,
+	} = formMethods;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -67,7 +76,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const setErrors = (errors: Record<string, string>): void => {
 		for (const key in errors) {
 			if (key in fields) {
-				setError(key, { type: "custom", message: errors[key] });
+				setError(key, { type: "api", message: errors[key] });
 			}
 		}
 	};
@@ -76,14 +85,24 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		if (onChange) {
-			const subscription = watch((value) => {
+		const subscription = watch((value) => {
+			if (onChange) {
 				onChange(value, checkIsFormValid());
-			});
+			}
 
-			return () => subscription.unsubscribe();
-		}
-	}, [checkIsFormValid, onChange, watch]);
+			for (const [key, value] of Object.entries(errors)) {
+				const fieldState = getFieldState(key);
+
+				// NOTE: Clear API errors if user updates the field
+				if (value["type"] === "api" && fieldState.isDirty) {
+					clearErrors(key);
+				}
+			}
+		});
+
+		return () => subscription.unsubscribe();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [checkIsFormValid, onChange, watch, errors]);
 
 	useDeepCompareEffectNoCheck(() => {
 		reset({ ...defaultValues, ...getValues() });
