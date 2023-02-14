@@ -88,6 +88,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 		fn: (value: unknown, arg: unknown) => boolean
 	) => void;
 
+	/** allow setting of custom errors thrown by endpoints */
 	setErrors: (errors: Record<string, string>) => void;
 }
 
