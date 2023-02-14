@@ -188,6 +188,34 @@ describe("frontend-engine", () => {
 		expect(getErrorMessage(true)).not.toBeInTheDocument();
 	});
 
+	describe.only("setErrors", () => {
+		const handleClick = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			try {
+				throw new Error("API error");
+			} catch (error) {
+				ref.current.setErrors({
+					[fieldOneId]: ERROR_MESSAGE,
+				});
+			}
+		};
+
+		it("should support setting of custom errors", async () => {
+			render(<FrontendEngineWithCustomButton onClick={handleClick} />);
+			await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+
+			expect(getFieldOne().nextSibling.textContent).toMatch(ERROR_MESSAGE);
+		});
+
+		it("should clear the error message related to API when the user edits the field", async () => {
+			render(<FrontendEngineWithCustomButton onClick={handleClick} />);
+			await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+	});
+
 	describe("validationMode", () => {
 		it("should validate on submit by default", async () => {
 			renderComponent();
