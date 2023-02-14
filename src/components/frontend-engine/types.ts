@@ -87,6 +87,8 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 		name: string,
 		fn: (value: unknown, arg: unknown) => boolean
 	) => void;
+
+	setErrors: (errors: Record<string, string>) => void;
 }
 
 // =============================================================================

@@ -38,7 +38,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			return await yupResolver(hardValidationSchema)(data, context, options);
 		},
 	});
-	const { reset, watch, handleSubmit: reactFormHookSubmit, getValues } = formMethods;
+	const { reset, watch, handleSubmit: reactFormHookSubmit, getValues, setError } = formMethods;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -48,6 +48,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		isValid: checkIsFormValid,
 		submit: reactFormHookSubmit(handleSubmit),
 		addCustomValidation: YupHelper.addCondition,
+		setErrors,
 	}));
 
 	const checkIsFormValid = useCallback(() => {
@@ -61,6 +62,14 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const handleSubmit = (data: TFrontendEngineValues): void => {
 		onSubmit?.(data);
+	};
+
+	const setErrors = (errors: Record<string, string>): void => {
+		for (const key in errors) {
+			if (key in fields) {
+				setError(key, { type: "custom", message: errors[key] });
+			}
+		}
 	};
 
 	// =============================================================================
