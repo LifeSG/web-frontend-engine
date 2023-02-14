@@ -292,3 +292,41 @@ export const AddCustomValidation: Story = () => {
 AddCustomValidation.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
+
+export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const handleClick = () => {
+		try {
+			throw {
+				name: "API error",
+			};
+		} catch (error) {
+			ref.current.setErrors(error);
+		}
+	};
+
+	return (
+		<>
+			<FrontendEngine
+				data={{
+					fields: {
+						name: {
+							label: "What is your name",
+							fieldType: "text",
+						},
+						...SubmitButtonStorybook,
+					},
+					validationMode: "onSubmit",
+				}}
+				ref={ref}
+			/>
+			<br />
+			<Button.Default styleType="secondary" onClick={handleClick}>
+				Trigger API error upon submission
+			</Button.Default>
+		</>
+	);
+};
+SetCustomErrors.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
