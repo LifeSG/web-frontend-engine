@@ -73,10 +73,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		onSubmit?.(data);
 	};
 
-	const setErrors = (errors: Record<string, string>): void => {
+	const setErrors = (errors: Record<string, string | string[]>): void => {
 		for (const key in errors) {
 			if (key in fields) {
-				setError(key, { type: "api", message: errors[key] });
+				const errorMessage = errors[key];
+
+				if (Array.isArray(errorMessage)) {
+					setError(key, { type: "api", message: errorMessage[0] });
+				} else {
+					setError(key, { type: "api", message: errorMessage });
+				}
 			}
 		}
 	};
