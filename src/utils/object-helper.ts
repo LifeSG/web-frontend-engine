@@ -24,5 +24,7 @@ export namespace ObjectHelper {
 				return getNestedData(key, value as unknown as Record<string, T>);
 			}
 		}
+
+		return {};
 	};
 }
