@@ -2,10 +2,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
-import { TestHelper } from "../../utils";
+import { ObjectHelper, TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../elements/wrapper";
-import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
+import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
@@ -73,42 +73,61 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		onSubmit?.(data);
 	};
 
-	const setErrors = (errors: Record<string, string | string[]>): void => {
-		for (const key in errors) {
-			if (key in fields) {
-				const errorMessage = errors[key];
+	// NOTE: Wrapper component contains nested fields
+	const setErrors = (errors: TErrorPayload): void => {
+		Object.entries(errors).forEach(([key, value]) => {
+			if (typeof value === "object") {
+				setErrors(value as TErrorPayload);
+			} else {
+				const isValidFieldKey = !!ObjectHelper.getNestedData(key, fields);
 
-				if (Array.isArray(errorMessage)) {
-					setError(key, { type: "api", message: errorMessage[0] });
-				} else {
-					setError(key, { type: "api", message: errorMessage });
+				if (isValidFieldKey) {
+					const errorObject = ObjectHelper.getNestedData(key, errors);
+					const errorMessage = Object.values(errorObject)[0];
+					const fieldKey = Object.keys(errorObject)[0];
+
+					if (Array.isArray(errorMessage)) {
+						setError(fieldKey, { type: "api", message: errorMessage[0] });
+					} else {
+						setError(fieldKey, { type: "api", message: errorMessage as string });
+					}
 				}
 			}
-		}
+		});
 	};
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const subscription = watch((value) => {
-			if (onChange) {
+		if (onChange) {
+			const subscription = watch((value) => {
 				onChange(value, checkIsFormValid());
-			}
+			});
 
-			for (const [key, value] of Object.entries(errors)) {
-				const fieldState = getFieldState(key);
+			return () => subscription.unsubscribe();
+		}
 
-				// NOTE: Clear API errors if user updates the field
-				if (value["type"] === "api" && fieldState.isDirty) {
-					clearErrors(key);
-				}
-			}
-		});
-
-		return () => subscription.unsubscribe();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [checkIsFormValid, onChange, watch, errors]);
+	}, [checkIsFormValid, onChange, watch]);
+
+	useDeepCompareEffectNoCheck(() => {
+		const apiErrors = Object.fromEntries(Object.entries(errors).filter(([_, value]) => value.type === "api"));
+
+		if (apiErrors) {
+			const subscriptions = watch(() => {
+				Object.keys(apiErrors).forEach((key) => {
+					const fieldState = getFieldState(key);
+
+					if (fieldState.isDirty) {
+						clearErrors(key);
+					}
+				});
+			});
+
+			return () => subscriptions.unsubscribe();
+		}
+	}, [errors]);
 
 	useDeepCompareEffectNoCheck(() => {
 		reset({ ...defaultValues, ...getValues() });
