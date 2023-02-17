@@ -13,4 +13,16 @@ export namespace ObjectHelper {
 
 		return updatedData;
 	};
+
+	export const getNestedData = <T>(key: string, data: Record<string, T>): Record<string, T> => {
+		if (key in data) {
+			return { [key]: data[key] };
+		}
+
+		for (const [_, value] of Object.entries(data)) {
+			if (typeof value === "object") {
+				return getNestedData(key, value as unknown as Record<string, T>);
+			}
+		}
+	};
 }
