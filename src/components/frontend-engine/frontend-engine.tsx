@@ -79,10 +79,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			if (typeof value === "object") {
 				setErrors(value as TErrorPayload);
 			} else {
-				const isValidFieldKey = !!ObjectHelper.getNestedData(key, fields);
+				const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(fields, key);
 
 				if (isValidFieldKey) {
-					const errorObject = ObjectHelper.getNestedData(key, errors);
+					const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
 					const errorMessage = Object.values(errorObject)[0];
 					const fieldKey = Object.keys(errorObject)[0];
 

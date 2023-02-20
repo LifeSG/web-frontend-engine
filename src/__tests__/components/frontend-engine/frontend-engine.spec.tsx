@@ -188,7 +188,7 @@ describe("frontend-engine", () => {
 		expect(getErrorMessage(true)).not.toBeInTheDocument();
 	});
 
-	describe.only("setErrors", () => {
+	describe("setErrors", () => {
 		const handleClick = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 			try {
 				throw new Error("API error");

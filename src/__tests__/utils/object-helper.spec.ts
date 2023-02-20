@@ -26,7 +26,7 @@ describe("object-helper", () => {
 			const expected = { a: 1 };
 			const data = { a: 1, b: 2 };
 
-			const result = ObjectHelper.getNestedData("a", data);
+			const result = ObjectHelper.getNestedValueByKey(data, "a");
 
 			expect(result).toEqual(expected);
 		});
@@ -35,7 +35,7 @@ describe("object-helper", () => {
 			const expected = { c: 3 };
 			const data = { a: { b: { c: 3 } } };
 
-			const result = ObjectHelper.getNestedData("c", data);
+			const result = ObjectHelper.getNestedValueByKey(data, "c");
 
 			expect(result).toEqual(expected);
 		});
@@ -44,7 +44,7 @@ describe("object-helper", () => {
 			const expected = {};
 			const data = { a: { b: { c: 3 } } };
 
-			const result = ObjectHelper.getNestedData("d", data);
+			const result = ObjectHelper.getNestedValueByKey(data, "d");
 
 			expect(result).toEqual(expected);
 		});
