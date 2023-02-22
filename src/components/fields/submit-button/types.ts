@@ -3,4 +3,6 @@ import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../f
 
 export interface ISubmitButtonSchema
 	extends Omit<IFrontendEngineBaseFieldJsonSchema<"submit">, "validation">,
-		TComponentOmitProps<ButtonProps> {}
+		TComponentOmitProps<ButtonProps, "disabled"> {
+	disabled?: boolean | "invalid-form" | undefined;
+}
