@@ -5,12 +5,12 @@ import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideField,
-	TOverrideSchema,
 } from "../../../common";
 
 const submitFn = jest.fn();
@@ -53,12 +53,13 @@ describe(fieldType, () => {
 	});
 
 	it("should be able to support default values", async () => {
+		const defaultLabel = "A";
 		const defaultValue = "Apple";
 		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText(defaultValue)).toBeInTheDocument();
+		expect(screen.getByTestId(componentId)).toHaveTextContent(defaultLabel);
 		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
 	});
 
