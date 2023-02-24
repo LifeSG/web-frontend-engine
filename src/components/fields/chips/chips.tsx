@@ -72,7 +72,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		return stateValue.includes(text);
 	};
 
-	const getTextAreaId = () => {
+	const getTextareaId = () => {
 		let textareaId = `${id}-textarea`;
 		if (textarea.label) {
 			textareaId = `${textareaId}-${kebabCase(textarea.label)}`;
@@ -107,7 +107,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		handleChange(name);
 		setShowTextArea((prevState) => {
 			if (prevState) {
-				removeFieldValidationConfig(getTextAreaId());
+				removeFieldValidationConfig(getTextareaId());
 			}
 			return !prevState;
 		});
@@ -129,7 +129,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		));
 	};
 
-	const renderTextAreaChip = (): JSX.Element => {
+	const renderTextareaChip = (): JSX.Element => {
 		const textareaLabel = textarea?.label;
 		if (!textarea && !textareaLabel) {
 			return;
@@ -145,13 +145,13 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		);
 	};
 
-	const renderTextArea = (): JSX.Element => {
+	const renderTextarea = (): JSX.Element => {
 		const textareaLabel = textarea?.label;
 		if (!textarea && !textareaLabel) {
 			return;
 		}
 
-		const textAreaId = getTextAreaId();
+		const textareaId = getTextareaId();
 		const schema: ITextareaSchema = {
 			fieldType: "textarea",
 			label,
@@ -161,10 +161,10 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			showTextArea && (
 				<Controller
 					control={control}
-					name={textAreaId}
+					name={textareaId}
 					shouldUnregister={true}
 					render={({ field, fieldState }) => {
-						const fieldProps = { ...field, id: textAreaId, ref: undefined };
+						const fieldProps = { ...field, id: textareaId, ref: undefined };
 						return <TextArea schema={schema} {...fieldProps} {...fieldState} />;
 					}}
 				/>
@@ -176,9 +176,9 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		<Form.CustomField label={label} errorMessage={error?.message} {...otherProps}>
 			<ChipContainer data-testid={TestHelper.generateId(id, "chips")}>
 				{renderChips()}
-				{renderTextAreaChip()}
+				{renderTextareaChip()}
 			</ChipContainer>
-			{renderTextArea()}
+			{renderTextarea()}
 		</Form.CustomField>
 	);
 };
