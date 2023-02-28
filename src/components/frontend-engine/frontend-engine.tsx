@@ -81,22 +81,22 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// NOTE: Wrapper component contains nested fields
 	const setErrors = (errors: TErrorPayload): void => {
 		Object.entries(errors).forEach(([key, value]) => {
-			if (typeof value === "object") {
+			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(fields, key);
+
+			if (!isValidFieldKey) {
+				return;
+			}
+
+			if (Array.isArray(value)) {
+				setError(key, { type: "api", message: value[0] });
+			} else if (typeof value === "object") {
 				setErrors(value as TErrorPayload);
 			} else {
-				const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(fields, key);
+				const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
+				const errorMessage = Object.values(errorObject)[0];
+				const fieldKey = Object.keys(errorObject)[0];
 
-				if (isValidFieldKey) {
-					const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
-					const errorMessage = Object.values(errorObject)[0];
-					const fieldKey = Object.keys(errorObject)[0];
-
-					if (Array.isArray(errorMessage)) {
-						setError(fieldKey, { type: "api", message: errorMessage[0] });
-					} else {
-						setError(fieldKey, { type: "api", message: errorMessage as string });
-					}
-				}
+				setError(fieldKey, { type: "api", message: errorMessage as string });
 			}
 		});
 	};
