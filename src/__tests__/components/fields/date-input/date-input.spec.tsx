@@ -6,12 +6,12 @@ import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideField,
-	TOverrideSchema,
 } from "../../../common";
 
 const submitFn = jest.fn();
@@ -124,11 +124,13 @@ describe(fieldType, () => {
 	});
 
 	it.each`
-		condition       | config                 | invalid                 | valid
-		${"future"}     | ${{ future: true }}    | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"past"}       | ${{ past: true }}      | ${["01", "01", "2022"]} | ${["12", "31", "2021"]}
-		${"non-future"} | ${{ notFuture: true }} | ${["02", "01", "2022"]} | ${["01", "01", "2022"]}
-		${"non-past"}   | ${{ notPast: true }}   | ${["31", "12", "2021"]} | ${["01", "01", "2022"]}
+		condition       | config                       | invalid                 | valid
+		${"future"}     | ${{ future: true }}          | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"past"}       | ${{ past: true }}            | ${["01", "01", "2022"]} | ${["12", "31", "2021"]}
+		${"non-future"} | ${{ notFuture: true }}       | ${["02", "01", "2022"]} | ${["01", "01", "2022"]}
+		${"non-past"}   | ${{ notPast: true }}         | ${["31", "12", "2021"]} | ${["01", "01", "2022"]}
+		${"min-date"}   | ${{ minDate: "2022-01-02" }} | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"max-date"}   | ${{ maxDate: "2022-01-02" }} | ${["03", "01", "2022"]} | ${["02", "01", "2022"]}
 	`("should be able to validate for $condition dates", async ({ config, invalid, valid }) => {
 		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
 		renderComponent({ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] });
