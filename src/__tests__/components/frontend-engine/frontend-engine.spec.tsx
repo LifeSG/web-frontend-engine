@@ -274,16 +274,16 @@ describe("frontend-engine", () => {
 
 		describe("errorMessage type", () => {
 			it.each`
-				type        | message
-				${"string"} | ${ERROR_MESSAGE}
-				${"array"}  | ${[ERROR_MESSAGE]}
-			`("should suppport error message of $type type", async ({ type, message }) => {
+				type        | onClick
+				${"string"} | ${handleClickDefault}
+				${"array"}  | ${handleClickArray}
+			`("should suppport error message of $type type", async ({ type, onClick }) => {
 				switch (type) {
 					case "string":
-						render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
+						render(<FrontendEngineWithCustomButton onClick={onClick} />);
 						break;
 					case "array":
-						render(<FrontendEngineWithCustomButton onClick={handleClickArray} />);
+						render(<FrontendEngineWithCustomButton onClick={onClick} />);
 						break;
 				}
 				await waitFor(() => fireEvent.click(getCustomSubmitButton()));
