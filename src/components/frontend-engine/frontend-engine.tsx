@@ -1,9 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import isEmpty from "lodash/isEmpty";
 import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
-import { useValidationSchema } from "../../utils/hooks";
+import { usePrevious, useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../elements/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
@@ -38,16 +39,20 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			return await yupResolver(hardValidationSchema)(data, context, options);
 		},
 	});
+
 	const {
 		reset,
 		watch,
 		handleSubmit: reactFormHookSubmit,
 		getValues,
 		setError,
+		control,
 		formState: { errors },
-		getFieldState,
 		clearErrors,
 	} = formMethods;
+
+	const formValues = useWatch({ control });
+	const oldFormValues = usePrevious(formValues);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -114,20 +119,17 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	useDeepCompareEffectNoCheck(() => {
 		const apiErrors = Object.fromEntries(Object.entries(errors).filter(([_, value]) => value.type === "api"));
 
-		if (apiErrors) {
-			const subscriptions = watch(() => {
-				Object.keys(apiErrors).forEach((key) => {
-					const fieldState = getFieldState(key);
+		if (apiErrors && !isEmpty(apiErrors) && oldFormValues) {
+			Object.keys(apiErrors).forEach((key) => {
+				const oldValue = oldFormValues[key];
+				const updatedValue = formValues[key];
 
-					if (fieldState.isDirty) {
-						clearErrors(key);
-					}
-				});
+				if (oldValue !== updatedValue) {
+					clearErrors(key);
+				}
 			});
-
-			return () => subscriptions.unsubscribe();
 		}
-	}, [errors]);
+	}, [formValues, oldFormValues]);
 
 	useDeepCompareEffectNoCheck(() => {
 		reset({ ...defaultValues, ...getValues() });
