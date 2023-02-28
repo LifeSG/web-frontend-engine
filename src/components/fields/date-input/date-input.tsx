@@ -31,6 +31,8 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		const pastRule = validation?.find((rule) => "past" in rule);
 		const notFutureRule = validation?.find((rule) => "notFuture" in rule);
 		const notPastRule = validation?.find((rule) => "notPast" in rule);
+		const minDateRule = validation?.find((rule) => "minDate" in rule);
+		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
 
 		setFieldValidationConfig(
 			id,
@@ -59,6 +61,32 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 				.test("not-past", notPastRule?.["errorMessage"] || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
 					if (!isValidDate(value) || !notPastRule?.["notPast"]) return true;
 					return !LocalDate.parse(value).isBefore(LocalDate.now());
+				})
+				.test("min-date", undefined, (value, context) => {
+					const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
+					if (minDate && LocalDate.parse(value).isBefore(minDate)) {
+						return context.createError({
+							message:
+								minDateRule?.["errorMessage"] ||
+								ERROR_MESSAGES.DATE.MIN_DATE(
+									DateTimeHelper.formatDateTime(minDateRule?.["minDate"], "dd/MM/uuuu", "date")
+								),
+						});
+					}
+					return true;
+				})
+				.test("max-date", undefined, (value, context) => {
+					const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
+					if (maxDate && LocalDate.parse(value).isAfter(maxDate)) {
+						return context.createError({
+							message:
+								maxDateRule?.["errorMessage"] ||
+								ERROR_MESSAGES.DATE.MAX_DATE(
+									DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date")
+								),
+						});
+					}
+					return true;
 				}),
 			validation
 		);
