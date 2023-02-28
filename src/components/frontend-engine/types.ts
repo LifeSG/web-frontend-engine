@@ -74,7 +74,7 @@ export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export type TValidationMode = keyof ValidationMode;
 
-export type TErrorMessage = string | string[] | Record<string, string[]>;
+export type TErrorMessage = string | string[] | Record<string, string | string[]>;
 export type TErrorPayload = Record<string, TErrorMessage>;
 export interface IFrontendEngineRef extends HTMLFormElement {
 	/** gets form values */
