@@ -51,7 +51,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		clearErrors,
 	} = formMethods;
 
-	const formValues = useWatch({ control });
+	const formValues = useWatch({ control, disabled: !errors });
 	const oldFormValues = usePrevious(formValues);
 
 	// =============================================================================
@@ -118,8 +118,9 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	useDeepCompareEffectNoCheck(() => {
 		const apiErrors = Object.fromEntries(Object.entries(errors).filter(([_, value]) => value.type === "api"));
+		const hasApiErrors = apiErrors && !isEmpty(apiErrors);
 
-		if (apiErrors && !isEmpty(apiErrors) && oldFormValues) {
+		if (hasApiErrors && !!oldFormValues) {
 			Object.keys(apiErrors).forEach((key) => {
 				const oldValue = oldFormValues[key];
 				const updatedValue = formValues[key];
@@ -129,7 +130,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				}
 			});
 		}
-	}, [formValues, oldFormValues]);
+	}, [formValues, errors, watch]);
 
 	useDeepCompareEffectNoCheck(() => {
 		reset({ ...defaultValues, ...getValues() });
