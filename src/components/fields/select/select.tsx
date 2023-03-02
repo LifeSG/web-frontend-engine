@@ -60,6 +60,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 				options={options}
 				onSelectOption={handleChange}
 				selectedOption={getSelectOption()}
+				displayValueExtractor={(item: ISelectOption) => item.label}
 				valueExtractor={(item: ISelectOption) => item.value}
 				listExtractor={(item: ISelectOption) => item.label}
 			/>
