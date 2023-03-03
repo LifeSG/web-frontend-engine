@@ -73,11 +73,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	const getTextareaId = () => {
-		let textareaId = `${id}-textarea`;
-		if (textarea.label) {
-			textareaId = `${textareaId}-${kebabCase(textarea.label)}`;
-		}
-		return textareaId;
+		return `${id}-textarea`;
 	};
 
 	// =============================================================================
