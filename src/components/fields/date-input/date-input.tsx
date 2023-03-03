@@ -1,4 +1,5 @@
-import { LocalDate } from "@js-joda/core";
+import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
+import { Locale } from "@js-joda/locale_en-us";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -34,6 +35,9 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		const minDateRule = validation?.find((rule) => "minDate" in rule);
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
 
+		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
+		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
+
 		setFieldValidationConfig(
 			id,
 			Yup.string()
@@ -62,32 +66,26 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 					if (!isValidDate(value) || !notPastRule?.["notPast"]) return true;
 					return !LocalDate.parse(value).isBefore(LocalDate.now());
 				})
-				.test("min-date", undefined, (value, context) => {
-					const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
-					if (minDate && LocalDate.parse(value).isBefore(minDate)) {
-						return context.createError({
-							message:
-								minDateRule?.["errorMessage"] ||
-								ERROR_MESSAGES.DATE.MIN_DATE(
-									DateTimeHelper.formatDateTime(minDateRule?.["minDate"], "dd/MM/uuuu", "date")
-								),
-						});
+				.test(
+					"min-date",
+					minDateRule?.["errorMessage"] ||
+						ERROR_MESSAGES.DATE.MIN_DATE(
+							DateTimeHelper.formatDateTime(minDateRule?.["minDate"], "dd/MM/uuuu", "date")
+						),
+					(value) => {
+						if (!isValidDate(value) || !minDate) return true;
+						return !LocalDate.parse(value).isBefore(minDate);
 					}
-					return true;
-				})
-				.test("max-date", undefined, (value, context) => {
-					const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
-					if (maxDate && LocalDate.parse(value).isAfter(maxDate)) {
-						return context.createError({
-							message:
-								maxDateRule?.["errorMessage"] ||
-								ERROR_MESSAGES.DATE.MAX_DATE(
-									DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date")
-								),
-						});
+				)
+				.test(
+					"max-date",
+					maxDateRule?.["errorMessage"] ||
+						DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date"),
+					(value) => {
+						if (!isValidDate(value) || !maxDate) return true;
+						return !LocalDate.parse(value).isAfter(maxDate);
 					}
-					return true;
-				}),
+				),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
