@@ -27,6 +27,7 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("submit"),
+		validation: { table: { disable: true } },
 		styleType: {
 			description: "The style type of the button",
 			table: {
@@ -40,16 +41,17 @@ export default {
 			},
 		},
 		disabled: {
-			description: "Specifies if the button is interactable",
+			description:
+				"Specifies if the button is interactable<br>For `invalid-form`, the button will remain disabled until the form is valid",
 			table: {
 				type: {
-					summary: "boolean",
+					summary: "boolean | invalid-form",
 				},
 				defaultValue: { summary: false },
 			},
-			options: [true, false],
+			options: [true, false, "invalid-form"],
 			control: {
-				type: "boolean",
+				type: "select",
 			},
 		},
 	},
@@ -84,3 +86,27 @@ Styled.args = {
 		styleType: "secondary",
 	},
 };
+
+export const DisabledOnInvalidForm = () => (
+	<FrontendEngine
+		data={{
+			fields: {
+				required: {
+					fieldType: "text",
+					label: "Required",
+					validation: [{ required: true }],
+				},
+				email: {
+					fieldType: "email",
+					label: "Email",
+					validation: [{ required: true }],
+				},
+				submit: {
+					fieldType: "submit",
+					label: "Submit",
+					disabled: "invalid-form",
+				},
+			},
+		}}
+	/>
+);
