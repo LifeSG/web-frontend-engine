@@ -6,6 +6,8 @@ export interface IDateInputValidationRule {
 	past?: boolean | undefined;
 	notFuture?: boolean | undefined;
 	notPast?: boolean | undefined;
+	minDate?: string | undefined;
+	maxDate?: string | undefined;
 }
 
 export interface IDateInputSchema<V = undefined>

@@ -31,4 +31,30 @@ export namespace DateTimeHelper {
 			return errorMessage || ERROR_MESSAGES.GENERIC.INVALID;
 		}
 	};
+
+	export function toLocalDateOrTime(value: string, format: string, type: "date"): LocalDate | undefined;
+	export function toLocalDateOrTime(value: string, format: string, type: "time"): LocalTime | undefined;
+	export function toLocalDateOrTime(value: string, format: string, type: "datetime"): LocalDateTime | undefined;
+	export function toLocalDateOrTime(value: string, format: string, type: "date" | "time" | "datetime") {
+		if (!value) return undefined;
+
+		try {
+			const timeFormatter = DateTimeFormatter.ofPattern(format)
+				.withResolverStyle(ResolverStyle.STRICT)
+				.withLocale(Locale.ENGLISH);
+
+			switch (type) {
+				case "date":
+					return LocalDate.parse(value, timeFormatter);
+				case "time":
+					return LocalTime.parse(value, timeFormatter);
+				case "datetime":
+					return LocalDateTime.parse(value, timeFormatter);
+				default:
+					return undefined;
+			}
+		} catch (error) {
+			return undefined;
+		}
+	}
 }

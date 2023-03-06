@@ -14,6 +14,8 @@ export const ERROR_MESSAGES = {
 		MUST_BE_PAST: "Date must be in the past.",
 		CANNOT_BE_FUTURE: "Date cannot be in the future.",
 		CANNOT_BE_PAST: "Date cannot be in the past.",
+		MIN_DATE: (date: string) => `Date cannot be earlier than ${date}`,
+		MAX_DATE: (date: string) => `Date cannot be later than ${date}`,
 		INVALID: "Invalid date",
 	},
 	GENERIC: {

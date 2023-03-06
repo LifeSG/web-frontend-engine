@@ -171,3 +171,21 @@ NotPastDate.args = {
 		validation: [{ required: true }, { notPast: true, errorMessage: "No past dates" }],
 	},
 };
+
+export const MinDate = Template.bind({});
+MinDate.args = {
+	"min-date": {
+		fieldType: "date",
+		label: "Date",
+		validation: [{ required: true }, { minDate: "2023-01-01", errorMessage: "Min date 01/01/2023" }],
+	},
+};
+
+export const MaxDate = Template.bind({});
+MaxDate.args = {
+	"max-date": {
+		fieldType: "date",
+		label: "Date",
+		validation: [{ required: true }, { maxDate: "2023-01-01", errorMessage: "Max date 01/01/2023" }],
+	},
+};
