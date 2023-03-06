@@ -80,7 +80,9 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 				.test(
 					"max-date",
 					maxDateRule?.["errorMessage"] ||
-						DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date"),
+						ERROR_MESSAGES.DATE.MAX_DATE(
+							DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date")
+						),
 					(value) => {
 						if (!isValidDate(value) || !maxDate) return true;
 						return !LocalDate.parse(value).isAfter(maxDate);
