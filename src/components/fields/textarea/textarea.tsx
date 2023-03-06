@@ -6,10 +6,10 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { Chip } from "../../shared";
-import { ChipContainer, StyledTextArea, Wrapper } from "./textarea.styles";
+import { ChipContainer, StyledTextarea, Wrapper } from "./textarea.styles";
 import { ITextareaSchema } from "./types";
 
-export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
+export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
@@ -89,7 +89,7 @@ export const TextArea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		<Form.CustomField label={label} id={id}>
 			<Wrapper chipPosition={chipPosition}>
 				{renderChips()}
-				<StyledTextArea
+				<StyledTextarea
 					{...otherSchema}
 					{...otherProps}
 					id={id}

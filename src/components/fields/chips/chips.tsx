@@ -7,7 +7,7 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Chip, ERROR_MESSAGES } from "../../shared";
-import { ITextareaSchema, TextArea } from "../textarea";
+import { ITextareaSchema, Textarea } from "../textarea";
 import { ChipContainer } from "./chips.styles";
 import { IChipsSchema } from "./types";
 
@@ -25,7 +25,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
-	const [showTextArea, setShowTextArea] = useState<boolean>(false);
+	const [showTextarea, setShowTextarea] = useState(false);
 	const [multi, setMulti] = useState(true);
 	const { control } = useFormContext();
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
@@ -101,7 +101,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	const handleTextareaChipClick = (name: string) => {
 		handleChange(name);
-		setShowTextArea((prevState) => {
+		setShowTextarea((prevState) => {
 			if (prevState) {
 				removeFieldValidationConfig(getTextareaId());
 			}
@@ -154,14 +154,14 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			...textarea,
 		};
 		return (
-			showTextArea && (
+			showTextarea && (
 				<Controller
 					control={control}
 					name={textareaId}
 					shouldUnregister={true}
 					render={({ field, fieldState }) => {
 						const fieldProps = { ...field, id: textareaId, ref: undefined };
-						return <TextArea schema={schema} {...fieldProps} {...fieldState} />;
+						return <Textarea schema={schema} {...fieldProps} {...fieldState} />;
 					}}
 				/>
 			)

@@ -133,7 +133,7 @@ type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
 export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
 
 export enum EFieldType {
-	TEXTAREA = "TextArea",
+	TEXTAREA = "Textarea",
 	TEXT = "TextField",
 	NUMERIC = "TextField",
 	EMAIL = "TextField",
