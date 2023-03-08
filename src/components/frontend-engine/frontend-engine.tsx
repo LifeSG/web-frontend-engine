@@ -1,10 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import isEmpty from "lodash/isEmpty";
-import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle } from "react";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
-import { usePrevious, useValidationSchema } from "../../utils/hooks";
+import { useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../elements/wrapper";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
@@ -46,13 +46,11 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		handleSubmit: reactFormHookSubmit,
 		getValues,
 		setError,
-		control,
-		formState: { errors },
+		formState,
 		clearErrors,
 	} = formMethods;
 
-	const formValues = useWatch({ control, disabled: !errors });
-	const oldFormValues = usePrevious(formValues);
+	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -116,21 +114,36 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [checkIsFormValid, onChange, watch]);
 
-	useDeepCompareEffectNoCheck(() => {
-		const apiErrors = Object.fromEntries(Object.entries(errors).filter(([_, value]) => value.type === "api"));
-		const hasApiErrors = apiErrors && !isEmpty(apiErrors);
+	useEffect(() => {
+		const errors = formState.errors;
 
-		if (hasApiErrors && !!oldFormValues) {
-			Object.keys(apiErrors).forEach((key) => {
-				const oldValue = oldFormValues[key];
-				const updatedValue = formValues[key];
+		if (errors && !isEmpty(errors)) {
+			const subscription = watch((value) => {
+				const apiErrors = Object.fromEntries(
+					Object.entries(formState.errors).filter(([_, value]) => value.type === "api")
+				);
+				const hasApiErrors = apiErrors && !isEmpty(apiErrors);
 
-				if (oldValue !== updatedValue) {
-					clearErrors(key);
+				if (hasApiErrors) {
+					Object.keys(apiErrors).forEach((key) => {
+						const oldValue = oldFormValues[key];
+						const updatedValue = value[key];
+
+						console.log(key, oldValue, updatedValue);
+
+						if (oldValue !== updatedValue) {
+							clearErrors(key);
+						}
+					});
 				}
+
+				setOldFormValues(value);
 			});
+
+			return () => subscription.unsubscribe();
 		}
-	}, [formValues, errors, watch]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [formState, watch]);
 
 	useDeepCompareEffectNoCheck(() => {
 		reset({ ...defaultValues, ...getValues() });
