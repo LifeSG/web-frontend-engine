@@ -1,5 +1,4 @@
-import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
-import { Locale } from "@js-joda/locale_en-us";
+import { LocalDate } from "@js-joda/core";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -48,23 +47,27 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 				})
 				.test("future", futureRule?.["errorMessage"] || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
 					if (!isValidDate(value) || !futureRule?.["future"]) return true;
-					return LocalDate.parse(value).isAfter(LocalDate.now());
+					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
+					return localDate.isAfter(LocalDate.now());
 				})
 				.test("past", pastRule?.["errorMessage"] || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
 					if (!isValidDate(value) || !pastRule?.["past"]) return true;
-					return LocalDate.parse(value).isBefore(LocalDate.now());
+					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
+					return localDate.isBefore(LocalDate.now());
 				})
 				.test(
 					"not-future",
 					notFutureRule?.["errorMessage"] || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE,
 					(value) => {
 						if (!isValidDate(value) || !notFutureRule?.["notFuture"]) return true;
-						return !LocalDate.parse(value).isAfter(LocalDate.now());
+						const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
+						return !localDate.isAfter(LocalDate.now());
 					}
 				)
 				.test("not-past", notPastRule?.["errorMessage"] || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
 					if (!isValidDate(value) || !notPastRule?.["notPast"]) return true;
-					return !LocalDate.parse(value).isBefore(LocalDate.now());
+					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
+					return !localDate.isBefore(LocalDate.now());
 				})
 				.test(
 					"min-date",
@@ -74,7 +77,8 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 						),
 					(value) => {
 						if (!isValidDate(value) || !minDate) return true;
-						return !LocalDate.parse(value).isBefore(minDate);
+						const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
+						return !localDate.isBefore(minDate);
 					}
 				)
 				.test(
@@ -85,7 +89,8 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 						),
 					(value) => {
 						if (!isValidDate(value) || !maxDate) return true;
-						return !LocalDate.parse(value).isAfter(maxDate);
+						const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
+						return !localDate.isAfter(maxDate);
 					}
 				),
 			validation
