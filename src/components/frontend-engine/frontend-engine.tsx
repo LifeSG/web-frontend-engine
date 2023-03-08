@@ -129,8 +129,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 						const oldValue = oldFormValues[key];
 						const updatedValue = value[key];
 
-						console.log(key, oldValue, updatedValue);
-
 						if (oldValue !== updatedValue) {
 							clearErrors(key);
 						}
