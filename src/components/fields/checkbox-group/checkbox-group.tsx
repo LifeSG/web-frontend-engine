@@ -1,6 +1,8 @@
 import { Form } from "@lifesg/react-design-system/form";
 import without from "lodash/without";
 import React, { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
@@ -21,6 +23,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		onChange,
 	} = props;
 
+	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -47,6 +50,16 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
+
+	useDeepCompareEffect(() => {
+		const updatedValues = [];
+		options.forEach((option) => {
+			if (value?.includes(option.value)) {
+				updatedValues.push(option.value);
+			}
+		});
+		setValue(id, updatedValues);
+	}, [options]);
 
 	useEffect(() => {
 		setStateValue(value || []);

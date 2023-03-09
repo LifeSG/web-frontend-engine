@@ -1,6 +1,8 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { InputSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
@@ -20,6 +22,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 		onChange,
 	} = props;
 
+	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -30,6 +33,12 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 		setFieldValidationConfig(id, Yup.string(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
+
+	useDeepCompareEffect(() => {
+		if (!options.find((option) => option.value === value)) {
+			setValue(id, "");
+		}
+	}, [options]);
 
 	useEffect(() => {
 		setStateValue(value || "");
