@@ -5,12 +5,12 @@ import { ITextareaSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/TextArea",
+	title: "Field/Textarea",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>TextArea</Title>
+					<Title>Textarea</Title>
 					<Description>
 						A form element that renders a multi-line textarea component with optional suggestion pills
 					</Description>

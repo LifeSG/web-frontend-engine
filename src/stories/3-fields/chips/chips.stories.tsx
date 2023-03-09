@@ -126,8 +126,8 @@ WithValidation.args = {
 	},
 };
 
-export const WithTextArea = Template.bind({});
-WithTextArea.args = {
+export const WithTextarea = Template.bind({});
+WithTextarea.args = {
 	"chips-with-textarea": {
 		fieldType: "chips",
 		label: "Fruits",
@@ -140,8 +140,8 @@ WithTextArea.args = {
 	},
 };
 
-export const WithTextAreaValidation = Template.bind({});
-WithTextAreaValidation.args = {
+export const WithTextareaValidation = Template.bind({});
+WithTextareaValidation.args = {
 	"chips-with-textarea-validation": {
 		fieldType: "chips",
 		label: "Fruits",
@@ -154,8 +154,8 @@ WithTextAreaValidation.args = {
 	},
 };
 
-export const WithResizableTextArea = Template.bind({});
-WithResizableTextArea.args = {
+export const WithResizableTextarea = Template.bind({});
+WithResizableTextarea.args = {
 	"chips-with-textarea-resizable": {
 		fieldType: "chips",
 		label: "Fruits",
@@ -168,8 +168,8 @@ WithResizableTextArea.args = {
 	},
 };
 
-export const WithTextAreaCustomRows = Template.bind({});
-WithTextAreaCustomRows.args = {
+export const WithTextareaCustomRows = Template.bind({});
+WithTextareaCustomRows.args = {
 	"chips-with-textarea-custom-rows": {
 		fieldType: "chips",
 		label: "Fruits",
@@ -182,8 +182,8 @@ WithTextAreaCustomRows.args = {
 	},
 };
 
-export const WithTextAreaMaxLength = Template.bind({});
-WithTextAreaMaxLength.args = {
+export const WithTextareaMaxLength = Template.bind({});
+WithTextareaMaxLength.args = {
 	"chips-with-textarea-max-length": {
 		fieldType: "chips",
 		label: "Fruits",

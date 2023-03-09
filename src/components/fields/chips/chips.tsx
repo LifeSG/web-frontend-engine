@@ -7,7 +7,7 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Chip, ERROR_MESSAGES } from "../../shared";
-import { ITextareaSchema, TextArea } from "../textarea";
+import { ITextareaSchema, Textarea } from "../textarea";
 import { ChipContainer } from "./chips.styles";
 import { IChipsSchema } from "./types";
 
@@ -25,7 +25,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
-	const [showTextArea, setShowTextArea] = useState<boolean>(false);
+	const [showTextarea, setShowTextarea] = useState(false);
 	const [multi, setMulti] = useState(true);
 	const { control } = useFormContext();
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
@@ -72,8 +72,8 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		return stateValue.includes(text);
 	};
 
-	const getTextAreaId = () => {
-		return `chips-${kebabCase(textarea.label)}`;
+	const getTextareaId = () => {
+		return `${id}-textarea`;
 	};
 
 	// =============================================================================
@@ -101,9 +101,9 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	const handleTextareaChipClick = (name: string) => {
 		handleChange(name);
-		setShowTextArea((prevState) => {
+		setShowTextarea((prevState) => {
 			if (prevState) {
-				removeFieldValidationConfig(getTextAreaId());
+				removeFieldValidationConfig(getTextareaId());
 			}
 			return !prevState;
 		});
@@ -125,7 +125,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		));
 	};
 
-	const renderTextAreaChip = (): JSX.Element => {
+	const renderTextareaChip = (): JSX.Element => {
 		const textareaLabel = textarea?.label;
 		if (!textarea && !textareaLabel) {
 			return;
@@ -141,27 +141,27 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		);
 	};
 
-	const renderTextArea = (): JSX.Element => {
+	const renderTextarea = (): JSX.Element => {
 		const textareaLabel = textarea?.label;
 		if (!textarea && !textareaLabel) {
 			return;
 		}
 
-		const textAreaId = getTextAreaId();
+		const textareaId = getTextareaId();
 		const schema: ITextareaSchema = {
 			fieldType: "textarea",
 			label,
 			...textarea,
 		};
 		return (
-			showTextArea && (
+			showTextarea && (
 				<Controller
 					control={control}
-					name={textAreaId}
+					name={textareaId}
 					shouldUnregister={true}
 					render={({ field, fieldState }) => {
-						const fieldProps = { ...field, id: textAreaId, ref: undefined };
-						return <TextArea schema={schema} {...fieldProps} {...fieldState} />;
+						const fieldProps = { ...field, id: textareaId, ref: undefined };
+						return <Textarea schema={schema} {...fieldProps} {...fieldState} />;
 					}}
 				/>
 			)
@@ -172,9 +172,9 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		<Form.CustomField label={label} errorMessage={error?.message} {...otherProps}>
 			<ChipContainer data-testid={TestHelper.generateId(id, "chips")}>
 				{renderChips()}
-				{renderTextAreaChip()}
+				{renderTextareaChip()}
 			</ChipContainer>
-			{renderTextArea()}
+			{renderTextarea()}
 		</Form.CustomField>
 	);
 };
