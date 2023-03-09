@@ -240,6 +240,26 @@ GetValues.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
+export const SetValue: Story<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const handleClick = () => {
+		ref.current.setValue("name", "Erik");
+	};
+
+	return (
+		<>
+			<FrontendEngine data={DATA} ref={ref} />
+			<br />
+			<Button.Default styleType="secondary" onClick={handleClick}>
+				Update name to Erik
+			</Button.Default>
+		</>
+	);
+};
+SetValue.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
 export const CheckIsValid: Story<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {

@@ -1,4 +1,4 @@
-import { ControllerFieldState, ControllerRenderProps, ValidationMode } from "react-hook-form";
+import { ControllerFieldState, ControllerRenderProps, UseFormSetValue, ValidationMode } from "react-hook-form";
 import { IAlertSchema, ITextSchema } from "../elements";
 import { IWrapperSchema } from "../elements/wrapper";
 import {
@@ -79,6 +79,8 @@ export type TErrorPayload = Record<string, TErrorMessage>;
 export interface IFrontendEngineRef extends HTMLFormElement {
 	/** gets form values */
 	getValues: () => TFrontendEngineValues;
+	/** set field value by id */
+	setValue: UseFormSetValue<TFrontendEngineValues>;
 	/** check if form is valid */
 	isValid: () => boolean;
 	/** triggers form submission */
