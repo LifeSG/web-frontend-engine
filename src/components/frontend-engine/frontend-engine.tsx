@@ -1,11 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle } from "react";
+import isEmpty from "lodash/isEmpty";
+import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
-import { TestHelper } from "../../utils";
+import { ObjectHelper, TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
 import { Wrapper } from "../elements/wrapper";
-import { IFrontendEngineProps, IFrontendEngineRef, TFrontendEngineValues } from "./types";
+import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
@@ -38,7 +39,18 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			return await yupResolver(hardValidationSchema)(data, context, options);
 		},
 	});
-	const { reset, watch, handleSubmit: reactFormHookSubmit, getValues } = formMethods;
+
+	const {
+		reset,
+		watch,
+		handleSubmit: reactFormHookSubmit,
+		getValues,
+		setError,
+		formState,
+		clearErrors,
+	} = formMethods;
+
+	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -48,6 +60,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		isValid: checkIsFormValid,
 		submit: reactFormHookSubmit(handleSubmit),
 		addCustomValidation: YupHelper.addCondition,
+		setErrors,
 	}));
 
 	const checkIsFormValid = useCallback(() => {
@@ -63,6 +76,29 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		onSubmit?.(data);
 	};
 
+	// NOTE: Wrapper component contains nested fields
+	const setErrors = (errors: TErrorPayload): void => {
+		Object.entries(errors).forEach(([key, value]) => {
+			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(fields, key);
+
+			if (!isValidFieldKey) {
+				return;
+			}
+
+			if (Array.isArray(value)) {
+				setError(key, { type: "api", message: value[0] });
+			} else if (typeof value === "object") {
+				setErrors(value as TErrorPayload);
+			} else {
+				const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
+				const errorMessage = Object.values(errorObject)[0];
+				const fieldKey = Object.keys(errorObject)[0];
+
+				setError(fieldKey, { type: "api", message: errorMessage as string });
+			}
+		});
+	};
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -74,7 +110,38 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 			return () => subscription.unsubscribe();
 		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [checkIsFormValid, onChange, watch]);
+
+	useEffect(() => {
+		const errors = formState.errors;
+
+		if (errors && !isEmpty(errors)) {
+			const subscription = watch((value) => {
+				const apiErrors = Object.fromEntries(
+					Object.entries(formState.errors).filter(([_, value]) => value.type === "api")
+				);
+				const hasApiErrors = apiErrors && !isEmpty(apiErrors);
+
+				if (hasApiErrors) {
+					Object.keys(apiErrors).forEach((key) => {
+						const oldValue = oldFormValues[key];
+						const updatedValue = value[key];
+
+						if (oldValue !== updatedValue) {
+							clearErrors(key);
+						}
+					});
+				}
+
+				setOldFormValues(value);
+			});
+
+			return () => subscription.unsubscribe();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [formState, watch]);
 
 	useDeepCompareEffectNoCheck(() => {
 		reset({ ...defaultValues, ...getValues() });

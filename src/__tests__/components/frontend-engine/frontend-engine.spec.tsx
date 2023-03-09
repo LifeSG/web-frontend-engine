@@ -16,6 +16,8 @@ import {
 const fieldType = "text";
 const fieldOneId = "field1";
 const fieldOneLabel = "Field 1";
+const fieldTwoId = "field2";
+const fieldTwoLabel = "Field 2";
 const customButtonLabel = "custom button";
 const componentTestId = TestHelper.generateId(FRONTEND_ENGINE_ID, "frontend-engine");
 
@@ -34,8 +36,33 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
+const NESTED_JSON_SCHEMA: IFrontendEngineData = {
+	id: FRONTEND_ENGINE_ID,
+	fields: {
+		[fieldOneId]: {
+			fieldType: "div",
+			children: {
+				header: {
+					fieldType: "h6",
+					children: "Fill in your name below",
+				},
+				[fieldTwoId]: {
+					label: fieldTwoLabel,
+					fieldType,
+					validation: [{ required: true }],
+				},
+				...getSubmitButtonProps(),
+			},
+		},
+	},
+};
+
 const getFieldOne = (): HTMLElement => {
 	return getField("textbox", fieldOneLabel);
+};
+
+const getFieldTwo = (): HTMLElement => {
+	return getField("textbox", fieldTwoLabel);
 };
 
 const getCustomSubmitButton = (): HTMLElement => {
@@ -45,13 +72,14 @@ const getCustomSubmitButton = (): HTMLElement => {
 const FrontendEngineWithCustomButton = (props: {
 	onSubmit?: () => void;
 	onClick: (ref: React.MutableRefObject<IFrontendEngineRef>) => void;
+	isNested?: boolean;
 }) => {
-	const { onSubmit, onClick } = props;
+	const { onSubmit, onClick, isNested } = props;
 	const ref = useRef<IFrontendEngineRef>();
 
 	return (
 		<>
-			<FrontendEngine data={JSON_SCHEMA} ref={ref} onSubmit={onSubmit} />
+			<FrontendEngine data={isNested ? NESTED_JSON_SCHEMA : JSON_SCHEMA} ref={ref} onSubmit={onSubmit} />
 			<button type="button" onClick={() => onClick(ref)}>
 				{customButtonLabel}
 			</button>
@@ -186,6 +214,85 @@ describe("frontend-engine", () => {
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(getErrorMessage(true)).not.toBeInTheDocument();
+	});
+
+	describe("setErrors", () => {
+		const handleClickDefault = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			try {
+				throw new Error("API error");
+			} catch (error) {
+				ref.current.setErrors({
+					[fieldOneId]: ERROR_MESSAGE,
+				});
+			}
+		};
+
+		const handleClickArray = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			try {
+				throw new Error("API error");
+			} catch (error) {
+				ref.current.setErrors({
+					[fieldOneId]: [ERROR_MESSAGE],
+				});
+			}
+		};
+
+		const handleClickNested = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			try {
+				throw new Error("API error");
+			} catch (error) {
+				ref.current.setErrors({
+					[fieldOneId]: {
+						[fieldTwoId]: ERROR_MESSAGE,
+					},
+				});
+			}
+		};
+
+		it("should support setting of custom errors", async () => {
+			render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
+			await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+
+			expect(getFieldOne().nextSibling.textContent).toMatch(ERROR_MESSAGE);
+		});
+
+		it("should support setting of custom errors for nested fields", async () => {
+			render(<FrontendEngineWithCustomButton onClick={handleClickNested} isNested />);
+			await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+
+			expect(getFieldTwo().nextSibling.textContent).toMatch(ERROR_MESSAGE);
+		});
+
+		it("should clear the error message related to API when the user edits the field", async () => {
+			render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
+			await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+
+		describe("errorMessage type", () => {
+			it.each`
+				type        | onClick
+				${"string"} | ${handleClickDefault}
+				${"array"}  | ${handleClickArray}
+			`("should suppport error message of $type type", async ({ type, onClick }) => {
+				switch (type) {
+					case "string":
+						render(<FrontendEngineWithCustomButton onClick={onClick} />);
+						break;
+					case "array":
+						render(<FrontendEngineWithCustomButton onClick={onClick} />);
+						break;
+				}
+				await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			});
+		});
 	});
 
 	describe("validationMode", () => {
