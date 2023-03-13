@@ -8,19 +8,20 @@ import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { IDateInputSchema } from "./types";
 
+const DEFAULT_DATE_FORMAT = "uuuu-MM-dd";
 export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, useCurrentDate, dateFormat = "uuuu-MM-dd", validation, ...otherSchema },
+		schema: { label, useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, validation, ...otherSchema },
 		id,
 		onChange,
 		value,
 		error,
 		...otherProps
 	} = props;
-	const [stateValue, setStateValue] = useState<string>(value || ""); // adheres to dateFormat
+	const [stateValue, setStateValue] = useState<string>(value || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
@@ -110,11 +111,21 @@ export const DateInput = (props: IGenericFieldProps<IDateInputSchema>) => {
 		if (useCurrentDate && !value) {
 			const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
 			onChange({ target: { value: currentDate } });
-			setStateValue(currentDate);
+
+			const inputDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), DEFAULT_DATE_FORMAT, "date");
+			setStateValue(inputDate);
 		} else if (!isValidDate(value)) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
-			setStateValue(value);
+			const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date"); // convert to LocalDate first to parse defaultValue
+			setStateValue(
+				DateTimeHelper.formatDateTime(
+					localDate?.toString(),
+					DEFAULT_DATE_FORMAT,
+					"date",
+					ERROR_MESSAGES.DATE.INVALID
+				)
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [useCurrentDate, value, dateFormat]);
