@@ -1,7 +1,8 @@
 import { LocalDate } from "@js-joda/core";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IDateInputSchema } from "../../../../components/fields";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
@@ -88,31 +89,51 @@ describe(fieldType, () => {
 		);
 	});
 
-	it("should support other date formats", async () => {
-		renderComponent({ dateFormat: "d MMMM uuuu" });
-		fireEvent.change(getDayInput(), { target: { value: "01" } });
-		fireEvent.change(getMonthInput(), { target: { value: "01" } });
-		fireEvent.change(getYearInput(), { target: { value: "2022" } });
+	describe("dateFormat", () => {
+		describe.each`
+			dateFormat       | value
+			${"d MMMM uuuu"} | ${"25 January 2022"}
+			${"MM-d-uu"}     | ${"01-25-22"}
+			${"d/M/uuuu"}    | ${"25/1/2022"}
+			${"uuuu MMM dd"} | ${"2022 Jan 25"}
+		`("$dateFormat", ({ dateFormat, value }) => {
+			it("should support date format", async () => {
+				renderComponent({ dateFormat });
+				fireEvent.change(getDayInput(), { target: { value: "25" } });
+				fireEvent.change(getMonthInput(), { target: { value: "01" } });
+				fireEvent.change(getYearInput(), { target: { value: "2022" } });
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalledWith(
-			expect.objectContaining({
-				[componentId]: "1 January 2022",
-			})
-		);
-	});
+				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+			});
 
-	it("should accept defaultValue in the format as defined by dateFormat", async () => {
-		renderComponent({ dateFormat: "d MMMM uuuu" }, { defaultValues: { [componentId]: "1 January 2022" } });
+			it("should format current date accordingly if useCurrentDate=true", async () => {
+				const date = "2022-01-25";
+				jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse(date));
+				renderComponent({ dateFormat, useCurrentDate: true });
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalledWith(
-			expect.objectContaining({
-				[componentId]: "1 January 2022",
-			})
-		);
+				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+			});
+
+			it("should accept defaultValue in the format as defined by dateFormat", async () => {
+				renderComponent({ dateFormat }, { defaultValues: { [componentId]: value } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+			});
+
+			it("should reject defaultValue if it did not follow dateFormat", async () => {
+				renderComponent({ dateFormat }, { defaultValues: { [componentId]: "2022-01-25" } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(screen.getByText(ERROR_MESSAGES.DATE.INVALID)).toBeInTheDocument();
+			});
+		});
 	});
 
 	it("should support validation schema", async () => {
