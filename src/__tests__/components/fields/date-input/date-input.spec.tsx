@@ -1,7 +1,8 @@
 import { LocalDate } from "@js-joda/core";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IDateInputSchema } from "../../../../components/fields";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
@@ -88,31 +89,51 @@ describe(fieldType, () => {
 		);
 	});
 
-	it("should support other date formats", async () => {
-		renderComponent({ dateFormat: "d MMMM uuuu" });
-		fireEvent.change(getDayInput(), { target: { value: "01" } });
-		fireEvent.change(getMonthInput(), { target: { value: "01" } });
-		fireEvent.change(getYearInput(), { target: { value: "2022" } });
+	describe("dateFormat", () => {
+		describe.each`
+			dateFormat       | value
+			${"d MMMM uuuu"} | ${"25 January 2022"}
+			${"MM-d-uu"}     | ${"01-25-22"}
+			${"d/M/uuuu"}    | ${"25/1/2022"}
+			${"uuuu MMM dd"} | ${"2022 Jan 25"}
+		`("$dateFormat", ({ dateFormat, value }) => {
+			it("should support date format", async () => {
+				renderComponent({ dateFormat });
+				fireEvent.change(getDayInput(), { target: { value: "25" } });
+				fireEvent.change(getMonthInput(), { target: { value: "01" } });
+				fireEvent.change(getYearInput(), { target: { value: "2022" } });
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalledWith(
-			expect.objectContaining({
-				[componentId]: "1 January 2022",
-			})
-		);
-	});
+				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+			});
 
-	it("should accept defaultValue in the format as defined by dateFormat", async () => {
-		renderComponent({ dateFormat: "d MMMM uuuu" }, { defaultValues: { [componentId]: "1 January 2022" } });
+			it("should format current date accordingly if useCurrentDate=true", async () => {
+				const date = "2022-01-25";
+				jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse(date));
+				renderComponent({ dateFormat, useCurrentDate: true });
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalledWith(
-			expect.objectContaining({
-				[componentId]: "1 January 2022",
-			})
-		);
+				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+			});
+
+			it("should accept defaultValue in the format as defined by dateFormat", async () => {
+				renderComponent({ dateFormat }, { defaultValues: { [componentId]: value } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+			});
+
+			it("should reject defaultValue if it did not follow dateFormat", async () => {
+				renderComponent({ dateFormat }, { defaultValues: { [componentId]: "2022-01-25" } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(screen.getByText(ERROR_MESSAGES.DATE.INVALID)).toBeInTheDocument();
+			});
+		});
 	});
 
 	it("should support validation schema", async () => {
@@ -123,7 +144,7 @@ describe(fieldType, () => {
 		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
-	it.each`
+	describe.each`
 		condition       | config                       | invalid                 | valid
 		${"future"}     | ${{ future: true }}          | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
 		${"past"}       | ${{ past: true }}            | ${["01", "01", "2022"]} | ${["12", "31", "2021"]}
@@ -131,22 +152,49 @@ describe(fieldType, () => {
 		${"non-past"}   | ${{ notPast: true }}         | ${["31", "12", "2021"]} | ${["01", "01", "2022"]}
 		${"min-date"}   | ${{ minDate: "2022-01-02" }} | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
 		${"max-date"}   | ${{ maxDate: "2022-01-02" }} | ${["03", "01", "2022"]} | ${["02", "01", "2022"]}
-	`("should be able to validate for $condition dates", async ({ config, invalid, valid }) => {
-		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
-		renderComponent({ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] });
-
-		fireEvent.change(getDayInput(), { target: { value: invalid[0] } });
-		fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
-		fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
-
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(getErrorMessage()).toBeInTheDocument();
-
-		await waitFor(() => {
-			fireEvent.change(getDayInput(), { target: { value: valid[0] } });
-			fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
-			fireEvent.change(getYearInput(), { target: { value: valid[2] } });
+	`("$condition validation", ({ condition, config, invalid, valid }) => {
+		beforeEach(() => {
+			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
 		});
-		expect(getErrorMessage(true)).not.toBeInTheDocument();
+
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		it(`should be able to validate for ${condition} dates`, async () => {
+			renderComponent({ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] });
+
+			fireEvent.change(getDayInput(), { target: { value: invalid[0] } });
+			fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
+			fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			await waitFor(() => {
+				fireEvent.change(getDayInput(), { target: { value: valid[0] } });
+				fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
+				fireEvent.change(getYearInput(), { target: { value: valid[2] } });
+			});
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+
+		it(`should be able to validate for ${condition} dates for a different date format`, async () => {
+			renderComponent({ validation: [{ errorMessage: ERROR_MESSAGE, dateFormat: "d MMMM uuuu", ...config }] });
+
+			fireEvent.change(getDayInput(), { target: { value: invalid[0] } });
+			fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
+			fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			await waitFor(() => {
+				fireEvent.change(getDayInput(), { target: { value: valid[0] } });
+				fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
+				fireEvent.change(getYearInput(), { target: { value: valid[2] } });
+			});
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
 	});
 });
