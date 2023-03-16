@@ -52,12 +52,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	}, [validation]);
 
 	useDeepCompareEffect(() => {
-		const updatedValues = [];
-		options.forEach((option) => {
-			if (value?.includes(option.value)) {
-				updatedValues.push(option.value);
-			}
-		});
+		const updatedValues = value?.filter((v) => options.find((option) => option.value === v));
 		setValue(id, updatedValues);
 	}, [options]);
 
