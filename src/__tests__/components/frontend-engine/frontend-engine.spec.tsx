@@ -65,7 +65,7 @@ const getFieldTwo = (): HTMLElement => {
 	return getField("textbox", fieldTwoLabel);
 };
 
-const getCustomSubmitButton = (): HTMLElement => {
+const getCustomButton = (): HTMLElement => {
 	return screen.getByRole("button", { name: customButtonLabel });
 };
 
@@ -146,9 +146,22 @@ describe("frontend-engine", () => {
 		render(<FrontendEngineWithCustomButton onClick={handleClick} />);
 
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-		fireEvent.click(getCustomSubmitButton());
+		fireEvent.click(getCustomButton());
 
 		expect(formValues?.[fieldOneId]).toBe("hello");
+	});
+
+	it("should update field value through setValue method", async () => {
+		const onSubmit = jest.fn();
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			ref.current.setValue(fieldOneId, "hello");
+		};
+		render(<FrontendEngineWithCustomButton onClick={handleClick} onSubmit={onSubmit} />);
+
+		fireEvent.click(getCustomButton());
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(onSubmit).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hello" }));
 	});
 
 	it("should return form validity through checkValid method", async () => {
@@ -158,11 +171,11 @@ describe("frontend-engine", () => {
 		};
 		render(<FrontendEngineWithCustomButton onClick={handleClick} />);
 
-		fireEvent.click(getCustomSubmitButton());
+		fireEvent.click(getCustomButton());
 		expect(isValid).toBe(false);
 
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-		fireEvent.click(getCustomSubmitButton());
+		fireEvent.click(getCustomButton());
 		expect(isValid).toBe(true);
 	});
 
@@ -172,7 +185,7 @@ describe("frontend-engine", () => {
 		render(<FrontendEngineWithCustomButton onSubmit={submitFn} onClick={handleClick} />);
 
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+		await waitFor(() => fireEvent.click(getCustomButton()));
 
 		expect(submitFn).toBeCalled();
 	});
@@ -251,21 +264,21 @@ describe("frontend-engine", () => {
 
 		it("should support setting of custom errors", async () => {
 			render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
-			await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+			await waitFor(() => fireEvent.click(getCustomButton()));
 
 			expect(getFieldOne().nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
 		it("should support setting of custom errors for nested fields", async () => {
 			render(<FrontendEngineWithCustomButton onClick={handleClickNested} isNested />);
-			await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+			await waitFor(() => fireEvent.click(getCustomButton()));
 
 			expect(getFieldTwo().nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
 		it("should clear the error message related to API when the user edits the field", async () => {
 			render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
-			await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+			await waitFor(() => fireEvent.click(getCustomButton()));
 
 			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 
@@ -286,7 +299,7 @@ describe("frontend-engine", () => {
 						render(<FrontendEngineWithCustomButton onClick={onClick} />);
 						break;
 				}
-				await waitFor(() => fireEvent.click(getCustomSubmitButton()));
+				await waitFor(() => fireEvent.click(getCustomButton()));
 
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 
