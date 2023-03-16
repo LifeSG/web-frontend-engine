@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import isEmpty from "lodash/isEmpty";
-import { forwardRef, ReactElement, Ref, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
@@ -45,6 +45,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		watch,
 		handleSubmit: reactFormHookSubmit,
 		getValues,
+		setValue,
 		setError,
 		formState,
 		clearErrors,
@@ -57,6 +58,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// =============================================================================
 	useImperativeHandle<Partial<IFrontendEngineRef>, Partial<IFrontendEngineRef>>(ref, () => ({
 		getValues,
+		setValue,
 		isValid: checkIsFormValid,
 		submit: reactFormHookSubmit(handleSubmit),
 		addCustomValidation: YupHelper.addCondition,

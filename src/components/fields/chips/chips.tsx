@@ -2,6 +2,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import kebabCase from "lodash/kebabCase";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
@@ -27,7 +28,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextarea, setShowTextarea] = useState(false);
 	const [multi, setMulti] = useState(true);
-	const { control } = useFormContext();
+	const { control, setValue } = useFormContext();
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
@@ -60,6 +61,11 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
+
+	useDeepCompareEffect(() => {
+		const updatedValues = value?.filter((v) => options.find((option) => option.value === v));
+		setValue(id, updatedValues);
+	}, [options]);
 
 	useEffect(() => {
 		setStateValue(value || []);
