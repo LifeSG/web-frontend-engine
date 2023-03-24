@@ -43,12 +43,12 @@ Filled.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }] }],
 		validation: [{ required: true }],
 	},
@@ -63,12 +63,12 @@ Empty.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ empty: true }] }],
 		validation: [{ required: true }],
 	},
@@ -93,7 +93,7 @@ Equals.args = {
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ equals: "Apple" }] }],
 		validation: [{ required: true }],
 	},
@@ -118,7 +118,7 @@ NotEquals.args = {
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { notEquals: "Apple" }] }],
 		validation: [{ required: true }],
 	},
@@ -134,17 +134,17 @@ AndConditions.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field3: {
 		label: "Field 3",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }], field2: [{ filled: true }] }],
 		validation: [{ required: true }],
 	},
@@ -159,17 +159,17 @@ OrConditions.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field3: {
 		label: "Field 3",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }] }, { field2: [{ filled: true }] }],
 		validation: [{ required: true }],
 	},

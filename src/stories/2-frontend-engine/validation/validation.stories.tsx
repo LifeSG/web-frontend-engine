@@ -91,12 +91,12 @@ SoftValidation.args = {
 		fields: {
 			name: {
 				label: "What is your name",
-				uiType: "text",
+				uiType: "text-field",
 				validation: [{ required: true }, { max: 5, soft: true, errorMessage: "Maximum length of 5" }],
 			},
 			email: {
 				label: "Email address",
-				uiType: "email",
+				uiType: "email-field",
 				validation: [{ required: true }],
 			},
 			sex: {

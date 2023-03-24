@@ -1,16 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
-import { INumberSchema } from "../../../components/fields";
+import { IEmailFieldSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/Numeric",
+	title: "Field/EmailField",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>Numeric</Title>
+					<Title>EmailField</Title>
 					<Description>A form element that contains a label, input and error message</Description>
 					<Heading>Props</Heading>
 					<Description>
@@ -26,7 +26,7 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("numeric"),
+		...CommonFieldStoryProps("email-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -54,15 +54,15 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, INumberSchema>> = (args) => (
+const Template: Story<Record<string, IEmailFieldSchema>> = (args) => (
 	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
-	"numeric-default": {
-		label: "Number",
-		uiType: "numeric",
+	"email-default": {
+		label: "Email",
+		uiType: "email-field",
 	},
 };
 
@@ -70,14 +70,14 @@ export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"numeric-default-value": {
-					label: "Number",
-					uiType: "numeric",
+				"email-default-value": {
+					label: "Email",
+					uiType: "email-field",
 				},
 				...SubmitButtonStorybook,
 			},
 			defaultValues: {
-				"numeric-default-value": 1,
+				"email-default-value": "default@domain.tld",
 			},
 		}}
 	/>
@@ -86,36 +86,45 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"numeric-disabled": {
-		label: "Number",
-		uiType: "numeric",
+	"email-disabled": {
+		label: "Email",
+		uiType: "email-field",
 		disabled: true,
+	},
+};
+
+export const CustomErrorMessage = Template.bind({});
+CustomErrorMessage.args = {
+	"email-email-error": {
+		label: "Email",
+		uiType: "email-field",
+		validation: [{ email: true, errorMessage: "Please use a valid email" }],
 	},
 };
 
 export const MaxLength = Template.bind({});
 MaxLength.args = {
-	"numeric-maxlength": {
-		label: "Number",
-		uiType: "numeric",
-		maxLength: 2,
+	"textfield-maxlength": {
+		label: "Email",
+		uiType: "email-field",
+		validation: [{ max: 5 }],
 	},
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"numeric-placeholder": {
-		label: "Number",
-		uiType: "numeric",
-		placeholder: "Enter a number",
+	"email-placeholder": {
+		label: "Email",
+		uiType: "email-field",
+		placeholder: "Enter an email",
 	},
 };
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"numeric-with-validation": {
-		label: "Number",
-		uiType: "numeric",
+	"email-with-validation": {
+		label: "Email",
+		uiType: "email-field",
 		validation: [{ required: true }],
 	},
 };

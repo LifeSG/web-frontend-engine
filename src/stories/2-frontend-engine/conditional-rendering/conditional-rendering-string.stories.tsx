@@ -39,12 +39,12 @@ MinCharacters.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { min: 5 }] }],
 		validation: [{ required: true }],
 	},
@@ -59,12 +59,12 @@ MaxCharacters.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { max: 5 }] }],
 		validation: [{ required: true }],
 	},
@@ -79,12 +79,12 @@ Matches.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { matches: "/^(hello)/" }] }],
 		validation: [{ required: true }],
 	},
@@ -99,12 +99,12 @@ Email.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "email",
+		uiType: "email-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { email: true }] }],
 		validation: [{ required: true }],
 	},
@@ -119,12 +119,12 @@ Url.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { url: true }] }],
 		validation: [{ required: true }],
 	},
@@ -139,12 +139,12 @@ Uuid.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "text",
+		uiType: "text-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { uuid: true }] }],
 		validation: [{ required: true }],
 	},

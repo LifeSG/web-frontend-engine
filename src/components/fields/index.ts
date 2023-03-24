@@ -7,5 +7,5 @@ export * from "./radio-button";
 export * from "./select";
 export * from "./submit-button";
 export * from "./textarea";
-export * from "./textfield";
+export * from "./text-field";
 export * from "./time-picker";

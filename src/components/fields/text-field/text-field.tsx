@@ -6,9 +6,9 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
-import { IEmailSchema, INumberSchema, ITextfieldSchema } from "./types";
+import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./types";
 
-export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSchema | INumberSchema>) => {
+export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFieldSchema | INumericFieldSchema>) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
@@ -30,7 +30,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 	// ================================================
 	useEffect(() => {
 		switch (uiType) {
-			case "numeric": {
+			case "numeric-field": {
 				setFieldValidationConfig(id, Yup.number(), validation);
 				const minRule = validation?.find((rule) => "min" in rule);
 				const maxRule = validation?.find((rule) => "max" in rule);
@@ -44,7 +44,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 				setDerivedAttributes(attributes);
 				break;
 			}
-			case "email": {
+			case "email-field": {
 				const emailRule = validation?.find((rule) => rule.email);
 				setFieldValidationConfig(
 					id,
@@ -63,7 +63,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 				setDerivedAttributes(attributes);
 				break;
 			}
-			case "text": {
+			case "text-field": {
 				setFieldValidationConfig(id, Yup.string(), validation);
 
 				const maxRule = validation?.find((rule) => "max" in rule);
@@ -101,11 +101,11 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 		if (inputMode) return inputMode;
 
 		switch (uiType) {
-			case "numeric":
+			case "numeric-field":
 				return "numeric";
-			case "email":
+			case "email-field":
 				return "email";
-			case "text":
+			case "text-field":
 				return "text";
 			default:
 				return "none";

@@ -9,7 +9,7 @@ import { FRONTEND_ENGINE_ID, getSubmitButtonProps } from "../../../common";
 const parentId = "wrapper";
 const parentFieldType = "div";
 const childId = "field1";
-const childFieldType = "text";
+const childFieldType = "text-field";
 const childTestId = TestHelper.generateId(childId, childFieldType);
 
 const renderComponent = (

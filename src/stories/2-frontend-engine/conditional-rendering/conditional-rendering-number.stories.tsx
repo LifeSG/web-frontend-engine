@@ -39,12 +39,12 @@ Min.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "numeric",
+		uiType: "numeric-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { min: 5 }] }],
 		validation: [{ required: true }],
 	},
@@ -59,12 +59,12 @@ Max.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "numeric",
+		uiType: "numeric-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { max: 5 }] }],
 		validation: [{ required: true }],
 	},
@@ -79,12 +79,12 @@ LessThan.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "numeric",
+		uiType: "numeric-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { lessThan: 5 }] }],
 		validation: [{ required: true }],
 	},
@@ -99,12 +99,12 @@ MoreThan.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "numeric",
+		uiType: "numeric-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { moreThan: 5 }] }],
 		validation: [{ required: true }],
 	},
@@ -119,12 +119,12 @@ Positive.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "numeric",
+		uiType: "numeric-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { positive: true }] }],
 		validation: [{ required: true }],
 	},
@@ -139,12 +139,12 @@ Negative.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "numeric",
+		uiType: "numeric-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { negative: true }] }],
 		validation: [{ required: true }],
 	},
@@ -159,12 +159,12 @@ Integer.args = {
 	},
 	field1: {
 		label: "Field 1",
-		uiType: "numeric",
+		uiType: "numeric-field",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		uiType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { integer: true }] }],
 		validation: [{ required: true }],
 	},

@@ -1,14 +1,14 @@
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
-export interface ITextfieldSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"text", V>,
+export interface ITextFieldSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"text-field", V>,
 		TComponentOmitProps<FormInputProps, "type" | "maxLength"> {}
 
-export interface IEmailSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"email", V>,
+export interface IEmailFieldSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"email-field", V>,
 		TComponentOmitProps<FormInputProps, "type" | "maxLength"> {}
 
-export interface INumberSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"numeric", V>,
+export interface INumericFieldSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"numeric-field", V>,
 		TComponentOmitProps<FormInputProps, "type" | "max" | "min"> {}

@@ -13,7 +13,7 @@ import {
 	getSubmitButtonProps,
 } from "../../common";
 
-const uiType = "text";
+const uiType = "text-field";
 const fieldOneId = "field1";
 const fieldOneLabel = "Field 1";
 const fieldTwoId = "field2";

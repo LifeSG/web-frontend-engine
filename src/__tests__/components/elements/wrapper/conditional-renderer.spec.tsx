@@ -56,7 +56,7 @@ describe("conditional-renderer", () => {
 		${"url"}       | ${{ url: true }}             | ${"hello"} | ${"https://domain.tld"}
 		${"uuid"}      | ${{ uuid: true }}            | ${"hello"} | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"}
 	`("should support $condition condition for string conditional rendering", ({ config, invalid, valid }) => {
-		const uiType = "text";
+		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
@@ -91,7 +91,7 @@ describe("conditional-renderer", () => {
 		${"negative"}  | ${{ negative: true }} | ${1}    | ${-1}
 		${"integer"}   | ${{ integer: true }}  | ${1.1}  | ${1}
 	`("should support $condition condition for number conditional rendering", ({ config, invalid, valid }) => {
-		const uiType = "numeric";
+		const uiType = "numeric-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
@@ -126,7 +126,7 @@ describe("conditional-renderer", () => {
 		${"excludes (array)"}  | ${{ excludes: ["Berry", "Cherry"] }} | ${["Apple", "Berry"]}           | ${["Apple"]}
 	`("should support $condition condition for array conditional rendering", ({ config, invalid, valid }) => {
 		const fieldOneType = "multi-select";
-		const fieldTwoType = "text";
+		const fieldTwoType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
@@ -161,7 +161,7 @@ describe("conditional-renderer", () => {
 	});
 
 	it("should support AND conditions", () => {
-		const uiType = "text";
+		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
@@ -189,7 +189,7 @@ describe("conditional-renderer", () => {
 	});
 
 	it("should support OR conditions", () => {
-		const uiType = "text";
+		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
@@ -218,7 +218,7 @@ describe("conditional-renderer", () => {
 	});
 
 	it("should remove validation schema for fields that are conditionally hidden", async () => {
-		const uiType = "text";
+		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
@@ -248,7 +248,7 @@ describe("conditional-renderer", () => {
 	});
 
 	it("should not submit fields that are conditionally hidden", async () => {
-		const uiType = "text";
+		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,

@@ -1,16 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
-import { ITextfieldSchema } from "../../../components/fields";
+import { INumericFieldSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/TextField",
+	title: "Field/NumericField",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>TextField</Title>
+					<Title>NumericField</Title>
 					<Description>A form element that contains a label, input and error message</Description>
 					<Heading>Props</Heading>
 					<Description>
@@ -26,20 +26,7 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("text"),
-		uiType: {
-			description: `Use <code>text</code> or <code>email</code> or <code>numeric</code> to show this field`,
-			table: {
-				type: {
-					summary: "text|email|numeric",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["text", "email", "numeric"],
-			control: {
-				type: "select",
-			},
-		},
+		...CommonFieldStoryProps("numeric-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -67,15 +54,15 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITextfieldSchema>> = (args) => (
+const Template: Story<Record<string, INumericFieldSchema>> = (args) => (
 	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
-	"text-default": {
-		label: "Textfield",
-		uiType: "text",
+	"numeric-default": {
+		label: "Number",
+		uiType: "numeric-field",
 	},
 };
 
@@ -83,14 +70,14 @@ export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"text-default-value": {
-					label: "Textfield",
-					uiType: "text",
+				"numeric-default-value": {
+					label: "Number",
+					uiType: "numeric-field",
 				},
 				...SubmitButtonStorybook,
 			},
 			defaultValues: {
-				"text-default-value": "This is the default value",
+				"numeric-default-value": 1,
 			},
 		}}
 	/>
@@ -99,36 +86,36 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-	"text-disabled": {
-		label: "Textfield",
-		uiType: "text",
+	"numeric-disabled": {
+		label: "Number",
+		uiType: "numeric-field",
 		disabled: true,
 	},
 };
 
 export const MaxLength = Template.bind({});
 MaxLength.args = {
-	"text-maxlength": {
-		label: "Textfield",
-		uiType: "text",
-		validation: [{ max: 5 }],
+	"numeric-maxlength": {
+		label: "Number",
+		uiType: "numeric-field",
+		maxLength: 2,
 	},
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-	"text-placeholder": {
-		label: "Textfield",
-		uiType: "text",
-		placeholder: "Enter text here",
+	"numeric-placeholder": {
+		label: "Number",
+		uiType: "numeric-field",
+		placeholder: "Enter a number",
 	},
 };
 
 export const WithValidation = Template.bind({});
 WithValidation.args = {
-	"text-with-validation": {
-		label: "Textfield",
-		uiType: "text",
+	"numeric-with-validation": {
+		label: "Number",
+		uiType: "numeric-field",
 		validation: [{ required: true }],
 	},
 };
