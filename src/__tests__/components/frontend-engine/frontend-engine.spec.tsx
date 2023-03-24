@@ -13,7 +13,7 @@ import {
 	getSubmitButtonProps,
 } from "../../common";
 
-const fieldType = "text";
+const uiType = "text";
 const fieldOneId = "field1";
 const fieldOneLabel = "Field 1";
 const fieldTwoId = "field2";
@@ -26,7 +26,7 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	fields: {
 		[fieldOneId]: {
 			label: fieldOneLabel,
-			fieldType,
+			uiType,
 			validation: [
 				{ required: true, errorMessage: ERROR_MESSAGE },
 				{ min: 2, errorMessage: ERROR_MESSAGE },
@@ -40,15 +40,15 @@ const NESTED_JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
 	fields: {
 		[fieldOneId]: {
-			fieldType: "div",
+			uiType: "div",
 			children: {
 				header: {
-					fieldType: "h6",
+					uiType: "h6",
 					children: "Fill in your name below",
 				},
 				[fieldTwoId]: {
 					label: fieldTwoLabel,
-					fieldType,
+					uiType,
 					validation: [{ required: true }],
 				},
 				...getSubmitButtonProps(),
@@ -210,7 +210,7 @@ describe("frontend-engine", () => {
 							...JSON_SCHEMA.fields,
 							[fieldOneId]: {
 								label: fieldOneLabel,
-								fieldType,
+								uiType,
 								validation: [{ mustBeHello: true, errorMessage: ERROR_MESSAGE }],
 							},
 						},

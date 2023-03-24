@@ -79,7 +79,7 @@ const Template: Story<Record<string, IAlertSchema>> = (args) => <FrontendEngine 
 export const Default = Template.bind({});
 Default.args = {
 	"alert-default": {
-		fieldType: "alert",
+		uiType: "alert",
 		type: "success",
 		children: "This is a success message",
 	},
@@ -88,7 +88,7 @@ Default.args = {
 export const Warning = Template.bind({});
 Warning.args = {
 	"alert-warning": {
-		fieldType: "alert",
+		uiType: "alert",
 		type: "warning",
 		children: "This is a warning message",
 	},
@@ -97,7 +97,7 @@ Warning.args = {
 export const Error = Template.bind({});
 Error.args = {
 	"alert-error": {
-		fieldType: "alert",
+		uiType: "alert",
 		type: "error",
 		children: "This is a error message",
 	},
@@ -106,7 +106,7 @@ Error.args = {
 export const ActionLink = Template.bind({});
 ActionLink.args = {
 	"alert-action-link": {
-		fieldType: "alert",
+		uiType: "alert",
 		type: "success",
 		children: "This contains an action link that redirects to another page",
 		actionLink: {
@@ -119,7 +119,7 @@ ActionLink.args = {
 export const ReactNodeChildren = Template.bind({});
 ReactNodeChildren.args = {
 	"alert-react-node": {
-		fieldType: "alert",
+		uiType: "alert",
 		type: "success",
 		children: (
 			<p>
@@ -135,7 +135,7 @@ ReactNodeChildren.args = {
 export const HTMLString = Template.bind({});
 HTMLString.args = {
 	"alert-html-string": {
-		fieldType: "alert",
+		uiType: "alert",
 		type: "success",
 		children: `<p>This is a <i>HTML</i> string</p>`,
 	},
@@ -144,7 +144,7 @@ HTMLString.args = {
 export const SanitizedHTMLString = Template.bind({});
 SanitizedHTMLString.args = {
 	"alert-sanitized-html-string": {
-		fieldType: "alert",
+		uiType: "alert",
 		type: "success",
 		children: `<p>This component should not contain a script tag<script>console.log('hello world')</script></p>`,
 	},

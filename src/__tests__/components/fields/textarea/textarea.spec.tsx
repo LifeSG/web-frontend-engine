@@ -15,7 +15,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "textarea";
+const uiType = "textarea";
 const componentLabel = "Textarea";
 
 const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overrideSchema?: TOverrideSchema) => {
@@ -24,7 +24,7 @@ const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overri
 		fields: {
 			[componentId]: {
 				label: componentLabel,
-				fieldType: "textarea",
+				uiType: "textarea",
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
@@ -38,7 +38,7 @@ const getTextarea = (): HTMLElement => {
 	return getField("textbox", componentLabel);
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});

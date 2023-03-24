@@ -200,7 +200,7 @@ describe("YupHelper", () => {
 		});
 
 		it.each`
-			fieldType   | sourceFieldType | valid                                     | then                                        | otherwise
+			uiType      | sourceFieldType | valid                                     | then                                        | otherwise
 			${"string"} | ${"string"}     | ${{ field1: "hello", field2: "world" }}   | ${{ field1: undefined, field2: "world" }}   | ${{ field1: "hi", field2: "hi" }}
 			${"number"} | ${"string"}     | ${{ field1: 1, field2: "world" }}         | ${{ field1: undefined, field2: "world" }}   | ${{ field1: 2, field2: "hi" }}
 			${"array"}  | ${"string"}     | ${{ field1: [1], field2: "world" }}       | ${{ field1: undefined, field2: "world" }}   | ${{ field1: [1, 2], field2: "hi" }}
@@ -211,9 +211,9 @@ describe("YupHelper", () => {
 			${"number"} | ${"array"}      | ${{ field1: 1, field2: [1, 2, 3] }}       | ${{ field1: undefined, field2: [1, 2, 3] }} | ${{ field1: [1], field2: [1] }}
 			${"array"}  | ${"array"}      | ${{ field1: [1], field2: [1, 2, 3] }}     | ${{ field1: undefined, field2: [1, 2, 3] }} | ${{ field1: [1, 2, 3], field2: [1] }}
 		`(
-			"should support Yup $fieldType conditional validation with config as condition for Yup $sourceFieldType type",
-			({ fieldType, sourceFieldType, valid, then, otherwise }) => {
-				const schema = generateConditionalSchema(fieldType, [{ filled: true }, { min: 3 }], sourceFieldType);
+			"should support Yup $uiType conditional validation with config as condition for Yup $sourceFieldType type",
+			({ uiType, sourceFieldType, valid, then, otherwise }) => {
+				const schema = generateConditionalSchema(uiType, [{ filled: true }, { min: 3 }], sourceFieldType);
 
 				expect(() => schema.validateSync(valid)).not.toThrowError();
 				expect(TestHelper.getError(() => schema.validateSync(then)).message).toBe(ERROR_MESSAGE);

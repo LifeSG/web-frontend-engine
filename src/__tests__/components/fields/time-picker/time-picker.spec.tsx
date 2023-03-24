@@ -16,7 +16,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "time";
+const uiType = "time";
 
 const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -24,7 +24,7 @@ const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, over
 		fields: {
 			[componentId]: {
 				label: "TimePicker",
-				fieldType,
+				uiType,
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
@@ -50,7 +50,7 @@ const getConfirmButton = (): HTMLElement => {
 	return getField("button", "confirm selection");
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 

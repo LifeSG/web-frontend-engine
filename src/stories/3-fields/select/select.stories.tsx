@@ -75,7 +75,7 @@ const Template: Story<Record<string, ISelectSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"select-default": {
-		fieldType: "select",
+		uiType: "select",
 		label: "Fruits",
 		options: [
 			{ label: "1", value: "1" },
@@ -90,7 +90,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"select-default-value": {
-					fieldType: "select",
+					uiType: "select",
 					label: "Fruits",
 					options: [
 						{ label: "Apple", value: "apple" },
@@ -109,7 +109,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"select-disabled": {
-		fieldType: "select",
+		uiType: "select",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "apple" },
@@ -123,7 +123,7 @@ Disabled.args = {
 export const CustomWidth = Template.bind({});
 CustomWidth.args = {
 	"select-custom-width": {
-		fieldType: "select",
+		uiType: "select",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "apple" },
@@ -137,7 +137,7 @@ CustomWidth.args = {
 export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"select-placeholder": {
-		fieldType: "select",
+		uiType: "select",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "apple" },
@@ -151,7 +151,7 @@ Placeholder.args = {
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"select-with-validation": {
-		fieldType: "select",
+		uiType: "select",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "apple" },

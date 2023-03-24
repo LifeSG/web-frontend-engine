@@ -13,7 +13,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { inputMode, label, fieldType, validation, ...otherSchema },
+		schema: { inputMode, label, uiType, validation, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -29,7 +29,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 	// EFFECTS
 	// ================================================
 	useEffect(() => {
-		switch (fieldType) {
+		switch (uiType) {
 			case "numeric": {
 				setFieldValidationConfig(id, Yup.number(), validation);
 				const minRule = validation?.find((rule) => "min" in rule);
@@ -100,7 +100,7 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 	const formatInputMode = (): React.HTMLAttributes<HTMLInputElement>["inputMode"] => {
 		if (inputMode) return inputMode;
 
-		switch (fieldType) {
+		switch (uiType) {
 			case "numeric":
 				return "numeric";
 			case "email":
@@ -121,8 +121,8 @@ export const TextField = (props: IGenericFieldProps<ITextfieldSchema | IEmailSch
 			{...otherProps}
 			{...derivedAttributes}
 			id={id}
-			data-testid={TestHelper.generateId(id, fieldType)}
-			type={fieldType}
+			data-testid={TestHelper.generateId(id, uiType)}
+			type={uiType}
 			label={label}
 			inputMode={formatInputMode()}
 			onChange={handleChange}

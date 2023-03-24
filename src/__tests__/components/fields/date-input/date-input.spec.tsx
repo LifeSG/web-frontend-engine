@@ -17,7 +17,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "date";
+const uiType = "date";
 
 const renderComponent = (overrideField?: TOverrideField<IDateInputSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -25,7 +25,7 @@ const renderComponent = (overrideField?: TOverrideField<IDateInputSchema>, overr
 		fields: {
 			[componentId]: {
 				label: "Date",
-				fieldType,
+				uiType,
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
@@ -47,7 +47,7 @@ const getYearInput = (): HTMLElement => {
 	return getField("textbox", "year-input");
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});

@@ -13,37 +13,37 @@ export const ExcludeReactFormHookProps = {
 	name: { table: { disable: true } },
 };
 
-export const CommonFieldStoryProps = (fieldType: string, onlyFieldType = false) => {
+export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => {
 	if (onlyFieldType) {
 		return {
-			[`${fieldType}-default`]: { table: { disable: true } },
-			fieldType: {
-				description: `Use <code>${fieldType}</code> to show this field`,
+			[`${uiType}-default`]: { table: { disable: true } },
+			uiType: {
+				description: `Use <code>${uiType}</code> to show this field`,
 				table: {
 					type: {
 						summary: "string",
 					},
 				},
 				type: { name: "string", required: true },
-				options: [fieldType],
+				options: [uiType],
 				control: {
 					type: "select",
 				},
-				defaultValue: fieldType,
+				defaultValue: uiType,
 			},
 		};
 	}
 	return {
-		[`${fieldType}-default`]: { table: { disable: true } },
-		fieldType: {
-			description: `Use <code>${fieldType}</code> to show this field`,
+		[`${uiType}-default`]: { table: { disable: true } },
+		uiType: {
+			description: `Use <code>${uiType}</code> to show this field`,
 			table: {
 				type: {
 					summary: "string",
 				},
 			},
 			type: { name: "string", required: true },
-			options: [fieldType],
+			options: [uiType],
 			control: {
 				type: "select",
 			},
@@ -83,7 +83,7 @@ export const CommonFieldStoryProps = (fieldType: string, onlyFieldType = false) 
 };
 
 export const SubmitButtonStorybook: Record<string, ISubmitButtonSchema> = {
-	"submit-button": { fieldType: "submit", label: "Submit" },
+	"submit-button": { uiType: "submit", label: "Submit" },
 };
 
 export const StyledForm = styled(FrontendEngine)`

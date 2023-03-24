@@ -67,7 +67,7 @@ const Template: Story<Record<string, ICheckboxGroupSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"checkbox-default": {
-		fieldType: "checkbox",
+		uiType: "checkbox",
 		label: "Checkbox",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -82,7 +82,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"checkbox-default-value": {
-					fieldType: "checkbox",
+					uiType: "checkbox",
 					label: "Fruits",
 					options: [
 						{ label: "Apple", value: "Apple" },
@@ -101,7 +101,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"checkbox-disabled": {
-		fieldType: "checkbox",
+		uiType: "checkbox",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -115,7 +115,7 @@ Disabled.args = {
 export const CustomSize = Template.bind({});
 CustomSize.args = {
 	"checkbox-custom-size": {
-		fieldType: "checkbox",
+		uiType: "checkbox",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -129,7 +129,7 @@ CustomSize.args = {
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"checkbox-with-validation": {
-		fieldType: "checkbox",
+		uiType: "checkbox",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },

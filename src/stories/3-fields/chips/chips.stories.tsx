@@ -65,7 +65,7 @@ const Template: Story<Record<string, IChipsSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"chips-default": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -80,7 +80,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"chips-default-value": {
-					fieldType: "chips",
+					uiType: "chips",
 					label: "Fruits",
 					options: [
 						{ label: "Apple", value: "Apple" },
@@ -101,7 +101,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"chips-disabled": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -115,7 +115,7 @@ Disabled.args = {
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"chips-with-validation": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -129,7 +129,7 @@ WithValidation.args = {
 export const WithTextarea = Template.bind({});
 WithTextarea.args = {
 	"chips-with-textarea": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -143,7 +143,7 @@ WithTextarea.args = {
 export const WithTextareaValidation = Template.bind({});
 WithTextareaValidation.args = {
 	"chips-with-textarea-validation": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -157,7 +157,7 @@ WithTextareaValidation.args = {
 export const WithResizableTextarea = Template.bind({});
 WithResizableTextarea.args = {
 	"chips-with-textarea-resizable": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -171,7 +171,7 @@ WithResizableTextarea.args = {
 export const WithTextareaCustomRows = Template.bind({});
 WithTextareaCustomRows.args = {
 	"chips-with-textarea-custom-rows": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -185,7 +185,7 @@ WithTextareaCustomRows.args = {
 export const WithTextareaMaxLength = Template.bind({});
 WithTextareaMaxLength.args = {
 	"chips-with-textarea-max-length": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -199,7 +199,7 @@ WithTextareaMaxLength.args = {
 export const SingleSelection = Template.bind({});
 SingleSelection.args = {
 	"chips-single-selection": {
-		fieldType: "chips",
+		uiType: "chips",
 		label: "Fruits",
 		options: [
 			{ label: "Apple", value: "Apple" },

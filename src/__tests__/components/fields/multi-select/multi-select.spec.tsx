@@ -17,7 +17,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "multi-select";
+const uiType = "multi-select";
 
 const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -25,7 +25,7 @@ const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, ove
 		fields: {
 			[componentId]: {
 				label: "Multiselect",
-				fieldType,
+				uiType,
 				options: [
 					{ label: "A", value: "Apple" },
 					{ label: "B", value: "Berry" },
@@ -51,7 +51,7 @@ const getCheckboxB = (): HTMLElement => {
 	return getField("button", "B");
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -150,7 +150,7 @@ describe(fieldType, () => {
 						data={{
 							id: FRONTEND_ENGINE_ID,
 							fields: {
-								[componentId]: { label: "Multiselect", fieldType, options },
+								[componentId]: { label: "Multiselect", uiType, options },
 								...getSubmitButtonProps(),
 							},
 						}}

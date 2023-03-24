@@ -83,7 +83,7 @@ export const Default = Template.bind({});
 Default.args = {
 	"time-default": {
 		label: "Timepicker",
-		fieldType: "time",
+		uiType: "time",
 	},
 };
 
@@ -91,7 +91,7 @@ export const Disabled = Template.bind({});
 Disabled.args = {
 	"time-disabled": {
 		label: "Timepicker",
-		fieldType: "time",
+		uiType: "time",
 		disabled: true,
 	},
 };
@@ -101,7 +101,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"time-default-value": {
-					fieldType: "time",
+					uiType: "time",
 					label: "Timepicker",
 				},
 				...SubmitButtonStorybook,
@@ -116,7 +116,7 @@ export const UseCurrentTime = Template.bind({});
 UseCurrentTime.args = {
 	"time-use-current-time": {
 		label: "Timepicker",
-		fieldType: "time",
+		uiType: "time",
 		useCurrentTime: true,
 	},
 };
@@ -125,7 +125,7 @@ export const WithDefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"time-default": { fieldType: "time", label: "Time" },
+				"time-default": { uiType: "time", label: "Time" },
 				...SubmitButtonStorybook,
 			},
 			defaultValues: { "time-default": "1:23pm" },
@@ -140,7 +140,7 @@ export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"time-placeholder": {
 		label: "Timepicker",
-		fieldType: "time",
+		uiType: "time",
 		placeholder: "Select a preferred time",
 	},
 };
@@ -149,7 +149,7 @@ export const Use24HoursFormat = Template.bind({});
 Use24HoursFormat.args = {
 	"time-24hr-format": {
 		label: "Timepicker",
-		fieldType: "time",
+		uiType: "time",
 		is24HourFormat: true,
 	},
 };

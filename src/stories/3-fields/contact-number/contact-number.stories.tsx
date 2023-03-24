@@ -83,7 +83,7 @@ const Template: Story<Record<string, IContactNumberSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"contact-default": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 	},
 };
@@ -91,7 +91,7 @@ Default.args = {
 export const DefaultCountry = Template.bind({});
 DefaultCountry.args = {
 	"contact-default-country": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 		country: "Japan",
 	},
@@ -102,7 +102,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"contact-default-value": {
-					fieldType: "contact",
+					uiType: "contact",
 					label: "Contact Number",
 					validation: [
 						{
@@ -130,7 +130,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"contact-disabled": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 		disabled: true,
 	},
@@ -139,7 +139,7 @@ Disabled.args = {
 export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"contact-placeholder": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 		placeholder: "Enter your contact number",
 	},
@@ -148,7 +148,7 @@ Placeholder.args = {
 export const WithSearch = Template.bind({});
 WithSearch.args = {
 	"contact-with-search": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 		enableSearch: true,
 	},
@@ -157,7 +157,7 @@ WithSearch.args = {
 export const SGNumberValidation = Template.bind({});
 SGNumberValidation.args = {
 	"contact-singapore-number": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 		validation: [
 			{
@@ -172,7 +172,7 @@ SGNumberValidation.args = {
 export const SGHouseNumberValidation = Template.bind({});
 SGHouseNumberValidation.args = {
 	"contact-singapore-house-number": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 		validation: [
 			{
@@ -187,7 +187,7 @@ SGHouseNumberValidation.args = {
 export const SGPhoneNumberValidation = Template.bind({});
 SGPhoneNumberValidation.args = {
 	"contact-singapore-mobile-number": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 		validation: [
 			{
@@ -202,7 +202,7 @@ SGPhoneNumberValidation.args = {
 export const InternationalNumberValidation = Template.bind({});
 InternationalNumberValidation.args = {
 	"contact-international-number": {
-		fieldType: "contact",
+		uiType: "contact",
 		label: "Contact Number",
 		validation: [
 			{

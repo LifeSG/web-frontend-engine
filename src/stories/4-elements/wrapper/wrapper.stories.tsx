@@ -30,7 +30,7 @@ export default {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("wrapper"),
 		label: { table: { disable: true } },
-		fieldType: {
+		uiType: {
 			description: "Actual HTML element type to render the component as",
 			table: {
 				type: {
@@ -60,11 +60,11 @@ const Template: Story<Record<string, IWrapperSchema>> = (args) => <FrontendEngin
 export const Default = Template.bind({});
 Default.args = {
 	"wrapper-default": {
-		fieldType: "div",
+		uiType: "div",
 		children: {
 			name: {
 				label: "What is your name",
-				fieldType: "textarea",
+				uiType: "textarea",
 				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 				chipTexts: ["John", "Doe"],
 			},
@@ -76,7 +76,7 @@ Default.args = {
 export const String = Template.bind({});
 String.args = {
 	"wrapper-string": {
-		fieldType: "div",
+		uiType: "div",
 		children: "Hello world",
 	},
 };
@@ -84,16 +84,16 @@ String.args = {
 export const StringAndField = Template.bind({});
 StringAndField.args = {
 	"wrapper-field-and-string": {
-		fieldType: "div",
+		uiType: "div",
 		children: {
 			"child-string": {
-				fieldType: "h6",
+				uiType: "h6",
 				className: "margin--bottom",
 				children: "Fill in your name below",
 			},
 			"child-name": {
 				label: "What is your name",
-				fieldType: "textarea",
+				uiType: "textarea",
 				validation: [{ required: true }],
 				chipTexts: ["John", "Doe"],
 			},
@@ -107,47 +107,47 @@ export const VariousElements = () => (
 		data={{
 			fields: {
 				"wrapper-div": {
-					fieldType: "div",
+					uiType: "div",
 					children: "Div",
 				},
 				"wrapper-span": {
-					fieldType: "span",
+					uiType: "span",
 					children: "Span",
 				},
 				"wrapper-section": {
-					fieldType: "section",
+					uiType: "section",
 					children: "Section",
 				},
 				"wrapper-header": {
-					fieldType: "header",
+					uiType: "header",
 					children: "Header",
 				},
 				"wrapper-footer": {
-					fieldType: "footer",
+					uiType: "footer",
 					children: "Footer",
 				},
 				"wrapper-h1": {
-					fieldType: "h1",
+					uiType: "h1",
 					children: "H1",
 				},
 				"wrapper-h2": {
-					fieldType: "h2",
+					uiType: "h2",
 					children: "H2",
 				},
 				"wrapper-h3": {
-					fieldType: "h3",
+					uiType: "h3",
 					children: "H3",
 				},
 				"wrapper-h4": {
-					fieldType: "h4",
+					uiType: "h4",
 					children: "H4",
 				},
 				"wrapper-h5": {
-					fieldType: "h5",
+					uiType: "h5",
 					children: "H5",
 				},
 				"wrapper-h6": {
-					fieldType: "h6",
+					uiType: "h6",
 					children: "H6",
 				},
 			},
@@ -158,36 +158,36 @@ export const VariousElements = () => (
 export const Layout = Template.bind({});
 Layout.args = {
 	"wrapper-row-1": {
-		fieldType: "div",
+		uiType: "div",
 		className: "row",
 		children: {
 			"wrapper-row-1-col": {
-				fieldType: "div",
+				uiType: "div",
 				className: "col is-full is-boxed",
 				children: "Create complex layouts with custom css classes",
 			},
 		},
 	},
 	"wrapper-row-2": {
-		fieldType: "div",
+		uiType: "div",
 		className: "row",
 		children: {
 			"wrapper-row-2-col-1": {
-				fieldType: "div",
+				uiType: "div",
 				className: "col is-half is-boxed",
 				children: "Column 1",
 			},
 			"wrapper-row-2-col-2": {
-				fieldType: "div",
+				uiType: "div",
 				className: "col is-half is-boxed",
 				children: {
 					"wrapper-row-2-col-2-1": {
-						fieldType: "div",
+						uiType: "div",
 						className: "col is-full is-boxed",
 						children: "Column 2 Row 1",
 					},
 					"wrapper-row-2-col-2-2": {
-						fieldType: "div",
+						uiType: "div",
 						className: "col is-full is-boxed",
 						children: "Column 2 Row 2",
 					},

@@ -16,7 +16,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "contact";
+const uiType = "contact";
 const componentLabel = "Contact Number";
 
 const renderComponent = (overrideField?: TOverrideField<IContactNumberSchema>, overrideSchema?: TOverrideSchema) => {
@@ -25,7 +25,7 @@ const renderComponent = (overrideField?: TOverrideField<IContactNumberSchema>, o
 		fields: {
 			[componentId]: {
 				label: componentLabel,
-				fieldType,
+				uiType,
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
@@ -43,7 +43,7 @@ const getDefaultDropdownToggle = (): HTMLElement => {
 	return getField("button", "+65");
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});

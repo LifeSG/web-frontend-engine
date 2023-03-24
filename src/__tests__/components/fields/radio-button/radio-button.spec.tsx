@@ -17,7 +17,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "radio";
+const uiType = "radio";
 
 const getRadioButtonA = (): HTMLElement => {
 	return getField("radio", "A");
@@ -33,7 +33,7 @@ const renderComponent = (overrideField?: TOverrideField<IRadioButtonGroupSchema>
 		fields: {
 			[componentId]: {
 				label: "Radio",
-				fieldType,
+				uiType,
 				options: [
 					{ label: "A", value: "Apple" },
 					{ label: "B", value: "Berry" },
@@ -47,7 +47,7 @@ const renderComponent = (overrideField?: TOverrideField<IRadioButtonGroupSchema>
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -96,7 +96,7 @@ describe(fieldType, () => {
 						data={{
 							id: FRONTEND_ENGINE_ID,
 							fields: {
-								[componentId]: { label: "Radio", fieldType, options },
+								[componentId]: { label: "Radio", uiType, options },
 								...getSubmitButtonProps(),
 							},
 						}}

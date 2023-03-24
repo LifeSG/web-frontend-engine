@@ -25,7 +25,7 @@ export default {
 			"fields": {
 				"name": {
 					label: "What is your name",
-					fieldType: "textarea",
+					uiType: "textarea",
 					validation: [
 						{ required: true },
 						{ max: 255, errorMessage: "Maximum length of 255" },
@@ -91,16 +91,16 @@ SoftValidation.args = {
 		fields: {
 			name: {
 				label: "What is your name",
-				fieldType: "text",
+				uiType: "text",
 				validation: [{ required: true }, { max: 5, soft: true, errorMessage: "Maximum length of 5" }],
 			},
 			email: {
 				label: "Email address",
-				fieldType: "email",
+				uiType: "email",
 				validation: [{ required: true }],
 			},
 			sex: {
-				fieldType: "select",
+				uiType: "select",
 				label: "Sex",
 				options: [
 					{ label: "Male", value: "male" },

@@ -28,7 +28,7 @@ const renderComponent = (
 		fields: {
 			[componentId]: {
 				label: "Textfield",
-				fieldType: defaultFieldType,
+				uiType: defaultFieldType,
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
@@ -109,13 +109,13 @@ describe("textfield", () => {
 		});
 
 		it("should be able to render the field", () => {
-			renderComponent({ fieldType: emailFieldType });
+			renderComponent({ uiType: emailFieldType });
 
 			expect(getTextfield()).toBeInTheDocument();
 		});
 
 		it("should validate email format", async () => {
-			renderComponent({ fieldType: emailFieldType });
+			renderComponent({ uiType: emailFieldType });
 
 			fireEvent.change(getTextfield(), { target: { value: "hello" } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -125,7 +125,7 @@ describe("textfield", () => {
 
 		it("should support validation schema", async () => {
 			renderComponent({
-				fieldType: emailFieldType,
+				uiType: emailFieldType,
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
 
@@ -135,26 +135,26 @@ describe("textfield", () => {
 		});
 
 		it("should apply inputMode according to its type", () => {
-			renderComponent({ fieldType: emailFieldType });
+			renderComponent({ uiType: emailFieldType });
 
 			expect(getTextfield()).toHaveAttribute("inputMode", emailFieldType);
 		});
 
 		it("should apply maxLength attribute if max validation is specified", () => {
-			renderComponent({ fieldType: emailFieldType, validation: [{ max: 5 }] });
+			renderComponent({ uiType: emailFieldType, validation: [{ max: 5 }] });
 
 			expect(getTextfield()).toHaveAttribute("maxLength", "5");
 		});
 
 		it("should apply maxLength attribute if length validation is specified", () => {
-			renderComponent({ fieldType: emailFieldType, validation: [{ length: 5 }] });
+			renderComponent({ uiType: emailFieldType, validation: [{ length: 5 }] });
 
 			expect(getTextfield()).toHaveAttribute("maxLength", "5");
 		});
 
 		it("should support default value", async () => {
 			const defaultValue = "john@doe.tld";
-			renderComponent({ fieldType: emailFieldType }, { defaultValues: { [componentId]: defaultValue } });
+			renderComponent({ uiType: emailFieldType }, { defaultValues: { [componentId]: defaultValue } });
 
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
@@ -164,7 +164,7 @@ describe("textfield", () => {
 
 		it("should pass other props into the field", () => {
 			renderComponent({
-				fieldType: emailFieldType,
+				uiType: emailFieldType,
 				placeholder: "placeholder",
 				readOnly: true,
 				disabled: true,
@@ -182,14 +182,14 @@ describe("textfield", () => {
 		});
 
 		it("should be able to render the field", () => {
-			renderComponent({ fieldType: numberFieldType });
+			renderComponent({ uiType: numberFieldType });
 
 			expect(getTextfield()).toBeInTheDocument();
 		});
 
 		it("should support validation schema", async () => {
 			renderComponent({
-				fieldType: numberFieldType,
+				uiType: numberFieldType,
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
 
@@ -199,26 +199,26 @@ describe("textfield", () => {
 		});
 
 		it("should apply inputMode according to its type", () => {
-			renderComponent({ fieldType: numberFieldType });
+			renderComponent({ uiType: numberFieldType });
 
 			expect(getTextfield()).toHaveAttribute("inputMode", numberFieldType);
 		});
 
 		it("should apply min attribute if min validation is specified", () => {
-			renderComponent({ fieldType: numberFieldType, validation: [{ min: 5 }] });
+			renderComponent({ uiType: numberFieldType, validation: [{ min: 5 }] });
 
 			expect(getTextfield()).toHaveAttribute("min", "5");
 		});
 
 		it("should apply max attribute if max validation is specified", () => {
-			renderComponent({ fieldType: numberFieldType, validation: [{ max: 5 }] });
+			renderComponent({ uiType: numberFieldType, validation: [{ max: 5 }] });
 
 			expect(getTextfield()).toHaveAttribute("max", "5");
 		});
 
 		it("should support default value", async () => {
 			const defaultValue = 1;
-			renderComponent({ fieldType: numberFieldType }, { defaultValues: { [componentId]: defaultValue } });
+			renderComponent({ uiType: numberFieldType }, { defaultValues: { [componentId]: defaultValue } });
 
 			expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
@@ -228,7 +228,7 @@ describe("textfield", () => {
 
 		it("should pass other props into the field", () => {
 			renderComponent({
-				fieldType: numberFieldType,
+				uiType: numberFieldType,
 				placeholder: "placeholder",
 				readOnly: true,
 				disabled: true,

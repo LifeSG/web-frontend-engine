@@ -23,7 +23,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const { id, schema, children, warnings } = props;
-	const { fieldType, children: schemaChildren, ...otherSchema } = schema || {};
+	const { uiType, children: schemaChildren, ...otherSchema } = schema || {};
 	const [fields, setFields] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
 
@@ -45,12 +45,12 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child) || typeof child !== "object") return;
-				const fieldType = child.fieldType?.toUpperCase();
+				const uiType = child.uiType?.toUpperCase();
 				const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
 
-				if (fieldTypeKeys.includes(fieldType)) {
+				if (fieldTypeKeys.includes(uiType)) {
 					// render fields with controller to register them into react-hook-form
-					const Field = frontendEngineComponents[EFieldType[fieldType]];
+					const Field = frontendEngineComponents[EFieldType[uiType]];
 					fieldComponents.push(
 						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
 							<Controller
@@ -74,9 +74,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 							/>
 						</ConditionalRenderer>
 					);
-				} else if (elementTypeKeys.includes(fieldType)) {
+				} else if (elementTypeKeys.includes(uiType)) {
 					// render other elements as normal components
-					const Element = (frontendEngineComponents[EElementType[fieldType]] ||
+					const Element = (frontendEngineComponents[EElementType[uiType]] ||
 						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
 					fieldComponents.push(
 						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
@@ -84,7 +84,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 						</ConditionalRenderer>
 					);
 				} else {
-					// need fieldType check to ignore other storybook args
+					// need uiType check to ignore other storybook args
 					fieldComponents.push(<Fragment key={id}>{ERROR_MESSAGES.GENERIC.UNSUPPORTED}</Fragment>);
 				}
 			});
@@ -100,13 +100,13 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const Element = fieldType as string | React.FunctionComponent;
+	const Element = uiType as string | React.FunctionComponent;
 
 	if (!Element) {
 		return <>{fields}</>;
 	}
 	return (
-		<Element {...otherSchema} {...{ id, "data-testid": TestHelper.generateId(id, fieldType) }}>
+		<Element {...otherSchema} {...{ id, "data-testid": TestHelper.generateId(id, uiType) }}>
 			{fields}
 		</Element>
 	);

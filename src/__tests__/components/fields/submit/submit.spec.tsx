@@ -14,12 +14,12 @@ const renderComponent = (overrideSubmit?: Partial<ISubmitButtonSchema> | undefin
 		fields: {
 			[componentId]: {
 				label: componentLabel,
-				fieldType: "text",
+				uiType: "text",
 				validation: [{ required: true }],
 			},
 			[SUBMIT_BUTTON_ID]: {
 				label: SUBMIT_BUTTON_LABEL,
-				fieldType: "submit",
+				uiType: "submit",
 				...overrideSubmit,
 			},
 		},

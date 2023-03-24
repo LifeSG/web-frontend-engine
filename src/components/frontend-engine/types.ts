@@ -102,7 +102,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefined> {
 	/** defines what kind of field to be rendered */
-	fieldType: T;
+	uiType: T;
 	/** caption for the field */
 	label: string;
 	/** render conditions
@@ -122,7 +122,7 @@ export type TFrontendEngineFieldJsonSchemaOmitKeys =
 	| "id"
 	| "label"
 	| "validation"
-	| "fieldType"
+	| "uiType"
 	| "showIf"
 	| "children"
 	| "value";

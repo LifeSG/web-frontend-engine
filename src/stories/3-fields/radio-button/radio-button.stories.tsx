@@ -54,7 +54,7 @@ const Template: Story<Record<string, IRadioButtonGroupSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"radio-default": {
-		fieldType: "radio",
+		uiType: "radio",
 		label: "Radio Button",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -69,7 +69,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"radio-default-value": {
-					fieldType: "radio",
+					uiType: "radio",
 					label: "Fruits",
 					options: [
 						{ label: "Apple", value: "Apple" },
@@ -88,7 +88,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"radio-disabled": {
-		fieldType: "radio",
+		uiType: "radio",
 		label: "Radio Button",
 		options: [
 			{ label: "Apple", value: "Apple" },
@@ -102,7 +102,7 @@ Disabled.args = {
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"radio-with-validation": {
-		fieldType: "radio",
+		uiType: "radio",
 		label: "Radio Button",
 		options: [
 			{ label: "Apple", value: "Apple" },

@@ -62,7 +62,7 @@ export const Default = Template.bind({});
 Default.args = {
 	"numeric-default": {
 		label: "Number",
-		fieldType: "numeric",
+		uiType: "numeric",
 	},
 };
 
@@ -72,7 +72,7 @@ export const DefaultValue = () => (
 			fields: {
 				"numeric-default-value": {
 					label: "Number",
-					fieldType: "numeric",
+					uiType: "numeric",
 				},
 				...SubmitButtonStorybook,
 			},
@@ -88,7 +88,7 @@ export const Disabled = Template.bind({});
 Disabled.args = {
 	"numeric-disabled": {
 		label: "Number",
-		fieldType: "numeric",
+		uiType: "numeric",
 		disabled: true,
 	},
 };
@@ -97,7 +97,7 @@ export const MaxLength = Template.bind({});
 MaxLength.args = {
 	"numeric-maxlength": {
 		label: "Number",
-		fieldType: "numeric",
+		uiType: "numeric",
 		maxLength: 2,
 	},
 };
@@ -106,7 +106,7 @@ export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"numeric-placeholder": {
 		label: "Number",
-		fieldType: "numeric",
+		uiType: "numeric",
 		placeholder: "Enter a number",
 	},
 };
@@ -115,7 +115,7 @@ export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"numeric-with-validation": {
 		label: "Number",
-		fieldType: "numeric",
+		uiType: "numeric",
 		validation: [{ required: true }],
 	},
 };
