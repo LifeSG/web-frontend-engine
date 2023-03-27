@@ -5,9 +5,9 @@ import * as Yup from "yup";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { ITimePickerSchema } from "./types";
+import { ITimeFieldSchema } from "./types";
 
-export const TimePicker = (props: IGenericFieldProps<ITimePickerSchema>) => {
+export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================

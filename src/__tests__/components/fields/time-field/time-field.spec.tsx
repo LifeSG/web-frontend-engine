@@ -1,29 +1,29 @@
 import { LocalTime } from "@js-joda/core";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
-import { ITimePickerSchema } from "../../../../components/fields";
+import { ITimeFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideField,
-	TOverrideSchema,
 } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
-const uiType = "time";
+const uiType = "time-field";
 
-const renderComponent = (overrideField?: TOverrideField<ITimePickerSchema>, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (overrideField?: TOverrideField<ITimeFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
 			[componentId]: {
-				label: "TimePicker",
+				label: "Time",
 				uiType,
 				...overrideField,
 			},

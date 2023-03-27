@@ -14,7 +14,7 @@ import {
 	ISubmitButtonSchema,
 	ITextFieldSchema,
 	ITextareaSchema,
-	ITimePickerSchema,
+	ITimeFieldSchema,
 } from "../fields";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 
@@ -65,7 +65,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IWrapperSchema
 	| IContactNumberSchema<V>
 	| IRadioButtonGroupSchema<V>
-	| ITimePickerSchema<V>
+	| ITimeFieldSchema<V>
 	| IChipsSchema<V>
 	| IAlertSchema
 	| ITextSchema;
@@ -151,7 +151,7 @@ export enum EFieldType {
 	CHECKBOX = "CheckboxGroup",
 	CONTACT = "ContactNumber",
 	RADIO = "RadioButtonGroup",
-	TIME = "TimePicker",
+	"TIME-FIELD" = "TimeField",
 	CHIPS = "Chips",
 }
 

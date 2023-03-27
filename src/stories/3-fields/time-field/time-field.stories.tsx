@@ -1,16 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { ITimePickerSchema } from "src/components/fields";
+import { ITimeFieldSchema } from "src/components/fields";
 import { FrontendEngine } from "../../../components";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/TimePicker",
+	title: "Field/TimeField",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>TimePicker</Title>
+					<Title>TimeField</Title>
 					<Description>A form element allows user to pick time</Description>
 					<Heading>Props</Heading>
 					<ArgsTable story={PRIMARY_STORY} />
@@ -21,7 +21,7 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("time"),
+		...CommonFieldStoryProps("time-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -75,23 +75,23 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITimePickerSchema>> = (args) => (
+const Template: Story<Record<string, ITimeFieldSchema>> = (args) => (
 	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
 	"time-default": {
-		label: "Timepicker",
-		uiType: "time",
+		label: "Time",
+		uiType: "time-field",
 	},
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"time-disabled": {
-		label: "Timepicker",
-		uiType: "time",
+		label: "Time",
+		uiType: "time-field",
 		disabled: true,
 	},
 };
@@ -101,8 +101,8 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"time-default-value": {
-					uiType: "time",
-					label: "Timepicker",
+					uiType: "time-field",
+					label: "Time",
 				},
 				...SubmitButtonStorybook,
 			},
@@ -115,8 +115,8 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const UseCurrentTime = Template.bind({});
 UseCurrentTime.args = {
 	"time-use-current-time": {
-		label: "Timepicker",
-		uiType: "time",
+		label: "Time",
+		uiType: "time-field",
 		useCurrentTime: true,
 	},
 };
@@ -125,7 +125,7 @@ export const WithDefaultValue = () => (
 	<FrontendEngine
 		data={{
 			fields: {
-				"time-default": { uiType: "time", label: "Time" },
+				"time-default": { uiType: "time-field", label: "Time" },
 				...SubmitButtonStorybook,
 			},
 			defaultValues: { "time-default": "1:23pm" },
@@ -139,8 +139,8 @@ WithDefaultValue.parameters = {
 export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"time-placeholder": {
-		label: "Timepicker",
-		uiType: "time",
+		label: "Time",
+		uiType: "time-field",
 		placeholder: "Select a preferred time",
 	},
 };
@@ -148,8 +148,8 @@ Placeholder.args = {
 export const Use24HoursFormat = Template.bind({});
 Use24HoursFormat.args = {
 	"time-24hr-format": {
-		label: "Timepicker",
-		uiType: "time",
+		label: "Time",
+		uiType: "time-field",
 		is24HourFormat: true,
 	},
 };
