@@ -34,11 +34,11 @@ export default {
 			description: "Actual HTML element type to render the component as",
 			table: {
 				type: {
-					summary: "div|span|section|header|footer|p",
+					summary: "div|span|header|footer|p",
 				},
 			},
 			type: { name: "string", required: true },
-			options: ["div", "span", "section", "header", "footer", "p"],
+			options: ["div", "span", "header", "footer", "p"],
 			control: {
 				type: "select",
 			},
@@ -113,10 +113,6 @@ export const VariousElements = () => (
 				"wrapper-span": {
 					uiType: "span",
 					children: "Span",
-				},
-				"wrapper-section": {
-					uiType: "section",
-					children: "Section",
 				},
 				"wrapper-header": {
 					uiType: "header",

@@ -171,7 +171,6 @@ export enum EElementType {
 	"TEXT-XSMALL" = "Text",
 	DIV = "Wrapper",
 	SPAN = "Wrapper",
-	SECTION = "Wrapper",
 	HEADER = "Wrapper",
 	FOOTER = "Wrapper",
 	H1 = "Wrapper",
