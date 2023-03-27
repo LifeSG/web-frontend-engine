@@ -1,15 +1,15 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { IDateInputSchema } from "src/components/fields/date-input/types";
+import { IDateFieldSchema } from "src/components/fields/date-field/types";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/DateInput",
+	title: "Field/DateField",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>DateInput</Title>
+					<Title>DateField</Title>
 					<Description>
 						This component provides the functionality for users to input a specific date according to the
 						date format
@@ -23,7 +23,7 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("date"),
+		...CommonFieldStoryProps("date-field"),
 		useCurrentDate: {
 			description: "Indicates if field should be prefilled with current system date",
 			table: {
@@ -61,14 +61,14 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, IDateInputSchema>> = (args) => (
+const Template: Story<Record<string, IDateFieldSchema>> = (args) => (
 	<StyledForm data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
 	"date-default": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 	},
 };
@@ -76,7 +76,7 @@ Default.args = {
 export const UseCurrentDate = Template.bind({});
 UseCurrentDate.args = {
 	"date-use-current-date": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		useCurrentDate: true,
 	},
@@ -86,7 +86,7 @@ export const WithDefaultValue = () => (
 	<StyledForm
 		data={{
 			fields: {
-				"date-default": { uiType: "date", label: "Date with default value" },
+				"date-default": { uiType: "date-field", label: "Date with default value" },
 				...SubmitButtonStorybook,
 			},
 			defaultValues: { "date-default": "2022-01-01" },
@@ -100,7 +100,7 @@ WithDefaultValue.parameters = {
 export const DateFormat = Template.bind({});
 DateFormat.args = {
 	"date-format": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		dateFormat: "d MMMM uuuu",
 	},
@@ -112,7 +112,7 @@ export const DateFormatDefaultValues = () => (
 			id: "frontendEngine",
 			fields: {
 				"date-format-default": {
-					uiType: "date",
+					uiType: "date-field",
 					label: "Date",
 					dateFormat: "d MMMM uuuu",
 				},
@@ -130,7 +130,7 @@ DateFormatDefaultValues.parameters = {
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"date-with-validation": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		validation: [{ required: true }],
 	},
@@ -139,7 +139,7 @@ WithValidation.args = {
 export const FutureDateOnly = Template.bind({});
 FutureDateOnly.args = {
 	"date-future": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		validation: [{ required: true }, { future: true, errorMessage: "Only future dates allowed" }],
 	},
@@ -148,7 +148,7 @@ FutureDateOnly.args = {
 export const PastDateOnly = Template.bind({});
 PastDateOnly.args = {
 	"date-past": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		validation: [{ required: true }, { past: true, errorMessage: "Only past dates allowed" }],
 	},
@@ -157,7 +157,7 @@ PastDateOnly.args = {
 export const NotFutureDate = Template.bind({});
 NotFutureDate.args = {
 	"date-now-or-past": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		validation: [{ required: true }, { notFuture: true, errorMessage: "No future dates" }],
 	},
@@ -166,7 +166,7 @@ NotFutureDate.args = {
 export const NotPastDate = Template.bind({});
 NotPastDate.args = {
 	"date-now-or-future": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		validation: [{ required: true }, { notPast: true, errorMessage: "No past dates" }],
 	},
@@ -175,7 +175,7 @@ NotPastDate.args = {
 export const MinDate = Template.bind({});
 MinDate.args = {
 	"min-date": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		validation: [{ required: true }, { minDate: "2023-01-01", errorMessage: "Min date 01/01/2023" }],
 	},
@@ -184,7 +184,7 @@ MinDate.args = {
 export const MaxDate = Template.bind({});
 MaxDate.args = {
 	"max-date": {
-		uiType: "date",
+		uiType: "date-field",
 		label: "Date",
 		validation: [{ required: true }, { maxDate: "2023-01-01", errorMessage: "Max date 01/01/2023" }],
 	},

@@ -1,7 +1,7 @@
 import { DateInputProps } from "@lifesg/react-design-system/date-input";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine/types";
 
-export interface IDateInputValidationRule {
+export interface IDateFieldValidationRule {
 	future?: boolean | undefined;
 	past?: boolean | undefined;
 	notFuture?: boolean | undefined;
@@ -10,8 +10,8 @@ export interface IDateInputValidationRule {
 	maxDate?: string | undefined;
 }
 
-export interface IDateInputSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"date", V, IDateInputValidationRule>,
+export interface IDateFieldSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"date-field", V, IDateFieldValidationRule>,
 		TComponentOmitProps<DateInputProps> {
 	useCurrentDate?: boolean | undefined;
 	dateFormat?: string | undefined;

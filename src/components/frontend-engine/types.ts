@@ -5,7 +5,7 @@ import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
 	IContactNumberSchema,
-	IDateInputSchema,
+	IDateFieldSchema,
 	IEmailFieldSchema,
 	IMultiSelectSchema,
 	INumericFieldSchema,
@@ -61,7 +61,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ISelectSchema<V>
 	| IMultiSelectSchema<V>
 	| ICheckboxGroupSchema<V>
-	| IDateInputSchema<V>
+	| IDateFieldSchema<V>
 	| IWrapperSchema
 	| IContactNumberSchema<V>
 	| IRadioButtonGroupSchema<V>
@@ -147,7 +147,7 @@ export enum EFieldType {
 	SUBMIT = "SubmitButton",
 	SELECT = "Select",
 	"MULTI-SELECT" = "MultiSelect",
-	DATE = "DateInput",
+	"DATE-FIELD" = "DateField",
 	CHECKBOX = "CheckboxGroup",
 	CONTACT = "ContactNumber",
 	RADIO = "RadioButtonGroup",

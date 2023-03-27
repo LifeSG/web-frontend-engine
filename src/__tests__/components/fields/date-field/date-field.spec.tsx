@@ -1,7 +1,7 @@
 import { LocalDate } from "@js-joda/core";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
-import { IDateInputSchema } from "../../../../components/fields";
+import { IDateFieldSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData } from "../../../../components/types";
 import {
@@ -17,9 +17,9 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const uiType = "date";
+const uiType = "date-field";
 
-const renderComponent = (overrideField?: TOverrideField<IDateInputSchema>, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (overrideField?: TOverrideField<IDateFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
