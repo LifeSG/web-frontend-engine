@@ -1,25 +1,25 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
-import { IContactNumberSchema, TSingaporeNumberRule } from "../../../../components/fields";
+import { IContactFieldSchema, TSingaporeNumberRule } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideField,
-	TOverrideSchema,
 } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
-const uiType = "contact";
+const uiType = "contact-field";
 const componentLabel = "Contact Number";
 
-const renderComponent = (overrideField?: TOverrideField<IContactNumberSchema>, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (overrideField?: TOverrideField<IContactFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {

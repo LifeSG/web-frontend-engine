@@ -1,6 +1,6 @@
 export * from "./checkbox-group";
 export * from "./chips";
-export * from "./contact-number";
+export * from "./contact-field";
 export * from "./date-field";
 export * from "./multi-select";
 export * from "./radio-button";

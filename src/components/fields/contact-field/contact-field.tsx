@@ -6,11 +6,11 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
-import { getCountries, getCountryFromPrefix, getPrefix, InternationalCallingCodeMap } from "./data";
-import { IContactNumberSchema, ISelectedCountry, TCountry, TSingaporeNumberRule } from "./types";
+import { InternationalCallingCodeMap, getCountries, getCountryFromPrefix, getPrefix } from "./data";
+import { IContactFieldSchema, ISelectedCountry, TCountry, TSingaporeNumberRule } from "./types";
 import { PhoneHelper } from "./utils";
 
-export const ContactNumber = (props: IGenericFieldProps<IContactNumberSchema>) => {
+export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================

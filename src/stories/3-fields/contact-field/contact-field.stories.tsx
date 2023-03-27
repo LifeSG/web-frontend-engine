@@ -1,16 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { IContactNumberSchema } from "../../../components/fields";
-import { getCountries } from "../../../components/fields/contact-number/data";
+import { IContactFieldSchema } from "../../../components/fields";
+import { getCountries } from "../../../components/fields/contact-field/data";
 import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
-	title: "Field/ContactNumber",
+	title: "Field/ContactField",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>ContactNumber</Title>
+					<Title>ContactField</Title>
 					<Description>
 						This component provides the functionality for users to input their phone numbers
 					</Description>
@@ -23,7 +23,7 @@ export default {
 	},
 	argTypes: {
 		...ExcludeReactFormHookProps,
-		...CommonFieldStoryProps("contact"),
+		...CommonFieldStoryProps("contact-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -76,14 +76,14 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, IContactNumberSchema>> = (args) => (
+const Template: Story<Record<string, IContactFieldSchema>> = (args) => (
 	<StyledForm data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
 );
 
 export const Default = Template.bind({});
 Default.args = {
 	"contact-default": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 	},
 };
@@ -91,7 +91,7 @@ Default.args = {
 export const DefaultCountry = Template.bind({});
 DefaultCountry.args = {
 	"contact-default-country": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 		country: "Japan",
 	},
@@ -102,7 +102,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"contact-default-value": {
-					uiType: "contact",
+					uiType: "contact-field",
 					label: "Contact Number",
 					validation: [
 						{
@@ -130,7 +130,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"contact-disabled": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 		disabled: true,
 	},
@@ -139,7 +139,7 @@ Disabled.args = {
 export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"contact-placeholder": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 		placeholder: "Enter your contact number",
 	},
@@ -148,7 +148,7 @@ Placeholder.args = {
 export const WithSearch = Template.bind({});
 WithSearch.args = {
 	"contact-with-search": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 		enableSearch: true,
 	},
@@ -157,7 +157,7 @@ WithSearch.args = {
 export const SGNumberValidation = Template.bind({});
 SGNumberValidation.args = {
 	"contact-singapore-number": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 		validation: [
 			{
@@ -172,7 +172,7 @@ SGNumberValidation.args = {
 export const SGHouseNumberValidation = Template.bind({});
 SGHouseNumberValidation.args = {
 	"contact-singapore-house-number": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 		validation: [
 			{
@@ -187,7 +187,7 @@ SGHouseNumberValidation.args = {
 export const SGPhoneNumberValidation = Template.bind({});
 SGPhoneNumberValidation.args = {
 	"contact-singapore-mobile-number": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 		validation: [
 			{
@@ -202,7 +202,7 @@ SGPhoneNumberValidation.args = {
 export const InternationalNumberValidation = Template.bind({});
 InternationalNumberValidation.args = {
 	"contact-international-number": {
-		uiType: "contact",
+		uiType: "contact-field",
 		label: "Contact Number",
 		validation: [
 			{

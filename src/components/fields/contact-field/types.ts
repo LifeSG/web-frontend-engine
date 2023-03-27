@@ -4,14 +4,14 @@ import { InternationalCallingCodeMap } from "./data";
 
 export type TCountry = keyof typeof InternationalCallingCodeMap;
 
-interface IContactNumberProps extends FormInputProps {
+interface IContactFieldProps extends FormInputProps {
 	country?: TCountry;
 	enableSearch?: boolean | undefined;
 }
 
 export type TSingaporeNumberRule = "default" | "house" | "mobile";
 
-export interface IContactNumberValidationRule {
+export interface IContactFieldValidationRule {
 	contactNumber?:
 		| {
 				internationalNumber: true;
@@ -33,6 +33,6 @@ export interface IParsedPhoneNumber {
 	number: string;
 }
 
-export interface IContactNumberSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"contact", V, IContactNumberValidationRule>,
-		TComponentOmitProps<IContactNumberProps> {}
+export interface IContactFieldSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"contact-field", V, IContactFieldValidationRule>,
+		TComponentOmitProps<IContactFieldProps> {}

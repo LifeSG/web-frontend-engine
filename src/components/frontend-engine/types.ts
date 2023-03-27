@@ -4,7 +4,7 @@ import { IWrapperSchema } from "../elements/wrapper";
 import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
-	IContactNumberSchema,
+	IContactFieldSchema,
 	IDateFieldSchema,
 	IEmailFieldSchema,
 	IMultiSelectSchema,
@@ -63,7 +63,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ICheckboxGroupSchema<V>
 	| IDateFieldSchema<V>
 	| IWrapperSchema
-	| IContactNumberSchema<V>
+	| IContactFieldSchema<V>
 	| IRadioButtonGroupSchema<V>
 	| ITimeFieldSchema<V>
 	| IChipsSchema<V>
@@ -149,7 +149,7 @@ export enum EFieldType {
 	"MULTI-SELECT" = "MultiSelect",
 	"DATE-FIELD" = "DateField",
 	CHECKBOX = "CheckboxGroup",
-	CONTACT = "ContactNumber",
+	"CONTACT-FIELD" = "ContactField",
 	RADIO = "RadioButtonGroup",
 	"TIME-FIELD" = "TimeField",
 	CHIPS = "Chips",
