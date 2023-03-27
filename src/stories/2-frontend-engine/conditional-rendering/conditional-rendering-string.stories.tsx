@@ -33,18 +33,18 @@ const Template: Story<Record<string, TFrontendEngineFieldSchema>> = (args) => (
 export const MinCharacters = Template.bind({});
 MinCharacters.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 has at least 5 characters",
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "text",
+		uiType: "text",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text",
 		showIf: [{ field1: [{ filled: true }, { min: 5 }] }],
 		validation: [{ required: true }],
 	},
@@ -53,18 +53,18 @@ MinCharacters.args = {
 export const MaxCharacters = Template.bind({});
 MaxCharacters.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 has at most 5 characters",
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "text",
+		uiType: "text",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text",
 		showIf: [{ field1: [{ filled: true }, { max: 5 }] }],
 		validation: [{ required: true }],
 	},
@@ -73,18 +73,18 @@ MaxCharacters.args = {
 export const Matches = Template.bind({});
 Matches.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 starts with `hello`",
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "text",
+		uiType: "text",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text",
 		showIf: [{ field1: [{ filled: true }, { matches: "/^(hello)/" }] }],
 		validation: [{ required: true }],
 	},
@@ -93,18 +93,18 @@ Matches.args = {
 export const Email = Template.bind({});
 Email.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 is a valid email",
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "email",
+		uiType: "email",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text",
 		showIf: [{ field1: [{ filled: true }, { email: true }] }],
 		validation: [{ required: true }],
 	},
@@ -113,18 +113,18 @@ Email.args = {
 export const Url = Template.bind({});
 Url.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 is a valid url",
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "text",
+		uiType: "text",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text",
 		showIf: [{ field1: [{ filled: true }, { url: true }] }],
 		validation: [{ required: true }],
 	},
@@ -133,18 +133,18 @@ Url.args = {
 export const Uuid = Template.bind({});
 Uuid.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 is a valid uuid",
 	},
 	field1: {
 		label: "Field 1",
-		fieldType: "text",
+		uiType: "text",
 		validation: [{ required: true }],
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text",
 		showIf: [{ field1: [{ filled: true }, { uuid: true }] }],
 		validation: [{ required: true }],
 	},

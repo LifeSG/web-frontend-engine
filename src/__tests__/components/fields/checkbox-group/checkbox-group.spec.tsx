@@ -15,7 +15,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "checkbox";
+const uiType = "checkbox";
 
 const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
@@ -23,7 +23,7 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 		fields: {
 			[componentId]: {
 				label: "Checkbox",
-				fieldType,
+				uiType,
 				options: [
 					{ label: "A", value: "Apple" },
 					{ label: "B", value: "Berry" },
@@ -44,7 +44,7 @@ const getCheckboxes = (): HTMLElement[] => {
 		.filter(Boolean);
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -140,7 +140,7 @@ describe(fieldType, () => {
 						data={{
 							id: FRONTEND_ENGINE_ID,
 							fields: {
-								[componentId]: { label: "Checkbox", fieldType, options },
+								[componentId]: { label: "Checkbox", uiType, options },
 								...getSubmitButtonProps(),
 							},
 						}}

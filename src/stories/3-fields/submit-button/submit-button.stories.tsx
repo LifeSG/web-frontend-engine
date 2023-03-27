@@ -64,7 +64,7 @@ const Template: Story<Record<string, ISubmitButtonSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"submit-default": {
-		fieldType: "submit",
+		uiType: "submit",
 		label: "Submit",
 	},
 };
@@ -72,7 +72,7 @@ Default.args = {
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"submit-disabled": {
-		fieldType: "submit",
+		uiType: "submit",
 		label: "Submit",
 		disabled: true,
 	},
@@ -81,7 +81,7 @@ Disabled.args = {
 export const Styled = Template.bind({});
 Styled.args = {
 	"submit-styled": {
-		fieldType: "submit",
+		uiType: "submit",
 		label: "Submit",
 		styleType: "secondary",
 	},
@@ -92,17 +92,17 @@ export const DisabledOnInvalidForm = () => (
 		data={{
 			fields: {
 				required: {
-					fieldType: "text",
+					uiType: "text",
 					label: "Required",
 					validation: [{ required: true }],
 				},
 				email: {
-					fieldType: "email",
+					uiType: "email",
 					label: "Email",
 					validation: [{ required: true }],
 				},
 				submit: {
-					fieldType: "submit",
+					uiType: "submit",
 					label: "Submit",
 					disabled: "invalid-form",
 				},

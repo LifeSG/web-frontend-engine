@@ -6,7 +6,7 @@ import { FRONTEND_ENGINE_ID, TOverrideSchema } from "../../../common";
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "text-body";
+const uiType = "text-body";
 const componentTestId = TestHelper.generateId(componentId, "text");
 
 const renderComponent = (
@@ -17,7 +17,7 @@ const renderComponent = (
 		id: FRONTEND_ENGINE_ID,
 		fields: {
 			[componentId]: {
-				fieldType,
+				uiType,
 				children: "Textbody",
 				...overrideField,
 			},
@@ -27,7 +27,7 @@ const renderComponent = (
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
@@ -49,7 +49,7 @@ describe(fieldType, () => {
 		"text-xsmall",
 	])("should be able to render Text.%s component", (type) => {
 		const text = "hello world";
-		renderComponent({ fieldType: type, children: text });
+		renderComponent({ uiType: type, children: text });
 
 		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
 		expect(screen.getByText(text)).toBeInTheDocument();
@@ -69,11 +69,11 @@ describe(fieldType, () => {
 		const fieldTwoId = "field2";
 		const fields: Record<string, ITextSchema> = {
 			[fieldOneId]: {
-				fieldType,
+				uiType,
 				children: "field one",
 			},
 			[fieldTwoId]: {
-				fieldType,
+				uiType,
 				children: "field two",
 			},
 		};

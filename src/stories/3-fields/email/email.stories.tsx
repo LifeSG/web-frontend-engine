@@ -62,7 +62,7 @@ export const Default = Template.bind({});
 Default.args = {
 	"email-default": {
 		label: "Email",
-		fieldType: "email",
+		uiType: "email",
 	},
 };
 
@@ -72,7 +72,7 @@ export const DefaultValue = () => (
 			fields: {
 				"email-default-value": {
 					label: "Email",
-					fieldType: "email",
+					uiType: "email",
 				},
 				...SubmitButtonStorybook,
 			},
@@ -88,7 +88,7 @@ export const Disabled = Template.bind({});
 Disabled.args = {
 	"email-disabled": {
 		label: "Email",
-		fieldType: "email",
+		uiType: "email",
 		disabled: true,
 	},
 };
@@ -97,7 +97,7 @@ export const CustomErrorMessage = Template.bind({});
 CustomErrorMessage.args = {
 	"email-email-error": {
 		label: "Email",
-		fieldType: "email",
+		uiType: "email",
 		validation: [{ email: true, errorMessage: "Please use a valid email" }],
 	},
 };
@@ -106,7 +106,7 @@ export const MaxLength = Template.bind({});
 MaxLength.args = {
 	"textfield-maxlength": {
 		label: "Email",
-		fieldType: "email",
+		uiType: "email",
 		validation: [{ max: 5 }],
 	},
 };
@@ -115,7 +115,7 @@ export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"email-placeholder": {
 		label: "Email",
-		fieldType: "email",
+		uiType: "email",
 		placeholder: "Enter an email",
 	},
 };
@@ -124,7 +124,7 @@ export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"email-with-validation": {
 		label: "Email",
-		fieldType: "email",
+		uiType: "email",
 		validation: [{ required: true }],
 	},
 };

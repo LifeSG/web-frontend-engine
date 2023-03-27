@@ -6,7 +6,7 @@ import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema } from "../../../co
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "alert";
+const uiType = "alert";
 const componentTestId = TestHelper.generateId(componentId, "alert");
 
 const renderComponent = (overrideField?: TOverrideField<IAlertSchema>, overrideSchema?: TOverrideSchema) => {
@@ -14,7 +14,7 @@ const renderComponent = (overrideField?: TOverrideField<IAlertSchema>, overrideS
 		id: FRONTEND_ENGINE_ID,
 		fields: {
 			[componentId]: {
-				fieldType,
+				uiType,
 				children: "Alert",
 				type: "success",
 				...overrideField,
@@ -25,7 +25,7 @@ const renderComponent = (overrideField?: TOverrideField<IAlertSchema>, overrideS
 	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});

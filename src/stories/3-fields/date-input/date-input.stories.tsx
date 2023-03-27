@@ -68,7 +68,7 @@ const Template: Story<Record<string, IDateInputSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"date-default": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 	},
 };
@@ -76,7 +76,7 @@ Default.args = {
 export const UseCurrentDate = Template.bind({});
 UseCurrentDate.args = {
 	"date-use-current-date": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		useCurrentDate: true,
 	},
@@ -86,7 +86,7 @@ export const WithDefaultValue = () => (
 	<StyledForm
 		data={{
 			fields: {
-				"date-default": { fieldType: "date", label: "Date with default value" },
+				"date-default": { uiType: "date", label: "Date with default value" },
 				...SubmitButtonStorybook,
 			},
 			defaultValues: { "date-default": "2022-01-01" },
@@ -100,7 +100,7 @@ WithDefaultValue.parameters = {
 export const DateFormat = Template.bind({});
 DateFormat.args = {
 	"date-format": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		dateFormat: "d MMMM uuuu",
 	},
@@ -112,7 +112,7 @@ export const DateFormatDefaultValues = () => (
 			id: "frontendEngine",
 			fields: {
 				"date-format-default": {
-					fieldType: "date",
+					uiType: "date",
 					label: "Date",
 					dateFormat: "d MMMM uuuu",
 				},
@@ -130,7 +130,7 @@ DateFormatDefaultValues.parameters = {
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"date-with-validation": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		validation: [{ required: true }],
 	},
@@ -139,7 +139,7 @@ WithValidation.args = {
 export const FutureDateOnly = Template.bind({});
 FutureDateOnly.args = {
 	"date-future": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		validation: [{ required: true }, { future: true, errorMessage: "Only future dates allowed" }],
 	},
@@ -148,7 +148,7 @@ FutureDateOnly.args = {
 export const PastDateOnly = Template.bind({});
 PastDateOnly.args = {
 	"date-past": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		validation: [{ required: true }, { past: true, errorMessage: "Only past dates allowed" }],
 	},
@@ -157,7 +157,7 @@ PastDateOnly.args = {
 export const NotFutureDate = Template.bind({});
 NotFutureDate.args = {
 	"date-now-or-past": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		validation: [{ required: true }, { notFuture: true, errorMessage: "No future dates" }],
 	},
@@ -166,7 +166,7 @@ NotFutureDate.args = {
 export const NotPastDate = Template.bind({});
 NotPastDate.args = {
 	"date-now-or-future": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		validation: [{ required: true }, { notPast: true, errorMessage: "No past dates" }],
 	},
@@ -175,7 +175,7 @@ NotPastDate.args = {
 export const MinDate = Template.bind({});
 MinDate.args = {
 	"min-date": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		validation: [{ required: true }, { minDate: "2023-01-01", errorMessage: "Min date 01/01/2023" }],
 	},
@@ -184,7 +184,7 @@ MinDate.args = {
 export const MaxDate = Template.bind({});
 MaxDate.args = {
 	"max-date": {
-		fieldType: "date",
+		uiType: "date",
 		label: "Date",
 		validation: [{ required: true }, { maxDate: "2023-01-01", errorMessage: "Max date 01/01/2023" }],
 	},

@@ -12,10 +12,10 @@ export const Text = (props: IGenericFieldProps<ITextSchema>) => {
 	// =============================================================================
 	const {
 		id,
-		schema: { children, fieldType, ...otherSchema },
+		schema: { children, uiType, ...otherSchema },
 	} = props;
 
-	const Element = TEXT_MAPPING[fieldType.toUpperCase()] || undefined;
+	const Element = TEXT_MAPPING[uiType.toUpperCase()] || undefined;
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================

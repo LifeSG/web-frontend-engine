@@ -14,16 +14,16 @@ const DATA: IFrontendEngineData = {
 	fields: {
 		name: {
 			label: "What is your name",
-			fieldType: "text",
+			uiType: "text",
 			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 		},
 		email: {
 			label: "Email address",
-			fieldType: "email",
+			uiType: "email",
 			validation: [{ required: true }],
 		},
 		sex: {
-			fieldType: "select",
+			uiType: "select",
 			label: "Sex",
 			options: [
 				{ label: "Male", value: "male" },
@@ -32,16 +32,13 @@ const DATA: IFrontendEngineData = {
 		},
 		description: {
 			label: "Feedback",
-			fieldType: "textarea",
+			uiType: "textarea",
 			rows: 3,
 			resizable: true,
 			validation: [{ required: true }],
 			chipTexts: ["Best", "Good", "Bad", "Horrible"],
 		},
 		...SubmitButtonStorybook,
-	},
-	defaultValues: {
-		name: "Erik Tan",
 	},
 };
 
@@ -296,7 +293,7 @@ export const AddCustomValidation: Story = () => {
 				fields: {
 					text: {
 						label: "Only accepts hello",
-						fieldType: "text",
+						uiType: "text",
 						validation: [{ required: true }, { mustBeHello: true, errorMessage: "Please key in hello" }],
 					},
 					...SubmitButtonStorybook,
@@ -332,7 +329,7 @@ export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
 					fields: {
 						name: {
 							label: "What is your name",
-							fieldType: "text",
+							uiType: "text",
 						},
 						...SubmitButtonStorybook,
 					},

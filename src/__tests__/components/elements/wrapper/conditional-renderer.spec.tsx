@@ -56,15 +56,15 @@ describe("conditional-renderer", () => {
 		${"url"}       | ${{ url: true }}             | ${"hello"} | ${"https://domain.tld"}
 		${"uuid"}      | ${{ uuid: true }}            | ${"hello"} | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"}
 	`("should support $condition condition for string conditional rendering", ({ config, invalid, valid }) => {
-		const fieldType = "text";
+		const uiType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
-				fieldType,
+				uiType,
 			},
 			[fieldTwoId]: {
 				label: fieldTwoLabel,
-				fieldType,
+				uiType,
 				showIf: [{ [fieldOneId]: [config] }],
 			},
 		};
@@ -91,15 +91,15 @@ describe("conditional-renderer", () => {
 		${"negative"}  | ${{ negative: true }} | ${1}    | ${-1}
 		${"integer"}   | ${{ integer: true }}  | ${1.1}  | ${1}
 	`("should support $condition condition for number conditional rendering", ({ config, invalid, valid }) => {
-		const fieldType = "numeric";
+		const uiType = "numeric";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
-				fieldType,
+				uiType,
 			},
 			[fieldTwoId]: {
 				label: fieldTwoLabel,
-				fieldType,
+				uiType,
 				showIf: [{ [fieldOneId]: [config] }],
 			},
 		};
@@ -130,7 +130,7 @@ describe("conditional-renderer", () => {
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
-				fieldType: fieldOneType,
+				uiType: fieldOneType,
 				options: [
 					{ value: "Apple", label: "Apple" },
 					{ value: "Berry", label: "Berry" },
@@ -139,7 +139,7 @@ describe("conditional-renderer", () => {
 			},
 			[fieldTwoId]: {
 				label: fieldTwoLabel,
-				fieldType: fieldTwoType,
+				uiType: fieldTwoType,
 				showIf: [{ [fieldOneId]: [config] }],
 			},
 		};
@@ -161,19 +161,19 @@ describe("conditional-renderer", () => {
 	});
 
 	it("should support AND conditions", () => {
-		const fieldType = "text";
+		const uiType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
-				fieldType,
+				uiType,
 			},
 			[fieldTwoId]: {
 				label: fieldTwoLabel,
-				fieldType,
+				uiType,
 			},
 			[fieldThreeId]: {
 				label: fieldThreeLabel,
-				fieldType,
+				uiType,
 				showIf: [{ [fieldOneId]: [{ filled: true }], [fieldTwoId]: [{ filled: true }] }],
 			},
 		};
@@ -189,19 +189,19 @@ describe("conditional-renderer", () => {
 	});
 
 	it("should support OR conditions", () => {
-		const fieldType = "text";
+		const uiType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
-				fieldType,
+				uiType,
 			},
 			[fieldTwoId]: {
 				label: fieldTwoLabel,
-				fieldType,
+				uiType,
 			},
 			[fieldThreeId]: {
 				label: fieldThreeLabel,
-				fieldType,
+				uiType,
 				showIf: [{ [fieldOneId]: [{ filled: true }] }, { [fieldTwoId]: [{ filled: true }] }],
 			},
 		};
@@ -218,15 +218,15 @@ describe("conditional-renderer", () => {
 	});
 
 	it("should remove validation schema for fields that are conditionally hidden", async () => {
-		const fieldType = "text";
+		const uiType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
-				fieldType,
+				uiType,
 			},
 			[fieldTwoId]: {
 				label: fieldTwoLabel,
-				fieldType,
+				uiType,
 				showIf: [{ [fieldOneId]: [{ filled: true }, { min: 5 }] }],
 				validation: [
 					{ required: true, errorMessage: ERROR_MESSAGE },
@@ -248,15 +248,15 @@ describe("conditional-renderer", () => {
 	});
 
 	it("should not submit fields that are conditionally hidden", async () => {
-		const fieldType = "text";
+		const uiType = "text";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[fieldOneId]: {
 				label: fieldOneLabel,
-				fieldType,
+				uiType,
 			},
 			[fieldTwoId]: {
 				label: fieldTwoLabel,
-				fieldType,
+				uiType,
 				showIf: [{ [fieldOneId]: [{ min: 5 }] }],
 			},
 		};

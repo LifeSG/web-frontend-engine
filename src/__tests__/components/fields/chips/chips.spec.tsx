@@ -16,7 +16,7 @@ import {
 
 const submitFn = jest.fn();
 const componentId = "field";
-const fieldType = "chips";
+const uiType = "chips";
 const textareaLabel = "D";
 
 const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideSchema?: TOverrideSchema) => {
@@ -25,7 +25,7 @@ const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideS
 		fields: {
 			[componentId]: {
 				label: "Chips",
-				fieldType,
+				uiType,
 				options: [
 					{ label: "A", value: "Apple" },
 					{ label: "B", value: "Berry" },
@@ -55,7 +55,7 @@ const getTextarea = (isQuery = false): HTMLElement => {
 	return getField("textbox", textareaLabel, isQuery);
 };
 
-describe(fieldType, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -181,7 +181,7 @@ describe(fieldType, () => {
 						data={{
 							id: FRONTEND_ENGINE_ID,
 							fields: {
-								[componentId]: { label: "Chips", fieldType, options },
+								[componentId]: { label: "Chips", uiType, options },
 								...getSubmitButtonProps(),
 							},
 						}}

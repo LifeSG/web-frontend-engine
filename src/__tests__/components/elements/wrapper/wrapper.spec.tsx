@@ -19,14 +19,14 @@ const renderComponent = (
 	const children = wrapperChildren || {
 		[childId]: {
 			label: "Field 1",
-			fieldType: childFieldType,
+			uiType: childFieldType,
 		},
 	};
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
 			[parentId]: {
-				fieldType: wrapperType,
+				uiType: wrapperType,
 				children,
 			},
 			...getSubmitButtonProps(),
@@ -53,7 +53,7 @@ describe("wrapper", () => {
 	it("should not render unsupported components", () => {
 		renderComponent(undefined, {
 			unsupported: {
-				fieldType: "unknown",
+				uiType: "unknown",
 			},
 		} as any);
 
@@ -65,11 +65,11 @@ describe("wrapper", () => {
 		const nestedTestId = TestHelper.generateId(nestedId, parentFieldType);
 		renderComponent(undefined, {
 			[nestedId]: {
-				fieldType: parentFieldType,
+				uiType: parentFieldType,
 				children: {
 					[childId]: {
 						label: "Field 1",
-						fieldType: childFieldType,
+						uiType: childFieldType,
 					},
 				},
 			},

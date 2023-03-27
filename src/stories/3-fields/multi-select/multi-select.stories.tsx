@@ -84,7 +84,7 @@ const Template: Story<Record<string, IMultiSelectSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"multi-select-default": {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "1", label: "1" },
@@ -99,7 +99,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"multi-select-default-value": {
-					fieldType: "multi-select",
+					uiType: "multi-select",
 					label: "Fruits",
 					options: [
 						{ value: "Apple", label: "Apple" },
@@ -120,7 +120,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const Disabled = Template.bind({});
 Disabled.args = {
 	"multi-select-disabled": {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -134,7 +134,7 @@ Disabled.args = {
 export const CustomWidth = Template.bind({});
 CustomWidth.args = {
 	"multi-select-custom-width": {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -148,7 +148,7 @@ CustomWidth.args = {
 export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"multi-select-placeholder": {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -162,7 +162,7 @@ Placeholder.args = {
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"multi-select-with-validation": {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Fruits",
 		options: [
 			{ value: "Apple", label: "Apple" },

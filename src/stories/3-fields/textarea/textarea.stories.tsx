@@ -93,7 +93,7 @@ const Template: Story<Record<string, ITextareaSchema>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
 	"textarea-default": {
-		fieldType: "textarea",
+		uiType: "textarea",
 		label: "Textarea",
 	},
 };
@@ -103,7 +103,7 @@ export const DefaultValue = () => (
 		data={{
 			fields: {
 				"textarea-default-value": {
-					fieldType: "textarea",
+					uiType: "textarea",
 					label: "Textarea",
 				},
 				...SubmitButtonStorybook,
@@ -119,7 +119,7 @@ DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
 export const AllowResize = Template.bind({});
 AllowResize.args = {
 	"textarea-allow-resize": {
-		fieldType: "textarea",
+		uiType: "textarea",
 		label: "Resizable textarea",
 		resizable: true,
 		rows: 3,
@@ -129,7 +129,7 @@ AllowResize.args = {
 export const WithCounter = Template.bind({});
 WithCounter.args = {
 	"textarea-with-counter": {
-		fieldType: "textarea",
+		uiType: "textarea",
 		label: "Textarea with counter",
 		validation: [{ max: 5 }],
 	},
@@ -138,7 +138,7 @@ WithCounter.args = {
 export const WithPills = Template.bind({});
 WithPills.args = {
 	"textarea-with-pills": {
-		fieldType: "textarea",
+		uiType: "textarea",
 		label: "Textarea with pills",
 		chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
 	},
@@ -148,7 +148,7 @@ export const WithPillsBottom = Template.bind({});
 WithPillsBottom.storyName = "With Pills (Bottom)";
 WithPillsBottom.args = {
 	"textarea-with-pills-bottom": {
-		fieldType: "textarea",
+		uiType: "textarea",
 		label: "Textarea with pills at the bottom",
 		chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
 		chipPosition: "bottom",
@@ -158,7 +158,7 @@ WithPillsBottom.args = {
 export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"textarea-with-validation": {
-		fieldType: "textarea",
+		uiType: "textarea",
 		label: "Textarea with validation",
 		validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }],
 	},
@@ -167,7 +167,7 @@ WithValidation.args = {
 export const WithPlaceholder = Template.bind({});
 WithPlaceholder.args = {
 	"textarea-with-placeholder": {
-		fieldType: "textarea",
+		uiType: "textarea",
 		label: "Textarea with placeholder",
 		placeholder: "Enter something...",
 	},

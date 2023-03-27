@@ -16,7 +16,7 @@ export type TWrapperType =
 	| "p";
 
 export interface IWrapperSchema extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
-	fieldType: TWrapperType;
+	uiType: TWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema> | string;
 }

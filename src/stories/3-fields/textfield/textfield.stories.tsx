@@ -27,7 +27,7 @@ export default {
 	argTypes: {
 		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("text"),
-		fieldType: {
+		uiType: {
 			description: `Use <code>text</code> or <code>email</code> or <code>numeric</code> to show this field`,
 			table: {
 				type: {
@@ -75,7 +75,7 @@ export const Default = Template.bind({});
 Default.args = {
 	"text-default": {
 		label: "Textfield",
-		fieldType: "text",
+		uiType: "text",
 	},
 };
 
@@ -85,7 +85,7 @@ export const DefaultValue = () => (
 			fields: {
 				"text-default-value": {
 					label: "Textfield",
-					fieldType: "text",
+					uiType: "text",
 				},
 				...SubmitButtonStorybook,
 			},
@@ -101,7 +101,7 @@ export const Disabled = Template.bind({});
 Disabled.args = {
 	"text-disabled": {
 		label: "Textfield",
-		fieldType: "text",
+		uiType: "text",
 		disabled: true,
 	},
 };
@@ -110,7 +110,7 @@ export const MaxLength = Template.bind({});
 MaxLength.args = {
 	"text-maxlength": {
 		label: "Textfield",
-		fieldType: "text",
+		uiType: "text",
 		validation: [{ max: 5 }],
 	},
 };
@@ -119,7 +119,7 @@ export const Placeholder = Template.bind({});
 Placeholder.args = {
 	"text-placeholder": {
 		label: "Textfield",
-		fieldType: "text",
+		uiType: "text",
 		placeholder: "Enter text here",
 	},
 };
@@ -128,7 +128,7 @@ export const WithValidation = Template.bind({});
 WithValidation.args = {
 	"text-with-validation": {
 		label: "Textfield",
-		fieldType: "text",
+		uiType: "text",
 		validation: [{ required: true }],
 	},
 };
