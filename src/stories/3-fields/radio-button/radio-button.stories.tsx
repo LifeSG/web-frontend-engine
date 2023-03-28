@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
-import { CommonFieldStoryProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/RadioButton",
@@ -54,7 +54,7 @@ const Template: Story<Record<string, IRadioButtonGroupSchema>> = (args) => (
 					uiType: "section",
 					children: {
 						...args,
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -91,7 +91,7 @@ export const DefaultValue = () => (
 								{ label: "Cherry", value: "Cherry" },
 							],
 						},
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},

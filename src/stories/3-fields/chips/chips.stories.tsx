@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IChipsSchema } from "../../../components/fields/chips";
-import { CommonFieldStoryProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, StyledForm, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/Chips",
@@ -58,7 +58,7 @@ const Template: Story<Record<string, IChipsSchema>> = (args) => (
 					uiType: "section",
 					children: {
 						...args,
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -95,7 +95,7 @@ export const DefaultValue = () => (
 								{ label: "Cherry", value: "Cherry" },
 							],
 						},
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},

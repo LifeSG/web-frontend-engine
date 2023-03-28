@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IMultiSelectSchema } from "../../../components/fields/multi-select";
-import { CommonFieldStoryProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, StyledForm, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/MultiSelect",
@@ -77,7 +77,7 @@ const Template: Story<Record<string, IMultiSelectSchema>> = (args) => (
 					uiType: "section",
 					children: {
 						...args,
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -114,7 +114,7 @@ export const DefaultValue = () => (
 								{ value: "Cherry", label: "Cherry" },
 							],
 						},
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},

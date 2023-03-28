@@ -1,7 +1,7 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine, IFrontendEngineProps } from "../../../components";
-import { SubmitButtonStorybook } from "../../common";
+import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
 export default {
@@ -111,7 +111,7 @@ SoftValidation.args = {
 						],
 						validation: [{ required: true, soft: true, errorMessage: "This field is optional" }],
 					},
-					...SubmitButtonStorybook,
+					...SUBMIT_BUTTON_SCHEMA,
 				},
 			},
 		},

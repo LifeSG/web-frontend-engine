@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ITimeFieldSchema } from "src/components/fields";
 import { FrontendEngine } from "../../../components";
-import { CommonFieldStoryProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/TimeField",
@@ -82,7 +82,7 @@ const Template: Story<Record<string, ITimeFieldSchema>> = (args) => (
 					uiType: "section",
 					children: {
 						...args,
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -118,7 +118,7 @@ export const DefaultValue = () => (
 							uiType: "time-field",
 							label: "Time",
 						},
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -145,7 +145,7 @@ export const WithDefaultValue = () => (
 					uiType: "section",
 					children: {
 						"time-default": { uiType: "time-field", label: "Time" },
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},

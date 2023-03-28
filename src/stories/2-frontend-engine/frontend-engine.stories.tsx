@@ -8,7 +8,7 @@ import {
 	IFrontendEngineProps,
 	IFrontendEngineRef,
 } from "../../components/frontend-engine";
-import { SubmitButtonStorybook } from "../common";
+import { SUBMIT_BUTTON_SCHEMA } from "../common";
 
 const DATA: IFrontendEngineData = {
 	sections: {
@@ -41,7 +41,7 @@ const DATA: IFrontendEngineData = {
 					validation: [{ required: true }],
 					chipTexts: ["Best", "Good", "Bad", "Horrible"],
 				},
-				...SubmitButtonStorybook,
+				...SUBMIT_BUTTON_SCHEMA,
 			},
 		},
 	},
@@ -307,7 +307,7 @@ export const AddCustomValidation: Story = () => {
 									{ mustBeHello: true, errorMessage: "Please key in hello" },
 								],
 							},
-							...SubmitButtonStorybook,
+							...SUBMIT_BUTTON_SCHEMA,
 						},
 					},
 				},
@@ -347,7 +347,7 @@ export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
 									label: "What is your name",
 									uiType: "text-field",
 								},
-								...SubmitButtonStorybook,
+								...SUBMIT_BUTTON_SCHEMA,
 							},
 						},
 					},

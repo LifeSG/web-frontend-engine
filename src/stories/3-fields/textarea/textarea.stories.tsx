@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { ITextareaSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/Textarea",
@@ -93,7 +93,7 @@ const Template: Story<Record<string, ITextareaSchema>> = (args) => (
 					uiType: "section",
 					children: {
 						...args,
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -120,7 +120,7 @@ export const DefaultValue = () => (
 							uiType: "textarea",
 							label: "Textarea",
 						},
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},

@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { IWrapperSchema } from "../../../components/elements/wrapper";
-import { CommonFieldStoryProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Element/Wrapper",
@@ -78,7 +78,7 @@ Default.args = {
 				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 				chipTexts: ["John", "Doe"],
 			},
-			...SubmitButtonStorybook,
+			...SUBMIT_BUTTON_SCHEMA,
 		},
 	},
 };
@@ -107,7 +107,7 @@ StringAndField.args = {
 				validation: [{ required: true }],
 				chipTexts: ["John", "Doe"],
 			},
-			...SubmitButtonStorybook,
+			...SUBMIT_BUTTON_SCHEMA,
 		},
 	},
 };

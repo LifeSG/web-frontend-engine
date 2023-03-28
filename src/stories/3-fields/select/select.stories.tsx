@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ISelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, StyledForm, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/Select",
@@ -75,7 +75,7 @@ const Template: Story<Record<string, ISelectSchema>> = (args) => (
 					uiType: "section",
 					children: {
 						...args,
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -112,7 +112,7 @@ export const DefaultValue = () => (
 								{ label: "Cherry", value: "cherry" },
 							],
 						},
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},

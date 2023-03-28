@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IDateFieldSchema } from "src/components/fields/date-field/types";
-import { CommonFieldStoryProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, StyledForm, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/DateField",
@@ -68,7 +68,7 @@ const Template: Story<Record<string, IDateFieldSchema>> = (args) => (
 					uiType: "section",
 					children: {
 						...args,
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -101,7 +101,7 @@ export const WithDefaultValue = () => (
 					uiType: "section",
 					children: {
 						"date-default": { uiType: "date-field", label: "Date with default value" },
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -135,7 +135,7 @@ export const DateFormatDefaultValues = () => (
 							label: "Date",
 							dateFormat: "d MMMM uuuu",
 						},
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},

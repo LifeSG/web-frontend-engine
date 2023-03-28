@@ -84,7 +84,7 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 	};
 };
 
-export const SubmitButtonStorybook: Record<string, ISubmitButtonSchema> = {
+export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
 	"submit-button": { uiType: "submit", label: "Submit" },
 };
 
