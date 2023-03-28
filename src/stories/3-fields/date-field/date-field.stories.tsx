@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IDateFieldSchema } from "src/components/fields/date-field/types";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/DateField",
@@ -22,7 +22,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("date-field"),
 		useCurrentDate: {
 			description: "Indicates if field should be prefilled with current system date",

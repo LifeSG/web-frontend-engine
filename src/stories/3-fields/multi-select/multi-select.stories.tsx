@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IMultiSelectSchema } from "../../../components/fields/multi-select";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/MultiSelect",
@@ -21,7 +21,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("multi-select"),
 		disabled: {
 			description: "Specifies if the input should be disabled",

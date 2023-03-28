@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { ITextSchema } from "../../../components/elements";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, LOREM_IPSUM } from "../../common";
+import { CommonFieldStoryProps, LOREM_IPSUM } from "../../common";
 
 export default {
 	title: "Element/Text",
@@ -28,7 +28,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("text", true),
 		"text-variants": { table: { disable: true } },
 		children: {

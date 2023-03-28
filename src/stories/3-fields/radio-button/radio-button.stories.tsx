@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/RadioButton",
@@ -20,7 +20,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("radio"),
 		disabled: {
 			description: "Specifies if the radio buttons should be disabled",

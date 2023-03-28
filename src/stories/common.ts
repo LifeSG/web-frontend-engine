@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { FrontendEngine } from "../components";
 import { ISubmitButtonSchema } from "../components/fields";
 
-export const ExcludeReactFormHookProps = {
+const EXCLUDED_STORY_PROPS = {
 	invalid: { table: { disable: true } },
 	isTouched: { table: { disable: true } },
 	isDirty: { table: { disable: true } },
@@ -16,6 +16,7 @@ export const ExcludeReactFormHookProps = {
 export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => {
 	if (onlyFieldType) {
 		return {
+			...EXCLUDED_STORY_PROPS,
 			[`${uiType}-default`]: { table: { disable: true } },
 			uiType: {
 				description: `Use <code>${uiType}</code> to show this field`,
@@ -34,6 +35,7 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 		};
 	}
 	return {
+		...EXCLUDED_STORY_PROPS,
 		[`${uiType}-default`]: { table: { disable: true } },
 		uiType: {
 			description: `Use <code>${uiType}</code> to show this field`,

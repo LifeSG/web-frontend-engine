@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IContactFieldSchema } from "../../../components/fields";
 import { getCountries } from "../../../components/fields/contact-field/data";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, StyledForm, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/ContactField",
@@ -22,7 +22,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("contact-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",

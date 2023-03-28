@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { IAlertSchema } from "../../../components/elements";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps } from "../../common";
+import { CommonFieldStoryProps } from "../../common";
 
 export default {
 	title: "Element/Alert",
@@ -28,7 +28,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("alert", true),
 		children: {
 			type: {

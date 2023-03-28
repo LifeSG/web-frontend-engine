@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { ISubmitButtonSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps } from "../../common";
+import { CommonFieldStoryProps } from "../../common";
 
 export default {
 	title: "Field/SubmitButton",
@@ -25,7 +25,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("submit"),
 		validation: { table: { disable: true } },
 		styleType: {

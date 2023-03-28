@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { INumericFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/NumericField",
@@ -25,7 +25,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("numeric-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",

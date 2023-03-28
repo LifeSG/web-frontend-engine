@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ITimeFieldSchema } from "src/components/fields";
 import { FrontendEngine } from "../../../components";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, SubmitButtonStorybook } from "../../common";
 
 export default {
 	title: "Field/TimeField",
@@ -20,7 +20,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("time-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",
