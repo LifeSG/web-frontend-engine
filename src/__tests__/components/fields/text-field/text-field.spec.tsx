@@ -12,12 +12,12 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const componentLabel = "Textfield";
-const defaultFieldType = "text-field";
-const emailFieldType = "email-field";
-const numericFieldType = "numeric-field";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const COMPONENT_LABEL = "Textfield";
+const DEFAULT_FIELD_TYPE = "text-field";
+const EMAIL_FIELD_TYPE = "email-field";
+const NUMERIC_FIELD_TYPE = "numeric-field";
 
 const renderComponent = (
 	overrideField?: Partial<ITextFieldSchema | IEmailFieldSchema | INumericFieldSchema> | undefined,
@@ -26,23 +26,23 @@ const renderComponent = (
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
+			[COMPONENT_ID]: {
 				label: "Textfield",
-				uiType: defaultFieldType,
+				uiType: DEFAULT_FIELD_TYPE,
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getTextfield = (): HTMLElement => {
-	return getField("textbox", componentLabel);
+	return getField("textbox", COMPONENT_LABEL);
 };
 
-describe(defaultFieldType, () => {
+describe(DEFAULT_FIELD_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -81,12 +81,12 @@ describe(defaultFieldType, () => {
 
 	it("should support default value", async () => {
 		const defaultValue = "hello";
-		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should pass other props into the field", () => {
@@ -102,19 +102,19 @@ describe(defaultFieldType, () => {
 	});
 });
 
-describe(emailFieldType, () => {
+describe(EMAIL_FIELD_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
 
 	it("should be able to render the field", () => {
-		renderComponent({ uiType: emailFieldType });
+		renderComponent({ uiType: EMAIL_FIELD_TYPE });
 
 		expect(getTextfield()).toBeInTheDocument();
 	});
 
 	it("should validate email format", async () => {
-		renderComponent({ uiType: emailFieldType });
+		renderComponent({ uiType: EMAIL_FIELD_TYPE });
 
 		fireEvent.change(getTextfield(), { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -124,7 +124,7 @@ describe(emailFieldType, () => {
 
 	it("should support validation schema", async () => {
 		renderComponent({
-			uiType: emailFieldType,
+			uiType: EMAIL_FIELD_TYPE,
 			validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 		});
 
@@ -134,36 +134,36 @@ describe(emailFieldType, () => {
 	});
 
 	it("should apply inputMode according to its type", () => {
-		renderComponent({ uiType: emailFieldType });
+		renderComponent({ uiType: EMAIL_FIELD_TYPE });
 
 		expect(getTextfield()).toHaveAttribute("inputMode", "email");
 	});
 
 	it("should apply maxLength attribute if max validation is specified", () => {
-		renderComponent({ uiType: emailFieldType, validation: [{ max: 5 }] });
+		renderComponent({ uiType: EMAIL_FIELD_TYPE, validation: [{ max: 5 }] });
 
 		expect(getTextfield()).toHaveAttribute("maxLength", "5");
 	});
 
 	it("should apply maxLength attribute if length validation is specified", () => {
-		renderComponent({ uiType: emailFieldType, validation: [{ length: 5 }] });
+		renderComponent({ uiType: EMAIL_FIELD_TYPE, validation: [{ length: 5 }] });
 
 		expect(getTextfield()).toHaveAttribute("maxLength", "5");
 	});
 
 	it("should support default value", async () => {
 		const defaultValue = "john@doe.tld";
-		renderComponent({ uiType: emailFieldType }, { defaultValues: { [componentId]: defaultValue } });
+		renderComponent({ uiType: EMAIL_FIELD_TYPE }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should pass other props into the field", () => {
 		renderComponent({
-			uiType: emailFieldType,
+			uiType: EMAIL_FIELD_TYPE,
 			placeholder: "placeholder",
 			readOnly: true,
 			disabled: true,
@@ -175,20 +175,20 @@ describe(emailFieldType, () => {
 	});
 });
 
-describe(numericFieldType, () => {
+describe(NUMERIC_FIELD_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
 
 	it("should be able to render the field", () => {
-		renderComponent({ uiType: numericFieldType });
+		renderComponent({ uiType: NUMERIC_FIELD_TYPE });
 
 		expect(getTextfield()).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
 		renderComponent({
-			uiType: numericFieldType,
+			uiType: NUMERIC_FIELD_TYPE,
 			validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 		});
 
@@ -198,36 +198,36 @@ describe(numericFieldType, () => {
 	});
 
 	it("should apply inputMode according to its type", () => {
-		renderComponent({ uiType: numericFieldType });
+		renderComponent({ uiType: NUMERIC_FIELD_TYPE });
 
 		expect(getTextfield()).toHaveAttribute("inputMode", "numeric");
 	});
 
 	it("should apply min attribute if min validation is specified", () => {
-		renderComponent({ uiType: numericFieldType, validation: [{ min: 5 }] });
+		renderComponent({ uiType: NUMERIC_FIELD_TYPE, validation: [{ min: 5 }] });
 
 		expect(getTextfield()).toHaveAttribute("min", "5");
 	});
 
 	it("should apply max attribute if max validation is specified", () => {
-		renderComponent({ uiType: numericFieldType, validation: [{ max: 5 }] });
+		renderComponent({ uiType: NUMERIC_FIELD_TYPE, validation: [{ max: 5 }] });
 
 		expect(getTextfield()).toHaveAttribute("max", "5");
 	});
 
 	it("should support default value", async () => {
 		const defaultValue = 1;
-		renderComponent({ uiType: numericFieldType }, { defaultValues: { [componentId]: defaultValue } });
+		renderComponent({ uiType: NUMERIC_FIELD_TYPE }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should pass other props into the field", () => {
 		renderComponent({
-			uiType: numericFieldType,
+			uiType: NUMERIC_FIELD_TYPE,
 			placeholder: "placeholder",
 			readOnly: true,
 			disabled: true,

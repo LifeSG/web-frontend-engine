@@ -13,17 +13,17 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const uiType = "checkbox";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "checkbox";
 
 const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
+			[COMPONENT_ID]: {
 				label: "Checkbox",
-				uiType,
+				uiType: UI_TYPE,
 				options: [
 					{ label: "A", value: "Apple" },
 					{ label: "B", value: "Berry" },
@@ -34,7 +34,7 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getCheckboxes = (): HTMLElement[] => {
@@ -44,7 +44,7 @@ const getCheckboxes = (): HTMLElement[] => {
 		.filter(Boolean);
 };
 
-describe(uiType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -57,7 +57,7 @@ describe(uiType, () => {
 
 	it("should be able to support default values", async () => {
 		const defaultValues = ["Apple"];
-		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -69,7 +69,7 @@ describe(uiType, () => {
 				expect(checkbox.nextElementSibling).not.toBeInTheDocument();
 			}
 		});
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -90,7 +90,7 @@ describe(uiType, () => {
 			expect(checkbox).toBeDisabled();
 		});
 
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: undefined }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
 	it("should be able to toggle the checkboxes", async () => {
@@ -100,15 +100,15 @@ describe(uiType, () => {
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
 	it.each`
@@ -140,11 +140,11 @@ describe(uiType, () => {
 						data={{
 							id: FRONTEND_ENGINE_ID,
 							fields: {
-								[componentId]: { label: "Checkbox", uiType, options },
+								[COMPONENT_ID]: { label: "Checkbox", uiType: UI_TYPE, options },
 								...getSubmitButtonProps(),
 							},
 						}}
-						onSubmit={submitFn}
+						onSubmit={SUBMIT_FN}
 					/>
 					<Button.Default
 						onClick={() =>
@@ -173,11 +173,13 @@ describe(uiType, () => {
 
 				selected.forEach((value) => fireEvent.click(screen.getByLabelText(value)));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: expectedValueBeforeUpdate }));
+				expect(SUBMIT_FN).toBeCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
+				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
 	});

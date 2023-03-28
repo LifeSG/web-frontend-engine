@@ -15,24 +15,24 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const uiType = "date-field";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "date-field";
 
 const renderComponent = (overrideField?: TOverrideField<IDateFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
+			[COMPONENT_ID]: {
 				label: "Date",
-				uiType,
+				uiType: UI_TYPE,
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getDayInput = (): HTMLElement => {
@@ -47,7 +47,7 @@ const getYearInput = (): HTMLElement => {
 	return getField("textbox", "year-input");
 };
 
-describe(uiType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -65,14 +65,14 @@ describe(uiType, () => {
 		const defaultMonth = "01";
 		const defaultYear = "2022";
 		const defaultValue = `${defaultYear}-${defaultMonth}-${defaultDay}`;
-		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(getDayInput()).toHaveAttribute("value", defaultDay);
 		expect(getMonthInput()).toHaveAttribute("value", defaultMonth);
 		expect(getYearInput()).toHaveAttribute("value", defaultYear);
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should show current date if useCurrentDate=true", async () => {
@@ -82,7 +82,7 @@ describe(uiType, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalledWith(
+		expect(SUBMIT_FN).toBeCalledWith(
 			expect.objectContaining({
 				field: date,
 			})
@@ -105,7 +105,7 @@ describe(uiType, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 			});
 
 			it("should format current date accordingly if useCurrentDate=true", async () => {
@@ -115,19 +115,19 @@ describe(uiType, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 			});
 
 			it("should accept defaultValue in the format as defined by dateFormat", async () => {
-				renderComponent({ dateFormat }, { defaultValues: { [componentId]: value } });
+				renderComponent({ dateFormat }, { defaultValues: { [COMPONENT_ID]: value } });
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: value }));
+				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 			});
 
 			it("should reject defaultValue if it did not follow dateFormat", async () => {
-				renderComponent({ dateFormat }, { defaultValues: { [componentId]: "2022-01-25" } });
+				renderComponent({ dateFormat }, { defaultValues: { [COMPONENT_ID]: "2022-01-25" } });
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 

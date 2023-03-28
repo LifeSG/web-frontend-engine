@@ -14,36 +14,36 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const uiType = "contact-field";
-const componentLabel = "Contact Number";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "contact-field";
+const COMPONENT_LABEL = "Contact Number";
 
 const renderComponent = (overrideField?: TOverrideField<IContactFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
-				label: componentLabel,
-				uiType,
+			[COMPONENT_ID]: {
+				label: COMPONENT_LABEL,
+				uiType: UI_TYPE,
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getContactField = (): HTMLElement => {
-	return getField("textbox", componentLabel);
+	return getField("textbox", COMPONENT_LABEL);
 };
 
 const getDefaultDropdownToggle = (): HTMLElement => {
 	return getField("button", "+65");
 };
 
-describe(uiType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -104,7 +104,7 @@ describe(uiType, () => {
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: `+65 ${contactNumber}` }));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` }));
 		});
 
 		it("+65 12345678 should be an invalid number", async () => {
@@ -138,7 +138,9 @@ describe(uiType, () => {
 				if (expected === "error") {
 					expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER)).toBeInTheDocument();
 				} else {
-					expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: `+65 ${contactNumber}` }));
+					expect(SUBMIT_FN).toBeCalledWith(
+						expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` })
+					);
 				}
 			}
 		);
@@ -155,7 +157,7 @@ describe(uiType, () => {
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: `+81 ${contactNumber}` }));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+81 ${contactNumber}` }));
 		});
 
 		it("+81 12345678  should be an invalid number", async () => {

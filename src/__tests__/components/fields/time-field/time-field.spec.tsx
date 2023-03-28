@@ -14,24 +14,24 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const uiType = "time-field";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "time-field";
 
 const renderComponent = (overrideField?: TOverrideField<ITimeFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
+			[COMPONENT_ID]: {
 				label: "Time",
-				uiType,
+				uiType: UI_TYPE,
 				...overrideField,
 			},
 			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getTimePicker = (): HTMLElement => {
@@ -50,7 +50,7 @@ const getConfirmButton = (): HTMLElement => {
 	return getField("button", "confirm selection");
 };
 
-describe(uiType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 
@@ -70,11 +70,11 @@ describe(uiType, () => {
 
 	it("should be able to support default values", async () => {
 		const defaultValue = "11:11am";
-		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -108,7 +108,7 @@ describe(uiType, () => {
 		await waitFor(() => fireEvent.click(getConfirmButton()));
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: "01:00am" }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00am" }));
 	});
 
 	it("should be able to display current time if useCurrentTime=true", () => {
@@ -129,6 +129,6 @@ describe(uiType, () => {
 		await waitFor(() => fireEvent.click(getConfirmButton()));
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: "01:00" }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00" }));
 	});
 });

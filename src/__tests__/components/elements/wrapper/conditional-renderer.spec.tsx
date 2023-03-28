@@ -6,13 +6,13 @@ import {
 } from "../../../../components/frontend-engine";
 import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getField, getSubmitButton, getSubmitButtonProps } from "../../../common";
 
-const submitFn = jest.fn();
-const fieldOneId = "field1";
-const fieldTwoId = "field2";
-const fieldThreeId = "field3";
-const fieldOneLabel = "Field one";
-const fieldTwoLabel = "Field two";
-const fieldThreeLabel = "Field three";
+const SUBMIT_FN = jest.fn();
+const FIELD_ONE_ID = "field1";
+const FIELD_TWO_ID = "field2";
+const FIELD_THREE_ID = "field3";
+const FIELD_ONE_LABEL = "Field one";
+const FIELD_TWO_LABEL = "Field two";
+const FIELD_THREE_LABEL = "Field three";
 
 const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
 	const json: IFrontendEngineData = {
@@ -23,19 +23,19 @@ const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => 
 		},
 	};
 
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getFieldOne = (): HTMLElement => {
-	return getField("textbox", fieldOneLabel);
+	return getField("textbox", FIELD_ONE_LABEL);
 };
 
 const getFieldTwo = (isQuery = false): HTMLElement => {
-	return getField("textbox", fieldTwoLabel, isQuery);
+	return getField("textbox", FIELD_TWO_LABEL, isQuery);
 };
 
 const getFieldThree = (isQuery = false): HTMLElement => {
-	return getField("textbox", fieldThreeLabel, isQuery);
+	return getField("textbox", FIELD_THREE_LABEL, isQuery);
 };
 
 describe("conditional-renderer", () => {
@@ -58,14 +58,14 @@ describe("conditional-renderer", () => {
 	`("should support $condition condition for string conditional rendering", ({ config, invalid, valid }) => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			[fieldOneId]: {
-				label: fieldOneLabel,
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
 				uiType,
 			},
-			[fieldTwoId]: {
-				label: fieldTwoLabel,
+			[FIELD_TWO_ID]: {
+				label: FIELD_TWO_LABEL,
 				uiType,
-				showIf: [{ [fieldOneId]: [config] }],
+				showIf: [{ [FIELD_ONE_ID]: [config] }],
 			},
 		};
 		renderComponent(fields);
@@ -93,14 +93,14 @@ describe("conditional-renderer", () => {
 	`("should support $condition condition for number conditional rendering", ({ config, invalid, valid }) => {
 		const uiType = "numeric-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			[fieldOneId]: {
-				label: fieldOneLabel,
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
 				uiType,
 			},
-			[fieldTwoId]: {
-				label: fieldTwoLabel,
+			[FIELD_TWO_ID]: {
+				label: FIELD_TWO_LABEL,
 				uiType,
-				showIf: [{ [fieldOneId]: [config] }],
+				showIf: [{ [FIELD_ONE_ID]: [config] }],
 			},
 		};
 		renderComponent(fields);
@@ -128,8 +128,8 @@ describe("conditional-renderer", () => {
 		const fieldOneType = "multi-select";
 		const fieldTwoType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			[fieldOneId]: {
-				label: fieldOneLabel,
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
 				uiType: fieldOneType,
 				options: [
 					{ value: "Apple", label: "Apple" },
@@ -137,10 +137,10 @@ describe("conditional-renderer", () => {
 					{ value: "Cherry", label: "Cherry" },
 				],
 			},
-			[fieldTwoId]: {
-				label: fieldTwoLabel,
+			[FIELD_TWO_ID]: {
+				label: FIELD_TWO_LABEL,
 				uiType: fieldTwoType,
-				showIf: [{ [fieldOneId]: [config] }],
+				showIf: [{ [FIELD_ONE_ID]: [config] }],
 			},
 		};
 		renderComponent(fields);
@@ -163,18 +163,18 @@ describe("conditional-renderer", () => {
 	it("should support AND conditions", () => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			[fieldOneId]: {
-				label: fieldOneLabel,
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
 				uiType,
 			},
-			[fieldTwoId]: {
-				label: fieldTwoLabel,
+			[FIELD_TWO_ID]: {
+				label: FIELD_TWO_LABEL,
 				uiType,
 			},
-			[fieldThreeId]: {
-				label: fieldThreeLabel,
+			[FIELD_THREE_ID]: {
+				label: FIELD_THREE_LABEL,
 				uiType,
-				showIf: [{ [fieldOneId]: [{ filled: true }], [fieldTwoId]: [{ filled: true }] }],
+				showIf: [{ [FIELD_ONE_ID]: [{ filled: true }], [FIELD_TWO_ID]: [{ filled: true }] }],
 			},
 		};
 		renderComponent(fields);
@@ -191,18 +191,18 @@ describe("conditional-renderer", () => {
 	it("should support OR conditions", () => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			[fieldOneId]: {
-				label: fieldOneLabel,
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
 				uiType,
 			},
-			[fieldTwoId]: {
-				label: fieldTwoLabel,
+			[FIELD_TWO_ID]: {
+				label: FIELD_TWO_LABEL,
 				uiType,
 			},
-			[fieldThreeId]: {
-				label: fieldThreeLabel,
+			[FIELD_THREE_ID]: {
+				label: FIELD_THREE_LABEL,
 				uiType,
-				showIf: [{ [fieldOneId]: [{ filled: true }] }, { [fieldTwoId]: [{ filled: true }] }],
+				showIf: [{ [FIELD_ONE_ID]: [{ filled: true }] }, { [FIELD_TWO_ID]: [{ filled: true }] }],
 			},
 		};
 		renderComponent(fields);
@@ -220,14 +220,14 @@ describe("conditional-renderer", () => {
 	it("should remove validation schema for fields that are conditionally hidden", async () => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			[fieldOneId]: {
-				label: fieldOneLabel,
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
 				uiType,
 			},
-			[fieldTwoId]: {
-				label: fieldTwoLabel,
+			[FIELD_TWO_ID]: {
+				label: FIELD_TWO_LABEL,
 				uiType,
-				showIf: [{ [fieldOneId]: [{ filled: true }, { min: 5 }] }],
+				showIf: [{ [FIELD_ONE_ID]: [{ filled: true }, { min: 5 }] }],
 				validation: [
 					{ required: true, errorMessage: ERROR_MESSAGE },
 					{ min: 5, errorMessage: ERROR_MESSAGE },
@@ -250,14 +250,14 @@ describe("conditional-renderer", () => {
 	it("should not submit fields that are conditionally hidden", async () => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
-			[fieldOneId]: {
-				label: fieldOneLabel,
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
 				uiType,
 			},
-			[fieldTwoId]: {
-				label: fieldTwoLabel,
+			[FIELD_TWO_ID]: {
+				label: FIELD_TWO_LABEL,
 				uiType,
-				showIf: [{ [fieldOneId]: [{ min: 5 }] }],
+				showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
 			},
 		};
 		renderComponent(fields);
@@ -267,7 +267,7 @@ describe("conditional-renderer", () => {
 		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hi" }));
-		expect(submitFn).toBeCalledWith(expect.not.objectContaining({ [fieldTwoId]: expect.anything() }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
 	});
 });

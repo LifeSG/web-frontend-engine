@@ -4,17 +4,17 @@ import { FrontendEngine, IFrontendEngineData } from "../../../../components/fron
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const uiType = "alert";
-const componentTestId = TestHelper.generateId(componentId, "alert");
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "alert";
+const COMPONENT_TEST_ID = TestHelper.generateId(COMPONENT_ID, "alert");
 
 const renderComponent = (overrideField?: TOverrideField<IAlertSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
-				uiType,
+			[COMPONENT_ID]: {
+				uiType: UI_TYPE,
 				children: "Alert",
 				type: "success",
 				...overrideField,
@@ -22,10 +22,10 @@ const renderComponent = (overrideField?: TOverrideField<IAlertSchema>, overrideS
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-describe(uiType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -33,7 +33,7 @@ describe(uiType, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(COMPONENT_TEST_ID)).toBeInTheDocument();
 	});
 
 	it("should be able to render a ReactNode children", () => {
