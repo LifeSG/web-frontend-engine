@@ -1,6 +1,9 @@
 import styled from "styled-components";
-import { FrontendEngine } from "../components";
+import { action } from "@storybook/addon-actions";
+import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
 import { ISubmitButtonSchema } from "../components/fields";
+import { IFrontendEngineRef, TNoInfer } from "../components/frontend-engine";
+import { ReactElement, Ref, forwardRef } from "react";
 
 const EXCLUDED_STORY_PROPS = {
 	invalid: { table: { disable: true } },
@@ -17,7 +20,6 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 	if (onlyFieldType) {
 		return {
 			...EXCLUDED_STORY_PROPS,
-			[`${uiType}-default`]: { table: { disable: true } },
 			uiType: {
 				description: `Use <code>${uiType}</code> to show this field`,
 				table: {
@@ -36,7 +38,6 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 	}
 	return {
 		...EXCLUDED_STORY_PROPS,
-		[`${uiType}-default`]: { table: { disable: true } },
 		uiType: {
 			description: `Use <code>${uiType}</code> to show this field`,
 			table: {
@@ -88,9 +89,21 @@ export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
 	"submit-button": { uiType: "submit", label: "Submit" },
 };
 
-export const StyledForm = styled(FrontendEngine)`
-	width: 350px;
+export const StyledForm = styled(OriginalFrontendEngine)`
+	width: 400px;
 `;
+
+// naming it as `FrontendEngine` because this is shown in code view
+export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => (
+	<StyledForm
+		onChange={(values, isValid) => action("change")(values, isValid)}
+		onSubmit={(e) => action("submit")(e)}
+		ref={ref}
+		{...props}
+	/>
+)) as <V = undefined>(
+	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
+) => ReactElement;
 
 export const LOREM_IPSUM = (prefix: string) => {
 	const codePrefix = `<code>${prefix}</code>`;

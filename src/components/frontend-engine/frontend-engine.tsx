@@ -6,7 +6,7 @@ import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
 import { Sections } from "../elements/sections";
-import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues } from "./types";
+import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
@@ -172,11 +172,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 });
 
 /**
- * prevents inferrence
- * https://stackoverflow.com/questions/56687668/a-way-to-disable-type-argument-inference-in-generics
- */
-type NoInfer<T, U> = [T][T extends U ? 0 : never];
-/**
  * The one and only component needed to create your form
  *
  * Minimally you will need to set the `data` props which is the JSON schema to define the form
@@ -188,7 +183,7 @@ export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProp
 		</YupProvider>
 	);
 }) as <V = undefined>(
-	props: IFrontendEngineProps<NoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
+	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
 ) => ReactElement;
 
 /**
