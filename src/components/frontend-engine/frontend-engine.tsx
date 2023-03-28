@@ -5,7 +5,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
-import { Wrapper } from "../elements/wrapper";
+import { Sections } from "../elements/sections";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
@@ -17,7 +17,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		data: {
 			className: dataClassName = null,
 			defaultValues,
-			fields,
+			sections,
 			id,
 			revalidationMode = "onChange",
 			validationMode = "onSubmit",
@@ -81,7 +81,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// NOTE: Wrapper component contains nested fields
 	const setErrors = (errors: TErrorPayload): void => {
 		Object.entries(errors).forEach(([key, value]) => {
-			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(fields, key);
+			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(sections, key);
 
 			if (!isValidFieldKey) {
 				return;
@@ -165,7 +165,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				onSubmit={reactFormHookSubmit(handleSubmit)}
 				ref={ref}
 			>
-				<Wrapper warnings={warnings}>{fields}</Wrapper>
+				<Sections warnings={warnings} schema={sections} />
 			</form>
 		</FormProvider>
 	);
