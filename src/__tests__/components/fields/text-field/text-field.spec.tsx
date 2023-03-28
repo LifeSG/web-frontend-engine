@@ -25,13 +25,18 @@ const renderComponent = (
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[COMPONENT_ID]: {
-				label: "Textfield",
-				uiType: DEFAULT_FIELD_TYPE,
-				...overrideField,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: "Textfield",
+						uiType: DEFAULT_FIELD_TYPE,
+						...overrideField,
+					},
+					...getSubmitButtonProps(),
+				},
 			},
-			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};

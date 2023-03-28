@@ -87,7 +87,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, ITextareaSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -101,12 +113,17 @@ Default.args = {
 export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				"textarea-default-value": {
-					uiType: "textarea",
-					label: "Textarea",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"textarea-default-value": {
+							uiType: "textarea",
+							label: "Textarea",
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: {
 				"textarea-default-value": "This is the default value",

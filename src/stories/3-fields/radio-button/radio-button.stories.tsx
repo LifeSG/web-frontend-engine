@@ -48,7 +48,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, IRadioButtonGroupSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -67,17 +79,22 @@ Default.args = {
 export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				"radio-default-value": {
-					uiType: "radio",
-					label: "Fruits",
-					options: [
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-					],
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"radio-default-value": {
+							uiType: "radio",
+							label: "Fruits",
+							options: [
+								{ label: "Apple", value: "Apple" },
+								{ label: "Berry", value: "Berry" },
+								{ label: "Cherry", value: "Cherry" },
+							],
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: { "radio-default-value": "Apple" },
 		}}

@@ -30,17 +30,22 @@ const getRadioButtonB = (): HTMLElement => {
 const renderComponent = (overrideField?: TOverrideField<IRadioButtonGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[COMPONENT_ID]: {
-				label: "Radio",
-				uiType: UI_TYPE,
-				options: [
-					{ label: "A", value: "Apple" },
-					{ label: "B", value: "Berry" },
-				],
-				...overrideField,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: "Radio",
+						uiType: UI_TYPE,
+						options: [
+							{ label: "A", value: "Apple" },
+							{ label: "B", value: "Berry" },
+						],
+						...overrideField,
+					},
+					...getSubmitButtonProps(),
+				},
 			},
-			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
@@ -95,9 +100,14 @@ describe(UI_TYPE, () => {
 					<FrontendEngine
 						data={{
 							id: FRONTEND_ENGINE_ID,
-							fields: {
-								[COMPONENT_ID]: { label: "Radio", uiType: UI_TYPE, options },
-								...getSubmitButtonProps(),
+							sections: {
+								section: {
+									uiType: "section",
+									children: {
+										[COMPONENT_ID]: { label: "Radio", uiType: UI_TYPE, options },
+										...getSubmitButtonProps(),
+									},
+								},
 							},
 						}}
 						onSubmit={SUBMIT_FN}

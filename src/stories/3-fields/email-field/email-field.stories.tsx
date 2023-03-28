@@ -55,7 +55,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, IEmailFieldSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -69,12 +81,17 @@ Default.args = {
 export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				"email-default-value": {
-					label: "Email",
-					uiType: "email-field",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"email-default-value": {
+							label: "Email",
+							uiType: "email-field",
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: {
 				"email-default-value": "default@domain.tld",

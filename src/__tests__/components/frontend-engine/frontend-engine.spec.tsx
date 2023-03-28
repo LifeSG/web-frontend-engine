@@ -23,35 +23,45 @@ const COMPONENT_TEST_ID = TestHelper.generateId(FRONTEND_ENGINE_ID, "frontend-en
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
-	fields: {
-		[FIELD_ONE_ID]: {
-			label: FIELD_ONE_LABEL,
-			uiType: UI_TYPE,
-			validation: [
-				{ required: true, errorMessage: ERROR_MESSAGE },
-				{ min: 2, errorMessage: ERROR_MESSAGE },
-			],
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				[FIELD_ONE_ID]: {
+					label: FIELD_ONE_LABEL,
+					uiType: UI_TYPE,
+					validation: [
+						{ required: true, errorMessage: ERROR_MESSAGE },
+						{ min: 2, errorMessage: ERROR_MESSAGE },
+					],
+				},
+				...getSubmitButtonProps(),
+			},
 		},
-		...getSubmitButtonProps(),
 	},
 };
 
 const NESTED_JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
-	fields: {
-		[FIELD_ONE_ID]: {
-			uiType: "div",
+	sections: {
+		section: {
+			uiType: "section",
 			children: {
-				header: {
-					uiType: "h6",
-					children: "Fill in your name below",
+				[FIELD_ONE_ID]: {
+					uiType: "div",
+					children: {
+						header: {
+							uiType: "h6",
+							children: "Fill in your name below",
+						},
+						[FIELD_TWO_ID]: {
+							label: FIELD_TWO_LABEL,
+							uiType: UI_TYPE,
+							validation: [{ required: true }],
+						},
+						...getSubmitButtonProps(),
+					},
 				},
-				[FIELD_TWO_ID]: {
-					label: FIELD_TWO_LABEL,
-					uiType: UI_TYPE,
-					validation: [{ required: true }],
-				},
-				...getSubmitButtonProps(),
 			},
 		},
 	},
@@ -94,9 +104,11 @@ const renderComponent = (
 	const json: IFrontendEngineData = {
 		...JSON_SCHEMA,
 		...overrideData,
-		fields: {
-			...JSON_SCHEMA.fields,
-			...overrideData?.fields,
+		sections: {
+			section: {
+				...JSON_SCHEMA.sections.section,
+				...overrideData?.sections?.section,
+			},
 		},
 	};
 	return render(<FrontendEngine {...overrideProps} data={json} />);
@@ -206,12 +218,17 @@ describe("frontend-engine", () => {
 					ref={ref}
 					data={{
 						...JSON_SCHEMA,
-						fields: {
-							...JSON_SCHEMA.fields,
-							[FIELD_ONE_ID]: {
-								label: FIELD_ONE_LABEL,
-								uiType: UI_TYPE,
-								validation: [{ mustBeHello: true, errorMessage: ERROR_MESSAGE }],
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									...JSON_SCHEMA.sections.section.children,
+									[FIELD_ONE_ID]: {
+										label: FIELD_ONE_LABEL,
+										uiType: UI_TYPE,
+										validation: [{ mustBeHello: true, errorMessage: ERROR_MESSAGE }],
+									},
+								},
 							},
 						},
 					}}

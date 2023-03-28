@@ -58,7 +58,16 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, ISubmitButtonSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: args,
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -90,21 +99,26 @@ Styled.args = {
 export const DisabledOnInvalidForm = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				required: {
-					uiType: "text-field",
-					label: "Required",
-					validation: [{ required: true }],
-				},
-				email: {
-					uiType: "email-field",
-					label: "Email",
-					validation: [{ required: true }],
-				},
-				submit: {
-					uiType: "submit",
-					label: "Submit",
-					disabled: "invalid-form",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						required: {
+							uiType: "text-field",
+							label: "Required",
+							validation: [{ required: true }],
+						},
+						email: {
+							uiType: "email-field",
+							label: "Email",
+							validation: [{ required: true }],
+						},
+						submit: {
+							uiType: "submit",
+							label: "Submit",
+							disabled: "invalid-form",
+						},
+					},
 				},
 			},
 		}}

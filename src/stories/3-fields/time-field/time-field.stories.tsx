@@ -76,7 +76,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, ITimeFieldSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -99,12 +111,17 @@ Disabled.args = {
 export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				"time-default-value": {
-					uiType: "time-field",
-					label: "Time",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"time-default-value": {
+							uiType: "time-field",
+							label: "Time",
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: { "time-default-value": "11:11am" },
 		}}
@@ -124,9 +141,14 @@ UseCurrentTime.args = {
 export const WithDefaultValue = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				"time-default": { uiType: "time-field", label: "Time" },
-				...SubmitButtonStorybook,
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"time-default": { uiType: "time-field", label: "Time" },
+						...SubmitButtonStorybook,
+					},
+				},
 			},
 			defaultValues: { "time-default": "1:23pm" },
 		}}

@@ -15,11 +15,16 @@ const renderComponent = (
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[COMPONENT_ID]: {
-				uiType: UI_TYPE,
-				children: "Textbody",
-				...overrideField,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						uiType: UI_TYPE,
+						children: "Textbody",
+						...overrideField,
+					},
+				},
 			},
 		},
 		...overrideSchema,
