@@ -76,7 +76,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITimeFieldSchema<V>
 	| IChipsSchema<V>
 	| IAlertSchema
-	| ITextSchema;
+	| ITextSchema
+	| ICustomComponentJsonSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -119,6 +120,17 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefi
 	showIf?: TRenderRules[] | undefined;
 	/** validation config, can be customised by passing generics */
 	validation?: (V | U | IYupValidationRule)[];
+	/** escape hatch for other form / frontend engines to have unsupported attributes */
+	customOptions?: Record<string, unknown> | undefined;
+}
+
+/**
+ * to support custom components from other form / frontend engines
+ */
+export interface ICustomComponentJsonSchema {
+	referenceKey: string;
+	[otherOptions: string]: unknown;
+	uiType?: never | undefined;
 }
 
 /**

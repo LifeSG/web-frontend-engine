@@ -36,7 +36,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 			const renderComponents: JSX.Element[] = [];
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
-				if (isEmpty(child) || typeof child !== "object") return;
+				if (isEmpty(child) || typeof child !== "object" || "referenceKey" in child) return;
 				const uiType = child.uiType?.toUpperCase();
 				const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
 
