@@ -146,8 +146,8 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [formState, watch]);
 
 	useDeepCompareEffectNoCheck(() => {
-		reset({ ...defaultValues, ...getValues() });
-	}, [defaultValues, getValues]);
+		reset(defaultValues);
+	}, [defaultValues]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
