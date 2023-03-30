@@ -70,7 +70,8 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 					summary: "array",
 				},
 			},
-			type: { name: "object", value: {} },
+			type: { name: "object" },
+			defaultValue: [],
 		},
 		showIf: {
 			description:
@@ -80,7 +81,8 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 					summary: "array",
 				},
 			},
-			type: { name: "object", value: {} },
+			type: { name: "object" },
+			defaultValue: [],
 		},
 	};
 };
