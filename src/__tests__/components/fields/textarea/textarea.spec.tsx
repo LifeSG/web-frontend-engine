@@ -13,17 +13,17 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const uiType = "textarea";
-const componentLabel = "Textarea";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "textarea";
+const COMPONENT_LABEL = "Textarea";
 
 const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
-				label: componentLabel,
+			[COMPONENT_ID]: {
+				label: COMPONENT_LABEL,
 				uiType: "textarea",
 				...overrideField,
 			},
@@ -31,14 +31,14 @@ const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overri
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getTextarea = (): HTMLElement => {
-	return getField("textbox", componentLabel);
+	return getField("textbox", COMPONENT_LABEL);
 };
 
-describe(uiType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -59,12 +59,12 @@ describe(uiType, () => {
 
 	it("should support default value", async () => {
 		const defaultValue = "hello";
-		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		expect(screen.getByText(defaultValue)).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should apply maxLength attribute if max validation is specified", () => {

@@ -4,10 +4,10 @@ import { FrontendEngine, IFrontendEngineData } from "../../../../components/fron
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, TOverrideSchema } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const uiType = "text-body";
-const componentTestId = TestHelper.generateId(componentId, "text");
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "text-body";
+const COMPONENT_TEST_ID = TestHelper.generateId(COMPONENT_ID, "text");
 
 const renderComponent = (
 	overrideField?: Partial<Omit<ITextSchema, "label">> | undefined,
@@ -16,22 +16,22 @@ const renderComponent = (
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
-				uiType,
+			[COMPONENT_ID]: {
+				uiType: UI_TYPE,
 				children: "Textbody",
 				...overrideField,
 			},
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-describe(uiType, () => {
+describe(UI_TYPE, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(COMPONENT_TEST_ID)).toBeInTheDocument();
 	});
 
 	it.each<TTextType>([
@@ -51,7 +51,7 @@ describe(uiType, () => {
 		const text = "hello world";
 		renderComponent({ uiType: type, children: text });
 
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(COMPONENT_TEST_ID)).toBeInTheDocument();
 		expect(screen.getByText(text)).toBeInTheDocument();
 	});
 
@@ -59,7 +59,7 @@ describe(uiType, () => {
 		const childrenContent = ["apple", "berry", "cherry"];
 		renderComponent({ children: childrenContent });
 
-		screen.getByTestId(componentTestId).childNodes.forEach((child) => {
+		screen.getByTestId(COMPONENT_TEST_ID).childNodes.forEach((child) => {
 			expect(childrenContent.includes(child.textContent));
 		});
 	});
@@ -69,18 +69,18 @@ describe(uiType, () => {
 		const fieldTwoId = "field2";
 		const fields: Record<string, ITextSchema> = {
 			[fieldOneId]: {
-				uiType,
+				uiType: UI_TYPE,
 				children: "field one",
 			},
 			[fieldTwoId]: {
-				uiType,
+				uiType: UI_TYPE,
 				children: "field two",
 			},
 		};
 		renderComponent({ children: fields });
 
 		// NOTE: Parent container should be transformed into a div
-		expect(screen.getByTestId(componentTestId).tagName).toBe("DIV");
+		expect(screen.getByTestId(COMPONENT_TEST_ID).tagName).toBe("DIV");
 		expect(screen.getByText("field one")).toBeInTheDocument();
 		expect(screen.getByText("field two")).toBeInTheDocument();
 	});

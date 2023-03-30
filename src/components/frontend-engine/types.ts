@@ -4,17 +4,17 @@ import { IWrapperSchema } from "../elements/wrapper";
 import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
-	IContactNumberSchema,
-	IDateInputSchema,
-	IEmailSchema,
+	IContactFieldSchema,
+	IDateFieldSchema,
+	IEmailFieldSchema,
 	IMultiSelectSchema,
-	INumberSchema,
+	INumericFieldSchema,
 	IRadioButtonGroupSchema,
 	ISelectSchema,
 	ISubmitButtonSchema,
+	ITextFieldSchema,
 	ITextareaSchema,
-	ITextfieldSchema,
-	ITimePickerSchema,
+	ITimeFieldSchema,
 } from "../fields";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 
@@ -54,18 +54,18 @@ export interface IFrontendEngineData<V = undefined> {
 
 export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextareaSchema<V>
-	| ITextfieldSchema<V>
-	| IEmailSchema<V>
-	| INumberSchema<V>
+	| ITextFieldSchema<V>
+	| IEmailFieldSchema<V>
+	| INumericFieldSchema<V>
 	| ISubmitButtonSchema
 	| ISelectSchema<V>
 	| IMultiSelectSchema<V>
 	| ICheckboxGroupSchema<V>
-	| IDateInputSchema<V>
+	| IDateFieldSchema<V>
 	| IWrapperSchema
-	| IContactNumberSchema<V>
+	| IContactFieldSchema<V>
 	| IRadioButtonGroupSchema<V>
-	| ITimePickerSchema<V>
+	| ITimeFieldSchema<V>
 	| IChipsSchema<V>
 	| IAlertSchema
 	| ITextSchema;
@@ -141,17 +141,17 @@ export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>
 
 export enum EFieldType {
 	TEXTAREA = "Textarea",
-	TEXT = "TextField",
-	NUMERIC = "TextField",
-	EMAIL = "TextField",
+	"TEXT-FIELD" = "TextField",
+	"NUMERIC-FIELD" = "TextField",
+	"EMAIL-FIELD" = "TextField",
 	SUBMIT = "SubmitButton",
 	SELECT = "Select",
 	"MULTI-SELECT" = "MultiSelect",
-	DATE = "DateInput",
+	"DATE-FIELD" = "DateField",
 	CHECKBOX = "CheckboxGroup",
-	CONTACT = "ContactNumber",
+	"CONTACT-FIELD" = "ContactField",
 	RADIO = "RadioButtonGroup",
-	TIME = "TimePicker",
+	"TIME-FIELD" = "TimeField",
 	CHIPS = "Chips",
 }
 
@@ -171,7 +171,6 @@ export enum EElementType {
 	"TEXT-XSMALL" = "Text",
 	DIV = "Wrapper",
 	SPAN = "Wrapper",
-	SECTION = "Wrapper",
 	HEADER = "Wrapper",
 	FOOTER = "Wrapper",
 	H1 = "Wrapper",

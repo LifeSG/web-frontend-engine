@@ -1,6 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ReactElement, ReactNode, useState } from "react";
+import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { ICheckboxGroupSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -15,17 +15,17 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const uiType = "select";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "select";
 
 const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		fields: {
-			[componentId]: {
+			[COMPONENT_ID]: {
 				label: "Select",
-				uiType,
+				uiType: UI_TYPE,
 				options: [
 					{ label: "A", value: "Apple" },
 					{ label: "B", value: "Berry" },
@@ -36,14 +36,14 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getSelectToggle = (): HTMLElement => {
 	return getField("button", "Select");
 };
 
-describe(uiType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -57,12 +57,12 @@ describe(uiType, () => {
 	it("should be able to support default values", async () => {
 		const defaultLabel = "A";
 		const defaultValue = "Apple";
-		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByTestId(componentId)).toHaveTextContent(defaultLabel);
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
+		expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent(defaultLabel);
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -98,11 +98,11 @@ describe(uiType, () => {
 						data={{
 							id: FRONTEND_ENGINE_ID,
 							fields: {
-								[componentId]: { label: "Select", uiType, options },
+								[COMPONENT_ID]: { label: "Select", uiType: UI_TYPE, options },
 								...getSubmitButtonProps(),
 							},
 						}}
-						onSubmit={submitFn}
+						onSubmit={SUBMIT_FN}
 					/>
 					<Button.Default
 						onClick={() =>
@@ -130,11 +130,13 @@ describe(uiType, () => {
 
 				fireEvent.click(screen.getByRole("button", { name: selected }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: expectedValueBeforeUpdate }));
+				expect(SUBMIT_FN).toBeCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
+				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
 	});

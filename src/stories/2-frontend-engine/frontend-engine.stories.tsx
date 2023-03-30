@@ -14,12 +14,12 @@ const DATA: IFrontendEngineData = {
 	fields: {
 		name: {
 			label: "What is your name",
-			uiType: "text",
+			uiType: "text-field",
 			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 		},
 		email: {
 			label: "Email address",
-			uiType: "email",
+			uiType: "email-field",
 			validation: [{ required: true }],
 		},
 		sex: {
@@ -293,7 +293,7 @@ export const AddCustomValidation: Story = () => {
 				fields: {
 					text: {
 						label: "Only accepts hello",
-						uiType: "text",
+						uiType: "text-field",
 						validation: [{ required: true }, { mustBeHello: true, errorMessage: "Please key in hello" }],
 					},
 					...SubmitButtonStorybook,
@@ -329,7 +329,7 @@ export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
 					fields: {
 						name: {
 							label: "What is your name",
-							uiType: "text",
+							uiType: "text-field",
 						},
 						...SubmitButtonStorybook,
 					},

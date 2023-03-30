@@ -92,12 +92,12 @@ export const DisabledOnInvalidForm = () => (
 		data={{
 			fields: {
 				required: {
-					uiType: "text",
+					uiType: "text-field",
 					label: "Required",
 					validation: [{ required: true }],
 				},
 				email: {
-					uiType: "email",
+					uiType: "email-field",
 					label: "Email",
 					validation: [{ required: true }],
 				},
