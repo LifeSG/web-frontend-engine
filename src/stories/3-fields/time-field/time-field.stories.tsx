@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ITimeFieldSchema } from "src/components/fields";
-import { FrontendEngine } from "../../../components";
-import { CommonFieldStoryProps, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/TimeField",
@@ -74,103 +73,65 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITimeFieldSchema>> = (args) => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						...args,
-						...SUBMIT_BUTTON_SCHEMA,
-					},
-				},
-			},
-		}}
-	/>
-);
-
-export const Default = Template.bind({});
-Default.args = {
-	"time-default": {
-		label: "Time",
-		uiType: "time-field",
-	},
-};
-
-export const Disabled = Template.bind({});
-Disabled.args = {
-	"time-disabled": {
-		label: "Time",
-		uiType: "time-field",
-		disabled: true,
-	},
-};
-
-export const DefaultValue = () => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"time-default-value": {
-							uiType: "time-field",
-							label: "Time",
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+							...SUBMIT_BUTTON_SCHEMA,
 						},
-						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
-			},
-			defaultValues: { "time-default-value": "11:11am" },
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<ITimeFieldSchema & { defaultValues?: string | undefined }>;
 
-export const UseCurrentTime = Template.bind({});
+export const Default = Template("time-default").bind({});
+Default.args = {
+	label: "Time",
+	uiType: "time-field",
+};
+
+export const Disabled = Template("time-disabled").bind({});
+Disabled.args = {
+	label: "Time",
+	uiType: "time-field",
+	disabled: true,
+};
+
+export const DefaultValue = Template("time-default-value").bind({});
+DefaultValue.args = {
+	label: "Time",
+	uiType: "time-field",
+	defaultValues: "11:11am",
+};
+
+export const UseCurrentTime = Template("time-use-current-time").bind({});
 UseCurrentTime.args = {
-	"time-use-current-time": {
-		label: "Time",
-		uiType: "time-field",
-		useCurrentTime: true,
-	},
+	label: "Time",
+	uiType: "time-field",
+	useCurrentTime: true,
 };
 
-export const WithDefaultValue = () => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"time-default": { uiType: "time-field", label: "Time" },
-						...SUBMIT_BUTTON_SCHEMA,
-					},
-				},
-			},
-			defaultValues: { "time-default": "1:23pm" },
-		}}
-	/>
-);
-WithDefaultValue.parameters = {
-	controls: { hideNoControlsWarning: true },
-};
-
-export const Placeholder = Template.bind({});
+export const Placeholder = Template("time-placeholder").bind({});
 Placeholder.args = {
-	"time-placeholder": {
-		label: "Time",
-		uiType: "time-field",
-		placeholder: "Select a preferred time",
-	},
+	label: "Time",
+	uiType: "time-field",
+	placeholder: "Select a preferred time",
 };
 
-export const Use24HoursFormat = Template.bind({});
+export const Use24HoursFormat = Template("time-24hr-format").bind({});
 Use24HoursFormat.args = {
-	"time-24hr-format": {
-		label: "Time",
-		uiType: "time-field",
-		is24HourFormat: true,
-	},
+	label: "Time",
+	uiType: "time-field",
+	is24HourFormat: true,
 };

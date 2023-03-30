@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../components";
 import { IAlertSchema } from "../../../components/elements";
-import { CommonFieldStoryProps } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine } from "../../common";
 
 export default {
 	title: "Element/Alert",
@@ -73,89 +72,79 @@ const anchorProps = {
 	target: "_blank",
 	rel: "noopener noreferrer",
 };
-const Template: Story<Record<string, IAlertSchema>> = (args) => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: args,
+
+const Template = (id: string) =>
+	((args) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+						},
+					},
 				},
-			},
-		}}
-	/>
-);
+			}}
+		/>
+	)) as Story<IAlertSchema>;
 
-export const Default = Template.bind({});
+export const Default = Template("alert-default").bind({});
 Default.args = {
-	"alert-default": {
-		uiType: "alert",
-		type: "success",
-		children: "This is a success message",
-	},
+	uiType: "alert",
+	type: "success",
+	children: "This is a success message",
 };
 
-export const Warning = Template.bind({});
+export const Warning = Template("alert-warning").bind({});
 Warning.args = {
-	"alert-warning": {
-		uiType: "alert",
-		type: "warning",
-		children: "This is a warning message",
-	},
+	uiType: "alert",
+	type: "warning",
+	children: "This is a warning message",
 };
 
-export const Error = Template.bind({});
+export const Error = Template("alert-error").bind({});
 Error.args = {
-	"alert-error": {
-		uiType: "alert",
-		type: "error",
-		children: "This is a error message",
-	},
+	uiType: "alert",
+	type: "error",
+	children: "This is a error message",
 };
 
-export const ActionLink = Template.bind({});
+export const ActionLink = Template("alert-action-link").bind({});
 ActionLink.args = {
-	"alert-action-link": {
-		uiType: "alert",
-		type: "success",
-		children: "This contains an action link that redirects to another page",
-		actionLink: {
-			...anchorProps,
-			children: "Click here",
-		},
+	uiType: "alert",
+	type: "success",
+	children: "This contains an action link that redirects to another page",
+	actionLink: {
+		...anchorProps,
+		children: "Click here",
 	},
 };
 
-export const ReactNodeChildren = Template.bind({});
+export const ReactNodeChildren = Template("alert-react-node").bind({});
 ReactNodeChildren.args = {
-	"alert-react-node": {
-		uiType: "alert",
-		type: "success",
-		children: (
-			<p>
-				You can add <strong>bold text</strong> to signify or highlight certain information. Or perhaps even add
-				a&nbsp;
-				<a {...anchorProps}>hyperlink</a>
-				&nbsp;to direct users to some external source.
-			</p>
-		),
-	},
+	uiType: "alert",
+	type: "success",
+	children: (
+		<p>
+			You can add <strong>bold text</strong> to signify or highlight certain information. Or perhaps even add
+			a&nbsp;
+			<a {...anchorProps}>hyperlink</a>
+			&nbsp;to direct users to some external source.
+		</p>
+	),
 };
 
-export const HTMLString = Template.bind({});
+export const HTMLString = Template("alert-html-string").bind({});
 HTMLString.args = {
-	"alert-html-string": {
-		uiType: "alert",
-		type: "success",
-		children: `<p>This is a <i>HTML</i> string</p>`,
-	},
+	uiType: "alert",
+	type: "success",
+	children: "<p>This is a <i>HTML</i> string</p>",
 };
 
-export const SanitizedHTMLString = Template.bind({});
+export const SanitizedHTMLString = Template("alert-sanitized-html-string").bind({});
 SanitizedHTMLString.args = {
-	"alert-sanitized-html-string": {
-		uiType: "alert",
-		type: "success",
-		children: `<p>This component should not contain a script tag<script>console.log('hello world')</script></p>`,
-	},
+	uiType: "alert",
+	type: "success",
+	children: "<p>This component should not contain a script tag<script>console.log('hello world')</script></p>",
 };

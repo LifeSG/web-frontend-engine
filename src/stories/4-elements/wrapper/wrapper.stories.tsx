@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../components";
 import { IWrapperSchema } from "../../../components/elements/wrapper";
-import { CommonFieldStoryProps, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Element/Wrapper",
@@ -54,7 +53,23 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, IWrapperSchema>> = (args) => (
+const Template = (id: string) =>
+	((args) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+						},
+					},
+				},
+			}}
+		/>
+	)) as Story<IWrapperSchema>;
+
+const SectionTemplate: Story<Record<string, IWrapperSchema>> = (args) => (
 	<FrontendEngine
 		data={{
 			sections: {
@@ -67,106 +82,96 @@ const Template: Story<Record<string, IWrapperSchema>> = (args) => (
 	/>
 );
 
-export const Default = Template.bind({});
+export const Default = Template("wrapper-default").bind({});
 Default.args = {
-	"wrapper-default": {
-		uiType: "div",
-		children: {
-			name: {
-				label: "What is your name",
-				uiType: "textarea",
-				validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-				chipTexts: ["John", "Doe"],
-			},
-			...SUBMIT_BUTTON_SCHEMA,
+	uiType: "div",
+	children: {
+		name: {
+			label: "What is your name",
+			uiType: "textarea",
+			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+			chipTexts: ["John", "Doe"],
 		},
+		...SUBMIT_BUTTON_SCHEMA,
 	},
 };
 
-export const String = Template.bind({});
+export const String = Template("wrapper-string").bind({});
 String.args = {
-	"wrapper-string": {
-		uiType: "div",
-		children: "Hello world",
-	},
+	uiType: "div",
+	children: "Hello world",
 };
 
-export const StringAndField = Template.bind({});
+export const StringAndField = Template("wrapper-field-and-string").bind({});
 StringAndField.args = {
-	"wrapper-field-and-string": {
-		uiType: "div",
-		children: {
-			"child-string": {
-				uiType: "h6",
-				className: "margin--bottom",
-				children: "Fill in your name below",
-			},
-			"child-name": {
-				label: "What is your name",
-				uiType: "textarea",
-				validation: [{ required: true }],
-				chipTexts: ["John", "Doe"],
-			},
-			...SUBMIT_BUTTON_SCHEMA,
+	uiType: "div",
+	children: {
+		"child-string": {
+			uiType: "h6",
+			className: "margin--bottom",
+			children: "Fill in your name below",
 		},
+		"child-name": {
+			label: "What is your name",
+			uiType: "textarea",
+			validation: [{ required: true }],
+			chipTexts: ["John", "Doe"],
+		},
+		...SUBMIT_BUTTON_SCHEMA,
 	},
 };
 
-export const VariousElements = () => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"wrapper-div": {
-							uiType: "div",
-							children: "Div",
-						},
-						"wrapper-span": {
-							uiType: "span",
-							children: "Span",
-						},
-						"wrapper-header": {
-							uiType: "header",
-							children: "Header",
-						},
-						"wrapper-footer": {
-							uiType: "footer",
-							children: "Footer",
-						},
-						"wrapper-h1": {
-							uiType: "h1",
-							children: "H1",
-						},
-						"wrapper-h2": {
-							uiType: "h2",
-							children: "H2",
-						},
-						"wrapper-h3": {
-							uiType: "h3",
-							children: "H3",
-						},
-						"wrapper-h4": {
-							uiType: "h4",
-							children: "H4",
-						},
-						"wrapper-h5": {
-							uiType: "h5",
-							children: "H5",
-						},
-						"wrapper-h6": {
-							uiType: "h6",
-							children: "H6",
-						},
-					},
-				},
-			},
-		}}
-	/>
-);
+export const VariousElements = SectionTemplate.bind({});
+VariousElements.args = {
+	"wrapper-div": {
+		uiType: "div",
+		children: "Div",
+	},
+	"wrapper-span": {
+		uiType: "span",
+		children: "Span",
+	},
+	"wrapper-header": {
+		uiType: "header",
+		children: "Header",
+	},
+	"wrapper-footer": {
+		uiType: "footer",
+		children: "Footer",
+	},
+	"wrapper-h1": {
+		uiType: "h1",
+		children: "H1",
+	},
+	"wrapper-h2": {
+		uiType: "h2",
+		children: "H2",
+	},
+	"wrapper-h3": {
+		uiType: "h3",
+		children: "H3",
+	},
+	"wrapper-h4": {
+		uiType: "h4",
+		children: "H4",
+	},
+	"wrapper-h5": {
+		uiType: "h5",
+		children: "H5",
+	},
+	"wrapper-h6": {
+		uiType: "h6",
+		children: "H6",
+	},
+};
+VariousElements.parameters = {
+	controls: {
+		exclude: /.*/g,
+		hideNoControlsWarning: true,
+	},
+};
 
-export const Layout = Template.bind({});
+export const Layout = SectionTemplate.bind({});
 Layout.args = {
 	"wrapper-row-1": {
 		uiType: "div",
@@ -207,3 +212,4 @@ Layout.args = {
 		},
 	},
 };
+Layout.parameters = VariousElements.parameters;

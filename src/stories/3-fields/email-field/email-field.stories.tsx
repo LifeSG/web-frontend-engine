@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../components";
 import { IEmailFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/EmailField",
@@ -53,94 +52,85 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, IEmailFieldSchema>> = (args) => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						...args,
-						...SUBMIT_BUTTON_SCHEMA,
-					},
-				},
-			},
-		}}
-	/>
-);
-
-export const Default = Template.bind({});
-Default.args = {
-	"email-default": {
-		label: "Email",
-		uiType: "email-field",
-	},
-};
-
-export const DefaultValue = () => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"email-default-value": {
-							label: "Email",
-							uiType: "email-field",
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+							...SUBMIT_BUTTON_SCHEMA,
 						},
-						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
-			},
-			defaultValues: {
-				"email-default-value": "default@domain.tld",
-			},
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<IEmailFieldSchema & { defaultValues?: string | undefined }>;
 
-export const Disabled = Template.bind({});
+export const Default = Template("email-default").bind({});
+Default.args = {
+	label: "Email",
+	uiType: "email-field",
+};
+
+export const DefaultValue = Template("email-default-value").bind({});
+DefaultValue.args = {
+	label: "Email",
+	uiType: "email-field",
+	defaultValues: "default@domain.tld",
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		control: {
+			type: "text",
+		},
+	},
+};
+
+export const Disabled = Template("email-disabled").bind({});
 Disabled.args = {
-	"email-disabled": {
-		label: "Email",
-		uiType: "email-field",
-		disabled: true,
-	},
+	label: "Email",
+	uiType: "email-field",
+	disabled: true,
 };
 
-export const CustomErrorMessage = Template.bind({});
+export const CustomErrorMessage = Template("email-email-error").bind({});
 CustomErrorMessage.args = {
-	"email-email-error": {
-		label: "Email",
-		uiType: "email-field",
-		validation: [{ email: true, errorMessage: "Please use a valid email" }],
-	},
+	label: "Email",
+	uiType: "email-field",
+	validation: [{ email: true, errorMessage: "Please use a valid email" }],
 };
 
-export const MaxLength = Template.bind({});
+export const MaxLength = Template("textfield-maxlength").bind({});
 MaxLength.args = {
-	"textfield-maxlength": {
-		label: "Email",
-		uiType: "email-field",
-		validation: [{ max: 5 }],
-	},
+	label: "Email",
+	uiType: "email-field",
+	validation: [{ max: 5 }],
 };
 
-export const Placeholder = Template.bind({});
+export const Placeholder = Template("email-placeholder").bind({});
 Placeholder.args = {
-	"email-placeholder": {
-		label: "Email",
-		uiType: "email-field",
-		placeholder: "Enter an email",
-	},
+	label: "Email",
+	uiType: "email-field",
+	placeholder: "Enter an email",
 };
 
-export const WithValidation = Template.bind({});
+export const WithValidation = Template("email-with-validation").bind({});
 WithValidation.args = {
-	"email-with-validation": {
-		label: "Email",
-		uiType: "email-field",
-		validation: [{ required: true }],
-	},
+	label: "Email",
+	uiType: "email-field",
+	validation: [{ required: true }],
 };

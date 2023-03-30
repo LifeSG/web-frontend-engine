@@ -2,7 +2,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IContactFieldSchema } from "../../../components/fields";
 import { getCountries } from "../../../components/fields/contact-field/data";
-import { CommonFieldStoryProps, StyledForm, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/ContactField",
@@ -75,157 +75,132 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, IContactFieldSchema>> = (args) => (
-	<StyledForm
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						...args,
-						...SUBMIT_BUTTON_SCHEMA,
-					},
-				},
-			},
-		}}
-	/>
-);
-
-export const Default = Template.bind({});
-Default.args = {
-	"contact-default": {
-		uiType: "contact-field",
-		label: "Contact Number",
-	},
-};
-
-export const DefaultCountry = Template.bind({});
-DefaultCountry.args = {
-	"contact-default-country": {
-		uiType: "contact-field",
-		label: "Contact Number",
-		country: "Japan",
-	},
-};
-
-export const DefaultValue = () => (
-	<StyledForm
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"contact-default-value": {
-							uiType: "contact-field",
-							label: "Contact Number",
-							validation: [
-								{
-									required: true,
-									errorMessage: "Enter mobile number",
-								},
-								{
-									contactNumber: {
-										singaporeNumber: "default",
-									},
-									errorMessage: "Invalid mobile number. Try again.",
-								},
-							],
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => {
+		return (
+			<FrontendEngine
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
 						},
-						...SUBMIT_BUTTON_SCHEMA,
 					},
-				},
-			},
-			defaultValues: {
-				"contact-default-value": "91234567",
-			},
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+					...(!!defaultValues && {
+						defaultValues: {
+							[id]: defaultValues,
+						},
+					}),
+				}}
+			/>
+		);
+	}) as Story<IContactFieldSchema & { defaultValues?: string | undefined }>;
 
-export const Disabled = Template.bind({});
+export const Default = Template("contact-default").bind({});
+Default.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+};
+
+export const DefaultCountry = Template("contact-default-country").bind({});
+DefaultCountry.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+	country: "Japan",
+};
+
+export const DefaultValue = Template("contact-default-value").bind({});
+DefaultValue.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+	defaultValues: "91234567",
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		control: {
+			type: "text",
+		},
+	},
+};
+
+export const Disabled = Template("contact-disabled").bind({});
 Disabled.args = {
-	"contact-disabled": {
-		uiType: "contact-field",
-		label: "Contact Number",
-		disabled: true,
-	},
+	uiType: "contact-field",
+	label: "Contact Number",
+	disabled: true,
 };
 
-export const Placeholder = Template.bind({});
+export const Placeholder = Template("contact-placeholder").bind({});
 Placeholder.args = {
-	"contact-placeholder": {
-		uiType: "contact-field",
-		label: "Contact Number",
-		placeholder: "Enter your contact number",
-	},
+	uiType: "contact-field",
+	label: "Contact Number",
+	placeholder: "Enter your contact number",
 };
 
-export const WithSearch = Template.bind({});
+export const WithSearch = Template("contact-with-search").bind({});
 WithSearch.args = {
-	"contact-with-search": {
-		uiType: "contact-field",
-		label: "Contact Number",
-		enableSearch: true,
-	},
+	uiType: "contact-field",
+	label: "Contact Number",
+	enableSearch: true,
 };
 
-export const SGNumberValidation = Template.bind({});
+export const SGNumberValidation = Template("contact-singapore-number").bind({});
 SGNumberValidation.args = {
-	"contact-singapore-number": {
-		uiType: "contact-field",
-		label: "Contact Number",
-		validation: [
-			{
-				contactNumber: {
-					singaporeNumber: "default",
-				},
+	uiType: "contact-field",
+	label: "Contact Number",
+	validation: [
+		{
+			contactNumber: {
+				singaporeNumber: "default",
 			},
-		],
-	},
+		},
+	],
 };
 
-export const SGHouseNumberValidation = Template.bind({});
+export const SGHouseNumberValidation = Template("contact-singapore-house-number").bind({});
 SGHouseNumberValidation.args = {
-	"contact-singapore-house-number": {
-		uiType: "contact-field",
-		label: "Contact Number",
-		validation: [
-			{
-				contactNumber: {
-					singaporeNumber: "house",
-				},
+	uiType: "contact-field",
+	label: "Contact Number",
+	validation: [
+		{
+			contactNumber: {
+				singaporeNumber: "house",
 			},
-		],
-	},
+		},
+	],
 };
 
-export const SGPhoneNumberValidation = Template.bind({});
+export const SGPhoneNumberValidation = Template("contact-singapore-mobile-number").bind({});
 SGPhoneNumberValidation.args = {
-	"contact-singapore-mobile-number": {
-		uiType: "contact-field",
-		label: "Contact Number",
-		validation: [
-			{
-				contactNumber: {
-					singaporeNumber: "mobile",
-				},
+	uiType: "contact-field",
+	label: "Contact Number",
+	validation: [
+		{
+			contactNumber: {
+				singaporeNumber: "mobile",
 			},
-		],
-	},
+		},
+	],
 };
 
-export const InternationalNumberValidation = Template.bind({});
+export const InternationalNumberValidation = Template("contact-international-number").bind({});
 InternationalNumberValidation.args = {
-	"contact-international-number": {
-		uiType: "contact-field",
-		label: "Contact Number",
-		validation: [
-			{
-				contactNumber: {
-					internationalNumber: true,
-				},
+	uiType: "contact-field",
+	label: "Contact Number",
+	validation: [
+		{
+			contactNumber: {
+				internationalNumber: true,
 			},
-		],
-	},
+		},
+	],
 };

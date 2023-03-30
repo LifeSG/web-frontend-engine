@@ -91,7 +91,7 @@ export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
 	"submit-button": { uiType: "submit", label: "Submit" },
 };
 
-export const StyledForm = styled(OriginalFrontendEngine)`
+const StyledForm = styled(OriginalFrontendEngine)`
 	width: 400px;
 `;
 
