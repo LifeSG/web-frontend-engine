@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../components";
 import { IYupValidationRule } from "../../../components/frontend-engine/yup";
+import { ERROR_MESSAGES } from "../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
 import { TestHelper } from "../../../utils";
 import {
@@ -244,6 +245,22 @@ describe("frontend-engine", () => {
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(getErrorMessage(true)).not.toBeInTheDocument();
+	});
+
+	it("should silently skip rendering schema with referenceKey", () => {
+		const frontendEngine = renderComponent(undefined, {
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						custom: { referenceKey: "something" },
+					},
+				},
+			},
+		});
+
+		expect(screen.queryByText(ERROR_MESSAGES.GENERIC.UNSUPPORTED)).not.toBeInTheDocument();
+		expect(frontendEngine.container.querySelector("section")).not.toBeInTheDocument();
 	});
 
 	describe("setErrors", () => {
