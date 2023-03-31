@@ -73,9 +73,14 @@ export default {
 const Template: Story<Record<string, IMultiSelectSchema>> = (args) => (
 	<StyledForm
 		data={{
-			fields: {
-				...args,
-				...SubmitButtonStorybook,
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
 			},
 		}}
 	/>
@@ -97,17 +102,22 @@ Default.args = {
 export const DefaultValue = () => (
 	<StyledForm
 		data={{
-			fields: {
-				"multi-select-default-value": {
-					uiType: "multi-select",
-					label: "Fruits",
-					options: [
-						{ value: "Apple", label: "Apple" },
-						{ value: "Berry", label: "Berry" },
-						{ value: "Cherry", label: "Cherry" },
-					],
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"multi-select-default-value": {
+							uiType: "multi-select",
+							label: "Fruits",
+							options: [
+								{ value: "Apple", label: "Apple" },
+								{ value: "Berry", label: "Berry" },
+								{ value: "Cherry", label: "Cherry" },
+							],
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: {
 				"multi-select-default-value": ["Apple", "Berry"],

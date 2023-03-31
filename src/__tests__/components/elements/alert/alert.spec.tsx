@@ -12,12 +12,17 @@ const COMPONENT_TEST_ID = TestHelper.generateId(COMPONENT_ID, "alert");
 const renderComponent = (overrideField?: TOverrideField<IAlertSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[COMPONENT_ID]: {
-				uiType: UI_TYPE,
-				children: "Alert",
-				type: "success",
-				...overrideField,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						uiType: UI_TYPE,
+						children: "Alert",
+						type: "success",
+						...overrideField,
+					},
+				},
 			},
 		},
 		...overrideSchema,

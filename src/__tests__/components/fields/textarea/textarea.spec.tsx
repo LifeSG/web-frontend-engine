@@ -21,13 +21,18 @@ const COMPONENT_LABEL = "Textarea";
 const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[COMPONENT_ID]: {
-				label: COMPONENT_LABEL,
-				uiType: "textarea",
-				...overrideField,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: COMPONENT_LABEL,
+						uiType: "textarea",
+						...overrideField,
+					},
+					...getSubmitButtonProps(),
+				},
 			},
-			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};

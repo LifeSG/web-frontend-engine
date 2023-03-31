@@ -22,13 +22,18 @@ const COMPONENT_LABEL = "Contact Number";
 const renderComponent = (overrideField?: TOverrideField<IContactFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[COMPONENT_ID]: {
-				label: COMPONENT_LABEL,
-				uiType: UI_TYPE,
-				...overrideField,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: COMPONENT_LABEL,
+						uiType: UI_TYPE,
+						...overrideField,
+					},
+					...getSubmitButtonProps(),
+				},
 			},
-			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};

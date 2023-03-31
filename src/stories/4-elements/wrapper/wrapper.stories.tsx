@@ -55,7 +55,18 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, IWrapperSchema>> = (args) => <FrontendEngine data={{ fields: args }} />;
+const Template: Story<Record<string, IWrapperSchema>> = (args) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: args,
+				},
+			},
+		}}
+	/>
+);
 
 export const Default = Template.bind({});
 Default.args = {
@@ -105,46 +116,51 @@ StringAndField.args = {
 export const VariousElements = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				"wrapper-div": {
-					uiType: "div",
-					children: "Div",
-				},
-				"wrapper-span": {
-					uiType: "span",
-					children: "Span",
-				},
-				"wrapper-header": {
-					uiType: "header",
-					children: "Header",
-				},
-				"wrapper-footer": {
-					uiType: "footer",
-					children: "Footer",
-				},
-				"wrapper-h1": {
-					uiType: "h1",
-					children: "H1",
-				},
-				"wrapper-h2": {
-					uiType: "h2",
-					children: "H2",
-				},
-				"wrapper-h3": {
-					uiType: "h3",
-					children: "H3",
-				},
-				"wrapper-h4": {
-					uiType: "h4",
-					children: "H4",
-				},
-				"wrapper-h5": {
-					uiType: "h5",
-					children: "H5",
-				},
-				"wrapper-h6": {
-					uiType: "h6",
-					children: "H6",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"wrapper-div": {
+							uiType: "div",
+							children: "Div",
+						},
+						"wrapper-span": {
+							uiType: "span",
+							children: "Span",
+						},
+						"wrapper-header": {
+							uiType: "header",
+							children: "Header",
+						},
+						"wrapper-footer": {
+							uiType: "footer",
+							children: "Footer",
+						},
+						"wrapper-h1": {
+							uiType: "h1",
+							children: "H1",
+						},
+						"wrapper-h2": {
+							uiType: "h2",
+							children: "H2",
+						},
+						"wrapper-h3": {
+							uiType: "h3",
+							children: "H3",
+						},
+						"wrapper-h4": {
+							uiType: "h4",
+							children: "H4",
+						},
+						"wrapper-h5": {
+							uiType: "h5",
+							children: "H5",
+						},
+						"wrapper-h6": {
+							uiType: "h6",
+							children: "H6",
+						},
+					},
 				},
 			},
 		}}

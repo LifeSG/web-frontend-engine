@@ -7,16 +7,8 @@ import * as FrontendEngineFields from "../../fields";
 import { EElementType, EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
-import { IWrapperSchema } from "./types";
+import { IWrapperProps } from "./types";
 import { DSAlert } from "./wrapper.styles";
-
-interface IWrapperProps {
-	id?: string | undefined;
-	schema?: IWrapperSchema | undefined;
-	/** only used internally by FrontendEngine */
-	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
-	warnings?: Record<string, string> | undefined;
-}
 
 export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
@@ -24,7 +16,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	const { id, schema, children, warnings } = props;
 	const { uiType, children: schemaChildren, ...otherSchema } = schema || {};
-	const [fields, setFields] = useState<React.ReactNode>(null);
+	const [components, setComponents] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
 
 	// =============================================================================
@@ -32,7 +24,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	/**
 	 * render direct descendants according to the type of children
-	 * - conditionally render fields through Controller
+	 * - conditionally render components through Controller
 	 * - render strings directly
 	 * - otherwise show field not supported error
 	 */
@@ -41,7 +33,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		if (typeof wrapperChildren === "object") {
 			const fieldTypeKeys = Object.keys(EFieldType);
 			const elementTypeKeys = Object.keys(EElementType);
-			const fieldComponents: JSX.Element[] = [];
+			const renderComponents: JSX.Element[] = [];
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child) || typeof child !== "object") return;
@@ -51,7 +43,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				if (fieldTypeKeys.includes(uiType)) {
 					// render fields with controller to register them into react-hook-form
 					const Field = frontendEngineComponents[EFieldType[uiType]];
-					fieldComponents.push(
+					renderComponents.push(
 						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
 							<Controller
 								control={control}
@@ -78,21 +70,21 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 					// render other elements as normal components
 					const Element = (frontendEngineComponents[EElementType[uiType]] ||
 						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
-					fieldComponents.push(
+					renderComponents.push(
 						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
 							<Element schema={child} id={id} />
 						</ConditionalRenderer>
 					);
 				} else {
 					// need uiType check to ignore other storybook args
-					fieldComponents.push(<Fragment key={id}>{ERROR_MESSAGES.GENERIC.UNSUPPORTED}</Fragment>);
+					renderComponents.push(<Fragment key={id}>{ERROR_MESSAGES.GENERIC.UNSUPPORTED}</Fragment>);
 				}
 			});
-			setFields(fieldComponents);
+			setComponents(renderComponents);
 		} else if (typeof wrapperChildren === "string") {
-			setFields(wrapperChildren);
+			setComponents(wrapperChildren);
 		} else {
-			setFields(ERROR_MESSAGES.GENERIC.UNSUPPORTED);
+			setComponents(ERROR_MESSAGES.GENERIC.UNSUPPORTED);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [schemaChildren || children, control, warnings]);
@@ -100,14 +92,14 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const Element = uiType as string | React.FunctionComponent;
+	const Component = uiType as string | React.FunctionComponent;
 
-	if (!Element) {
-		return <>{fields}</>;
+	if (!Component) {
+		return <>{components}</>;
 	}
 	return (
-		<Element {...otherSchema} {...{ id, "data-testid": TestHelper.generateId(id, uiType) }}>
-			{fields}
-		</Element>
+		<Component {...otherSchema} {...{ id, "data-testid": TestHelper.generateId(id, uiType) }}>
+			{components}
+		</Component>
 	);
 };

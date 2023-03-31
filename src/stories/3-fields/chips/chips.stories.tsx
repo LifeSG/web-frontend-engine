@@ -54,9 +54,14 @@ export default {
 const Template: Story<Record<string, IChipsSchema>> = (args) => (
 	<StyledForm
 		data={{
-			fields: {
-				...args,
-				...SubmitButtonStorybook,
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
 			},
 		}}
 	/>
@@ -78,17 +83,22 @@ Default.args = {
 export const DefaultValue = () => (
 	<StyledForm
 		data={{
-			fields: {
-				"chips-default-value": {
-					uiType: "chips",
-					label: "Fruits",
-					options: [
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-					],
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"chips-default-value": {
+							uiType: "chips",
+							label: "Fruits",
+							options: [
+								{ label: "Apple", value: "Apple" },
+								{ label: "Berry", value: "Berry" },
+								{ label: "Cherry", value: "Cherry" },
+							],
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: {
 				"chips-default-value": ["Apple", "Berry"],

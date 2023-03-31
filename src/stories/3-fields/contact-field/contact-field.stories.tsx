@@ -77,7 +77,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, IContactFieldSchema>> = (args) => (
-	<StyledForm data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<StyledForm
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -100,24 +112,29 @@ DefaultCountry.args = {
 export const DefaultValue = () => (
 	<StyledForm
 		data={{
-			fields: {
-				"contact-default-value": {
-					uiType: "contact-field",
-					label: "Contact Number",
-					validation: [
-						{
-							required: true,
-							errorMessage: "Enter mobile number",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"contact-default-value": {
+							uiType: "contact-field",
+							label: "Contact Number",
+							validation: [
+								{
+									required: true,
+									errorMessage: "Enter mobile number",
+								},
+								{
+									contactNumber: {
+										singaporeNumber: "default",
+									},
+									errorMessage: "Invalid mobile number. Try again.",
+								},
+							],
 						},
-						{
-							contactNumber: {
-								singaporeNumber: "default",
-							},
-							errorMessage: "Invalid mobile number. Try again.",
-						},
-					],
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: {
 				"contact-default-value": "91234567",

@@ -8,3 +8,11 @@ export interface IWrapperSchema extends TComponentOmitProps<React.HTMLAttributes
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema> | string;
 }
+
+export interface IWrapperProps {
+	id?: string | undefined;
+	schema?: IWrapperSchema | undefined;
+	/** only used internally by FrontendEngine */
+	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
+	warnings?: Record<string, string> | undefined;
+}

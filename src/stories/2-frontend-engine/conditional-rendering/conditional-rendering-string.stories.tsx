@@ -27,7 +27,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, TFrontendEngineFieldSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const MinCharacters = Template.bind({});

@@ -55,7 +55,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, INumericFieldSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -69,12 +81,17 @@ Default.args = {
 export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				"numeric-default-value": {
-					label: "Number",
-					uiType: "numeric-field",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"numeric-default-value": {
+							label: "Number",
+							uiType: "numeric-field",
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: {
 				"numeric-default-value": 1,

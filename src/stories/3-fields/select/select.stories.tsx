@@ -69,7 +69,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, ISelectSchema>> = (args) => (
-	<StyledForm data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<StyledForm
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -88,17 +100,22 @@ Default.args = {
 export const DefaultValue = () => (
 	<StyledForm
 		data={{
-			fields: {
-				"select-default-value": {
-					uiType: "select",
-					label: "Fruits",
-					options: [
-						{ label: "Apple", value: "apple" },
-						{ label: "Berry", value: "berry" },
-						{ label: "Cherry", value: "cherry" },
-					],
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"select-default-value": {
+							uiType: "select",
+							label: "Fruits",
+							options: [
+								{ label: "Apple", value: "apple" },
+								{ label: "Berry", value: "berry" },
+								{ label: "Cherry", value: "cherry" },
+							],
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: { "select-default-value": "apple" },
 		}}

@@ -1,5 +1,6 @@
 import { ControllerFieldState, ControllerRenderProps, UseFormSetValue, ValidationMode } from "react-hook-form";
 import { IAlertSchema, ITextSchema } from "../elements";
+import { ISectionSchema } from "../elements/section";
 import { IWrapperSchema } from "../elements/wrapper";
 import {
 	ICheckboxGroupSchema,
@@ -29,7 +30,7 @@ export type { IYupValidationRule } from "./yup";
 export interface IFrontendEngineProps<V = undefined> {
 	/** HTML class attribute that is applied on the `<form>` element */
 	className?: string;
-	/** JSON configuration to define the fields and functionalities of the form */
+	/** JSON configuration to define the components and functionalities of the form */
 	data?: IFrontendEngineData<V> | undefined;
 	/** Fires every time a value changes in any fields */
 	onChange?: ((values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown) | undefined;
@@ -42,8 +43,14 @@ export interface IFrontendEngineData<V = undefined> {
 	className?: string | undefined;
 	/** Fields' initial values on mount. The key of each field needs to match the id used in the field */
 	defaultValues?: TFrontendEngineValues | undefined;
-	/** All elements within the form in key-value format, key refers to the id of the field while value refers to the JSON schema of the field */
-	fields: Record<string, TFrontendEngineFieldSchema<V>>;
+	/**
+	 * Specifies the components to be rendered
+	 *
+	 * All components within the form are in key-value format, key refers to the id of the components while value refers to its JSON schema
+	 *
+	 * Note: sections accept only section `uiType`, the subsequent children accepts uiType other than section
+	 * */
+	sections: Record<string, ISectionSchema<V>>;
 	/** Unique HTML id attribute that is applied on the `<form>` element */
 	id?: string | undefined;
 	/** Validation strategy when inputs with errors get re-validated after a user submits the form (onSubmit event) */
@@ -52,6 +59,7 @@ export interface IFrontendEngineData<V = undefined> {
 	validationMode?: TValidationMode | undefined;
 }
 
+// NOTE: add all possible schema types here except section schema
 export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextareaSchema<V>
 	| ITextFieldSchema<V>
@@ -79,20 +87,20 @@ export type TErrorPayload = Record<string, TErrorMessage>;
 export interface IFrontendEngineRef extends HTMLFormElement {
 	/** gets form values */
 	getValues: () => TFrontendEngineValues;
-	/** set field value by id */
+	/** sets field value by id */
 	setValue: UseFormSetValue<TFrontendEngineValues>;
-	/** check if form is valid */
+	/** checks if form is valid */
 	isValid: () => boolean;
 	/** triggers form submission */
 	submit: () => void;
-
+	/** adds custom validation rule */
 	addCustomValidation: (
 		type: TYupSchemaType | "mixed",
 		name: string,
 		fn: (value: unknown, arg: unknown) => boolean
 	) => void;
 
-	/** allow setting of custom errors thrown by endpoints */
+	/** allows setting of custom errors thrown by endpoints */
 	setErrors: (errors: TErrorPayload) => void;
 }
 
@@ -101,7 +109,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // =============================================================================
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefined> {
-	/** defines what kind of field to be rendered */
+	/** defines what kind of component to be rendered */
 	uiType: T;
 	/** caption for the field */
 	label: string;
@@ -127,7 +135,7 @@ export type TFrontendEngineFieldJsonSchemaOmitKeys =
 	| "children"
 	| "value";
 
-// NOTE: Form elements should not support validation nor contain labels
+// NOTE: Elements should not support validation nor contain labels
 export interface IFrontendEngineElementJsonSchema<T>
 	extends Omit<IFrontendEngineBaseFieldJsonSchema<T>, "label" | "validation"> {}
 
@@ -136,9 +144,15 @@ type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
 	? TFrontendEngineFieldJsonSchemaOmitKeys | T
 	: TFrontendEngineFieldJsonSchemaOmitKeys;
 
-// NOTE: Omit clashing keys between native props and frontend engine
+/**
+ * Omits clashing keys between native props and frontend engine
+ */
 export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
 
+/**
+ * Field types
+ * - components that can contain values that can get submitted
+ */
 export enum EFieldType {
 	TEXTAREA = "Textarea",
 	"TEXT-FIELD" = "TextField",
@@ -155,6 +169,11 @@ export enum EFieldType {
 	CHIPS = "Chips",
 }
 
+/**
+ * Non-field types
+ * - components that do not have values
+ * - typically used for layouts and messages
+ */
 export enum EElementType {
 	ALERT = "Alert",
 	"TEXT-D1" = "Text",

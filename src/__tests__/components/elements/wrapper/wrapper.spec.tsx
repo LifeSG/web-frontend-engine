@@ -24,12 +24,17 @@ const renderComponent = (
 	};
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[PARENT_ID]: {
-				uiType: wrapperType,
-				children,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[PARENT_ID]: {
+						uiType: wrapperType,
+						children,
+					},
+					...getSubmitButtonProps(),
+				},
 			},
-			...getSubmitButtonProps(),
 		},
 	};
 	return render(<FrontendEngine data={json} />);

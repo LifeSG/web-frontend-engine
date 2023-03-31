@@ -11,34 +11,39 @@ import {
 import { SubmitButtonStorybook } from "../common";
 
 const DATA: IFrontendEngineData = {
-	fields: {
-		name: {
-			label: "What is your name",
-			uiType: "text-field",
-			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				name: {
+					label: "What is your name",
+					uiType: "text-field",
+					validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+				},
+				email: {
+					label: "Email address",
+					uiType: "email-field",
+					validation: [{ required: true }],
+				},
+				sex: {
+					uiType: "select",
+					label: "Sex",
+					options: [
+						{ label: "Male", value: "male" },
+						{ label: "Female", value: "female" },
+					],
+				},
+				description: {
+					label: "Feedback",
+					uiType: "textarea",
+					rows: 3,
+					resizable: true,
+					validation: [{ required: true }],
+					chipTexts: ["Best", "Good", "Bad", "Horrible"],
+				},
+				...SubmitButtonStorybook,
+			},
 		},
-		email: {
-			label: "Email address",
-			uiType: "email-field",
-			validation: [{ required: true }],
-		},
-		sex: {
-			uiType: "select",
-			label: "Sex",
-			options: [
-				{ label: "Male", value: "male" },
-				{ label: "Female", value: "female" },
-			],
-		},
-		description: {
-			label: "Feedback",
-			uiType: "textarea",
-			rows: 3,
-			resizable: true,
-			validation: [{ required: true }],
-			chipTexts: ["Best", "Good", "Bad", "Horrible"],
-		},
-		...SubmitButtonStorybook,
 	},
 };
 
@@ -95,11 +100,11 @@ export default {
 				},
 			},
 		},
-		"data.fields": {
-			description: "All elements within the form. For more info, refer to individual field stories.",
+		"data.sections": {
+			description: "All components within the form. For more info, refer to individual field stories.",
 			table: {
 				type: {
-					summary: "Record<string, TFrontendEngineFieldSchema>",
+					summary: "Record<string, ISectionSchema>",
 				},
 			},
 			control: {
@@ -290,13 +295,21 @@ export const AddCustomValidation: Story = () => {
 	return (
 		<FrontendEngine<IYupCustomValidationRule>
 			data={{
-				fields: {
-					text: {
-						label: "Only accepts hello",
-						uiType: "text-field",
-						validation: [{ required: true }, { mustBeHello: true, errorMessage: "Please key in hello" }],
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							text: {
+								label: "Only accepts hello",
+								uiType: "text-field",
+								validation: [
+									{ required: true },
+									{ mustBeHello: true, errorMessage: "Please key in hello" },
+								],
+							},
+							...SubmitButtonStorybook,
+						},
 					},
-					...SubmitButtonStorybook,
 				},
 				defaultValues: {
 					text: "Hi",
@@ -326,12 +339,17 @@ export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine
 				data={{
-					fields: {
-						name: {
-							label: "What is your name",
-							uiType: "text-field",
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								name: {
+									label: "What is your name",
+									uiType: "text-field",
+								},
+								...SubmitButtonStorybook,
+							},
 						},
-						...SubmitButtonStorybook,
 					},
 					validationMode: "onSubmit",
 				}}

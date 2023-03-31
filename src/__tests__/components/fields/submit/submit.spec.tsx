@@ -11,16 +11,21 @@ const COMPONENT_LABEL = "Textfield";
 const renderComponent = (overrideSubmit?: Partial<ISubmitButtonSchema> | undefined) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[COMPONENT_ID]: {
-				label: COMPONENT_LABEL,
-				uiType: "text-field",
-				validation: [{ required: true }],
-			},
-			[SUBMIT_BUTTON_ID]: {
-				label: SUBMIT_BUTTON_LABEL,
-				uiType: "submit",
-				...overrideSubmit,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: COMPONENT_LABEL,
+						uiType: "text-field",
+						validation: [{ required: true }],
+					},
+					[SUBMIT_BUTTON_ID]: {
+						label: SUBMIT_BUTTON_LABEL,
+						uiType: "submit",
+						...overrideSubmit,
+					},
+				},
 			},
 		},
 	};

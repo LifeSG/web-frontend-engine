@@ -88,27 +88,32 @@ NotEquals.args = {
 export const SoftValidation: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
 SoftValidation.args = {
 	data: {
-		fields: {
-			name: {
-				label: "What is your name",
-				uiType: "text-field",
-				validation: [{ required: true }, { max: 5, soft: true, errorMessage: "Maximum length of 5" }],
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					name: {
+						label: "What is your name",
+						uiType: "text-field",
+						validation: [{ required: true }, { max: 5, soft: true, errorMessage: "Maximum length of 5" }],
+					},
+					email: {
+						label: "Email address",
+						uiType: "email-field",
+						validation: [{ required: true }],
+					},
+					sex: {
+						uiType: "select",
+						label: "Sex",
+						options: [
+							{ label: "Male", value: "male" },
+							{ label: "Female", value: "female" },
+						],
+						validation: [{ required: true, soft: true, errorMessage: "This field is optional" }],
+					},
+					...SubmitButtonStorybook,
+				},
 			},
-			email: {
-				label: "Email address",
-				uiType: "email-field",
-				validation: [{ required: true }],
-			},
-			sex: {
-				uiType: "select",
-				label: "Sex",
-				options: [
-					{ label: "Male", value: "male" },
-					{ label: "Female", value: "female" },
-				],
-				validation: [{ required: true, soft: true, errorMessage: "This field is optional" }],
-			},
-			...SubmitButtonStorybook,
 		},
 		defaultValues: {
 			name: "Erik Tan",

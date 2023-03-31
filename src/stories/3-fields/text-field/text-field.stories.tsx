@@ -55,7 +55,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, ITextFieldSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -69,12 +81,17 @@ Default.args = {
 export const DefaultValue = () => (
 	<FrontendEngine
 		data={{
-			fields: {
-				"text-default-value": {
-					label: "Textfield",
-					uiType: "text-field",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"text-default-value": {
+							label: "Textfield",
+							uiType: "text-field",
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: {
 				"text-default-value": "This is the default value",

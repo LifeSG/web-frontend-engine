@@ -124,7 +124,18 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITextSchema>> = (args) => <FrontendEngine data={{ fields: { ...args } }} />;
+const Template: Story<Record<string, ITextSchema>> = (args) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: args,
+				},
+			},
+		}}
+	/>
+);
 
 export const Variants = Template.bind({});
 Variants.args = {

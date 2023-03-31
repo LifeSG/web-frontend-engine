@@ -17,9 +17,14 @@ const FIELD_THREE_LABEL = "Field three";
 const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			...fields,
-			...getSubmitButtonProps(),
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					...fields,
+					...getSubmitButtonProps(),
+				},
+			},
 		},
 	};
 

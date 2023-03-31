@@ -74,7 +74,18 @@ const anchorProps = {
 	target: "_blank",
 	rel: "noopener noreferrer",
 };
-const Template: Story<Record<string, IAlertSchema>> = (args) => <FrontendEngine data={{ fields: { ...args } }} />;
+const Template: Story<Record<string, IAlertSchema>> = (args) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: args,
+				},
+			},
+		}}
+	/>
+);
 
 export const Default = Template.bind({});
 Default.args = {

@@ -62,7 +62,19 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, IDateFieldSchema>> = (args) => (
-	<StyledForm data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<StyledForm
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SubmitButtonStorybook,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Default = Template.bind({});
@@ -85,9 +97,14 @@ UseCurrentDate.args = {
 export const WithDefaultValue = () => (
 	<StyledForm
 		data={{
-			fields: {
-				"date-default": { uiType: "date-field", label: "Date with default value" },
-				...SubmitButtonStorybook,
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"date-default": { uiType: "date-field", label: "Date with default value" },
+						...SubmitButtonStorybook,
+					},
+				},
 			},
 			defaultValues: { "date-default": "2022-01-01" },
 		}}
@@ -110,13 +127,18 @@ export const DateFormatDefaultValues = () => (
 	<StyledForm
 		data={{
 			id: "frontendEngine",
-			fields: {
-				"date-format-default": {
-					uiType: "date-field",
-					label: "Date",
-					dateFormat: "d MMMM uuuu",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"date-format-default": {
+							uiType: "date-field",
+							label: "Date",
+							dateFormat: "d MMMM uuuu",
+						},
+						...SubmitButtonStorybook,
+					},
 				},
-				...SubmitButtonStorybook,
 			},
 			defaultValues: { "date-format-default": "1 January 2022" },
 		}}
