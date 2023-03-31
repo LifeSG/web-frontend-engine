@@ -6,7 +6,7 @@ export const Section = (props: ISectionProps) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { children },
+		sectionSchema: { children },
 		...otherProps
 	} = props;
 
