@@ -23,12 +23,9 @@ export const Sections = (props: ISectionsProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderSections = () => {
-		return Object.entries(schema).reduce((renderList, [id, section], i) => {
-			return [
-				...renderList,
-				<Section key={`section-${i}`} id={id} sectionSchema={section} warnings={warnings} />,
-			];
-		}, []);
+		return Object.entries(schema).map(([id, section], i) => (
+			<Section key={`section-${i}`} id={id} sectionSchema={section} warnings={warnings} />
+		));
 	};
 
 	return <>{renderSections()}</>;
