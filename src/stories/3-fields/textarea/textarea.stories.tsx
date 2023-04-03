@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../components";
 import { ITextareaSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/Textarea",
@@ -27,7 +26,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("textarea"),
 		chipTexts: {
 			description: "Adds clickable suggestion pills",
@@ -73,119 +71,98 @@ export default {
 			},
 			type: { name: "number" },
 		},
-		validation: {
-			description:
-				"Validation schema, for more info, refer to the respective stories <a href='/docs/form-validation-schema--required'>here</a>",
-			table: {
-				type: {
-					summary: "object",
-				},
-			},
-			type: { name: "object", value: {} },
-		},
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITextareaSchema>> = (args) => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						...args,
-						...SubmitButtonStorybook,
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+							...SUBMIT_BUTTON_SCHEMA,
+						},
 					},
 				},
-			},
-		}}
-	/>
-);
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<ITextareaSchema & { defaultValues?: string | undefined }>;
 
-export const Default = Template.bind({});
+export const Default = Template("textarea-default").bind({});
 Default.args = {
-	"textarea-default": {
-		uiType: "textarea",
-		label: "Textarea",
+	uiType: "textarea",
+	label: "Textarea",
+};
+
+export const DefaultValue = Template("textarea-default-value").bind({});
+DefaultValue.args = {
+	uiType: "textarea",
+	label: "Textarea",
+	defaultValues: "This is the default value",
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		control: {
+			type: "text",
+		},
 	},
 };
 
-export const DefaultValue = () => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"textarea-default-value": {
-							uiType: "textarea",
-							label: "Textarea",
-						},
-						...SubmitButtonStorybook,
-					},
-				},
-			},
-			defaultValues: {
-				"textarea-default-value": "This is the default value",
-			},
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
-
-export const AllowResize = Template.bind({});
+export const AllowResize = Template("textarea-allow-resize").bind({});
 AllowResize.args = {
-	"textarea-allow-resize": {
-		uiType: "textarea",
-		label: "Resizable textarea",
-		resizable: true,
-		rows: 3,
-	},
+	uiType: "textarea",
+	label: "Resizable textarea",
+	resizable: true,
+	rows: 3,
 };
 
 export const WithCounter = Template.bind({});
-WithCounter.args = {
-	"textarea-with-counter": {
-		uiType: "textarea",
-		label: "Textarea with counter",
-		validation: [{ max: 5 }],
-	},
+WithCounter("textarea-with-counter").args = {
+	uiType: "textarea",
+	label: "Textarea with counter",
+	validation: [{ max: 5 }],
 };
 
-export const WithPills = Template.bind({});
+export const WithPills = Template("textarea-with-pills").bind({});
 WithPills.args = {
-	"textarea-with-pills": {
-		uiType: "textarea",
-		label: "Textarea with pills",
-		chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
-	},
+	uiType: "textarea",
+	label: "Textarea with pills",
+	chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
 };
 
-export const WithPillsBottom = Template.bind({});
+export const WithPillsBottom = Template("textarea-with-pills-bottom").bind({});
 WithPillsBottom.storyName = "With Pills (Bottom)";
 WithPillsBottom.args = {
-	"textarea-with-pills-bottom": {
-		uiType: "textarea",
-		label: "Textarea with pills at the bottom",
-		chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
-		chipPosition: "bottom",
-	},
+	uiType: "textarea",
+	label: "Textarea with pills at the bottom",
+	chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
+	chipPosition: "bottom",
 };
 
-export const WithValidation = Template.bind({});
+export const WithValidation = Template("textarea-with-validation").bind({});
 WithValidation.args = {
-	"textarea-with-validation": {
-		uiType: "textarea",
-		label: "Textarea with validation",
-		validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }],
-	},
+	uiType: "textarea",
+	label: "Textarea with validation",
+	validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }],
 };
 
-export const WithPlaceholder = Template.bind({});
+export const WithPlaceholder = Template("textarea-with-placeholder").bind({});
 WithPlaceholder.args = {
-	"textarea-with-placeholder": {
-		uiType: "textarea",
-		label: "Textarea with placeholder",
-		placeholder: "Enter something...",
-	},
+	uiType: "textarea",
+	label: "Textarea with placeholder",
+	placeholder: "Enter something...",
 };

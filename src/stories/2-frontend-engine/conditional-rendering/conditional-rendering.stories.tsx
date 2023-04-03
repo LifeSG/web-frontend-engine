@@ -2,7 +2,7 @@ import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
-import { SubmitButtonStorybook } from "../../common";
+import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Form/Conditional Rendering",
@@ -38,7 +38,7 @@ const Template: Story<Record<string, TFrontendEngineFieldSchema>> = (args) => (
 					uiType: "section",
 					children: {
 						...args,
-						...SubmitButtonStorybook,
+						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
 			},
@@ -134,7 +134,7 @@ NotEquals.args = {
 		showIf: [{ field1: [{ filled: true }, { notEquals: "Apple" }] }],
 		validation: [{ required: true }],
 	},
-	...SubmitButtonStorybook,
+	...SUBMIT_BUTTON_SCHEMA,
 };
 
 export const AndConditions = Template.bind({});

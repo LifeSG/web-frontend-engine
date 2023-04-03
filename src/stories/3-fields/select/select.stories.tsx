@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ISelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/Select",
@@ -19,7 +19,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("select"),
 		disabled: {
 			description: "Specifies if the input should be disabled",
@@ -68,113 +67,108 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ISelectSchema>> = (args) => (
-	<StyledForm
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						...args,
-						...SubmitButtonStorybook,
-					},
-				},
-			},
-		}}
-	/>
-);
-
-export const Default = Template.bind({});
-Default.args = {
-	"select-default": {
-		uiType: "select",
-		label: "Fruits",
-		options: [
-			{ label: "1", value: "1" },
-			{ label: "2", value: "2" },
-			{ label: "3", value: "3" },
-		],
-	},
-};
-
-export const DefaultValue = () => (
-	<StyledForm
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"select-default-value": {
-							uiType: "select",
-							label: "Fruits",
-							options: [
-								{ label: "Apple", value: "apple" },
-								{ label: "Berry", value: "berry" },
-								{ label: "Cherry", value: "cherry" },
-							],
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+							...SUBMIT_BUTTON_SCHEMA,
 						},
-						...SubmitButtonStorybook,
 					},
 				},
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<ISelectSchema & { defaultValues?: string | undefined }>;
+
+export const Default = Template("select-default").bind({});
+Default.args = {
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "1", value: "1" },
+		{ label: "2", value: "2" },
+		{ label: "3", value: "3" },
+	],
+};
+
+export const DefaultValue = Template("select-default-value").bind({});
+DefaultValue.args = {
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "apple" },
+		{ label: "Berry", value: "berry" },
+		{ label: "Cherry", value: "cherry" },
+	],
+	defaultValues: "apple",
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
 			},
-			defaultValues: { "select-default-value": "apple" },
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+		},
+		control: {
+			type: "text",
+		},
+	},
+};
 
-export const Disabled = Template.bind({});
+export const Disabled = Template("select-disabled").bind({});
 Disabled.args = {
-	"select-disabled": {
-		uiType: "select",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "apple" },
-			{ label: "Berry", value: "berry" },
-			{ label: "Cherry", value: "cherry" },
-		],
-		disabled: true,
-	},
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "apple" },
+		{ label: "Berry", value: "berry" },
+		{ label: "Cherry", value: "cherry" },
+	],
+	disabled: true,
 };
 
-export const CustomWidth = Template.bind({});
+export const CustomWidth = Template("select-custom-width").bind({});
 CustomWidth.args = {
-	"select-custom-width": {
-		uiType: "select",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "apple" },
-			{ label: "Berry", value: "berry" },
-			{ label: "Cherry", value: "cherry" },
-		],
-		listStyleWidth: "12rem",
-	},
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "apple" },
+		{ label: "Berry", value: "berry" },
+		{ label: "Cherry", value: "cherry" },
+	],
+	listStyleWidth: "12rem",
 };
 
-export const Placeholder = Template.bind({});
+export const Placeholder = Template("select-placeholder").bind({});
 Placeholder.args = {
-	"select-placeholder": {
-		uiType: "select",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "apple" },
-			{ label: "Berry", value: "berry" },
-			{ label: "Cherry", value: "cherry" },
-		],
-		placeholder: "Select your fruit",
-	},
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "apple" },
+		{ label: "Berry", value: "berry" },
+		{ label: "Cherry", value: "cherry" },
+	],
+	placeholder: "Select your fruit",
 };
 
-export const WithValidation = Template.bind({});
+export const WithValidation = Template("select-with-validation").bind({});
 WithValidation.args = {
-	"select-with-validation": {
-		uiType: "select",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "apple" },
-			{ label: "Berry", value: "berry" },
-			{ label: "Cherry", value: "cherry" },
-		],
-		validation: [{ required: true }],
-	},
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "apple" },
+		{ label: "Berry", value: "berry" },
+		{ label: "Cherry", value: "cherry" },
+	],
+	validation: [{ required: true }],
 };

@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../components";
 import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/RadioButton",
@@ -20,7 +19,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("radio"),
 		disabled: {
 			description: "Specifies if the radio buttons should be disabled",
@@ -47,85 +45,84 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, IRadioButtonGroupSchema>> = (args) => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						...args,
-						...SubmitButtonStorybook,
-					},
-				},
-			},
-		}}
-	/>
-);
-
-export const Default = Template.bind({});
-Default.args = {
-	"radio-default": {
-		uiType: "radio",
-		label: "Radio Button",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-	},
-};
-
-export const DefaultValue = () => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"radio-default-value": {
-							uiType: "radio",
-							label: "Fruits",
-							options: [
-								{ label: "Apple", value: "Apple" },
-								{ label: "Berry", value: "Berry" },
-								{ label: "Cherry", value: "Cherry" },
-							],
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+							...SUBMIT_BUTTON_SCHEMA,
 						},
-						...SubmitButtonStorybook,
 					},
 				},
-			},
-			defaultValues: { "radio-default-value": "Apple" },
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<IRadioButtonGroupSchema & { defaultValues?: string | undefined }>;
 
-export const Disabled = Template.bind({});
-Disabled.args = {
-	"radio-disabled": {
-		uiType: "radio",
-		label: "Radio Button",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		disabled: true,
+export const Default = Template("radio-default").bind({});
+Default.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
+export const DefaultValue = Template("radio-default-value").bind({});
+DefaultValue.args = {
+	uiType: "radio",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	defaultValues: "Apple",
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		control: {
+			type: "text",
+		},
 	},
 };
 
-export const WithValidation = Template.bind({});
+export const Disabled = Template("radio-disabled").bind({});
+Disabled.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	disabled: true,
+};
+
+export const WithValidation = Template("radio-with-validation").bind({});
 WithValidation.args = {
-	"radio-with-validation": {
-		uiType: "radio",
-		label: "Radio Button",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		validation: [{ required: true }],
-	},
+	uiType: "radio",
+	label: "Radio Button",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	validation: [{ required: true }],
 };

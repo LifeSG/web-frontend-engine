@@ -35,7 +35,7 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 	}, [watch]);
 
 	useDeepCompareEffectNoCheck(() => {
-		if (!renderRules) return;
+		if (isEmpty(renderRules)) return;
 
 		const canShow = canRender();
 		if (canShow !== show) {
@@ -52,6 +52,8 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const canRender = () => {
+		if (isEmpty(renderRules)) return true;
+
 		let isValid = false;
 		renderRules.forEach((ruleGroup) => {
 			if (!isValid) {
@@ -83,6 +85,6 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	if (renderRules && !show) return null;
+	if (!isEmpty(renderRules) && !show) return null;
 	return <>{children}</>;
 };

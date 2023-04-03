@@ -1,14 +1,10 @@
 import { Button } from "@lifesg/react-design-system/button";
+import { action } from "@storybook/addon-actions";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { useEffect, useRef } from "react";
-import {
-	FrontendEngine,
-	IFrontendEngineData,
-	IFrontendEngineProps,
-	IFrontendEngineRef,
-} from "../../components/frontend-engine";
-import { SubmitButtonStorybook } from "../common";
+import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
+import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../common";
 
 const DATA: IFrontendEngineData = {
 	sections: {
@@ -41,7 +37,7 @@ const DATA: IFrontendEngineData = {
 					validation: [{ required: true }],
 					chipTexts: ["Best", "Good", "Bad", "Horrible"],
 				},
-				...SubmitButtonStorybook,
+				...SUBMIT_BUTTON_SCHEMA,
 			},
 		},
 	},
@@ -162,6 +158,14 @@ export default {
 				},
 			},
 		},
+		ref: {
+			description: "Functions same as React refs, provides a way to access the component",
+			table: {
+				type: {
+					summary: "Ref<IFrontendEngineRef>",
+				},
+			},
+		},
 	},
 } as Meta;
 
@@ -194,11 +198,11 @@ ValidateOnBlur.args = {
 	},
 };
 
-export const OnChange: Story<IFrontendEngineProps> = () => (
-	<FrontendEngine data={DATA} onChange={(values, isValid) => console.log({ values, isValid })} />
-);
-OnChange.parameters = {
-	controls: { hideNoControlsWarning: true },
+export const OnChange: Story<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
+
+OnChange.args = {
+	data: DATA,
+	onChange: (values, isValid) => action("change")(values, isValid),
 };
 
 export const ExternalSubmit: Story<IFrontendEngineProps> = () => {
@@ -307,7 +311,7 @@ export const AddCustomValidation: Story = () => {
 									{ mustBeHello: true, errorMessage: "Please key in hello" },
 								],
 							},
-							...SubmitButtonStorybook,
+							...SUBMIT_BUTTON_SCHEMA,
 						},
 					},
 				},
@@ -347,7 +351,7 @@ export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
 									label: "What is your name",
 									uiType: "text-field",
 								},
-								...SubmitButtonStorybook,
+								...SUBMIT_BUTTON_SCHEMA,
 							},
 						},
 					},

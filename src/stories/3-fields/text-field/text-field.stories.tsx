@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../components";
 import { ITextFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/TextField",
@@ -25,7 +24,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("text-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",
@@ -54,85 +52,78 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ITextFieldSchema>> = (args) => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						...args,
-						...SubmitButtonStorybook,
-					},
-				},
-			},
-		}}
-	/>
-);
-
-export const Default = Template.bind({});
-Default.args = {
-	"text-default": {
-		label: "Textfield",
-		uiType: "text-field",
-	},
-};
-
-export const DefaultValue = () => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"text-default-value": {
-							label: "Textfield",
-							uiType: "text-field",
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+							...SUBMIT_BUTTON_SCHEMA,
 						},
-						...SubmitButtonStorybook,
 					},
 				},
-			},
-			defaultValues: {
-				"text-default-value": "This is the default value",
-			},
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<ITextFieldSchema & { defaultValues?: string | undefined }>;
 
-export const Disabled = Template.bind({});
+export const Default = Template("text-default").bind({});
+Default.args = {
+	label: "Textfield",
+	uiType: "text-field",
+};
+
+export const DefaultValue = Template("text-default-value").bind({});
+DefaultValue.args = {
+	label: "Textfield",
+	uiType: "text-field",
+	defaultValues: "This is the default value",
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		control: {
+			type: "text",
+		},
+	},
+};
+
+export const Disabled = Template("text-disabled").bind({});
 Disabled.args = {
-	"text-disabled": {
-		label: "Textfield",
-		uiType: "text-field",
-		disabled: true,
-	},
+	label: "Textfield",
+	uiType: "text-field",
+	disabled: true,
 };
 
-export const MaxLength = Template.bind({});
+export const MaxLength = Template("text-maxlength").bind({});
 MaxLength.args = {
-	"text-maxlength": {
-		label: "Textfield",
-		uiType: "text-field",
-		validation: [{ max: 5 }],
-	},
+	label: "Textfield",
+	uiType: "text-field",
+	validation: [{ max: 5 }],
 };
 
-export const Placeholder = Template.bind({});
+export const Placeholder = Template("text-placeholder").bind({});
 Placeholder.args = {
-	"text-placeholder": {
-		label: "Textfield",
-		uiType: "text-field",
-		placeholder: "Enter text here",
-	},
+	label: "Textfield",
+	uiType: "text-field",
+	placeholder: "Enter text here",
 };
 
-export const WithValidation = Template.bind({});
+export const WithValidation = Template("text-with-validation").bind({});
 WithValidation.args = {
-	"text-with-validation": {
-		label: "Textfield",
-		uiType: "text-field",
-		validation: [{ required: true }],
-	},
+	label: "Textfield",
+	uiType: "text-field",
+	validation: [{ required: true }],
 };

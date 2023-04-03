@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../components";
 import { INumericFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/NumericField",
@@ -25,7 +24,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("numeric-field"),
 		placeholder: {
 			description: "Specifies the placeholder text",
@@ -54,85 +52,76 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, INumericFieldSchema>> = (args) => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						...args,
-						...SubmitButtonStorybook,
-					},
-				},
-			},
-		}}
-	/>
-);
-
-export const Default = Template.bind({});
-Default.args = {
-	"numeric-default": {
-		label: "Number",
-		uiType: "numeric-field",
-	},
-};
-
-export const DefaultValue = () => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"numeric-default-value": {
-							label: "Number",
-							uiType: "numeric-field",
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+							...SUBMIT_BUTTON_SCHEMA,
 						},
-						...SubmitButtonStorybook,
 					},
 				},
-			},
-			defaultValues: {
-				"numeric-default-value": 1,
-			},
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<INumericFieldSchema & { defaultValues?: number | undefined }>;
 
-export const Disabled = Template.bind({});
+export const Default = Template("numeric-default").bind({});
+Default.args = {
+	label: "Number",
+	uiType: "numeric-field",
+};
+
+export const DefaultValue = Template("numeric-default-value").bind({});
+DefaultValue.args = {
+	label: "Number",
+	uiType: "numeric-field",
+	defaultValues: 1,
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "number",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
+};
+
+export const Disabled = Template("numeric-disabled").bind({});
 Disabled.args = {
-	"numeric-disabled": {
-		label: "Number",
-		uiType: "numeric-field",
-		disabled: true,
-	},
+	label: "Number",
+	uiType: "numeric-field",
+	disabled: true,
 };
 
-export const MaxLength = Template.bind({});
+export const MaxLength = Template("numeric-maxlength").bind({});
 MaxLength.args = {
-	"numeric-maxlength": {
-		label: "Number",
-		uiType: "numeric-field",
-		maxLength: 2,
-	},
+	label: "Number",
+	uiType: "numeric-field",
+	maxLength: 2,
 };
 
-export const Placeholder = Template.bind({});
+export const Placeholder = Template("numeric-placeholder").bind({});
 Placeholder.args = {
-	"numeric-placeholder": {
-		label: "Number",
-		uiType: "numeric-field",
-		placeholder: "Enter a number",
-	},
+	label: "Number",
+	uiType: "numeric-field",
+	placeholder: "Enter a number",
 };
 
-export const WithValidation = Template.bind({});
+export const WithValidation = Template("numeric-with-validation").bind({});
 WithValidation.args = {
-	"numeric-with-validation": {
-		label: "Number",
-		uiType: "numeric-field",
-		validation: [{ required: true }],
-	},
+	label: "Number",
+	uiType: "numeric-field",
+	validation: [{ required: true }],
 };
