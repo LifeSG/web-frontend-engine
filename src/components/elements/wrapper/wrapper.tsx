@@ -15,7 +15,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const { id, schema, children, warnings } = props;
-	const { uiType, children: schemaChildren, ...otherSchema } = schema || {};
+	const { showIf, uiType, children: schemaChildren, ...otherSchema } = schema || {};
 	const [components, setComponents] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
 
@@ -44,7 +44,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 					// render fields with controller to register them into react-hook-form
 					const Field = frontendEngineComponents[EFieldType[uiType]];
 					renderComponents.push(
-						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
+						<ConditionalRenderer id={id} key={id} renderRules={child.showIf} schema={child}>
 							<Controller
 								control={control}
 								name={id}
@@ -71,7 +71,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 					const Element = (frontendEngineComponents[EElementType[uiType]] ||
 						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
 					renderComponents.push(
-						<ConditionalRenderer id={id} key={id} renderRules={child.showIf}>
+						<ConditionalRenderer id={id} key={id} renderRules={child.showIf} schema={child}>
 							<Element schema={child} id={id} />
 						</ConditionalRenderer>
 					);
