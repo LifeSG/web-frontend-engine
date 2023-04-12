@@ -246,10 +246,47 @@ describe("conditional-renderer", () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(SUBMIT_FN).not.toBeCalled();
 
 		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
+		expect(SUBMIT_FN).toBeCalled();
+	});
+
+	it("should remove validation schema for fields with parents that are conditionally hidden", async () => {
+		const uiType = "text-field";
+		const fields: Record<string, TFrontendEngineFieldSchema> = {
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
+				uiType,
+			},
+			wrapper: {
+				uiType: "div",
+				showIf: [{ [FIELD_ONE_ID]: [{ filled: true }, { min: 5 }] }],
+				children: {
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType,
+						validation: [
+							{ required: true, errorMessage: ERROR_MESSAGE },
+							{ min: 5, errorMessage: ERROR_MESSAGE },
+						],
+					},
+				},
+			},
+		};
+		renderComponent(fields);
+
+		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		fireEvent.change(getFieldTwo(), { target: { value: "hi" } });
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		expect(SUBMIT_FN).not.toBeCalled();
+
+		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toBeCalled();
 	});
 
 	it("should not submit fields that are conditionally hidden", async () => {
