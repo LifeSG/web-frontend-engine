@@ -1,9 +1,10 @@
-# web-frontend-engine
+# LifeSG Web Frontend Engine [![npm version](https://img.shields.io/npm/v/@lifesg/web-frontend-engine.svg?style=flat)](https://www.npmjs.com/package/@lifesg/web-frontend-engine)
 
 Repository for the web frontend engine
 
 -   UI components based on <a href="https://github.com/LifeSG/react-design-system" target="_blank" rel="noopener noreferrer">React design system</a>
 -   Form generation via JSON schema
+-   To see the schema and fields available, visit our <a href="https://designsystem.life.gov.sg/web-frontend-engine/index.html?path=/story/introduction-getting-started--page" target="_blank" rel="noopener noreferrer">Storybook documentation</a>.
 
 The intention of frontend engine is to take out the heavy lifting of form development and offer a collection of common fields so engineers can develop forms quickly. The form will be defined through a JSON schema so non-engineers can customise the form as well.
 
@@ -23,20 +24,25 @@ Developers are expected to have the following packages installed:
 ## Usage
 
 ```tsx
-import { FrontendEngine } from "web-frontend-engine";
+import { FrontendEngine } from "@lifesg/web-frontend-engine";
 
 const App = () => {
 	return (
 		<FrontendEngine
 			data={{
-				fields: {
-					myField: {
-						fieldType: "text",
-						label: "My field",
-					},
-					submit: {
-						fieldType: "submit",
-						label: "Submit",
+				sections: {
+					mySection: {
+						uiType: "section",
+						children: {
+							myField: {
+								uiType: "text-field",
+								label: "My field",
+							},
+							submit: {
+								uiType: "submit",
+								label: "Submit",
+							},
+						},
 					},
 				},
 			}}
@@ -47,22 +53,10 @@ const App = () => {
 export default App;
 ```
 
-## Component Documentation
+## Contributing to the repo
 
-The components are documented using Storybook. To see the stories, upon pulling this repository to your system, do these steps:
+To contribute to the frontend engine
 
-Install all dependencies
-
-> `npm ci`
-
-Run Storybook
-
-> `npm run storybook`
-
-If the web page does not load automatically, you may go to this url
-
-> `http://localhost:6006`
-
-## Adding Components
-
-To contribute to the frontend engine, view [Contributing](CONTRIBUTING.md).
+-   Refer to [Contributing](CONTRIBUTING.md)
+-   Understand [how it works](https://github.com/LifeSG/web-frontend-engine/wiki/How-It-Works)
+-   Familiarise with the [JSON schema](https://github.com/LifeSG/web-frontend-engine/wiki/JSON-Schema)
