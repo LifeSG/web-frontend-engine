@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IChipsSchema } from "../../../components/fields/chips";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps, StyledForm, SubmitButtonStorybook } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/Chips",
@@ -27,7 +27,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("chips"),
 		options: {
 			description: "A list of text chips for users to select",
@@ -51,161 +50,154 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, IChipsSchema>> = (args) => (
-	<StyledForm
-		data={{
-			fields: {
-				...args,
-				...SubmitButtonStorybook,
-			},
-		}}
-	/>
-);
-
-export const Default = Template.bind({});
-Default.args = {
-	"chips-default": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-	},
-};
-
-export const DefaultValue = () => (
-	<StyledForm
-		data={{
-			fields: {
-				"chips-default-value": {
-					fieldType: "chips",
-					label: "Fruits",
-					options: [
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-					],
+const Template = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+							...SUBMIT_BUTTON_SCHEMA,
+						},
+					},
 				},
-				...SubmitButtonStorybook,
-			},
-			defaultValues: {
-				"chips-default-value": ["Apple", "Berry"],
-			},
-		}}
-	/>
-);
-DefaultValue.parameters = { controls: { hideNoControlsWarning: true } };
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<IChipsSchema & { defaultValues?: string[] | undefined }>;
 
-export const Disabled = Template.bind({});
+export const Default = Template("chips-default").bind({});
+Default.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
+export const DefaultValue = Template("chips-default-value").bind({});
+DefaultValue.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	defaultValues: ["Apple", "Berry"],
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string[]",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
+};
+
+export const Disabled = Template("chips-disabled").bind({});
 Disabled.args = {
-	"chips-disabled": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		disabled: true,
-	},
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	disabled: true,
 };
 
-export const WithValidation = Template.bind({});
+export const WithValidation = Template("chips-with-validation").bind({});
 WithValidation.args = {
-	"chips-with-validation": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		validation: [{ required: true }],
-	},
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	validation: [{ required: true }],
 };
 
-export const WithTextarea = Template.bind({});
+export const WithTextarea = Template("chips-with-textarea").bind({});
 WithTextarea.args = {
-	"chips-with-textarea": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		textarea: { label: "Durian" },
-	},
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian" },
 };
 
-export const WithTextareaValidation = Template.bind({});
+export const WithTextareaValidation = Template("chips-with-textarea-validation").bind({});
 WithTextareaValidation.args = {
-	"chips-with-textarea-validation": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		textarea: { label: "Durian", validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }] },
-	},
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian", validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }] },
 };
 
-export const WithResizableTextarea = Template.bind({});
+export const WithResizableTextarea = Template("chips-with-textarea-resizable").bind({});
 WithResizableTextarea.args = {
-	"chips-with-textarea-resizable": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		textarea: { label: "Durian", resizable: true },
-	},
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian", resizable: true },
 };
 
-export const WithTextareaCustomRows = Template.bind({});
+export const WithTextareaCustomRows = Template("chips-with-textarea-custom-rows").bind({});
 WithTextareaCustomRows.args = {
-	"chips-with-textarea-custom-rows": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		textarea: { label: "Durian", rows: 1 },
-	},
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian", rows: 1 },
 };
 
-export const WithTextareaMaxLength = Template.bind({});
+export const WithTextareaMaxLength = Template("chips-with-textarea-max-length").bind({});
 WithTextareaMaxLength.args = {
-	"chips-with-textarea-max-length": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		textarea: { label: "Durian", rows: 1, validation: [{ max: 10 }] },
-	},
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian", rows: 1, validation: [{ max: 10 }] },
 };
 
-export const SingleSelection = Template.bind({});
+export const SingleSelection = Template("chips-single-selection").bind({});
 SingleSelection.args = {
-	"chips-single-selection": {
-		fieldType: "chips",
-		label: "Fruits",
-		options: [
-			{ label: "Apple", value: "Apple" },
-			{ label: "Berry", value: "Berry" },
-			{ label: "Cherry", value: "Cherry" },
-		],
-		validation: [{ max: 1 }],
-	},
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	validation: [{ max: 1 }],
 };

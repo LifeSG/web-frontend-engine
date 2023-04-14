@@ -12,7 +12,7 @@ export const getSubmitButtonProps = (): Record<string, TFrontendEngineFieldSchem
 	return {
 		[SUBMIT_BUTTON_ID]: {
 			label: SUBMIT_BUTTON_LABEL,
-			fieldType: "submit",
+			uiType: "submit",
 		},
 	};
 };

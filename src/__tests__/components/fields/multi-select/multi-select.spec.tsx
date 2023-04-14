@@ -15,28 +15,33 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const fieldType = "multi-select";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "multi-select";
 
 const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[componentId]: {
-				label: "Multiselect",
-				fieldType,
-				options: [
-					{ label: "A", value: "Apple" },
-					{ label: "B", value: "Berry" },
-				],
-				...overrideField,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: "Multiselect",
+						uiType: UI_TYPE,
+						options: [
+							{ label: "A", value: "Apple" },
+							{ label: "B", value: "Berry" },
+						],
+						...overrideField,
+					},
+					...getSubmitButtonProps(),
+				},
 			},
-			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getComponent = (): HTMLElement => {
@@ -51,7 +56,7 @@ const getCheckboxB = (): HTMLElement => {
 	return getField("button", "B");
 };
 
-describe(fieldType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -64,14 +69,14 @@ describe(fieldType, () => {
 
 	it("should be able to support default values", async () => {
 		const defaultValues = ["Apple"];
-		renderComponent(undefined, { defaultValues: { [componentId]: defaultValues } });
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
 		const toggle = getField("button", "1 selected");
 		await waitFor(() => fireEvent.click(toggle));
 		expect(getCheckboxA().querySelector("svg")).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValues }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -112,15 +117,15 @@ describe(fieldType, () => {
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(berry));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Berry"] }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(berry));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
 	it("should be able to toggle all the checkboxes at once", async () => {
@@ -130,10 +135,10 @@ describe(fieldType, () => {
 		const selectAllButton = getField("button", "Select all");
 
 		await waitFor(() => fireEvent.click(selectAllButton));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: ["Apple", "Berry"] }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(selectAllButton));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: [] }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
 	describe("update options schema", () => {
@@ -149,12 +154,17 @@ describe(fieldType, () => {
 					<FrontendEngine
 						data={{
 							id: FRONTEND_ENGINE_ID,
-							fields: {
-								[componentId]: { label: "Multiselect", fieldType, options },
-								...getSubmitButtonProps(),
+							sections: {
+								section: {
+									uiType: "section",
+									children: {
+										[COMPONENT_ID]: { label: "Multiselect", uiType: UI_TYPE, options },
+										...getSubmitButtonProps(),
+									},
+								},
 							},
 						}}
-						onSubmit={submitFn}
+						onSubmit={SUBMIT_FN}
 					/>
 					<Button.Default
 						onClick={() =>
@@ -183,11 +193,13 @@ describe(fieldType, () => {
 
 				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: expectedValueBeforeUpdate }));
+				expect(SUBMIT_FN).toBeCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
+				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
 	});

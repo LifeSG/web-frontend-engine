@@ -155,7 +155,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 		const textareaId = getTextareaId();
 		const schema: ITextareaSchema = {
-			fieldType: "textarea",
+			uiType: "textarea",
 			label,
 			...textarea,
 		};

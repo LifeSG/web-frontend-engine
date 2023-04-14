@@ -1,11 +1,10 @@
 import { Meta } from "@storybook/addon-docs";
-import { VersionTags } from "./version-tag.tsx";
 
 <Meta title="Introduction/Getting Started" />
 
 # Web Frontend Engine
 
-<VersionTags link="https://github.com/LifeSG/web-frontend-engine" />
+[![npm version](https://img.shields.io/npm/v/@lifesg/web-frontend-engine.svg?style=flat)](https://www.npmjs.com/package/@lifesg/web-frontend-engine)
 
 A form building library to come up with forms with relative ease.
 
@@ -16,11 +15,9 @@ A form building library to come up with forms with relative ease.
 
 The library is actively in development stage and is aiming for MVP release. With that, the priority is on ensuring the form fields work properly and can be defined through the JSON schema. It is also assumed that all the necessary form fields are provided by Frontend Engine.
 
-While it is possible to pass custom components into Frontend Engine, it is largely unsupported as this feature is deprioritised, so use at your own risk! The current assumption is all form fields will exist inside Frontend Engine.
-
 ### Purpose
 
-The purpose of Frontend Engine is to take out the heavy lifting of form development and offer a collection of common fields so engineers can develop forms quickly. Forms can be defined through a JSON schema so non-engineers can customise them as well.
+The intention of frontend engine is to take out the heavy lifting of form development and offer a collection of common fields so engineers can develop forms quickly. The form will be defined through a JSON schema so non-engineers can customise the form as well.
 
 ### Design system
 
@@ -32,52 +29,36 @@ Under the hood, the Frontend Engine relies on [React Form Hook](https://react-ho
 
 ## Installation
 
-Add this library as a dependency in your project's `package.json`
-
-```json
-
-"web-frontend-engine": "TO INSERT URL"
-// ?.?.? is the version tag of the built branch
-
-```
-
-Install the library
-
-```bash
-npm i web-frontend-engine
-```
+`npm i @lifesg/web-frontend-engine`
 
 ## Usage
 
-### 1. Define the JSON schema
-
-Frontend Engine accepts the JSON schema through the data props, the shape is defined in the `IFrontendEngineData` interface. Do refer to the individual Frontend Engine stories for more details.
-
-```json
-{
-	"fields": {
-		"name": {
-			"label": "What is your name",
-			"fieldType": "textarea",
-			"validation": ["required"]
-		}
-	}
-}
-```
-
-### 2. Using the Frontend Engine component
-
-Render Frontend Engine component accordingly:
-
 ```tsx
-import React from "react";
-import { FrontendEngine } from "web-frontend-engine";
-import { IFrontendEngineData } from "web-frontend-engine/types";
-import data from "./data.json";
+import { FrontendEngine } from "@lifesg/web-frontend-engine";
 
-const MyForm = () => {
-	return <FrontendEngine data={data as IFrontendEngineData} />;
+const App = () => {
+	return (
+		<FrontendEngine
+			data={{
+				sections: {
+					mySection: {
+						uiType: "section",
+						children: {
+							myField: {
+								uiType: "text-field",
+								label: "My field",
+							},
+							submit: {
+								uiType: "submit",
+								label: "Submit",
+							},
+						},
+					},
+				},
+			}}
+		/>
+	);
 };
 
-export default MyForm;
+export default App;
 ```

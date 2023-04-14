@@ -6,30 +6,35 @@ import { ERROR_MESSAGES } from "../../../../components/shared";
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, getSubmitButtonProps } from "../../../common";
 
-const parentId = "wrapper";
-const parentFieldType = "div";
-const childId = "field1";
-const childFieldType = "text";
-const childTestId = TestHelper.generateId(childId, childFieldType);
+const PARENT_ID = "wrapper";
+const PARENT_FIELD_TYPE = "div";
+const CHILD_ID = "field1";
+const CHILD_FIELD_TYPE = "text-field";
+const CHILD_TEST_ID = TestHelper.generateId(CHILD_ID, CHILD_FIELD_TYPE);
 
 const renderComponent = (
 	wrapperType: TWrapperType = "div",
 	wrapperChildren?: Record<string, TFrontendEngineFieldSchema> | string
 ) => {
 	const children = wrapperChildren || {
-		[childId]: {
+		[CHILD_ID]: {
 			label: "Field 1",
-			fieldType: childFieldType,
+			uiType: CHILD_FIELD_TYPE,
 		},
 	};
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[parentId]: {
-				fieldType: wrapperType,
-				children,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[PARENT_ID]: {
+						uiType: wrapperType,
+						children,
+					},
+					...getSubmitButtonProps(),
+				},
 			},
-			...getSubmitButtonProps(),
 		},
 	};
 	return render(<FrontendEngine data={json} />);
@@ -39,8 +44,8 @@ describe("wrapper", () => {
 	it("should be able to render other fields as children", () => {
 		renderComponent();
 
-		expect(screen.getByTestId(childTestId)).toBeInTheDocument();
-		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
+		expect(screen.getByTestId(CHILD_TEST_ID)).toBeInTheDocument();
+		expect(screen.getByTestId(CHILD_TEST_ID).tagName).toBe("INPUT");
 	});
 
 	it("should be able to render string as children", () => {
@@ -53,7 +58,7 @@ describe("wrapper", () => {
 	it("should not render unsupported components", () => {
 		renderComponent(undefined, {
 			unsupported: {
-				fieldType: "unknown",
+				uiType: "unknown",
 			},
 		} as any);
 
@@ -62,31 +67,31 @@ describe("wrapper", () => {
 
 	it("should be able to render nested children", () => {
 		const nestedId = "nested";
-		const nestedTestId = TestHelper.generateId(nestedId, parentFieldType);
+		const nestedTestId = TestHelper.generateId(nestedId, PARENT_FIELD_TYPE);
 		renderComponent(undefined, {
 			[nestedId]: {
-				fieldType: parentFieldType,
+				uiType: PARENT_FIELD_TYPE,
 				children: {
-					[childId]: {
+					[CHILD_ID]: {
 						label: "Field 1",
-						fieldType: childFieldType,
+						uiType: CHILD_FIELD_TYPE,
 					},
 				},
 			},
 		});
 
 		expect(screen.getByTestId(nestedTestId)).toBeInTheDocument();
-		expect(screen.getByTestId(childTestId)).toBeInTheDocument();
-		expect(screen.getByTestId(childTestId).tagName).toBe("INPUT");
+		expect(screen.getByTestId(CHILD_TEST_ID)).toBeInTheDocument();
+		expect(screen.getByTestId(CHILD_TEST_ID).tagName).toBe("INPUT");
 	});
 
-	it.each<TWrapperType>(["div", "span", "section", "header", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "p"])(
+	it.each<TWrapperType>(["div", "span", "header", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "p"])(
 		"should be able to render with %s element type",
 		(type) => {
 			const text = "hello world";
 			renderComponent(type, text);
 
-			expect(screen.getByTestId(TestHelper.generateId(parentId, type))).toBeInTheDocument();
+			expect(screen.getByTestId(TestHelper.generateId(PARENT_ID, type))).toBeInTheDocument();
 			expect(screen.getByText(text)).toBeInTheDocument();
 		}
 	);

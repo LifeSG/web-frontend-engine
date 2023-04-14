@@ -2,7 +2,7 @@ import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../../components";
 import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
-import { SubmitButtonStorybook } from "../../common";
+import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Form/Conditional Rendering/Arrays",
@@ -27,18 +27,30 @@ export default {
 } as Meta;
 
 const Template: Story<Record<string, TFrontendEngineFieldSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args, ...SubmitButtonStorybook } }} />
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						...args,
+						...SUBMIT_BUTTON_SCHEMA,
+					},
+				},
+			},
+		}}
+	/>
 );
 
 export const Length = Template.bind({});
 Length.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 has exactly 2 items selected",
 	},
 	field1: {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Field 1",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -48,7 +60,7 @@ Length.args = {
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { length: 2 }] }],
 		validation: [{ required: true }],
 	},
@@ -57,12 +69,12 @@ Length.args = {
 export const MinItems = Template.bind({});
 MinItems.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 has at least 2 items selected",
 	},
 	field1: {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Field 1",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -72,7 +84,7 @@ MinItems.args = {
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { min: 2 }] }],
 		validation: [{ required: true }],
 	},
@@ -81,12 +93,12 @@ MinItems.args = {
 export const MaxItems = Template.bind({});
 MaxItems.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 has at most 2 items selected",
 	},
 	field1: {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Field 1",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -96,7 +108,7 @@ MaxItems.args = {
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { max: 2 }] }],
 		validation: [{ required: true }],
 	},
@@ -105,12 +117,12 @@ MaxItems.args = {
 export const Includes = Template.bind({});
 Includes.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 includes `Apple` and `Berry`",
 	},
 	field1: {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Field 1",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -120,7 +132,7 @@ Includes.args = {
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { includes: ["Apple", "Berry"] }] }],
 		validation: [{ required: true }],
 	},
@@ -129,12 +141,12 @@ Includes.args = {
 export const Excludes = Template.bind({});
 Excludes.args = {
 	intro: {
-		fieldType: "div",
+		uiType: "div",
 		className: "margin--bottom",
 		children: "Show field 2 as long as field 1 excludes `Apple` and `Berry`",
 	},
 	field1: {
-		fieldType: "multi-select",
+		uiType: "multi-select",
 		label: "Field 1",
 		options: [
 			{ value: "Apple", label: "Apple" },
@@ -144,7 +156,7 @@ Excludes.args = {
 	},
 	field2: {
 		label: "Field 2",
-		fieldType: "text",
+		uiType: "text-field",
 		showIf: [{ field1: [{ filled: true }, { excludes: ["Apple", "Berry"] }] }],
 		validation: [{ required: true }],
 	},

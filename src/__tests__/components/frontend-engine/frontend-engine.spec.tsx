@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../components";
 import { IYupValidationRule } from "../../../components/frontend-engine/yup";
+import { ERROR_MESSAGES } from "../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
 import { TestHelper } from "../../../utils";
 import {
@@ -13,43 +14,27 @@ import {
 	getSubmitButtonProps,
 } from "../../common";
 
-const fieldType = "text";
-const fieldOneId = "field1";
-const fieldOneLabel = "Field 1";
-const fieldTwoId = "field2";
-const fieldTwoLabel = "Field 2";
-const customButtonLabel = "custom button";
-const componentTestId = TestHelper.generateId(FRONTEND_ENGINE_ID, "frontend-engine");
+const UI_TYPE = "text-field";
+const FIELD_ONE_ID = "field1";
+const FIELD_ONE_LABEL = "Field 1";
+const FIELD_TWO_ID = "field2";
+const FIELD_TWO_LABEL = "Field 2";
+const CUSTOM_BUTTON_LABEL = "custom button";
+const COMPONENT_TEST_ID = TestHelper.generateId(FRONTEND_ENGINE_ID, "frontend-engine");
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
-	fields: {
-		[fieldOneId]: {
-			label: fieldOneLabel,
-			fieldType,
-			validation: [
-				{ required: true, errorMessage: ERROR_MESSAGE },
-				{ min: 2, errorMessage: ERROR_MESSAGE },
-			],
-		},
-		...getSubmitButtonProps(),
-	},
-};
-
-const NESTED_JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	fields: {
-		[fieldOneId]: {
-			fieldType: "div",
+	sections: {
+		section: {
+			uiType: "section",
 			children: {
-				header: {
-					fieldType: "h6",
-					children: "Fill in your name below",
-				},
-				[fieldTwoId]: {
-					label: fieldTwoLabel,
-					fieldType,
-					validation: [{ required: true }],
+				[FIELD_ONE_ID]: {
+					label: FIELD_ONE_LABEL,
+					uiType: UI_TYPE,
+					validation: [
+						{ required: true, errorMessage: ERROR_MESSAGE },
+						{ min: 2, errorMessage: ERROR_MESSAGE },
+					],
 				},
 				...getSubmitButtonProps(),
 			},
@@ -57,16 +42,42 @@ const NESTED_JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
+const NESTED_JSON_SCHEMA: IFrontendEngineData = {
+	id: FRONTEND_ENGINE_ID,
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				[FIELD_ONE_ID]: {
+					uiType: "div",
+					children: {
+						header: {
+							uiType: "h6",
+							children: "Fill in your name below",
+						},
+						[FIELD_TWO_ID]: {
+							label: FIELD_TWO_LABEL,
+							uiType: UI_TYPE,
+							validation: [{ required: true }],
+						},
+						...getSubmitButtonProps(),
+					},
+				},
+			},
+		},
+	},
+};
+
 const getFieldOne = (): HTMLElement => {
-	return getField("textbox", fieldOneLabel);
+	return getField("textbox", FIELD_ONE_LABEL);
 };
 
 const getFieldTwo = (): HTMLElement => {
-	return getField("textbox", fieldTwoLabel);
+	return getField("textbox", FIELD_TWO_LABEL);
 };
 
 const getCustomButton = (): HTMLElement => {
-	return screen.getByRole("button", { name: customButtonLabel });
+	return screen.getByRole("button", { name: CUSTOM_BUTTON_LABEL });
 };
 
 const FrontendEngineWithCustomButton = (props: {
@@ -81,7 +92,7 @@ const FrontendEngineWithCustomButton = (props: {
 		<>
 			<FrontendEngine data={isNested ? NESTED_JSON_SCHEMA : JSON_SCHEMA} ref={ref} onSubmit={onSubmit} />
 			<button type="button" onClick={() => onClick(ref)}>
-				{customButtonLabel}
+				{CUSTOM_BUTTON_LABEL}
 			</button>
 		</>
 	);
@@ -94,9 +105,11 @@ const renderComponent = (
 	const json: IFrontendEngineData = {
 		...JSON_SCHEMA,
 		...overrideData,
-		fields: {
-			...JSON_SCHEMA.fields,
-			...overrideData?.fields,
+		sections: {
+			section: {
+				...JSON_SCHEMA.sections.section,
+				...overrideData?.sections?.section,
+			},
 		},
 	};
 	return render(<FrontendEngine {...overrideProps} data={json} />);
@@ -110,7 +123,7 @@ describe("frontend-engine", () => {
 	it("should render a form with JSON provided", () => {
 		renderComponent();
 
-		expect(screen.getByTestId(componentTestId)).toBeInTheDocument();
+		expect(screen.getByTestId(COMPONENT_TEST_ID)).toBeInTheDocument();
 		expect(getFieldOne()).toBeInTheDocument();
 	});
 
@@ -123,7 +136,7 @@ describe("frontend-engine", () => {
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(onChange).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hello" }), true);
+		expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
 	});
 
 	it("should call onSubmit prop on submit", async () => {
@@ -148,20 +161,20 @@ describe("frontend-engine", () => {
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		fireEvent.click(getCustomButton());
 
-		expect(formValues?.[fieldOneId]).toBe("hello");
+		expect(formValues?.[FIELD_ONE_ID]).toBe("hello");
 	});
 
 	it("should update field value through setValue method", async () => {
 		const onSubmit = jest.fn();
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			ref.current.setValue(fieldOneId, "hello");
+			ref.current.setValue(FIELD_ONE_ID, "hello");
 		};
 		render(<FrontendEngineWithCustomButton onClick={handleClick} onSubmit={onSubmit} />);
 
 		fireEvent.click(getCustomButton());
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(onSubmit).toBeCalledWith(expect.objectContaining({ [fieldOneId]: "hello" }));
+		expect(onSubmit).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }));
 	});
 
 	it("should return form validity through checkValid method", async () => {
@@ -206,12 +219,17 @@ describe("frontend-engine", () => {
 					ref={ref}
 					data={{
 						...JSON_SCHEMA,
-						fields: {
-							...JSON_SCHEMA.fields,
-							[fieldOneId]: {
-								label: fieldOneLabel,
-								fieldType,
-								validation: [{ mustBeHello: true, errorMessage: ERROR_MESSAGE }],
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									...JSON_SCHEMA.sections.section.children,
+									[FIELD_ONE_ID]: {
+										label: FIELD_ONE_LABEL,
+										uiType: UI_TYPE,
+										validation: [{ mustBeHello: true, errorMessage: ERROR_MESSAGE }],
+									},
+								},
 							},
 						},
 					}}
@@ -229,13 +247,29 @@ describe("frontend-engine", () => {
 		expect(getErrorMessage(true)).not.toBeInTheDocument();
 	});
 
+	it("should silently skip rendering schema with referenceKey", () => {
+		const frontendEngine = renderComponent(undefined, {
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						custom: { referenceKey: "something" },
+					},
+				},
+			},
+		});
+
+		expect(screen.queryByText(ERROR_MESSAGES.GENERIC.UNSUPPORTED)).not.toBeInTheDocument();
+		expect(frontendEngine.container.querySelector("section")).not.toBeInTheDocument();
+	});
+
 	describe("setErrors", () => {
 		const handleClickDefault = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 			try {
 				throw new Error("API error");
 			} catch (error) {
 				ref.current.setErrors({
-					[fieldOneId]: ERROR_MESSAGE,
+					[FIELD_ONE_ID]: ERROR_MESSAGE,
 				});
 			}
 		};
@@ -245,7 +279,7 @@ describe("frontend-engine", () => {
 				throw new Error("API error");
 			} catch (error) {
 				ref.current.setErrors({
-					[fieldOneId]: [ERROR_MESSAGE],
+					[FIELD_ONE_ID]: [ERROR_MESSAGE],
 				});
 			}
 		};
@@ -255,8 +289,8 @@ describe("frontend-engine", () => {
 				throw new Error("API error");
 			} catch (error) {
 				ref.current.setErrors({
-					[fieldOneId]: {
-						[fieldTwoId]: ERROR_MESSAGE,
+					[FIELD_ONE_ID]: {
+						[FIELD_TWO_ID]: ERROR_MESSAGE,
 					},
 				});
 			}

@@ -4,31 +4,36 @@ import { ISubmitButtonSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
 import { FRONTEND_ENGINE_ID, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL, getField, getSubmitButton } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const componentLabel = "Textfield";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const COMPONENT_LABEL = "Textfield";
 
 const renderComponent = (overrideSubmit?: Partial<ISubmitButtonSchema> | undefined) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[componentId]: {
-				label: componentLabel,
-				fieldType: "text",
-				validation: [{ required: true }],
-			},
-			[SUBMIT_BUTTON_ID]: {
-				label: SUBMIT_BUTTON_LABEL,
-				fieldType: "submit",
-				...overrideSubmit,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: COMPONENT_LABEL,
+						uiType: "text-field",
+						validation: [{ required: true }],
+					},
+					[SUBMIT_BUTTON_ID]: {
+						label: SUBMIT_BUTTON_LABEL,
+						uiType: "submit",
+						...overrideSubmit,
+					},
+				},
 			},
 		},
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getTextfield = (): HTMLElement => {
-	return getField("textbox", componentLabel);
+	return getField("textbox", COMPONENT_LABEL);
 };
 
 describe("submit", () => {
@@ -37,7 +42,7 @@ describe("submit", () => {
 		fireEvent.change(getTextfield(), { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalled();
+		expect(SUBMIT_FN).toBeCalled();
 	});
 
 	it("should be disabled if configured", async () => {

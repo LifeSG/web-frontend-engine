@@ -15,9 +15,9 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
-const submitFn = jest.fn();
-const componentId = "field";
-const fieldType = "radio";
+const SUBMIT_FN = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "radio";
 
 const getRadioButtonA = (): HTMLElement => {
 	return getField("radio", "A");
@@ -30,24 +30,29 @@ const getRadioButtonB = (): HTMLElement => {
 const renderComponent = (overrideField?: TOverrideField<IRadioButtonGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			[componentId]: {
-				label: "Radio",
-				fieldType,
-				options: [
-					{ label: "A", value: "Apple" },
-					{ label: "B", value: "Berry" },
-				],
-				...overrideField,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: "Radio",
+						uiType: UI_TYPE,
+						options: [
+							{ label: "A", value: "Apple" },
+							{ label: "B", value: "Berry" },
+						],
+						...overrideField,
+					},
+					...getSubmitButtonProps(),
+				},
 			},
-			...getSubmitButtonProps(),
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={submitFn} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-describe(fieldType, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -61,12 +66,12 @@ describe(fieldType, () => {
 
 	it("should be able to support default values", async () => {
 		const defaultValue = "Apple";
-		renderComponent(undefined, { defaultValues: { [componentId]: defaultValue } });
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		expect(getRadioButtonA()).toBeChecked();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: defaultValue }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -95,12 +100,17 @@ describe(fieldType, () => {
 					<FrontendEngine
 						data={{
 							id: FRONTEND_ENGINE_ID,
-							fields: {
-								[componentId]: { label: "Radio", fieldType, options },
-								...getSubmitButtonProps(),
+							sections: {
+								section: {
+									uiType: "section",
+									children: {
+										[COMPONENT_ID]: { label: "Radio", uiType: UI_TYPE, options },
+										...getSubmitButtonProps(),
+									},
+								},
 							},
 						}}
-						onSubmit={submitFn}
+						onSubmit={SUBMIT_FN}
 					/>
 					<Button.Default
 						onClick={() =>
@@ -128,11 +138,13 @@ describe(fieldType, () => {
 
 				fireEvent.click(screen.getByLabelText(selected));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: expectedValueBeforeUpdate }));
+				expect(SUBMIT_FN).toBeCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
+				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(expect.objectContaining({ [componentId]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
 	});

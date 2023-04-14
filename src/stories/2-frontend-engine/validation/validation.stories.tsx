@@ -1,7 +1,7 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine, IFrontendEngineProps } from "../../../components";
-import { SubmitButtonStorybook } from "../../common";
+import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
 export default {
@@ -25,7 +25,7 @@ export default {
 			"fields": {
 				"name": {
 					label: "What is your name",
-					fieldType: "textarea",
+					uiType: "textarea",
 					validation: [
 						{ required: true },
 						{ max: 255, errorMessage: "Maximum length of 255" },
@@ -88,27 +88,32 @@ NotEquals.args = {
 export const SoftValidation: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
 SoftValidation.args = {
 	data: {
-		fields: {
-			name: {
-				label: "What is your name",
-				fieldType: "text",
-				validation: [{ required: true }, { max: 5, soft: true, errorMessage: "Maximum length of 5" }],
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					name: {
+						label: "What is your name",
+						uiType: "text-field",
+						validation: [{ required: true }, { max: 5, soft: true, errorMessage: "Maximum length of 5" }],
+					},
+					email: {
+						label: "Email address",
+						uiType: "email-field",
+						validation: [{ required: true }],
+					},
+					sex: {
+						uiType: "select",
+						label: "Sex",
+						options: [
+							{ label: "Male", value: "male" },
+							{ label: "Female", value: "female" },
+						],
+						validation: [{ required: true, soft: true, errorMessage: "This field is optional" }],
+					},
+					...SUBMIT_BUTTON_SCHEMA,
+				},
 			},
-			email: {
-				label: "Email address",
-				fieldType: "email",
-				validation: [{ required: true }],
-			},
-			sex: {
-				fieldType: "select",
-				label: "Sex",
-				options: [
-					{ label: "Male", value: "male" },
-					{ label: "Female", value: "female" },
-				],
-				validation: [{ required: true, soft: true, errorMessage: "This field is optional" }],
-			},
-			...SubmitButtonStorybook,
 		},
 		defaultValues: {
 			name: "Erik Tan",

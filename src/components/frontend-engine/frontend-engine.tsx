@@ -5,8 +5,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
 import { useValidationSchema } from "../../utils/hooks";
-import { Wrapper } from "../elements/wrapper";
-import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues } from "./types";
+import { Sections } from "../elements/sections";
+import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
@@ -17,7 +17,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		data: {
 			className: dataClassName = null,
 			defaultValues,
-			fields,
+			sections,
 			id,
 			revalidationMode = "onChange",
 			validationMode = "onSubmit",
@@ -81,7 +81,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// NOTE: Wrapper component contains nested fields
 	const setErrors = (errors: TErrorPayload): void => {
 		Object.entries(errors).forEach(([key, value]) => {
-			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(fields, key);
+			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(sections, key);
 
 			if (!isValidFieldKey) {
 				return;
@@ -146,8 +146,8 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [formState, watch]);
 
 	useDeepCompareEffectNoCheck(() => {
-		reset({ ...defaultValues, ...getValues() });
-	}, [defaultValues, getValues]);
+		reset(defaultValues);
+	}, [defaultValues]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
@@ -165,17 +165,12 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				onSubmit={reactFormHookSubmit(handleSubmit)}
 				ref={ref}
 			>
-				<Wrapper warnings={warnings}>{fields}</Wrapper>
+				<Sections warnings={warnings} schema={sections} />
 			</form>
 		</FormProvider>
 	);
 });
 
-/**
- * prevents inferrence
- * https://stackoverflow.com/questions/56687668/a-way-to-disable-type-argument-inference-in-generics
- */
-type NoInfer<T, U> = [T][T extends U ? 0 : never];
 /**
  * The one and only component needed to create your form
  *
@@ -188,7 +183,7 @@ export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProp
 		</YupProvider>
 	);
 }) as <V = undefined>(
-	props: IFrontendEngineProps<NoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
+	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
 ) => ReactElement;
 
 /**

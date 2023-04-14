@@ -1,14 +1,17 @@
 import isEmpty from "lodash/isEmpty";
+import isObject from "lodash/isObject";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { useValidationConfig } from "../../../utils/hooks";
+import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
 
 interface IProps {
 	id: string;
 	renderRules?: TRenderRules[] | undefined;
 	children: React.ReactNode;
+	schema: TFrontendEngineFieldSchema;
 }
 
 /**
@@ -16,7 +19,7 @@ interface IProps {
  * render conditions are based on Yup schema and the base schema is derived from corresponding validation config
  * automatically remove validation config on hide / unmount, for more complex fields, it still has to be done via the field itself
  */
-export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
+export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
@@ -35,12 +38,13 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 	}, [watch]);
 
 	useDeepCompareEffectNoCheck(() => {
-		if (!renderRules) return;
+		if (isEmpty(renderRules)) return;
 
 		const canShow = canRender();
 		if (canShow !== show) {
 			if (!canShow) {
-				removeFieldValidationConfig(id);
+				const idsToDelete = [id, ...listAllChildIds(schema?.["children"])];
+				idsToDelete.forEach((idToDelete) => removeFieldValidationConfig(idToDelete));
 			}
 			toggleShow(canShow);
 		}
@@ -52,6 +56,8 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const canRender = () => {
+		if (isEmpty(renderRules)) return true;
+
 		let isValid = false;
 		renderRules.forEach((ruleGroup) => {
 			if (!isValid) {
@@ -80,9 +86,27 @@ export const ConditionalRenderer = ({ id, renderRules, children }: IProps) => {
 		return isValid;
 	};
 
+	/**
+	 * Return all object keys by recursively looping through the object children
+	 */
+	const listAllChildIds = (children: unknown) => {
+		const childIdList: string[] = [];
+		if (isEmpty(children) || !isObject(children)) {
+			return childIdList;
+		}
+		Object.keys(children).forEach((id) => {
+			childIdList.push(id);
+			if (children["children"]) {
+				childIdList.push(...listAllChildIds(children["children"]));
+			}
+		});
+
+		return childIdList;
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	if (renderRules && !show) return null;
+	if (!isEmpty(renderRules) && !show) return null;
 	return <>{children}</>;
 };

@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../components";
 import { ISubmitButtonSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, ExcludeReactFormHookProps } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine } from "../../common";
 
 export default {
 	title: "Field/SubmitButton",
@@ -25,7 +24,6 @@ export default {
 		},
 	},
 	argTypes: {
-		...ExcludeReactFormHookProps,
 		...CommonFieldStoryProps("submit"),
 		validation: { table: { disable: true } },
 		styleType: {
@@ -57,56 +55,68 @@ export default {
 	},
 } as Meta;
 
-const Template: Story<Record<string, ISubmitButtonSchema>> = (args) => (
-	<FrontendEngine data={{ fields: { ...args } }} />
-);
+const Template = (id: string) =>
+	((args) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+						},
+					},
+				},
+			}}
+		/>
+	)) as Story<ISubmitButtonSchema>;
 
-export const Default = Template.bind({});
+export const Default = Template("submit-default").bind({});
 Default.args = {
-	"submit-default": {
-		fieldType: "submit",
-		label: "Submit",
-	},
+	uiType: "submit",
+	label: "Submit",
 };
 
-export const Disabled = Template.bind({});
+export const Disabled = Template("submit-disabled").bind({});
 Disabled.args = {
-	"submit-disabled": {
-		fieldType: "submit",
-		label: "Submit",
-		disabled: true,
-	},
+	uiType: "submit",
+	label: "Submit",
+	disabled: true,
 };
 
-export const Styled = Template.bind({});
+export const Styled = Template("submit-styled").bind({});
 Styled.args = {
-	"submit-styled": {
-		fieldType: "submit",
-		label: "Submit",
-		styleType: "secondary",
-	},
+	uiType: "submit",
+	label: "Submit",
+	styleType: "secondary",
 };
 
-export const DisabledOnInvalidForm = () => (
+export const DisabledOnInvalidForm = (args: ISubmitButtonSchema) => (
 	<FrontendEngine
 		data={{
-			fields: {
-				required: {
-					fieldType: "text",
-					label: "Required",
-					validation: [{ required: true }],
-				},
-				email: {
-					fieldType: "email",
-					label: "Email",
-					validation: [{ required: true }],
-				},
-				submit: {
-					fieldType: "submit",
-					label: "Submit",
-					disabled: "invalid-form",
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						required: {
+							uiType: "text-field",
+							label: "Required",
+							validation: [{ required: true }],
+						},
+						email: {
+							uiType: "email-field",
+							label: "Email",
+							validation: [{ required: true }],
+						},
+						submit: args,
+					},
 				},
 			},
 		}}
 	/>
 );
+DisabledOnInvalidForm.args = {
+	uiType: "submit",
+	label: "Submit",
+	disabled: "invalid-form",
+};

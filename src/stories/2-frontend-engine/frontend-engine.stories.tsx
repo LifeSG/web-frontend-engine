@@ -1,47 +1,45 @@
 import { Button } from "@lifesg/react-design-system/button";
+import { action } from "@storybook/addon-actions";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { useEffect, useRef } from "react";
-import {
-	FrontendEngine,
-	IFrontendEngineData,
-	IFrontendEngineProps,
-	IFrontendEngineRef,
-} from "../../components/frontend-engine";
-import { SubmitButtonStorybook } from "../common";
+import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
+import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../common";
 
 const DATA: IFrontendEngineData = {
-	fields: {
-		name: {
-			label: "What is your name",
-			fieldType: "text",
-			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				name: {
+					label: "What is your name",
+					uiType: "text-field",
+					validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+				},
+				email: {
+					label: "Email address",
+					uiType: "email-field",
+					validation: [{ required: true }],
+				},
+				sex: {
+					uiType: "select",
+					label: "Sex",
+					options: [
+						{ label: "Male", value: "male" },
+						{ label: "Female", value: "female" },
+					],
+				},
+				description: {
+					label: "Feedback",
+					uiType: "textarea",
+					rows: 3,
+					resizable: true,
+					validation: [{ required: true }],
+					chipTexts: ["Best", "Good", "Bad", "Horrible"],
+				},
+				...SUBMIT_BUTTON_SCHEMA,
+			},
 		},
-		email: {
-			label: "Email address",
-			fieldType: "email",
-			validation: [{ required: true }],
-		},
-		sex: {
-			fieldType: "select",
-			label: "Sex",
-			options: [
-				{ label: "Male", value: "male" },
-				{ label: "Female", value: "female" },
-			],
-		},
-		description: {
-			label: "Feedback",
-			fieldType: "textarea",
-			rows: 3,
-			resizable: true,
-			validation: [{ required: true }],
-			chipTexts: ["Best", "Good", "Bad", "Horrible"],
-		},
-		...SubmitButtonStorybook,
-	},
-	defaultValues: {
-		name: "Erik Tan",
 	},
 };
 
@@ -98,11 +96,11 @@ export default {
 				},
 			},
 		},
-		"data.fields": {
-			description: "All elements within the form. For more info, refer to individual field stories.",
+		"data.sections": {
+			description: "All components within the form. For more info, refer to individual field stories.",
 			table: {
 				type: {
-					summary: "Record<string, TFrontendEngineFieldSchema>",
+					summary: "Record<string, ISectionSchema>",
 				},
 			},
 			control: {
@@ -160,6 +158,14 @@ export default {
 				},
 			},
 		},
+		ref: {
+			description: "Functions same as React refs, provides a way to access the component",
+			table: {
+				type: {
+					summary: "Ref<IFrontendEngineRef>",
+				},
+			},
+		},
 	},
 } as Meta;
 
@@ -192,11 +198,11 @@ ValidateOnBlur.args = {
 	},
 };
 
-export const OnChange: Story<IFrontendEngineProps> = () => (
-	<FrontendEngine data={DATA} onChange={(values, isValid) => console.log({ values, isValid })} />
-);
-OnChange.parameters = {
-	controls: { hideNoControlsWarning: true },
+export const OnChange: Story<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
+
+OnChange.args = {
+	data: DATA,
+	onChange: (values, isValid) => action("change")(values, isValid),
 };
 
 export const ExternalSubmit: Story<IFrontendEngineProps> = () => {
@@ -293,13 +299,21 @@ export const AddCustomValidation: Story = () => {
 	return (
 		<FrontendEngine<IYupCustomValidationRule>
 			data={{
-				fields: {
-					text: {
-						label: "Only accepts hello",
-						fieldType: "text",
-						validation: [{ required: true }, { mustBeHello: true, errorMessage: "Please key in hello" }],
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							text: {
+								label: "Only accepts hello",
+								uiType: "text-field",
+								validation: [
+									{ required: true },
+									{ mustBeHello: true, errorMessage: "Please key in hello" },
+								],
+							},
+							...SUBMIT_BUTTON_SCHEMA,
+						},
 					},
-					...SubmitButtonStorybook,
 				},
 				defaultValues: {
 					text: "Hi",
@@ -329,12 +343,17 @@ export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine
 				data={{
-					fields: {
-						name: {
-							label: "What is your name",
-							fieldType: "text",
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								name: {
+									label: "What is your name",
+									uiType: "text-field",
+								},
+								...SUBMIT_BUTTON_SCHEMA,
+							},
 						},
-						...SubmitButtonStorybook,
 					},
 					validationMode: "onSubmit",
 				}}
