@@ -18,6 +18,9 @@ export const ERROR_MESSAGES = {
 		MAX_DATE: (date: string) => `Date cannot be later than ${date}`,
 		INVALID: "Invalid date",
 	},
+	UNIT_NUMBER: {
+		INVALID: "Invalid unit number",
+	},
 	GENERIC: {
 		INVALID: "Invalid input",
 		UNSUPPORTED: "This component is not supported by the engine",
