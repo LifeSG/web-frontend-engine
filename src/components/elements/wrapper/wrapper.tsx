@@ -36,7 +36,15 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 			const renderComponents: JSX.Element[] = [];
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
-				if (isEmpty(child) || typeof child !== "object" || "referenceKey" in child) return;
+				if (isEmpty(child) || typeof child !== "object") return;
+				if ("referenceKey" in child) {
+					// referenceKey : filer => <Child schema={child.schema}> </Child>
+					// referenceKey : filter-item => <Child children={child.fields}> <
+					// 1. How should we render
+					// 2. How to render nested
+					console.log(child);
+					return;
+				}
 				const uiType = child.uiType?.toUpperCase();
 				const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
 
