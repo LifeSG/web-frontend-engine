@@ -27,11 +27,12 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const unitNumberRule = validation?.find((rule) => "unitNumberFormat" in rule);
 		setFieldValidationConfig(
 			id,
 			Yup.string().matches(/^([a-zA-Z0-9]{1,3}-[a-zA-Z0-9]{1,5})$/, {
 				excludeEmptyString: true,
-				message: ERROR_MESSAGES.UNIT_NUMBER.INVALID,
+				message: unitNumberRule?.errorMessage || ERROR_MESSAGES.UNIT_NUMBER.INVALID,
 			}),
 			validation
 		);

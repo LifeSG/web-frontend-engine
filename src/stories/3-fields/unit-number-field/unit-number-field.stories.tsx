@@ -109,9 +109,16 @@ Placeholder.args = {
 	placeholder: "03-045",
 };
 
+export const CustomErrorMessage = Template("unit-number-custom-error").bind({});
+CustomErrorMessage.args = {
+	label: "Unit number with custom error",
+	uiType: "unit-number-field",
+	validation: [{ unitNumberFormat: true, errorMessage: "Please enter a valid unit number" }],
+};
+
 export const WithValidation = Template("unit-number-with-validation").bind({});
 WithValidation.args = {
-	uiType: "unit-number-field",
 	label: "Unit number with validation",
+	uiType: "unit-number-field",
 	validation: [{ required: true }],
 };
