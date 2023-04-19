@@ -11,6 +11,7 @@ import {
 	IMultiSelectSchema,
 	INumericFieldSchema,
 	IRadioButtonGroupSchema,
+	IResetButtonSchema,
 	ISelectSchema,
 	ISubmitButtonSchema,
 	ITextFieldSchema,
@@ -77,7 +78,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IChipsSchema<V>
 	| IAlertSchema
 	| ITextSchema
-	| ICustomComponentJsonSchema;
+	| ICustomComponentJsonSchema
+	| IResetButtonSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -179,6 +181,7 @@ export enum EFieldType {
 	RADIO = "RadioButtonGroup",
 	"TIME-FIELD" = "TimeField",
 	CHIPS = "Chips",
+	RESET = "ResetButton",
 }
 
 /**

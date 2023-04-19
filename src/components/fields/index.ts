@@ -9,3 +9,4 @@ export * from "./submit-button";
 export * from "./text-field";
 export * from "./textarea";
 export * from "./time-field";
+export * from "./reset-button";
