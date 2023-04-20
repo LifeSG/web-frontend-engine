@@ -1,13 +1,15 @@
-import { CheckboxProps } from "@lifesg/react-design-system/checkbox";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { ICustomComponentJsonSchema, TFrontendEngineFieldSchema } from "../../../frontend-engine";
 
-interface IOption {
+export interface IFilterItemSchema extends ICustomComponentJsonSchema {
 	label: string;
-	value: string;
+	children: Record<string, TFrontendEngineFieldSchema>;
+	collapsible?: boolean;
+	showDivider?: boolean;
+	showMobileDivider?: boolean;
 }
 
-export interface ICheckboxGroupSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"checkbox", V>,
-		TComponentOmitProps<CheckboxProps> {
-	options: IOption[];
+export interface IFilterItemProps {
+	id?: string | undefined;
+	schema?: IFilterItemSchema;
+	warnings?: Record<string, string> | undefined;
 }

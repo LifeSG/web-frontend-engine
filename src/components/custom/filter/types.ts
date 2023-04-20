@@ -1,18 +1,15 @@
-import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
-import { TRenderRules } from "../../frontend-engine/yup";
+import { ICustomComponentJsonSchema } from "../../frontend-engine";
+import { IFilterItemSchema } from "./filter-item/types";
+export type Mode = "default" | "mobile";
 
-export type TWrapperType = "div" | "span" | "header" | "footer" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
-
-export interface IWrapperSchema extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
-	uiType: TWrapperType;
-	showIf?: TRenderRules[] | undefined;
-	children: Record<string, TFrontendEngineFieldSchema> | string;
+export interface IFilterSchema extends ICustomComponentJsonSchema {
+	label?: string;
+	toggleFilterButtonLabel?: string;
+	children: Record<string, IFilterItemSchema>;
 }
 
-export interface IWrapperProps {
+export interface IFilterProps {
 	id?: string | undefined;
-	schema?: IWrapperSchema | undefined;
-	/** only used internally by FrontendEngine */
-	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
+	schema?: IFilterSchema;
 	warnings?: Record<string, string> | undefined;
 }
