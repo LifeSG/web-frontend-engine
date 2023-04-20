@@ -46,7 +46,7 @@ export default {
 				},
 				defaultValue: { summary: false },
 			},
-			options: [true, false, "empty-form"],
+			options: [true, false],
 			control: {
 				type: "select",
 			},
@@ -96,8 +96,15 @@ Styled.args = {
 	styleType: "secondary",
 };
 
-export const FieldWithDefaultValue = Template("reset-default-value", "default").bind({});
-FieldWithDefaultValue.args = {
+export const DefaultValueCleared = Template("reset-default-value", "default").bind({});
+DefaultValueCleared.args = {
 	uiType: "reset",
 	label: "Reset",
+};
+
+export const DefaultValueRetained = Template("reset-default-value", "default").bind({});
+DefaultValueRetained.args = {
+	uiType: "reset",
+	label: "Reset",
+	keepDefaultValues: true,
 };
