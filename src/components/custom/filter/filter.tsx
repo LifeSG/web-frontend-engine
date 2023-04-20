@@ -1,8 +1,8 @@
-import { Filter } from "@lifesg/react-design-system/filter";
+import { Filter as FilterComponent } from "@lifesg/react-design-system/filter";
 import { Wrapper } from "../../elements/wrapper";
 import { IFilterProps } from "./types";
 
-export const FilterComponent = (props: IFilterProps) => {
+export const Filter = (props: IFilterProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
@@ -14,8 +14,8 @@ export const FilterComponent = (props: IFilterProps) => {
 	// RENDER FUNCTIONS
 	// =========================================================================
 	return (
-		<Filter toggleFilterButtonLabel={toggleFilterButtonLabel} headerTitle={label}>
+		<FilterComponent toggleFilterButtonLabel={toggleFilterButtonLabel} headerTitle={label}>
 			<Wrapper>{children}</Wrapper>
-		</Filter>
+		</FilterComponent>
 	);
 };

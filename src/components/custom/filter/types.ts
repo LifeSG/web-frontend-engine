@@ -1,15 +1,15 @@
 import { ICustomComponentJsonSchema } from "../../frontend-engine";
+import { IFilterItemCheckboxSchema } from "./filter-item-checkbox/types";
 import { IFilterItemSchema } from "./filter-item/types";
-export type Mode = "default" | "mobile";
 
 export interface IFilterSchema extends ICustomComponentJsonSchema {
-	label?: string;
-	toggleFilterButtonLabel?: string;
-	children: Record<string, IFilterItemSchema>;
+	label?: string | undefined;
+	toggleFilterButtonLabel?: string | undefined;
+	children: Record<string, IFilterItemSchema | IFilterItemCheckboxSchema>;
 }
 
 export interface IFilterProps {
 	id?: string | undefined;
-	schema?: IFilterSchema;
+	schema?: IFilterSchema | undefined;
 	warnings?: Record<string, string> | undefined;
 }

@@ -141,7 +141,6 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefi
  */
 export interface ICustomComponentJsonSchema {
 	referenceKey: string;
-	[otherOptions: string]: unknown;
 	uiType?: never | undefined;
 }
 
@@ -232,8 +231,9 @@ export enum EElementType {
  * - components that do not have uiType and have specific schema to render
  */
 export enum ECustomType {
-	FILTER = "FilterComponent",
-	"FILTER-ITEM" = "FilterItem"
+	FILTER = "Filter",
+	"FILTER-ITEM" = "FilterItem",
+	"FILTER-ITEM-CHECKBOX" = "FilterItemCheckbox",
 }
 
 // =============================================================================

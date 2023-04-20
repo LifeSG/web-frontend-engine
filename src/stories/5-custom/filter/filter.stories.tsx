@@ -1,6 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../common";
+import { IFilterSchema } from "../../../components/custom/filter/types";
 
 export default {
 	title: "Custom/Filter",
@@ -9,9 +10,7 @@ export default {
 			page: () => (
 				<>
 					<Title>Filter</Title>
-					<Description>
-						This component acts as a wrapper for filter component
-					</Description>
+					<Description>This component acts as a wrapper for filter component</Description>
 					<Heading>Props</Heading>
 					<Description>
 						This component also inherits the
@@ -64,17 +63,17 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as Story<any>; // TODO: should update type
+	)) as Story<IFilterSchema>; // TODO: should update type
 
 export const FilterWrapper = Template("wrapper-default").bind({});
 FilterWrapper.args = {
-	uiType: "div",
-	children: {
-		name: {
-			label: "Filter Wrapper",
-			referenceKey: "filter",
-		},
-	},
+	// uiType: "div",
+	// children: {
+	// 	name: {
+	// 		label: "Filter Wrapper",
+	// 		referenceKey: "filter",
+	// 	},
+	// },
 };
 
 export const FilterItem = Template("wrapper-default").bind({});
@@ -88,22 +87,24 @@ FilterItem.args = {
 				dateField: {
 					uiType: "date-field",
 					label: "Date with default value",
-					defaultValues: "2022-02-01",
-				}
-			}
+					// defaultValues: "2022-02-01",
+				},
+			},
 		},
 	},
 };
 
 export const FilterCheckBoxItem = Template("wrapper-default").bind({});
-FilterWrapper.args = {
-	uiType: "div",
+FilterCheckBoxItem.args = {
+	referenceKey: "filter",
 	children: {
-		name: {
-			label: "What is your name",
-			uiType: "textarea",
-			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-			chipTexts: ["John", "Doe"],
+		filterItem1: {
+			label: "Filter Item 1",
+			referenceKey: "filter-item-checkbox",
+			options: [
+				{ label: "red", value: "red" },
+				{ label: "blue", value: "blue" },
+			],
 		},
 	},
 };

@@ -5,7 +5,13 @@ import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
 import * as FrontendEngineFields from "../../fields";
 import * as FrontendEngineCustom from "../../custom";
-import { ECustomType, EElementType, EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
+import {
+	ECustomType,
+	EElementType,
+	EFieldType,
+	IGenericFieldProps,
+	TFrontendEngineFieldSchema,
+} from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperProps } from "./types";
@@ -39,13 +45,11 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child) || typeof child !== "object") return;
 				if ("referenceKey" in child) {
-					// referenceKey : filer => <Child schema={child.schema}> </Child>
-					// referenceKey : filter-item => <Child children={child.fields}> <
-					// 1. How should we render
-					// 2. How to render nested
-					const uiType = child.referenceKey?.toUpperCase();
-					const CustomElement = (FrontendEngineCustom[ECustomType[uiType]] ||
-						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
+					const referenceKey = child.referenceKey?.toUpperCase();
+					const CustomElement = FrontendEngineCustom[
+						ECustomType[referenceKey]
+					] as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
+					console.log(CustomElement, referenceKey);
 					renderComponents.push(
 						<ConditionalRenderer id={id} key={id} schema={child}>
 							<CustomElement schema={child} id={id} />
