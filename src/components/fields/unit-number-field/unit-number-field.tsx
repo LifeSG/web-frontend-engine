@@ -32,7 +32,7 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 			id,
 			Yup.string().matches(/^([a-zA-Z0-9]{1,3}-[a-zA-Z0-9]{1,5})$/, {
 				excludeEmptyString: true,
-				message: unitNumberRule?.errorMessage || ERROR_MESSAGES.UNIT_NUMBER.INVALID,
+				message: unitNumberRule?.["errorMessage"] || ERROR_MESSAGES.UNIT_NUMBER.INVALID,
 			}),
 			validation
 		);

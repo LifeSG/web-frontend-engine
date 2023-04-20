@@ -23,7 +23,6 @@ export const YUP_CONDITIONS = [
 	"includes",
 	"excludes",
 	"uinfin",
-	"unitNumberFormat",
 ] as const;
 export type TYupSchemaType = (typeof YUP_TYPES)[number];
 export type TYupCondition = (typeof YUP_CONDITIONS)[number];
@@ -47,7 +46,6 @@ interface IYupRule {
 	includes?: unknown | undefined;
 	excludes?: unknown | undefined;
 	uinfin?: boolean | undefined;
-	unitNumberFormat?: boolean | undefined;
 }
 
 export interface IYupValidationRule extends IYupRule {

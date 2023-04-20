@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IUnitNumberFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -89,27 +89,40 @@ describe(UI_TYPE, () => {
 	describe("it should be able to verify unit numbers", () => {
 		it("01-20 should be a valid unit number", async () => {
 			const floorNumber = "01";
-			const UnitNumber = "20";
-			const UnitNumberValue = `${floorNumber}-${UnitNumber}`;
+			const unitNumber = "20";
+			const unitNumberValue = `${floorNumber}-${unitNumber}`;
 			renderComponent({ validation: [{ required: true }] });
 
 			fireEvent.change(getFloorInputField(), { target: { value: floorNumber } });
-			fireEvent.change(getUnitInputField(), { target: { value: UnitNumber } });
+			fireEvent.change(getUnitInputField(), { target: { value: unitNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: UnitNumberValue }));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: unitNumberValue }));
 		});
 
 		it("03- should be an invalid unit number", async () => {
 			const floorNumber = "03";
-			const UnitNumber = "";
+			const unitNumber = "";
 			renderComponent({ validation: [{ required: true }] });
 
 			fireEvent.change(getFloorInputField(), { target: { value: floorNumber } });
-			fireEvent.change(getUnitInputField(), { target: { value: UnitNumber } });
+			fireEvent.change(getUnitInputField(), { target: { value: unitNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGES.UNIT_NUMBER.INVALID)).toBeInTheDocument();
+		});
+
+		it("03- should be display with custom error message", async () => {
+			const floorNumber = "03";
+			const unitNumber = "";
+			const customError = "Please enter a valid unit number.";
+			renderComponent({ validation: [{ unitNumberFormat: true, errorMessage: customError }] });
+
+			fireEvent.change(getFloorInputField(), { target: { value: floorNumber } });
+			fireEvent.change(getUnitInputField(), { target: { value: unitNumber } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText(customError)).toBeInTheDocument();
 		});
 	});
 });

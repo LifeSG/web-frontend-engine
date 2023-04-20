@@ -122,7 +122,6 @@ export namespace YupHelper {
 				case !!rule.positive:
 				case !!rule.negative:
 				case !!rule.integer:
-				case !!rule.unitNumberFormat:
 					try {
 						yupSchema = (yupSchema as unknown)[ruleKey](rule.errorMessage);
 					} catch (error) {
