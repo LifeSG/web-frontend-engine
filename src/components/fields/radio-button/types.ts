@@ -4,6 +4,7 @@ import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../f
 interface IOption {
 	label: string;
 	value: string;
+	disabled?: boolean;
 }
 
 export interface IRadioButtonGroupSchema<V = undefined>

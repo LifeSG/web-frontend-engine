@@ -34,10 +34,11 @@ export default {
 			},
 		},
 		options: {
-			description: "A list of options that a user can choose from",
+			description:
+				"A list of options that a user can choose from. Component <code>disabled</code> will take precedence over option <code>disabled</code>",
 			table: {
 				type: {
-					summary: "{ label: string, value: string }[]",
+					summary: "{ label: string, value: string, disabled?: boolean }[]",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -101,6 +102,17 @@ DefaultValue.argTypes = {
 			type: "text",
 		},
 	},
+};
+
+export const DisabledOptions = Template("radio-disabled-options").bind({});
+DisabledOptions.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	options: [
+		{ label: "Apple", value: "Apple", disabled: true },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry", disabled: true },
+	],
 };
 
 export const Disabled = Template("radio-disabled").bind({});
