@@ -23,6 +23,7 @@ import {
 	ITextFieldSchema,
 	ITextareaSchema,
 	ITimeFieldSchema,
+	IUnitNumberFieldSchema,
 } from "../fields";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 
@@ -82,6 +83,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IRadioButtonGroupSchema<V>
 	| ITimeFieldSchema<V>
 	| IChipsSchema<V>
+	| IUnitNumberFieldSchema<V>
 	| IAlertSchema
 	| ITextSchema
 	| ICustomComponentJsonSchema
@@ -190,6 +192,7 @@ export enum EFieldType {
 	"TIME-FIELD" = "TimeField",
 	CHIPS = "Chips",
 	RESET = "ResetButton",
+	"UNIT-NUMBER-FIELD" = "UnitNumberField",
 }
 
 /**
