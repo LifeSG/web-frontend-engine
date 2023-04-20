@@ -227,6 +227,15 @@ export enum EElementType {
 	P = "Wrapper",
 }
 
+/**
+ * Custom element types
+ * - components that do not have uiType and have specific schema to render
+ */
+export enum ECustomType {
+	FILTER = "FilterComponent",
+	"FILTER-ITEM" = "FilterItem"
+}
+
 // =============================================================================
 // FIELD PROPS
 // =============================================================================

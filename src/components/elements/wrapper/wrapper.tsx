@@ -4,7 +4,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
 import * as FrontendEngineFields from "../../fields";
-import { EElementType, EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
+import * as FrontendEngineCustom from "../../custom";
+import { ECustomType, EElementType, EFieldType, IGenericFieldProps, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperProps } from "./types";
@@ -42,14 +43,14 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 					// referenceKey : filter-item => <Child children={child.fields}> <
 					// 1. How should we render
 					// 2. How to render nested
-					// const CustomElement = (FrontendEngineCustom[EElementType[uiType]] ||
-					// 	Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
-					// renderComponents.push(
-					// 	<ConditionalRenderer id={id} key={id} renderRules={child.showIf} schema={child}>
-					// 		<Element schema={child} id={id} />
-					// 	</ConditionalRenderer>
-					// );
-					console.log(child);
+					const uiType = child.referenceKey?.toUpperCase();
+					const CustomElement = (FrontendEngineCustom[ECustomType[uiType]] ||
+						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
+					renderComponents.push(
+						<ConditionalRenderer id={id} key={id} schema={child}>
+							<CustomElement schema={child} id={id} />
+						</ConditionalRenderer>
+					);
 					return;
 				}
 				const uiType = child.uiType?.toUpperCase();
