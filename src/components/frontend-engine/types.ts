@@ -1,4 +1,10 @@
-import { ControllerFieldState, ControllerRenderProps, UseFormSetValue, ValidationMode } from "react-hook-form";
+import {
+	ControllerFieldState,
+	ControllerRenderProps,
+	UseFormReset,
+	UseFormSetValue,
+	ValidationMode,
+} from "react-hook-form";
 import { IAlertSchema, ITextSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { IWrapperSchema } from "../elements/wrapper";
@@ -105,6 +111,8 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 
 	/** allows setting of custom errors thrown by endpoints */
 	setErrors: (errors: TErrorPayload) => void;
+	/** resets the form to the default state */
+	reset: UseFormReset<TFrontendEngineValues>;
 }
 
 // =============================================================================
