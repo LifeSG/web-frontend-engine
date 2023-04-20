@@ -1,7 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { IWrapperSchema } from "../../../components/elements/wrapper";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { FrontendEngine } from "../../common";
 
 export default {
 	title: "Custom/Filter",
@@ -65,33 +64,34 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as Story<IWrapperSchema>;
+	)) as Story<any>; // TODO: should update type
 
 export const FilterWrapper = Template("wrapper-default").bind({});
 FilterWrapper.args = {
 	uiType: "div",
 	children: {
 		name: {
-			label: "What is your name",
-			uiType: "textarea",
-			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-			chipTexts: ["John", "Doe"],
+			label: "Filter Wrapper",
+			referenceKey: "filter",
 		},
-		...SUBMIT_BUTTON_SCHEMA,
 	},
 };
 
 export const FilterItem = Template("wrapper-default").bind({});
 FilterItem.args = {
-	uiType: "div",
+	referenceKey: "filter",
 	children: {
-		name: {
-			label: "What is your name",
-			uiType: "textarea",
-			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-			chipTexts: ["John", "Doe"],
+		filterItem1: {
+			label: "Filter Item 1",
+			referenceKey: "filter-item",
+			children: {
+				dateField: {
+					uiType: "date-field",
+					label: "Date with default value",
+					defaultValues: "2022-02-01",
+				}
+			}
 		},
-		...SUBMIT_BUTTON_SCHEMA,
 	},
 };
 
@@ -105,6 +105,5 @@ FilterWrapper.args = {
 			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 			chipTexts: ["John", "Doe"],
 		},
-		...SUBMIT_BUTTON_SCHEMA,
 	},
 };
