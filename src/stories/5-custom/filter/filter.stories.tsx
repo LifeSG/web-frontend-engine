@@ -1,7 +1,8 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../common";
-import { IFilterSchema } from "../../../components/custom/filter/types";
+import { IFilterSchema } from "../../../components/custom/elements/filter/types";
+import { IFilterItemCheckboxSchema } from "../../../components/custom/fields/filter-item-checkbox/types";
 
 export default {
 	title: "Custom/Filter",
@@ -65,6 +66,27 @@ const Template = (id: string) =>
 		/>
 	)) as Story<IFilterSchema>; // TODO: should update type
 
+const TemplateFilterItemCheckbox = (id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args,
+						},
+					},
+				},
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<IFilterSchema & { defaultValues?: string[] | undefined }>; // TODO: should update type
+
 export const FilterWrapper = Template("wrapper-default").bind({});
 FilterWrapper.args = {
 	// uiType: "div",
@@ -94,8 +116,9 @@ FilterItem.args = {
 	},
 };
 
-export const FilterCheckBoxItem = Template("wrapper-default").bind({});
+export const FilterCheckBoxItem = TemplateFilterItemCheckbox("checkbox-default-value").bind({});
 FilterCheckBoxItem.args = {
+	defaultValues: ["red"],
 	referenceKey: "filter",
 	children: {
 		filterItem1: {
@@ -105,6 +128,8 @@ FilterCheckBoxItem.args = {
 				{ label: "red", value: "red" },
 				{ label: "blue", value: "blue" },
 			],
+			defaultValues: ["red"],
+			validation: [{ required: true }],
 		},
 	},
 };

@@ -86,8 +86,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IUnitNumberFieldSchema<V>
 	| IAlertSchema
 	| ITextSchema
-	| ICustomComponentJsonSchema
-	| IResetButtonSchema;
+	| IResetButtonSchema
+	| ICustomComponentJsonSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -139,9 +139,10 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefi
 /**
  * to support custom components from other form / frontend engines
  */
-export interface ICustomComponentJsonSchema {
+export interface ICustomComponentJsonSchema<T, V = undefined, U = undefined> {
 	referenceKey: string;
 	uiType?: never | undefined;
+	validation?: (V | U | IYupValidationRule)[];
 }
 
 /**

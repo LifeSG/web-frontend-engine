@@ -1,5 +1,5 @@
 import { Filter as FilterComponent } from "@lifesg/react-design-system/filter";
-import { Wrapper } from "../../elements/wrapper";
+import { Wrapper } from "../../../elements/wrapper";
 import { IFilterProps } from "./types";
 
 export const Filter = (props: IFilterProps) => {

@@ -4,7 +4,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
 import * as FrontendEngineFields from "../../fields";
-import * as FrontendEngineCustom from "../../custom";
+import * as FrontendEngineCustomFields from "../../custom/fields";
+import * as FrontendEngineCustomElements from "../../custom/elements";
 import {
 	ECustomType,
 	EElementType,
@@ -46,15 +47,43 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				if (isEmpty(child) || typeof child !== "object") return;
 				if ("referenceKey" in child) {
 					const referenceKey = child.referenceKey?.toUpperCase();
-					const CustomElement = FrontendEngineCustom[
-						ECustomType[referenceKey]
-					] as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
-					console.log(CustomElement, referenceKey);
-					renderComponents.push(
-						<ConditionalRenderer id={id} key={id} schema={child}>
-							<CustomElement schema={child} id={id} />
-						</ConditionalRenderer>
-					);
+					// Should check if CustomElement
+					if (FrontendEngineCustomElements[ECustomType[referenceKey]]) {
+						const CustomElement = FrontendEngineCustomElements[
+							ECustomType[referenceKey]
+						] as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
+						renderComponents.push(
+							<ConditionalRenderer id={id} key={id} schema={child}>
+								<CustomElement {...child} schema={child} id={id} />
+							</ConditionalRenderer>
+						);
+					}
+					if (FrontendEngineCustomFields[ECustomType[referenceKey]]) {
+						const Field = FrontendEngineCustomFields[ECustomType[referenceKey]];
+						renderComponents.push(
+							<ConditionalRenderer id={id} key={id} schema={child}>
+								<Controller
+									control={control}
+									name={id}
+									shouldUnregister={true}
+									render={({ field, fieldState }) => {
+										const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
+										const warning = warnings ? warnings[id] : "";
+
+										if (!warning) {
+											return <Field schema={child} {...fieldProps} {...fieldState} />;
+										}
+										return (
+											<>
+												<Field schema={child} {...fieldProps} {...fieldState} />
+												<DSAlert type="warning">{warning}</DSAlert>
+											</>
+										);
+									}}
+								/>
+							</ConditionalRenderer>
+						);
+					}
 					return;
 				}
 				const uiType = child.uiType?.toUpperCase();
