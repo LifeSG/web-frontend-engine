@@ -82,8 +82,33 @@ describe(UI_TYPE, () => {
 		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
-	it("should be disabled if configured", async () => {
+	it("should be disabled if configured for options", async () => {
+		renderComponent({
+			options: [
+				{ label: "A", value: "Apple" },
+				{ label: "B", value: "Berry", disabled: true },
+			],
+		});
+
+		expect(getRadioButtonA()).toBeEnabled();
+		expect(getRadioButtonB()).toBeDisabled();
+	});
+
+	it("should be disabled if configured for component", async () => {
 		renderComponent({ disabled: true });
+
+		expect(getRadioButtonA()).toBeDisabled();
+		expect(getRadioButtonB()).toBeDisabled();
+	});
+
+	it("should be disabled if configured for both component/options", async () => {
+		renderComponent({
+			options: [
+				{ label: "A", value: "Apple", disabled: false },
+				{ label: "B", value: "Berry", disabled: false },
+			],
+			disabled: true,
+		});
 
 		expect(getRadioButtonA()).toBeDisabled();
 		expect(getRadioButtonB()).toBeDisabled();

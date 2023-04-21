@@ -76,13 +76,13 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							{...otherSchema}
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
-							disabled={disabled}
+							disabled={disabled ?? option.disabled}
 							name={option.label}
 							value={option.value}
 							checked={isRadioButtonChecked(option.value)}
 							onChange={handleChange}
 						/>
-						<Label htmlFor={radioButtonId} disabled={disabled}>
+						<Label htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
 							{option.label}
 						</Label>
 					</RadioContainer>
