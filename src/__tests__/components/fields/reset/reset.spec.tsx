@@ -1,11 +1,14 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IResetButtonSchema } from "../../../../components/fields";
 import { IFrontendEngineData, TFrontendEngineValues } from "../../../../components/types";
-import { FRONTEND_ENGINE_ID, RESET_BUTTON_ID, RESET_BUTTON_LABEL, getField, getResetButton } from "../../../common";
+import { FRONTEND_ENGINE_ID, getField } from "../../../common";
 
 const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Textfield";
+
+const RESET_BUTTON_ID = "reset";
+const RESET_BUTTON_LABEL = "Reset";
 
 const renderComponent = (
 	overrideReset?: Partial<IResetButtonSchema> | undefined,
@@ -37,6 +40,10 @@ const renderComponent = (
 
 const getTextfield = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
+};
+
+const getResetButton = (): HTMLElement => {
+	return screen.getByRole("button", { name: RESET_BUTTON_LABEL });
 };
 
 describe("reset", () => {

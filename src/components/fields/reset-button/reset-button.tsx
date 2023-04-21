@@ -23,7 +23,7 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 		if (keepDefaultValues) {
 			reset();
 		} else {
-			const map: { [key: string]: string } = {};
+			const map: Record<string, ""> = {};
 			Object.keys(getValues()).forEach((key) => (map[key] = ""));
 			reset(map);
 		}

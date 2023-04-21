@@ -51,6 +51,19 @@ export default {
 				type: "select",
 			},
 		},
+		keepDefaultValues: {
+			description: "Specifies if the default values are retained on reset",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			options: [true, false],
+			control: {
+				type: "select",
+			},
+		},
 	},
 } as Meta;
 
