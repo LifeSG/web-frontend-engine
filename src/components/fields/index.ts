@@ -10,3 +10,4 @@ export * from "./text-field";
 export * from "./textarea";
 export * from "./time-field";
 export * from "./reset-button";
+export * from "./unit-number-field";
