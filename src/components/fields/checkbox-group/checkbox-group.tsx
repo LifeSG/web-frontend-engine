@@ -102,13 +102,13 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 							{...otherSchema}
 							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={checkboxId}
-							disabled={disabled}
+							disabled={disabled ?? option.disabled}
 							name={option.label}
 							value={option.value}
 							checked={isCheckboxChecked(option.value)}
 							onChange={handleChange}
 						/>
-						<Label htmlFor={checkboxId} disabled={disabled}>
+						<Label htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
 							{option.label}
 						</Label>
 					</CheckboxContainer>
