@@ -4,6 +4,7 @@ import { IYupValidationRule } from "../../frontend-engine/yup/types";
 export interface IChipOption {
 	label: string;
 	value: string;
+	disabled?: boolean | undefined;
 }
 
 export interface IChipsSchema<V = undefined>

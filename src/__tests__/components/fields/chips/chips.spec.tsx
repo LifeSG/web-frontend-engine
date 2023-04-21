@@ -90,8 +90,33 @@ describe(UI_TYPE, () => {
 		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
+	it("should be disabled if configured for options", async () => {
+		renderComponent({
+			options: [
+				{ label: "A", value: "Apple" },
+				{ label: "B", value: "Berry", disabled: true },
+			],
+		});
+
+		expect(getChipA()).toBeEnabled();
+		expect(getChipB()).toBeDisabled();
+	});
+
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
+
+		expect(getChipA()).toBeDisabled();
+		expect(getChipB()).toBeDisabled();
+	});
+
+	it("should be disabled if configured for both component/options", async () => {
+		renderComponent({
+			options: [
+				{ label: "A", value: "Apple", disabled: false },
+				{ label: "B", value: "Berry", disabled: false },
+			],
+			disabled: true,
+		});
 
 		expect(getChipA()).toBeDisabled();
 		expect(getChipB()).toBeDisabled();

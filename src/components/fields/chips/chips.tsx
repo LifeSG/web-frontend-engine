@@ -17,7 +17,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, textarea, ...otherSchema },
+		schema: { label, options, validation, disabled, textarea, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -125,6 +125,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 				key={index}
 				onClick={() => handleChange(option.value)}
 				isActive={isChipSelected(option.value)}
+				disabled={disabled ?? option.disabled}
 			>
 				{option.label}
 			</Chip>

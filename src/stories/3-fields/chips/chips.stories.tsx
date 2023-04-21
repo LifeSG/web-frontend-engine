@@ -29,10 +29,11 @@ export default {
 	argTypes: {
 		...CommonFieldStoryProps("chips"),
 		options: {
-			description: "A list of text chips for users to select",
+			description:
+				"A list of options that a user can choose from. Component <code>disabled</code> will take precedence over option <code>disabled</code>",
 			table: {
 				type: {
-					summary: "string[]",
+					summary: "{label: string, value: string, disabled?: boolean}[]",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -46,6 +47,19 @@ export default {
 				},
 			},
 			type: { name: "object", value: {} },
+		},
+		disabled: {
+			description: "Specifies if the chips should be disabled",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
 		},
 	},
 } as Meta;
@@ -104,6 +118,17 @@ DefaultValue.argTypes = {
 		},
 		type: { name: "object", value: {} },
 	},
+};
+
+export const DisabledOptions = Template("chips-disabled-options").bind({});
+DisabledOptions.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple", disabled: true },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry", disabled: true },
+	],
 };
 
 export const Disabled = Template("chips-disabled").bind({});
