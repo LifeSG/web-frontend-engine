@@ -1,14 +1,12 @@
 import {
-	ICustomComponentJsonSchema,
+	ICustomFieldJsonSchema,
 	IFrontendEngineBaseFieldJsonSchema,
 	TComponentOmitProps,
 } from "../../../frontend-engine";
 import { FilterItemCheckboxProps } from "@lifesg/react-design-system/filter/types";
-export interface IFilterItemCheckboxSchema<V = undefined>
-	extends ICustomComponentJsonSchema<"filter-item-checkbox", V> {
+export interface IFilterItemCheckboxSchema<V = undefined> extends ICustomFieldJsonSchema<"filter-item-checkbox", V> {
 	label: string;
 	options: IOption[];
-	defaultValues: string[];
 }
 
 export interface IFilterItemCheckboxProps<V = undefined>

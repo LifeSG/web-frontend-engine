@@ -2,7 +2,6 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { FrontendEngine } from "../../common";
 import { IFilterSchema } from "../../../components/custom/elements/filter/types";
-import { IFilterItemCheckboxSchema } from "../../../components/custom/fields/filter-item-checkbox/types";
 
 export default {
 	title: "Custom/Filter",
@@ -116,7 +115,7 @@ FilterItem.args = {
 	},
 };
 
-export const FilterCheckBoxItem = TemplateFilterItemCheckbox("checkbox-default-value").bind({});
+export const FilterCheckBoxItem = TemplateFilterItemCheckbox("filterItem1").bind({});
 FilterCheckBoxItem.args = {
 	defaultValues: ["red"],
 	referenceKey: "filter",
@@ -128,7 +127,6 @@ FilterCheckBoxItem.args = {
 				{ label: "red", value: "red" },
 				{ label: "blue", value: "blue" },
 			],
-			defaultValues: ["red"],
 			validation: [{ required: true }],
 		},
 	},

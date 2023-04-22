@@ -56,7 +56,6 @@ export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckbox
 	}, [options]);
 
 	useEffect(() => {
-		console.log("reachedVal", id, value, name, getValues());
 		setStateValue(value || []);
 	}, [value, name]);
 

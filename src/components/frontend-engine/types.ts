@@ -142,7 +142,13 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefi
 export interface ICustomComponentJsonSchema<T, V = undefined, U = undefined> {
 	referenceKey: string;
 	uiType?: never | undefined;
+}
+
+export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> {
+	referenceKey: string;
+	uiType?: never | undefined;
 	validation?: (V | U | IYupValidationRule)[];
+	defaultValues?: string[];
 }
 
 /**
