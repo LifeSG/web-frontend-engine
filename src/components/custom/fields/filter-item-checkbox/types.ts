@@ -7,6 +7,9 @@ import { FilterItemCheckboxProps } from "@lifesg/react-design-system/filter/type
 export interface IFilterItemCheckboxSchema<V = undefined> extends ICustomFieldJsonSchema<"filter-item-checkbox", V> {
 	label: string;
 	options: IOption[];
+	collapsible?: boolean | undefined;
+	showDivider?: boolean | undefined;
+	showMobileDivider?: boolean | undefined;
 }
 
 export interface IFilterItemCheckboxProps<V = undefined>
