@@ -2,12 +2,12 @@ import isEmpty from "lodash/isEmpty";
 import React, { Fragment, useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import * as FrontendEngineElements from "..";
+import * as FrontendEngineCustomComponents from "../../custom";
 import { TestHelper } from "../../../utils";
 import * as FrontendEngineFields from "../../fields";
-import * as FrontendEngineCustomFields from "../../custom/fields";
-import * as FrontendEngineCustomElements from "../../custom/elements";
 import {
-	ECustomType,
+	ECustomElementType,
+	ECustomFieldType,
 	EElementType,
 	EFieldType,
 	IGenericFieldProps,
@@ -73,9 +73,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				if ("referenceKey" in child) {
 					const referenceKey = child.referenceKey?.toUpperCase();
 					// Should check if CustomElement
-					if (FrontendEngineCustomElements[ECustomType[referenceKey]]) {
-						const CustomElement = FrontendEngineCustomElements[
-							ECustomType[referenceKey]
+					if (FrontendEngineCustomComponents[ECustomElementType[referenceKey]]) {
+						const CustomElement = FrontendEngineCustomComponents[
+							ECustomElementType[referenceKey]
 						] as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
 						renderComponents.push(
 							<ConditionalRenderer id={id} key={id} schema={child}>
@@ -83,8 +83,8 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 							</ConditionalRenderer>
 						);
 					}
-					if (FrontendEngineCustomFields[ECustomType[referenceKey]]) {
-						const Field = FrontendEngineCustomFields[ECustomType[referenceKey]];
+					if (FrontendEngineCustomComponents[ECustomFieldType[referenceKey]]) {
+						const Field = FrontendEngineCustomComponents[ECustomFieldType[referenceKey]];
 						renderComponents.push(renderField(Field));
 					}
 					return;

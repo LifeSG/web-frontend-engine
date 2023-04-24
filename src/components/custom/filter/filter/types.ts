@@ -1,6 +1,6 @@
 import { ICustomComponentJsonSchema } from "../../../frontend-engine";
-import { IFilterItemCheckboxSchema } from "../../fields/filter-item-checkbox/types";
-import { IFilterItemSchema } from "../../elements/filter-item/types";
+import { IFilterItemCheckboxSchema } from "../filter-item-checkbox/types";
+import { IFilterItemSchema } from "../filter-item/types";
 
 export interface IFilterSchema<V = undefined> extends ICustomComponentJsonSchema<"filter", V> {
 	label?: string | undefined;

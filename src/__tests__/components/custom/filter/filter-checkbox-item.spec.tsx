@@ -1,8 +1,8 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
-import { IFilterItemCheckboxSchema } from "../../../../../components/custom/fields/filter-item-checkbox/types";
-import { FrontendEngine, IFrontendEngineData } from "../../../../../components/frontend-engine";
+import { IFilterItemCheckboxSchema } from "../../../../components/custom/filter/filter-item-checkbox/types";
+import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -11,7 +11,7 @@ import {
 	getErrorMessage,
 	getSubmitButton,
 	getSubmitButtonProps,
-} from "../../../../common";
+} from "../../../common";
 const { ResizeObserver } = window;
 
 const SUBMIT_FN = jest.fn();

@@ -235,9 +235,12 @@ export enum EElementType {
  * Custom element types
  * - components that do not have uiType and have specific schema to render
  */
-export enum ECustomType {
+export enum ECustomElementType {
 	FILTER = "Filter",
 	"FILTER-ITEM" = "FilterItem",
+}
+
+export enum ECustomFieldType {
 	"FILTER-ITEM-CHECKBOX" = "FilterItemCheckbox",
 }
 

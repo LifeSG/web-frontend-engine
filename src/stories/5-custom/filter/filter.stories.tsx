@@ -1,10 +1,10 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../../common";
-import { IFilterSchema } from "../../../../components/custom/elements/filter/types";
+import { FrontendEngine } from "../../common";
+import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 
 export default {
-	title: "Custom/Elements/Filter",
+	title: "Custom/Filter",
 	parameters: {
 		docs: {
 			page: () => (
