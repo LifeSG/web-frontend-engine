@@ -84,5 +84,15 @@ FilterCheckBoxItem.args = {
 			],
 			validation: [{ required: true }],
 		},
+		filterItem2: {
+			label: "Filter Item 2",
+			referenceKey: "filter-item",
+			children: {
+				name: {
+					uiType: "text-field",
+					label: "Name",
+				},
+			},
+		},
 	},
 };

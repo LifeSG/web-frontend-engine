@@ -1,12 +1,15 @@
 import { Filter } from "@lifesg/react-design-system";
+import { TestHelper } from "../../../../utils";
 import { Wrapper } from "../../../elements/wrapper";
-import { IFilterItemProps } from "./types";
+import { IGenericFieldProps } from "../../../frontend-engine";
+import { IFilterItemSchema } from "./types";
 
-export const FilterItem = (props: IFilterItemProps) => {
+export const FilterItem = (props: IGenericFieldProps<IFilterItemSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
+		id,
 		schema: { children, label, collapsible = true, showDivider = true, showMobileDivider = true },
 	} = props;
 
@@ -15,6 +18,7 @@ export const FilterItem = (props: IFilterItemProps) => {
 	// =============================================================================
 	return (
 		<Filter.Item
+			data-testid={TestHelper.generateId(id, "filter-item")}
 			title={label}
 			collapsible={collapsible}
 			showDivider={showDivider}

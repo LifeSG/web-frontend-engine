@@ -1,3 +1,5 @@
+import { IFilterItemCheckboxSchema } from "../../custom/filter/filter-item-checkbox/types";
+import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TRenderRules } from "../../frontend-engine/yup";
 
@@ -13,6 +15,9 @@ export interface IWrapperProps {
 	id?: string | undefined;
 	schema?: IWrapperSchema | undefined;
 	/** only used internally by FrontendEngine */
-	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
+	children?:
+		| Record<string, TFrontendEngineFieldSchema>
+		| Record<string, IFilterItemSchema | IFilterItemCheckboxSchema>
+		| undefined;
 	warnings?: Record<string, string> | undefined;
 }

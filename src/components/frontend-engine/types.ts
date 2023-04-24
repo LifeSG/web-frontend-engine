@@ -5,6 +5,7 @@ import {
 	UseFormSetValue,
 	ValidationMode,
 } from "react-hook-form";
+import { IFilterSchema } from "../custom/filter/filter/types";
 import { IAlertSchema, ITextSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { IWrapperSchema } from "../elements/wrapper";
@@ -87,6 +88,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IAlertSchema
 	| ITextSchema
 	| IResetButtonSchema
+	| IFilterSchema
 	| ICustomComponentJsonSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
@@ -139,12 +141,12 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefi
 /**
  * to support custom components from other form / frontend engines
  */
-export interface ICustomComponentJsonSchema<T, V = undefined, U = undefined> {
-	referenceKey: string;
+export interface ICustomComponentJsonSchema<T> {
+	referenceKey: T;
 	uiType?: never | undefined;
 }
 
-export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> extends ICustomComponentJsonSchema<T, V, U> {
+export interface ICustomFilterFieldJsonSchema<T, V = undefined, U = undefined> extends ICustomComponentJsonSchema<T> {
 	validation?: (V | U | IYupValidationRule)[];
 	defaultValues?: string[];
 }

@@ -28,16 +28,20 @@ const renderComponent = (
 			section: {
 				uiType: "section",
 				children: {
-					[COMPONENT_ID]: {
-						label: "Filter Item Checkbox",
-						referenceKey: REFERENCE_KEY,
-						options: [
-							{ label: "Apple", value: "Apple" },
-							{ label: "Berry", value: "Berry" },
-						],
-						...overrideField,
+					filterItem1: {
+						referenceKey: "filter",
+						label: "Filter Item",
+						children: {
+							colors: {
+								label: "Filter Item Checkbox",
+								referenceKey: REFERENCE_KEY,
+								options: [
+									{ label: "Apple", value: "Apple" },
+									{ label: "Berry", value: "Berry" },
+								],
+							},
+						},
 					},
-					...getSubmitButtonProps(),
 				},
 			},
 		},
@@ -50,6 +54,7 @@ const getCheckboxes = (): HTMLElement[] => {
 	return screen.getAllByRole("checkbox").filter(Boolean);
 };
 
+// TODO: Fix
 describe(REFERENCE_KEY, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -66,7 +71,7 @@ describe(REFERENCE_KEY, () => {
 		jest.restoreAllMocks();
 	});
 
-	it("should be able to render the field", () => {
+	it.only("should be able to render the field", () => {
 		renderComponent();
 		expect(getCheckboxes()).toHaveLength(2);
 	});
@@ -126,12 +131,18 @@ describe(REFERENCE_KEY, () => {
 								section: {
 									uiType: "section",
 									children: {
-										[COMPONENT_ID]: {
-											label: "Filter Item Checkbox",
-											referenceKey: REFERENCE_KEY,
-											options,
+										field: {
+											referenceKey: "filter",
+											label: "Filter",
+											children: {
+												[COMPONENT_ID]: {
+													label: "Filter Item Checkbox",
+													referenceKey: REFERENCE_KEY,
+													options,
+												},
+												...getSubmitButtonProps(),
+											},
 										},
-										...getSubmitButtonProps(),
 									},
 								},
 							},

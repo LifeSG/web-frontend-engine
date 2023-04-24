@@ -7,7 +7,6 @@ import * as Yup from "yup";
 import { useFormContext } from "react-hook-form";
 import { IGenericFieldProps } from "../../../frontend-engine";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import { without } from "lodash";
 import { TestHelper } from "../../../../utils";
 
 export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckboxProps>) => {

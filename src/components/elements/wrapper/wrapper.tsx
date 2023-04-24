@@ -45,6 +45,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child) || typeof child !== "object") return;
+				// TODO: Move outof Wrapper component and refactor
 				const renderField = (Field: React.ElementType) => {
 					return (
 						<ConditionalRenderer id={id} key={id} schema={child}>
@@ -70,10 +71,15 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 						</ConditionalRenderer>
 					);
 				};
+
+				// TODO: Refactor to fucntion
 				if ("referenceKey" in child) {
 					const referenceKey = child.referenceKey?.toUpperCase();
 					// Should check if CustomElement
-					if (FrontendEngineCustomComponents[ECustomElementType[referenceKey]]) {
+					if (FrontendEngineCustomComponents[ECustomFieldType[referenceKey]]) {
+						const Field = FrontendEngineCustomComponents[ECustomFieldType[referenceKey]];
+						renderComponents.push(renderField(Field));
+					} else if (FrontendEngineCustomComponents[ECustomElementType[referenceKey]]) {
 						const CustomElement = FrontendEngineCustomComponents[
 							ECustomElementType[referenceKey]
 						] as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
@@ -83,12 +89,10 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 							</ConditionalRenderer>
 						);
 					}
-					if (FrontendEngineCustomComponents[ECustomFieldType[referenceKey]]) {
-						const Field = FrontendEngineCustomComponents[ECustomFieldType[referenceKey]];
-						renderComponents.push(renderField(Field));
-					}
 					return;
 				}
+
+				// TODO: Refactor to fucntion
 				const uiType = child.uiType?.toUpperCase();
 				const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
 
