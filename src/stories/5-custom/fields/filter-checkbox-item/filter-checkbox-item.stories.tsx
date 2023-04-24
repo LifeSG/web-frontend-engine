@@ -1,10 +1,10 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../common";
-import { IFilterSchema } from "../../../components/custom/elements/filter/types";
+import { FrontendEngine } from "../../../common";
+import { IFilterSchema } from "../../../../components/custom/elements/filter/types";
 
 export default {
-	title: "Custom/Filter",
+	title: "Custom/Fields/Filter",
 	parameters: {
 		docs: {
 			page: () => (
@@ -49,22 +49,6 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	((args) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-						},
-					},
-				},
-			}}
-		/>
-	)) as Story<IFilterSchema>; // TODO: should update type
-
 const TemplateFilterItemCheckbox = (id: string) =>
 	(({ defaultValues, ...args }) => (
 		<FrontendEngine
@@ -85,35 +69,6 @@ const TemplateFilterItemCheckbox = (id: string) =>
 			}}
 		/>
 	)) as Story<IFilterSchema & { defaultValues?: string[] | undefined }>; // TODO: should update type
-
-export const FilterWrapper = Template("wrapper-default").bind({});
-FilterWrapper.args = {
-	// uiType: "div",
-	// children: {
-	// 	name: {
-	// 		label: "Filter Wrapper",
-	// 		referenceKey: "filter",
-	// 	},
-	// },
-};
-
-export const FilterItem = Template("wrapper-default").bind({});
-FilterItem.args = {
-	referenceKey: "filter",
-	children: {
-		filterItem1: {
-			label: "Filter Item 1",
-			referenceKey: "filter-item",
-			children: {
-				dateField: {
-					uiType: "date-field",
-					label: "Date with default value",
-					// defaultValues: "2022-02-01",
-				},
-			},
-		},
-	},
-};
 
 export const FilterCheckBoxItem = TemplateFilterItemCheckbox("filterItem1").bind({});
 FilterCheckBoxItem.args = {
