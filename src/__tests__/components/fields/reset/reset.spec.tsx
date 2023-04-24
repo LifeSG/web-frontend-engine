@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import _ from "lodash";
 import { FrontendEngine } from "../../../../components";
 import { IResetButtonSchema } from "../../../../components/fields";
 import { IFrontendEngineData, TFrontendEngineValues } from "../../../../components/types";
@@ -47,15 +48,21 @@ const getResetButton = (): HTMLElement => {
 };
 
 describe("reset", () => {
-	it("should reset the form on press", async () => {
-		renderComponent();
+	it.each`
+		result     | description
+		${"hello"} | ${"is set"}
+		${""}      | ${"is not set"}
+	`("reset the form to on press to $description when default value is not set", async ({ result }) => {
+		renderComponent(undefined, _.isEmpty(result) ? undefined : { [COMPONENT_ID]: "hello" });
 
 		const textfield = getTextfield();
-		fireEvent.change(textfield, { target: { value: "hello" } });
-		expect(textfield).toHaveValue("hello");
+
+		expect(textfield).toHaveValue(result);
+		fireEvent.change(textfield, { target: { value: "goodbye" } });
+		expect(textfield).toHaveValue("goodbye");
 
 		await waitFor(() => fireEvent.click(getResetButton()));
-		expect(textfield).toHaveValue("");
+		expect(textfield).toHaveValue(result);
 	});
 
 	it("should be disabled if configured", async () => {
