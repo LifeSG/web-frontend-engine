@@ -45,55 +45,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child) || typeof child !== "object") return;
-				if ("referenceKey" in child) {
-					const referenceKey = child.referenceKey?.toUpperCase();
-					// Should check if CustomElement
-					if (FrontendEngineCustomElements[ECustomType[referenceKey]]) {
-						const CustomElement = FrontendEngineCustomElements[
-							ECustomType[referenceKey]
-						] as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
-						renderComponents.push(
-							<ConditionalRenderer id={id} key={id} schema={child}>
-								<CustomElement {...child} schema={child} id={id} />
-							</ConditionalRenderer>
-						);
-					}
-					if (FrontendEngineCustomFields[ECustomType[referenceKey]]) {
-						const Field = FrontendEngineCustomFields[ECustomType[referenceKey]];
-						renderComponents.push(
-							<ConditionalRenderer id={id} key={id} schema={child}>
-								<Controller
-									control={control}
-									name={id}
-									shouldUnregister={true}
-									render={({ field, fieldState }) => {
-										const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
-										const warning = warnings ? warnings[id] : "";
-
-										if (!warning) {
-											return <Field schema={child} {...fieldProps} {...fieldState} />;
-										}
-										return (
-											<>
-												<Field schema={child} {...fieldProps} {...fieldState} />
-												<DSAlert type="warning">{warning}</DSAlert>
-											</>
-										);
-									}}
-								/>
-							</ConditionalRenderer>
-						);
-					}
-					return;
-				}
-				const uiType = child.uiType?.toUpperCase();
-				const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
-
-				if (fieldTypeKeys.includes(uiType)) {
-					// render fields with controller to register them into react-hook-form
-					const Field = frontendEngineComponents[EFieldType[uiType]];
-					renderComponents.push(
-						<ConditionalRenderer id={id} key={id} renderRules={child.showIf} schema={child}>
+				const renderField = (Field: React.ElementType) => {
+					return (
+						<ConditionalRenderer id={id} key={id} schema={child}>
 							<Controller
 								control={control}
 								name={id}
@@ -115,6 +69,33 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 							/>
 						</ConditionalRenderer>
 					);
+				};
+				if ("referenceKey" in child) {
+					const referenceKey = child.referenceKey?.toUpperCase();
+					// Should check if CustomElement
+					if (FrontendEngineCustomElements[ECustomType[referenceKey]]) {
+						const CustomElement = FrontendEngineCustomElements[
+							ECustomType[referenceKey]
+						] as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
+						renderComponents.push(
+							<ConditionalRenderer id={id} key={id} schema={child}>
+								<CustomElement {...child} schema={child} id={id} />
+							</ConditionalRenderer>
+						);
+					}
+					if (FrontendEngineCustomFields[ECustomType[referenceKey]]) {
+						const Field = FrontendEngineCustomFields[ECustomType[referenceKey]];
+						renderComponents.push(renderField(Field));
+					}
+					return;
+				}
+				const uiType = child.uiType?.toUpperCase();
+				const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
+
+				if (fieldTypeKeys.includes(uiType)) {
+					// render fields with controller to register them into react-hook-form
+					const Field = frontendEngineComponents[EFieldType[uiType]];
+					renderComponents.push(renderField(Field));
 				} else if (elementTypeKeys.includes(uiType)) {
 					// render other elements as normal components
 					const Element = (frontendEngineComponents[EElementType[uiType]] ||
