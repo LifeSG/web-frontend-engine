@@ -5,5 +5,4 @@ export interface IResetButtonSchema
 	extends Omit<IFrontendEngineBaseFieldJsonSchema<"reset">, "validation">,
 		TComponentOmitProps<ButtonProps, "disabled"> {
 	disabled?: boolean | undefined;
-	keepDefaultValues?: boolean | undefined;
 }

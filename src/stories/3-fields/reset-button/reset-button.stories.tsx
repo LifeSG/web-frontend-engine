@@ -51,19 +51,6 @@ export default {
 				type: "select",
 			},
 		},
-		keepDefaultValues: {
-			description: "Specifies if the default values are retained on reset",
-			table: {
-				type: {
-					summary: "boolean",
-				},
-				defaultValue: { summary: false },
-			},
-			options: [true, false],
-			control: {
-				type: "select",
-			},
-		},
 	},
 } as Meta;
 
@@ -109,15 +96,8 @@ Styled.args = {
 	styleType: "secondary",
 };
 
-export const DefaultValueCleared = Template("reset-default-value", "default").bind({});
-DefaultValueCleared.args = {
+export const DefaultValue = Template("reset-default-value", "default").bind({});
+DefaultValue.args = {
 	uiType: "reset",
 	label: "Reset",
-};
-
-export const DefaultValueRetained = Template("reset-default-value", "default").bind({});
-DefaultValueRetained.args = {
-	uiType: "reset",
-	label: "Reset",
-	keepDefaultValues: true,
 };

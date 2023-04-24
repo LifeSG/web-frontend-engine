@@ -63,24 +63,4 @@ describe("reset", () => {
 
 		expect(getResetButton()).toBeDisabled();
 	});
-
-	it.each`
-		keepDefaultValues | result     | description
-		${true}           | ${"hello"} | ${"default value"}
-		${false}          | ${""}      | ${"empty"}
-	`(
-		"reset the form to $description on press if keepDefaultValues is set to $keepDefaultValues",
-		async ({ keepDefaultValues, result }) => {
-			renderComponent({ keepDefaultValues }, { [COMPONENT_ID]: "hello" });
-
-			const textfield = getTextfield();
-
-			expect(textfield).toHaveValue("hello");
-			fireEvent.change(textfield, { target: { value: "goodbye" } });
-			expect(textfield).toHaveValue("goodbye");
-
-			await waitFor(() => fireEvent.click(getResetButton()));
-			expect(textfield).toHaveValue(result);
-		}
-	);
 });
