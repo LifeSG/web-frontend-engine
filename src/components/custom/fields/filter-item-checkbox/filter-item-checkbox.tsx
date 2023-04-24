@@ -1,4 +1,4 @@
-import { Filter } from "@lifesg/react-design-system";
+import { Filter, Form } from "@lifesg/react-design-system";
 import { useEffect, useState } from "react";
 import { useValidationConfig } from "../../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../../shared";
@@ -8,20 +8,22 @@ import { useFormContext } from "react-hook-form";
 import { IGenericFieldProps } from "../../../frontend-engine";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import { without } from "lodash";
+import { TestHelper } from "../../../../utils";
 
 export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckboxProps>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, validation },
+		schema: { label, options, validation, ...otherSchema },
 		id,
 		name,
 		value,
+		error,
 		onChange,
 	} = props;
 	const { setFieldValidationConfig } = useValidationConfig();
-	const { setValue, getValues } = useFormContext();
+	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [selectedOptions, setSelectedOptions] = useState<IOption[]>();
 	// =============================================================================
@@ -63,27 +65,22 @@ export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckbox
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (options: IOption[]): void => {
-		let updatedStateValues = [...stateValue];
-
-		options.forEach((opt) => {
-			if (updatedStateValues.includes(opt.value)) {
-				updatedStateValues = without(updatedStateValues, opt.value);
-			} else {
-				updatedStateValues.push(opt.value);
-			}
-		});
-		onChange({ target: { value: updatedStateValues } });
+		onChange({ target: { value: options.map((opt) => opt.value) } });
 	};
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Filter.Checkbox
-			title={label}
-			selectedOptions={selectedOptions}
-			options={options}
-			onSelect={handleChange}
-		></Filter.Checkbox>
+		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
+			<Filter.Checkbox
+				{...otherSchema}
+				data-testid={TestHelper.generateId(id, "filter-item-checkbox")}
+				title={label}
+				selectedOptions={selectedOptions}
+				options={options}
+				onSelect={handleChange}
+			></Filter.Checkbox>
+		</Form.CustomField>
 	);
 };

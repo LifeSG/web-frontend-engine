@@ -144,9 +144,7 @@ export interface ICustomComponentJsonSchema<T, V = undefined, U = undefined> {
 	uiType?: never | undefined;
 }
 
-export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> {
-	referenceKey: string;
-	uiType?: never | undefined;
+export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> extends ICustomComponentJsonSchema<T, V, U> {
 	validation?: (V | U | IYupValidationRule)[];
 	defaultValues?: string[];
 }
