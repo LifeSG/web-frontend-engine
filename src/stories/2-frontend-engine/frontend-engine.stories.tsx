@@ -408,3 +408,7 @@ export const Reset: Story<IFrontendEngineProps> = () => {
 		</>
 	);
 };
+
+Reset.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
