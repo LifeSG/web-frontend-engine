@@ -45,7 +45,7 @@ const getContactField = (): HTMLElement => {
 };
 
 const getDefaultDropdownToggle = (): HTMLElement => {
-	return getField("button", "+65");
+	return screen.getByTestId("addon-selector");
 };
 
 describe(UI_TYPE, () => {
@@ -61,7 +61,7 @@ describe(UI_TYPE, () => {
 
 	it("should be able to support default country", async () => {
 		renderComponent({ country: "Japan" });
-
+		await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 		expect(screen.getByText("+81")).toBeInTheDocument();
 	});
 
@@ -152,12 +152,11 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("it should be able to verify International numbers", () => {
-		it("+81 97-958-4362  should be a valid number", async () => {
-			const contactNumber = "97-958-4362 ";
+		it("+81 97-958-4362 should be a valid number", async () => {
+			const contactNumber = "97-958-4362";
 			renderComponent({ validation: [{ contactNumber: { internationalNumber: true } }] });
 
-			const japanCode = getField("button", "Japan (+81)");
-			await waitFor(() => fireEvent.click(japanCode));
+			await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -165,12 +164,11 @@ describe(UI_TYPE, () => {
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+81 ${contactNumber}` }));
 		});
 
-		it("+81 12345678  should be an invalid number", async () => {
+		it("+81 12345678 should be an invalid number", async () => {
 			const contactNumber = "12345678";
 			renderComponent({ validation: [{ contactNumber: { internationalNumber: true } }] });
 
-			const japanCode = getField("button", "Japan (+81)");
-			await waitFor(() => fireEvent.click(japanCode));
+			await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));

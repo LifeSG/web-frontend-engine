@@ -48,7 +48,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				// TODO: Move outof Wrapper component and refactor
 				const renderField = (Field: React.ElementType) => {
 					return (
-						<ConditionalRenderer id={id} key={id} schema={child}>
+						<ConditionalRenderer id={id} key={id} renderRules={child?.showIf} schema={child}>
 							<Controller
 								control={control}
 								name={id}

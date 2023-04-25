@@ -93,10 +93,10 @@ describe(UI_TYPE, () => {
 		expect(getComponent().parentElement).toHaveAttribute("disabled");
 	});
 
-	it("should be able to support custom list style width", () => {
+	it("should be able to support custom list style width", async () => {
 		const width = "24rem";
 		renderComponent({ listStyleWidth: width });
-
+		await waitFor(() => fireEvent.click(getComponent()));
 		expect(getField("list")).toHaveStyle({ width });
 	});
 
@@ -190,6 +190,7 @@ describe(UI_TYPE, () => {
 			"$scenario",
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(<CustomComponent />);
+				await waitFor(() => fireEvent.click(getComponent()));
 
 				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
