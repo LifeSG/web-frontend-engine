@@ -37,7 +37,6 @@ const renderComponent = (overrideField?: TOverrideField<ITextFieldSchema>, overr
 										...overrideField,
 									},
 								},
-
 							},
 							...getSubmitButtonProps(),
 						},

@@ -28,17 +28,23 @@ const renderComponent = (
 			section: {
 				uiType: "section",
 				children: {
-					[COMPONENT_ID]: {
-						label: "Filter Item Checkbox",
-						referenceKey: REFERENCE_KEY,
-						options: [
-							{ label: "Apple", value: "Apple" },
-							{ label: "Berry", value: "Berry" },
-						],
-						...overrideField,
+					filterItem1: {
+						referenceKey: "filter",
+						label: "Filter Item",
+						children: {
+							[COMPONENT_ID]: {
+								label: "Filter Item Checkbox",
+								referenceKey: REFERENCE_KEY,
+								options: [
+									{ label: "Apple", value: "Apple" },
+									{ label: "Berry", value: "Berry" },
+								],
+								...overrideField,
+							},
+							...getSubmitButtonProps(),
+						},
 					},
-					...getSubmitButtonProps(),
-				} as any, // TODO: Fix schema after fixing mobile rendering issue.
+				},
 			},
 		},
 		...overrideSchema,
@@ -47,7 +53,17 @@ const renderComponent = (
 };
 
 const getCheckboxes = (): HTMLElement[] => {
-	return screen.getAllByRole("checkbox").filter(Boolean);
+	return screen
+		.getAllByRole("checkbox")
+		.filter((el) => el.getAttribute("data-testid") !== "toggle-label")
+		.filter(Boolean);
+};
+
+const getCheckboxByVal = (val: string) => {
+	return screen
+		.getAllByText(val)
+		.find((el) => el.getAttribute("data-testid") !== "toggle-label")
+		?.querySelector("input");
 };
 
 describe(REFERENCE_KEY, () => {
@@ -78,7 +94,7 @@ describe(REFERENCE_KEY, () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		defaultValues.forEach((val) => {
-			const checkBox = screen.getByText(val).querySelector("input");
+			const checkBox = getCheckboxByVal(val);
 			expect(checkBox.checked).toBeTruthy();
 		});
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
@@ -88,8 +104,7 @@ describe(REFERENCE_KEY, () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-
-		expect(getErrorMessage()).toBeInTheDocument();
+		expect(screen.getAllByText(ERROR_MESSAGE)[0]).toBeInTheDocument();
 	});
 
 	it("should be able to toggle the checkboxes", async () => {
@@ -126,13 +141,19 @@ describe(REFERENCE_KEY, () => {
 								section: {
 									uiType: "section",
 									children: {
-										[COMPONENT_ID]: {
-											label: "Filter Item Checkbox",
-											referenceKey: REFERENCE_KEY,
-											options,
+										field: {
+											referenceKey: "filter",
+											label: "Filter",
+											children: {
+												[COMPONENT_ID]: {
+													label: "Filter Item Checkbox",
+													referenceKey: REFERENCE_KEY,
+													options,
+												},
+												...getSubmitButtonProps(),
+											},
 										},
-										...getSubmitButtonProps(),
-									} as any,  // TODO: Fix schema after fixing mobile rendering issue
+									},
 								},
 							},
 						}}
@@ -163,7 +184,7 @@ describe(REFERENCE_KEY, () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(<CustomComponent />);
 
-				selected.forEach((value) => fireEvent.click(screen.getByLabelText(value)));
+				selected.forEach((value) => fireEvent.click(getCheckboxByVal(value)));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })

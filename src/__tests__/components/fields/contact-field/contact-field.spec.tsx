@@ -61,9 +61,8 @@ describe(UI_TYPE, () => {
 
 	// TODO: Fix test case for default value
 	it.skip("should be able to support default country", async () => {
-		renderComponent({country: "Japan"});
+		renderComponent({ country: "Japan" });
 		expect(screen.getByText("+81")).toBeInTheDocument();
-
 	});
 
 	it("should be able to support validation schema", async () => {

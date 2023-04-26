@@ -44,28 +44,30 @@ export default {
 } as Meta;
 const Template = (id: string) =>
 	((args) => {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const formRef = useRef<IFrontendEngineRef>(null);
 		args.onClear = () => {
 			for (const key in formRef.current?.getValues()) {
 				// FIXME - Temporary hacky fix until FEE has reset function
 				formRef.current?.setValue(key, "");
 			}
-    	};
+		};
 		return (
-		<FrontendEngine ref={formRef}
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+							},
 						},
 					},
-				},
-			}}
-		/>
-	)}) as Story<IFilterSchema>;
-
+				}}
+			/>
+		);
+	}) as Story<IFilterSchema>;
 
 export const FilterWrapper = Template("wrapper-default").bind({});
 FilterWrapper.args = {
@@ -105,4 +107,3 @@ FilterWrapperWithDisabledClear.args = {
 		},
 	},
 };
-
