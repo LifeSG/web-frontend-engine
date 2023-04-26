@@ -87,6 +87,36 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 	};
 };
 
+export const CommonCustomStoryProps = (referenceKey: string) => {
+	return {
+		referenceKey: {
+			description: `Use <code>${referenceKey}</code> to show this field`,
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			type: { name: "string", required: true },
+			options: [referenceKey],
+			control: {
+				type: "text",
+			},
+			defaultValue: referenceKey,
+		},
+		label: {
+			description: "A name/description of the purpose of the element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
+			},
+		},
+	};
+};
+
 export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
 	"submit-button": { uiType: "submit", label: "Submit" },
 };

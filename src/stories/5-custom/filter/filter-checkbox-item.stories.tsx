@@ -1,21 +1,17 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../common";
+import { CommonCustomStoryProps, FrontendEngine } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 
 export default {
-	title: "Custom/Filter/Fields",
+	title: "Custom/Filter/Filter-Checkbox",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>Filter</Title>
-					<Description>This component acts as a wrapper for filter component</Description>
+					<Title>Filter Checkbox</Title>
+					<Description>Widget to select multiple options</Description>
 					<Heading>Props</Heading>
-					<Description>
-						This component also inherits the
-						[HTMLElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement) attributes.
-					</Description>
 					<ArgsTable story={PRIMARY_STORY} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
@@ -23,20 +19,7 @@ export default {
 		},
 	},
 	argTypes: {
-		label: { table: { disable: true } },
-		referenceKey: {
-			description: "Actual HTML element type to render the component as",
-			table: {
-				type: {
-					summary: "filter",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["filter"],
-			control: {
-				type: "select",
-			},
-		},
+		...CommonCustomStoryProps("filter-checkbox"),
 		children: {
 			description: "Elements or string that is the descendant of this component",
 			table: {
@@ -46,11 +29,20 @@ export default {
 			},
 			type: { name: "object", value: {}, required: true },
 		},
+		options: {
+			description: "A list of options that a user can choose from.",
+			table: {
+				type: {
+					summary: "{label: string, value: string}[]",
+				},
+			},
+			type: { name: "object", value: {} },
+		},
 	},
 } as Meta;
 
-const TemplateFilterItemCheckbox = (id: string) =>
-	(({ defaultValues, ...args }) => (
+const Template = (id: string) =>
+	((args) => (
 		<FrontendEngine
 			data={{
 				sections: {
@@ -61,38 +53,33 @@ const TemplateFilterItemCheckbox = (id: string) =>
 						},
 					},
 				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
 			}}
 		/>
-	)) as Story<IFilterSchema & { defaultValues?: string[] | undefined }>; // TODO: should update type
+	)) as Story<IFilterSchema>;
 
-export const FilterCheckBoxItem = TemplateFilterItemCheckbox("filterItem1").bind({});
+export const FilterCheckBoxItem = Template("wrapper-default").bind({});
 FilterCheckBoxItem.args = {
-	defaultValues: ["red"],
 	referenceKey: "filter",
 	children: {
 		filterItem1: {
-			label: "Filter Item 1",
+			label: "With 5 or less items",
 			referenceKey: "filter-item-checkbox",
 			options: [
 				{ label: "red", value: "red" },
 				{ label: "blue", value: "blue" },
 			],
-			validation: [{ required: true }],
 		},
 		filterItem2: {
-			label: "Filter Item 2",
-			referenceKey: "filter-item",
-			children: {
-				name: {
-					uiType: "text-field",
-					label: "Name",
-				},
-			},
+			label: "With 5 or more items",
+			referenceKey: "filter-item-checkbox",
+			options: [
+				{ label: "red", value: "red" },
+				{ label: "blue", value: "blue" },
+				{ label: "blue", value: "blue" },
+				{ label: "blue", value: "blue" },
+				{ label: "blue", value: "blue" },
+				{ label: "blue", value: "blue" },
+			],
 		},
 	},
 };

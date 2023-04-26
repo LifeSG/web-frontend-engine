@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { FrontendEngine } from "../../common";
+import { CommonCustomStoryProps, FrontendEngine } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 
 export default {
@@ -10,12 +10,8 @@ export default {
 			page: () => (
 				<>
 					<Title>Filter</Title>
-					<Description>This component acts as a wrapper for filter component</Description>
+					<Description>Displays widgets under collapsible panels to filter data results</Description>
 					<Heading>Props</Heading>
-					<Description>
-						This component also inherits the
-						[HTMLElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement) attributes.
-					</Description>
 					<ArgsTable story={PRIMARY_STORY} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
@@ -23,25 +19,21 @@ export default {
 		},
 	},
 	argTypes: {
-		label: { table: { disable: true } },
-		referenceKey: {
-			description: "Actual HTML element type to render the component as",
-			table: {
-				type: {
-					summary: "filter",
-				},
-			},
-			type: { name: "string", required: true },
-			options: ["filter"],
+		...CommonCustomStoryProps("filter"),
+		toggleFilterButtonLabel: {
+			description: "Toggle to display label for filter button",
 			control: {
-				type: "select",
+				type: "text",
 			},
+			defaultValue: "true",
 		},
 		children: {
-			description: "Elements or string that is the descendant of this component",
+			description:
+				"Elements or string that is the descendant of this component. Only accepts FilterItem or FilterItemCheckbox.",
 			table: {
 				type: {
-					summary: "TFrontendEngineFieldSchema | string | (string | TFrontendEngineFieldSchema)[]",
+					summary:
+						"IFilterItemSchema | IFilterItemCheckboxSchema | string | (string | IFilterItemSchema | IFilterItemCheckboxSchema)[]",
 				},
 			},
 			type: { name: "object", value: {}, required: true },
@@ -67,27 +59,17 @@ const Template = (id: string) =>
 
 export const FilterWrapper = Template("wrapper-default").bind({});
 FilterWrapper.args = {
-	// uiType: "div",
-	// children: {
-	// 	name: {
-	// 		label: "Filter Wrapper",
-	// 		referenceKey: "filter",
-	// 	},
-	// },
-};
-
-export const FilterItem = Template("wrapper-default").bind({});
-FilterItem.args = {
 	referenceKey: "filter",
+	toggleFilterButtonLabel: "true",
 	children: {
 		filterItem1: {
-			label: "Filter Item 1",
+			label: "Search",
 			referenceKey: "filter-item",
 			children: {
-				dateField: {
-					uiType: "date-field",
-					label: "Date with default value",
-					// defaultValues: "2022-02-01",
+				name: {
+					label: "",
+					uiType: "text-field",
+					placeholder: "Enter keyword",
 				},
 			},
 		},
