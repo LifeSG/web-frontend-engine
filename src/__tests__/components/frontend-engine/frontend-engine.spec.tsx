@@ -203,6 +203,19 @@ describe("frontend-engine", () => {
 		expect(submitFn).toBeCalled();
 	});
 
+	it("should reset through reset method", async () => {
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			ref.current.reset();
+		};
+
+		render(<FrontendEngineWithCustomButton onClick={handleClick} />);
+		const field = getFieldOne();
+		fireEvent.change(field, { target: { value: "hello" } });
+		await waitFor(() => fireEvent.click(getCustomButton()));
+
+		expect(field).toHaveValue("");
+	});
+
 	it("should support custom validation", async () => {
 		interface IYupCustomValidationRule extends IYupValidationRule {
 			mustBeHello?: boolean | undefined;

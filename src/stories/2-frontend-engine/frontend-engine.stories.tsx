@@ -29,6 +29,28 @@ const DATA: IFrontendEngineData = {
 						{ label: "Female", value: "female" },
 					],
 				},
+				radio: {
+					uiType: "radio",
+					label: "Radio Button",
+					options: [
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+					],
+				},
+				unit: {
+					label: "Unit Number",
+					uiType: "unit-number-field",
+				},
+				multi: {
+					uiType: "multi-select",
+					label: "Fruits",
+					options: [
+						{ value: "1", label: "1" },
+						{ value: "2", label: "2" },
+						{ value: "3", label: "3" },
+					],
+				},
 				description: {
 					label: "Feedback",
 					uiType: "textarea",
@@ -367,5 +389,26 @@ export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
 	);
 };
 SetCustomErrors.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+export const Reset: Story<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const handleClick = () => {
+		ref.current.reset();
+	};
+
+	return (
+		<>
+			<FrontendEngine data={{ ...DATA, defaultValues: { name: "Bob" } }} ref={ref} />
+			<br />
+			<Button.Default styleType="secondary" onClick={handleClick}>
+				Reset form
+			</Button.Default>
+		</>
+	);
+};
+
+Reset.parameters = {
 	controls: { hideNoControlsWarning: true },
 };

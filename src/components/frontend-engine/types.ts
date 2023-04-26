@@ -1,4 +1,10 @@
-import { ControllerFieldState, ControllerRenderProps, UseFormSetValue, ValidationMode } from "react-hook-form";
+import {
+	ControllerFieldState,
+	ControllerRenderProps,
+	UseFormReset,
+	UseFormSetValue,
+	ValidationMode,
+} from "react-hook-form";
 import { IAlertSchema, ITextSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { IWrapperSchema } from "../elements/wrapper";
@@ -11,6 +17,7 @@ import {
 	IMultiSelectSchema,
 	INumericFieldSchema,
 	IRadioButtonGroupSchema,
+	IResetButtonSchema,
 	ISelectSchema,
 	ISubmitButtonSchema,
 	ITextFieldSchema,
@@ -79,7 +86,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IUnitNumberFieldSchema<V>
 	| IAlertSchema
 	| ITextSchema
-	| ICustomComponentJsonSchema;
+	| ICustomComponentJsonSchema
+	| IResetButtonSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -105,6 +113,8 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 
 	/** allows setting of custom errors thrown by endpoints */
 	setErrors: (errors: TErrorPayload) => void;
+	/** resets the form to the default state */
+	reset: UseFormReset<TFrontendEngineValues>;
 }
 
 // =============================================================================
@@ -181,6 +191,7 @@ export enum EFieldType {
 	RADIO = "RadioButtonGroup",
 	"TIME-FIELD" = "TimeField",
 	CHIPS = "Chips",
+	RESET = "ResetButton",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
 }
 

@@ -63,6 +63,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		submit: reactFormHookSubmit(handleSubmit),
 		addCustomValidation: YupHelper.addCondition,
 		setErrors,
+		reset,
 	}));
 
 	const checkIsFormValid = useCallback(() => {
