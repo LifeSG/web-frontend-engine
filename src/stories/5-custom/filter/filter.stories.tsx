@@ -2,6 +2,8 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { CommonCustomStoryProps, FrontendEngine } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
+import { useRef } from "react";
+import { IFrontendEngineRef } from "../../../components";
 
 export default {
 	title: "Custom/Filter",
@@ -40,10 +42,17 @@ export default {
 		},
 	},
 } as Meta;
-
 const Template = (id: string) =>
-	((args) => (
-		<FrontendEngine
+	((args) => {
+		const formRef = useRef<IFrontendEngineRef>(null);
+		args.onClear = () => {
+			for (const key in formRef.current?.getValues()) {
+				// FIXME - Temporary hacky fix until FEE has reset function
+				formRef.current?.setValue(key, "");
+			}
+    	};
+		return (
+		<FrontendEngine ref={formRef}
 			data={{
 				sections: {
 					section: {
@@ -55,7 +64,8 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as Story<IFilterSchema>; // TODO: should update type
+	)}) as Story<IFilterSchema>;
+
 
 export const FilterWrapper = Template("wrapper-default").bind({});
 FilterWrapper.args = {
@@ -75,3 +85,24 @@ FilterWrapper.args = {
 		},
 	},
 };
+
+export const FilterWrapperWithDisabledClear = Template("wrapper-default").bind({});
+FilterWrapperWithDisabledClear.args = {
+	referenceKey: "filter",
+	toggleFilterButtonLabel: "true",
+	clearButtonDisabled: true,
+	children: {
+		filterItem1: {
+			label: "Search",
+			referenceKey: "filter-item",
+			children: {
+				name: {
+					label: "",
+					uiType: "text-field",
+					placeholder: "Enter keyword",
+				},
+			},
+		},
+	},
+};
+

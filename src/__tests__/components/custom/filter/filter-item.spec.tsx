@@ -1,6 +1,4 @@
-import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useState } from "react";
 import { ITextFieldSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
@@ -8,16 +6,16 @@ import {
 	FRONTEND_ENGINE_ID,
 	TOverrideField,
 	TOverrideSchema,
-	getErrorMessage,
 	getSubmitButton,
 	getSubmitButtonProps,
+	getField,
 } from "../../../common";
 const { ResizeObserver } = window;
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
-const REFERENCE_KEY = "filter-item-checkbox";
-
+const REFERENCE_KEY = "filter-item";
+const TEXTFIELD_LABEL = "Name";
 const renderComponent = (overrideField?: TOverrideField<ITextFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -29,16 +27,17 @@ const renderComponent = (overrideField?: TOverrideField<ITextFieldSchema>, overr
 						referenceKey: "filter",
 						label: "Filter",
 						children: {
-							[COMPONENT_ID]: {
-								referenceKey: "filter-item",
-								label: "Filter Item Checkbox",
+							filterItem1: {
+								referenceKey: REFERENCE_KEY,
+								label: "Filter Item",
 								children: {
-									name: {
+									[COMPONENT_ID]: {
 										uiType: "text-field",
-										label: "Name",
+										label: TEXTFIELD_LABEL,
+										...overrideField,
 									},
 								},
-								...overrideField,
+
 							},
 							...getSubmitButtonProps(),
 						},
@@ -51,6 +50,9 @@ const renderComponent = (overrideField?: TOverrideField<ITextFieldSchema>, overr
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
+const getTextfield = (): HTMLElement => {
+	return getField("textbox", TEXTFIELD_LABEL);
+};
 // TODO: Add more tests
 describe(REFERENCE_KEY, () => {
 	beforeEach(() => {
@@ -68,28 +70,37 @@ describe(REFERENCE_KEY, () => {
 		jest.restoreAllMocks();
 	});
 
-	it.only("should be able to render text field", () => {
+	it("should be able to render text field", () => {
 		renderComponent();
 	});
 
-	it("should be able to support default values", async () => {
-		const defaultValues = ["Apple"];
-		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
+	it("should support default value", async () => {
+		const defaultValue = "John Doe";
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+		// switching to use get all by display value, as filter-item will render two fields for desktop and mobile
+		expect(screen.getAllByDisplayValue(defaultValue)[0]).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-
-		defaultValues.forEach((val) => {
-			const checkBox = screen.getByText(val).querySelector("input");
-			expect(checkBox.checked).toBeTruthy();
-		});
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
-	it("should be able to support validation schema", async () => {
+	it("should pass other props into the field", () => {
+		renderComponent({
+			placeholder: "placeholder",
+			readOnly: true,
+			disabled: true,
+		});
+
+		expect(getTextfield()).toHaveAttribute("placeholder", "placeholder");
+		expect(getTextfield()).toHaveAttribute("readonly");
+		expect(getTextfield()).toBeDisabled();
+	});
+
+	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(getErrorMessage()).toBeInTheDocument();
+		expect(screen.getAllByText(ERROR_MESSAGE)[0]).toBeInTheDocument();
 	});
 });

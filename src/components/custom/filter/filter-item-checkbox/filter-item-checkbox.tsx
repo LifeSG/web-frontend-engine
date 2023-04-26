@@ -71,7 +71,7 @@ export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckbox
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
+		<Form.CustomField id={id} errorMessage={error?.message}>
 			<Filter.Checkbox
 				{...otherSchema}
 				data-testid={TestHelper.generateId(id, "filter-item-checkbox")}
