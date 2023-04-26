@@ -18,6 +18,81 @@ import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperProps } from "./types";
 import { DSAlert } from "./wrapper.styles";
 
+const fieldTypeKeys = Object.keys(EFieldType);
+const elementTypeKeys = Object.keys(EElementType);
+type ComponentRenderType = {
+	fieldType?: React.ElementType | undefined;
+	elementType?: React.ElementType | undefined;
+	fragment?: React.ReactElement | undefined;
+};
+
+const renderField = (Field: React.ElementType, id, child, control, warnings) => {
+	return (
+		<ConditionalRenderer id={id} key={id} renderRules={child?.showIf} schema={child}>
+			<Controller
+				control={control}
+				name={id}
+				shouldUnregister={true}
+				render={({ field, fieldState }) => {
+					const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
+					const warning = warnings ? warnings[id] : "";
+
+					if (!warning) {
+						return <Field schema={child} {...fieldProps} {...fieldState} />;
+					}
+					return (
+						<>
+							<Field schema={child} {...fieldProps} {...fieldState} />
+							<DSAlert type="warning">{warning}</DSAlert>
+						</>
+					);
+				}}
+			/>
+		</ConditionalRenderer>
+	);
+};
+
+const renderElement = (Element: React.ElementType, id, child) => {
+	return (
+		<ConditionalRenderer id={id} key={id} renderRules={child.showIf} schema={child}>
+			<Element schema={child} id={id} />
+		</ConditionalRenderer>
+	);
+};
+
+const getCustomComponentType = (referenceKey) => {
+	const refKey = referenceKey?.toUpperCase();
+	// Should check if CustomElement
+	if (FrontendEngineCustomComponents[ECustomFieldType[refKey]]) {
+		const fieldType = FrontendEngineCustomComponents[ECustomFieldType[refKey]];
+		return { fieldType };
+	} else if (FrontendEngineCustomComponents[ECustomElementType[refKey]]) {
+		const elementType = FrontendEngineCustomComponents[ECustomElementType[refKey]];
+		return { elementType };
+	}
+};
+
+const getComponentTypeOrFragment = (uiType, id) => {
+	// TODO: Refactor to fucntion
+	const UIType = uiType?.toUpperCase();
+	const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
+
+	if (fieldTypeKeys.includes(UIType)) {
+		// render fields with controller to register them into react-hook-form
+		const fieldType = frontendEngineComponents[EFieldType[UIType]];
+		return { fieldType };
+	} else if (elementTypeKeys.includes(UIType)) {
+		// render other elements as normal components
+		const elementType = (frontendEngineComponents[EElementType[UIType]] ||
+			Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
+		return { elementType };
+	} else {
+		// need uiType check to ignore other storybook args
+		const fragment = <Fragment key={id}>{ERROR_MESSAGES.GENERIC.UNSUPPORTED}</Fragment>;
+		return { fragment };
+	}
+};
+
 export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	// CONST, STATE, REF
@@ -39,79 +114,19 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	useEffect(() => {
 		const wrapperChildren = schemaChildren || children;
 		if (typeof wrapperChildren === "object") {
-			const fieldTypeKeys = Object.keys(EFieldType);
-			const elementTypeKeys = Object.keys(EElementType);
 			const renderComponents: JSX.Element[] = [];
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child) || typeof child !== "object") return;
-				// TODO: Move outof Wrapper component and refactor
-				const renderField = (Field: React.ElementType) => {
-					return (
-						<ConditionalRenderer id={id} key={id} renderRules={child?.showIf} schema={child}>
-							<Controller
-								control={control}
-								name={id}
-								shouldUnregister={true}
-								render={({ field, fieldState }) => {
-									const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
-									const warning = warnings ? warnings[id] : "";
-
-									if (!warning) {
-										return <Field schema={child} {...fieldProps} {...fieldState} />;
-									}
-									return (
-										<>
-											<Field schema={child} {...fieldProps} {...fieldState} />
-											<DSAlert type="warning">{warning}</DSAlert>
-										</>
-									);
-								}}
-							/>
-						</ConditionalRenderer>
-					);
-				};
-
-				// TODO: Refactor to fucntion
-				if ("referenceKey" in child) {
-					const referenceKey = child.referenceKey?.toUpperCase();
-					// Should check if CustomElement
-					if (FrontendEngineCustomComponents[ECustomFieldType[referenceKey]]) {
-						const Field = FrontendEngineCustomComponents[ECustomFieldType[referenceKey]];
-						renderComponents.push(renderField(Field));
-					} else if (FrontendEngineCustomComponents[ECustomElementType[referenceKey]]) {
-						const CustomElement = FrontendEngineCustomComponents[
-							ECustomElementType[referenceKey]
-						] as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
-						renderComponents.push(
-							<ConditionalRenderer id={id} key={id} schema={child}>
-								<CustomElement {...child} schema={child} id={id} />
-							</ConditionalRenderer>
-						);
-					}
-					return;
-				}
-
-				// TODO: Refactor to fucntion
-				const uiType = child.uiType?.toUpperCase();
-				const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
-
-				if (fieldTypeKeys.includes(uiType)) {
-					// render fields with controller to register them into react-hook-form
-					const Field = frontendEngineComponents[EFieldType[uiType]];
-					renderComponents.push(renderField(Field));
-				} else if (elementTypeKeys.includes(uiType)) {
-					// render other elements as normal components
-					const Element = (frontendEngineComponents[EElementType[uiType]] ||
-						Wrapper) as React.ForwardRefExoticComponent<IGenericFieldProps<TFrontendEngineFieldSchema>>;
-					renderComponents.push(
-						<ConditionalRenderer id={id} key={id} renderRules={child.showIf} schema={child}>
-							<Element schema={child} id={id} />
-						</ConditionalRenderer>
-					);
+				const compType: ComponentRenderType = child.referenceKey
+					? getCustomComponentType(child.referenceKey)
+					: getComponentTypeOrFragment(child.uiType, id);
+				if (compType.fragment) {
+					renderComponents.push(compType.fragment);
 				} else {
-					// need uiType check to ignore other storybook args
-					renderComponents.push(<Fragment key={id}>{ERROR_MESSAGES.GENERIC.UNSUPPORTED}</Fragment>);
+					compType.fieldType
+						? renderComponents.push(renderField(compType.fieldType, id, child, control, warnings))
+						: renderComponents.push(renderElement(compType.elementType, id, child));
 				}
 			});
 			setComponents(renderComponents);
