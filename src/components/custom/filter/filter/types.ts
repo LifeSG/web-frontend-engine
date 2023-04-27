@@ -6,7 +6,6 @@ export interface IFilterSchema extends ICustomComponentJsonSchema<"filter"> {
 	label?: string | undefined;
 	toggleFilterButtonLabel?: string | undefined;
 	children: Record<string, IFilterItemSchema | IFilterItemCheckboxSchema>;
-	onClear?: () => void | undefined;
 	clearButtonDisabled?: boolean | undefined;
 }
 

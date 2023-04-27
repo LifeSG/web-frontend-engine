@@ -8,7 +8,6 @@ import {
 	FRONTEND_ENGINE_ID,
 	TOverrideField,
 	TOverrideSchema,
-	getErrorMessage,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -123,6 +122,20 @@ describe(REFERENCE_KEY, () => {
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+	});
+
+	it("should be able to clear checkboxes", async () => {
+		renderComponent();
+		const checkboxes = getCheckboxes();
+		await waitFor(() => fireEvent.click(checkboxes[0]));
+		await waitFor(() => fireEvent.click(checkboxes[1]));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
+
+		const [clearBtn] = screen.queryAllByText("Clear");
+		await waitFor(() => fireEvent.click(clearBtn));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
 	describe("update options schema", () => {

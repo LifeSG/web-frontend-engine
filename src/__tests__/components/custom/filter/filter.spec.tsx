@@ -19,7 +19,6 @@ const renderComponent = (overrideField?: TOverrideField<ITextFieldSchema>, overr
 					filter: {
 						referenceKey: "filter",
 						label: "Filters",
-						onClear: clearCallback,
 						children: {
 							filterItem1: {
 								referenceKey: REFERENCE_KEY,
@@ -74,12 +73,15 @@ describe(REFERENCE_KEY, () => {
 		expect(screen.getByText("Done")).toBeVisible();
 	});
 
-	it("should trigger given clear call back when clicked on clear button", async () => {
+	it("should clear form when when clicked on clear button", async () => {
 		renderComponent();
 		expect(screen.getAllByTestId("filterItem1__filter-item")).toHaveLength(2);
 		const [clearBtn] = screen.queryAllByText("Clear");
+		const textfield = getField("textbox", TEXTFIELD_LABEL);
+		await waitFor(() => fireEvent.change(textfield, { target: { value: "something value" } }));
+		expect(screen.getAllByDisplayValue("something value")[0]).toBeInTheDocument();
 		await waitFor(() => fireEvent.click(clearBtn));
-		expect(clearCallback).toHaveBeenCalled();
+		expect(screen.queryAllByDisplayValue("something value")).toHaveLength(0);
 	});
 
 	it("should be able to close the rendered modal with close button.", async () => {
