@@ -2,6 +2,8 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { CommonCustomStoryProps, FrontendEngine } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
+import { useRef } from "react";
+import { IFrontendEngineRef } from "../../../components";
 
 export default {
 	title: "Custom/Filter/Filter-Checkbox",
@@ -42,20 +44,32 @@ export default {
 } as Meta;
 
 const Template = (id: string) =>
-	((args) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
+	((args) => {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const formRef = useRef<IFrontendEngineRef>(null);
+		args.onClear = () => {
+			console.log("data", formRef.current.getValues());
+			for (const key in formRef.current?.getValues()) {
+				// FIXME - Temporary hacky fix until FEE has reset function
+				formRef.current?.setValue(key, []);
+			}
+		};
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+							},
 						},
 					},
-				},
-			}}
-		/>
-	)) as Story<IFilterSchema>;
+				}}
+			/>
+		);
+	}) as Story<IFilterSchema>;
 
 export const FilterCheckBoxItem = Template("wrapper-default").bind({});
 FilterCheckBoxItem.args = {
@@ -75,10 +89,10 @@ FilterCheckBoxItem.args = {
 			options: [
 				{ label: "red", value: "red" },
 				{ label: "blue", value: "blue" },
-				{ label: "blue", value: "blue" },
-				{ label: "blue", value: "blue" },
-				{ label: "blue", value: "blue" },
-				{ label: "blue", value: "blue" },
+				{ label: "green", value: "green" },
+				{ label: "orange", value: "orange" },
+				{ label: "yellow", value: "yellow" },
+				{ label: "black", value: "black" },
 			],
 		},
 	},

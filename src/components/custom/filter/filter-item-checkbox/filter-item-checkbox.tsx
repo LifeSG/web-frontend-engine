@@ -54,7 +54,7 @@ export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckbox
 		const selectedOpts = options.filter((opt) => value?.find((val) => opt.value === val));
 		setSelectedOptions(selectedOpts);
 		setValue(id, updatedValues);
-	}, [options]);
+	}, [options, value]);
 
 	useEffect(() => {
 		setStateValue(value || []);
@@ -71,15 +71,14 @@ export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckbox
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.CustomField id={id} errorMessage={error?.message}>
-			<Filter.Checkbox
-				{...otherSchema}
-				data-testid={TestHelper.generateId(id, "filter-item-checkbox")}
-				title={label}
-				selectedOptions={selectedOptions}
-				options={options}
-				onSelect={handleChange}
-			></Filter.Checkbox>
-		</Form.CustomField>
+		<Filter.Checkbox
+			id={id}
+			{...otherSchema}
+			data-testid={TestHelper.generateId(id, "filter-item-checkbox")}
+			title={label}
+			selectedOptions={selectedOptions}
+			options={options}
+			onSelect={handleChange}
+		></Filter.Checkbox>
 	);
 };

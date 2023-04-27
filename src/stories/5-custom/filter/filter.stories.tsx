@@ -22,12 +22,23 @@ export default {
 	},
 	argTypes: {
 		...CommonCustomStoryProps("filter"),
-		toggleFilterButtonLabel: {
-			description: "Toggle to display label for filter button",
+		label: {
+			description: "A name/description of the purpose of the element used in desktop view",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
 			control: {
 				type: "text",
 			},
-			defaultValue: "true",
+		},
+		toggleFilterButtonLabel: {
+			description: "Filter button label used in mobile view.",
+			control: {
+				type: "text",
+			},
+			defaultValue: "Filters Mobile",
 		},
 		children: {
 			description:
@@ -72,7 +83,8 @@ const Template = (id: string) =>
 export const FilterWrapper = Template("wrapper-default").bind({});
 FilterWrapper.args = {
 	referenceKey: "filter",
-	toggleFilterButtonLabel: "true",
+	label: "Filters Desktop",
+	toggleFilterButtonLabel: "Filters Mobile",
 	children: {
 		filterItem1: {
 			label: "Search",
@@ -91,7 +103,8 @@ FilterWrapper.args = {
 export const FilterWrapperWithDisabledClear = Template("wrapper-default").bind({});
 FilterWrapperWithDisabledClear.args = {
 	referenceKey: "filter",
-	toggleFilterButtonLabel: "true",
+	label: "Filters",
+	toggleFilterButtonLabel: "Filters Mobile",
 	clearButtonDisabled: true,
 	children: {
 		filterItem1: {
