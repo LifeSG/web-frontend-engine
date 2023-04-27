@@ -18,13 +18,11 @@ export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckbox
 		id,
 		name,
 		value,
-		error,
 		onChange,
 	} = props;
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { setValue } = useFormContext();
-	const [stateValue, setStateValue] = useState<string[]>(value || []);
-	const [selectedOptions, setSelectedOptions] = useState<IOption[]>();
+	const [selectedOptions, setSelectedOptions] = useState<IOption[]>(); // Current selected value state
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -55,10 +53,6 @@ export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckbox
 		setSelectedOptions(selectedOpts);
 		setValue(id, updatedValues);
 	}, [options, value]);
-
-	useEffect(() => {
-		setStateValue(value || []);
-	}, [value, name]);
 
 	// =============================================================================
 	// EVENT HANDLERS

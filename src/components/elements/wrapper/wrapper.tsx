@@ -121,6 +121,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				const compType: ComponentRenderType = child.referenceKey
 					? getCustomComponentType(child.referenceKey)
 					: getComponentTypeOrFragment(child.uiType, id);
+				if (!compType) return;
 				if (compType.fragment) {
 					renderComponents.push(compType.fragment);
 				} else {

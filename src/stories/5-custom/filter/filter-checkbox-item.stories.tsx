@@ -48,7 +48,6 @@ const Template = (id: string) =>
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const formRef = useRef<IFrontendEngineRef>(null);
 		args.onClear = () => {
-			console.log("data", formRef.current.getValues());
 			for (const key in formRef.current?.getValues()) {
 				// FIXME - Temporary hacky fix until FEE has reset function
 				formRef.current?.setValue(key, []);

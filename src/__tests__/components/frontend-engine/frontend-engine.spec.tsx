@@ -260,21 +260,24 @@ describe("frontend-engine", () => {
 		expect(getErrorMessage(true)).not.toBeInTheDocument();
 	});
 
-	// it("should silently skip rendering schema with referenceKey", () => {
-	// 	const frontendEngine = renderComponent(undefined, {
-	// 		sections: {
-	// 			section: {
-	// 				uiType: "section",
-	// 				children: {
-	// 					custom: { referenceKey: "something" },
-	// 				},
-	// 			},
-	// 		},
-	// 	});
+	it("should silently skip rendering schema with referenceKey", () => {
+		const frontendEngine = renderComponent(undefined, {
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						custom: {
+							referenceKey: "something" as any,
+							label: "Something",
+						},
+					},
+				},
+			},
+		});
 
-	// 	expect(screen.queryByText(ERROR_MESSAGES.GENERIC.UNSUPPORTED)).not.toBeInTheDocument();
-	// 	expect(frontendEngine.container.querySelector("section")).not.toBeInTheDocument();
-	// });
+		expect(screen.queryByText(ERROR_MESSAGES.GENERIC.UNSUPPORTED)).not.toBeInTheDocument();
+		expect(frontendEngine.container.querySelector("section")).not.toBeInTheDocument();
+	});
 
 	describe("setErrors", () => {
 		const handleClickDefault = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
