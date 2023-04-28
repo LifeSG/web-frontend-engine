@@ -17,6 +17,8 @@ import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperProps } from "./types";
 import { DSAlert } from "./wrapper.styles";
+import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
+import { IFilterItemCheckboxSchema } from "../../custom/filter/filter-item-checkbox/types";
 
 const fieldTypeKeys = Object.keys(EFieldType);
 const elementTypeKeys = Object.keys(EElementType);
@@ -26,23 +28,34 @@ type TComponentRenderType = {
 	fragment?: React.ReactElement | undefined;
 };
 
-const renderField = (Field: React.ElementType, id, child, control, warnings) => {
+const renderField = (
+	Field: React.ElementType,
+	id: string,
+	schema: TFrontendEngineFieldSchema,
+	control,
+	warnings: Record<string, string>
+) => {
 	return (
-		<ConditionalRenderer id={id} key={id} renderRules={child?.showIf} schema={child}>
+		<ConditionalRenderer
+			id={id}
+			key={id}
+			{...(schema && "showIf" in schema && { renderRules: schema.showIf })}
+			schema={schema}
+		>
 			<Controller
 				control={control}
 				name={id}
 				shouldUnregister={true}
 				render={({ field, fieldState }) => {
 					const fieldProps = { ...field, id, ref: undefined }; // not passing ref because not all components have fields to be manipulated
-					const warning = warnings ? warnings[id] : "";
+					const warning = warnings?.[id];
 
 					if (!warning) {
-						return <Field schema={child} {...fieldProps} {...fieldState} />;
+						return <Field schema={schema} {...fieldProps} {...fieldState} />;
 					}
 					return (
 						<>
-							<Field schema={child} {...fieldProps} {...fieldState} />
+							<Field schema={schema} {...fieldProps} {...fieldState} />
 							<DSAlert type="warning">{warning}</DSAlert>
 						</>
 					);
@@ -52,15 +65,24 @@ const renderField = (Field: React.ElementType, id, child, control, warnings) => 
 	);
 };
 
-const renderElement = (Element: React.ElementType, id, child) => {
+const renderElement = (
+	Element: React.ElementType,
+	id: string,
+	schema: TFrontendEngineFieldSchema | IFilterItemCheckboxSchema | IFilterItemSchema
+) => {
 	return (
-		<ConditionalRenderer id={id} key={id} renderRules={child.showIf} schema={child}>
-			<Element schema={child} id={id} />
+		<ConditionalRenderer
+			id={id}
+			key={id}
+			{...(schema && "showIf" in schema && { renderRules: schema.showIf })}
+			schema={schema}
+		>
+			<Element schema={schema} id={id} />
 		</ConditionalRenderer>
 	);
 };
 
-const getCustomComponentType = (referenceKey) => {
+const getCustomComponentType = (referenceKey: string) => {
 	const refKey = referenceKey?.toUpperCase();
 	// Should check if CustomElement
 	if (FrontendEngineCustomComponents[ECustomFieldType[refKey]]) {
@@ -72,7 +94,7 @@ const getCustomComponentType = (referenceKey) => {
 	}
 };
 
-const getComponentTypeOrFragment = (uiType, id) => {
+const getComponentTypeOrFragment = (uiType: string, id: string) => {
 	// TODO: Refactor to fucntion
 	const UIType = uiType?.toUpperCase();
 	const frontendEngineComponents = { ...FrontendEngineFields, ...FrontendEngineElements };
