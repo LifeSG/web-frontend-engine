@@ -141,7 +141,7 @@ export default {
 		},
 		"data.revalidationMode": {
 			description:
-				" Validation strategy when inputs with errors get re-validated after a user submits the form (onSubmit event).",
+				"Validation strategy when inputs with errors get re-validated after a user submits the form (onSubmit event). Refer to React Hook Form's <a href='https://react-hook-form.com/api/useform/#props' target='_blank' rel='noopener noreferrer'>documentation</a> for more info.",
 			table: {
 				type: {
 					summary: "TRevalidationMode",
@@ -153,14 +153,15 @@ export default {
 			},
 		},
 		"data.validationMode": {
-			description: "Validation strategy before a user submits the form (onSubmit event)",
+			description:
+				"Validation strategy before a user submits the form (onSubmit event). RRefer to React Hook Form's <a href='https://react-hook-form.com/api/useform/#props' target='_blank' rel='noopener noreferrer'>documentation</a> for more info.",
 			table: {
 				type: {
 					summary: "TValidationMode",
-					detail: "onBlur | onChange | onSubmit",
+					detail: "onBlur | onChange | onSubmit | onTouched",
 				},
 				defaultValue: {
-					summary: "onSubmit",
+					summary: "onTouched",
 				},
 			},
 		},
@@ -215,6 +216,15 @@ export const ValidateOnBlur = Template.bind({});
 ValidateOnBlur.args = {
 	data: {
 		validationMode: "onBlur",
+		revalidationMode: "onChange",
+		...DATA,
+	},
+};
+
+export const ValidateOnTouched = Template.bind({});
+ValidateOnTouched.args = {
+	data: {
+		validationMode: "onTouched",
 		revalidationMode: "onChange",
 		...DATA,
 	},

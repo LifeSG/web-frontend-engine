@@ -384,6 +384,21 @@ describe("frontend-engine", () => {
 			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "h" } }));
 			expect(getErrorMessage()).toBeInTheDocument();
 		});
+
+		it("should support onTouched validationMode", async () => {
+			renderComponent(undefined, { validationMode: "onTouched" });
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "h" } }));
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+
+			await waitFor(() => fireEvent.blur(getFieldOne()));
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "he" } }));
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
 	});
 
 	describe("revalidationMode", () => {

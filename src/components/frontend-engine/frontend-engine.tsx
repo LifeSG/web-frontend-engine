@@ -20,7 +20,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			sections,
 			id,
 			revalidationMode = "onChange",
-			validationMode = "onSubmit",
+			validationMode = "onTouched",
 		},
 		className = null,
 		onChange,
