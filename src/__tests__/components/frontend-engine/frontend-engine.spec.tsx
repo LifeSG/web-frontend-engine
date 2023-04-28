@@ -399,6 +399,16 @@ describe("frontend-engine", () => {
 			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "he" } }));
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
+
+		it("should support all validationMode", async () => {
+			renderComponent(undefined, { validationMode: "all" });
+
+			await waitFor(() => fireEvent.blur(getFieldOne()));
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "h" } }));
+			expect(getErrorMessage(true)).toBeInTheDocument();
+		});
 	});
 
 	describe("revalidationMode", () => {

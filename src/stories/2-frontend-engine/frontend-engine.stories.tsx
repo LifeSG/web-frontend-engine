@@ -158,7 +158,7 @@ export default {
 			table: {
 				type: {
 					summary: "TValidationMode",
-					detail: "onBlur | onChange | onSubmit | onTouched",
+					detail: "onBlur | onChange | onSubmit | onTouched | all",
 				},
 				defaultValue: {
 					summary: "onTouched",
@@ -230,8 +230,16 @@ ValidateOnTouched.args = {
 	},
 };
 
-export const OnChange: Story<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
+export const ValidateOnAll = Template.bind({});
+ValidateOnAll.args = {
+	data: {
+		validationMode: "all",
+		revalidationMode: "onChange",
+		...DATA,
+	},
+};
 
+export const OnChange: Story<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
 OnChange.args = {
 	data: DATA,
 	onChange: (values, isValid) => action("change")(values, isValid),
