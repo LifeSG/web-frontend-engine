@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
-import React, { useEffect, useState } from "react";
+import React, { HTMLInputTypeAttribute, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
@@ -112,6 +112,18 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		}
 	};
 
+	const formatInputType = (): HTMLInputTypeAttribute => {
+		switch (uiType) {
+			case "numeric-field":
+				return "number";
+			case "email-field":
+				return "email";
+			case "text-field":
+			default:
+				return "text";
+		}
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -122,7 +134,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			{...derivedAttributes}
 			id={id}
 			data-testid={TestHelper.generateId(id, uiType)}
-			type={uiType}
+			type={formatInputType()}
 			label={label}
 			inputMode={formatInputMode()}
 			onChange={handleChange}
