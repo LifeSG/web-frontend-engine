@@ -1,9 +1,9 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { CommonCustomStoryProps, FrontendEngine } from "../../common";
-import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 import { useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
+import { IFilterSchema } from "../../../components/custom/filter/filter/types";
+import { CommonCustomStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Custom/Filter/Filter-Checkbox",
@@ -61,11 +61,42 @@ export default {
 			},
 			defaultValue: true,
 		},
+		defaultValues: {
+			description: "Default value for the field, this is declared outside `sections`",
+			table: {
+				type: {
+					summary: "string[]",
+				},
+			},
+			type: { name: "object", value: {} },
+		},
+		validation: {
+			description:
+				"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='/docs/form-validation-schema--required'>Validation Schema</a> stories",
+			table: {
+				type: {
+					summary: "array",
+				},
+			},
+			type: { name: "object", value: {} },
+			defaultValue: [],
+		},
+		showIf: {
+			description:
+				"A set of conditions to render the field. For more info, refer to the <a href='/docs/form-conditional-rendering--filled'>Conditional Rendering</a> stories",
+			table: {
+				type: {
+					summary: "array",
+				},
+			},
+			type: { name: "object", value: {} },
+			defaultValue: [],
+		},
 	},
 } as Meta;
 
 const Template = (id: string) =>
-	((args) => {
+	(({ defaultValues, submitBtn, ...args }) => {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const formRef = useRef<IFrontendEngineRef>(null);
 		return (
@@ -77,20 +108,24 @@ const Template = (id: string) =>
 							uiType: "section",
 							children: {
 								[id]: args,
+								...(submitBtn && { ...SUBMIT_BUTTON_SCHEMA }),
 							},
 						},
 					},
-					defaultValues: {
-						[id]: ["red"],
-					},
+					...(!!defaultValues && {
+						defaultValues: {
+							[id]: defaultValues,
+						},
+					}),
 				}}
 			/>
 		);
-	}) as Story<IFilterSchema>;
+	}) as Story<IFilterSchema & { defaultValues?: string[] | undefined; submitBtn?: boolean }>;
 
 export const FilterCheckBoxItem = Template("wrapper-default").bind({});
 FilterCheckBoxItem.args = {
 	referenceKey: "filter",
+	defaultValues: ["red", "orange"],
 	children: {
 		filterItem1: {
 			label: "With 5 or less items with validation",
@@ -102,7 +137,7 @@ FilterCheckBoxItem.args = {
 			],
 		},
 		filterItem2: {
-			label: "With 5 or more items and default values",
+			label: "With 5 or more items",
 			referenceKey: "filter-item-checkbox",
 			options: [
 				{ label: "red", value: "red" },
@@ -156,3 +191,44 @@ FilterCheckBoxItem.args = {
 		},
 	},
 };
+
+export const FilterCheckBoxItemWithDefaultValues = Template("wrapper-default-values").bind({});
+FilterCheckBoxItemWithDefaultValues.args = {
+	referenceKey: "filter",
+	defaultValues: ["red", "orange"],
+	children: {
+		"wrapper-default-values": {
+			label: "With 5 or more items",
+			referenceKey: "filter-item-checkbox",
+			options: [
+				{ label: "red", value: "red" },
+				{ label: "blue", value: "blue" },
+				{ label: "green", value: "green" },
+				{ label: "orange", value: "orange" },
+				{ label: "yellow", value: "yellow" },
+				{ label: "black", value: "black" },
+			],
+		},
+	},
+};
+
+// export const FilterCheckBoxItemWithValidation = Template("wrapper-validation").bind({});
+// FilterCheckBoxItemWithValidation.args = {
+// 	referenceKey: "filter",
+// 	submitBtn: true,
+// 	children: {
+// 		"wrapper-default-values": {
+// 			label: "With 5 or more items",
+// 			referenceKey: "filter-item-checkbox",
+// 			options: [
+// 				{ label: "red", value: "red" },
+// 				{ label: "blue", value: "blue" },
+// 				{ label: "green", value: "green" },
+// 				{ label: "orange", value: "orange" },
+// 				{ label: "yellow", value: "yellow" },
+// 				{ label: "black", value: "black" },
+// 			],
+// 			validation: [{ required: true }],
+// 		},
+// 	},
+// };
