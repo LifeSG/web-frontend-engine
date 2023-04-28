@@ -1,22 +1,21 @@
-import { Filter, Form } from "@lifesg/react-design-system";
+import { Filter } from "@lifesg/react-design-system";
 import { useEffect, useState } from "react";
-import { useValidationConfig } from "../../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../../shared";
-import { IFilterItemCheckboxProps, IOption } from "./types";
-import * as Yup from "yup";
 import { useFormContext } from "react-hook-form";
-import { IGenericFieldProps } from "../../../frontend-engine";
 import useDeepCompareEffect from "use-deep-compare-effect";
+import * as Yup from "yup";
 import { TestHelper } from "../../../../utils";
+import { useValidationConfig } from "../../../../utils/hooks";
+import { IGenericFieldProps } from "../../../frontend-engine";
+import { ERROR_MESSAGES } from "../../../shared";
+import { IFilterItemCheckboxSchema, IOption } from "./types";
 
-export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckboxProps>) => {
+export const FilterItemCheckbox = (props: IGenericFieldProps<IFilterItemCheckboxSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
 		schema: { label, options, validation, ...otherSchema },
 		id,
-		name,
 		value,
 		onChange,
 	} = props;

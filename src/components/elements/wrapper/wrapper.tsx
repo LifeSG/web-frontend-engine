@@ -20,7 +20,7 @@ import { DSAlert } from "./wrapper.styles";
 
 const fieldTypeKeys = Object.keys(EFieldType);
 const elementTypeKeys = Object.keys(EElementType);
-type ComponentRenderType = {
+type TComponentRenderType = {
 	fieldType?: React.ElementType | undefined;
 	elementType?: React.ElementType | undefined;
 	fragment?: React.ReactElement | undefined;
@@ -118,7 +118,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 			Object.entries(wrapperChildren).forEach(([id, child]) => {
 				if (isEmpty(child) || typeof child !== "object") return;
-				const compType: ComponentRenderType = child.referenceKey
+				const compType: TComponentRenderType = child.referenceKey
 					? getCustomComponentType(child.referenceKey)
 					: getComponentTypeOrFragment(child.uiType, id);
 				if (!compType) return;

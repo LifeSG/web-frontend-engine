@@ -40,6 +40,27 @@ export default {
 			},
 			type: { name: "object", value: {} },
 		},
+		collapsible: {
+			description: "Specifies if the contents can be collapsed or expanded",
+			control: {
+				type: "boolean",
+			},
+			defaultValue: true,
+		},
+		showDivider: {
+			description: "Specifies if header divider is visible in default mode",
+			control: {
+				type: "boolean",
+			},
+			defaultValue: true,
+		},
+		showMobileDivider: {
+			description: "Specifies if divider is visible in mobile mode",
+			control: {
+				type: "boolean",
+			},
+			defaultValue: true,
+		},
 	},
 } as Meta;
 
@@ -59,6 +80,9 @@ const Template = (id: string) =>
 							},
 						},
 					},
+					defaultValues: {
+						[id]: ["red"],
+					},
 				}}
 			/>
 		);
@@ -69,15 +93,16 @@ FilterCheckBoxItem.args = {
 	referenceKey: "filter",
 	children: {
 		filterItem1: {
-			label: "With 5 or less items",
+			label: "With 5 or less items with validation",
 			referenceKey: "filter-item-checkbox",
+			validation: [{ required: true, errorMessage: "Choose at least one option" }],
 			options: [
 				{ label: "red", value: "red" },
 				{ label: "blue", value: "blue" },
 			],
 		},
 		filterItem2: {
-			label: "With 5 or more items",
+			label: "With 5 or more items and default values",
 			referenceKey: "filter-item-checkbox",
 			options: [
 				{ label: "red", value: "red" },
@@ -86,6 +111,47 @@ FilterCheckBoxItem.args = {
 				{ label: "orange", value: "orange" },
 				{ label: "yellow", value: "yellow" },
 				{ label: "black", value: "black" },
+			],
+		},
+		filterItem3: {
+			label: "Collapsible item",
+			referenceKey: "filter-item-checkbox",
+			collapsible: true,
+			showDivider: true,
+			options: [
+				{ label: "red", value: "red" },
+				{ label: "blue", value: "blue" },
+			],
+		},
+		filterItem4: {
+			label: "Non-Collapsible item",
+			referenceKey: "filter-item-checkbox",
+			collapsible: false,
+			showDivider: false,
+			options: [
+				{ label: "red", value: "red" },
+				{ label: "blue", value: "blue" },
+			],
+		},
+		filterItem5: {
+			label: "Collapsible item with divider",
+			referenceKey: "filter-item-checkbox",
+			collapsible: true,
+			showDivider: true,
+			options: [
+				{ label: "red", value: "red" },
+				{ label: "blue", value: "blue" },
+			],
+		},
+		filterItem6: {
+			label: "Collapsible item with mobile divider",
+			referenceKey: "filter-item-checkbox",
+			collapsible: true,
+			showMobileDivider: true,
+			showDivider: false,
+			options: [
+				{ label: "red", value: "red" },
+				{ label: "blue", value: "blue" },
 			],
 		},
 	},

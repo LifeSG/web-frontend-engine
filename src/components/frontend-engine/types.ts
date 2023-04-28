@@ -146,9 +146,12 @@ export interface ICustomComponentJsonSchema<T> {
 	uiType?: never | undefined;
 }
 
-export interface ICustomFilterFieldJsonSchema<T, V = undefined, U = undefined> extends ICustomComponentJsonSchema<T> {
+export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> extends ICustomComponentJsonSchema<T> {
 	validation?: (V | U | IYupValidationRule)[];
-	defaultValues?: string[];
+	/** render conditions
+	 * - need to fulfil at least 1 object in array (OR condition)
+	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
+	showIf?: TRenderRules[] | undefined;
 }
 
 /**

@@ -316,14 +316,14 @@ describe("frontend-engine", () => {
 			render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
-			expect(getErrorMessage()).toBeInTheDocument();
+			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
 		it("should support setting of custom errors for nested fields", async () => {
 			render(<FrontendEngineWithCustomButton onClick={handleClickNested} isNested />);
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
-			expect(getErrorMessage()).toBeInTheDocument();
+			expect(getFieldTwo().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
 		it("should clear the error message related to API when the user edits the field", async () => {

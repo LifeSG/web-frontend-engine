@@ -40,6 +40,13 @@ export default {
 			},
 			defaultValue: "Filters Mobile",
 		},
+		clearButtonDisabled: {
+			description: "Toggle to disable the clear filters button",
+			control: {
+				type: "boolean",
+			},
+			defaultValue: false,
+		},
 		children: {
 			description:
 				"Elements or string that is the descendant of this component. Only accepts FilterItem or FilterItemCheckbox.",
