@@ -356,14 +356,19 @@ describe("frontend-engine", () => {
 	});
 
 	describe("validationMode", () => {
-		it("should validate on submit by default", async () => {
+		it("should support validate on touched by default", async () => {
 			renderComponent();
 
-			fireEvent.change(getFieldOne(), { target: { value: "h" } });
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 
-			await waitFor(() => fireEvent.click(getSubmitButton()));
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "h" } }));
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+
+			await waitFor(() => fireEvent.blur(getFieldOne()));
 			expect(getErrorMessage()).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "he" } }));
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
 
 		it("should support onBlur validationMode", async () => {
@@ -383,6 +388,29 @@ describe("frontend-engine", () => {
 
 			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "h" } }));
 			expect(getErrorMessage()).toBeInTheDocument();
+		});
+
+		it("should support onSubmit validationMode", async () => {
+			renderComponent();
+
+			fireEvent.change(getFieldOne(), { target: { value: "h" } });
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+
+			fireEvent.blur(getFieldOne());
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+		});
+
+		it("should support all validationMode", async () => {
+			renderComponent(undefined, { validationMode: "all" });
+
+			await waitFor(() => fireEvent.blur(getFieldOne()));
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "h" } }));
+			expect(getErrorMessage(true)).toBeInTheDocument();
 		});
 	});
 

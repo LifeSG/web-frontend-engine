@@ -141,7 +141,7 @@ export default {
 		},
 		"data.revalidationMode": {
 			description:
-				" Validation strategy when inputs with errors get re-validated after a user submits the form (onSubmit event).",
+				"Validation strategy when inputs with errors get re-validated after a user submits the form (onSubmit event). Refer to React Hook Form's <a href='https://react-hook-form.com/api/useform/#props' target='_blank' rel='noopener noreferrer'>documentation</a> for more info.",
 			table: {
 				type: {
 					summary: "TRevalidationMode",
@@ -153,14 +153,15 @@ export default {
 			},
 		},
 		"data.validationMode": {
-			description: "Validation strategy before a user submits the form (onSubmit event)",
+			description:
+				"Validation strategy before a user submits the form (onSubmit event). RRefer to React Hook Form's <a href='https://react-hook-form.com/api/useform/#props' target='_blank' rel='noopener noreferrer'>documentation</a> for more info.",
 			table: {
 				type: {
 					summary: "TValidationMode",
-					detail: "onBlur | onChange | onSubmit",
+					detail: "onBlur | onChange | onSubmit | onTouched | all",
 				},
 				defaultValue: {
-					summary: "onSubmit",
+					summary: "onTouched",
 				},
 			},
 		},
@@ -196,7 +197,7 @@ const Template: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args
 export const Default = Template.bind({});
 Default.args = {
 	data: {
-		validationMode: "onSubmit",
+		validationMode: "onTouched",
 		revalidationMode: "onChange",
 		...DATA,
 	},
@@ -220,8 +221,25 @@ ValidateOnBlur.args = {
 	},
 };
 
-export const OnChange: Story<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
+export const ValidateOnSubmit = Template.bind({});
+ValidateOnSubmit.args = {
+	data: {
+		validationMode: "onSubmit",
+		revalidationMode: "onChange",
+		...DATA,
+	},
+};
 
+export const ValidateOnAll = Template.bind({});
+ValidateOnAll.args = {
+	data: {
+		validationMode: "all",
+		revalidationMode: "onChange",
+		...DATA,
+	},
+};
+
+export const OnChange: Story<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
 OnChange.args = {
 	data: DATA,
 	onChange: (values, isValid) => action("change")(values, isValid),
