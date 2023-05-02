@@ -197,7 +197,7 @@ const Template: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args
 export const Default = Template.bind({});
 Default.args = {
 	data: {
-		validationMode: "onSubmit",
+		validationMode: "onTouched",
 		revalidationMode: "onChange",
 		...DATA,
 	},
@@ -221,10 +221,10 @@ ValidateOnBlur.args = {
 	},
 };
 
-export const ValidateOnTouched = Template.bind({});
-ValidateOnTouched.args = {
+export const ValidateOnSubmit = Template.bind({});
+ValidateOnSubmit.args = {
 	data: {
-		validationMode: "onTouched",
+		validationMode: "onSubmit",
 		revalidationMode: "onChange",
 		...DATA,
 	},
