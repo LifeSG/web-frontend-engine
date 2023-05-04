@@ -61,26 +61,18 @@ export default {
 			},
 			defaultValue: true,
 		},
-		defaultValues: {
-			description: "Default value for the field, this is declared outside `sections`",
-			table: {
-				type: {
-					summary: "string[]",
-				},
-			},
-			type: { name: "object", value: {} },
-		},
-		validation: {
-			description:
-				"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='/docs/form-validation-schema--required'>Validation Schema</a> stories",
-			table: {
-				type: {
-					summary: "array",
-				},
-			},
-			type: { name: "object", value: {} },
-			defaultValue: [],
-		},
+		// WIll be implemented as a part of a differetn ticket.
+		// validation: {
+		// 	description:
+		// 		"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='/docs/form-validation-schema--required'>Validation Schema</a> stories",
+		// 	table: {
+		// 		type: {
+		// 			summary: "array",
+		// 		},
+		// 	},
+		// 	type: { name: "object", value: {} },
+		// 	defaultValue: [],
+		// },
 		showIf: {
 			description:
 				"A set of conditions to render the field. For more info, refer to the <a href='/docs/form-conditional-rendering--filled'>Conditional Rendering</a> stories",
@@ -125,12 +117,11 @@ const Template = (id: string) =>
 export const FilterCheckBoxItem = Template("wrapper-default").bind({});
 FilterCheckBoxItem.args = {
 	referenceKey: "filter",
-	defaultValues: ["red", "orange"],
 	children: {
 		filterItem1: {
-			label: "With 5 or less items with validation",
+			label: "With 5 or less items",
 			referenceKey: "filter-item-checkbox",
-			validation: [{ required: true, errorMessage: "Choose at least one option" }],
+			// validation: [{ required: true, errorMessage: "Choose at least one option" }],
 			options: [
 				{ label: "red", value: "red" },
 				{ label: "blue", value: "blue" },
@@ -209,6 +200,18 @@ FilterCheckBoxItemWithDefaultValues.args = {
 				{ label: "black", value: "black" },
 			],
 		},
+	},
+};
+
+FilterCheckBoxItemWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string[]",
+			},
+		},
+		type: { name: "object", value: {} },
 	},
 };
 
