@@ -129,7 +129,7 @@ describe("conditional-renderer", () => {
 		${"includes (array)"}  | ${{ includes: ["Berry", "Cherry"] }} | ${["Berry"]}                    | ${["Apple", "Berry", "Cherry"]}
 		${"excludes (string)"} | ${{ excludes: "Berry" }}             | ${["Apple", "Berry"]}           | ${["Apple", "Cherry"]}
 		${"excludes (array)"}  | ${{ excludes: ["Berry", "Cherry"] }} | ${["Apple", "Berry"]}           | ${["Apple"]}
-	`("should support $condition condition for array conditional rendering", ({ config, invalid, valid }) => {
+	`("should support $condition condition for array conditional rendering", async ({ config, invalid, valid }) => {
 		const fieldOneType = "multi-select";
 		const fieldTwoType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
@@ -149,6 +149,8 @@ describe("conditional-renderer", () => {
 			},
 		};
 		renderComponent(fields);
+
+		await waitFor(() => fireEvent.click(getField("button", "Select")));
 
 		invalid?.forEach((value: string) => {
 			fireEvent.click(screen.getByText(value).closest("button"));

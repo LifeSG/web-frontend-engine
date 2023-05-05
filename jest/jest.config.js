@@ -18,7 +18,8 @@ module.exports = async () => ({
 			"<rootDir>/jest/mocks/file-mock.ts",
 		"src/(.*)": "<rootDir>/src/$1",
 	},
+	setupFiles: ["<rootDir>/src/__tests__/setup/globalSetup.js"],
 	setupFilesAfterEnv: ["jest-canvas-mock", "@testing-library/jest-dom"],
 	verbose: true,
-	bail: true,
+	bail: false,
 });

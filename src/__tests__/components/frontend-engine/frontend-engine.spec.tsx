@@ -266,7 +266,10 @@ describe("frontend-engine", () => {
 				section: {
 					uiType: "section",
 					children: {
-						custom: { referenceKey: "something" },
+						custom: {
+							referenceKey: "something" as any,
+							label: "Something",
+						},
 					},
 				},
 			},
@@ -313,14 +316,14 @@ describe("frontend-engine", () => {
 			render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
-			expect(getFieldOne().nextSibling.textContent).toMatch(ERROR_MESSAGE);
+			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
 		it("should support setting of custom errors for nested fields", async () => {
 			render(<FrontendEngineWithCustomButton onClick={handleClickNested} isNested />);
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
-			expect(getFieldTwo().nextSibling.textContent).toMatch(ERROR_MESSAGE);
+			expect(getFieldTwo().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
 		it("should clear the error message related to API when the user edits the field", async () => {

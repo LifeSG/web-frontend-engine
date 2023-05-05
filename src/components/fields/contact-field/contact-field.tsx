@@ -21,6 +21,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		onChange,
 		value,
 		error,
+		onBlur,
 		...otherProps
 	} = props;
 
@@ -171,6 +172,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			label={label}
 			value={formatDisplayValue()}
 			onChange={handleChange}
+			onBlur={onBlur}
 			addon={getAddOns()}
 			errorMessage={error?.message}
 			placeholder={getPlaceholderText()}

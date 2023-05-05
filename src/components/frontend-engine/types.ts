@@ -5,6 +5,7 @@ import {
 	UseFormSetValue,
 	ValidationMode,
 } from "react-hook-form";
+import { IFilterSchema } from "../custom/filter/filter/types";
 import { IAlertSchema, ITextSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { IWrapperSchema } from "../elements/wrapper";
@@ -86,8 +87,9 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IUnitNumberFieldSchema<V>
 	| IAlertSchema
 	| ITextSchema
-	| ICustomComponentJsonSchema
-	| IResetButtonSchema;
+	| IResetButtonSchema
+	| IFilterSchema
+	| ICustomComponentJsonSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -139,10 +141,17 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefi
 /**
  * to support custom components from other form / frontend engines
  */
-export interface ICustomComponentJsonSchema {
-	referenceKey: string;
-	[otherOptions: string]: unknown;
+export interface ICustomComponentJsonSchema<T> {
+	referenceKey: T;
 	uiType?: never | undefined;
+}
+
+export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> extends ICustomComponentJsonSchema<T> {
+	validation?: (V | U | IYupValidationRule)[];
+	/** render conditions
+	 * - need to fulfil at least 1 object in array (OR condition)
+	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
+	showIf?: TRenderRules[] | undefined;
 }
 
 /**
@@ -225,6 +234,19 @@ export enum EElementType {
 	H5 = "Wrapper",
 	H6 = "Wrapper",
 	P = "Wrapper",
+}
+
+/**
+ * Custom element types
+ * - components that do not have uiType and have specific schema to render
+ */
+export enum ECustomElementType {
+	FILTER = "Filter",
+	"FILTER-ITEM" = "FilterItem",
+}
+
+export enum ECustomFieldType {
+	"FILTER-CHECKBOX" = "FilterCheckbox",
 }
 
 // =============================================================================

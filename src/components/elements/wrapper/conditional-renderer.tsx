@@ -6,12 +6,14 @@ import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { useValidationConfig } from "../../../utils/hooks";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
+import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
+import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 
 interface IProps {
 	id: string;
 	renderRules?: TRenderRules[] | undefined;
 	children: React.ReactNode;
-	schema: TFrontendEngineFieldSchema;
+	schema: TFrontendEngineFieldSchema | IFilterItemSchema | IFilterCheckboxSchema;
 }
 
 /**

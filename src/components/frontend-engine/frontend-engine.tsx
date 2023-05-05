@@ -28,7 +28,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	} = props;
 
 	const { warnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
-
 	const formMethods = useForm({
 		mode: validationMode,
 		reValidateMode: revalidationMode,

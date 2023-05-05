@@ -138,6 +138,7 @@ describe(UI_TYPE, () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string>) => {
 				render(<CustomComponent />);
 
+				await waitFor(() => fireEvent.click(getSelectToggle()));
 				fireEvent.click(screen.getByRole("button", { name: selected }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toBeCalledWith(

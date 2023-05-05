@@ -151,7 +151,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	const renderTextarea = (): JSX.Element => {
 		const textareaLabel = textarea?.label;
 		if (!textarea && !textareaLabel) {
-			return;
+			return <></>;
 		}
 
 		const textareaId = getTextareaId();
@@ -160,18 +160,18 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			label,
 			...textarea,
 		};
-		return (
-			showTextarea && (
-				<Controller
-					control={control}
-					name={textareaId}
-					shouldUnregister={true}
-					render={({ field, fieldState }) => {
-						const fieldProps = { ...field, id: textareaId, ref: undefined };
-						return <Textarea schema={schema} {...fieldProps} {...fieldState} />;
-					}}
-				/>
-			)
+		return showTextarea ? (
+			<Controller
+				control={control}
+				name={textareaId}
+				shouldUnregister={true}
+				render={({ field, fieldState }) => {
+					const fieldProps = { ...field, id: textareaId, ref: undefined };
+					return <Textarea schema={schema} {...fieldProps} {...fieldState} />;
+				}}
+			/>
+		) : (
+			<></>
 		);
 	};
 
