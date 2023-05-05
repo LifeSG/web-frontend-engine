@@ -2,6 +2,7 @@ import { byCountry } from "country-code-lookup";
 import { CountryCode, parsePhoneNumber } from "libphonenumber-js";
 import { IParsedPhoneNumber } from "./types";
 
+const SINGAPORE_PHONE_NUMBER_REGEX = /^(?!\+?6599)(?!^\+65\d{6}$)^(?:\+?(?:65)?([9,8,6,3]{1}\d{7}))$/;
 const SINGAPORE_MOBILE_NUMBER_REGEX = /^(?!\+?6599)(?!^\+65\d{6}$)^(?:\+?(?:65)?([9,8]{1}\d{7}))$/;
 
 export namespace PhoneHelper {
@@ -21,11 +22,12 @@ export namespace PhoneHelper {
 			const phoneNumber = parsePhoneNumber(value, "SG");
 			const isNumberValid = phoneNumber.isValid();
 			const isMobileNumber = SINGAPORE_MOBILE_NUMBER_REGEX.test(number);
+			const isPhoneNumber = SINGAPORE_PHONE_NUMBER_REGEX.test(number);
 
 			if (validateHomeNumber) {
-				return isNumberValid && !isMobileNumber;
+				return isNumberValid && isPhoneNumber && !isMobileNumber;
 			}
-			return isNumberValid && isMobileNumber;
+			return isNumberValid && isPhoneNumber && isMobileNumber;
 		} catch (error) {
 			return false;
 		}

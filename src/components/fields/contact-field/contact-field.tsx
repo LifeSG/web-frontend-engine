@@ -1,14 +1,14 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { AddonProps } from "@lifesg/react-design-system/input-group/types";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
-import { InternationalCallingCodeMap, getCountries, getCountryFromPrefix, getPrefix } from "./data";
-import { IContactFieldSchema, ISelectedCountry, TCountry, TSingaporeNumberRule } from "./types";
+import { getCountryFromPrefix, getInternationalCallingCodeMap } from "./data";
+import { IContactFieldSchema, ISelectedCountry, TCallingCodeMap, TSingaporeNumberRule } from "./types";
 import { PhoneHelper } from "./utils";
+import { PhoneNumberInputValue } from "@lifesg/react-design-system";
 
 export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => {
 	// =============================================================================
@@ -26,6 +26,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
+	const [internationalCodeMap, setInternationalCodeMap] = useState<TCallingCodeMap>(new Map());
 	const [selectedCountry, setSelectedCountry] = useState<ISelectedCountry>();
 	const [singaporeRule, setSingaporeRule] = useState<TSingaporeNumberRule>();
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -33,6 +34,12 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		const country = getInternationalCallingCodeMap();
+
+		setInternationalCodeMap(country);
+	}, []);
+
 	useEffect(() => {
 		const contactNumberRule = validation?.find((rule) => "contactNumber" in rule);
 		const singaporeRule = contactNumberRule?.["contactNumber"]?.["singaporeNumber"];
@@ -57,10 +64,19 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 					}
 				})
 				.test(
+					"fixedCountry",
+					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_FIXED_COUNTRY(country),
+					(value) => {
+						if (!value || !otherSchema.fixedCountry) return true;
+
+						return PhoneHelper.isInternationalNumber(country, value);
+					}
+				)
+				.test(
 					"internationalNumber",
 					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER,
 					(value) => {
-						if (!value || singaporeRule) return true;
+						if (!value || singaporeRule || otherSchema.fixedCountry) return true;
 
 						return PhoneHelper.isInternationalNumber(selectedCountry?.name, value);
 					}
@@ -71,75 +87,48 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	}, [validation, selectedCountry]);
 
 	useEffect(() => {
-		setStateValue(value || "");
-	}, [value]);
+		if (internationalCodeMap.size === 0) return;
 
-	useEffect(() => {
 		const countryName = country || "Singapore";
 
 		setSelectedCountry({
 			name: countryName,
-			prefix: getPrefix(countryName),
+			prefix: internationalCodeMap.get(countryName),
 		});
-	}, [country]);
+	}, [country, internationalCodeMap]);
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handlePrefixChange = (key: TCountry, prefix: string): void => {
-		const { number: phoneNumberWithoutPrefix } = PhoneHelper.getParsedPhoneNumber(stateValue);
-		const phoneNumberWithPrefix = PhoneHelper.formatPhoneNumber(prefix, phoneNumberWithoutPrefix);
+	const handleChange = (value: PhoneNumberInputValue): void => {
+		const { countryCode, number } = value;
 
-		setSelectedCountry({ name: key, prefix });
-		onChange({ target: { value: phoneNumberWithPrefix } });
-	};
+		const countryCodeWithoutPlus = countryCode.replace(/\+/g, "");
+		const phoneNumberWithPrefix = PhoneHelper.formatPhoneNumber(countryCode, number);
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-		const phoneNumberWithPrefix = PhoneHelper.formatPhoneNumber(selectedCountry?.prefix, event.target.value);
+		// update country code
+		if (countryCodeWithoutPlus !== selectedCountry.prefix) {
+			const countryName = getCountryFromPrefix(countryCodeWithoutPlus, internationalCodeMap);
 
+			setSelectedCountry({
+				name: countryName,
+				prefix: countryCode,
+			});
+		}
+
+		setStateValue(number);
 		onChange({ target: { value: phoneNumberWithPrefix } });
 	};
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const formatDisplayValue = (): string => {
-		const parsedValues = stateValue.split(" ");
-		return parsedValues.length > 1 ? parsedValues[1] : stateValue;
-	};
+	const formatDisplayValue = (): PhoneNumberInputValue => {
+		if (!selectedCountry) return undefined;
 
-	const getSpacing = (): number => {
-		if (selectedCountry?.name === "Singapore") {
-			return 4;
-		}
-		return 0;
-	};
+		const { prefix } = selectedCountry;
 
-	const getMaxLength = (): number => {
-		if (selectedCountry?.name === "Singapore") {
-			return 9;
-		}
-		return 14;
-	};
-
-	const getAddOns = (): AddonProps<string, unknown> => {
-		if (singaporeRule) {
-			return { attributes: { value: "+65" } };
-		}
-
-		return {
-			type: "list",
-			attributes: {
-				options: getCountries(),
-				listExtractor: (item: string) => `${item} (${getPrefix(item)})`,
-				enableSearch,
-				onSelectOption: handlePrefixChange,
-				value: selectedCountry
-					? getCountryFromPrefix(selectedCountry.prefix)
-					: InternationalCallingCodeMap["Singapore"],
-				valueExtractor: (item: string) => getPrefix(item),
-			},
-		};
+		return { number: stateValue, countryCode: prefix };
 	};
 
 	const getPlaceholderText = (): string => {
@@ -160,24 +149,21 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.InputGroup
-			{...otherSchema}
-			{...otherProps}
-			id={id}
-			data-testid={TestHelper.generateId(id, "contact")}
-			name={name}
-			disabled={disabled}
-			type="tel"
-			inputMode="tel"
-			label={label}
-			value={formatDisplayValue()}
-			onChange={handleChange}
-			onBlur={onBlur}
-			addon={getAddOns()}
-			errorMessage={error?.message}
-			placeholder={getPlaceholderText()}
-			spacing={getSpacing()}
-			maxLength={getMaxLength()}
-		/>
+		<>
+			<Form.PhoneNumberInput
+				{...otherSchema}
+				{...otherProps}
+				data-testid={TestHelper.generateId(id, "contact")}
+				disabled={disabled}
+				enableSearch={enableSearch}
+				errorMessage={error?.message}
+				id={id}
+				label={label}
+				name={name}
+				placeholder={getPlaceholderText()}
+				value={formatDisplayValue()}
+				onChange={handleChange}
+			/>
+		</>
 	);
 };
