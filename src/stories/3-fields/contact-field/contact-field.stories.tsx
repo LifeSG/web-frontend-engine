@@ -132,6 +132,14 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const FixedCountry = Template("contact-fixed-country").bind({});
+FixedCountry.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+	country: "Singapore",
+	fixedCountry: true,
+};
+
 export const Disabled = Template("contact-disabled").bind({});
 Disabled.args = {
 	uiType: "contact-field",
