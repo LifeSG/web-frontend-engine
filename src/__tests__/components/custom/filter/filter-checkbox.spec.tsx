@@ -1,7 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
-import { IFilterItemCheckboxSchema } from "../../../../components/custom/filter/filter-item-checkbox/types";
+import { IFilterCheckboxSchema } from "../../../../components/custom/filter/filter-checkbox/types";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
@@ -15,12 +15,9 @@ const { ResizeObserver } = window;
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
-const REFERENCE_KEY = "filter-item-checkbox";
+const REFERENCE_KEY = "filter-checkbox";
 
-const renderComponent = (
-	overrideField?: TOverrideField<IFilterItemCheckboxSchema>,
-	overrideSchema?: TOverrideSchema
-) => {
+const renderComponent = (overrideField?: TOverrideField<IFilterCheckboxSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		sections: {
@@ -97,14 +94,6 @@ describe(REFERENCE_KEY, () => {
 			expect(checkBox.checked).toBeTruthy();
 		});
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
-	});
-
-	// TODO: Should be fixed after finalizing error message UI design
-	it.skip("should be able to support validation schema", async () => {
-		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
-
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(screen.getAllByText(ERROR_MESSAGE)[0]).toBeInTheDocument();
 	});
 
 	it("should be able to toggle the checkboxes", async () => {

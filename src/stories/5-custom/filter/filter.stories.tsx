@@ -49,7 +49,7 @@ export default {
 		},
 		children: {
 			description:
-				"Elements or string that is the descendant of this component. Only accepts FilterItem or FilterItemCheckbox.",
+				"Elements or string that is the descendant of this component. Only accepts FilterItem or FilterCheckbox.",
 			table: {
 				type: {
 					summary:
@@ -81,8 +81,8 @@ const Template = (id: string) =>
 		);
 	}) as Story<IFilterSchema>;
 
-export const FilterWrapper = Template("wrapper-default").bind({});
-FilterWrapper.args = {
+export const Default = Template("wrapper-default").bind({});
+Default.args = {
 	referenceKey: "filter",
 	label: "Filters Desktop",
 	toggleFilterButtonLabel: "Filters Mobile",
@@ -101,8 +101,8 @@ FilterWrapper.args = {
 	},
 };
 
-export const FilterWrapperWithDisabledClear = Template("wrapper-default").bind({});
-FilterWrapperWithDisabledClear.args = {
+export const DisabledClearButton = Template("wrapper-default").bind({});
+DisabledClearButton.args = {
 	referenceKey: "filter",
 	label: "Filters",
 	toggleFilterButtonLabel: "Filters Mobile",

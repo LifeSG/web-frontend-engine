@@ -7,13 +7,13 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
-import { IFilterItemCheckboxSchema } from "../../custom/filter/filter-item-checkbox/types";
+import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 
 interface IProps {
 	id: string;
 	renderRules?: TRenderRules[] | undefined;
 	children: React.ReactNode;
-	schema: TFrontendEngineFieldSchema | IFilterItemSchema | IFilterItemCheckboxSchema;
+	schema: TFrontendEngineFieldSchema | IFilterItemSchema | IFilterCheckboxSchema;
 }
 
 /**

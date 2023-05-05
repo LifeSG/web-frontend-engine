@@ -6,7 +6,7 @@ import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 import { CommonCustomStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
-	title: "Custom/Filter/Filter-Checkbox",
+	title: "Custom/Filter/FilterCheckbox",
 	parameters: {
 		docs: {
 			page: () => (
@@ -114,13 +114,13 @@ const Template = (id: string) =>
 		);
 	}) as Story<IFilterSchema & { defaultValues?: string[] | undefined; submitBtn?: boolean }>;
 
-export const FilterCheckBoxItem = Template("wrapper-default").bind({});
-FilterCheckBoxItem.args = {
+export const Default = Template("wrapper-default").bind({});
+Default.args = {
 	referenceKey: "filter",
 	children: {
 		filterItem1: {
 			label: "With 5 or less items",
-			referenceKey: "filter-item-checkbox",
+			referenceKey: "filter-checkbox",
 			// validation: [{ required: true, errorMessage: "Choose at least one option" }],
 			options: [
 				{ label: "red", value: "red" },
@@ -129,7 +129,7 @@ FilterCheckBoxItem.args = {
 		},
 		filterItem2: {
 			label: "With 5 or more items",
-			referenceKey: "filter-item-checkbox",
+			referenceKey: "filter-checkbox",
 			options: [
 				{ label: "red", value: "red" },
 				{ label: "blue", value: "blue" },
@@ -141,7 +141,7 @@ FilterCheckBoxItem.args = {
 		},
 		filterItem3: {
 			label: "Collapsible item",
-			referenceKey: "filter-item-checkbox",
+			referenceKey: "filter-checkbox",
 			collapsible: true,
 			showDivider: true,
 			options: [
@@ -151,7 +151,7 @@ FilterCheckBoxItem.args = {
 		},
 		filterItem4: {
 			label: "Non-Collapsible item",
-			referenceKey: "filter-item-checkbox",
+			referenceKey: "filter-checkbox",
 			collapsible: false,
 			showDivider: false,
 			options: [
@@ -161,7 +161,7 @@ FilterCheckBoxItem.args = {
 		},
 		filterItem5: {
 			label: "Collapsible item with divider",
-			referenceKey: "filter-item-checkbox",
+			referenceKey: "filter-checkbox",
 			collapsible: true,
 			showDivider: true,
 			options: [
@@ -171,7 +171,7 @@ FilterCheckBoxItem.args = {
 		},
 		filterItem6: {
 			label: "Collapsible item with mobile divider",
-			referenceKey: "filter-item-checkbox",
+			referenceKey: "filter-checkbox",
 			collapsible: true,
 			showMobileDivider: true,
 			showDivider: false,
@@ -183,14 +183,14 @@ FilterCheckBoxItem.args = {
 	},
 };
 
-export const FilterCheckBoxItemWithDefaultValues = Template("wrapper-default-values").bind({});
-FilterCheckBoxItemWithDefaultValues.args = {
+export const WithDefaultValues = Template("wrapper-default-values").bind({});
+WithDefaultValues.args = {
 	referenceKey: "filter",
 	defaultValues: ["red", "orange"],
 	children: {
 		"wrapper-default-values": {
 			label: "With 5 or more items",
-			referenceKey: "filter-item-checkbox",
+			referenceKey: "filter-checkbox",
 			options: [
 				{ label: "red", value: "red" },
 				{ label: "blue", value: "blue" },
@@ -203,7 +203,7 @@ FilterCheckBoxItemWithDefaultValues.args = {
 	},
 };
 
-FilterCheckBoxItemWithDefaultValues.argTypes = {
+WithDefaultValues.argTypes = {
 	defaultValues: {
 		description: "Default value for the field, this is declared outside `sections`",
 		table: {
@@ -214,24 +214,3 @@ FilterCheckBoxItemWithDefaultValues.argTypes = {
 		type: { name: "object", value: {} },
 	},
 };
-
-// export const FilterCheckBoxItemWithValidation = Template("wrapper-validation").bind({});
-// FilterCheckBoxItemWithValidation.args = {
-// 	referenceKey: "filter",
-// 	submitBtn: true,
-// 	children: {
-// 		"wrapper-default-values": {
-// 			label: "With 5 or more items",
-// 			referenceKey: "filter-item-checkbox",
-// 			options: [
-// 				{ label: "red", value: "red" },
-// 				{ label: "blue", value: "blue" },
-// 				{ label: "green", value: "green" },
-// 				{ label: "orange", value: "orange" },
-// 				{ label: "yellow", value: "yellow" },
-// 				{ label: "black", value: "black" },
-// 			],
-// 			validation: [{ required: true }],
-// 		},
-// 	},
-// };

@@ -18,7 +18,7 @@ import { ConditionalRenderer } from "./conditional-renderer";
 import { IWrapperProps } from "./types";
 import { DSAlert } from "./wrapper.styles";
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
-import { IFilterItemCheckboxSchema } from "../../custom/filter/filter-item-checkbox/types";
+import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 
 const fieldTypeKeys = Object.keys(EFieldType);
 const elementTypeKeys = Object.keys(EElementType);
@@ -68,7 +68,7 @@ const renderField = (
 const renderElement = (
 	Element: React.ElementType,
 	id: string,
-	schema: TFrontendEngineFieldSchema | IFilterItemCheckboxSchema | IFilterItemSchema
+	schema: TFrontendEngineFieldSchema | IFilterCheckboxSchema | IFilterItemSchema
 ) => {
 	return (
 		<ConditionalRenderer

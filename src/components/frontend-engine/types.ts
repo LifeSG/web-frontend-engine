@@ -246,7 +246,7 @@ export enum ECustomElementType {
 }
 
 export enum ECustomFieldType {
-	"FILTER-ITEM-CHECKBOX" = "FilterItemCheckbox",
+	"FILTER-CHECKBOX" = "FilterCheckbox",
 }
 
 // =============================================================================
