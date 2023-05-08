@@ -6,7 +6,7 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
 import { getCountryFromPrefix, getInternationalCallingCodeMap } from "./data";
-import { IContactFieldSchema, ISelectedCountry, TCallingCodeMap, TSingaporeNumberRule } from "./types";
+import { IContactFieldSchema, ISelectedCountry, TCallingCodeMap, TCountry, TSingaporeNumberRule } from "./types";
 import { PhoneHelper } from "./utils";
 import { PhoneNumberInputValue } from "@lifesg/react-design-system";
 
@@ -26,6 +26,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
+	const [countryValue, setCountryValue] = useState<TCountry>(country);
 	const [internationalCodeMap, setInternationalCodeMap] = useState<TCallingCodeMap>(new Map());
 	const [selectedCountry, setSelectedCountry] = useState<ISelectedCountry>();
 	const [singaporeRule, setSingaporeRule] = useState<TSingaporeNumberRule>();
@@ -35,15 +36,20 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const country = getInternationalCallingCodeMap();
+		const countryMap = getInternationalCallingCodeMap();
 
-		setInternationalCodeMap(country);
+		setInternationalCodeMap(countryMap);
 	}, []);
 
 	useEffect(() => {
 		const contactNumberRule = validation?.find((rule) => "contactNumber" in rule);
 		const singaporeRule = contactNumberRule?.["contactNumber"]?.["singaporeNumber"];
+		const fixedCountryName = contactNumberRule?.["contactNumber"]?.["fixedCountry"];
 		const errorMessage = contactNumberRule?.["errorMessage"];
+
+		if (fixedCountryName) {
+			setCountryValue(fixedCountryName);
+		}
 
 		setSingaporeRule(singaporeRule);
 		setFieldValidationConfig(
@@ -65,18 +71,18 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 				})
 				.test(
 					"fixedCountry",
-					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_FIXED_COUNTRY(country),
+					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_FIXED_COUNTRY(fixedCountryName),
 					(value) => {
-						if (!value || !otherSchema.fixedCountry) return true;
+						if (!value || !fixedCountryName) return true;
 
-						return PhoneHelper.isInternationalNumber(country, value);
+						return PhoneHelper.isInternationalNumber(fixedCountryName, value);
 					}
 				)
 				.test(
 					"internationalNumber",
 					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER,
 					(value) => {
-						if (!value || singaporeRule || otherSchema.fixedCountry) return true;
+						if (!value || singaporeRule || fixedCountryName) return true;
 
 						return PhoneHelper.isInternationalNumber(selectedCountry?.name, value);
 					}
@@ -89,13 +95,13 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	useEffect(() => {
 		if (internationalCodeMap.size === 0) return;
 
-		const countryName = country || "Singapore";
+		const countryName = countryValue || "Singapore";
 
 		setSelectedCountry({
 			name: countryName,
 			prefix: internationalCodeMap.get(countryName),
 		});
-	}, [country, internationalCodeMap]);
+	}, [countryValue, internationalCodeMap]);
 
 	// =============================================================================
 	// EVENT HANDLERS
