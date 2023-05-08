@@ -28,7 +28,7 @@ export interface IContactFieldValidationRule {
 		| {
 				internationalNumber?: never;
 				singaporeNumber?: never;
-				fixedCountry: true;
+				fixedCountry: TCountry;
 		  };
 }
 

@@ -143,12 +143,21 @@ describe(UI_TYPE, () => {
 		);
 	});
 
-	describe("it should verify specific country in fixed country", () => {
+	describe("it should be able to verify specific country", () => {
 		it("+33 512345678 should be a valid number", async () => {
 			const contactNumber = "512345678";
 			const country = "France";
 
-			renderComponent({ fixedCountry: true, country });
+			renderComponent({
+				fixedCountry: true,
+				validation: [
+					{
+						contactNumber: {
+							fixedCountry: country,
+						},
+					},
+				],
+			});
 
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -160,7 +169,16 @@ describe(UI_TYPE, () => {
 			const contactNumber = "012345678";
 			const country = "France";
 
-			renderComponent({ fixedCountry: true, country });
+			renderComponent({
+				fixedCountry: true,
+				validation: [
+					{
+						contactNumber: {
+							fixedCountry: country,
+						},
+					},
+				],
+			});
 
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
