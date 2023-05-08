@@ -110,11 +110,11 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(getFieldOne(), { target: { value: invalid } });
-		expect(getFieldTwo(true)).not.toBeInTheDocument();
+		fireEvent.change(getField("spinbutton", FIELD_ONE_LABEL), { target: { value: invalid } });
+		expect(getField("spinbutton", FIELD_TWO_LABEL, true)).not.toBeInTheDocument();
 
-		fireEvent.change(getFieldOne(), { target: { value: valid } });
-		expect(getFieldTwo()).toBeInTheDocument();
+		fireEvent.change(getField("spinbutton", FIELD_ONE_LABEL), { target: { value: valid } });
+		expect(getField("spinbutton", FIELD_TWO_LABEL)).toBeInTheDocument();
 	});
 
 	it.each`

@@ -43,8 +43,8 @@ const renderComponent = (
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-const getTextfield = (): HTMLElement => {
-	return getField("textbox", COMPONENT_LABEL);
+const getTextfield = (role: "textbox" | "spinbutton" = "textbox"): HTMLElement => {
+	return getField(role, COMPONENT_LABEL);
 };
 
 describe(DEFAULT_FIELD_TYPE, () => {
@@ -188,7 +188,7 @@ describe(NUMERIC_FIELD_TYPE, () => {
 	it("should be able to render the field", () => {
 		renderComponent({ uiType: NUMERIC_FIELD_TYPE });
 
-		expect(getTextfield()).toBeInTheDocument();
+		expect(getTextfield("spinbutton")).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
@@ -205,19 +205,19 @@ describe(NUMERIC_FIELD_TYPE, () => {
 	it("should apply inputMode according to its type", () => {
 		renderComponent({ uiType: NUMERIC_FIELD_TYPE });
 
-		expect(getTextfield()).toHaveAttribute("inputMode", "numeric");
+		expect(getTextfield("spinbutton")).toHaveAttribute("inputMode", "numeric");
 	});
 
 	it("should apply min attribute if min validation is specified", () => {
 		renderComponent({ uiType: NUMERIC_FIELD_TYPE, validation: [{ min: 5 }] });
 
-		expect(getTextfield()).toHaveAttribute("min", "5");
+		expect(getTextfield("spinbutton")).toHaveAttribute("min", "5");
 	});
 
 	it("should apply max attribute if max validation is specified", () => {
 		renderComponent({ uiType: NUMERIC_FIELD_TYPE, validation: [{ max: 5 }] });
 
-		expect(getTextfield()).toHaveAttribute("max", "5");
+		expect(getTextfield("spinbutton")).toHaveAttribute("max", "5");
 	});
 
 	it("should support default value", async () => {
@@ -238,8 +238,8 @@ describe(NUMERIC_FIELD_TYPE, () => {
 			disabled: true,
 		});
 
-		expect(getTextfield()).toHaveAttribute("placeholder", "placeholder");
-		expect(getTextfield()).toHaveAttribute("readOnly");
-		expect(getTextfield()).toBeDisabled();
+		expect(getTextfield("spinbutton")).toHaveAttribute("placeholder", "placeholder");
+		expect(getTextfield("spinbutton")).toHaveAttribute("readOnly");
+		expect(getTextfield("spinbutton")).toBeDisabled();
 	});
 });
