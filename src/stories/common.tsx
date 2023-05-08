@@ -124,7 +124,7 @@ export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
 
 const MINIMUM_SIDE_PADDING = 48;
 const SIDEBAR_WIDTH = 210;
-const SPACER = 600;
+const SPACER = 550;
 
 const StyledForm = styled(OriginalFrontendEngine)`
 	width: calc(${MediaWidths.desktopM}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
