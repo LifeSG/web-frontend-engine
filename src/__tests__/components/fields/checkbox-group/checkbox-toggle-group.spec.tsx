@@ -46,7 +46,7 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 };
 
 const getToggles = (): HTMLElement[] => {
-	return screen.getAllByTestId("toggle-input");
+	return screen.getAllByRole("checkbox");
 };
 
 describe("checkbox toggle group", () => {

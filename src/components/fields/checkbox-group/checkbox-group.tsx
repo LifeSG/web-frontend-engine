@@ -1,6 +1,7 @@
+import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Form } from "@lifesg/react-design-system/form";
 import without from "lodash/without";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
@@ -8,7 +9,7 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
-import { CheckboxContainer, Label, StyledCheckbox, StyledToggle, ToggleWrapper } from "./checkbox-group.styles";
+import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
@@ -63,23 +64,20 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = useCallback(
-		(value: string, none?: boolean): void => {
-			const nullOpt = options.find((opt) => opt.none === true);
-			let updatedStateValues = [...stateValue];
-			if (none) {
-				updatedStateValues = updatedStateValues.includes(value) ? [] : [value];
-			} else if (updatedStateValues.includes(value)) {
-				updatedStateValues = without(updatedStateValues, value, nullOpt?.value);
-			} else {
-				updatedStateValues.push(value);
-				updatedStateValues = without(updatedStateValues, nullOpt?.value);
-			}
+	const handleChange = (value: string, none?: boolean): void => {
+		const nullOpt = options.find((opt) => opt.none === true);
+		let updatedStateValues = [...stateValue];
+		if (none) {
+			updatedStateValues = updatedStateValues.includes(value) ? [] : [value];
+		} else if (updatedStateValues.includes(value)) {
+			updatedStateValues = without(updatedStateValues, value, nullOpt?.value);
+		} else {
+			updatedStateValues.push(value);
+			updatedStateValues = without(updatedStateValues, nullOpt?.value);
+		}
 
-			onChange({ target: { value: updatedStateValues } });
-		},
-		[options, stateValue]
-	);
+		onChange({ target: { value: updatedStateValues } });
+	};
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -130,7 +128,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 						const checkboxId = formatId(index);
 
 						return (
-							<StyledToggle
+							<Toggle
 								key={index}
 								{...otherSchema}
 								type="checkbox"
@@ -148,7 +146,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 								onChange={() => handleChange(option.value, option.none)}
 							>
 								{option.label}
-							</StyledToggle>
+							</Toggle>
 						);
 					})}
 				</ToggleWrapper>

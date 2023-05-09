@@ -4,7 +4,7 @@ import { ICheckboxGroupSchema } from "../../../components/fields/checkbox-group"
 import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
-	title: "Field/Checkbox",
+	title: "Field/Checkbox/Default",
 	parameters: {
 		docs: {
 			page: () => (
