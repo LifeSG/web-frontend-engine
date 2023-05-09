@@ -1,12 +1,13 @@
 import { Form } from "@lifesg/react-design-system/form";
-import React, { useCallback, useEffect, useState } from "react";
+import { Toggle } from "@lifesg/react-design-system/toggle";
+import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { Label, RadioContainer, StyledRadioButton, StyledToggle, ToggleWrapper } from "./radio-button.styles";
+import { Label, RadioContainer, StyledRadioButton, ToggleWrapper } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
@@ -54,12 +55,9 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const isRadioButtonChecked = useCallback(
-		(value: string): boolean => {
-			return stateValue === value;
-		},
-		[stateValue]
-	);
+	const isRadioButtonChecked = (value: string): boolean => {
+		return stateValue === value;
+	};
 
 	const formatId = (index: number) => {
 		return `${id}-${index}`;
@@ -103,7 +101,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 						const radioButtonId = formatId(index);
 
 						return (
-							<StyledToggle
+							<Toggle
 								{...otherSchema}
 								key={index}
 								type="radio"
@@ -121,7 +119,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								onChange={(e) => handleChange(e, option.value)}
 							>
 								{option.label}
-							</StyledToggle>
+							</Toggle>
 						);
 					})}
 				</ToggleWrapper>

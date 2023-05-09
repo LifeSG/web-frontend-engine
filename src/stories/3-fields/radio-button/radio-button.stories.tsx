@@ -4,7 +4,7 @@ import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button
 import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
-	title: "Field/RadioButton",
+	title: "Field/RadioButton/Default",
 	parameters: {
 		docs: {
 			page: () => (
