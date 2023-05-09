@@ -153,6 +153,20 @@ WithSearch.args = {
 	enableSearch: true,
 };
 
+export const FixedCountry = Template("contact-fixed-country").bind({});
+FixedCountry.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+	fixedCountry: true,
+	validation: [
+		{
+			contactNumber: {
+				internationalNumber: "Netherlands",
+			},
+		},
+	],
+};
+
 export const SGNumberValidation = Template("contact-singapore-number").bind({});
 SGNumberValidation.args = {
 	uiType: "contact-field",
@@ -187,20 +201,6 @@ SGPhoneNumberValidation.args = {
 		{
 			contactNumber: {
 				singaporeNumber: "mobile",
-			},
-		},
-	],
-};
-
-export const FixedCountry = Template("contact-fixed-country").bind({});
-FixedCountry.args = {
-	uiType: "contact-field",
-	label: "Contact Number",
-	fixedCountry: true,
-	validation: [
-		{
-			contactNumber: {
-				internationalNumber: "Netherlands",
 			},
 		},
 	],
