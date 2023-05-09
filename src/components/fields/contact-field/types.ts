@@ -16,19 +16,12 @@ export type TCallingCodeMap = Map<TCountry, string>;
 export interface IContactFieldValidationRule {
 	contactNumber?:
 		| {
-				internationalNumber: true;
+				internationalNumber: boolean | Omit<TCountry, "Singapore">;
 				singaporeNumber?: never;
-				fixedCountry?: never;
 		  }
 		| {
 				internationalNumber?: never;
 				singaporeNumber: TSingaporeNumberRule;
-				fixedCountry?: never;
-		  }
-		| {
-				internationalNumber?: never;
-				singaporeNumber?: never;
-				fixedCountry: TCountry;
 		  };
 }
 

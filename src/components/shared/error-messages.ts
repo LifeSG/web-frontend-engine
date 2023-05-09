@@ -1,12 +1,9 @@
-import { TCountry } from "../fields";
-
 export const ERROR_MESSAGES = {
 	COMMON: {
 		REQUIRED_OPTION: "An option is required",
 	},
 	CONTACT: {
 		INVALID_SINGAPORE_NUMBER: "Invalid Singapore number",
-		INVALID_FIXED_COUNTRY: (country: TCountry) => `Invalid ${country} number`,
 		INVALID_INTERNATIONAL_NUMBER: "Invalid international number",
 	},
 	EMAIL: {

@@ -132,20 +132,6 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const FixedCountry = Template("contact-fixed-country").bind({});
-FixedCountry.args = {
-	uiType: "contact-field",
-	label: "Contact Number",
-	fixedCountry: true,
-	validation: [
-		{
-			contactNumber: {
-				fixedCountry: "Japan",
-			},
-		},
-	],
-};
-
 export const Disabled = Template("contact-disabled").bind({});
 Disabled.args = {
 	uiType: "contact-field",
@@ -201,6 +187,20 @@ SGPhoneNumberValidation.args = {
 		{
 			contactNumber: {
 				singaporeNumber: "mobile",
+			},
+		},
+	],
+};
+
+export const FixedCountry = Template("contact-fixed-country").bind({});
+FixedCountry.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+	fixedCountry: true,
+	validation: [
+		{
+			contactNumber: {
+				internationalNumber: "Netherlands",
 			},
 		},
 	],
