@@ -44,12 +44,12 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	useEffect(() => {
 		const contactNumberRule = validation?.find((rule) => "contactNumber" in rule);
 		const singaporeRule = contactNumberRule?.["contactNumber"]?.["singaporeNumber"];
-		const fixedCountryName = contactNumberRule?.["contactNumber"]?.["fixedCountry"];
+		const internationalNumberRule = contactNumberRule?.["contactNumber"]?.["internationalNumber"];
 		const errorMessage = contactNumberRule?.["errorMessage"];
 
-		if (fixedCountryName) {
-			setCountryValue(fixedCountryName);
-		}
+		const fixedCountryName = typeof internationalNumberRule === "boolean" ? undefined : internationalNumberRule;
+
+		if (fixedCountryName) setCountryValue(fixedCountryName);
 
 		setSingaporeRule(singaporeRule);
 		setFieldValidationConfig(
@@ -70,19 +70,10 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 					}
 				})
 				.test(
-					"fixedCountry",
-					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_FIXED_COUNTRY(fixedCountryName),
-					(value) => {
-						if (!value || !fixedCountryName) return true;
-
-						return PhoneHelper.isInternationalNumber(fixedCountryName, value);
-					}
-				)
-				.test(
 					"internationalNumber",
 					errorMessage || ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER,
 					(value) => {
-						if (!value || singaporeRule || fixedCountryName) return true;
+						if (!value || singaporeRule) return true;
 
 						return PhoneHelper.isInternationalNumber(selectedCountry?.name, value);
 					}

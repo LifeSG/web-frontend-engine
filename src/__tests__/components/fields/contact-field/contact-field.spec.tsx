@@ -143,50 +143,6 @@ describe(UI_TYPE, () => {
 		);
 	});
 
-	describe("it should be able to verify specific country", () => {
-		it("+33 512345678 should be a valid number", async () => {
-			const contactNumber = "512345678";
-			const country = "France";
-
-			renderComponent({
-				fixedCountry: true,
-				validation: [
-					{
-						contactNumber: {
-							fixedCountry: country,
-						},
-					},
-				],
-			});
-
-			fireEvent.change(getContactField(), { target: { value: contactNumber } });
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+33 ${contactNumber}` }));
-		});
-
-		it("+33 012345678 should be an invalid number", async () => {
-			const contactNumber = "012345678";
-			const country = "France";
-
-			renderComponent({
-				fixedCountry: true,
-				validation: [
-					{
-						contactNumber: {
-							fixedCountry: country,
-						},
-					},
-				],
-			});
-
-			fireEvent.change(getContactField(), { target: { value: contactNumber } });
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-
-			expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_FIXED_COUNTRY(country))).toBeInTheDocument();
-		});
-	});
-
 	describe("it should be able to verify International numbers", () => {
 		it("+81 979584362 should be a valid number", async () => {
 			const contactNumber = "979584362";
@@ -212,6 +168,48 @@ describe(UI_TYPE, () => {
 			const japanCode = getField("button", "Japan+81");
 
 			await waitFor(() => fireEvent.click(japanCode));
+			fireEvent.change(getContactField(), { target: { value: contactNumber } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER)).toBeInTheDocument();
+		});
+
+		it("should validate against specific country when specified", async () => {
+			const contactNumber = "512345678";
+			const country = "France";
+
+			renderComponent({
+				fixedCountry: true,
+				validation: [
+					{
+						contactNumber: {
+							internationalNumber: country,
+						},
+					},
+				],
+			});
+
+			fireEvent.change(getContactField(), { target: { value: contactNumber } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+33 ${contactNumber}` }));
+		});
+
+		it("should reject if number format does not match specified country", async () => {
+			const contactNumber = "012345678";
+			const country = "France";
+
+			renderComponent({
+				fixedCountry: true,
+				validation: [
+					{
+						contactNumber: {
+							internationalNumber: country,
+						},
+					},
+				],
+			});
+
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
