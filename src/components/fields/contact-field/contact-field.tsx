@@ -21,7 +21,6 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		onChange,
 		value,
 		error,
-		onBlur,
 		...otherProps
 	} = props;
 
