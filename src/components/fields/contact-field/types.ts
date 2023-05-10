@@ -3,7 +3,7 @@ import { CountryData } from "./data";
 import { PhoneNumberInputProps } from "@lifesg/react-design-system";
 
 interface IContactFieldProps extends PhoneNumberInputProps {
-	country?: TCountry;
+	defaultCountry?: TCountry;
 	enableSearch?: boolean | undefined;
 }
 
