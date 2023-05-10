@@ -1,6 +1,7 @@
+import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Form } from "@lifesg/react-design-system/form";
 import without from "lodash/without";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
@@ -8,7 +9,7 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
-import { CheckboxContainer, Label, StyledCheckbox } from "./checkbox-group.styles";
+import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
@@ -16,7 +17,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, validation, disabled, ...otherSchema },
+		schema: { label, options, validation, disabled, customOptions, ...otherSchema },
 		id,
 		value,
 		error,
@@ -63,14 +64,16 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-		const value = event.target.value;
+	const handleChange = (value: string, none?: boolean): void => {
+		const nullOpt = options.find((opt) => opt.none === true);
 		let updatedStateValues = [...stateValue];
-
-		if (updatedStateValues.includes(value)) {
-			updatedStateValues = without(updatedStateValues, value);
+		if (none) {
+			updatedStateValues = updatedStateValues.includes(value) ? [] : [value];
+		} else if (updatedStateValues.includes(value)) {
+			updatedStateValues = without(updatedStateValues, value, nullOpt?.value);
 		} else {
 			updatedStateValues.push(value);
+			updatedStateValues = without(updatedStateValues, nullOpt?.value);
 		}
 
 		onChange({ target: { value: updatedStateValues } });
@@ -106,7 +109,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 							name={option.label}
 							value={option.value}
 							checked={isCheckboxChecked(option.value)}
-							onChange={handleChange}
+							onChange={() => handleChange(option.value)}
 						/>
 						<Label htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
 							{option.label}
@@ -117,9 +120,43 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		);
 	};
 
+	const renderToggles = () => {
+		return (
+			options.length > 0 && (
+				<ToggleWrapper>
+					{options.map((option, index) => {
+						const checkboxId = formatId(index);
+
+						return (
+							<Toggle
+								key={index}
+								{...otherSchema}
+								type="checkbox"
+								data-testid={TestHelper.generateId(id, "toggle")}
+								id={checkboxId}
+								disabled={disabled ?? option.disabled}
+								name={option.label}
+								indicator={customOptions.styleType === "toggle" && customOptions?.indicator}
+								styleType={
+									customOptions.styleType === "toggle" && customOptions?.border === false
+										? "no-border"
+										: "default"
+								}
+								checked={isCheckboxChecked(option.value)}
+								onChange={() => handleChange(option.value, option.none)}
+							>
+								{option.label}
+							</Toggle>
+						);
+					})}
+				</ToggleWrapper>
+			)
+		);
+	};
+
 	return (
 		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			{renderCheckboxes()}
+			{customOptions?.styleType === "toggle" ? renderToggles() : renderCheckboxes()}
 		</Form.CustomField>
 	);
 };

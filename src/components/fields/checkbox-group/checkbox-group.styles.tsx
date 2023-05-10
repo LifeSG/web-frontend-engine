@@ -1,6 +1,5 @@
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import styled from "styled-components";
-
 interface ILabelProps {
 	disabled?: boolean | undefined;
 }
@@ -19,4 +18,10 @@ export const CheckboxContainer = styled.div`
 	:not(:last-of-type) {
 		margin-bottom: 1rem;
 	}
+`;
+
+export const ToggleWrapper = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
 `;
