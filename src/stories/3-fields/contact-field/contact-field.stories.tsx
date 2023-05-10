@@ -34,7 +34,7 @@ export default {
 				type: "text",
 			},
 		},
-		country: {
+		defaultCountry: {
 			description: "Specifies a default country for the input field",
 			table: {
 				type: {
@@ -109,7 +109,7 @@ export const DefaultCountry = Template("contact-default-country").bind({});
 DefaultCountry.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
-	country: "Japan",
+	defaultCountry: "Japan",
 };
 
 export const DefaultValue = Template("contact-default-value").bind({});
@@ -157,11 +157,10 @@ export const FixedCountry = Template("contact-fixed-country").bind({});
 FixedCountry.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
-	fixedCountry: true,
 	validation: [
 		{
 			contactNumber: {
-				internationalNumber: "Netherlands",
+				internationalNumber: "Malaysia",
 			},
 		},
 	],

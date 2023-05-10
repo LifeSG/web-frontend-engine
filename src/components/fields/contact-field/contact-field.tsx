@@ -15,7 +15,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, country, disabled, enableSearch, validation, placeholder, ...otherSchema },
+		schema: { label, defaultCountry, disabled, enableSearch, validation, placeholder, ...otherSchema },
 		id,
 		name,
 		onChange,
@@ -25,30 +25,29 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
-	const [countryValue, setCountryValue] = useState<TCountry>(country);
-	const [internationalCodeMap, setInternationalCodeMap] = useState<TCallingCodeMap>(new Map());
+	const [countryValue, setCountryValue] = useState<TCountry>(defaultCountry);
+	const [internationalCodeMap] = useState<TCallingCodeMap>(getInternationalCallingCodeMap());
 	const [selectedCountry, setSelectedCountry] = useState<ISelectedCountry>();
 	const [singaporeRule, setSingaporeRule] = useState<TSingaporeNumberRule>();
+	const [fixedCountry, setFixedCountry] = useState<boolean>(false);
 	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const countryMap = getInternationalCallingCodeMap();
-
-		setInternationalCodeMap(countryMap);
-	}, []);
-
-	useEffect(() => {
 		const contactNumberRule = validation?.find((rule) => "contactNumber" in rule);
 		const singaporeRule = contactNumberRule?.["contactNumber"]?.["singaporeNumber"];
 		const internationalNumberRule = contactNumberRule?.["contactNumber"]?.["internationalNumber"];
 		const errorMessage = contactNumberRule?.["errorMessage"];
 
-		const fixedCountryName = typeof internationalNumberRule === "boolean" ? undefined : internationalNumberRule;
-
-		if (fixedCountryName) setCountryValue(fixedCountryName);
+		if (internationalCodeMap.has(internationalNumberRule)) {
+			setCountryValue(internationalNumberRule);
+			setFixedCountry(true);
+		} else if ((["default", "house", "mobile"] as TSingaporeNumberRule[]).includes(singaporeRule)) {
+			setCountryValue("Singapore");
+			setFixedCountry(true);
+		}
 
 		setSingaporeRule(singaporeRule);
 		setFieldValidationConfig(
@@ -83,8 +82,6 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	}, [validation, selectedCountry]);
 
 	useEffect(() => {
-		if (internationalCodeMap.size === 0) return;
-
 		const countryName = countryValue || "Singapore";
 
 		setSelectedCountry({
@@ -153,6 +150,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 				disabled={disabled}
 				enableSearch={enableSearch}
 				errorMessage={error?.message}
+				fixedCountry={fixedCountry}
 				id={id}
 				label={label}
 				name={name}

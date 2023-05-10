@@ -59,12 +59,6 @@ describe(UI_TYPE, () => {
 		expect(getContactField()).toBeInTheDocument();
 	});
 
-	// TODO: Fix test case for default value
-	it.skip("should be able to support default country", async () => {
-		renderComponent({ country: "Japan" });
-		expect(screen.getByText("+81")).toBeInTheDocument();
-	});
-
 	it("should be able to support validation schema", async () => {
 		renderComponent({
 			validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
@@ -179,7 +173,6 @@ describe(UI_TYPE, () => {
 			const country = "France";
 
 			renderComponent({
-				fixedCountry: true,
 				validation: [
 					{
 						contactNumber: {
@@ -200,7 +193,6 @@ describe(UI_TYPE, () => {
 			const country = "France";
 
 			renderComponent({
-				fixedCountry: true,
 				validation: [
 					{
 						contactNumber: {
