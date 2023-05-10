@@ -20,3 +20,9 @@ export const RadioContainer = styled.div`
 		margin-bottom: 1rem;
 	}
 `;
+
+export const ToggleWrapper = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+`;

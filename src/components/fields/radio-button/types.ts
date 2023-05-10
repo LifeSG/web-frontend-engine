@@ -7,8 +7,19 @@ interface IOption {
 	disabled?: boolean | undefined;
 }
 
+type TCustomOptions =
+	| {
+			styleType: "default";
+	  }
+	| {
+			styleType: "toggle";
+			indicator?: boolean;
+			border?: boolean;
+	  };
+
 export interface IRadioButtonGroupSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"radio", V>,
 		TComponentOmitProps<RadioButtonProps> {
 	options: IOption[];
+	customOptions?: TCustomOptions;
 }

@@ -4,13 +4,13 @@ import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button
 import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
-	title: "Field/RadioButton/Default",
+	title: "Field/RadioButton/Toggle",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>Radio Button</Title>
-					<Description>This component provides a set of radio buttons for user to select</Description>
+					<Title>Radio Toggle Button</Title>
+					<Description>This component provides a set of radio toggle buttons for user to select</Description>
 					<Heading>Props</Heading>
 					<ArgsTable story={PRIMARY_STORY} />
 					<Stories includePrimary={true} title="Examples" />
@@ -32,6 +32,16 @@ export default {
 			control: {
 				type: "boolean",
 			},
+		},
+		customOptions: {
+			description:
+				"<div>A custom options on which styling to use for rendering the toggle group.</div><ul><li>`styleType` prop accept either `default` or `toggle` and also can be `undefined`.If set to `toggle` will render toggle button, else render default radio buttons.</li><li>`indicator` show/hide radio icon, `false` by default.</li><li>`border` show/hide border,`true` by default.</li></ul>",
+			table: {
+				type: {
+					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean}`,
+				},
+			},
+			type: { name: "object", value: {} },
 		},
 		options: {
 			description:
@@ -72,6 +82,9 @@ export const Default = Template("radio-default").bind({});
 Default.args = {
 	uiType: "radio",
 	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+	},
 	options: [
 		{ label: "Apple", value: "Apple" },
 		{ label: "Berry", value: "Berry" },
@@ -83,6 +96,9 @@ export const DefaultValue = Template("radio-default-value").bind({});
 DefaultValue.args = {
 	uiType: "radio",
 	label: "Fruits",
+	customOptions: {
+		styleType: "toggle",
+	},
 	options: [
 		{ label: "Apple", value: "Apple" },
 		{ label: "Berry", value: "Berry" },
@@ -108,6 +124,9 @@ export const DisabledOptions = Template("radio-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "radio",
 	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+	},
 	options: [
 		{ label: "Apple", value: "Apple", disabled: true },
 		{ label: "Berry", value: "Berry" },
@@ -119,6 +138,9 @@ export const Disabled = Template("radio-disabled").bind({});
 Disabled.args = {
 	uiType: "radio",
 	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+	},
 	options: [
 		{ label: "Apple", value: "Apple" },
 		{ label: "Berry", value: "Berry" },
@@ -131,6 +153,41 @@ export const WithValidation = Template("radio-with-validation").bind({});
 WithValidation.args = {
 	uiType: "radio",
 	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	validation: [{ required: true }],
+};
+
+export const WithIndicator = Template("radio-with-validation").bind({});
+WithIndicator.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+		indicator: true,
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	validation: [{ required: true }],
+};
+
+export const WithoutBorder = Template("radio-with-validation").bind({});
+WithoutBorder.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+		border: false,
+	},
 	options: [
 		{ label: "Apple", value: "Apple" },
 		{ label: "Berry", value: "Berry" },
