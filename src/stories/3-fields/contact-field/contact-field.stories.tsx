@@ -34,8 +34,9 @@ export default {
 				type: "text",
 			},
 		},
-		country: {
-			description: "Specifies a default country for the input field",
+		defaultCountry: {
+			description:
+				"Specifies a default country for the input field, not applicable if field has fixed country code. (Defined via validation config)",
 			table: {
 				type: {
 					summary: "TCountry",
@@ -47,7 +48,8 @@ export default {
 			options: getCountries(),
 		},
 		enableSearch: {
-			description: "Specifies if the given list of country codes can be searched",
+			description:
+				"Specifies if the given list of country codes can be searched, not applicable if field has fixed country code. (Defined via validation config)",
 			table: {
 				type: {
 					summary: "boolean",
@@ -109,7 +111,7 @@ export const DefaultCountry = Template("contact-default-country").bind({});
 DefaultCountry.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
-	country: "Japan",
+	defaultCountry: "Japan",
 };
 
 export const DefaultValue = Template("contact-default-value").bind({});
@@ -151,6 +153,19 @@ WithSearch.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
 	enableSearch: true,
+};
+
+export const FixedCountry = Template("contact-fixed-country").bind({});
+FixedCountry.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+	validation: [
+		{
+			contactNumber: {
+				internationalNumber: "Ireland",
+			},
+		},
+	],
 };
 
 export const SGNumberValidation = Template("contact-singapore-number").bind({});

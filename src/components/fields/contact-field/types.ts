@@ -1,20 +1,22 @@
-import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine/types";
-import { InternationalCallingCodeMap } from "./data";
+import { CountryData } from "./data";
+import { PhoneNumberInputProps } from "@lifesg/react-design-system";
 
-export type TCountry = keyof typeof InternationalCallingCodeMap;
-
-interface IContactFieldProps extends FormInputProps {
-	country?: TCountry;
+interface IContactFieldProps extends PhoneNumberInputProps {
+	defaultCountry?: TCountry;
 	enableSearch?: boolean | undefined;
 }
 
 export type TSingaporeNumberRule = "default" | "house" | "mobile";
 
+export type TCountry = (typeof CountryData)[number][0];
+
+export type TCallingCodeMap = Map<TCountry, string>;
+
 export interface IContactFieldValidationRule {
 	contactNumber?:
 		| {
-				internationalNumber: true;
+				internationalNumber: boolean | Omit<TCountry, "Singapore">;
 				singaporeNumber?: never;
 		  }
 		| {
@@ -24,7 +26,7 @@ export interface IContactFieldValidationRule {
 }
 
 export interface ISelectedCountry {
-	prefix: string;
+	prefix: string | undefined;
 	name: TCountry;
 }
 
