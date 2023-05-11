@@ -2,7 +2,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationConfig } from "../../../utils/hooks";
+import { usePrevious, useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
 import { getCountryFromPrefix, getInternationalCallingCodeMap } from "./data";
@@ -25,6 +25,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
+	const prevDefaultCountry = usePrevious(defaultCountry);
 	const [countryValue, setCountryValue] = useState<TCountry>(defaultCountry);
 	const [internationalCodeMap] = useState<TCallingCodeMap>(getInternationalCallingCodeMap());
 	const [selectedCountry, setSelectedCountry] = useState<ISelectedCountry>();
@@ -47,8 +48,6 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		} else if ((["default", "house", "mobile"] as TSingaporeNumberRule[]).includes(singaporeRule)) {
 			setCountryValue("Singapore");
 			setFixedCountry(true);
-		} else if (!singaporeRule && !internationalNumberRule) {
-			setCountryValue(defaultCountry);
 		}
 
 		setSingaporeRule(singaporeRule);
@@ -81,7 +80,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [defaultCountry, validation, selectedCountry]);
+	}, [validation, selectedCountry]);
 
 	useEffect(() => {
 		const countryName = countryValue || "Singapore";
@@ -91,6 +90,22 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			prefix: internationalCodeMap.get(countryName),
 		});
 	}, [countryValue, internationalCodeMap]);
+
+	useEffect(() => {
+		const contactNumberRule = validation?.find((rule) => "contactNumber" in rule);
+		const singaporeRule = contactNumberRule?.["contactNumber"]?.["singaporeNumber"];
+		const internationalNumberRule = contactNumberRule?.["contactNumber"]?.["internationalNumber"];
+
+		if (
+			!!defaultCountry &&
+			prevDefaultCountry !== defaultCountry &&
+			!internationalCodeMap.has(internationalNumberRule) &&
+			!(["default", "house", "mobile"] as TSingaporeNumberRule[]).includes(singaporeRule)
+		) {
+			setCountryValue(defaultCountry);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [validation, defaultCountry]);
 
 	// =============================================================================
 	// EVENT HANDLERS
