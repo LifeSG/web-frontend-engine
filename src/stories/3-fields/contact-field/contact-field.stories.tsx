@@ -35,7 +35,8 @@ export default {
 			},
 		},
 		defaultCountry: {
-			description: "Specifies a default country for the input field",
+			description:
+				"Specifies a default country for the input field, not applicable if field has fixed country code. (Defined via validation config)",
 			table: {
 				type: {
 					summary: "TCountry",
@@ -47,7 +48,8 @@ export default {
 			options: getCountries(),
 		},
 		enableSearch: {
-			description: "Specifies if the given list of country codes can be searched",
+			description:
+				"Specifies if the given list of country codes can be searched, not applicable if field has fixed country code. (Defined via validation config)",
 			table: {
 				type: {
 					summary: "boolean",
@@ -160,7 +162,7 @@ FixedCountry.args = {
 	validation: [
 		{
 			contactNumber: {
-				internationalNumber: "Malaysia",
+				internationalNumber: "Ireland",
 			},
 		},
 	],
