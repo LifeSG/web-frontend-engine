@@ -49,7 +49,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			setFixedCountry(true);
 		}
 
-		if (!fixedCountry) {
+		if (!contactNumberRule) {
 			setCountryValue(defaultCountry);
 		}
 
