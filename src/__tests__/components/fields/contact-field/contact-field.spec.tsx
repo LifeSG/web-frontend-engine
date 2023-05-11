@@ -193,7 +193,7 @@ describe(UI_TYPE, () => {
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+33 ${contactNumber}` }));
 		});
 
-		it("should fixed the country selection if singaporeNumber in validation", async () => {
+		it("should fix the country selection if there is singaporeNumber validation", async () => {
 			renderComponent({
 				validation: [
 					{
@@ -208,7 +208,7 @@ describe(UI_TYPE, () => {
 			expect(screen.getByTestId("addon")).toBeInTheDocument();
 		});
 
-		it("should fixed the specific country when specified in internationalNumber validation", async () => {
+		it("should fix the specific country if internationalNumber validation has a specific country", async () => {
 			const country = "Denmark";
 
 			renderComponent({
@@ -225,7 +225,7 @@ describe(UI_TYPE, () => {
 			expect(screen.getByTestId("addon")).toBeInTheDocument();
 		});
 
-		it("should not fixed the country selection if not specific country internationalNumber validation", async () => {
+		it("should not fix the country selection if internationalNumber validation does not have a specific country", async () => {
 			renderComponent({
 				validation: [
 					{
