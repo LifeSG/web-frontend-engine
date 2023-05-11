@@ -59,6 +59,11 @@ describe(UI_TYPE, () => {
 		expect(getContactField()).toBeInTheDocument();
 	});
 
+	it("should be able to support default country", async () => {
+		renderComponent({ defaultCountry: "Japan" });
+		expect(screen.getByText("+81")).toBeInTheDocument();
+	});
+
 	it("should be able to support validation schema", async () => {
 		renderComponent({
 			validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
@@ -186,6 +191,53 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+33 ${contactNumber}` }));
+		});
+
+		it("should fixed the country selection if singaporeNumber in validation", async () => {
+			renderComponent({
+				validation: [
+					{
+						contactNumber: {
+							singaporeNumber: "mobile",
+						},
+					},
+				],
+			});
+
+			expect(screen.queryByTestId("addon-selector")).not.toBeInTheDocument();
+			expect(screen.getByTestId("addon")).toBeInTheDocument();
+		});
+
+		it("should fixed the specific country when specified in internationalNumber validation", async () => {
+			const country = "Denmark";
+
+			renderComponent({
+				validation: [
+					{
+						contactNumber: {
+							internationalNumber: country,
+						},
+					},
+				],
+			});
+
+			expect(screen.queryByTestId("addon-selector")).not.toBeInTheDocument();
+			expect(screen.getByTestId("addon")).toBeInTheDocument();
+		});
+
+		it("should not fixed the country selection if not specific country internationalNumber validation", async () => {
+			renderComponent({
+				validation: [
+					{
+						contactNumber: {
+							internationalNumber: true,
+						},
+					},
+				],
+			});
+
+			expect(screen.getByTestId("addon-selector")).toBeInTheDocument();
+			expect(screen.queryByTestId("addon")).not.toBeInTheDocument();
 		});
 
 		it("should reject if number format does not match specified country", async () => {

@@ -49,6 +49,10 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			setFixedCountry(true);
 		}
 
+		if (!fixedCountry) {
+			setCountryValue(defaultCountry);
+		}
+
 		setSingaporeRule(singaporeRule);
 		setFieldValidationConfig(
 			id,
@@ -79,7 +83,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation, selectedCountry]);
+	}, [defaultCountry, validation, selectedCountry]);
 
 	useEffect(() => {
 		const countryName = countryValue || "Singapore";
@@ -142,22 +146,20 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<>
-			<Form.PhoneNumberInput
-				{...otherSchema}
-				{...otherProps}
-				data-testid={TestHelper.generateId(id, "contact")}
-				disabled={disabled}
-				enableSearch={enableSearch}
-				errorMessage={error?.message}
-				fixedCountry={fixedCountry}
-				id={id}
-				label={label}
-				name={name}
-				placeholder={getPlaceholderText()}
-				value={formatDisplayValue()}
-				onChange={handleChange}
-			/>
-		</>
+		<Form.PhoneNumberInput
+			{...otherSchema}
+			{...otherProps}
+			data-testid={TestHelper.generateId(id, "contact")}
+			disabled={disabled}
+			enableSearch={enableSearch}
+			errorMessage={error?.message}
+			fixedCountry={fixedCountry}
+			id={id}
+			label={label}
+			name={name}
+			placeholder={getPlaceholderText()}
+			value={formatDisplayValue()}
+			onChange={handleChange}
+		/>
 	);
 };
