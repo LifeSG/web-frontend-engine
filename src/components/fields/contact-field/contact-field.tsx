@@ -47,9 +47,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		} else if ((["default", "house", "mobile"] as TSingaporeNumberRule[]).includes(singaporeRule)) {
 			setCountryValue("Singapore");
 			setFixedCountry(true);
-		}
-
-		if (!contactNumberRule) {
+		} else if (!singaporeRule && !internationalNumberRule) {
 			setCountryValue(defaultCountry);
 		}
 
