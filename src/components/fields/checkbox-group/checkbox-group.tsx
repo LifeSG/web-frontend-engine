@@ -111,7 +111,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 							checked={isCheckboxChecked(option.value)}
 							onChange={() => handleChange(option.value)}
 						/>
-						<Label htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
+						<Label as="label" htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
 							{option.label}
 						</Label>
 					</CheckboxContainer>

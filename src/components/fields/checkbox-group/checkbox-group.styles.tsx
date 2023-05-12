@@ -1,10 +1,11 @@
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
+import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 interface ILabelProps {
 	disabled?: boolean | undefined;
 }
 
-export const Label = styled.label<ILabelProps>`
+export const Label = styled(Text.BodySmall)<ILabelProps>`
 	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 
