@@ -84,7 +84,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							checked={isRadioButtonChecked(option.value)}
 							onChange={handleChange}
 						/>
-						<Label htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
+						<Label as="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
 							{option.label}
 						</Label>
 					</RadioContainer>
