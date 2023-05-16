@@ -27,6 +27,7 @@ import {
 	IUnitNumberFieldSchema,
 } from "../fields";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
+import { ILocationInputSchema } from "../fields/location-input-group/types";
 
 // =============================================================================
 // YUP SCHEMA
@@ -89,7 +90,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextSchema
 	| IResetButtonSchema
 	| IFilterSchema
-	| ICustomComponentJsonSchema<V>;
+	| ICustomComponentJsonSchema<V>
+	| ILocationInputSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -195,13 +197,14 @@ export enum EFieldType {
 	SELECT = "Select",
 	"MULTI-SELECT" = "MultiSelect",
 	"DATE-FIELD" = "DateField",
-	CHECKBOX = "CheckboxGroup",
+	CHECKBOX = "CheckboxGroup", // you can rename your components here
 	"CONTACT-FIELD" = "ContactField",
 	RADIO = "RadioButtonGroup",
 	"TIME-FIELD" = "TimeField",
 	CHIPS = "Chips",
 	RESET = "ResetButton",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
+	"LOCATION-INPUT" = "LocationInputGroup",
 }
 
 /**
