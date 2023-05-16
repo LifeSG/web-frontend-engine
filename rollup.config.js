@@ -3,9 +3,9 @@ import image from "@rollup/plugin-image";
 import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
-import pkg from "./package.json";
 
 const plugins = [
 	peerDepsExternal(), // Add the externals for me. [react, react-dom]
@@ -19,6 +19,7 @@ const plugins = [
 			exclude: ["**/stories/**", "**/__tests__/**", "**/__mocks__/**", "**/util/**"],
 		},
 	}),
+	postcss(),
 	image(),
 	json(),
 	terser(), // Helps remove comments, whitespace or logging codes
@@ -28,14 +29,14 @@ export default {
 	input: "src/index.ts",
 	output: [
 		{
-			file: pkg.module,
+			dir: "dist",
 			format: "esm",
 			sourcemap: true,
 			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
 		},
 		{
-			file: pkg.main,
+			dir: "dist/cjs",
 			format: "cjs",
 			sourcemap: true,
 			exports: "named",
