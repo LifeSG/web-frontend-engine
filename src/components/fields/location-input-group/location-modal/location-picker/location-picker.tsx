@@ -3,10 +3,10 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
+import CurrentLocationUnavailable from "../../../../../assets/img/icons/current-location-unavailable.svg";
+import CurrentLocation from "../../../../../assets/img/icons/current-location.svg";
+import LocationPinBlue from "../../../../../assets/img/icons/location-pin-blue.svg";
 import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
-import LocationPinBlue from "src/assets/img/icons/location-pin-blue.svg";
-import CurrentLocation from "src/assets/img/icons/current-location.svg";
-import CurrentLocationUnavailable from "src/assets/img/icons/current-location-unavailable.svg";
 
 interface ILocationCoord {
 	lat: number;

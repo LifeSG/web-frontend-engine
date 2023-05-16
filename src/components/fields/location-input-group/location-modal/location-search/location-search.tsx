@@ -1,10 +1,7 @@
 import { Text } from "@lifesg/react-design-system/text";
-import axios, { CancelTokenSource } from "axios";
 import { debounce, isEqual } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import sanitizeHtml from "sanitize-html";
-import LocationPinBlack from "src/assets/img/icons/location-pin-black.svg";
-import SearchSvg from "src/assets/img/icons/search.svg";
 import { OneMapService } from "../../../../../services";
 import {
 	OneMapBoolean,
@@ -13,6 +10,8 @@ import {
 	OneMapSearchResults,
 } from "../../../../../services/types";
 import { ILocationCoord, LocationHelper, TestHelper } from "../../../../../utils";
+import LocationPinBlack from "../../../../../assets/img/icons/location-pin-black.svg";
+import SearchSvg from "../../../../../assets/img/icons/search.svg";
 import { InfiniteScrollList, Prompt } from "../../../../elements";
 import { ILocationDisplayListParams, ILocationInputValues, TSinglePanelInputMode } from "../../types";
 import {
