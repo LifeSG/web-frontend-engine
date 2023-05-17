@@ -98,25 +98,37 @@ export type TValidationMode = keyof ValidationMode;
 export type TErrorMessage = string | string[] | Record<string, string | string[]>;
 export type TErrorPayload = Record<string, TErrorMessage>;
 export interface IFrontendEngineRef extends HTMLFormElement {
-	/** gets form values */
-	getValues: () => TFrontendEngineValues;
-	/** sets field value by id */
-	setValue: UseFormSetValue<TFrontendEngineValues>;
-	/** checks if form is valid */
-	isValid: () => boolean;
-	/** triggers form submission */
-	submit: () => void;
-	/** adds custom validation rule */
 	addCustomValidation: (
 		type: TYupSchemaType | "mixed",
 		name: string,
 		fn: (value: unknown, arg: unknown) => boolean
 	) => void;
-
-	/** allows setting of custom errors thrown by endpoints */
-	setErrors: (errors: TErrorPayload) => void;
+	addFieldEventListener: (
+		type: string,
+		id: string,
+		listener: (this: Element, ev: Event) => any,
+		options?: boolean | AddEventListenerOptions
+	) => void;
+	dispatchFieldEvent: (type: string, id: string, detail?: any) => boolean;
+	/** gets form values */
+	getValues: () => TFrontendEngineValues;
+	/** checks if form is valid */
+	isValid: () => boolean;
+	/** adds custom validation rule */
+	removeFieldEventListener: (
+		type: string,
+		id: string,
+		listener: (this: Element, ev: Event) => any,
+		options?: boolean | EventListenerOptions
+	) => void;
 	/** resets the form to the default state */
 	reset: UseFormReset<TFrontendEngineValues>;
+	/** allows setting of custom errors thrown by endpoints */
+	setErrors: (errors: TErrorPayload) => void;
+	/** sets field value by id */
+	setValue: UseFormSetValue<TFrontendEngineValues>;
+	/** triggers form submission */
+	submit: () => void;
 }
 
 // =============================================================================
