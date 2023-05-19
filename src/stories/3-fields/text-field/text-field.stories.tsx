@@ -127,3 +127,14 @@ WithValidation.args = {
 	uiType: "text-field",
 	validation: [{ required: true }],
 };
+
+export const PreventPasteAndDrag = Template("prevent-paste-and-drag").bind({});
+PreventPasteAndDrag.args = {
+	label: "Textfield",
+	uiType: "text-field",
+	placeholder: "Enter text here",
+	customOptions: {
+		preventCopyAndPaste: true,
+		preventDragAndDrop: true,
+	},
+};

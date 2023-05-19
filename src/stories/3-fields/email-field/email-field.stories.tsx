@@ -134,3 +134,13 @@ WithValidation.args = {
 	uiType: "email-field",
 	validation: [{ required: true }],
 };
+
+export const PreventPasteAndDrag = Template("prevent-paste-and-drag").bind({});
+PreventPasteAndDrag.args = {
+	label: "Email",
+	uiType: "email-field",
+	customOptions: {
+		preventCopyAndPaste: true,
+		preventDragAndDrop: true,
+	},
+};
