@@ -34,7 +34,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	useEffect(() => {
 		if (useCurrentTime && !value) {
 			const timeFormatPattern = is24HourFormat ? "H:mm" : "h:mma";
-			handleCurrentTime(timeFormatPattern);
+			setTimeout(() => handleCurrentTime(timeFormatPattern));
 		} else {
 			setStateValue(value);
 		}

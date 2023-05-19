@@ -40,7 +40,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value);
+		setStateValue(value || "");
 	}, [value]);
 
 	// =============================================================================

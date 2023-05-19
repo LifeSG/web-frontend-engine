@@ -110,7 +110,8 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 
 		if (useCurrentDate && !value) {
 			const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
-			onChange({ target: { value: currentDate } });
+			// need delay to allow onChange event to fire properly
+			setTimeout(() => onChange({ target: { value: currentDate } }));
 
 			const inputDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), DEFAULT_DATE_FORMAT, "date");
 			setStateValue(inputDate);

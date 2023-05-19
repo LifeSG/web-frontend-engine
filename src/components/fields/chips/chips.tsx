@@ -1,5 +1,4 @@
 import { Form } from "@lifesg/react-design-system/form";
-import kebabCase from "lodash/kebabCase";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -68,6 +67,11 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	}, [options]);
 
 	useEffect(() => {
+		if (value?.includes(textarea?.label)) {
+			toggleTextarea(true);
+		} else {
+			toggleTextarea();
+		}
 		setStateValue(value || []);
 	}, [value]);
 
@@ -80,6 +84,13 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	const getTextareaId = () => {
 		return `${id}-textarea`;
+	};
+
+	const toggleTextarea = (show = false) => {
+		setShowTextarea(show);
+		if (!show) {
+			removeFieldValidationConfig(getTextareaId());
+		}
 	};
 
 	// =============================================================================
@@ -107,12 +118,6 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	const handleTextareaChipClick = (name: string) => {
 		handleChange(name);
-		setShowTextarea((prevState) => {
-			if (prevState) {
-				removeFieldValidationConfig(getTextareaId());
-			}
-			return !prevState;
-		});
 	};
 
 	// =============================================================================
