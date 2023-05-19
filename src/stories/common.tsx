@@ -1,10 +1,11 @@
-import styled from "styled-components";
+import { MediaQuery, MediaWidths } from "@lifesg/react-design-system";
 import { action } from "@storybook/addon-actions";
+import { Story } from "@storybook/react/types-6-0";
+import { ReactElement, Ref, forwardRef } from "react";
+import styled from "styled-components";
 import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
 import { ISubmitButtonSchema } from "../components/fields";
-import { IFrontendEngineRef, TNoInfer } from "../components/frontend-engine";
-import { ReactElement, Ref, forwardRef } from "react";
-import { MediaQuery, MediaWidths } from "@lifesg/react-design-system";
+import { IFrontendEngineRef, TFrontendEngineFieldSchema, TNoInfer } from "../components/frontend-engine";
 
 const EXCLUDED_STORY_PROPS = {
 	invalid: { table: { disable: true } },
@@ -166,3 +167,68 @@ export const LOREM_IPSUM = (prefix: string) => {
 
 	return `${prefix && codePrefix + " : "}Lorem ipsum dolor sit`;
 };
+
+/**
+ * Default story template that contains the component and a submit button
+ *
+ * &lt;T&gt; generic: component schema definition
+ *
+ * &lt;U&gt; generic: default value typing
+ */
+export const DefaultStoryTemplate = <T, U = string>(id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args as unknown as TFrontendEngineFieldSchema,
+							...SUBMIT_BUTTON_SCHEMA,
+						},
+					},
+				},
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<T & { defaultValues?: U | undefined }>;
+
+/**
+ * Story template that contains the component, a reset button and a submit button
+ *
+ * &lt;T&gt; generic: component schema definition
+ *
+ * &lt;U&gt; generic: default value typing
+ */
+export const ResetStoryTemplate = <T, U = string>(id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args as unknown as TFrontendEngineFieldSchema,
+							buttons: {
+								uiType: "div",
+								style: { display: "flex", gap: "1rem" },
+								children: {
+									"reset-button": { uiType: "reset", label: "Reset" },
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					},
+				},
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<T & { defaultValues?: U | undefined }>;
