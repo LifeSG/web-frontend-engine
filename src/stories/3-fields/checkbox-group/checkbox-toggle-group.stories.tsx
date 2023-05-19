@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { ICheckboxGroupSchema } from "../../../components/fields/checkbox-group";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/Checkbox/Toggle",
@@ -56,29 +56,7 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<ICheckboxGroupSchema & { defaultValues?: string[] | undefined }>;
-
-export const Default = Template("checkbox-default").bind({});
+export const Default = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
 Default.args = {
 	uiType: "checkbox",
 	label: "Toggle",
@@ -92,7 +70,7 @@ Default.args = {
 	],
 };
 
-export const DefaultValue = Template("checkbox-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<ICheckboxGroupSchema, string[]>("checkbox-default-value").bind({});
 DefaultValue.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -118,7 +96,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const DisabledOptions = Template("checkbox-disabled-options").bind({});
+export const DisabledOptions = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -132,7 +110,7 @@ DisabledOptions.args = {
 	],
 };
 
-export const Disabled = Template("checkbox-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-disabled").bind({});
 Disabled.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -147,7 +125,7 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const WithValidation = Template("checkbox-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-with-validation").bind({});
 WithValidation.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -162,7 +140,7 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const NoneOption = Template("checkbox-default").bind({});
+export const NoneOption = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
 NoneOption.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -177,7 +155,7 @@ NoneOption.args = {
 	],
 };
 
-export const WithIndicator = Template("checkbox-default").bind({});
+export const WithIndicator = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
 WithIndicator.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -192,7 +170,7 @@ WithIndicator.args = {
 	],
 };
 
-export const WithoutBorder = Template("checkbox-default").bind({});
+export const WithoutBorder = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
 WithoutBorder.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -205,4 +183,46 @@ WithoutBorder.args = {
 		{ label: "Berry", value: "Berry" },
 		{ label: "Cherry", value: "Cherry" },
 	],
+};
+
+export const Reset = ResetStoryTemplate<ICheckboxGroupSchema>("checkbox-reset").bind({});
+Reset.args = {
+	uiType: "checkbox",
+	label: "Checkbox",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<ICheckboxGroupSchema, string[]>(
+	"checkbox-reset-default-values"
+).bind({});
+ResetWithDefaultValues.args = {
+	uiType: "checkbox",
+	label: "Checkbox",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	defaultValues: ["Apple", "Berry"],
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string[]",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
 };

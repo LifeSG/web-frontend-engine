@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { ISelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/Select",
@@ -67,40 +67,18 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<ISelectSchema & { defaultValues?: string | undefined }>;
-
-export const Default = Template("select-default").bind({});
+export const Default = DefaultStoryTemplate<ISelectSchema>("select-default").bind({});
 Default.args = {
 	uiType: "select",
 	label: "Fruits",
 	options: [
-		{ label: "1", value: "1" },
-		{ label: "2", value: "2" },
-		{ label: "3", value: "3" },
+		{ label: "Apple", value: "apple" },
+		{ label: "Berry", value: "berry" },
+		{ label: "Cherry", value: "cherry" },
 	],
 };
 
-export const DefaultValue = Template("select-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<ISelectSchema>("select-default-value").bind({});
 DefaultValue.args = {
 	uiType: "select",
 	label: "Fruits",
@@ -125,7 +103,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const Disabled = Template("select-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<ISelectSchema>("select-disabled").bind({});
 Disabled.args = {
 	uiType: "select",
 	label: "Fruits",
@@ -137,7 +115,7 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const CustomWidth = Template("select-custom-width").bind({});
+export const CustomWidth = DefaultStoryTemplate<ISelectSchema>("select-custom-width").bind({});
 CustomWidth.args = {
 	uiType: "select",
 	label: "Fruits",
@@ -149,7 +127,7 @@ CustomWidth.args = {
 	listStyleWidth: "12rem",
 };
 
-export const Placeholder = Template("select-placeholder").bind({});
+export const Placeholder = DefaultStoryTemplate<ISelectSchema>("select-placeholder").bind({});
 Placeholder.args = {
 	uiType: "select",
 	label: "Fruits",
@@ -161,7 +139,7 @@ Placeholder.args = {
 	placeholder: "Select your fruit",
 };
 
-export const WithValidation = Template("select-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<ISelectSchema>("select-with-validation").bind({});
 WithValidation.args = {
 	uiType: "select",
 	label: "Fruits",
@@ -171,4 +149,38 @@ WithValidation.args = {
 		{ label: "Cherry", value: "cherry" },
 	],
 	validation: [{ required: true }],
+};
+
+export const Reset = ResetStoryTemplate<ISelectSchema>("select-reset").bind({});
+Reset.args = {
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<ISelectSchema>("select-reset-default-values").bind({});
+ResetWithDefaultValues.args = {
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	defaultValues: "Apple",
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
 };

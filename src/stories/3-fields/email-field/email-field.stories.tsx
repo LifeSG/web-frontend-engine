@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { IEmailFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/EmailField",
@@ -63,35 +63,13 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<IEmailFieldSchema & { defaultValues?: string | undefined }>;
-
-export const Default = Template("email-default").bind({});
+export const Default = DefaultStoryTemplate<IEmailFieldSchema>("email-default").bind({});
 Default.args = {
 	label: "Email",
 	uiType: "email-field",
 };
 
-export const DefaultValue = Template("email-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IEmailFieldSchema>("email-default-value").bind({});
 DefaultValue.args = {
 	label: "Email",
 	uiType: "email-field",
@@ -111,42 +89,42 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const Disabled = Template("email-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<IEmailFieldSchema>("email-disabled").bind({});
 Disabled.args = {
 	label: "Email",
 	uiType: "email-field",
 	disabled: true,
 };
 
-export const CustomErrorMessage = Template("email-email-error").bind({});
+export const CustomErrorMessage = DefaultStoryTemplate<IEmailFieldSchema>("email-email-error").bind({});
 CustomErrorMessage.args = {
 	label: "Email",
 	uiType: "email-field",
 	validation: [{ email: true, errorMessage: "Please use a valid email" }],
 };
 
-export const MaxLength = Template("textfield-maxlength").bind({});
+export const MaxLength = DefaultStoryTemplate<IEmailFieldSchema>("textfield-maxlength").bind({});
 MaxLength.args = {
 	label: "Email",
 	uiType: "email-field",
 	validation: [{ max: 5 }],
 };
 
-export const Placeholder = Template("email-placeholder").bind({});
+export const Placeholder = DefaultStoryTemplate<IEmailFieldSchema>("email-placeholder").bind({});
 Placeholder.args = {
 	label: "Email",
 	uiType: "email-field",
 	placeholder: "Enter an email",
 };
 
-export const WithValidation = Template("email-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<IEmailFieldSchema>("email-with-validation").bind({});
 WithValidation.args = {
 	label: "Email",
 	uiType: "email-field",
 	validation: [{ required: true }],
 };
 
-export const PreventCopyAndPaste = Template("prevent-copy-and-paste").bind({});
+export const PreventCopyAndPaste = DefaultStoryTemplate<IEmailFieldSchema>("prevent-copy-and-paste").bind({});
 PreventCopyAndPaste.args = {
 	label: "Email",
 	uiType: "email-field",
@@ -155,11 +133,34 @@ PreventCopyAndPaste.args = {
 	},
 };
 
-export const PreventDragAndDrop = Template("prevent-drag-and-drop").bind({});
+export const PreventDragAndDrop = DefaultStoryTemplate<IEmailFieldSchema>("prevent-drag-and-drop").bind({});
 PreventDragAndDrop.args = {
 	label: "Textfield",
 	uiType: "email-field",
 	customOptions: {
 		preventDragAndDrop: true,
+	},
+};
+export const Reset = ResetStoryTemplate<IEmailFieldSchema>("email-reset").bind({});
+Reset.args = {
+	uiType: "email-field",
+	label: "Email",
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<IEmailFieldSchema>("email-reset-default-values").bind({});
+ResetWithDefaultValues.args = {
+	uiType: "email-field",
+	label: "Email",
+	defaultValues: "default@domain.tld",
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		type: { name: "object", value: {} },
 	},
 };

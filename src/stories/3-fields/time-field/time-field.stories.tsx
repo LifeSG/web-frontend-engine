@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { ITimeFieldSchema } from "src/components/fields";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/TimeField",
@@ -73,65 +73,78 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<ITimeFieldSchema & { defaultValues?: string | undefined }>;
-
-export const Default = Template("time-default").bind({});
+export const Default = DefaultStoryTemplate<ITimeFieldSchema>("time-default").bind({});
 Default.args = {
 	label: "Time",
 	uiType: "time-field",
 };
 
-export const Disabled = Template("time-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<ITimeFieldSchema>("time-disabled").bind({});
 Disabled.args = {
 	label: "Time",
 	uiType: "time-field",
 	disabled: true,
 };
 
-export const DefaultValue = Template("time-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<ITimeFieldSchema>("time-default-value").bind({});
 DefaultValue.args = {
 	label: "Time",
 	uiType: "time-field",
 	defaultValues: "11:11am",
 };
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
+};
 
-export const UseCurrentTime = Template("time-use-current-time").bind({});
+export const UseCurrentTime = DefaultStoryTemplate<ITimeFieldSchema>("time-use-current-time").bind({});
 UseCurrentTime.args = {
 	label: "Time",
 	uiType: "time-field",
 	useCurrentTime: true,
 };
 
-export const Placeholder = Template("time-placeholder").bind({});
+export const Placeholder = DefaultStoryTemplate<ITimeFieldSchema>("time-placeholder").bind({});
 Placeholder.args = {
 	label: "Time",
 	uiType: "time-field",
 	placeholder: "Select a preferred time",
 };
 
-export const Use24HoursFormat = Template("time-24hr-format").bind({});
+export const Use24HoursFormat = DefaultStoryTemplate<ITimeFieldSchema>("time-24hr-format").bind({});
 Use24HoursFormat.args = {
 	label: "Time",
 	uiType: "time-field",
 	is24HourFormat: true,
+};
+
+export const Reset = ResetStoryTemplate<ITimeFieldSchema>("time-reset").bind({});
+Reset.args = {
+	label: "Time",
+	uiType: "time-field",
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<ITimeFieldSchema>("time-reset-default-values").bind({});
+ResetWithDefaultValues.args = {
+	label: "Time",
+	uiType: "time-field",
+	defaultValues: "11:11am",
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
 };
