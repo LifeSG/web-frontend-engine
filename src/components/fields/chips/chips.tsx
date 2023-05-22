@@ -62,7 +62,8 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	}, [validation]);
 
 	useDeepCompareEffect(() => {
-		const updatedValues = value?.filter((v) => options.find((option) => option.value === v));
+		const optionValuesWithTextarea = [...options.map((option) => option.value), textarea?.label];
+		const updatedValues = value?.filter((v) => optionValuesWithTextarea.includes(v));
 		setValue(id, updatedValues);
 	}, [options]);
 
@@ -90,6 +91,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		setShowTextarea(show);
 		if (!show) {
 			removeFieldValidationConfig(getTextareaId());
+			setValue(getTextareaId(), undefined);
 		}
 	};
 
@@ -169,7 +171,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			<Controller
 				control={control}
 				name={textareaId}
-				shouldUnregister={true}
+				shouldUnregister={false}
 				render={({ field, fieldState }) => {
 					const fieldProps = { ...field, id: textareaId, ref: undefined };
 					return <Textarea schema={schema} {...fieldProps} {...fieldState} />;

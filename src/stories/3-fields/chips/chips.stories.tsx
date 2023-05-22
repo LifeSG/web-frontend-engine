@@ -1,7 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta, Story } from "@storybook/react/types-6-0";
 import { IChipsSchema } from "../../../components/fields/chips";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	FrontendEngine,
+	RESET_BUTTON_SCHEMA,
+	ResetStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
+} from "../../common";
+import { IFrontendEngineRef } from "../../../components";
+import { useRef } from "react";
 
 export default {
 	title: "Field/Chips",
@@ -96,6 +105,42 @@ DefaultValue.argTypes = {
 		},
 		type: { name: "object", value: {} },
 	},
+};
+
+export const DefaultTextareaValue: Story<IChipsSchema> = (args) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"chips-textarea-default": args,
+						buttons: {
+							uiType: "div",
+							style: { display: "flex", gap: "1rem" },
+							children: {
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				},
+			},
+			defaultValues: {
+				"chips-textarea-default": ["Durian"],
+				"chips-textarea-default-textarea": "Hello world",
+			},
+		}}
+	/>
+);
+DefaultTextareaValue.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian", rows: 1 },
 };
 
 export const DisabledOptions = DefaultStoryTemplate<IChipsSchema>("chips-disabled-options").bind({});
@@ -237,4 +282,41 @@ ResetWithDefaultValues.argTypes = {
 		},
 		type: { name: "object", value: {} },
 	},
+};
+
+export const ResetWithTextarea: Story<IChipsSchema> = (args) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"chips-textarea-reset": args,
+						buttons: {
+							uiType: "div",
+							style: { display: "flex", gap: "1rem" },
+							children: {
+								...RESET_BUTTON_SCHEMA,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				},
+			},
+			defaultValues: {
+				"chips-textarea-reset": ["Durian"],
+				"chips-textarea-reset-textarea": "Hello world",
+			},
+		}}
+	/>
+);
+ResetWithTextarea.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian", rows: 1 },
 };

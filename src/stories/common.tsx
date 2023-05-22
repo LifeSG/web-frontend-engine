@@ -4,7 +4,7 @@ import { Story } from "@storybook/react/types-6-0";
 import { ReactElement, Ref, forwardRef } from "react";
 import styled from "styled-components";
 import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
-import { ISubmitButtonSchema } from "../components/fields";
+import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema, TNoInfer } from "../components/frontend-engine";
 
 const EXCLUDED_STORY_PROPS = {
@@ -122,6 +122,9 @@ export const CommonCustomStoryProps = (referenceKey: string) => {
 export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
 	"submit-button": { uiType: "submit", label: "Submit" },
 };
+export const RESET_BUTTON_SCHEMA: Record<string, IResetButtonSchema> = {
+	"reset-button": { uiType: "reset", label: "Reset" },
+};
 
 const MINIMUM_SIDE_PADDING = 48;
 const SIDEBAR_WIDTH = 210;
@@ -217,7 +220,7 @@ export const ResetStoryTemplate = <T, U = string>(id: string) =>
 								uiType: "div",
 								style: { display: "flex", gap: "1rem" },
 								children: {
-									"reset-button": { uiType: "reset", label: "Reset" },
+									...RESET_BUTTON_SCHEMA,
 									...SUBMIT_BUTTON_SCHEMA,
 								},
 							},
