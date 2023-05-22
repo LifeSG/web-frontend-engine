@@ -9,6 +9,8 @@ import {
 	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -37,6 +39,7 @@ const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, o
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -213,5 +216,35 @@ describe("checkbox toggle group", () => {
 				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			const checkboxes = getToggles();
+			fireEvent.click(checkboxes[0]);
+			fireEvent.click(checkboxes[1]);
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(checkboxes[0]).not.toBeChecked();
+			expect(checkboxes[1]).not.toBeChecked();
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValues = ["Apple"];
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
+
+			const checkboxes = getToggles();
+			fireEvent.click(checkboxes[1]);
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(checkboxes[0]).toBeChecked();
+			expect(checkboxes[1]).not.toBeChecked();
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		});
 	});
 });

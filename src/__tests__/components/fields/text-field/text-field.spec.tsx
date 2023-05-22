@@ -9,6 +9,8 @@ import {
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -36,6 +38,7 @@ const renderComponent = (
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -155,6 +158,31 @@ describe(DEFAULT_FIELD_TYPE, () => {
 		const textField = getTextfield();
 		const event = fireEvent.drop(textField, { target: { value: EXPECTED_TEXT } });
 		expect(event).toBe(true);
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			fireEvent.change(getTextfield(), { target: { value: "hello" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextfield()).toHaveValue("");
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValue = "hello";
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			fireEvent.change(getTextfield(), { target: { value: "world" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextfield()).toHaveValue(defaultValue);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
 	});
 });
 
@@ -281,6 +309,31 @@ describe(EMAIL_FIELD_TYPE, () => {
 		const event = fireEvent.drop(textField, { target: { value: EXPECTED_EMAIL } });
 		expect(event).toBe(true);
 	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent({ uiType: EMAIL_FIELD_TYPE });
+
+			fireEvent.change(getTextfield(), { target: { value: "john@doe.com" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextfield()).toHaveValue("");
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValue = "john@doe.com";
+			renderComponent({ uiType: EMAIL_FIELD_TYPE }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			fireEvent.change(getTextfield(), { target: { value: "lorem@ipsum.com" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextfield()).toHaveValue(defaultValue);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
+	});
 });
 
 describe(NUMERIC_FIELD_TYPE, () => {
@@ -396,5 +449,30 @@ describe(NUMERIC_FIELD_TYPE, () => {
 		const textField = getTextfield();
 		const event = fireEvent.drop(textField, { target: { value: EXPECTED_NUMBER } });
 		expect(event).toBe(true);
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent({ uiType: NUMERIC_FIELD_TYPE });
+
+			fireEvent.change(getTextfield("spinbutton"), { target: { value: 1 } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextfield("spinbutton")).toHaveValue(null);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValue = 1;
+			renderComponent({ uiType: NUMERIC_FIELD_TYPE }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			fireEvent.change(getTextfield("spinbutton"), { target: { value: 2 } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextfield("spinbutton")).toHaveValue(defaultValue);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
 	});
 });

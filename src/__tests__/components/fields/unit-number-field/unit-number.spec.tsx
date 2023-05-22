@@ -7,6 +7,8 @@ import {
 	TOverrideField,
 	TOverrideSchema,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -30,6 +32,7 @@ const renderComponent = (overrideField?: TOverrideField<IUnitNumberFieldSchema>,
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -123,6 +126,39 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(customError)).toBeInTheDocument();
+		});
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			const floorNumber = "01";
+			const unitNumber = "20";
+			renderComponent();
+
+			fireEvent.change(getFloorInputField(), { target: { value: floorNumber } });
+			fireEvent.change(getUnitInputField(), { target: { value: unitNumber } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getFloorInputField()).toHaveValue("");
+			expect(getUnitInputField()).toHaveValue("");
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultFloor = "01";
+			const defaultUnit = "20";
+			const defaultValue = `${defaultFloor}-${defaultUnit}`;
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			fireEvent.change(getFloorInputField(), { target: { value: "12" } });
+			fireEvent.change(getUnitInputField(), { target: { value: "34" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getFloorInputField()).toHaveValue(defaultFloor);
+			expect(getUnitInputField()).toHaveValue(defaultUnit);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});
 });

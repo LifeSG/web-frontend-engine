@@ -10,6 +10,8 @@ import {
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -31,6 +33,7 @@ const renderComponent = (overrideField?: TOverrideField<ITimeFieldSchema>, overr
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -74,7 +77,7 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should be able to support default values", async () => {
-		const defaultValue = "11:11am";
+		const defaultValue = "11:11AM";
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -113,15 +116,15 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(getConfirmButton()));
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00am" }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00AM" }));
 	});
 
-	it("should be able to display current time if useCurrentTime=true", () => {
+	it("should be able to display current time if useCurrentTime=true", async () => {
 		const time = "12:00";
 		jest.spyOn(LocalTime, "now").mockReturnValue(LocalTime.parse(time));
 		renderComponent({ useCurrentTime: true });
 
-		expect(getTimePicker()).toHaveAttribute("value", `${time}pm`);
+		await waitFor(() => expect(getTimePicker()).toHaveValue(`${time}pm`));
 	});
 
 	it("should be able to support 24 hour time format", async () => {
@@ -135,5 +138,52 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00" }));
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			fireEvent.click(getTimePicker());
+			fireEvent.click(getMinuteButton());
+			fireEvent.click(getHourButton());
+			fireEvent.click(getConfirmButton());
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			await waitFor(() => expect(getTimePicker()).toHaveValue(""));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValue = "11:11am";
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			fireEvent.click(getTimePicker());
+			fireEvent.click(getMinuteButton());
+			fireEvent.click(getHourButton());
+			fireEvent.click(getConfirmButton());
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			await waitFor(() => expect(getTimePicker()).toHaveValue(defaultValue));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
+
+		it("should revert to current time on reset", async () => {
+			const currentTime = "12:00";
+			jest.spyOn(LocalTime, "now").mockReturnValue(LocalTime.parse(currentTime));
+			renderComponent({ useCurrentTime: true });
+
+			fireEvent.click(getTimePicker());
+			fireEvent.click(getMinuteButton());
+			fireEvent.click(getHourButton());
+			fireEvent.click(getConfirmButton());
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			await waitFor(() => expect(getTimePicker()).toHaveValue(`${currentTime}pm`));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `${currentTime}PM` }));
+		});
 	});
 });
