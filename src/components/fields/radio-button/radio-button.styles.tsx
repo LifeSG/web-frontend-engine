@@ -22,7 +22,7 @@ export const RadioContainer = styled.div`
 	}
 `;
 
-export const ToggleWrapper = styled.div`
+export const FlexWrapper = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
