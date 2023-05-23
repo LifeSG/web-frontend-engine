@@ -85,6 +85,64 @@ NotEquals.args = {
 	value: { name: "hello world" },
 };
 
+export const EqualsFieldTextField: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
+EqualsFieldTextField.args = {
+	data: {
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					name: {
+						label: "Name",
+						uiType: "text-field",
+						validation: [{ required: true }],
+					},
+					name1: {
+						label: "Re enter name",
+						uiType: "text-field",
+						validation: [{ equalsField: "name" }],
+					},
+					...SUBMIT_BUTTON_SCHEMA,
+				},
+			},
+		},
+	},
+};
+
+export const EqualsFieldCheckbox: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
+EqualsFieldCheckbox.args = {
+	data: {
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					checkbox: {
+						label: "Select fruits",
+						uiType: "checkbox",
+						options: [
+							{ label: "Apple", value: "Apple" },
+							{ label: "Berry", value: "Berry" },
+							{ label: "Cherry", value: "Cherry" },
+						],
+						validation: [{ required: true }],
+					},
+					checkbox1: {
+						label: "Re select same fruits",
+						uiType: "checkbox",
+						options: [
+							{ label: "Apple", value: "Apple" },
+							{ label: "Berry", value: "Berry" },
+							{ label: "Cherry", value: "Cherry" },
+						],
+						validation: [{ equalsField: "checkbox" }],
+					},
+					...SUBMIT_BUTTON_SCHEMA,
+				},
+			},
+		},
+	},
+};
+
 export const SoftValidation: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
 SoftValidation.args = {
 	data: {

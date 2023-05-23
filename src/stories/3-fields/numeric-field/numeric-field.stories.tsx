@@ -126,12 +126,22 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const PreventPasteAndDrag = Template("prevent-paste-and-drag").bind({});
-PreventPasteAndDrag.args = {
+export const PreventCopyAndPaste = Template("prevent-copy-and-paste").bind({});
+PreventCopyAndPaste.args = {
 	label: "Number",
 	uiType: "numeric-field",
+	placeholder: "Enter text here",
 	customOptions: {
 		preventCopyAndPaste: true,
+	},
+};
+
+export const PreventDragAndDrop = Template("prevent-drag-and-drop").bind({});
+PreventDragAndDrop.args = {
+	label: "Number",
+	uiType: "numeric-field",
+	placeholder: "Enter text here",
+	customOptions: {
 		preventDragAndDrop: true,
 	},
 };

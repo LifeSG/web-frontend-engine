@@ -136,8 +136,8 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			data-testid={TestHelper.generateId(id, uiType)}
 			type={formatInputType()}
 			label={label}
-			onPaste={(e) => (customOptions.preventCopyAndPaste ? e.preventDefault() : e.persist())}
-			onDrop={(e) => (customOptions.preventDragAndDrop ? e.preventDefault() : e.persist())}
+			onPaste={(e) => (customOptions.preventCopyAndPaste ? e.preventDefault() : null)}
+			onDrop={(e) => (customOptions.preventDragAndDrop ? e.preventDefault() : null)}
 			inputMode={formatInputMode()}
 			onChange={handleChange}
 			value={stateValue}
