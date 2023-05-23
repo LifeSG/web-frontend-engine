@@ -1,16 +1,15 @@
 import { Text } from "@lifesg/react-design-system/text";
 import React, { useEffect, useState } from "react";
-import WarningIcon from "../../../../../assets/img/icons/warning-white.svg";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
-import { EImageStatus, IImage, TImageUploadAcceptedFileType } from "../../types";
+import { EImageStatus, IImage, ISharedImageProps, TImageUploadAcceptedFileType } from "../../types";
 import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, Wrapper } from "./image-error.styles";
 
-interface IProps {
+const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-white.svg";
+
+interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	id?: string;
 	image: IImage;
-	accepts: TImageUploadAcceptedFileType[];
-	maxSizeInKb: number;
 	onClickOk: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -56,7 +55,7 @@ export const ImageError = (props: IProps) => {
 	//  =============================================================================
 	return (
 		<Wrapper>
-			<ErrorIcon src={WarningIcon} alt={errorTitle} />
+			<ErrorIcon src={WARNING_ICON} alt={errorTitle} />
 			<Content>
 				<BodyText
 					as={Text.H4}

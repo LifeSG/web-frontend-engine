@@ -3,7 +3,7 @@ import { Text } from "@lifesg/react-design-system/text";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
-import { EImageStatus, IImage, IImageUploadValidationRule, TImageUploadAcceptedFileType } from "../../types";
+import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps } from "../../types";
 import {
 	CellDeleteButton,
 	CellFileSize,
@@ -18,17 +18,15 @@ import {
 	Wrapper,
 } from "./file-item.styles";
 
-interface IProps {
+interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	id?: string;
 	index: number;
 	fileItem: IImage;
-	maxSize: number;
-	accepts: TImageUploadAcceptedFileType[];
 	validation: IImageUploadValidationRule[];
 	onDelete: (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, onDelete, validation }: IProps) => {
+export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accepts, onDelete, validation }: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -49,14 +47,14 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, 
 		setTransformedFileName(transformed);
 	}, [fileName]);
 
+	// =============================================================================
+	// EFFECTS
+	// =============================================================================
 	useEffect(() => {
 		window.addEventListener("resize", setFileNameToWidth);
 		return () => window.removeEventListener("resize", setFileNameToWidth);
 	}, [setFileNameToWidth]);
 
-	// =============================================================================
-	// EFFECTS
-	// =============================================================================
 	useEffect(() => {
 		switch (status) {
 			case EImageStatus.ERROR_FORMAT: {
@@ -71,16 +69,16 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSize, accepts, 
 				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").GENERIC);
 				break;
 			case EImageStatus.ERROR_SIZE: {
-				const fileSizeRule = validation?.find((rule) => "maxSize" in rule);
+				const fileSizeRule = validation?.find((rule) => "maxFileSize" in rule);
 				const errorMessage =
-					fileSizeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxSize);
+					fileSizeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxSizeInKb);
 				setError(true);
 				setErrorMessage(errorMessage);
 				break;
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [status, maxSize]);
+	}, [status, dataURL, file.type, maxSizeInKb]);
 
 	useEffect(() => {
 		setFileNameToWidth();

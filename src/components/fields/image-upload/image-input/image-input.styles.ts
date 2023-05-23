@@ -37,7 +37,7 @@ export const AddButton = styled(Button.Small)`
 	${MediaQuery.MinWidth.mobileL} {
 		width: 10rem;
 		height: 2.5rem;
-	} ;
+	}
 `;
 
 export const DropThemHereText = styled(Content)`

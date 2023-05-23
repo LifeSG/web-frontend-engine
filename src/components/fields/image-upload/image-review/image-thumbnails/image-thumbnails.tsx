@@ -1,9 +1,7 @@
 import { ChangeEvent, useRef } from "react";
-import AddPlaceholderIcon from "../../../../../assets/img/icons/photo-placeholder-add.svg";
-import WarningIcon from "../../../../../assets/img/icons/warning-grey.svg";
 import { TestHelper } from "../../../../../utils";
 import { TFileCapture } from "../../../../shared";
-import { EImageStatus, IImage, TImageUploadAcceptedFileType } from "../../types";
+import { EImageStatus, IImage, ISharedImageProps } from "../../types";
 import {
 	AddImageButton,
 	BorderOverlay,
@@ -15,13 +13,14 @@ import {
 	ThumbnailsWrapper,
 } from "./image-thumbnails.styles";
 
-interface IProps {
-	accepts: TImageUploadAcceptedFileType[];
+const ADD_PLACEHOLDER_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/photo-placeholder-add.svg";
+const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-grey.svg";
+
+interface IProps extends Omit<ISharedImageProps, "maxSizeInKb"> {
 	activeFileIndex: number;
 	capture?: TFileCapture;
 	id?: string | undefined;
 	images: IImage[];
-	maxFiles: number;
 	onClickThumbnail: (index: number) => void;
 	onSelectFile: (file: File) => void;
 }
@@ -72,7 +71,7 @@ export const ImageThumbnails = (props: IProps) => {
 						key={index}
 						id={TestHelper.generateId(id, `item-${index + 1}`)}
 						data-testid={TestHelper.generateId(id, `item-${index + 1}`)}
-						src={image.thumbnailDataURL || image.dataURL || AddPlaceholderIcon}
+						src={image.thumbnailDataURL || image.dataURL || ADD_PLACEHOLDER_ICON}
 						type="button"
 						aria-label={`thumbnail of ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
@@ -92,7 +91,7 @@ export const ImageThumbnails = (props: IProps) => {
 						error
 					>
 						<BorderOverlay isSelected={activeFileIndex === index} />
-						<ThumbnailWarningIcon src={WarningIcon} />
+						<ThumbnailWarningIcon src={WARNING_ICON} />
 					</ThumbnailItem>
 				);
 			}
@@ -122,7 +121,7 @@ export const ImageThumbnails = (props: IProps) => {
 					aria-label="add image"
 					onClick={handleButtonClick}
 				>
-					<img alt="add" src={AddPlaceholderIcon} />
+					<img alt="add" src={ADD_PLACEHOLDER_ICON} />
 				</AddImageButton>
 			</>
 		));

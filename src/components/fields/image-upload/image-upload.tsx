@@ -1,5 +1,5 @@
-import * as Yup from "yup";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
+import * as Yup from "yup";
 import { FileHelper, WindowHelper } from "../../../utils";
 import { useFieldEvent, usePrevious, useValidationSchema } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
@@ -19,14 +19,14 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const {
 		schema: {
 			capture,
-			copies,
+			buttonLabel,
 			compress,
 			description,
 			dimensions = { width: 1000, height: 1000 },
 			editImage,
 			label,
 			outputType = "jpg",
-			uploadOnAdd,
+			upload,
 			validation,
 		},
 		id,
@@ -34,7 +34,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		onChange,
 		...otherProps
 	} = props;
-	const { buttonAdd, dragAndDropHint, inputHint } = copies || {};
 	const { images, setImages } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const [acceptedFileTypes, setAcceptedFileTypes] = useState<TImageUploadAcceptedFileType[]>([
@@ -240,18 +239,17 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					maxSizeInKb={maxFileSize}
 					onChange={onChange}
 					outputType={outputType}
-					upload={uploadOnAdd}
+					upload={upload}
 					value={value}
 				/>
 			</Suspense>
 			<ImageInput
-				title={label}
+				id={id}
+				label={label}
+				fieldType="image-upload"
 				capture={capture}
 				description={description}
-				buttonAdd={buttonAdd}
-				id={id}
-				inputHint={inputHint}
-				dragAndDropHint={dragAndDropHint}
+				buttonLabel={buttonLabel}
 				accepts={acceptedFileTypes}
 				maxFiles={maxFiles}
 				maxSizeInKb={maxFileSize}

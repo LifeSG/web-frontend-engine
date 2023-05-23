@@ -82,7 +82,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 			field: {
 				label: "Image Upload",
 				fieldType: "image-upload",
-				uploadOnAdd: {
+				upload: {
 					method: "post",
 					url: "test",
 				},
@@ -144,11 +144,7 @@ describe("image-upload", () => {
 	it("should allow customising of copies", async () => {
 		await renderComponent({
 			overrideField: {
-				copies: {
-					buttonAdd: "TEST 1",
-					dragAndDropHint: "TEST 2",
-					inputHint: "TEST 3",
-				},
+				buttonLabel: "TEST 1",
 			},
 		});
 
@@ -170,8 +166,6 @@ describe("image-upload", () => {
 		);
 
 		expect(screen.getByText("TEST 1")).toBeInTheDocument();
-		expect(screen.getByText("TEST 2")).toBeInTheDocument();
-		expect(screen.getByText("TEST 3")).toBeInTheDocument();
 	});
 
 	it("should support default value", async () => {
@@ -386,7 +380,7 @@ describe("image-upload", () => {
 				await renderComponent({
 					files: [FILE_1, FILE_2],
 					overrideField: {
-						validation: [{ maxSize: 0.15, errorMessage: ERROR_MESSAGE }],
+						validation: [{ maxFileSize: 0.15, errorMessage: ERROR_MESSAGE }],
 					},
 					uploadType: inputType,
 				});
@@ -435,7 +429,7 @@ describe("image-upload", () => {
 				await act(async () => {
 					await renderComponent({
 						files: [FILE_1],
-						overrideField: { compress: true, validation: [{ maxSize: 1 }] },
+						overrideField: { compress: true, validation: [{ maxFileSize: 1 }] },
 						uploadType: inputType,
 					});
 					await flushPromise();
@@ -569,7 +563,7 @@ describe("image-upload", () => {
 				compressSpy = jest.spyOn(ImageHelper, "compressImage");
 				await renderComponent({
 					files: [FILE_1],
-					overrideField: { editImage: true, validation: [{ maxSize: 0.15 }] },
+					overrideField: { editImage: true, validation: [{ maxFileSize: 0.15 }] },
 					reviewImage: true,
 				});
 

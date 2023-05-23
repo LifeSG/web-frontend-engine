@@ -1,58 +1,37 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
 import { TestHelper } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
-import { DragUpload, ERROR_MESSAGES, IDragUploadRef, TFileCapture } from "../../../shared";
+import { DragUpload, ERROR_MESSAGES, IDragUploadRef } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, IImageUploadValidationRule, TImageUploadAcceptedFileType } from "../types";
+import { EImageStatus, IImage, IImageUploadSchema, ISharedImageProps } from "../types";
 import { FileItem } from "./file-item";
-import {
-	AddButton,
-	AlertContainer,
-	Content,
-	DropThemHereText,
-	Subtitle,
-	UploadWrapper,
-	Wrapper,
-} from "./image-input.styles";
+import { AddButton, AlertContainer, Content, Subtitle, UploadWrapper, Wrapper } from "./image-input.styles";
 
-interface IProps {
-	accepts: TImageUploadAcceptedFileType[];
-	buttonAdd?: string;
-	capture?: TFileCapture;
-	description: string;
-	dimensions: { width: number; height: number };
-	inputHint?: string;
-	dragAndDropHint?: string;
+interface IImageInputProps extends IImageUploadSchema, ISharedImageProps {
+	id: string;
 	errorMessage?: string;
-	id?: string | undefined;
-	maxFiles: number;
-	maxSizeInKb: number;
-	title: string;
-	validation: IImageUploadValidationRule[];
 }
 
 /**
  * handles adding of image(s) through drag & drop or file dialog
  */
-export const ImageInput = (props: IProps) => {
+export const ImageInput = (props: IImageInputProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		accepts,
-		buttonAdd = "Add photos",
+		id,
+		label,
+		buttonLabel = "Add photos",
 		capture,
 		description,
 		dimensions,
-		inputHint = "or drop them here",
-		errorMessage,
-		dragAndDropHint,
-		id = "image-input",
 		maxFiles,
+		accepts,
 		maxSizeInKb,
-		title,
 		validation,
+		errorMessage,
 	} = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
@@ -73,6 +52,7 @@ export const ImageInput = (props: IProps) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [exceededFiles]);
+
 	// ===========================================================================
 	// EVENT HANDLERS
 	// ===========================================================================
@@ -122,7 +102,7 @@ export const ImageInput = (props: IProps) => {
 					key={`${fileItem.name}_${i}`}
 					index={i}
 					fileItem={fileItem}
-					maxSize={maxSizeInKb}
+					maxSizeInKb={maxSizeInKb}
 					accepts={accepts}
 					validation={validation}
 					onDelete={handleDeleteFile}
@@ -131,7 +111,7 @@ export const ImageInput = (props: IProps) => {
 		});
 	};
 
-	// render uploader as long as there are available slots or maxFiles is not defined
+	// render uploader as long as there are available slots or max is not defined
 	const renderUploader = () => {
 		if (maxFiles && remainingPhotos <= 0) return null;
 		return (
@@ -142,9 +122,8 @@ export const ImageInput = (props: IProps) => {
 					id={TestHelper.generateId(id, "file-input-add-button")}
 					data-testid={TestHelper.generateId(id, "file-input-add-button")}
 				>
-					{buttonAdd}
+					{buttonLabel}
 				</AddButton>
-				<DropThemHereText weight="semibold"> {inputHint} </DropThemHereText>
 			</UploadWrapper>
 		);
 	};
@@ -178,14 +157,9 @@ export const ImageInput = (props: IProps) => {
 
 	return (
 		<Wrapper id={TestHelper.generateId(id)} data-testid={TestHelper.generateId(id)}>
-			<DragUpload
-				capture={capture}
-				hint={dragAndDropHint}
-				id={`${id}-drag-upload`}
-				onInput={handleInput}
-				ref={dragUploadRef}
-			>
-				<Subtitle weight="semibold">{title}</Subtitle>
+			<DragUpload capture={capture} id={`${id}-drag-upload`} onInput={handleInput} ref={dragUploadRef}>
+				<Subtitle weight="semibold">{label}</Subtitle>
+				{/* TODO:make sure this description able to take in html file */}
 				<Content weight="semibold">{description}</Content>
 				{renderFiles()}
 				{exceededFiles ? renderFileExceededAlert() : null}

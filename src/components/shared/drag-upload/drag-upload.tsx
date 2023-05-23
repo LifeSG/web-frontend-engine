@@ -1,9 +1,10 @@
 import { ChangeEvent, forwardRef, useImperativeHandle, useRef } from "react";
 import { useDropzone } from "react-dropzone";
-import uploadIcon from "../../../assets/img/icons/global-upload.svg";
 import { TestHelper } from "../../../utils";
 import { HiddenInput, HintContainer, HintText, Wrapper } from "./drag-upload.styles";
 import { IDragUploadProps, IDragUploadRef } from "./types";
+
+const UPLOAD_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/global-upload.svg";
 
 export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, ref) => {
 	// =============================================================================
@@ -35,7 +36,7 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 	const renderHint = () => {
 		return (
 			<HintContainer id={TestHelper.generateId(id, "hint")} data-testid={TestHelper.generateId(id, "hint")}>
-				<img src={uploadIcon} alt="" />
+				<img src={UPLOAD_ICON} alt="" />
 				<HintText weight="semibold">{hint}</HintText>
 			</HintContainer>
 		);

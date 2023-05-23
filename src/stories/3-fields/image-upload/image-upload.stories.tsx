@@ -249,21 +249,7 @@ Compress.args = {
 		fieldType: "image-upload",
 		description: "Compress to 100kb",
 		compress: true,
-		validation: [{ maxSize: 100 }],
-	},
-};
-
-export const Copies = Template.bind({});
-Copies.args = {
-	"upload-copies": {
-		label: "This is the label",
-		description: "This is the description",
-		fieldType: "image-upload",
-		copies: {
-			buttonAdd: "Add",
-			dragAndDropHint: "Drag and drop hint",
-			inputHint: "Input hint",
-		},
+		validation: [{ maxFileSize: 100 }],
 	},
 };
 
@@ -315,7 +301,7 @@ MaxFileSize.args = {
 		label: "Provide images",
 		fieldType: "image-upload",
 		description: "Max 100kb",
-		validation: [{ maxSize: 100, errorMessage: "Max 100kb" }],
+		validation: [{ maxFileSize: 100, errorMessage: "Max 100kb" }],
 	},
 };
 
@@ -335,7 +321,7 @@ UploadOnAdd.args = {
 		label: "Provide images",
 		fieldType: "image-upload",
 		description: "Uploads image via API after adding image",
-		uploadOnAdd: {
+		upload: {
 			method: "post",
 			url: "https://jsonplaceholder.typicode.com/posts",
 		},

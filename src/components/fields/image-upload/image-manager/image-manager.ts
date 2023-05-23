@@ -2,26 +2,14 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { usePrevious } from "../../../../utils/hooks";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
 import { ImageContext } from "../image-context";
-import {
-	EImageStatus,
-	IImage,
-	TImageUploadAcceptedFileType,
-	TImageUploadOutputFileType,
-	TUploadMethod,
-} from "../types";
+import { EImageStatus, IImage, ISharedImageProps, ISharedImageUploadProps } from "../types";
 
-interface IProps {
-	accepts: TImageUploadAcceptedFileType[];
-	compress: boolean;
-	dimensions: { width: number; height: number };
+interface IProps
+	extends Omit<ISharedImageProps, "maxFiles">,
+		Partial<Pick<ISharedImageUploadProps, "upload">>,
+		Omit<ISharedImageUploadProps, "upload"> {
 	editImage: boolean;
 	onChange: (...event: any[]) => void;
-	outputType: TImageUploadOutputFileType;
-	maxSizeInKb: number;
-	upload?: {
-		method: TUploadMethod;
-		url: string;
-	};
 	value: any;
 }
 

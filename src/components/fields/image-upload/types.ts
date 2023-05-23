@@ -4,34 +4,68 @@ import { TFileCapture } from "../../shared";
 
 export type TUploadMethod = "post" | "get" | "put" | "patch";
 export const ACCEPTED_FILE_TYPES = ["jpg", "gif", "png", "heic", "heif", "webp"] as const;
-export type TImageUploadAcceptedFileType = typeof ACCEPTED_FILE_TYPES[number];
+export type TImageUploadAcceptedFileType = (typeof ACCEPTED_FILE_TYPES)[number];
 export type TImageUploadOutputFileType = "jpg" | "png";
 
 export interface IImageUploadValidationRule extends IYupValidationRule {
 	/** accepted file types */
 	fileType?: TImageUploadAcceptedFileType[] | undefined;
 	/** max acceptable file size in kb */
-	maxSize?: number | undefined;
+	maxFileSize?: number | undefined;
+}
+
+export interface IFileValidationStatus {
+	isValid: boolean;
+	isSoftError?: boolean;
+	invalidErrorMessage?: string;
+}
+
+export interface IFilesInvalidError {
+	isSoftError: boolean;
+	message: string | JSX.Element;
+}
+
+export declare type TFileValidationStatuses = {
+	[fileName: string]: IFileValidationStatus;
+};
+
+export interface ICheckCondition {
+	isConditionValid: (images: IImage[], validationAttemptCount: number) => Promise<TFileValidationStatuses>;
+	filesInvalidError?: IFilesInvalidError;
+}
+
+export interface IImageUploadValidationRule extends IYupValidationRule {
+	/** accepted file types */
+	fileType?: TImageUploadAcceptedFileType[] | undefined;
+	/** max acceptable file size in kb */
+	maxFileSize?: number | undefined;
 }
 
 export interface IImageUploadSchema<V = IImageUploadValidationRule>
-	extends IFrontendEngineBaseFieldJsonSchema<"image-upload", V> {
-	capture?: TFileCapture;
-	copies?: {
-		buttonAdd?: string | undefined;
-		dragAndDropHint?: string | undefined;
-		inputHint?: string | undefined;
-	};
-	compress?: boolean | undefined;
+	extends IFrontendEngineBaseFieldJsonSchema<"image-upload", V>,
+		Partial<ISharedImageUploadProps> {
+	buttonLabel?: string | undefined;
 	description?: string | undefined;
-	/** refers to preview dimensions and eventual output dimensions */
-	dimensions?: { width: number; height: number } | undefined;
 	editImage?: boolean | undefined;
-	outputType?: TImageUploadOutputFileType | undefined;
-	uploadOnAdd?: {
-		method: TUploadMethod;
-		url: string;
-	};
+
+	// for illegal parking; deferred
+	checkConditionsOnSave?: ICheckCondition | undefined;
+	capture?: TFileCapture | undefined;
+	// deferred
+	preventSubmitOnFileError?: boolean | undefined;
+}
+
+export interface ISharedImageUploadProps {
+	outputType: TImageUploadOutputFileType;
+	upload: { method: TUploadMethod; url: string };
+	compress: boolean;
+	dimensions: IImageDimensions;
+}
+
+export interface ISharedImageProps {
+	accepts: TImageUploadAcceptedFileType[];
+	maxSizeInKb: number;
+	maxFiles: number;
 }
 
 export enum EImageStatus {
@@ -58,7 +92,7 @@ export interface IImage {
 	name: string;
 	type?: string;
 	/** refers to preview dimensions and eventual output dimensions */
-	dimensions: { width: number; height: number };
+	dimensions: IImageDimensions;
 	dataURL?: string;
 	thumbnailDataURL?: string;
 	drawingDataURL?: string;
@@ -68,4 +102,9 @@ export interface IImage {
 	uploadProgress: number;
 	uploadResponse?: any;
 	slot: number;
+}
+
+export interface IImageDimensions {
+	width: number;
+	height: number;
 }
