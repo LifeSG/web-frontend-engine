@@ -135,6 +135,28 @@ describe(DEFAULT_FIELD_TYPE, () => {
 			expect(textField).not.toHaveValue(EXPECTED_TEXT);
 		});
 	});
+
+	it("should fireEvent return false since default behavior is prevented", () => {
+		renderComponent({
+			customOptions: {
+				preventDragAndDrop: true,
+			},
+		});
+		const textField = getTextfield();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_TEXT } });
+		expect(event).toBe(false);
+	});
+
+	it("should fireEvent return true since default behavior is not prevented", () => {
+		renderComponent({
+			customOptions: {
+				preventDragAndDrop: false,
+			},
+		});
+		const textField = getTextfield();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_TEXT } });
+		expect(event).toBe(true);
+	});
 });
 
 describe(EMAIL_FIELD_TYPE, () => {
@@ -239,6 +261,28 @@ describe(EMAIL_FIELD_TYPE, () => {
 			expect(textField).not.toHaveValue(EXPECTED_EMAIL);
 		});
 	});
+
+	it("should fireEvent return false since default behavior is prevented", () => {
+		renderComponent({
+			customOptions: {
+				preventDragAndDrop: true,
+			},
+		});
+		const textField = getTextfield();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_EMAIL } });
+		expect(event).toBe(false);
+	});
+
+	it("should fireEvent return true since default behavior is not prevented", () => {
+		renderComponent({
+			customOptions: {
+				preventDragAndDrop: false,
+			},
+		});
+		const textField = getTextfield();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_EMAIL } });
+		expect(event).toBe(true);
+	});
 });
 
 describe(NUMERIC_FIELD_TYPE, () => {
@@ -333,5 +377,27 @@ describe(NUMERIC_FIELD_TYPE, () => {
 			await userEvent.paste(`${EXPECTED_NUMBER}`);
 			expect(textField).not.toHaveValue(EXPECTED_NUMBER);
 		});
+	});
+
+	it("should fireEvent return false since default behavior is prevented", () => {
+		renderComponent({
+			customOptions: {
+				preventDragAndDrop: true,
+			},
+		});
+		const textField = getTextfield();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_NUMBER } });
+		expect(event).toBe(false);
+	});
+
+	it("should fireEvent return true since default behavior is not prevented", () => {
+		renderComponent({
+			customOptions: {
+				preventDragAndDrop: false,
+			},
+		});
+		const textField = getTextfield();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_NUMBER } });
+		expect(event).toBe(true);
 	});
 });
