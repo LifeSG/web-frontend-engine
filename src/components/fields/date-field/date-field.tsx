@@ -114,7 +114,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 
 			const inputDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), DEFAULT_DATE_FORMAT, "date");
 			setStateValue(inputDate);
-		} else if (!isValidDate(value)) {
+		} else if (value && !isValidDate(value)) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
 			const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date"); // convert to LocalDate first to parse defaultValue
