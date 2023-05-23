@@ -1,3 +1,6 @@
+import isArray from "lodash/isArray";
+import isString from "lodash/isString";
+import isNumber from "lodash/isNumber";
 import { Button } from "@lifesg/react-design-system/button";
 import { useFormContext } from "react-hook-form";
 import { IGenericFieldProps } from "../../frontend-engine";
@@ -8,19 +11,28 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, disabled, ...otherSchema },
+		schema: { label, disabled, ignoreDefaultValues, ...otherSchema },
 		id,
 		...otherProps
 	} = props;
 
-	const { reset } = useFormContext();
+	const { reset, getValues } = useFormContext();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-
 	const onClick = () => {
-		reset();
+		if (ignoreDefaultValues) {
+			const values = getValues();
+			Object.entries(values).forEach(([key, value]) => {
+				if (isArray(value)) {
+					values[key] = [];
+				} else if (isString(value) || isNumber(value)) {
+					values[key] = "";
+				}
+			});
+			reset(values);
+		} else reset();
 	};
 
 	// =============================================================================

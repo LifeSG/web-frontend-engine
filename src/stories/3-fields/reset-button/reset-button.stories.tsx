@@ -48,7 +48,20 @@ export default {
 			},
 			options: [true, false],
 			control: {
-				type: "select",
+				type: "boolean",
+			},
+		},
+		ignoreDefaultValues: {
+			description: "Specifies if button should reset all fields and default values to blank",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
 			},
 		},
 	},
@@ -100,4 +113,11 @@ export const DefaultValue = Template("reset-default-value", "default").bind({});
 DefaultValue.args = {
 	uiType: "reset",
 	label: "Reset",
+};
+
+export const IgnoreDefaultValue = Template("reset-ignore-default-value", "default").bind({});
+IgnoreDefaultValue.args = {
+	uiType: "reset",
+	label: "Reset",
+	ignoreDefaultValues: true,
 };
