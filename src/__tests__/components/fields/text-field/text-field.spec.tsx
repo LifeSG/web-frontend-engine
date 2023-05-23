@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { FrontendEngine } from "../../../../components";
 import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
@@ -48,6 +49,7 @@ const getTextfield = (role: "textbox" | "spinbutton" = "textbox"): HTMLElement =
 };
 
 describe(DEFAULT_FIELD_TYPE, () => {
+	const EXPECTED_TEXT = "test this has been pasted";
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -105,9 +107,38 @@ describe(DEFAULT_FIELD_TYPE, () => {
 		expect(getTextfield()).toHaveAttribute("readonly");
 		expect(getTextfield()).toBeDisabled();
 	});
+
+	it("should not prevent copy and paste", async () => {
+		renderComponent({
+			customOptions: {
+				preventCopyAndPaste: false,
+			},
+		});
+		const textField = getTextfield();
+		textField.focus();
+		await act(async () => {
+			await userEvent.paste(EXPECTED_TEXT);
+			expect(textField).toHaveValue(EXPECTED_TEXT);
+		});
+	});
+
+	it("should prevent copy and paste", async () => {
+		renderComponent({
+			customOptions: {
+				preventCopyAndPaste: true,
+			},
+		});
+		const textField = getTextfield();
+		textField.focus();
+		await act(async () => {
+			await userEvent.paste(EXPECTED_TEXT);
+			expect(textField).not.toHaveValue(EXPECTED_TEXT);
+		});
+	});
 });
 
 describe(EMAIL_FIELD_TYPE, () => {
+	const EXPECTED_EMAIL = "aa@aa.com";
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -178,9 +209,40 @@ describe(EMAIL_FIELD_TYPE, () => {
 		expect(getTextfield()).toHaveAttribute("readOnly");
 		expect(getTextfield()).toBeDisabled();
 	});
+
+	it("should not prevent copy and paste", async () => {
+		renderComponent({
+			uiType: EMAIL_FIELD_TYPE,
+			customOptions: {
+				preventCopyAndPaste: false,
+			},
+		});
+		const textField = getTextfield();
+		textField.focus();
+		await act(async () => {
+			await userEvent.paste(EXPECTED_EMAIL);
+			expect(textField).toHaveValue(EXPECTED_EMAIL);
+		});
+	});
+
+	it("should prevent copy and paste", async () => {
+		renderComponent({
+			uiType: EMAIL_FIELD_TYPE,
+			customOptions: {
+				preventCopyAndPaste: true,
+			},
+		});
+		const textField = getTextfield();
+		textField.focus();
+		await act(async () => {
+			await userEvent.paste(EXPECTED_EMAIL);
+			expect(textField).not.toHaveValue(EXPECTED_EMAIL);
+		});
+	});
 });
 
 describe(NUMERIC_FIELD_TYPE, () => {
+	const EXPECTED_NUMBER = 10;
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -241,5 +303,35 @@ describe(NUMERIC_FIELD_TYPE, () => {
 		expect(getTextfield("spinbutton")).toHaveAttribute("placeholder", "placeholder");
 		expect(getTextfield("spinbutton")).toHaveAttribute("readOnly");
 		expect(getTextfield("spinbutton")).toBeDisabled();
+	});
+
+	it("should not prevent copy and paste", async () => {
+		renderComponent({
+			uiType: NUMERIC_FIELD_TYPE,
+			customOptions: {
+				preventCopyAndPaste: false,
+			},
+		});
+		const textField = getTextfield("spinbutton");
+		textField.focus();
+		await act(async () => {
+			await userEvent.paste(`${EXPECTED_NUMBER}`);
+			expect(textField).toHaveValue(EXPECTED_NUMBER);
+		});
+	});
+
+	it("should prevent copy and paste", async () => {
+		renderComponent({
+			uiType: NUMERIC_FIELD_TYPE,
+			customOptions: {
+				preventCopyAndPaste: true,
+			},
+		});
+		const textField = getTextfield("spinbutton");
+		textField.focus();
+		await act(async () => {
+			await userEvent.paste(`${EXPECTED_NUMBER}`);
+			expect(textField).not.toHaveValue(EXPECTED_NUMBER);
+		});
 	});
 });

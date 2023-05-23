@@ -1,5 +1,6 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
+import * as Yup from "yup";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
 export default {
@@ -81,4 +82,12 @@ ExcludesArray.args = {
 	type: "array",
 	rule: { excludes: ["hello", "world"], errorMessage: "Must exclude `hello` and `world`" },
 	value: { name: ["hello", "world", "lorem", "ipsum"] },
+};
+
+export const EqualsField = Template.bind({});
+EqualsField.args = {
+	type: "array",
+	rule: { equalsField: "field2", errorMessage: "Both fields must match" },
+	value: { name: ["Apple", "Berry"], field2: ["Apple"] },
+	extraFields: { field2: { schema: Yup.array(), validationRules: [] } },
 };

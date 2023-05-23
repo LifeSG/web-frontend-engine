@@ -28,11 +28,11 @@ YupHelper.addCondition("array", "excludes", (values: unknown[], matches: unknown
 		return values.length && matches.filter((m) => values.includes(m)).length === 0;
 	}
 });
-YupHelper.addCondition("mixed", "equalsField", (value, match, fn) => {
-	switch (typeof value) {
+YupHelper.addCondition("mixed", "equalsField", (values: unknown[], matches: unknown | unknown[], fn) => {
+	switch (typeof values) {
 		case "object":
-			return JSON.stringify(value) === JSON.stringify(fn.parent[`${match}`]);
+			return isEqual(values?.sort(), fn.parent[`${matches}`]?.sort());
 		default:
-			return fn.parent[`${match}`] === value;
+			return isEqual(values, fn.parent[`${matches}`]);
 	}
 });

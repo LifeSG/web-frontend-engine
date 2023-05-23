@@ -54,5 +54,39 @@ describe("custom conditions", () => {
 			});
 			expect(TestHelper.getError(() => schema.validateSync({ field1, field2 })).message).toBe(ERROR_MESSAGE);
 		});
+
+		it.each`
+			type             | field1       | field2
+			${"array"}       | ${["Apple"]} | ${["Apple"]}
+			${"array empty"} | ${[]}        | ${[]}
+		`("should not throw error if both inputs are same $type", ({ field1, field2 }) => {
+			const schema = YupHelper.buildSchema({
+				field1: {
+					schema: Yup.array(),
+					validationRules: [{ required: true }],
+				},
+				field2: { schema: Yup.array(), validationRules: [{ equalsField: "field1" }] },
+			});
+			expect(() => schema.validateSync({ field1, field2 })).not.toThrowError();
+		});
+
+		it.each`
+			type                | field1                 | field2
+			${"two one array"}  | ${["Apple", "Berry"]}  | ${["Apple", "Cherry"]}
+			${"two zero array"} | ${["Apple", "Cherry"]} | ${[]}
+		`("should throw error if both inputs are not same $type", ({ field1, field2 }) => {
+			const ERROR_MESSAGE = "test error message";
+			const schema = YupHelper.buildSchema({
+				field1: {
+					schema: Yup.array(),
+					validationRules: [{ required: true }],
+				},
+				field2: {
+					schema: Yup.array(),
+					validationRules: [{ equalsField: "field1", errorMessage: ERROR_MESSAGE }],
+				},
+			});
+			expect(TestHelper.getError(() => schema.validateSync({ field1, field2 })).message).toBe(ERROR_MESSAGE);
+		});
 	});
 });
