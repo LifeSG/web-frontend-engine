@@ -8,19 +8,28 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, disabled, ...otherSchema },
+		schema: { label, disabled, ignoreDefaultValues, ...otherSchema },
 		id,
 		...otherProps
 	} = props;
 
-	const { reset } = useFormContext();
+	const { reset, getValues } = useFormContext();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-
 	const onClick = () => {
-		reset();
+		if (ignoreDefaultValues) {
+			const values = getValues();
+			Object.entries(values).forEach(([key, value]) => {
+				if (Array.isArray(value)) {
+					values[key] = [];
+				} else {
+					values[key] = "";
+				}
+			});
+			reset(values);
+		} else reset();
 	};
 
 	// =============================================================================
