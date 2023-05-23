@@ -106,7 +106,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	addFieldEventListener: (
 		type: string,
 		id: string,
-		listener: (this: Element, ev: Event) => any,
+		listener: (ev: Event) => any,
 		options?: boolean | AddEventListenerOptions
 	) => void;
 	dispatchFieldEvent: (type: string, id: string, detail?: any) => boolean;
@@ -118,7 +118,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	removeFieldEventListener: (
 		type: string,
 		id: string,
-		listener: (this: Element, ev: Event) => any,
+		listener: (ev: Event) => any,
 		options?: boolean | EventListenerOptions
 	) => void;
 	/** resets the form to the default state */

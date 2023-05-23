@@ -11,7 +11,7 @@ export const useFieldEvent = () => {
 	const addFieldEventListener = (
 		type: string,
 		id: string,
-		listener: (this: Element, ev: Event) => unknown,
+		listener: (ev: Event) => unknown,
 		options?: boolean | AddEventListenerOptions
 	) => {
 		eventManager?.addEventListener(`${id}:${type}`, listener, options);
@@ -20,7 +20,7 @@ export const useFieldEvent = () => {
 	const removeFieldEventListener = (
 		type: string,
 		id: string,
-		listener: (this: Element, ev: Event) => unknown,
+		listener: (ev: Event) => unknown,
 		options?: boolean | AddEventListenerOptions
 	) => {
 		eventManager?.removeEventListener(`${id}:${type}`, listener, options);

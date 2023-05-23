@@ -1,4 +1,4 @@
-import { createContext, ReactElement, useRef } from "react";
+import { ReactElement, createContext, useRef } from "react";
 
 /**
  * events are added / removed / dispatched via the eventManager
