@@ -48,7 +48,7 @@ export default {
 			},
 			options: [true, false],
 			control: {
-				type: "select",
+				type: "boolean",
 			},
 		},
 		ignoreDefaultValues: {
@@ -61,7 +61,7 @@ export default {
 			},
 			options: [true, false],
 			control: {
-				type: "select",
+				type: "boolean",
 			},
 		},
 	},
