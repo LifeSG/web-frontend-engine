@@ -1,6 +1,5 @@
 import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
-import { TFileCapture } from "../../shared";
 
 export type TUploadMethod = "post" | "get" | "put" | "patch";
 export const ACCEPTED_FILE_TYPES = ["jpg", "gif", "png", "heic", "heif", "webp"] as const;
@@ -11,55 +10,18 @@ export interface IImageUploadValidationRule extends IYupValidationRule {
 	/** accepted file types */
 	fileType?: TImageUploadAcceptedFileType[] | undefined;
 	/** max acceptable file size in kb */
-	maxFileSize?: number | undefined;
-}
-
-export interface IFileValidationStatus {
-	isValid: boolean;
-	isSoftError?: boolean;
-	invalidErrorMessage?: string;
-}
-
-export interface IFilesInvalidError {
-	isSoftError: boolean;
-	message: string | JSX.Element;
-}
-
-export declare type TFileValidationStatuses = {
-	[fileName: string]: IFileValidationStatus;
-};
-
-export interface ICheckCondition {
-	isConditionValid: (images: IImage[], validationAttemptCount: number) => Promise<TFileValidationStatuses>;
-	filesInvalidError?: IFilesInvalidError;
-}
-
-export interface IImageUploadValidationRule extends IYupValidationRule {
-	/** accepted file types */
-	fileType?: TImageUploadAcceptedFileType[] | undefined;
-	/** max acceptable file size in kb */
-	maxFileSize?: number | undefined;
+	maxSizeInKb?: number | undefined;
 }
 
 export interface IImageUploadSchema<V = IImageUploadValidationRule>
-	extends IFrontendEngineBaseFieldJsonSchema<"image-upload", V>,
-		Partial<ISharedImageUploadProps> {
+	extends IFrontendEngineBaseFieldJsonSchema<"image-upload", V> {
 	buttonLabel?: string | undefined;
 	description?: string | undefined;
 	editImage?: boolean | undefined;
-
-	// for illegal parking; deferred
-	checkConditionsOnSave?: ICheckCondition | undefined;
-	capture?: TFileCapture | undefined;
-	// deferred
-	preventSubmitOnFileError?: boolean | undefined;
-}
-
-export interface ISharedImageUploadProps {
-	outputType: TImageUploadOutputFileType;
-	upload: { method: TUploadMethod; url: string };
-	compress: boolean;
-	dimensions: IImageDimensions;
+	outputType?: TImageUploadOutputFileType | undefined;
+	uploadOnAddingFile?: { method: TUploadMethod; url: string } | undefined;
+	compress?: boolean | undefined;
+	dimensions?: IImageDimensions | undefined;
 }
 
 export interface ISharedImageProps {

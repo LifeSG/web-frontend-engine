@@ -54,53 +54,17 @@ export default {
 				type: "boolean",
 			},
 		},
-		copies: {
-			description: "Text for various UI elements in the field",
-			defaultValue: { buttonAdd: "Add photos", dragHint: "Drop photos here", dropHint: "or drop them here" },
-			table: {
-				type: {
-					summary: "object",
-				},
-			},
-			type: { name: "object", value: {} },
-		},
-		"copies.buttonAdd": {
+		buttonLabel: {
+			type: { name: "string", required: false },
 			description: "Text for upload button",
 			defaultValue: "Add photos",
 			table: {
 				type: {
 					summary: "string",
 				},
-				defaultValue: { summary: "Add photos" },
 			},
 			control: {
-				type: null,
-			},
-		},
-		"copies.dragHint": {
-			description: "Text that will appear when dragging an image to the drop area",
-			defaultValue: "Drop photos here",
-			table: {
-				type: {
-					summary: "string",
-				},
-				defaultValue: { summary: "Drop photos here" },
-			},
-			control: {
-				type: null,
-			},
-		},
-		"copies.dropHint": {
-			description: "Text that will appear beneath the upload button",
-			defaultValue: "or drop them here",
-			table: {
-				type: {
-					summary: "string",
-				},
-				defaultValue: { summary: "or drop them here" },
-			},
-			control: {
-				type: null,
+				type: "text",
 			},
 		},
 		outputType: {
@@ -144,7 +108,7 @@ export default {
 				type: "boolean",
 			},
 		},
-		uploadOnAdd: {
+		uploadOnAddingFile: {
 			type: { name: "object", value: {} },
 			defaultValue: { url: "", method: "post" },
 			description:
@@ -232,24 +196,13 @@ AcceptedFileTypes.args = {
 	},
 };
 
-export const Capture = Template.bind({});
-Capture.args = {
+export const ButtonLabel = Template.bind({});
+ButtonLabel.args = {
 	"upload-compress": {
 		label: "Provide images",
 		fieldType: "image-upload",
-		description: "Use outward facing camera only",
-		capture: "environment",
-	},
-};
-
-export const Compress = Template.bind({});
-Compress.args = {
-	"upload-compress": {
-		label: "Provide images",
-		fieldType: "image-upload",
-		description: "Compress to 100kb",
-		compress: true,
-		validation: [{ maxFileSize: 100 }],
+		description: "Text for upload button",
+		buttonLabel: "Okay",
 	},
 };
 
@@ -301,7 +254,7 @@ MaxFileSize.args = {
 		label: "Provide images",
 		fieldType: "image-upload",
 		description: "Max 100kb",
-		validation: [{ maxFileSize: 100, errorMessage: "Max 100kb" }],
+		validation: [{ maxSizeInKb: 100, errorMessage: "Max 100kb" }],
 	},
 };
 
@@ -321,7 +274,7 @@ UploadOnAdd.args = {
 		label: "Provide images",
 		fieldType: "image-upload",
 		description: "Uploads image via API after adding image",
-		upload: {
+		uploadOnAddingFile: {
 			method: "post",
 			url: "https://jsonplaceholder.typicode.com/posts",
 		},

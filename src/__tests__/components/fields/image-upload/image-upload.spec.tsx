@@ -7,12 +7,12 @@ import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from ".
 import { AxiosApiClient, FileHelper, ImageHelper, WindowHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
-	flushPromise,
 	FRONTEND_ENGINE_ID,
-	getField,
-	getSubmitButton,
 	SUBMIT_BUTTON_ID,
 	SUBMIT_BUTTON_LABEL,
+	flushPromise,
+	getField,
+	getSubmitButton,
 } from "../../../common";
 
 const JPG_BASE64 =
@@ -82,7 +82,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 			field: {
 				label: "Image Upload",
 				fieldType: "image-upload",
-				upload: {
+				uploadOnAddingFile: {
 					method: "post",
 					url: "test",
 				},
@@ -380,7 +380,7 @@ describe("image-upload", () => {
 				await renderComponent({
 					files: [FILE_1, FILE_2],
 					overrideField: {
-						validation: [{ maxFileSize: 0.15, errorMessage: ERROR_MESSAGE }],
+						validation: [{ maxSizeInKb: 0.15, errorMessage: ERROR_MESSAGE }],
 					},
 					uploadType: inputType,
 				});
@@ -429,7 +429,7 @@ describe("image-upload", () => {
 				await act(async () => {
 					await renderComponent({
 						files: [FILE_1],
-						overrideField: { compress: true, validation: [{ maxFileSize: 1 }] },
+						overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
 						uploadType: inputType,
 					});
 					await flushPromise();
@@ -563,7 +563,7 @@ describe("image-upload", () => {
 				compressSpy = jest.spyOn(ImageHelper, "compressImage");
 				await renderComponent({
 					files: [FILE_1],
-					overrideField: { editImage: true, validation: [{ maxFileSize: 0.15 }] },
+					overrideField: { editImage: true, validation: [{ maxSizeInKb: 0.15 }] },
 					reviewImage: true,
 				});
 

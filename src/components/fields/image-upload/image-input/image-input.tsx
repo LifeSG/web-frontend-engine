@@ -8,7 +8,7 @@ import { EImageStatus, IImage, IImageUploadSchema, ISharedImageProps } from "../
 import { FileItem } from "./file-item";
 import { AddButton, AlertContainer, Content, Subtitle, UploadWrapper, Wrapper } from "./image-input.styles";
 
-interface IImageInputProps extends IImageUploadSchema, ISharedImageProps {
+interface IImageInputProps extends Omit<IImageUploadSchema, "outputType" | "upload">, ISharedImageProps {
 	id: string;
 	errorMessage?: string;
 }
@@ -24,7 +24,6 @@ export const ImageInput = (props: IImageInputProps) => {
 		id,
 		label,
 		buttonLabel = "Add photos",
-		capture,
 		description,
 		dimensions,
 		maxFiles,
@@ -157,7 +156,7 @@ export const ImageInput = (props: IImageInputProps) => {
 
 	return (
 		<Wrapper id={TestHelper.generateId(id)} data-testid={TestHelper.generateId(id)}>
-			<DragUpload capture={capture} id={`${id}-drag-upload`} onInput={handleInput} ref={dragUploadRef}>
+			<DragUpload id={`${id}-drag-upload`} onInput={handleInput} ref={dragUploadRef}>
 				<Subtitle weight="semibold">{label}</Subtitle>
 				{/* TODO:make sure this description able to take in html file */}
 				<Content weight="semibold">{description}</Content>

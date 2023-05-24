@@ -18,7 +18,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	//  =============================================================================
 	const {
 		schema: {
-			capture,
 			buttonLabel,
 			compress,
 			description,
@@ -26,7 +25,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			editImage,
 			label,
 			outputType = "jpg",
-			upload,
+			uploadOnAddingFile,
 			validation,
 		},
 		id,
@@ -216,7 +215,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		return (
 			<ImageReview
 				accepts={acceptedFileTypes}
-				capture={capture}
 				dimensions={dimensions}
 				id={id}
 				maxFiles={maxFiles}
@@ -239,7 +237,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					maxSizeInKb={maxFileSize}
 					onChange={onChange}
 					outputType={outputType}
-					upload={upload}
+					upload={uploadOnAddingFile}
 					value={value}
 				/>
 			</Suspense>
@@ -247,7 +245,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				id={id}
 				label={label}
 				fieldType="image-upload"
-				capture={capture}
 				description={description}
 				buttonLabel={buttonLabel}
 				accepts={acceptedFileTypes}
