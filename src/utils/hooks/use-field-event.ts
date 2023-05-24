@@ -21,7 +21,7 @@ export const useFieldEvent = () => {
 		type: string,
 		id: string,
 		listener: (ev: Event) => unknown,
-		options?: boolean | AddEventListenerOptions
+		options?: boolean | EventListenerOptions
 	) => {
 		eventManager?.removeEventListener(`${id}:${type}`, listener, options);
 	};
