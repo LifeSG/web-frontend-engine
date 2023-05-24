@@ -206,6 +206,15 @@ ButtonLabel.args = {
 	},
 };
 
+export const CustomDescription = Template.bind({});
+CustomDescription.args = {
+	"upload-compress": {
+		label: "Provide images",
+		fieldType: "image-upload",
+		description: "<span>Testing<br>&#x2022; Testing<br>&#x2022; Testing</span>",
+	},
+};
+
 export const Dimensions = Template.bind({});
 Dimensions.args = {
 	"upload-dimensions": {

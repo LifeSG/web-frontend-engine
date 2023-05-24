@@ -1,7 +1,7 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
 import { TestHelper } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
-import { DragUpload, ERROR_MESSAGES, IDragUploadRef } from "../../../shared";
+import { DragUpload, ERROR_MESSAGES, IDragUploadRef, Sanitize } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
 import { EImageStatus, IImage, IImageUploadSchema, ISharedImageProps } from "../types";
@@ -158,8 +158,9 @@ export const ImageInput = (props: IImageInputProps) => {
 		<Wrapper id={TestHelper.generateId(id)} data-testid={TestHelper.generateId(id)}>
 			<DragUpload id={`${id}-drag-upload`} onInput={handleInput} ref={dragUploadRef}>
 				<Subtitle weight="semibold">{label}</Subtitle>
-				{/* TODO:make sure this description able to take in html file */}
-				<Content weight="semibold">{description}</Content>
+				<Content>
+					<Sanitize>{description}</Sanitize>
+				</Content>
 				{renderFiles()}
 				{exceededFiles ? renderFileExceededAlert() : null}
 				{errorMessage && renderCustomError(errorMessage)}
