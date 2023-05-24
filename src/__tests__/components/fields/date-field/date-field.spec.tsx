@@ -55,7 +55,6 @@ const getYearInput = (): HTMLElement => {
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
-		delete window.ResizeObserver;
 		window.ResizeObserver = jest.fn().mockImplementation(() => ({
 			observe: jest.fn(),
 			unobserve: jest.fn(),
@@ -118,7 +117,7 @@ describe(UI_TYPE, () => {
 				fireEvent.change(getDayInput(), { target: { value: "25" } });
 				fireEvent.change(getMonthInput(), { target: { value: "01" } });
 				fireEvent.change(getYearInput(), { target: { value: "2022" } });
-				await waitFor(() => fireEvent.click(screen.getByText("Done")));
+				fireEvent.click(screen.getByText("Done"));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
 				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
@@ -184,15 +183,13 @@ describe(UI_TYPE, () => {
 			fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
 			fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
 
-			await waitFor(() => fireEvent.click(screen.getByText("Done")));
+			fireEvent.click(screen.getByText("Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(getErrorMessage()).toBeInTheDocument();
 
-			await waitFor(() => {
-				fireEvent.change(getDayInput(), { target: { value: valid[0] } });
-				fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
-				fireEvent.change(getYearInput(), { target: { value: valid[2] } });
-			});
+			fireEvent.change(getDayInput(), { target: { value: valid[0] } });
+			fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
+			fireEvent.change(getYearInput(), { target: { value: valid[2] } });
 			await waitFor(() => fireEvent.click(screen.getByText("Done")));
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
@@ -208,12 +205,10 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(getErrorMessage()).toBeInTheDocument();
 
-			await waitFor(() => {
-				fireEvent.focus(getDayInput());
-				fireEvent.change(getDayInput(), { target: { value: valid[0] } });
-				fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
-				fireEvent.change(getYearInput(), { target: { value: valid[2] } });
-			});
+			fireEvent.focus(getDayInput());
+			fireEvent.change(getDayInput(), { target: { value: valid[0] } });
+			fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
+			fireEvent.change(getYearInput(), { target: { value: valid[2] } });
 			await waitFor(() => fireEvent.click(screen.getByText("Done")));
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});

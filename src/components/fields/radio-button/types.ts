@@ -14,8 +14,8 @@ type TCustomOptions =
 	  }
 	| {
 			styleType: "toggle";
-			indicator?: boolean;
-			border?: boolean;
+			indicator?: boolean | undefined;
+			border?: boolean | undefined;
 	  }
 	| {
 			styleType: "image-button";

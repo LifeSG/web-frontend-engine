@@ -1,3 +1,4 @@
+import { ImageButton } from "@lifesg/react-design-system";
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
@@ -12,6 +13,13 @@ export const Label = styled(Text.BodySmall)<ILabelProps>`
 
 export const StyledRadioButton = styled(RadioButton)`
 	margin-right: 5px;
+`;
+
+export const StyledImageButton = styled(ImageButton)`
+	flex: 1;
+	img {
+		min-width: 3.5rem;
+	}
 `;
 
 export const RadioContainer = styled.div`

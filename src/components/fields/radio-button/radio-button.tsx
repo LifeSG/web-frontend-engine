@@ -1,6 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { Toggle } from "@lifesg/react-design-system/toggle";
-import { ImageButton } from "@lifesg/react-design-system/image-button";
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -8,7 +7,7 @@ import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { Label, RadioContainer, StyledRadioButton, FlexWrapper } from "./radio-button.styles";
+import { Label, RadioContainer, StyledRadioButton, FlexWrapper, StyledImageButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
@@ -48,13 +47,10 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>, value?: string): void => {
-		value ?? setStateValue(value);
-		value ? onChange({ target: { value } }) : onChange(event);
-	};
-
-	const handleClick = (event: React.MouseEvent<HTMLButtonElement>, value?: string): void => {
-		console.log(event, value);
+	const handleChangeOrClick = (
+		event: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement>,
+		value?: string
+	): void => {
 		value ?? setStateValue(value);
 		value ? onChange({ target: { value } }) : onChange(event);
 	};
@@ -89,7 +85,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							name={option.label}
 							value={option.value}
 							checked={isRadioButtonChecked(option.value)}
-							onChange={handleChange}
+							onChange={handleChangeOrClick}
 						/>
 						<Label as="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
 							{option.label}
@@ -123,7 +119,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 										: "default"
 								}
 								checked={isRadioButtonChecked(option.value)}
-								onChange={(e) => handleChange(e, option.value)}
+								onChange={(e) => handleChangeOrClick(e, option.value)}
 							>
 								{option.label}
 							</Toggle>
@@ -142,7 +138,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 						const radioButtonId = formatId(index);
 
 						return (
-							<ImageButton
+							<StyledImageButton
 								{...otherSchema}
 								type="button"
 								key={index}
@@ -151,11 +147,11 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								disabled={disabled ?? option.disabled}
 								name={option.label}
 								selected={isRadioButtonChecked(option.value)}
-								onClick={(e) => handleClick(e, option.value)}
+								onClick={(e) => handleChangeOrClick(e, option.value)}
 								imgSrc={option.imgSrc}
 							>
 								{option.label}
-							</ImageButton>
+							</StyledImageButton>
 						);
 					})}
 				</FlexWrapper>

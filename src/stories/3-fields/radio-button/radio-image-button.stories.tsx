@@ -47,7 +47,7 @@ export default {
 		},
 		options: {
 			description:
-				"A list of options that a user can choose from. Component <code>disabled</code> will take precedence over option <code>disabled</code>",
+				"A list of options that a user can choose from. Component <code>disabled</code> will take precedence over option <code>disabled</code>. <code>imgSrc</code> should be a link to a valid image.",
 			table: {
 				type: {
 					summary: "{ label: string, value: string, disabled?: boolean, imgSrc?: string }[]",
@@ -115,9 +115,6 @@ DefaultValue.argTypes = {
 			type: {
 				summary: "string",
 			},
-		},
-		control: {
-			type: "text",
 		},
 	},
 };
