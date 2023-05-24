@@ -172,3 +172,10 @@ ResetWithDefaultValues.argTypes = {
 		type: { name: "object", value: {} },
 	},
 };
+
+export const ResetToCurrentDate = ResetStoryTemplate<IDateFieldSchema>("date-reset-current-date").bind({});
+ResetToCurrentDate.args = {
+	uiType: "date-field",
+	label: "Date",
+	useCurrentDate: true,
+};
