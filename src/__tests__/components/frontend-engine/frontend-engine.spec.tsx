@@ -1,3 +1,4 @@
+import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../components";
@@ -454,5 +455,48 @@ describe("frontend-engine", () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(getErrorMessage()).toBeInTheDocument();
 		});
+	});
+
+	it("should allow adding, dispatching and removing of field event listener", () => {
+		const testFn = jest.fn();
+		const eventName = "my-event";
+
+		const FrontendEngineWithEvent = () => {
+			const ref = useRef<IFrontendEngineRef>();
+			const handleAddFieldEventListener = () => {
+				ref.current?.addFieldEventListener(eventName, FIELD_ONE_ID, testFn);
+			};
+			const handleDispatchFieldEventListener = () => {
+				ref.current?.dispatchFieldEvent(eventName, FIELD_ONE_ID);
+			};
+			const handleRemoveFieldEventListener = () => {
+				ref.current?.removeFieldEventListener(eventName, FIELD_ONE_ID, testFn);
+			};
+
+			return (
+				<>
+					<FrontendEngine ref={ref} data={JSON_SCHEMA} />
+					<Button.Default onClick={handleAddFieldEventListener}>Add field event listener</Button.Default>
+					<Button.Default onClick={handleDispatchFieldEventListener}>
+						Dispatch field event listener
+					</Button.Default>
+					<Button.Default onClick={handleRemoveFieldEventListener}>
+						Remove field event listener
+					</Button.Default>
+				</>
+			);
+		};
+		render(<FrontendEngineWithEvent />);
+
+		fireEvent.click(screen.getByRole("button", { name: "Dispatch field event listener" }));
+		expect(testFn).not.toBeCalled();
+
+		fireEvent.click(screen.getByRole("button", { name: "Add field event listener" }));
+		fireEvent.click(screen.getByRole("button", { name: "Dispatch field event listener" }));
+		expect(testFn).toBeCalledTimes(1);
+
+		fireEvent.click(screen.getByRole("button", { name: "Remove field event listener" }));
+		fireEvent.click(screen.getByRole("button", { name: "Dispatch field event listener" }));
+		expect(testFn).toBeCalledTimes(1);
 	});
 });
