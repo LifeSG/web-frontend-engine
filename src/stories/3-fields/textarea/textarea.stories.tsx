@@ -94,9 +94,6 @@ DefaultValue.argTypes = {
 				summary: "string",
 			},
 		},
-		control: {
-			type: "text",
-		},
 	},
 };
 
@@ -165,6 +162,5 @@ ResetWithDefaultValues.argTypes = {
 				summary: "string",
 			},
 		},
-		type: { name: "object", value: {} },
 	},
 };

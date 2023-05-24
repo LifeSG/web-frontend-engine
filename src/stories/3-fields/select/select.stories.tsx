@@ -49,9 +49,6 @@ export default {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		listStyleWidth: {
 			description: "Style option: The width of the options. You can specify e.g. 100% or 12rem",
@@ -59,9 +56,6 @@ export default {
 				type: {
 					summary: "string",
 				},
-			},
-			control: {
-				type: "text",
 			},
 		},
 	},
@@ -96,9 +90,6 @@ DefaultValue.argTypes = {
 			type: {
 				summary: "string",
 			},
-		},
-		control: {
-			type: "text",
 		},
 	},
 };
@@ -181,6 +172,5 @@ ResetWithDefaultValues.argTypes = {
 				summary: "string",
 			},
 		},
-		type: { name: "object", value: {} },
 	},
 };

@@ -60,9 +60,6 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		validation: {
 			description:
@@ -100,9 +97,6 @@ export const CommonCustomStoryProps = (referenceKey: string) => {
 			},
 			type: { name: "string", required: true },
 			options: [referenceKey],
-			control: {
-				type: "text",
-			},
 			defaultValue: referenceKey,
 		},
 		label: {
@@ -111,9 +105,6 @@ export const CommonCustomStoryProps = (referenceKey: string) => {
 				type: {
 					summary: "string",
 				},
-			},
-			control: {
-				type: "text",
 			},
 		},
 	};

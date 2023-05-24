@@ -43,9 +43,6 @@ export default {
 				},
 				defaultValue: { summary: "uuuu-MM-dd" },
 			},
-			control: {
-				type: "text",
-			},
 		},
 	},
 } as Meta;
@@ -76,9 +73,6 @@ DefaultValue.argTypes = {
 			type: {
 				summary: "string",
 			},
-		},
-		control: {
-			type: "text",
 		},
 	},
 };
@@ -169,7 +163,6 @@ ResetWithDefaultValues.argTypes = {
 				summary: "string",
 			},
 		},
-		type: { name: "object", value: {} },
 	},
 };
 

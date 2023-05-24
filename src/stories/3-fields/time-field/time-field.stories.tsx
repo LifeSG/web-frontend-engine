@@ -27,9 +27,6 @@ export default {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		disabled: {
 			description: "Specifies if the form element is interactable",
@@ -100,7 +97,6 @@ DefaultValue.argTypes = {
 				summary: "string",
 			},
 		},
-		type: { name: "object", value: {} },
 	},
 };
 
@@ -145,6 +141,5 @@ ResetWithDefaultValues.argTypes = {
 				summary: "string",
 			},
 		},
-		type: { name: "object", value: {} },
 	},
 };

@@ -32,9 +32,6 @@ export default {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		disabled: {
 			description: "Specifies if the textfield is interactable",
@@ -82,9 +79,6 @@ DefaultValue.argTypes = {
 			type: {
 				summary: "string",
 			},
-		},
-		control: {
-			type: "text",
 		},
 	},
 };
@@ -155,6 +149,5 @@ ResetWithDefaultValues.argTypes = {
 				summary: "string",
 			},
 		},
-		type: { name: "object", value: {} },
 	},
 };

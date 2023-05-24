@@ -30,9 +30,6 @@ export default {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		defaultCountry: {
 			description:
@@ -103,9 +100,6 @@ DefaultValue.argTypes = {
 			type: {
 				summary: "string",
 			},
-		},
-		control: {
-			type: "text",
 		},
 	},
 };
@@ -222,6 +216,5 @@ ResetWithDefaultValues.argTypes = {
 				summary: "string",
 			},
 		},
-		type: { name: "object", value: {} },
 	},
 };
