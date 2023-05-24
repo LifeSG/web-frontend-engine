@@ -143,3 +143,10 @@ ResetWithDefaultValues.argTypes = {
 		},
 	},
 };
+
+export const ResetToCurrentTime = ResetStoryTemplate<ITimeFieldSchema>("date-reset-current-date").bind({});
+ResetToCurrentTime.args = {
+	label: "Time",
+	uiType: "time-field",
+	useCurrentTime: true,
+};
