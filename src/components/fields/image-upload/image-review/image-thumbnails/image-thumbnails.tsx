@@ -111,7 +111,7 @@ export const ImageThumbnails = (props: IProps) => {
 					tabIndex={-1}
 					capture={capture}
 					ref={fileInputRef}
-					accept={accepts.join(", ")}
+					accept={accepts.map((fileType) => `.${fileType}`).join(", ")}
 					onChange={handleInputChange}
 				/>
 				<AddImageButton

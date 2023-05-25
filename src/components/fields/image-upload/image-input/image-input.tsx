@@ -145,7 +145,7 @@ export const ImageInput = (props: IImageInputProps) => {
 		}
 
 		return (
-			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "file-exceeded-error")}>
+			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "error")}>
 				{errorMessage}
 			</AlertContainer>
 		);
@@ -153,7 +153,7 @@ export const ImageInput = (props: IImageInputProps) => {
 
 	const renderCustomError = (errorMessage: string) => {
 		return (
-			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "custom-error")}>
+			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "error")}>
 				{errorMessage}
 			</AlertContainer>
 		);
@@ -161,7 +161,7 @@ export const ImageInput = (props: IImageInputProps) => {
 
 	return (
 		<Wrapper id={TestHelper.generateId(id)} data-testid={TestHelper.generateId(id)}>
-			<DragUpload id={`${id}-drag-upload`} onInput={handleInput} ref={dragUploadRef}>
+			<DragUpload id={`${id}-drag-upload`} accept={accepts} onInput={handleInput} ref={dragUploadRef}>
 				<Subtitle weight="semibold">{label}</Subtitle>
 				<Content>
 					<Sanitize>{description}</Sanitize>
