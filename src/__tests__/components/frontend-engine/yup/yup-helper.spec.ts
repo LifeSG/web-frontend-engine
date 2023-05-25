@@ -159,6 +159,35 @@ describe("YupHelper", () => {
 			);
 		});
 
+		const generateMultipleFieldSchema = (type: "string" | "number" | "boolean" | "object" | "array") =>
+			YupHelper.buildSchema({
+				field1: { schema: YupHelper.mapSchemaType(type), validationRules: [] },
+				field2: {
+					schema: YupHelper.mapSchemaType(type),
+					validationRules: [{ equalsField: "field1", errorMessage: ERROR_MESSAGE }],
+				},
+			});
+
+		it.each`
+			type         | condition                    | valid                   | invalid
+			${"string"}  | ${"equalsField"}             | ${"hello"}              | ${"help"}
+			${"number"}  | ${"equalsField"}             | ${1}                    | ${2}
+			${"boolean"} | ${"equalsField"}             | ${true}                 | ${false}
+			${"array"}   | ${"equalsField"}             | ${["Apple"]}            | ${["Apple", "Berry"]}
+			${"array"}   | ${"equalsField (empty)"}     | ${[]}                   | ${["Apple"]}
+			${"object"}  | ${"equalsField"}             | ${{ fruit: ["Apple"] }} | ${{}}
+			${"object"}  | ${"equalsField (undefined)"} | ${undefined}            | ${{}}
+		`("should support $condition condition for Yup $type type", ({ type, valid, invalid }) => {
+			const schema = generateMultipleFieldSchema(type);
+
+			expect(() => schema.validateSync({ field1: valid, field2: valid })).not.toThrowError();
+			expect(
+				TestHelper.getError(() =>
+					schema.validateSync({ field1: valid, field2: invalid }, { abortEarly: false })
+				).message
+			).toBe(ERROR_MESSAGE);
+		});
+
 		const generateConditionalSchema = (type: TYupSchemaType, is: any, sourceFieldType: TYupSchemaType) =>
 			Yup.object().shape({
 				field1: YupHelper.mapRules(YupHelper.mapSchemaType(type), [

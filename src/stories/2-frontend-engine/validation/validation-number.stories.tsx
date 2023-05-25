@@ -1,5 +1,6 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
+import * as Yup from "yup";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
 export default {
@@ -77,4 +78,12 @@ Integer.args = {
 	type: "number",
 	rule: { integer: true, errorMessage: "Must be integer" },
 	value: { name: 1.5 },
+};
+
+export const EqualsField = Template.bind({});
+EqualsField.args = {
+	type: "number",
+	rule: { equalsField: "field2", errorMessage: "Both fields must match" },
+	value: { name: 10, field2: 11 },
+	extraFields: { field2: { schema: Yup.number(), validationRules: [] } },
 };

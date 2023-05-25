@@ -13,7 +13,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// CONST, STATE, REFS
 	// ================================================
 	const {
-		schema: { inputMode, label, uiType, validation, ...otherSchema },
+		schema: { inputMode, label, uiType, validation, customOptions, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -136,6 +136,8 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			data-testid={TestHelper.generateId(id, uiType)}
 			type={formatInputType()}
 			label={label}
+			onPaste={(e) => (customOptions?.preventCopyAndPaste ? e.preventDefault() : null)}
+			onDrop={(e) => (customOptions?.preventDragAndDrop ? e.preventDefault() : null)}
 			inputMode={formatInputMode()}
 			onChange={handleChange}
 			value={stateValue}

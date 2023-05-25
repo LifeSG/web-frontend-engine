@@ -49,6 +49,17 @@ export default {
 				type: "boolean",
 			},
 		},
+		customOptions: {
+			description:
+				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li></ul>",
+			table: {
+				type: {
+					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean}`,
+				},
+			},
+			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false },
+			control: { type: "object" },
+		},
 	},
 } as Meta;
 
@@ -126,4 +137,22 @@ WithValidation.args = {
 	label: "Textfield",
 	uiType: "text-field",
 	validation: [{ required: true }],
+};
+
+export const PreventCopyAndPaste = Template("prevent-copy-and-paste").bind({});
+PreventCopyAndPaste.args = {
+	label: "Textfield",
+	uiType: "text-field",
+	customOptions: {
+		preventCopyAndPaste: true,
+	},
+};
+
+export const PreventDragAndDrop = Template("prevent-drag-and-drop").bind({});
+PreventDragAndDrop.args = {
+	label: "Textfield",
+	uiType: "text-field",
+	customOptions: {
+		preventDragAndDrop: true,
+	},
 };
