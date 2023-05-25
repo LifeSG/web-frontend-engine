@@ -43,5 +43,5 @@ export default {
 		},
 	],
 	plugins,
-	external: ["react", "react-dom", "styled-components", "@lifesg/react-design-system"],
+	external: ["react", "react-dom", "styled-components", "@lifesg/react-design-system", "@lifesg/react-icons"],
 };
