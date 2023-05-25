@@ -47,12 +47,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChangeOrClick = (
-		event: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement>,
-		value?: string
-	): void => {
-		value ?? setStateValue(value);
-		value ? onChange({ target: { value } }) : onChange(event);
+	const handleChangeOrClick = (value: string): void => {
+		onChange({ target: { value } });
 	};
 
 	// =============================================================================
@@ -85,7 +81,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							name={option.label}
 							value={option.value}
 							checked={isRadioButtonChecked(option.value)}
-							onChange={handleChangeOrClick}
+							onChange={() => handleChangeOrClick(option.value)}
 						/>
 						<Label as="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
 							{option.label}
@@ -119,7 +115,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 										: "default"
 								}
 								checked={isRadioButtonChecked(option.value)}
-								onChange={(e) => handleChangeOrClick(e, option.value)}
+								onChange={() => handleChangeOrClick(option.value)}
 							>
 								{option.label}
 							</Toggle>
@@ -147,7 +143,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								disabled={disabled ?? option.disabled}
 								name={option.label}
 								selected={isRadioButtonChecked(option.value)}
-								onClick={(e) => handleChangeOrClick(e, option.value)}
+								onClick={() => handleChangeOrClick(option.value)}
 								imgSrc={option.imgSrc}
 							>
 								{option.label}
