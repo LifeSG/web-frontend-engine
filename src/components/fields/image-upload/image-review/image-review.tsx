@@ -96,7 +96,6 @@ export const ImageReview = (props: IProps) => {
 	// edit image
 	const [activeColor, setActiveColor] = useState(PALETTE_COLORS[0].color);
 	const [eraseMode, setEraseMode] = useState(false);
-	const [clearDrawing, setClearDrawing] = useState(false);
 	const imageEditorRef = useRef<IImageEditorRef>(null);
 
 	const reviewSaveDisabled =
@@ -230,8 +229,7 @@ export const ImageReview = (props: IProps) => {
 
 	const handleClearDrawingDecision = (decision: boolean) => {
 		if (decision) {
-			setClearDrawing(true);
-			setTimeout(() => setClearDrawing(false));
+			imageEditorRef.current.clearDrawing();
 		}
 		setActivePrompt(null);
 	};
@@ -249,7 +247,6 @@ export const ImageReview = (props: IProps) => {
 	const clearDrawingStates = () => {
 		setActiveColor("");
 		setEraseMode(false);
-		setClearDrawing(false);
 	};
 
 	// =============================================================================
@@ -300,7 +297,6 @@ export const ImageReview = (props: IProps) => {
 							drawing={images[activeFileIndex]?.drawing}
 							color={drawActive ? activeColor : undefined}
 							erase={drawActive ? eraseMode : false}
-							clear={clearDrawing}
 							ref={imageEditorRef}
 						/>
 					</Suspense>

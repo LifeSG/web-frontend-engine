@@ -6,10 +6,10 @@ export interface IImageEditorProps {
 	drawing?: fabric.Object[];
 	color?: string;
 	erase?: boolean;
-	clear?: boolean;
 	forwardedRef?: ForwardedRef<IImageEditorRef>;
 }
 export interface IImageEditorRef {
+	clearDrawing: VoidFunction;
 	export: () => {
 		drawing: fabric.Object[];
 		dataURL: string;

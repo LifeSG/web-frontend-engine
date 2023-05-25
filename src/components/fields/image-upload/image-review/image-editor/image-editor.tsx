@@ -12,7 +12,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	//  =============================================================================
 	// CONST, STATE, REFS
 	//  =============================================================================
-	const { maxSizeInB, baseImageDataURL, drawing, color, erase, clear } = props;
+	const { maxSizeInB, baseImageDataURL, drawing, color, erase } = props;
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const fabricCanvas = useRef<fabric.Canvas>();
@@ -25,7 +25,8 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	});
 
 	useImperativeHandle(ref, () => ({
-		export() {
+		clearDrawing,
+		export: () => {
 			if (fabricCanvas.current) {
 				resetZoomAndPosition();
 				return {
@@ -144,6 +145,14 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	// =============================================================================
 	// PHOTO AND DRAWINGS
 	// =============================================================================
+	const clearDrawing = () => {
+		if (fabricCanvas.current) {
+			fabricCanvas.current.getObjects().forEach((obj) => {
+				if (!obj.isType("image")) fabricCanvas.current?.remove(obj);
+			});
+		}
+	};
+
 	const fitImageToCanvas = () => {
 		if (fabricCanvas.current && fabricBackground.current) {
 			const img = fabricBackground.current;
@@ -254,14 +263,6 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			}
 		}
 	}, [erase]);
-
-	useEffect(() => {
-		if (clear && fabricCanvas.current) {
-			fabricCanvas.current.getObjects().forEach((obj) => {
-				if (!obj.isType("image")) fabricCanvas.current?.remove(obj);
-			});
-		}
-	}, [clear]);
 
 	// =============================================================================
 	// GESTURES
