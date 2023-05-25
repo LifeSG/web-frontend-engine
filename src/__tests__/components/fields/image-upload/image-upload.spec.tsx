@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { setupJestCanvasMock } from "jest-canvas-mock";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IImageUploadSchema } from "../../../../components/fields";
@@ -86,7 +87,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 				uiType: "section",
 				children: {
 					[COMPONENT_ID]: {
-						label: "Radio",
+						label: "Image Upload",
 						uiType: UI_TYPE,
 						uploadOnAddingFile: {
 							method: "post",
@@ -133,6 +134,7 @@ describe("image-upload", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		jest.restoreAllMocks();
+		setupJestCanvasMock();
 
 		jest.spyOn(FileHelper, "truncateFileName").mockImplementation((fileName) => fileName);
 		uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ id: 1 });
@@ -596,7 +598,7 @@ describe("image-upload", () => {
 				await waitFor(() => fireEvent.click(getField("button", "Draw")));
 			});
 
-			it.only("should hide the thumbnails and show the drawing toolbar", () => {
+			it("should hide the thumbnails and show the drawing toolbar", () => {
 				expect(getField("button", `thumbnail of ${FILE_1.name}`, true)).not.toBeInTheDocument();
 				expect(getField("button", "eraser")).toBeInTheDocument();
 				expect(screen.getAllByRole("button", { name: /brush$/i })).toBeTruthy();

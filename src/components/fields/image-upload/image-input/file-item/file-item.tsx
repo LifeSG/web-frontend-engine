@@ -69,7 +69,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").GENERIC);
 				break;
 			case EImageStatus.ERROR_SIZE: {
-				const fileSizeRule = validation?.find((rule) => "maxFileSize" in rule);
+				const fileSizeRule = validation?.find((rule) => "maxSizeInKb" in rule);
 				const errorMessage =
 					fileSizeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxSizeInKb);
 				setError(true);
