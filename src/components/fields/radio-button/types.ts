@@ -5,6 +5,7 @@ interface IOption {
 	label: string;
 	value: string;
 	disabled?: boolean | undefined;
+	imgSrc?: string | undefined;
 }
 
 type TCustomOptions =
@@ -13,8 +14,11 @@ type TCustomOptions =
 	  }
 	| {
 			styleType: "toggle";
-			indicator?: boolean;
-			border?: boolean;
+			indicator?: boolean | undefined;
+			border?: boolean | undefined;
+	  }
+	| {
+			styleType: "image-button";
 	  };
 
 export interface IRadioButtonGroupSchema<V = undefined>

@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { Label, RadioContainer, StyledRadioButton, ToggleWrapper } from "./radio-button.styles";
+import { Label, RadioContainer, StyledRadioButton, FlexWrapper, StyledImageButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
@@ -47,9 +47,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>, value?: string): void => {
-		value ?? setStateValue(value);
-		value ? onChange({ target: { value } }) : onChange(event);
+	const handleChangeOrClick = (value: string): void => {
+		onChange({ target: { value } });
 	};
 
 	// =============================================================================
@@ -82,7 +81,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							name={option.label}
 							value={option.value}
 							checked={isRadioButtonChecked(option.value)}
-							onChange={handleChange}
+							onChange={() => handleChangeOrClick(option.value)}
 						/>
 						<Label as="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
 							{option.label}
@@ -96,7 +95,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderToggles = () => {
 		return (
 			options.length > 0 && (
-				<ToggleWrapper>
+				<FlexWrapper>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -116,20 +115,60 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 										: "default"
 								}
 								checked={isRadioButtonChecked(option.value)}
-								onChange={(e) => handleChange(e, option.value)}
+								onChange={() => handleChangeOrClick(option.value)}
 							>
 								{option.label}
 							</Toggle>
 						);
 					})}
-				</ToggleWrapper>
+				</FlexWrapper>
 			)
 		);
 	};
 
+	const renderImageButtons = () => {
+		return (
+			options.length > 0 && (
+				<FlexWrapper>
+					{options.map((option, index) => {
+						const radioButtonId = formatId(index);
+
+						return (
+							<StyledImageButton
+								{...otherSchema}
+								type="button"
+								key={index}
+								id={radioButtonId}
+								data-testid={TestHelper.generateId(id, "radio")}
+								disabled={disabled ?? option.disabled}
+								name={option.label}
+								selected={isRadioButtonChecked(option.value)}
+								onClick={() => handleChangeOrClick(option.value)}
+								imgSrc={option.imgSrc}
+							>
+								{option.label}
+							</StyledImageButton>
+						);
+					})}
+				</FlexWrapper>
+			)
+		);
+	};
+
+	const renderOptions = () => {
+		switch (customOptions?.styleType) {
+			case "toggle":
+				return renderToggles();
+			case "image-button":
+				return renderImageButtons();
+			default:
+				return renderRadioButtons();
+		}
+	};
+
 	return (
 		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			{customOptions?.styleType === "toggle" ? renderToggles() : renderRadioButtons()}
+			{renderOptions()}
 		</Form.CustomField>
 	);
 };
