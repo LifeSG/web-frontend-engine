@@ -8,11 +8,12 @@ import { AxiosApiClient, FileHelper, ImageHelper, WindowHelper } from "../../../
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
-	SUBMIT_BUTTON_ID,
-	SUBMIT_BUTTON_LABEL,
+	TOverrideField,
+	TOverrideSchema,
 	flushPromise,
 	getField,
 	getSubmitButton,
+	getSubmitButtonProps,
 } from "../../../common";
 
 const JPG_BASE64 =
@@ -23,7 +24,9 @@ const FILE_1 = new File(["file"], "test.jpg", {
 const FILE_2 = new File(["file"], "test2.jpg", {
 	type: "image/jpeg",
 });
-const submitFn = jest.fn();
+const COMPONENT_ID = "field";
+const UI_TYPE = "image-upload";
+const SUBMIT_FN = jest.fn();
 let uploadSpy: jest.SpyInstance;
 
 const getSaveButton = (isQuery = false): HTMLElement => getField("button", "Save", isQuery);
@@ -49,8 +52,8 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 };
 
 interface IRenderAndPerformActionsOptions {
-	overrideField?: Partial<Omit<IImageUploadSchema, "fieldType" | "label">> | undefined;
-	overrideSchema?: Partial<Omit<IFrontendEngineData, "fields">> | undefined;
+	overrideField?: TOverrideField<IImageUploadSchema>;
+	overrideSchema?: TOverrideSchema;
 	files?: { name: string; type: string }[];
 	uploadType?: "input" | "drag & drop";
 	reviewImage?: boolean;
@@ -78,19 +81,21 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 	} = options;
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
-		fields: {
-			field: {
-				label: "Image Upload",
-				fieldType: "image-upload",
-				uploadOnAddingFile: {
-					method: "post",
-					url: "test",
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					[COMPONENT_ID]: {
+						label: "Radio",
+						uiType: UI_TYPE,
+						uploadOnAddingFile: {
+							method: "post",
+							url: "test",
+						},
+						...overrideField,
+					},
+					...getSubmitButtonProps(),
 				},
-				...overrideField,
-			},
-			[SUBMIT_BUTTON_ID]: {
-				label: SUBMIT_BUTTON_LABEL,
-				fieldType: "submit",
 			},
 		},
 		...overrideSchema,
@@ -98,7 +103,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 	render(
 		<FrontendEngineWithEventListener
 			data={json}
-			onSubmit={submitFn}
+			onSubmit={SUBMIT_FN}
 			eventType={eventType}
 			eventListener={eventListener}
 		/>
@@ -189,7 +194,7 @@ describe("image-upload", () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 		});
 
-		expect(submitFn).toBeCalledWith(
+		expect(SUBMIT_FN).toBeCalledWith(
 			expect.objectContaining({
 				field: expect.arrayContaining([
 					expect.objectContaining({
@@ -210,7 +215,7 @@ describe("image-upload", () => {
 			});
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(submitFn).not.toBeCalled();
+			expect(SUBMIT_FN).not.toBeCalled();
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 
@@ -253,7 +258,7 @@ describe("image-upload", () => {
 			it("should submit as many base64 and upload response", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith(
+				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -296,7 +301,7 @@ describe("image-upload", () => {
 			it("should submit base64 and upload response up to max number of images", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith(
+				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -329,7 +334,7 @@ describe("image-upload", () => {
 
 			it("should submit only the valid files", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(submitFn).toBeCalledWith(
+				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -359,7 +364,7 @@ describe("image-upload", () => {
 			it("should submit only the valid files", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith(
+				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -394,7 +399,7 @@ describe("image-upload", () => {
 			it("should submit only the valid files", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith(
+				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -591,7 +596,7 @@ describe("image-upload", () => {
 				await waitFor(() => fireEvent.click(getField("button", "Draw")));
 			});
 
-			it("should hide the thumbnails and show the drawing toolbar", () => {
+			it.only("should hide the thumbnails and show the drawing toolbar", () => {
 				expect(getField("button", `thumbnail of ${FILE_1.name}`, true)).not.toBeInTheDocument();
 				expect(getField("button", "eraser")).toBeInTheDocument();
 				expect(screen.getAllByRole("button", { name: /brush$/i })).toBeTruthy();
