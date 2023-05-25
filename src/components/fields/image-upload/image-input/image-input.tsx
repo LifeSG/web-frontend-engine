@@ -4,12 +4,17 @@ import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { DragUpload, ERROR_MESSAGES, IDragUploadRef, Sanitize } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, IImageUploadSchema, ISharedImageProps } from "../types";
+import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps } from "../types";
 import { FileItem } from "./file-item";
 import { AddButton, AlertContainer, Content, Subtitle, UploadWrapper, Wrapper } from "./image-input.styles";
 
-interface IImageInputProps extends Omit<IImageUploadSchema, "outputType" | "upload">, ISharedImageProps {
-	id: string;
+interface IImageInputProps extends ISharedImageProps {
+	id?: string | undefined;
+	label: string;
+	buttonLabel?: string;
+	description: string;
+	dimensions: { width: number; height: number };
+	validation: IImageUploadValidationRule[];
 	errorMessage?: string;
 }
 

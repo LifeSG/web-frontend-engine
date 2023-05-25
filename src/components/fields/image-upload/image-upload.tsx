@@ -244,7 +244,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			<ImageInput
 				id={id}
 				label={label}
-				uiType="image-upload"
 				description={description}
 				buttonLabel={buttonLabel}
 				accepts={acceptedFileTypes}

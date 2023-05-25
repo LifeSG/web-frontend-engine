@@ -2,7 +2,7 @@ import { Text } from "@lifesg/react-design-system/text";
 import React, { useEffect, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
-import { EImageStatus, IImage, ISharedImageProps, TImageUploadAcceptedFileType } from "../../types";
+import { EImageStatus, IImage, ISharedImageProps } from "../../types";
 import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, Wrapper } from "./image-error.styles";
 
 const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-white.svg";

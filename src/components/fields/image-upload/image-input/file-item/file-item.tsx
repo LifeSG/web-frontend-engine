@@ -1,5 +1,5 @@
-import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Text } from "@lifesg/react-design-system/text";
+import { CrossIcon } from "@lifesg/react-icons/cross";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";

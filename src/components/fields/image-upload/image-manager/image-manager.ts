@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { usePrevious } from "../../../../utils/hooks";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
+import { usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import { EImageStatus, IImage, ISharedImageProps, TImageUploadOutputFileType, TUploadMethod } from "../types";
 
