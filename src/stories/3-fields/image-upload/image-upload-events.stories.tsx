@@ -1,15 +1,14 @@
+import { action } from "@storybook/addon-actions";
 import { Description, Stories, Title } from "@storybook/addon-docs";
-import { useState } from "@storybook/addons";
-import { Meta } from "@storybook/react/types-6-0";
-import { ForwardedRef, forwardRef, useCallback, useEffect, useRef } from "react";
-import styled from "styled-components";
-import { FrontendEngine } from "../../../components";
+import { Meta, Story } from "@storybook/react/types-6-0";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { IImageUploadSchema } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
-import { SubmitButtonStorybook } from "../../common";
+import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import DefaultImageUploadConfig from "./image-upload.stories";
 
 export default {
 	title: "Field/ImageUpload/Events",
-	component: null,
 	parameters: {
 		docs: {
 			page: () => (
@@ -26,135 +25,123 @@ export default {
 			},
 		},
 	},
-	argTypes: {
-		type: {
-			table: { disable: true },
-		},
-	},
+	argTypes: DefaultImageUploadConfig.argTypes,
 } as Meta;
 
-export const Mount = () => {
-	const formRef = useRef<IFrontendEngineRef>();
-	const handleMount = () => console.log("mount");
-
-	useEffect(() => {
-		const currentFormRef = formRef.current;
-		currentFormRef.addFieldEventListener("mount", "mount-field", handleMount);
-		return () => currentFormRef.removeFieldEventListener("mount", "mount-field", handleMount);
-	}, []);
-
-	return <EventComponent id="mount-field" ref={formRef} />;
-};
-Mount.parameters = { controls: { hideNoControlsWarning: true } };
-
-export const ShowReviewModal = () => {
-	const formRef = useRef<IFrontendEngineRef>();
-	const handleShowReviewModal = () => console.log("show review modal");
-
-	useEffect(() => {
-		const currentFormRef = formRef.current;
-		currentFormRef.addFieldEventListener("show-review-modal", "show-review-modal-field", handleShowReviewModal);
-		return () =>
-			currentFormRef.removeFieldEventListener(
-				"show-review-modal",
-				"show-review-modal-field",
-				handleShowReviewModal
-			);
-	}, []);
-
-	return <EventComponent id="show-review-modal-field" ref={formRef} />;
-};
-ShowReviewModal.parameters = { controls: { hideNoControlsWarning: true } };
-
-export const HideReviewModal = () => {
-	const formRef = useRef<IFrontendEngineRef>();
-	const handleHideReviewModal = () => console.log("hide review modal");
-
-	useEffect(() => {
-		const currentFormRef = formRef.current;
-		currentFormRef.addFieldEventListener("hide-review-modal", "hide-review-modal-field", handleHideReviewModal);
-		return () =>
-			currentFormRef.removeFieldEventListener(
-				"hide-review-modal",
-				"hide-review-modal-field",
-				handleHideReviewModal
-			);
-	}, []);
-
-	return <EventComponent id="hide-review-modal-field" ref={formRef} />;
-};
-HideReviewModal.parameters = { controls: { hideNoControlsWarning: true } };
-
-export const FileDialog = () => {
-	const formRef = useRef<IFrontendEngineRef>();
-	const handleFileDialog = () => console.log("file dialog");
-
-	useEffect(() => {
-		const currentFormRef = formRef.current;
-		currentFormRef.addFieldEventListener("file-dialog", "file-dialog-field", handleFileDialog);
-		return () => currentFormRef.removeFieldEventListener("file-dialog", "file-dialog-field", handleFileDialog);
-	}, []);
-
-	return <EventComponent id="file-dialog-field" ref={formRef} />;
-};
-FileDialog.parameters = { controls: { hideNoControlsWarning: true } };
-
-export const SaveReviewImages = () => {
-	const formRef = useRef<IFrontendEngineRef>();
-	const [attemptCount, setAttemptCount] = useState(1);
-	const handleSaveReviewImages = useCallback(
-		async (event: CustomEvent) => {
-			console.log("save review images attempt", attemptCount, event.detail.images);
-			// event can be prevented and retried
-			if (attemptCount < 2) {
-				event.preventDefault();
-				setAttemptCount((v) => v + 1);
-				await new Promise((resolve) => setTimeout(resolve, 1000));
-				event.detail.retry();
-			}
-		},
-		[attemptCount]
-	);
-
-	useEffect(() => {
-		const currentFormRef = formRef.current;
-		currentFormRef.addFieldEventListener("save-review-images", "save-review-images-field", handleSaveReviewImages);
-		return () =>
-			currentFormRef.removeFieldEventListener(
-				"save-review-images",
-				"save-review-images-field",
-				handleSaveReviewImages
-			);
-	}, [handleSaveReviewImages]);
-
-	return <EventComponent id="save-review-images-field" ref={formRef} />;
-};
-SaveReviewImages.parameters = { controls: { hideNoControlsWarning: true } };
-
-interface IProps {
-	id: string;
-	ref: IFrontendEngineRef;
-}
-const EventComponent = forwardRef((props: IProps, ref: ForwardedRef<IFrontendEngineRef>) => {
-	const { id } = props;
-
-	return (
-		<StyledForm
-			ref={ref}
-			data={{
-				fields: {
-					[id]: {
-						label: "Provide images",
-						fieldType: "image-upload",
-						editImage: true,
+/* eslint-disable react-hooks/rules-of-hooks */
+const Template = (eventName: string) =>
+	((args) => {
+		const id = `image-upload-${eventName}`;
+		const formRef = useRef<IFrontendEngineRef>();
+		const handleEvent = (e: unknown) => action(eventName)(e);
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
+			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
 					},
-					...SubmitButtonStorybook,
-				},
-			}}
-		/>
-	);
-});
-const StyledForm = styled(FrontendEngine)`
-	width: 500px;
-	margin: 0 auto;
-`;
+				}}
+			/>
+		);
+	}) as Story<IImageUploadSchema>;
+/* eslint-enable react-hooks/rules-of-hooks */
+
+export const Mount = Template("mount").bind({});
+Mount.args = {
+	label: "Provide images",
+	description: "Listen for `mount` event",
+	uiType: "image-upload",
+};
+
+export const ShowReviewModal = Template("show-review-modal").bind({});
+ShowReviewModal.args = {
+	label: "Provide images",
+	description: "Listen for `show-review-modal` event",
+	uiType: "image-upload",
+	editImage: true,
+};
+
+export const HideReviewModal = Template("hide-review-modal").bind({});
+HideReviewModal.args = {
+	label: "Provide images",
+	description: "Listen for `hide-review-modal` event",
+	uiType: "image-upload",
+	editImage: true,
+};
+
+export const FileDialog = Template("file-dialog").bind({});
+FileDialog.args = {
+	label: "Provide images",
+	description: "Listen for `file-dialog` event",
+	uiType: "image-upload",
+	editImage: true,
+};
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const SaveReviewImagesTemplate = (eventName: string) =>
+	((args) => {
+		const id = `image-upload-${eventName}`;
+		const formRef = useRef<IFrontendEngineRef>();
+		const [attemptCount, setAttemptCount] = useState(1);
+
+		const handleSaveReviewImages = useCallback(
+			async (event: CustomEvent) => {
+				action(eventName)(event, attemptCount);
+				// event can be prevented and retried
+				if (attemptCount < 2) {
+					event.preventDefault();
+					setAttemptCount((v) => v + 1);
+					await new Promise((resolve) => setTimeout(resolve, 1000));
+					event.detail.retry();
+				}
+			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[attemptCount]
+		);
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(eventName, id, handleSaveReviewImages);
+			return () => currentFormRef.removeFieldEventListener(eventName, id, handleSaveReviewImages);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [handleSaveReviewImages]);
+
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				}}
+			/>
+		);
+	}) as Story<IImageUploadSchema>;
+/* eslint-enable react-hooks/rules-of-hooks */
+
+export const SaveReviewImages = SaveReviewImagesTemplate("save-review-images").bind({});
+SaveReviewImages.args = {
+	label: "Provide images",
+	description: "Listen for `save-review-images` event",
+	uiType: "image-upload",
+	editImage: true,
+};
