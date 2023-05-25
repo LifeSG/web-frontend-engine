@@ -1,5 +1,5 @@
 import capitalize from "lodash/capitalize";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { FileHelper } from "../../utils/file-helper"; // import directly to avoid circular dependency
 
 export const ERROR_MESSAGES = {
@@ -10,9 +10,6 @@ export const ERROR_MESSAGES = {
 		INVALID_SINGAPORE_NUMBER: "Invalid Singapore number",
 		INVALID_INTERNATIONAL_NUMBER: "Invalid international number",
 	},
-	EMAIL: {
-		INVALID: "Invalid email address",
-	},
 	DATE: {
 		MUST_BE_FUTURE: "Date must be in the future.",
 		MUST_BE_PAST: "Date must be in the past.",
@@ -22,8 +19,8 @@ export const ERROR_MESSAGES = {
 		MAX_DATE: (date: string) => `Date cannot be later than ${date}`,
 		INVALID: "Invalid date",
 	},
-	UNIT_NUMBER: {
-		INVALID: "Invalid unit number",
+	EMAIL: {
+		INVALID: "Invalid email address",
 	},
 	GENERIC: {
 		INVALID: "Invalid input",
@@ -66,4 +63,7 @@ export const ERROR_MESSAGES = {
 			},
 		},
 	}),
+	UNIT_NUMBER: {
+		INVALID: "Invalid unit number",
+	},
 };
