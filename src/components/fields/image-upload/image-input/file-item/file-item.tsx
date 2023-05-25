@@ -1,4 +1,4 @@
-import { Icon } from "@lifesg/react-design-system/icon";
+import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Text } from "@lifesg/react-design-system/text";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
@@ -122,7 +122,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 					id={TestHelper.generateId(`${id}-${index + 1}`, "btn-delete")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "btn-delete")}
 				>
-					<Icon type="cross" />
+					<CrossIcon />
 				</DeleteButton>
 			</CellDeleteButton>
 		);

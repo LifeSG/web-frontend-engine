@@ -1,4 +1,4 @@
-import { Icon } from "@lifesg/react-design-system/icon";
+import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper } from "../../../../utils";
@@ -265,7 +265,7 @@ export const ImageReview = (props: IProps) => {
 						aria-label="exit review modal"
 						onClick={() => setActivePrompt("exit")}
 					>
-						<Icon type="cross" />
+						<CrossIcon type="cross" />
 					</ReviewCloseButton>
 					<ReviewTitle weight="semibold">Review photos</ReviewTitle>
 				</>

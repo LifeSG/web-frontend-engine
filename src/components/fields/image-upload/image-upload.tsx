@@ -1,7 +1,7 @@
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { FileHelper, WindowHelper } from "../../../utils";
-import { useFieldEvent, usePrevious, useValidationSchema } from "../../../utils/hooks";
+import { useFieldEvent, usePrevious, useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
@@ -42,7 +42,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [maxFileSize, setMaxFileSize] = useState(0);
 	const [showReviewPrompt, setShowReviewPrompt] = useState(false);
 	const [showReviewModal, setShowReviewModal] = useState(false);
-	const { setFieldValidationConfig } = useValidationSchema();
+	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =============================================================================
@@ -244,7 +244,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			<ImageInput
 				id={id}
 				label={label}
-				fieldType="image-upload"
+				uiType="image-upload"
 				description={description}
 				buttonLabel={buttonLabel}
 				accepts={acceptedFileTypes}
