@@ -1,9 +1,7 @@
-import * as Yup from "yup";
-
 import { YupHelper } from "../../../../components/frontend-engine/yup";
 import { TestHelper } from "../../../../utils";
 
-describe("custom conditions", () => {
+describe("validateUinfin", () => {
 	describe("uinfin", () => {
 		it("should pass when given a valid uinfin", async () => {
 			const schema = YupHelper.buildFieldSchema(YupHelper.mapSchemaType("string"), [{ uinfin: true }]);
