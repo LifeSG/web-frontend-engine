@@ -161,7 +161,7 @@ DefaultValue.argTypes = {
 		description: "Default value for the field, this is declared outside `sections`",
 		table: {
 			type: {
-				summary: "object",
+				summary: "{ fileName: string; dataURL: string; }",
 				value: {},
 			},
 		},
@@ -177,6 +177,7 @@ AcceptedFileTypes.args = {
 	label: "Provide images",
 	uiType: "image-upload",
 	description: "Accepts only png format",
+	editImage: true,
 	validation: [{ fileType: ["png"], errorMessage: "Accepts only png format" }],
 };
 
@@ -188,8 +189,8 @@ ButtonLabel.args = {
 	buttonLabel: "Okay",
 };
 
-export const CustomDescription = Template("upload-compress").bind({});
-CustomDescription.args = {
+export const HTMLDescription = Template("upload-compress").bind({});
+HTMLDescription.args = {
 	label: "Provide images",
 	uiType: "image-upload",
 	description: "<span>Testing<br>&#x2022; Testing<br>&#x2022; Testing</span>",
