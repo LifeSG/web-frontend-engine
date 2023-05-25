@@ -2,8 +2,8 @@ import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 type TCustomOptions = {
-	preventCopyAndPaste?: boolean;
-	preventDragAndDrop?: boolean;
+	preventCopyAndPaste?: boolean | undefined;
+	preventDragAndDrop?: boolean | undefined;
 };
 
 export interface ITextFieldSchema<V = undefined>

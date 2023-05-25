@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { FrontendEngine } from "../../../../components";
 import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "../../../../components/fields";
@@ -108,7 +108,7 @@ describe(DEFAULT_FIELD_TYPE, () => {
 		expect(getTextfield()).toBeDisabled();
 	});
 
-	it("should not prevent copy and paste", async () => {
+	it("should not prevent copy and paste if `preventCopyAndPaste` is false", async () => {
 		renderComponent({
 			customOptions: {
 				preventCopyAndPaste: false,
@@ -116,13 +116,11 @@ describe(DEFAULT_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield();
 		textField.focus();
-		await act(async () => {
-			await userEvent.paste(EXPECTED_TEXT);
-			expect(textField).toHaveValue(EXPECTED_TEXT);
-		});
+		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
+		expect(textField).toHaveValue(EXPECTED_TEXT);
 	});
 
-	it("should prevent copy and paste", async () => {
+	it("should prevent copy and paste if `preventCopyAndPaste` is true", async () => {
 		renderComponent({
 			customOptions: {
 				preventCopyAndPaste: true,
@@ -130,13 +128,12 @@ describe(DEFAULT_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield();
 		textField.focus();
-		await act(async () => {
-			await userEvent.paste(EXPECTED_TEXT);
-			expect(textField).not.toHaveValue(EXPECTED_TEXT);
-		});
+		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
+		expect(textField).not.toHaveValue(EXPECTED_TEXT);
 	});
 
-	it("should fireEvent return false since default behavior is prevented", () => {
+	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
+	it("should allow drag and drop text into field if preventDragAndDrop is not true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: true,
@@ -147,7 +144,8 @@ describe(DEFAULT_FIELD_TYPE, () => {
 		expect(event).toBe(false);
 	});
 
-	it("should fireEvent return true since default behavior is not prevented", () => {
+	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
+	it("should prevent drag & drop text into field if preventDragAndDrop is true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: false,
@@ -232,7 +230,7 @@ describe(EMAIL_FIELD_TYPE, () => {
 		expect(getTextfield()).toBeDisabled();
 	});
 
-	it("should not prevent copy and paste", async () => {
+	it("should not prevent copy and paste if `preventCopyAndPaste` is false", async () => {
 		renderComponent({
 			uiType: EMAIL_FIELD_TYPE,
 			customOptions: {
@@ -241,13 +239,11 @@ describe(EMAIL_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield();
 		textField.focus();
-		await act(async () => {
-			await userEvent.paste(EXPECTED_EMAIL);
-			expect(textField).toHaveValue(EXPECTED_EMAIL);
-		});
+		await waitFor(() => userEvent.paste(EXPECTED_EMAIL));
+		expect(textField).toHaveValue(EXPECTED_EMAIL);
 	});
 
-	it("should prevent copy and paste", async () => {
+	it("should prevent copy and paste if `preventCopyAndPaste` is true", async () => {
 		renderComponent({
 			uiType: EMAIL_FIELD_TYPE,
 			customOptions: {
@@ -256,13 +252,12 @@ describe(EMAIL_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield();
 		textField.focus();
-		await act(async () => {
-			await userEvent.paste(EXPECTED_EMAIL);
-			expect(textField).not.toHaveValue(EXPECTED_EMAIL);
-		});
+		await waitFor(() => userEvent.paste(EXPECTED_EMAIL));
+		expect(textField).not.toHaveValue(EXPECTED_EMAIL);
 	});
 
-	it("should fireEvent return false since default behavior is prevented", () => {
+	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
+	it("should allow drag and drop email into field if preventDragAndDrop is not true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: true,
@@ -273,7 +268,8 @@ describe(EMAIL_FIELD_TYPE, () => {
 		expect(event).toBe(false);
 	});
 
-	it("should fireEvent return true since default behavior is not prevented", () => {
+	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
+	it("should prevent drag & drop email into field if preventDragAndDrop is true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: false,
@@ -349,7 +345,7 @@ describe(NUMERIC_FIELD_TYPE, () => {
 		expect(getTextfield("spinbutton")).toBeDisabled();
 	});
 
-	it("should not prevent copy and paste", async () => {
+	it("should not prevent copy and paste if `preventCopyAndPaste` is false", async () => {
 		renderComponent({
 			uiType: NUMERIC_FIELD_TYPE,
 			customOptions: {
@@ -358,13 +354,11 @@ describe(NUMERIC_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield("spinbutton");
 		textField.focus();
-		await act(async () => {
-			await userEvent.paste(`${EXPECTED_NUMBER}`);
-			expect(textField).toHaveValue(EXPECTED_NUMBER);
-		});
+		await waitFor(() => userEvent.paste(`${EXPECTED_NUMBER}`));
+		expect(textField).toHaveValue(EXPECTED_NUMBER);
 	});
 
-	it("should prevent copy and paste", async () => {
+	it("should prevent copy and paste if `preventCopyAndPaste` is true", async () => {
 		renderComponent({
 			uiType: NUMERIC_FIELD_TYPE,
 			customOptions: {
@@ -373,13 +367,12 @@ describe(NUMERIC_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield("spinbutton");
 		textField.focus();
-		await act(async () => {
-			await userEvent.paste(`${EXPECTED_NUMBER}`);
-			expect(textField).not.toHaveValue(EXPECTED_NUMBER);
-		});
+		await waitFor(() => userEvent.paste(`${EXPECTED_NUMBER}`));
+		expect(textField).not.toHaveValue(EXPECTED_NUMBER);
 	});
 
-	it("should fireEvent return false since default behavior is prevented", () => {
+	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
+	it("should allow drag and drop number into field if preventDragAndDrop is not true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: true,
@@ -390,7 +383,8 @@ describe(NUMERIC_FIELD_TYPE, () => {
 		expect(event).toBe(false);
 	});
 
-	it("should fireEvent return true since default behavior is not prevented", () => {
+	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
+	it("should prevent drag & drop number into field if preventDragAndDrop is true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: false,
