@@ -160,7 +160,12 @@ export const ImageInput = (props: IImageInputProps) => {
 	};
 
 	return (
-		<Wrapper id={TestHelper.generateId(id)} data-testid={TestHelper.generateId(id)}>
+		<Wrapper
+			id={TestHelper.generateId(id)}
+			data-testid={TestHelper.generateId(id)}
+			aria-invalid={!!errorMessage}
+			aria-describedby={!!errorMessage && TestHelper.generateId(id, "error")}
+		>
 			<DragUpload id={`${id}-drag-upload`} accept={accepts} onInput={handleInput} ref={dragUploadRef}>
 				<Subtitle weight="semibold">{label}</Subtitle>
 				<Content>
