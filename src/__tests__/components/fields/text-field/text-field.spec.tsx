@@ -129,7 +129,7 @@ describe(DEFAULT_FIELD_TYPE, () => {
 		const textField = getTextfield();
 		textField.focus();
 		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
-		expect(textField).not.toHaveValue(EXPECTED_TEXT);
+		expect(textField).toHaveValue("");
 	});
 
 	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
@@ -141,6 +141,7 @@ describe(DEFAULT_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield();
 		const event = fireEvent.drop(textField, { target: { value: EXPECTED_TEXT } });
+		expect(textField).toHaveValue(EXPECTED_TEXT);
 		expect(event).toBe(false);
 	});
 
@@ -253,7 +254,7 @@ describe(EMAIL_FIELD_TYPE, () => {
 		const textField = getTextfield();
 		textField.focus();
 		await waitFor(() => userEvent.paste(EXPECTED_EMAIL));
-		expect(textField).not.toHaveValue(EXPECTED_EMAIL);
+		expect(textField).toHaveValue("");
 	});
 
 	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
@@ -265,6 +266,7 @@ describe(EMAIL_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield();
 		const event = fireEvent.drop(textField, { target: { value: EXPECTED_EMAIL } });
+		expect(textField).toHaveValue(EXPECTED_EMAIL);
 		expect(event).toBe(false);
 	});
 
@@ -368,7 +370,7 @@ describe(NUMERIC_FIELD_TYPE, () => {
 		const textField = getTextfield("spinbutton");
 		textField.focus();
 		await waitFor(() => userEvent.paste(`${EXPECTED_NUMBER}`));
-		expect(textField).not.toHaveValue(EXPECTED_NUMBER);
+		expect(textField).toHaveValue(null);
 	});
 
 	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
@@ -380,6 +382,7 @@ describe(NUMERIC_FIELD_TYPE, () => {
 		});
 		const textField = getTextfield();
 		const event = fireEvent.drop(textField, { target: { value: EXPECTED_NUMBER } });
+		expect(textField).toHaveValue(`${EXPECTED_NUMBER}`);
 		expect(event).toBe(false);
 	});
 
