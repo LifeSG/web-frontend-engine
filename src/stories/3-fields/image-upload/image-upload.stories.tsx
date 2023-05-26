@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { IImageUploadSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 import { jpgDataURL } from "./image-data-url";
 
 export default {
@@ -119,49 +119,31 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<IImageUploadSchema & { defaultValues?: unknown | undefined }>;
-
-export const Default = Template("upload").bind({});
+export const Default = DefaultStoryTemplate<IImageUploadSchema>("upload").bind({});
 Default.args = {
 	label: "Provide images",
 	uiType: "image-upload",
 };
 
-export const DefaultValue = Template("upload-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IImageUploadSchema, { fileName: string; dataURL: string }[]>(
+	"upload-default-value"
+).bind({});
 DefaultValue.args = {
 	label: "Provide images",
 	uiType: "image-upload",
-	defaultValues: {
-		fileName: "test.jpg",
-		dataURL: jpgDataURL,
-	},
+	defaultValues: [
+		{
+			fileName: "test.jpg",
+			dataURL: jpgDataURL,
+		},
+	],
 };
 DefaultValue.argTypes = {
 	defaultValues: {
 		description: "Default value for the field, this is declared outside `sections`",
 		table: {
 			type: {
-				summary: "{ fileName: string; dataURL: string; }",
+				summary: "{ fileName: string; dataURL: string; }[]",
 				value: {},
 			},
 		},
@@ -172,7 +154,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const AcceptedFileTypes = Template("upload-file-type").bind({});
+export const AcceptedFileTypes = DefaultStoryTemplate<IImageUploadSchema>("upload-file-type").bind({});
 AcceptedFileTypes.args = {
 	label: "Provide images",
 	uiType: "image-upload",
@@ -181,7 +163,7 @@ AcceptedFileTypes.args = {
 	validation: [{ fileType: ["png"], errorMessage: "Accepts only png format" }],
 };
 
-export const ButtonLabel = Template("upload-button-label").bind({});
+export const ButtonLabel = DefaultStoryTemplate<IImageUploadSchema>("upload-button-label").bind({});
 ButtonLabel.args = {
 	label: "Provide images",
 	uiType: "image-upload",
@@ -189,14 +171,14 @@ ButtonLabel.args = {
 	buttonLabel: "Okay",
 };
 
-export const HTMLDescription = Template("upload-compress").bind({});
+export const HTMLDescription = DefaultStoryTemplate<IImageUploadSchema>("upload-compress").bind({});
 HTMLDescription.args = {
 	label: "Provide images",
 	uiType: "image-upload",
 	description: "<span>Testing<br>&#x2022; Testing<br>&#x2022; Testing</span>",
 };
 
-export const Dimensions = Template("upload-dimensions").bind({});
+export const Dimensions = DefaultStoryTemplate<IImageUploadSchema>("upload-dimensions").bind({});
 Dimensions.args = {
 	label: "Provide images",
 	description: "Outputs image at 250x250, you can verify by inspecting the thumbnail generated or review modal",
@@ -206,7 +188,7 @@ Dimensions.args = {
 	dimensions: { width: 250, height: 250 },
 };
 
-export const EditImage = Template("upload-edit-image").bind({});
+export const EditImage = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
 EditImage.args = {
 	label: "Provide images",
 	description: "Brings up the image review modal on selecting an image",
@@ -214,7 +196,7 @@ EditImage.args = {
 	editImage: true,
 };
 
-export const Length = Template("upload-length").bind({});
+export const Length = DefaultStoryTemplate<IImageUploadSchema>("upload-length").bind({});
 Length.args = {
 	label: "Provide images",
 	uiType: "image-upload",
@@ -222,7 +204,7 @@ Length.args = {
 	validation: [{ length: 2, errorMessage: "Must have 2 images" }],
 };
 
-export const MaxImages = Template("upload-max-images").bind({});
+export const MaxImages = DefaultStoryTemplate<IImageUploadSchema>("upload-max-images").bind({});
 MaxImages.args = {
 	label: "Provide images",
 	uiType: "image-upload",
@@ -230,7 +212,7 @@ MaxImages.args = {
 	validation: [{ max: 2, errorMessage: "Upload up to 2 images" }],
 };
 
-export const MaxFileSize = Template("upload-max-file-size").bind({});
+export const MaxFileSize = DefaultStoryTemplate<IImageUploadSchema>("upload-max-file-size").bind({});
 MaxFileSize.args = {
 	label: "Provide images",
 	uiType: "image-upload",
@@ -238,7 +220,7 @@ MaxFileSize.args = {
 	validation: [{ maxSizeInKb: 100, errorMessage: "Max 100kb" }],
 };
 
-export const OutputType = Template("upload-output-type").bind({});
+export const OutputType = DefaultStoryTemplate<IImageUploadSchema>("upload-output-type").bind({});
 OutputType.args = {
 	label: "Provide images",
 	description: "Outputs in PNG format, you can verify by inspecting the thumbnail generated",
@@ -246,7 +228,7 @@ OutputType.args = {
 	outputType: "png",
 };
 
-export const UploadOnAdd = Template("upload-on-add").bind({});
+export const UploadOnAdd = DefaultStoryTemplate<IImageUploadSchema>("upload-on-add").bind({});
 UploadOnAdd.args = {
 	label: "Provide images",
 	uiType: "image-upload",
@@ -257,7 +239,7 @@ UploadOnAdd.args = {
 	},
 };
 
-export const WithValidation = Template("upload-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-with-validation").bind({});
 WithValidation.args = {
 	label: "Provide images",
 	uiType: "image-upload",
@@ -270,4 +252,39 @@ WithValidation.args = {
 	uiType: "image-upload",
 	description: "Required field",
 	validation: [{ required: true }],
+};
+
+export const Reset = ResetStoryTemplate<IImageUploadSchema>("upload-reset").bind({});
+Reset.args = {
+	label: "Provide images",
+	uiType: "image-upload",
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<IImageUploadSchema, { fileName: string; dataURL: string }[]>(
+	"upload-reset-default-values"
+).bind({});
+ResetWithDefaultValues.args = {
+	label: "Provide images",
+	uiType: "image-upload",
+	defaultValues: [
+		{
+			fileName: "test.jpg",
+			dataURL: jpgDataURL,
+		},
+	],
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "{ fileName: string; dataURL: string; }[]",
+				value: {},
+			},
+		},
+		control: {
+			type: "object",
+			value: {},
+		},
+	},
 };
