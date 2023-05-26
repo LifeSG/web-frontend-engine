@@ -144,6 +144,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 								}
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
+								error={!!error?.message}
 							>
 								{option.label}
 							</Toggle>
