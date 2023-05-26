@@ -37,7 +37,7 @@ export default {
 		},
 		customOptions: {
 			description:
-				"<div>A custom options on which styling to use for rendering the image-button group.</div><ul><li>`styleType` prop accept either `default` or `image-button` and also can be `undefined`.If set to `image-button` will render image-button button, else render default radio buttons.</li><li>`indicator` show/hide radio icon, `false` by default.</li><li>`border` show/hide border,`true` by default.</li></ul>",
+				"<div>A custom options on which styling to use for rendering the image-button group.</div><ul><li>`styleType` prop accept either `default` or `image-button` and also can be `undefined`.If set to `image-button` will render image-button button, else render default radio buttons.",
 			table: {
 				type: {
 					summary: `{styleType: "image-button"}`,
