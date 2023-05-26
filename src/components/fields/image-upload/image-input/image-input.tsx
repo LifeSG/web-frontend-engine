@@ -166,7 +166,9 @@ export const ImageInput = (props: IImageInputProps) => {
 			aria-describedby={!!errorMessage && TestHelper.generateId(id, "error")}
 		>
 			<DragUpload id={`${id}-drag-upload`} accept={accepts} onInput={handleInput} ref={dragUploadRef}>
-				<Subtitle weight="semibold">{label}</Subtitle>
+				<Subtitle as="label" htmlFor={TestHelper.generateId(id, "file-input-add-button")} weight="semibold">
+					{label}
+				</Subtitle>
 				<Content>
 					<Sanitize>{description}</Sanitize>
 				</Content>
