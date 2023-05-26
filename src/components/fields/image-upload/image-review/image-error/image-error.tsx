@@ -8,7 +8,6 @@ import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, Wrapper } from "./
 const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-white.svg";
 
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
-	id?: string;
 	image: IImage;
 	onClickOk: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }

@@ -9,13 +9,12 @@ import { FileItem } from "./file-item";
 import { AddButton, AlertContainer, Content, Subtitle, UploadWrapper, Wrapper } from "./image-input.styles";
 
 interface IImageInputProps extends ISharedImageProps {
-	id?: string | undefined;
 	label: string;
-	buttonLabel?: string;
+	buttonLabel?: string | undefined;
 	description: string;
 	dimensions: { width: number; height: number };
 	validation: IImageUploadValidationRule[];
-	errorMessage?: string;
+	errorMessage?: string | undefined;
 }
 
 /**

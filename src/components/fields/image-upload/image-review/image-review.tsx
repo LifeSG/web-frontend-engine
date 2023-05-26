@@ -1,12 +1,12 @@
-import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Modal } from "@lifesg/react-design-system/modal";
+import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { TFileCapture } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, TImageUploadAcceptedFileType } from "../types";
+import { EImageStatus, IImage, ISharedImageProps } from "../types";
 import { IImageEditorRef } from "./image-editor";
 import { ImageError } from "./image-error";
 import { ImagePrompts } from "./image-prompts";
@@ -54,14 +54,10 @@ const PALETTE_COLORS = [
 	{ color: "#f8e821", label: "yellow" },
 ];
 
-interface IProps {
-	accepts: TImageUploadAcceptedFileType[];
+interface IProps extends ISharedImageProps {
 	capture?: TFileCapture;
 	compress?: boolean | undefined;
 	dimensions: { width: number; height: number };
-	id?: string | undefined;
-	maxFiles: number;
-	maxSizeInKb: number;
 	onExit: () => void;
 	outputType: string;
 	show: boolean;

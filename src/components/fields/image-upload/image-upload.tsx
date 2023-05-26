@@ -116,7 +116,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					}
 				)
 				.test(
-					"max-size",
+					"max-size-in-kb",
 					maxFileSizeRule?.errorMessage ||
 						ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxFileSizeRule?.["maxSizeInKb"]),
 					(value) => {
@@ -124,7 +124,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 						return value.reduce((accumulator, file) => {
 							if (
 								!accumulator ||
-								FileHelper.getFilesizeFromBase64(file.dataURL) > maxFileSizeRule?.["maxSize"] * 1024
+								FileHelper.getFilesizeFromBase64(file.dataURL) > maxFileSizeRule?.["maxSizeInKb"] * 1024
 							)
 								return false;
 							return true;

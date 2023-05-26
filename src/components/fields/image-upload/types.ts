@@ -25,6 +25,7 @@ export interface IImageUploadSchema<V = IImageUploadValidationRule>
 }
 
 export interface ISharedImageProps {
+	id?: string | undefined;
 	accepts: TImageUploadAcceptedFileType[];
 	maxSizeInKb: number;
 	maxFiles: number;

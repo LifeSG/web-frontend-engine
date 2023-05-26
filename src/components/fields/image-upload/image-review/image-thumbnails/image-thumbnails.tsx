@@ -19,7 +19,6 @@ const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/w
 interface IProps extends Omit<ISharedImageProps, "maxSizeInKb"> {
 	activeFileIndex: number;
 	capture?: TFileCapture;
-	id?: string | undefined;
 	images: IImage[];
 	onClickThumbnail: (index: number) => void;
 	onSelectFile: (file: File) => void;
