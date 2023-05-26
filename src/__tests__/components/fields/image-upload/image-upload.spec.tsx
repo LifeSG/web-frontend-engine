@@ -13,6 +13,8 @@ import {
 	TOverrideSchema,
 	flushPromise,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -96,6 +98,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -825,6 +828,57 @@ describe("image-upload", () => {
 			expect(mockCounter.value).toBeCalledTimes(2);
 			expect(getSaveButton(true)).not.toBeInTheDocument();
 			expect(uploadSpy).toBeCalled();
+		});
+	});
+
+	describe("reset", () => {
+		it("should clear values on reset", async () => {
+			await renderComponent({
+				files: [FILE_1, FILE_2],
+				uploadType: "input",
+			});
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(screen.queryByText(FILE_1.name)).not.toBeInTheDocument();
+			expect(screen.queryByText(FILE_2.name)).not.toBeInTheDocument();
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
+			jest.spyOn(FileHelper, "getMimeType").mockResolvedValue("image/jpeg");
+
+			await renderComponent({
+				files: [FILE_2],
+				overrideSchema: {
+					defaultValues: {
+						field: [
+							{
+								fileName: FILE_1.name,
+								dataURL: JPG_BASE64,
+							},
+						],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(100);
+				fireEvent.click(getResetButton());
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+			});
+
+			expect(screen.getByText(FILE_1.name)).toBeInTheDocument();
+			expect(screen.queryByText(FILE_2.name)).not.toBeInTheDocument();
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({
+					field: expect.arrayContaining([
+						expect.objectContaining({
+							fileName: FILE_1.name,
+							dataURL: JPG_BASE64,
+						}),
+					]),
+				})
+			);
 		});
 	});
 });

@@ -8,6 +8,7 @@ import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";
 import { ImageReview } from "./image-review";
 import { ACCEPTED_FILE_TYPES, EImageStatus, IImage, IImageUploadSchema, TImageUploadAcceptedFileType } from "./types";
+import { useFormContext } from "react-hook-form";
 
 // lazy load to fix next.js SSR errors
 const ImageManager = lazy(() => import("./image-manager"));
@@ -29,6 +30,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			validation,
 		},
 		id,
+		isDirty,
 		value,
 		onChange,
 		...otherProps
@@ -52,10 +54,9 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		dispatchFieldEvent("mount", id);
 	}, []);
 
-	// handle `defaultValue`
-	// to run once only, otherwise it will go into infinite loop as the value will change
 	useEffect(() => {
-		if (Array.isArray(value)) {
+		// for `defaultValue`
+		if (!isDirty && Array.isArray(value)) {
 			const newImages: IImage[] = [];
 			(value as { fileName: string; dataURL: string }[]).forEach(({ fileName, dataURL }, i) => {
 				const newImage: IImage = {
@@ -73,7 +74,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			setImages(newImages);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [isDirty]);
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
