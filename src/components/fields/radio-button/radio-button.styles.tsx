@@ -1,3 +1,4 @@
+import { ImageButton } from "@lifesg/react-design-system";
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
@@ -14,6 +15,13 @@ export const StyledRadioButton = styled(RadioButton)`
 	margin-right: 5px;
 `;
 
+export const StyledImageButton = styled(ImageButton)`
+	flex: 1;
+	img {
+		min-width: 3.5rem;
+	}
+`;
+
 export const RadioContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -22,7 +30,7 @@ export const RadioContainer = styled.div`
 	}
 `;
 
-export const ToggleWrapper = styled.div`
+export const FlexWrapper = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;

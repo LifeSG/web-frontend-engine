@@ -28,3 +28,13 @@ YupHelper.addCondition("array", "excludes", (values: unknown[], matches: unknown
 		return values.length && matches.filter((m) => values.includes(m)).length === 0;
 	}
 });
+YupHelper.addCondition("mixed", "equalsField", (values: unknown[], matches: unknown | unknown[], fn) => {
+	switch (typeof values) {
+		case "object":
+			return Array.isArray(values) && Array.isArray(fn.parent[`${matches}`])
+				? isEqual(values?.sort(), fn.parent[`${matches}`]?.sort())
+				: isEqual(values, fn.parent[`${matches}`]);
+		default:
+			return isEqual(values, fn.parent[`${matches}`]);
+	}
+});

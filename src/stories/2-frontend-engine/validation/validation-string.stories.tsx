@@ -1,5 +1,6 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
+import * as Yup from "yup";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
 export default {
@@ -84,4 +85,12 @@ Uinfin.args = {
 	type: "string",
 	rule: { uinfin: true, errorMessage: "Invalid uinfin" },
 	value: { name: "hello world" },
+};
+
+export const EqualsField = Template.bind({});
+EqualsField.args = {
+	type: "string",
+	rule: { equalsField: "field2", errorMessage: "Both fields must match" },
+	value: { name: "hello world", field2: "world" },
+	extraFields: { field2: { schema: Yup.string(), validationRules: [] } },
 };

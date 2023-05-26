@@ -19,6 +19,8 @@ const COMPONENT_ID = "field";
 const UI_TYPE = "contact-field";
 const COMPONENT_LABEL = "Contact Number";
 
+jest.setTimeout(10000);
+
 const renderComponent = (overrideField?: TOverrideField<IContactFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,

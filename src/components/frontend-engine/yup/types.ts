@@ -23,6 +23,7 @@ export const YUP_CONDITIONS = [
 	"includes",
 	"excludes",
 	"uinfin",
+	"equalsField",
 ] as const;
 export type TYupSchemaType = (typeof YUP_TYPES)[number];
 export type TYupCondition = (typeof YUP_CONDITIONS)[number];
@@ -46,6 +47,7 @@ interface IYupRule {
 	includes?: unknown | undefined;
 	excludes?: unknown | undefined;
 	uinfin?: boolean | undefined;
+	equalsField?: unknown | undefined;
 }
 
 export interface IYupValidationRule extends IYupRule {
