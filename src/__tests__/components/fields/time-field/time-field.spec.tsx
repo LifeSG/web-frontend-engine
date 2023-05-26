@@ -144,11 +144,11 @@ describe(UI_TYPE, () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
 
-			fireEvent.click(getTimePicker());
-			fireEvent.click(getMinuteButton());
-			fireEvent.click(getHourButton());
-			fireEvent.click(getConfirmButton());
-			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getTimePicker()));
+			await waitFor(() => fireEvent.click(getMinuteButton()));
+			await waitFor(() => fireEvent.click(getHourButton()));
+			await waitFor(() => fireEvent.click(getConfirmButton()));
+			await waitFor(() => fireEvent.click(getResetButton()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			await waitFor(() => expect(getTimePicker()).toHaveValue(""));
@@ -159,11 +159,11 @@ describe(UI_TYPE, () => {
 			const defaultValue = "11:11am";
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
-			fireEvent.click(getTimePicker());
-			fireEvent.click(getMinuteButton());
-			fireEvent.click(getHourButton());
-			fireEvent.click(getConfirmButton());
-			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getTimePicker()));
+			await waitFor(() => fireEvent.click(getMinuteButton()));
+			await waitFor(() => fireEvent.click(getHourButton()));
+			await waitFor(() => fireEvent.click(getConfirmButton()));
+			await waitFor(() => fireEvent.click(getResetButton()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			await waitFor(() => expect(getTimePicker()).toHaveValue(defaultValue));
@@ -175,11 +175,11 @@ describe(UI_TYPE, () => {
 			jest.spyOn(LocalTime, "now").mockReturnValue(LocalTime.parse(currentTime));
 			renderComponent({ useCurrentTime: true });
 
-			fireEvent.click(getTimePicker());
-			fireEvent.click(getMinuteButton());
-			fireEvent.click(getHourButton());
-			fireEvent.click(getConfirmButton());
-			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getTimePicker()));
+			await waitFor(() => fireEvent.click(getMinuteButton()));
+			await waitFor(() => fireEvent.click(getHourButton()));
+			await waitFor(() => fireEvent.click(getConfirmButton()));
+			await waitFor(() => fireEvent.click(getResetButton()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			await waitFor(() => expect(getTimePicker()).toHaveValue(`${currentTime}pm`));
