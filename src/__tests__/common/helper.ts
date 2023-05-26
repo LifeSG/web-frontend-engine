@@ -1,6 +1,6 @@
 import { ByRoleOptions, screen } from "@testing-library/react";
 import { TFrontendEngineFieldSchema } from "../../components/frontend-engine";
-import { ERROR_MESSAGE, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
+import { ERROR_MESSAGE, RESET_BUTTON_ID, RESET_BUTTON_LABEL, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
 
 type TAriaRoles = "textbox" | "generic" | "button" | "spinbutton" | "radio" | "list";
 
@@ -8,11 +8,24 @@ export const getSubmitButton = (): HTMLElement => {
 	return screen.getByRole("button", { name: SUBMIT_BUTTON_LABEL });
 };
 
+export const getResetButton = (): HTMLElement => {
+	return screen.getByRole("button", { name: RESET_BUTTON_LABEL });
+};
+
 export const getSubmitButtonProps = (): Record<string, TFrontendEngineFieldSchema> => {
 	return {
 		[SUBMIT_BUTTON_ID]: {
 			label: SUBMIT_BUTTON_LABEL,
 			uiType: "submit",
+		},
+	};
+};
+
+export const getResetButtonProps = (): Record<string, TFrontendEngineFieldSchema> => {
+	return {
+		[RESET_BUTTON_ID]: {
+			label: RESET_BUTTON_LABEL,
+			uiType: "reset",
 		},
 	};
 };

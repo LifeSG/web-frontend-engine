@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { ITextareaSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/Textarea",
@@ -74,35 +74,13 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<ITextareaSchema & { defaultValues?: string | undefined }>;
-
-export const Default = Template("textarea-default").bind({});
+export const Default = DefaultStoryTemplate<ITextareaSchema>("textarea-default").bind({});
 Default.args = {
 	uiType: "textarea",
 	label: "Textarea",
 };
 
-export const DefaultValue = Template("textarea-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<ITextareaSchema>("textarea-default-value").bind({});
 DefaultValue.args = {
 	uiType: "textarea",
 	label: "Textarea",
@@ -116,13 +94,10 @@ DefaultValue.argTypes = {
 				summary: "string",
 			},
 		},
-		control: {
-			type: "text",
-		},
 	},
 };
 
-export const AllowResize = Template("textarea-allow-resize").bind({});
+export const AllowResize = DefaultStoryTemplate<ITextareaSchema>("textarea-allow-resize").bind({});
 AllowResize.args = {
 	uiType: "textarea",
 	label: "Resizable textarea",
@@ -130,21 +105,21 @@ AllowResize.args = {
 	rows: 3,
 };
 
-export const WithCounter = Template.bind({});
-WithCounter("textarea-with-counter").args = {
+export const WithCounter = DefaultStoryTemplate<ITextareaSchema>("textarea-with-counter").bind({});
+WithCounter.args = {
 	uiType: "textarea",
 	label: "Textarea with counter",
 	validation: [{ max: 5 }],
 };
 
-export const WithPills = Template("textarea-with-pills").bind({});
+export const WithPills = DefaultStoryTemplate<ITextareaSchema>("textarea-with-pills").bind({});
 WithPills.args = {
 	uiType: "textarea",
 	label: "Textarea with pills",
 	chipTexts: ["Pill 1", "Pill 2", "Pill 3"],
 };
 
-export const WithPillsBottom = Template("textarea-with-pills-bottom").bind({});
+export const WithPillsBottom = DefaultStoryTemplate<ITextareaSchema>("textarea-with-pills-bottom").bind({});
 WithPillsBottom.storyName = "With Pills (Bottom)";
 WithPillsBottom.args = {
 	uiType: "textarea",
@@ -153,16 +128,39 @@ WithPillsBottom.args = {
 	chipPosition: "bottom",
 };
 
-export const WithValidation = Template("textarea-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<ITextareaSchema>("textarea-with-validation").bind({});
 WithValidation.args = {
 	uiType: "textarea",
 	label: "Textarea with validation",
 	validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }],
 };
 
-export const WithPlaceholder = Template("textarea-with-placeholder").bind({});
+export const WithPlaceholder = DefaultStoryTemplate<ITextareaSchema>("textarea-with-placeholder").bind({});
 WithPlaceholder.args = {
 	uiType: "textarea",
 	label: "Textarea with placeholder",
 	placeholder: "Enter something...",
+};
+
+export const Reset = ResetStoryTemplate<ITextareaSchema>("textarea-reset").bind({});
+Reset.args = {
+	uiType: "textarea",
+	label: "Textarea",
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<ITextareaSchema>("textarea-reset-default-values").bind({});
+ResetWithDefaultValues.args = {
+	uiType: "textarea",
+	label: "Textarea",
+	defaultValues: "This is the default value",
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+	},
 };

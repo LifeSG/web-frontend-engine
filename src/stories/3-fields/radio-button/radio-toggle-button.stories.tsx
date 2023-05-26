@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/RadioButton/Toggle",
@@ -56,29 +56,7 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<IRadioButtonGroupSchema & { defaultValues?: string | undefined }>;
-
-export const Default = Template("radio-default").bind({});
+export const Default = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-default").bind({});
 Default.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -92,7 +70,7 @@ Default.args = {
 	],
 };
 
-export const DefaultValue = Template("radio-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-default-value").bind({});
 DefaultValue.args = {
 	uiType: "radio",
 	label: "Fruits",
@@ -114,13 +92,10 @@ DefaultValue.argTypes = {
 				summary: "string",
 			},
 		},
-		control: {
-			type: "text",
-		},
 	},
 };
 
-export const DisabledOptions = Template("radio-disabled-options").bind({});
+export const DisabledOptions = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -134,7 +109,7 @@ DisabledOptions.args = {
 	],
 };
 
-export const Disabled = Template("radio-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-disabled").bind({});
 Disabled.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -149,7 +124,7 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const WithValidation = Template("radio-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation").bind({});
 WithValidation.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -164,7 +139,7 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const WithIndicator = Template("radio-with-validation").bind({});
+export const WithIndicator = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation").bind({});
 WithIndicator.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -180,7 +155,7 @@ WithIndicator.args = {
 	validation: [{ required: true }],
 };
 
-export const WithoutBorder = Template("radio-with-validation").bind({});
+export const WithoutBorder = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation").bind({});
 WithoutBorder.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -194,4 +169,45 @@ WithoutBorder.args = {
 		{ label: "Cherry", value: "Cherry" },
 	],
 	validation: [{ required: true }],
+};
+
+export const Reset = ResetStoryTemplate<IRadioButtonGroupSchema>("radio-reset").bind({});
+Reset.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<IRadioButtonGroupSchema>("radio-reset-default-values").bind(
+	{}
+);
+ResetWithDefaultValues.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	defaultValues: "Apple",
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+	},
 };

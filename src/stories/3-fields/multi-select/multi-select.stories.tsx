@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { IMultiSelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/MultiSelect",
@@ -51,9 +51,6 @@ export default {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		listStyleWidth: {
 			description: "Style option: The width of the options. You can specify e.g. 100% or 12rem",
@@ -62,36 +59,11 @@ export default {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<IMultiSelectSchema & { defaultValues?: string[] | undefined }>;
-
-export const Default = Template("multi-select-default").bind({});
+export const Default = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-default").bind({});
 Default.args = {
 	uiType: "multi-select",
 	label: "Fruits",
@@ -102,7 +74,7 @@ Default.args = {
 	],
 };
 
-export const DefaultValue = Template("multi-select-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IMultiSelectSchema, string[]>("multi-select-default-value").bind({});
 DefaultValue.args = {
 	uiType: "multi-select",
 	label: "Fruits",
@@ -125,7 +97,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const Disabled = Template("multi-select-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-disabled").bind({});
 Disabled.args = {
 	uiType: "multi-select",
 	label: "Fruits",
@@ -137,7 +109,7 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const CustomWidth = Template("multi-select-custom-width").bind({});
+export const CustomWidth = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-custom-width").bind({});
 CustomWidth.args = {
 	uiType: "multi-select",
 	label: "Fruits",
@@ -149,7 +121,7 @@ CustomWidth.args = {
 	listStyleWidth: "12rem",
 };
 
-export const Placeholder = Template("multi-select-placeholder").bind({});
+export const Placeholder = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-placeholder").bind({});
 Placeholder.args = {
 	uiType: "multi-select",
 	label: "Fruits",
@@ -161,7 +133,7 @@ Placeholder.args = {
 	placeholder: "Select your fruit",
 };
 
-export const WithValidation = Template("multi-select-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-with-validation").bind({});
 WithValidation.args = {
 	uiType: "multi-select",
 	label: "Fruits",
@@ -171,4 +143,40 @@ WithValidation.args = {
 		{ value: "Cherry", label: "Cherry" },
 	],
 	validation: [{ required: true }],
+};
+
+export const Reset = ResetStoryTemplate<IMultiSelectSchema>("multi-select-reset").bind({});
+Reset.args = {
+	uiType: "multi-select",
+	label: "Fruits",
+	options: [
+		{ value: "Apple", label: "Apple" },
+		{ value: "Berry", label: "Berry" },
+		{ value: "Cherry", label: "Cherry" },
+	],
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<IMultiSelectSchema, string[]>(
+	"multi-select-reset-default-value"
+).bind({});
+ResetWithDefaultValues.args = {
+	uiType: "multi-select",
+	label: "Fruits",
+	options: [
+		{ value: "Apple", label: "Apple" },
+		{ value: "Berry", label: "Berry" },
+		{ value: "Cherry", label: "Cherry" },
+	],
+	defaultValues: ["Apple", "Berry"],
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string[]",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
 };

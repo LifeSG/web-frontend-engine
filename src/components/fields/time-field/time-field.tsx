@@ -34,7 +34,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	useEffect(() => {
 		if (useCurrentTime && !value) {
 			const timeFormatPattern = is24HourFormat ? "H:mm" : "h:mma";
-			handleCurrentTime(timeFormatPattern);
+			setTimeout(() => handleCurrentTime(timeFormatPattern));
 		} else {
 			setStateValue(value);
 		}
@@ -46,14 +46,15 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (value: string): void => {
-		onChange({ target: { value } });
+		// TODO: temporary fix to uppercase am/pm,to remove setting uppercase when design system is using uppercase
+		onChange({ target: { value: value.toUpperCase() } });
 	};
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const handleCurrentTime = (format: string): void => {
-		const currentTime = DateTimeHelper.formatDateTime(LocalTime.now().toString(), format, "time");
+		const currentTime = DateTimeHelper.formatDateTime(LocalTime.now().toString().toUpperCase(), format, "time");
 
 		setStateValue(currentTime);
 		onChange({ target: { value: currentTime } });

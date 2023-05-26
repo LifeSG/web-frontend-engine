@@ -1,7 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IChipsSchema } from "../../../components/fields/chips";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	FrontendEngine,
+	RESET_BUTTON_SCHEMA,
+	ResetStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
+} from "../../common";
+import { IFrontendEngineRef } from "../../../components";
+import { useRef } from "react";
 
 export default {
 	title: "Field/Chips",
@@ -64,29 +73,7 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<IChipsSchema & { defaultValues?: string[] | undefined }>;
-
-export const Default = Template("chips-default").bind({});
+export const Default = DefaultStoryTemplate<IChipsSchema>("chips-default").bind({});
 Default.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -97,7 +84,7 @@ Default.args = {
 	],
 };
 
-export const DefaultValue = Template("chips-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IChipsSchema, string[]>("chips-default-value").bind({});
 DefaultValue.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -120,7 +107,43 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const DisabledOptions = Template("chips-disabled-options").bind({});
+export const DefaultTextareaValue: Story<IChipsSchema> = (args) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"chips-textarea-default": args,
+						buttons: {
+							uiType: "div",
+							style: { display: "flex", gap: "1rem" },
+							children: {
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				},
+			},
+			defaultValues: {
+				"chips-textarea-default": ["Durian"],
+				"chips-textarea-default-textarea": "Hello world",
+			},
+		}}
+	/>
+);
+DefaultTextareaValue.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian", rows: 1 },
+};
+
+export const DisabledOptions = DefaultStoryTemplate<IChipsSchema>("chips-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -131,7 +154,7 @@ DisabledOptions.args = {
 	],
 };
 
-export const Disabled = Template("chips-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<IChipsSchema>("chips-disabled").bind({});
 Disabled.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -143,7 +166,7 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const WithValidation = Template("chips-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<IChipsSchema>("chips-with-validation").bind({});
 WithValidation.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -155,7 +178,7 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const WithTextarea = Template("chips-with-textarea").bind({});
+export const WithTextarea = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea").bind({});
 WithTextarea.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -167,7 +190,7 @@ WithTextarea.args = {
 	textarea: { label: "Durian" },
 };
 
-export const WithTextareaValidation = Template("chips-with-textarea-validation").bind({});
+export const WithTextareaValidation = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea-validation").bind({});
 WithTextareaValidation.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -179,7 +202,7 @@ WithTextareaValidation.args = {
 	textarea: { label: "Durian", validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }] },
 };
 
-export const WithResizableTextarea = Template("chips-with-textarea-resizable").bind({});
+export const WithResizableTextarea = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea-resizable").bind({});
 WithResizableTextarea.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -191,7 +214,7 @@ WithResizableTextarea.args = {
 	textarea: { label: "Durian", resizable: true },
 };
 
-export const WithTextareaCustomRows = Template("chips-with-textarea-custom-rows").bind({});
+export const WithTextareaCustomRows = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea-custom-rows").bind({});
 WithTextareaCustomRows.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -203,7 +226,7 @@ WithTextareaCustomRows.args = {
 	textarea: { label: "Durian", rows: 1 },
 };
 
-export const WithTextareaMaxLength = Template("chips-with-textarea-max-length").bind({});
+export const WithTextareaMaxLength = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea-max-length").bind({});
 WithTextareaMaxLength.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -215,7 +238,7 @@ WithTextareaMaxLength.args = {
 	textarea: { label: "Durian", rows: 1, validation: [{ max: 10 }] },
 };
 
-export const SingleSelection = Template("chips-single-selection").bind({});
+export const SingleSelection = DefaultStoryTemplate<IChipsSchema>("chips-single-selection").bind({});
 SingleSelection.args = {
 	uiType: "chips",
 	label: "Fruits",
@@ -225,4 +248,75 @@ SingleSelection.args = {
 		{ label: "Cherry", value: "Cherry" },
 	],
 	validation: [{ max: 1 }],
+};
+
+export const Reset = ResetStoryTemplate<IChipsSchema>("chips-reset").bind({});
+Reset.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<IChipsSchema, string[]>("chips-reset-default-values").bind({});
+ResetWithDefaultValues.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	defaultValues: ["Apple", "Berry"],
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string[]",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
+};
+
+export const ResetWithTextarea: Story<IChipsSchema> = (args) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"chips-textarea-reset": args,
+						buttons: {
+							uiType: "div",
+							style: { display: "flex", gap: "1rem" },
+							children: {
+								...RESET_BUTTON_SCHEMA,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				},
+			},
+			defaultValues: {
+				"chips-textarea-reset": ["Durian"],
+				"chips-textarea-reset-textarea": "Hello world",
+			},
+		}}
+	/>
+);
+ResetWithTextarea.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: { label: "Durian", rows: 1 },
 };
