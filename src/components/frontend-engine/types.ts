@@ -46,6 +46,7 @@ export interface IFrontendEngineProps<V = undefined> {
 	onChange?: ((values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown) | undefined;
 	/** Submit event handler, will receive the form data if form validation is successful */
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
+	onSubmitError?: (errors: TFrontendEngineValues) => unknown | undefined;
 }
 
 export interface IFrontendEngineData<V = undefined> {
