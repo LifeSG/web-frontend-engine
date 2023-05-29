@@ -152,6 +152,26 @@ describe("frontend-engine", () => {
 		expect(onSubmit).toBeCalled();
 	});
 
+	it("should call onSubmitError prop and not onSubmit prop on submit with validation error(s)", async () => {
+		const onSubmit = jest.fn();
+		const onSubmitError = jest.fn();
+		renderComponent({
+			onSubmit,
+			onSubmitError,
+		});
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(onSubmitError).toBeCalledWith({
+			[FIELD_ONE_ID]: {
+				message: ERROR_MESSAGE,
+				ref: expect.anything(),
+				type: expect.anything(),
+			},
+		});
+		expect(onSubmit).not.toBeCalled();
+	});
+
 	it("should return form values through getValues method", () => {
 		let formValues: Record<string, any> = {};
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
