@@ -31,12 +31,12 @@ const renderComponent = (overrideField?: TOverrideField<IRangeSelectSchema>, ove
 						uiType: UI_TYPE,
 						options: {
 							from: [
-								{ label: "Apple", value: "Apple" },
-								{ label: "Berry", value: "Berry" },
+								{ label: "A", value: "Apple" },
+								{ label: "B", value: "Berry" },
 							],
 							to: [
-								{ label: "Cherry", value: "Cherry" },
-								{ label: "Date", value: "Date" },
+								{ label: "C", value: "Cherry" },
+								{ label: "D", value: "Date" },
 							],
 						},
 						listStyleWidth: "40rem",
@@ -55,14 +55,6 @@ const getComponent = (): HTMLElement => {
 	return getField("button", "Select Select");
 };
 
-const getOptionA = (): HTMLElement => {
-	return getField("button", "Apple");
-};
-
-const getOptionC = (): HTMLElement => {
-	return getField("button", "Cherry");
-};
-
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -79,7 +71,7 @@ describe(UI_TYPE, () => {
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent("AppleCherry");
+		expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent("AC");
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
@@ -115,8 +107,8 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getComponent()));
 
-		await waitFor(() => fireEvent.click(screen.getAllByText("Apple")[0]));
-		await waitFor(() => fireEvent.click(screen.getAllByText("Cherry")[0]));
+		await waitFor(() => fireEvent.click(screen.getAllByText("A")[0]));
+		await waitFor(() => fireEvent.click(screen.getAllByText("C")[0]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } }));
 	});
@@ -125,12 +117,12 @@ describe(UI_TYPE, () => {
 		const CustomComponent = () => {
 			const [options, setOptions] = useState({
 				from: [
-					{ label: "Apple", value: "Apple" },
-					{ label: "Berry", value: "Berry" },
+					{ label: "A", value: "Apple" },
+					{ label: "B", value: "Berry" },
 				],
 				to: [
-					{ label: "Cherry", value: "Cherry" },
-					{ label: "Date", value: "Date" },
+					{ label: "C", value: "Cherry" },
+					{ label: "D", value: "Date" },
 				],
 			});
 			return (
@@ -154,12 +146,12 @@ describe(UI_TYPE, () => {
 						onClick={() =>
 							setOptions({
 								from: [
-									{ label: "Apple", value: "Apple" },
-									{ label: "Banana", value: "Banana" },
+									{ label: "A", value: "Apple" },
+									{ label: "B", value: "Banana" },
 								],
 								to: [
-									{ label: "Cherry", value: "Cherry" },
-									{ label: "Eggplant", value: "Eggplant" },
+									{ label: "C", value: "Cherry" },
+									{ label: "E", value: "Eggplant" },
 								],
 							})
 						}
@@ -171,10 +163,10 @@ describe(UI_TYPE, () => {
 		};
 
 		it.each`
-			scenario                                                                             | selected               | expectedValueBeforeUpdate          | expectedValueAfterUpdate
-			${"should retain field values if option is not removed on schema update"}            | ${["Apple", "Cherry"]} | ${{ from: "Apple", to: "Cherry" }} | ${{ from: "Apple", to: "Cherry" }}
-			${"should clear field values if option is removed on schema update"}                 | ${["Berry", "Date"]}   | ${{ from: "Berry", to: "Date" }}   | ${{ from: "", to: "" }}
-			${"should retain the field values of options that are not removed on schema update"} | ${["Apple", "Date"]}   | ${{ from: "Apple", to: "Date" }}   | ${{ from: "Apple", to: "" }}
+			scenario                                                                             | selected      | expectedValueBeforeUpdate          | expectedValueAfterUpdate
+			${"should retain field values if option is not removed on schema update"}            | ${["A", "C"]} | ${{ from: "Apple", to: "Cherry" }} | ${{ from: "Apple", to: "Cherry" }}
+			${"should clear field values if option is removed on schema update"}                 | ${["B", "D"]} | ${{ from: "Berry", to: "Date" }}   | ${{ from: "", to: "" }}
+			${"should retain the field values of options that are not removed on schema update"} | ${["A", "D"]} | ${{ from: "Apple", to: "Date" }}   | ${{ from: "Apple", to: "" }}
 		`(
 			"$scenario",
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {

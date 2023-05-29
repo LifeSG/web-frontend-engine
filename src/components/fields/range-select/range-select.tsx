@@ -57,7 +57,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	}, [validation]);
 
 	useDeepCompareEffect(() => {
-		const newValue: any = {};
+		const newValue: Record<string, string> = {};
 		if (!options.from.find((option) => option.value === value.from)) {
 			newValue.from = "";
 		}
@@ -85,7 +85,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (option): void => {
+	const handleChange = (option: InputRangeProp<IRangeSelectOption>): void => {
 		if (option.from) onChange({ target: { value: { from: option.from.value, to: toStateValue } } });
 		if (option.to) onChange({ target: { value: { to: option.to.value, from: fromStateValue } } });
 	};
@@ -106,7 +106,8 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 				valueToStringFunction={(value: any) => `${value.from} - ${value.to}`}
 				valueExtractor={(item: IRangeSelectOption) => ({ from: item.value, to: item.value })}
 				displayValueExtractor={(item: IRangeSelectOption) => item.label}
-				listExtractor={(item: IRangeSelectOption) => item.value}
+				listExtractor={(item: IRangeSelectOption) => item.label}
+				error={!!error?.message}
 			/>
 		</Form.CustomField>
 	);
