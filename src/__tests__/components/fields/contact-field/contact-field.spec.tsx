@@ -10,6 +10,8 @@ import {
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -34,6 +36,7 @@ const renderComponent = (overrideField?: TOverrideField<IContactFieldSchema>, ov
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -260,6 +263,31 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER)).toBeInTheDocument();
+		});
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			fireEvent.change(getContactField(), { target: { value: "91234567" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getContactField()).toHaveValue("");
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValues = "91234567";
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
+
+			fireEvent.change(getContactField(), { target: { value: "987654321" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getContactField()).toHaveValue("9123 4567");
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
 });

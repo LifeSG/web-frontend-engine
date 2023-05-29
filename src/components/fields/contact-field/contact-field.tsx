@@ -107,6 +107,12 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation, defaultCountry]);
 
+	// handle changes in value through reset
+	useEffect(() => {
+		const { number } = PhoneHelper.getParsedPhoneNumber(value || "");
+		setStateValue(number);
+	}, [value]);
+
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================

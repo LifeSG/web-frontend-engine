@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { IDateFieldSchema } from "src/components/fields/date-field/types";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/DateField",
@@ -43,51 +43,24 @@ export default {
 				},
 				defaultValue: { summary: "uuuu-MM-dd" },
 			},
-			control: {
-				type: "text",
-			},
 		},
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => {
-		return (
-			<FrontendEngine
-				data={{
-					sections: {
-						section: {
-							uiType: "section",
-							children: {
-								[id]: args,
-								...SUBMIT_BUTTON_SCHEMA,
-							},
-						},
-					},
-					...(!!defaultValues && {
-						defaultValues: {
-							[id]: defaultValues,
-						},
-					}),
-				}}
-			/>
-		);
-	}) as Story<IDateFieldSchema & { defaultValues?: string | undefined }>;
-
-export const Default = Template("date-default").bind({});
+export const Default = DefaultStoryTemplate<IDateFieldSchema>("date-default").bind({});
 Default.args = {
 	uiType: "date-field",
 	label: "Date",
 };
 
-export const UseCurrentDate = Template("date-use-current-date").bind({});
+export const UseCurrentDate = DefaultStoryTemplate<IDateFieldSchema>("date-use-current-date").bind({});
 UseCurrentDate.args = {
 	uiType: "date-field",
 	label: "Date",
 	useCurrentDate: true,
 };
 
-export const DefaultValue = Template("date-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IDateFieldSchema>("date-default-value").bind({});
 DefaultValue.args = {
 	uiType: "date-field",
 	label: "Date with default value",
@@ -101,20 +74,17 @@ DefaultValue.argTypes = {
 				summary: "string",
 			},
 		},
-		control: {
-			type: "text",
-		},
 	},
 };
 
-export const DateFormat = Template("date-format").bind({});
+export const DateFormat = DefaultStoryTemplate<IDateFieldSchema>("date-format").bind({});
 DateFormat.args = {
 	uiType: "date-field",
 	label: "Date",
 	dateFormat: "d MMMM uuuu",
 };
 
-export const DateFormatDefaultValues = Template("date-format-default").bind({});
+export const DateFormatDefaultValues = DefaultStoryTemplate<IDateFieldSchema>("date-format-default").bind({});
 DateFormatDefaultValues.storyName = "Date Format with Default Value";
 DateFormatDefaultValues.args = {
 	uiType: "date-field",
@@ -124,51 +94,81 @@ DateFormatDefaultValues.args = {
 };
 DateFormatDefaultValues.argTypes = DefaultValue.argTypes;
 
-export const WithValidation = Template("date-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<IDateFieldSchema>("date-with-validation").bind({});
 WithValidation.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }],
 };
 
-export const FutureDateOnly = Template("date-future").bind({});
+export const FutureDateOnly = DefaultStoryTemplate<IDateFieldSchema>("date-future").bind({});
 FutureDateOnly.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }, { future: true, errorMessage: "Only future dates allowed" }],
 };
 
-export const PastDateOnly = Template("date-past").bind({});
+export const PastDateOnly = DefaultStoryTemplate<IDateFieldSchema>("date-past").bind({});
 PastDateOnly.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }, { past: true, errorMessage: "Only past dates allowed" }],
 };
 
-export const NotFutureDate = Template("date-now-or-past").bind({});
+export const NotFutureDate = DefaultStoryTemplate<IDateFieldSchema>("date-now-or-past").bind({});
 NotFutureDate.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }, { notFuture: true, errorMessage: "No future dates" }],
 };
 
-export const NotPastDate = Template("date-now-or-future").bind({});
+export const NotPastDate = DefaultStoryTemplate<IDateFieldSchema>("date-now-or-future").bind({});
 NotPastDate.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }, { notPast: true, errorMessage: "No past dates" }],
 };
 
-export const MinDate = Template("min-date").bind({});
+export const MinDate = DefaultStoryTemplate<IDateFieldSchema>("min-date").bind({});
 MinDate.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }, { minDate: "2023-01-01", errorMessage: "Min date 01/01/2023" }],
 };
 
-export const MaxDate = Template("max-date").bind({});
+export const MaxDate = DefaultStoryTemplate<IDateFieldSchema>("max-date").bind({});
 MaxDate.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }, { maxDate: "2023-01-01", errorMessage: "Max date 01/01/2023" }],
+};
+
+export const Reset = ResetStoryTemplate<IDateFieldSchema>("date-reset").bind({});
+Reset.args = {
+	uiType: "date-field",
+	label: "Date",
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<IDateFieldSchema>("date-reset-default-values").bind({});
+ResetWithDefaultValues.args = {
+	uiType: "date-field",
+	label: "Date",
+	defaultValues: "2022-02-01",
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+	},
+};
+
+export const ResetToCurrentDate = ResetStoryTemplate<IDateFieldSchema>("date-reset-current-date").bind({});
+ResetToCurrentDate.args = {
+	uiType: "date-field",
+	label: "Date",
+	useCurrentDate: true,
 };

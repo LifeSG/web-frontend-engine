@@ -9,6 +9,8 @@ import {
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -31,6 +33,7 @@ const renderComponent = (overrideField?: TOverrideField<ITextareaSchema>, overri
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -121,5 +124,30 @@ describe(UI_TYPE, () => {
 		expect(getTextarea()).toHaveAttribute("placeholder", "placeholder");
 		expect(getTextarea()).toHaveAttribute("readonly");
 		expect(getTextarea()).toBeDisabled();
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			fireEvent.change(getTextarea(), { target: { value: "hello" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextarea()).toHaveValue("");
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValue = "hello";
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			fireEvent.change(getTextarea(), { target: { value: "world" } });
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextarea()).toHaveValue(defaultValue);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
 	});
 });

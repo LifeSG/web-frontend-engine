@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { IUnitNumberFieldSchema } from "src/components/fields";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/UnitNumberField",
@@ -27,9 +27,6 @@ export default {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		disabled: {
 			description: "Specifies if the form element is interactable",
@@ -47,42 +44,20 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<IUnitNumberFieldSchema & { defaultValues?: string | undefined }>;
-
-export const Default = Template("unit-number-default").bind({});
+export const Default = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-default").bind({});
 Default.args = {
 	label: "Unit Number",
 	uiType: "unit-number-field",
 };
 
-export const Disabled = Template("unit-number-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-disabled").bind({});
 Disabled.args = {
 	label: "Unit Number",
 	uiType: "unit-number-field",
 	disabled: true,
 };
 
-export const DefaultValue = Template("unit-number-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-default-value").bind({});
 DefaultValue.args = {
 	uiType: "unit-number-field",
 	label: "Unit number with default value",
@@ -96,29 +71,51 @@ DefaultValue.argTypes = {
 				summary: "string",
 			},
 		},
-		control: {
-			type: "text",
-		},
 	},
 };
 
-export const Placeholder = Template("unit-number-placeholder").bind({});
+export const Placeholder = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-placeholder").bind({});
 Placeholder.args = {
 	label: "Unit number with placeholder",
 	uiType: "unit-number-field",
 	placeholder: "03-045",
 };
 
-export const CustomErrorMessage = Template("unit-number-custom-error").bind({});
+export const CustomErrorMessage = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-custom-error").bind({});
 CustomErrorMessage.args = {
 	label: "Unit number with custom error",
 	uiType: "unit-number-field",
 	validation: [{ unitNumberFormat: true, errorMessage: "Please enter a valid unit number" }],
 };
 
-export const WithValidation = Template("unit-number-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-with-validation").bind({});
 WithValidation.args = {
 	label: "Unit number with validation",
 	uiType: "unit-number-field",
 	validation: [{ required: true }],
+};
+
+export const Reset = ResetStoryTemplate<IUnitNumberFieldSchema>("unit-number-reset").bind({});
+Reset.args = {
+	label: "Unit Number",
+	uiType: "unit-number-field",
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<IUnitNumberFieldSchema>(
+	"unit-number-reset-default-values"
+).bind({});
+ResetWithDefaultValues.args = {
+	label: "Unit Number",
+	uiType: "unit-number-field",
+	defaultValues: "01-019",
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+	},
 };

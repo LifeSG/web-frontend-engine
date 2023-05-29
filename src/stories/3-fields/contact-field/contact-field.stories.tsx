@@ -1,8 +1,8 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { IContactFieldSchema } from "../../../components/fields";
 import { getCountries } from "../../../components/fields/contact-field/data";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/ContactField",
@@ -29,9 +29,6 @@ export default {
 				type: {
 					summary: "string",
 				},
-			},
-			control: {
-				type: "text",
 			},
 		},
 		defaultCountry: {
@@ -77,44 +74,20 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => {
-		return (
-			<FrontendEngine
-				data={{
-					sections: {
-						section: {
-							uiType: "section",
-							children: {
-								[id]: args,
-								...SUBMIT_BUTTON_SCHEMA,
-							},
-						},
-					},
-					...(!!defaultValues && {
-						defaultValues: {
-							[id]: defaultValues,
-						},
-					}),
-				}}
-			/>
-		);
-	}) as Story<IContactFieldSchema & { defaultValues?: string | undefined }>;
-
-export const Default = Template("contact-default").bind({});
+export const Default = DefaultStoryTemplate<IContactFieldSchema>("contact-default").bind({});
 Default.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
 };
 
-export const DefaultCountry = Template("contact-default-country").bind({});
+export const DefaultCountry = DefaultStoryTemplate<IContactFieldSchema>("contact-default-country").bind({});
 DefaultCountry.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
 	defaultCountry: "Japan",
 };
 
-export const DefaultValue = Template("contact-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IContactFieldSchema>("contact-default-value").bind({});
 DefaultValue.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
@@ -128,34 +101,31 @@ DefaultValue.argTypes = {
 				summary: "string",
 			},
 		},
-		control: {
-			type: "text",
-		},
 	},
 };
 
-export const Disabled = Template("contact-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<IContactFieldSchema>("contact-disabled").bind({});
 Disabled.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
 	disabled: true,
 };
 
-export const Placeholder = Template("contact-placeholder").bind({});
+export const Placeholder = DefaultStoryTemplate<IContactFieldSchema>("contact-placeholder").bind({});
 Placeholder.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
 	placeholder: "Enter your contact number",
 };
 
-export const WithSearch = Template("contact-with-search").bind({});
+export const WithSearch = DefaultStoryTemplate<IContactFieldSchema>("contact-with-search").bind({});
 WithSearch.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
 	enableSearch: true,
 };
 
-export const FixedCountry = Template("contact-fixed-country").bind({});
+export const FixedCountry = DefaultStoryTemplate<IContactFieldSchema>("contact-fixed-country").bind({});
 FixedCountry.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
@@ -168,7 +138,7 @@ FixedCountry.args = {
 	],
 };
 
-export const SGNumberValidation = Template("contact-singapore-number").bind({});
+export const SGNumberValidation = DefaultStoryTemplate<IContactFieldSchema>("contact-singapore-number").bind({});
 SGNumberValidation.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
@@ -181,7 +151,9 @@ SGNumberValidation.args = {
 	],
 };
 
-export const SGHouseNumberValidation = Template("contact-singapore-house-number").bind({});
+export const SGHouseNumberValidation = DefaultStoryTemplate<IContactFieldSchema>("contact-singapore-house-number").bind(
+	{}
+);
 SGHouseNumberValidation.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
@@ -194,7 +166,9 @@ SGHouseNumberValidation.args = {
 	],
 };
 
-export const SGPhoneNumberValidation = Template("contact-singapore-mobile-number").bind({});
+export const SGPhoneNumberValidation = DefaultStoryTemplate<IContactFieldSchema>(
+	"contact-singapore-mobile-number"
+).bind({});
 SGPhoneNumberValidation.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
@@ -207,7 +181,9 @@ SGPhoneNumberValidation.args = {
 	],
 };
 
-export const InternationalNumberValidation = Template("contact-international-number").bind({});
+export const InternationalNumberValidation = DefaultStoryTemplate<IContactFieldSchema>(
+	"contact-international-number"
+).bind({});
 InternationalNumberValidation.args = {
 	uiType: "contact-field",
 	label: "Contact Number",
@@ -218,4 +194,27 @@ InternationalNumberValidation.args = {
 			},
 		},
 	],
+};
+
+export const Reset = ResetStoryTemplate<IContactFieldSchema>("contact-reset").bind({});
+Reset.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<IContactFieldSchema>("contact-reset-default-values").bind({});
+ResetWithDefaultValues.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+	defaultValues: "91234567",
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+	},
 };

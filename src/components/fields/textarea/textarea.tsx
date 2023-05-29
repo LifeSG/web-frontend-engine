@@ -8,6 +8,7 @@ import { IGenericFieldProps } from "../../frontend-engine/types";
 import { Chip } from "../../shared";
 import { ChipContainer, StyledTextarea, Wrapper } from "./textarea.styles";
 import { ITextareaSchema } from "./types";
+import { useFormContext } from "react-hook-form";
 
 export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// =============================================================================
@@ -22,6 +23,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		error,
 		...otherProps
 	} = props;
+	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
 	const [maxLength, setMaxLength] = useState<number>();
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -29,6 +31,12 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		// ensure default value is passed to react-hook-form on mount
+		// this is used in conjunction with chips + textarea field
+		setValue(id, value);
+	}, []);
+
 	useEffect(() => {
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
@@ -40,7 +48,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value);
+		setStateValue(value || "");
 	}, [value]);
 
 	// =============================================================================

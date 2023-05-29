@@ -10,6 +10,8 @@ import {
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -36,6 +38,7 @@ const renderComponent = (overrideField?: TOverrideField<IChipsSchema>, overrideS
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -52,8 +55,8 @@ const getChipB = (): HTMLElement => {
 	return getField("button", "B");
 };
 
-const getTextareaChip = (): HTMLElement => {
-	return getField("button", TEXT_AREA_LABEL);
+const getTextareaChip = (pressed = false): HTMLElement => {
+	return getField("button", pressed ? { name: TEXT_AREA_LABEL, pressed: true } : TEXT_AREA_LABEL);
 };
 
 const getTextarea = (isQuery = false): HTMLElement => {
@@ -80,6 +83,31 @@ describe(UI_TYPE, () => {
 
 		expect(getChipA(true)).toBeInTheDocument();
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+	});
+
+	it("should be able to support default values in textarea", async () => {
+		const defaultValues = ["D"];
+		const defaultTextAreaValue = "Eggplant";
+		renderComponent(
+			{ textarea: { label: TEXT_AREA_LABEL } },
+			{
+				defaultValues: {
+					[COMPONENT_ID]: defaultValues,
+					[`${COMPONENT_ID}-textarea`]: defaultTextAreaValue,
+				},
+			}
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(getTextareaChip(true)).toBeInTheDocument();
+		expect(getTextarea()).toHaveValue(defaultTextAreaValue);
+		expect(SUBMIT_FN).toBeCalledWith(
+			expect.objectContaining({
+				[COMPONENT_ID]: defaultValues,
+				[`${COMPONENT_ID}-textarea`]: defaultTextAreaValue,
+			})
+		);
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -258,5 +286,62 @@ describe(UI_TYPE, () => {
 				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			fireEvent.click(getChipA());
+			fireEvent.click(getChipB());
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getField("button", { name: "A", pressed: true }, true)).not.toBeInTheDocument();
+			expect(getField("button", { name: "B", pressed: true }, true)).not.toBeInTheDocument();
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValues = ["Apple"];
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
+
+			fireEvent.click(getChipB());
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getChipA(true)).toBeInTheDocument();
+			expect(getField("button", { name: "B", pressed: true }, true)).not.toBeInTheDocument();
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		});
+
+		it("should revert to default textarea value on reset", async () => {
+			const defaultValues = [TEXT_AREA_LABEL];
+			const defaultTextAreaValue = "Eggplant";
+			renderComponent(
+				{ textarea: { label: TEXT_AREA_LABEL } },
+				{
+					defaultValues: {
+						[COMPONENT_ID]: defaultValues,
+						[`${COMPONENT_ID}-textarea`]: defaultTextAreaValue,
+					},
+				}
+			);
+
+			fireEvent.click(getChipB());
+			fireEvent.change(getTextarea(), { target: { value: "Hello" } });
+			fireEvent.click(getTextareaChip());
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getTextareaChip(true)).toBeInTheDocument();
+			expect(getTextarea()).toHaveValue(defaultTextAreaValue);
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({
+					[COMPONENT_ID]: defaultValues,
+					[`${COMPONENT_ID}-textarea`]: defaultTextAreaValue,
+				})
+			);
+		});
 	});
 });

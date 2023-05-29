@@ -29,15 +29,9 @@ export default {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		toggleFilterButtonLabel: {
 			description: "Filter button label used in mobile view.",
-			control: {
-				type: "text",
-			},
 			defaultValue: "Filters Mobile",
 		},
 		clearButtonDisabled: {

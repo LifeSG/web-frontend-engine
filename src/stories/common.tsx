@@ -1,10 +1,11 @@
-import styled from "styled-components";
-import { action } from "@storybook/addon-actions";
-import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
-import { ISubmitButtonSchema } from "../components/fields";
-import { IFrontendEngineRef, TNoInfer } from "../components/frontend-engine";
-import { ReactElement, Ref, forwardRef } from "react";
 import { MediaQuery, MediaWidths } from "@lifesg/react-design-system";
+import { action } from "@storybook/addon-actions";
+import { Story } from "@storybook/react/types-6-0";
+import { ReactElement, Ref, forwardRef } from "react";
+import styled from "styled-components";
+import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
+import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
+import { IFrontendEngineRef, TFrontendEngineFieldSchema, TNoInfer } from "../components/frontend-engine";
 
 const EXCLUDED_STORY_PROPS = {
 	invalid: { table: { disable: true } },
@@ -59,9 +60,6 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 		validation: {
 			description:
@@ -99,9 +97,6 @@ export const CommonCustomStoryProps = (referenceKey: string) => {
 			},
 			type: { name: "string", required: true },
 			options: [referenceKey],
-			control: {
-				type: "text",
-			},
 			defaultValue: referenceKey,
 		},
 		label: {
@@ -111,15 +106,15 @@ export const CommonCustomStoryProps = (referenceKey: string) => {
 					summary: "string",
 				},
 			},
-			control: {
-				type: "text",
-			},
 		},
 	};
 };
 
 export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
 	"submit-button": { uiType: "submit", label: "Submit" },
+};
+export const RESET_BUTTON_SCHEMA: Record<string, IResetButtonSchema> = {
+	"reset-button": { uiType: "reset", label: "Reset" },
 };
 
 const MINIMUM_SIDE_PADDING = 48;
@@ -166,3 +161,68 @@ export const LOREM_IPSUM = (prefix: string) => {
 
 	return `${prefix && codePrefix + " : "}Lorem ipsum dolor sit`;
 };
+
+/**
+ * Default story template that contains the component and a submit button
+ *
+ * &lt;T&gt; generic: component schema definition
+ *
+ * &lt;U&gt; generic: default value typing
+ */
+export const DefaultStoryTemplate = <T, U = string>(id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args as unknown as TFrontendEngineFieldSchema,
+							...SUBMIT_BUTTON_SCHEMA,
+						},
+					},
+				},
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<T & { defaultValues?: U | undefined }>;
+
+/**
+ * Story template that contains the component, a reset button and a submit button
+ *
+ * &lt;T&gt; generic: component schema definition
+ *
+ * &lt;U&gt; generic: default value typing
+ */
+export const ResetStoryTemplate = <T, U = string>(id: string) =>
+	(({ defaultValues, ...args }) => (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: args as unknown as TFrontendEngineFieldSchema,
+							buttons: {
+								uiType: "div",
+								style: { display: "flex", gap: "1rem" },
+								children: {
+									...RESET_BUTTON_SCHEMA,
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					},
+				},
+				...(!!defaultValues && {
+					defaultValues: {
+						[id]: defaultValues,
+					},
+				}),
+			}}
+		/>
+	)) as Story<T & { defaultValues?: U | undefined }>;

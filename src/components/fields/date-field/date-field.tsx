@@ -7,6 +7,7 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { IDateFieldSchema } from "./types";
+import { useFormContext } from "react-hook-form";
 
 const DEFAULT_DATE_FORMAT = "uuuu-MM-dd";
 export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
@@ -16,11 +17,13 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	const {
 		schema: { label, useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, validation, ...otherSchema },
 		id,
+		isDirty,
 		onChange,
 		value,
 		error,
 		...otherProps
 	} = props;
+	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -108,13 +111,24 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	useEffect(() => {
 		if (!dateFormat) return;
 
-		if (useCurrentDate && !value) {
-			const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
-			onChange({ target: { value: currentDate } });
+		if (!value) {
+			if (!isDirty) {
+				// runs on mount and reset
+				if (useCurrentDate) {
+					const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
+					setValue(id, currentDate, { shouldDirty: true });
 
-			const inputDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), DEFAULT_DATE_FORMAT, "date");
-			setStateValue(inputDate);
-		} else if (value && !isValidDate(value)) {
+					const inputDate = DateTimeHelper.formatDateTime(
+						LocalDate.now().toString(),
+						DEFAULT_DATE_FORMAT,
+						"date"
+					);
+					setStateValue(inputDate);
+				} else {
+					setStateValue(undefined);
+				}
+			}
+		} else if (!isValidDate(value)) {
 			setStateValue(ERROR_MESSAGES.DATE.INVALID);
 		} else {
 			const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date"); // convert to LocalDate first to parse defaultValue
@@ -128,7 +142,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [useCurrentDate, value, dateFormat]);
+	}, [useCurrentDate, value, dateFormat, isDirty]);
 
 	// =============================================================================
 	// EVENT HANDLER
@@ -136,7 +150,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	const handleChange = ([day, month, year]: string[]) => {
 		if (!day && !month && !year) {
 			onChange({
-				target: { value: undefined },
+				target: { value: "" },
 			});
 		} else if (day.length < 2 || month.length < 2 || year.length < 4) {
 			onChange({

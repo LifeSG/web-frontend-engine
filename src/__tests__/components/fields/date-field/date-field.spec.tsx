@@ -11,6 +11,8 @@ import {
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -32,6 +34,7 @@ const renderComponent = (overrideField?: TOverrideField<IDateFieldSchema>, overr
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -211,6 +214,68 @@ describe(UI_TYPE, () => {
 			fireEvent.change(getYearInput(), { target: { value: valid[2] } });
 			await waitFor(() => fireEvent.click(screen.getByText("Done")));
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			fireEvent.focus(getDayInput());
+			fireEvent.change(getDayInput(), { target: { value: "25" } });
+			fireEvent.change(getMonthInput(), { target: { value: "01" } });
+			fireEvent.change(getYearInput(), { target: { value: "2022" } });
+			fireEvent.click(screen.getByText("Done"));
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getDayInput()).toHaveAttribute("value", "");
+			expect(getMonthInput()).toHaveAttribute("value", "");
+			expect(getYearInput()).toHaveAttribute("value", "");
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultDay = "01";
+			const defaultMonth = "01";
+			const defaultYear = "2022";
+			const defaultValue = `${defaultYear}-${defaultMonth}-${defaultDay}`;
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			fireEvent.focus(getDayInput());
+			fireEvent.change(getDayInput(), { target: { value: "25" } });
+			fireEvent.change(getMonthInput(), { target: { value: "05" } });
+			fireEvent.change(getYearInput(), { target: { value: "2021" } });
+			fireEvent.click(screen.getByText("Done"));
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getDayInput()).toHaveAttribute("value", defaultDay);
+			expect(getMonthInput()).toHaveAttribute("value", defaultMonth);
+			expect(getYearInput()).toHaveAttribute("value", defaultYear);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
+
+		it("should revert to current date on reset", async () => {
+			const currentDay = "01";
+			const currentMonth = "01";
+			const currentYear = "2022";
+			const currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
+			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse(currentDate));
+			renderComponent({ useCurrentDate: true });
+
+			fireEvent.focus(getDayInput());
+			fireEvent.change(getDayInput(), { target: { value: "25" } });
+			fireEvent.change(getMonthInput(), { target: { value: "05" } });
+			fireEvent.change(getYearInput(), { target: { value: "2021" } });
+			fireEvent.click(screen.getByText("Done"));
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getDayInput()).toHaveAttribute("value", currentDay);
+			expect(getMonthInput()).toHaveAttribute("value", currentMonth);
+			expect(getYearInput()).toHaveAttribute("value", currentYear);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: currentDate }));
 		});
 	});
 });
