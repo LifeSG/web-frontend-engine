@@ -1,7 +1,7 @@
 import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
 
-export type TUploadMethod = "post" | "get" | "put" | "patch";
+export type TUploadMethod = "post" | "put" | "patch";
 export const ACCEPTED_FILE_TYPES = ["jpg", "gif", "png", "heic", "heif", "webp"] as const;
 export type TImageUploadAcceptedFileType = (typeof ACCEPTED_FILE_TYPES)[number];
 export type TImageUploadOutputFileType = "jpg" | "png";
