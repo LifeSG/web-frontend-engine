@@ -1,7 +1,7 @@
 import { ForwardedRef } from "react";
 
 export interface IImageEditorProps {
-	maxSizeInB?: number;
+	maxSizeInKb?: number;
 	baseImageDataURL?: string;
 	drawing?: fabric.Object[];
 	color?: string;

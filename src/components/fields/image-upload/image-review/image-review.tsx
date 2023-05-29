@@ -294,6 +294,7 @@ export const ImageReview = (props: IProps) => {
 							color={drawActive ? activeColor : undefined}
 							erase={drawActive ? eraseMode : false}
 							ref={imageEditorRef}
+							maxSizeInKb={maxSizeInKb}
 						/>
 					</Suspense>
 				</ImageEditorWrapper>

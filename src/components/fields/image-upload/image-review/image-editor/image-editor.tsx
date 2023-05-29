@@ -12,7 +12,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	//  =============================================================================
 	// CONST, STATE, REFS
 	//  =============================================================================
-	const { maxSizeInB, baseImageDataURL, drawing, color, erase } = props;
+	const { maxSizeInKb, baseImageDataURL, drawing, color, erase } = props;
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const fabricCanvas = useRef<fabric.Canvas>();
@@ -46,7 +46,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	}));
 
 	// recursively compress image until it fits limit
-	const toDataURLWithLimit = (limit = maxSizeInB, quality = 1): string => {
+	const toDataURLWithLimit = (limit = maxSizeInKb, quality = 1): string => {
 		if (fabricBackground.current) {
 			const dataURL =
 				fabricCanvas.current?.toDataURL({
