@@ -181,6 +181,15 @@ export default {
 				},
 			},
 		},
+		onSubmitError: {
+			description:
+				"Submit event handler for when form fails validation, will receive error fields and respective error messages",
+			table: {
+				type: {
+					summary: "(values: TFrontendEngineValues) => unknown",
+				},
+			},
+		},
 		ref: {
 			description: "Functions same as React refs, provides a way to access the component",
 			table: {
