@@ -67,12 +67,6 @@ export const Description = styled(Text.H4)`
 	margin-top: 0.5rem;
 `;
 
-export const UnorderedList = styled(TextList.Ul)``;
-
-export const UnorderedListItem = styled(Text.BodySmall)`
-	text-align: left;
-`;
-
 export const CallButton = styled.a`
 	display: inline-block;
 	font-family: open Sans semibold;

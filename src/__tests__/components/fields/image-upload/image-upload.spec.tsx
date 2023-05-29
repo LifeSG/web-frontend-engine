@@ -148,7 +148,7 @@ describe("image-upload", () => {
 
 		expect(screen.getByTestId("field")).toBeInTheDocument();
 		expect(getDragInputUploadField()).toBeInTheDocument();
-		expect(getField("button", "Add photos")).toBeInTheDocument();
+		expect(getField("button", "Image Upload")).toBeInTheDocument();
 	});
 
 	it("should allow customising of copies", async () => {
@@ -257,7 +257,7 @@ describe("image-upload", () => {
 			});
 
 			it("should hide the add button", () => {
-				expect(getField("button", "Add photos", true)).not.toBeInTheDocument();
+				expect(getField("button", "Image Upload", true)).not.toBeInTheDocument();
 			});
 
 			it("should submit as many base64 and upload response", async () => {
@@ -300,7 +300,7 @@ describe("image-upload", () => {
 			});
 
 			it("should hide the add button", () => {
-				expect(getField("button", "Add photos", true)).not.toBeInTheDocument();
+				expect(getField("button", "Image Upload", true)).not.toBeInTheDocument();
 			});
 
 			it("should submit base64 and upload response up to max number of images", async () => {
@@ -769,7 +769,7 @@ describe("image-upload", () => {
 				eventListener: handleFileDialog,
 			});
 			await act(async () => {
-				await waitFor(() => fireEvent.click(getField("button", "Add photos")));
+				await waitFor(() => fireEvent.click(getField("button", "Image Upload")));
 			});
 
 			expect(handleFileDialog).toBeCalled();

@@ -18,14 +18,14 @@ export const Prompt = (props: IPromptProps) => {
 		<Modal
 			show={show}
 			id={TestHelper.generateId(id, undefined, show ? "show" : "hide")}
-			data-test-id={TestHelper.generateId(id, undefined, show ? "show" : "hide")}
+			data-testid={TestHelper.generateId(id, undefined, show ? "show" : "hide")}
 		>
 			<Container size={size}>
 				<LabelContainer size={size}>
 					{typeof image === "string" ? <PromptImage src={image} alt={title} /> : image}
 					<Title
 						id={TestHelper.generateId(id, "title")}
-						data-test-id={TestHelper.generateId(id, "title")}
+						data-testid={TestHelper.generateId(id, "title")}
 						size={size}
 						weight="semibold"
 					>
