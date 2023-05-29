@@ -11,6 +11,8 @@ import {
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -43,6 +45,7 @@ const renderComponent = (overrideField?: TOverrideField<IRangeSelectSchema>, ove
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -53,6 +56,14 @@ const renderComponent = (overrideField?: TOverrideField<IRangeSelectSchema>, ove
 
 const getComponent = (): HTMLElement => {
 	return getField("button", "Select Select");
+};
+
+const getOptionA = (): HTMLElement => {
+	return screen.getAllByText("A")[0];
+};
+
+const getOptionC = (): HTMLElement => {
+	return screen.getAllByText("C")[0];
 };
 
 describe(UI_TYPE, () => {
@@ -107,8 +118,8 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getComponent()));
 
-		await waitFor(() => fireEvent.click(screen.getAllByText("A")[0]));
-		await waitFor(() => fireEvent.click(screen.getAllByText("C")[0]));
+		await waitFor(() => fireEvent.click(getOptionA()));
+		await waitFor(() => fireEvent.click(getOptionC()));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } }));
 	});
@@ -184,5 +195,35 @@ describe(UI_TYPE, () => {
 				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			await waitFor(() => fireEvent.click(getComponent()));
+			await waitFor(() => fireEvent.click(getOptionA()));
+			await waitFor(() => fireEvent.click(getOptionC()));
+			await waitFor(() => fireEvent.click(getResetButton()));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
+			);
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValues = { from: "Apple", to: "Cherry" };
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
+
+			// Click on the range-select with default values
+			await waitFor(() => fireEvent.click(getField("button", "A C")));
+			await waitFor(() => fireEvent.click(screen.getAllByText("B")[0]));
+			await waitFor(() => fireEvent.click(screen.getAllByText("D")[0]));
+			await waitFor(() => fireEvent.click(getResetButton()));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		});
 	});
 });

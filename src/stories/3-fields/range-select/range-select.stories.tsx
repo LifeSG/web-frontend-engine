@@ -2,7 +2,7 @@ import { InputRangeProp } from "@lifesg/react-design-system";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IRangeSelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, RESET_BUTTON_SCHEMA, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/RangeSelect",
@@ -78,6 +78,7 @@ const Template = (id: string) =>
 						children: {
 							[id]: args,
 							...(args.validation.length > 0 ? SUBMIT_BUTTON_SCHEMA : {}),
+							...(id.includes("reset") ? RESET_BUTTON_SCHEMA : {}),
 						},
 					},
 				},
@@ -195,4 +196,52 @@ WithValidation.args = {
 		to: "",
 	},
 	validation: [{ required: true }],
+};
+
+export const Reset = Template("range-select-reset").bind({});
+Reset.args = {
+	uiType: "range-select",
+	label: "Directions",
+	options: {
+		from: [
+			{ label: "North", value: "North" },
+			{ label: "East", value: "East" },
+		],
+		to: [
+			{ label: "South", value: "South" },
+			{ label: "West", value: "West" },
+		],
+	},
+};
+
+export const ResetWithDefaultValues = Template("range-select-reset-default-value").bind({});
+ResetWithDefaultValues.args = {
+	uiType: "range-select",
+	label: "Directions",
+	options: {
+		from: [
+			{ label: "North", value: "North" },
+			{ label: "East", value: "East" },
+		],
+		to: [
+			{ label: "South", value: "South" },
+			{ label: "West", value: "West" },
+		],
+	},
+	defaultValues: {
+		from: "North",
+		to: "South",
+	},
+};
+
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "{ from: string, to: string }",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
 };
