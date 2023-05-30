@@ -1,4 +1,4 @@
-import { ReactElement, createContext, useRef } from "react";
+import { ReactElement, createContext, useEffect, useState } from "react";
 
 /**
  * events are added / removed / dispatched via the eventManager
@@ -17,7 +17,11 @@ export const EventContext = createContext<IEventContext>({
 });
 
 export const EventProvider = ({ children }: IProps) => {
-	const eventManager = useRef<Element>(document?.createElement("div"));
+	const [eventManager, setEventManager] = useState<Element>();
 
-	return <EventContext.Provider value={{ eventManager: eventManager.current }}>{children}</EventContext.Provider>;
+	useEffect(() => {
+		setEventManager(document.createElement("div"));
+	}, []);
+
+	return <EventContext.Provider value={{ eventManager }}>{children}</EventContext.Provider>;
 };
