@@ -94,7 +94,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	return (
-		<Form.CustomField label={label} id={id}>
+		<Form.CustomField label={label} id={id} errorMessage={error?.message}>
 			<Wrapper chipPosition={chipPosition}>
 				{renderChips()}
 				<StyledTextarea
@@ -108,7 +108,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 					resizable={resizable}
 					onChange={handleChange}
 					value={stateValue}
-					errorMessage={error?.message}
+					error={!!error?.message}
 				/>
 			</Wrapper>
 		</Form.CustomField>

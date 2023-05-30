@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { Label, RadioContainer, StyledRadioButton, FlexWrapper, StyledImageButton } from "./radio-button.styles";
+import { FlexWrapper, Label, RadioContainer, StyledImageButton, StyledRadioButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
@@ -116,6 +116,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								}
 								checked={isRadioButtonChecked(option.value)}
 								onChange={() => handleChangeOrClick(option.value)}
+								error={!!error?.message}
 							>
 								{option.label}
 							</Toggle>
@@ -145,6 +146,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								selected={isRadioButtonChecked(option.value)}
 								onClick={() => handleChangeOrClick(option.value)}
 								imgSrc={option.imgSrc}
+								error={!!error?.message}
 							>
 								{option.label}
 							</StyledImageButton>
