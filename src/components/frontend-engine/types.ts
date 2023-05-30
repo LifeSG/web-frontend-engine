@@ -19,6 +19,7 @@ import {
 	IMultiSelectSchema,
 	INumericFieldSchema,
 	IRadioButtonGroupSchema,
+	ISwitchSchema,
 	IResetButtonSchema,
 	ISelectSchema,
 	ISubmitButtonSchema,
@@ -89,6 +90,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextSchema
 	| ITextareaSchema<V>
 	| ITextFieldSchema<V>
+	| ISwitchSchema
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
 	| IWrapperSchema;
@@ -217,6 +219,7 @@ export enum EFieldType {
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
+	SWITCH = "Switch",
 }
 
 /**
