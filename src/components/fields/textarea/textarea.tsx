@@ -100,7 +100,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 				<StyledTextarea
 					{...otherSchema}
 					{...otherProps}
-					id={id}
+					id={id + "-base"}
 					data-testid={TestHelper.generateId(id, "textarea")}
 					name={name}
 					maxLength={maxLength}
