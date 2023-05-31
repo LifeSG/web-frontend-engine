@@ -1,11 +1,11 @@
-import { ReactElement, createContext, useRef } from "react";
+import { ReactElement, createContext, useEffect, useRef } from "react";
 
 /**
  * events are added / removed / dispatched via the eventManager
  * the eventManager is just a div, the handling of events is purely through native event handlers
  */
 interface IEventContext {
-	eventManager: Element;
+	eventManagerRef: React.RefObject<Element>;
 }
 
 interface IProps {
@@ -13,11 +13,15 @@ interface IProps {
 }
 
 export const EventContext = createContext<IEventContext>({
-	eventManager: null,
+	eventManagerRef: { current: null },
 });
 
 export const EventProvider = ({ children }: IProps) => {
-	const eventManager = useRef<Element>(document?.createElement("div"));
+	const eventManagerRef = useRef<Element>();
 
-	return <EventContext.Provider value={{ eventManager: eventManager.current }}>{children}</EventContext.Provider>;
+	useEffect(() => {
+		eventManagerRef.current = document.createElement("div");
+	}, []);
+
+	return <EventContext.Provider value={{ eventManagerRef }}>{children}</EventContext.Provider>;
 };
