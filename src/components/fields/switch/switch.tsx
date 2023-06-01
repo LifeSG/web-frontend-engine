@@ -1,7 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
@@ -40,7 +39,6 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleClick = (value: boolean) => {
-		//console.log("click", stateValue, value);
 		onChange({ target: { value } });
 	};
 
@@ -60,7 +58,6 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 			<FlexWrapper>
 				<Toggle
 					{...otherSchema}
-					key={formatId("yes")}
 					type="yes"
 					id={formatId("yes")}
 					data-testid={TestHelper.generateId(id, "switch-yes")}
@@ -70,12 +67,12 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 					onChange={() => handleClick(true)}
 					indicator={true}
 					name="Yes"
+					error={!!error?.message}
 				>
 					Yes
 				</Toggle>
 				<Toggle
 					{...otherSchema}
-					key={formatId("no")}
 					type="no"
 					id={formatId("no")}
 					data-testid={TestHelper.generateId(id, "switch-no")}
@@ -85,6 +82,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 					onChange={() => handleClick(false)}
 					indicator={true}
 					name="No"
+					error={!!error?.message}
 				>
 					No
 				</Toggle>

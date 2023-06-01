@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ISwitchSchema } from "../../../components/fields/switch/types";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, ResetStoryTemplate, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
 	title: "Field/Switch",
@@ -114,4 +114,19 @@ WithoutBorder.args = {
 	customOptions: {
 		border: false,
 	},
+};
+
+export const Reset = ResetStoryTemplate<ISwitchSchema>("switch-reset").bind({});
+Reset.args = {
+	uiType: "switch",
+	label: "Switch",
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<ISwitchSchema, boolean>("switch-reset-default-values").bind(
+	{}
+);
+ResetWithDefaultValues.args = {
+	uiType: "switch",
+	label: "Switch",
+	defaultValues: true,
 };

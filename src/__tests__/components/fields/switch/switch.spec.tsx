@@ -1,6 +1,4 @@
-import { Button } from "@lifesg/react-design-system/button";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useState } from "react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { ISwitchSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -11,6 +9,8 @@ import {
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
+	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -36,6 +36,7 @@ const renderComponent = (overrideField?: TOverrideField<ISwitchSchema>, override
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
+					...getResetButtonProps(),
 				},
 			},
 		},
@@ -51,7 +52,6 @@ describe("switch toggle button", () => {
 
 	it("should be able to render the field", () => {
 		renderComponent();
-		// screen.debug();
 		expect(getSwitchButton("Yes")).toBeInTheDocument();
 		expect(getSwitchButton("No")).toBeInTheDocument();
 	});
@@ -93,5 +93,35 @@ describe("switch toggle button", () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValue }));
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+			const yes = getSwitchButton("Yes");
+
+			fireEvent.click(yes);
+			await waitFor(() => fireEvent.click(getResetButton()));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(yes).not.toBeChecked();
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultValue = true;
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			const yes = getSwitchButton("Yes");
+			const no = getSwitchButton("No");
+
+			fireEvent.click(no);
+			await waitFor(() => fireEvent.click(getResetButton()));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(yes).toBeChecked();
+			expect(no).not.toBeChecked();
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
 	});
 });
