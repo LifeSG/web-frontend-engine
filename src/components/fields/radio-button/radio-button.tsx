@@ -15,7 +15,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, disabled, validation, customOptions, ...otherSchema },
+		schema: { label, options, disabled, validation, customOptions, className, ...otherSchema },
 		id,
 		value,
 		error,
@@ -75,6 +75,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 					<RadioContainer key={index}>
 						<StyledRadioButton
 							{...otherSchema}
+							className={className}
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
@@ -95,7 +96,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderToggles = () => {
 		return (
 			options.length > 0 && (
-				<FlexWrapper>
+				<FlexWrapper className={className}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -130,7 +131,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderImageButtons = () => {
 		return (
 			options.length > 0 && (
-				<FlexWrapper>
+				<FlexWrapper className={className}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
