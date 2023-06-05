@@ -121,14 +121,11 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 						ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxFileSizeRule?.["maxSizeInKb"]),
 					(value) => {
 						if (!value || !Array.isArray(value) || !maxFileSizeRule?.["maxSizeInKb"]) return true;
-						return value.reduce((accumulator, file) => {
-							if (
-								!accumulator ||
-								FileHelper.getFilesizeFromBase64(file.dataURL) > maxFileSizeRule?.["maxSizeInKb"] * 1024
-							)
-								return false;
-							return true;
-						}, true);
+						return value.every(
+							(file) =>
+								FileHelper.getFilesizeFromBase64(file.dataURL) <=
+								maxFileSizeRule?.["maxSizeInKb"] * 1024
+						);
 					}
 				),
 			validation
