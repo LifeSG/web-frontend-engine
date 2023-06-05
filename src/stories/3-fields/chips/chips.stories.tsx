@@ -9,8 +9,6 @@ import {
 	ResetStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
-import { IFrontendEngineRef } from "../../../components";
-import { useRef } from "react";
 
 export default {
 	title: "Field/Chips",
