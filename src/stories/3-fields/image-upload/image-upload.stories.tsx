@@ -111,7 +111,7 @@ export default {
 				"<div>Whether upload to API on adding file / after editing image, this can be used to do AV scan of the added file.</div><ul><li>method: HTTP method.</li><li>url: API endpoint to upload to.</li></ul>",
 			table: {
 				type: {
-					summary: "{ method: post|get|put|patch, url: string }",
+					summary: "{ method: post|put|patch, url: string }",
 				},
 				defaultValue: { summary: null },
 			},
