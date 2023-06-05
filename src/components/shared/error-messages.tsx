@@ -5,6 +5,7 @@ import { FileHelper } from "../../utils/file-helper"; // import directly to avoi
 export const ERROR_MESSAGES = {
 	COMMON: {
 		REQUIRED_OPTION: "An option is required",
+		REQUIRED_OPTIONS: "Both options are required",
 	},
 	CONTACT: {
 		INVALID_SINGAPORE_NUMBER: "Invalid Singapore number",

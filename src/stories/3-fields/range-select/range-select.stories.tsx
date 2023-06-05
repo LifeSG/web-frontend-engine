@@ -1,8 +1,8 @@
 import { InputRangeProp } from "@lifesg/react-design-system";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { IRangeSelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine, RESET_BUTTON_SCHEMA, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/RangeSelect",
@@ -68,30 +68,7 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...(args.validation.length > 0 ? SUBMIT_BUTTON_SCHEMA : {}),
-							...(id.includes("reset") ? RESET_BUTTON_SCHEMA : {}),
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<IRangeSelectSchema & { defaultValues?: InputRangeProp<string> | undefined }>;
-
-export const Default = Template("range-select-default").bind({});
+export const Default = DefaultStoryTemplate<IRangeSelectSchema>("range-select-default").bind({});
 Default.args = {
 	uiType: "range-select",
 	label: "Directions",
@@ -107,7 +84,9 @@ Default.args = {
 	},
 };
 
-export const DefaultValue = Template("range-select-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<IRangeSelectSchema, InputRangeProp<string>>(
+	"range-select-default-value"
+).bind({});
 DefaultValue.args = {
 	uiType: "range-select",
 	label: "Directions",
@@ -140,7 +119,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const Disabled = Template("range-select-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<IRangeSelectSchema>("range-select-disabled").bind({});
 Disabled.args = {
 	uiType: "range-select",
 	label: "Directions",
@@ -157,7 +136,7 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const Placeholder = Template("range-select-placeholder").bind({});
+export const Placeholder = DefaultStoryTemplate<IRangeSelectSchema>("range-select-placeholder").bind({});
 Placeholder.args = {
 	uiType: "range-select",
 	label: "Directions",
@@ -177,7 +156,9 @@ Placeholder.args = {
 	},
 };
 
-export const WithValidation = Template("range-select-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<IRangeSelectSchema, InputRangeProp<string>>(
+	"range-select-with-validation"
+).bind({});
 WithValidation.args = {
 	uiType: "range-select",
 	label: "Directions",
@@ -198,7 +179,7 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const Reset = Template("range-select-reset").bind({});
+export const Reset = ResetStoryTemplate<IRangeSelectSchema, InputRangeProp<string>>("range-select-reset").bind({});
 Reset.args = {
 	uiType: "range-select",
 	label: "Directions",
@@ -214,7 +195,9 @@ Reset.args = {
 	},
 };
 
-export const ResetWithDefaultValues = Template("range-select-reset-default-value").bind({});
+export const ResetWithDefaultValues = ResetStoryTemplate<IRangeSelectSchema, InputRangeProp<string>>(
+	"range-select-reset-default-value"
+).bind({});
 ResetWithDefaultValues.args = {
 	uiType: "range-select",
 	label: "Directions",

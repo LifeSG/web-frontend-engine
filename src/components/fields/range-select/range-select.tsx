@@ -103,7 +103,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 				options={options}
 				onSelectOption={handleChange}
 				selectedOptions={getSelectedOptions()}
-				valueToStringFunction={(value: any) => `${value.from} - ${value.to}`}
+				valueToStringFunction={(value) => `${value.from} - ${value.to}`}
 				valueExtractor={(item: IRangeSelectOption) => ({ from: item.value, to: item.value })}
 				displayValueExtractor={(item: IRangeSelectOption) => item.label}
 				listExtractor={(item: IRangeSelectOption) => item.label}
