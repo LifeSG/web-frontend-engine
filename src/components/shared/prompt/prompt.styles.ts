@@ -1,7 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { MediaQuery } from "@lifesg/react-design-system/media";
 import { Text } from "@lifesg/react-design-system/text";
-import { TextList } from "@lifesg/react-design-system/text-list";
 import styled from "styled-components";
 
 interface SizeProps {
@@ -65,15 +64,6 @@ export const LabelContainer = styled.div<SizeProps>`
 
 export const Description = styled(Text.H4)`
 	margin-top: 0.5rem;
-`;
-
-export const CallButton = styled.a`
-	display: inline-block;
-	font-family: open Sans semibold;
-`;
-
-export const BoldLetters = styled.strong`
-	font-family: open Sans semibold;
 `;
 
 export const Title = styled(Text.H4)<SizeProps>`

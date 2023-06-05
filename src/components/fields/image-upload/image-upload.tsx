@@ -8,7 +8,6 @@ import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";
 import { ImageReview } from "./image-review";
 import { ACCEPTED_FILE_TYPES, EImageStatus, IImage, IImageUploadSchema, TImageUploadAcceptedFileType } from "./types";
-import { useFormContext } from "react-hook-form";
 
 // lazy load to fix next.js SSR errors
 const ImageManager = lazy(() => import("./image-manager"));

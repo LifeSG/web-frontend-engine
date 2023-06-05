@@ -1,4 +1,4 @@
-import React, { createContext, Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, createContext, useMemo, useState } from "react";
 import { IImage } from "../types";
 
 interface IImageContext {
