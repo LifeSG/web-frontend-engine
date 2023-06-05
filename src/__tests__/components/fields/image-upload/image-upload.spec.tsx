@@ -148,7 +148,7 @@ describe("image-upload", () => {
 
 		expect(screen.getByTestId("field")).toBeInTheDocument();
 		expect(getDragInputUploadField()).toBeInTheDocument();
-		expect(getField("button", "Image Upload")).toBeInTheDocument();
+		expect(screen.getByLabelText("Image Upload")).toBeInTheDocument();
 	});
 
 	it("should allow customising of copies", async () => {
@@ -257,7 +257,7 @@ describe("image-upload", () => {
 			});
 
 			it("should hide the add button", () => {
-				expect(getField("button", "Image Upload", true)).not.toBeInTheDocument();
+				expect(screen.queryByLabelText("Add photos")).not.toBeInTheDocument();
 			});
 
 			it("should submit as many base64 and upload response", async () => {
