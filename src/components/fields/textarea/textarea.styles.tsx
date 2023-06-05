@@ -17,6 +17,7 @@ export const Wrapper = styled.div<{ chipPosition?: "top" | "bottom" | undefined 
 export const ChipContainer = styled.div`
 	margin: 0.5rem 0rem;
 	display: flex;
+	flex-wrap: wrap;
 	gap: 0.5rem;
 `;
 
