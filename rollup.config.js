@@ -5,7 +5,6 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
-import pkg from "./package.json";
 
 const plugins = [
 	peerDepsExternal(), // Add the externals for me. [react, react-dom]
@@ -28,14 +27,14 @@ export default {
 	input: "src/index.ts",
 	output: [
 		{
-			file: pkg.module,
+			dir: "dist",
 			format: "esm",
 			sourcemap: true,
 			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
 		},
 		{
-			file: pkg.main,
+			dir: "dist/cjs",
 			format: "cjs",
 			sourcemap: true,
 			exports: "named",
@@ -43,5 +42,5 @@ export default {
 		},
 	],
 	plugins,
-	external: ["react", "react-dom", "styled-components", "@lifesg/react-design-system"],
+	external: ["react", "react-dom", "styled-components", "@lifesg/react-design-system", "@lifesg/react-icons"],
 };

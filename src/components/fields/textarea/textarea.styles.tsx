@@ -1,4 +1,4 @@
-import { Form } from "@lifesg/react-design-system/form";
+import { Textarea } from "@lifesg/react-design-system/input-textarea";
 import styled, { css } from "styled-components";
 
 interface ITextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -20,7 +20,7 @@ export const ChipContainer = styled.div`
 	gap: 0.5rem;
 `;
 
-export const StyledTextarea = styled(Form.Textarea)<ITextareaProps>`
+export const StyledTextarea = styled(Textarea)<ITextareaProps>`
 	width: auto;
 
 	${(props) =>

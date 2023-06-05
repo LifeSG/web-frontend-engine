@@ -89,6 +89,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 				selectedOptions={getSelectOptions()}
 				valueExtractor={(item: IMultiSelectOption) => item.value}
 				listExtractor={(item: IMultiSelectOption) => item.label}
+				error={!!error?.message}
 			/>
 		</Form.CustomField>
 	);

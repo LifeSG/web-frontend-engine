@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { Label, RadioContainer, StyledRadioButton, FlexWrapper, StyledImageButton } from "./radio-button.styles";
+import { FlexWrapper, Label, RadioContainer, StyledImageButton, StyledRadioButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
@@ -15,7 +15,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, disabled, validation, customOptions, ...otherSchema },
+		schema: { label, options, disabled, validation, customOptions, className, ...otherSchema },
 		id,
 		value,
 		error,
@@ -75,6 +75,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 					<RadioContainer key={index}>
 						<StyledRadioButton
 							{...otherSchema}
+							className={className}
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
@@ -95,7 +96,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderToggles = () => {
 		return (
 			options.length > 0 && (
-				<FlexWrapper>
+				<FlexWrapper className={className}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -116,6 +117,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								}
 								checked={isRadioButtonChecked(option.value)}
 								onChange={() => handleChangeOrClick(option.value)}
+								error={!!error?.message}
 							>
 								{option.label}
 							</Toggle>
@@ -129,7 +131,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderImageButtons = () => {
 		return (
 			options.length > 0 && (
-				<FlexWrapper>
+				<FlexWrapper className={className}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -145,6 +147,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								selected={isRadioButtonChecked(option.value)}
 								onClick={() => handleChangeOrClick(option.value)}
 								imgSrc={option.imgSrc}
+								error={!!error?.message}
 							>
 								{option.label}
 							</StyledImageButton>

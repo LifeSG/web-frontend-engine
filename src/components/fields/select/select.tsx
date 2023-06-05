@@ -66,6 +66,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 				id={id}
 				data-testid={TestHelper.generateId(id, "select")}
 				name={name}
+				error={!!error?.message}
 				options={options}
 				onSelectOption={handleChange}
 				selectedOption={getSelectOption()}

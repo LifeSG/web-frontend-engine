@@ -15,6 +15,7 @@ import {
 	IContactFieldSchema,
 	IDateFieldSchema,
 	IEmailFieldSchema,
+	IImageUploadSchema,
 	IMultiSelectSchema,
 	INumericFieldSchema,
 	IRadioButtonGroupSchema,
@@ -71,27 +72,28 @@ export interface IFrontendEngineData<V = undefined> {
 
 // NOTE: add all possible schema types here except section schema
 export type TFrontendEngineFieldSchema<V = undefined> =
+	| IAlertSchema
+	| ICheckboxGroupSchema<V>
+	| IChipsSchema<V>
+	| IContactFieldSchema<V>
+	| ICustomComponentJsonSchema<V>
+	| IDateFieldSchema<V>
+	| IEmailFieldSchema<V>
+	| IFilterSchema
+	| IImageUploadSchema<V>
+	| IMultiSelectSchema<V>
+	| IRangeSelectSchema<V>
+	| INumericFieldSchema<V>
+	| IRadioButtonGroupSchema<V>
+	| IResetButtonSchema
+	| ISelectSchema<V>
+	| ISubmitButtonSchema
+	| ITextSchema
 	| ITextareaSchema<V>
 	| ITextFieldSchema<V>
-	| IEmailFieldSchema<V>
-	| INumericFieldSchema<V>
-	| ISubmitButtonSchema
-	| ISelectSchema<V>
-	| IRangeSelectSchema<V>
-	| IMultiSelectSchema<V>
-	| ICheckboxGroupSchema<V>
-	| IDateFieldSchema<V>
-	| IWrapperSchema
-	| IContactFieldSchema<V>
-	| IRadioButtonGroupSchema<V>
 	| ITimeFieldSchema<V>
-	| IChipsSchema<V>
 	| IUnitNumberFieldSchema<V>
-	| IAlertSchema
-	| ITextSchema
-	| IResetButtonSchema
-	| IFilterSchema
-	| ICustomComponentJsonSchema<V>;
+	| IWrapperSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -201,21 +203,22 @@ export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>
  * - components that can contain values that can get submitted
  */
 export enum EFieldType {
+	CHECKBOX = "CheckboxGroup",
+	CHIPS = "Chips",
+	"CONTACT-FIELD" = "ContactField",
+	"DATE-FIELD" = "DateField",
+	"EMAIL-FIELD" = "TextField",
+	"IMAGE-UPLOAD" = "ImageUpload",
+	"MULTI-SELECT" = "MultiSelect",
+	"RANGE-SELECT" = "RangeSelect",
+	"NUMERIC-FIELD" = "TextField",
+	RADIO = "RadioButtonGroup",
+	RESET = "ResetButton",
+	SELECT = "Select",
+	SUBMIT = "SubmitButton",
 	TEXTAREA = "Textarea",
 	"TEXT-FIELD" = "TextField",
-	"NUMERIC-FIELD" = "TextField",
-	"EMAIL-FIELD" = "TextField",
-	SUBMIT = "SubmitButton",
-	SELECT = "Select",
-	"RANGE-SELECT" = "RangeSelect",
-	"MULTI-SELECT" = "MultiSelect",
-	"DATE-FIELD" = "DateField",
-	CHECKBOX = "CheckboxGroup",
-	"CONTACT-FIELD" = "ContactField",
-	RADIO = "RadioButtonGroup",
 	"TIME-FIELD" = "TimeField",
-	CHIPS = "Chips",
-	RESET = "ResetButton",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
 }
 

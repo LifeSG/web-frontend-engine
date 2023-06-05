@@ -6,7 +6,7 @@ import { EventContext } from "../../components/frontend-engine/event";
  * use this hook to add/dispatch/remove event listeners
  */
 export const useFieldEvent = () => {
-	const { eventManager } = useContext(EventContext);
+	const { eventManagerRef } = useContext(EventContext);
 
 	const addFieldEventListener = (
 		type: string,
@@ -14,7 +14,7 @@ export const useFieldEvent = () => {
 		listener: (ev: Event) => unknown,
 		options?: boolean | AddEventListenerOptions
 	) => {
-		eventManager?.addEventListener(`${id}:${type}`, listener, options);
+		eventManagerRef.current?.addEventListener(`${id}:${type}`, listener, options);
 	};
 
 	const removeFieldEventListener = (
@@ -23,11 +23,11 @@ export const useFieldEvent = () => {
 		listener: (ev: Event) => unknown,
 		options?: boolean | EventListenerOptions
 	) => {
-		eventManager?.removeEventListener(`${id}:${type}`, listener, options);
+		eventManagerRef.current?.removeEventListener(`${id}:${type}`, listener, options);
 	};
 
 	const dispatchFieldEvent = (type: string, id: string, detail?: any): boolean => {
-		return eventManager?.dispatchEvent(
+		return eventManagerRef.current?.dispatchEvent(
 			new CustomEvent(`${id}:${type}`, { cancelable: true, detail: { id, ...detail } })
 		);
 	};
