@@ -91,7 +91,11 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-		onChange(event);
+		if (uiType === "numeric-field" && !event.target.value) {
+			onChange({ target: { value: undefined } });
+		} else {
+			onChange(event);
+		}
 	};
 
 	// =============================================================================
