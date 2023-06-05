@@ -156,6 +156,29 @@ Placeholder.args = {
 	},
 };
 
+export const Search = DefaultStoryTemplate<IRangeSelectSchema>("range-select-search").bind({});
+Search.args = {
+	uiType: "range-select",
+	label: "Fruits",
+	options: {
+		from: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+			{ label: "Dates", value: "Dates" },
+			{ label: "Orange", value: "Orange" },
+		],
+		to: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+			{ label: "Dates", value: "Dates" },
+			{ label: "Orange", value: "Orange" },
+		],
+	},
+	enableSearch: true,
+};
+
 export const WithValidation = DefaultStoryTemplate<IRangeSelectSchema, InputRangeProp<string>>(
 	"range-select-with-validation"
 ).bind({});
