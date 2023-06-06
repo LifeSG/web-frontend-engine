@@ -50,7 +50,7 @@ describe(UI_TYPE, () => {
 		jest.resetAllMocks();
 	});
 
-	it.only("should be able to render the field", () => {
+	it("should be able to render the field", () => {
 		renderComponent();
 		expect(getSwitchButton("Yes")).toBeInTheDocument();
 		expect(getSwitchButton("No")).toBeInTheDocument();
