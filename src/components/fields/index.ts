@@ -6,6 +6,7 @@ export * from "./image-upload";
 export * from "./multi-select";
 export * from "./radio-button";
 export * from "./select";
+export * from "./range-select";
 export * from "./submit-button";
 export * from "./text-field";
 export * from "./textarea";

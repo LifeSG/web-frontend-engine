@@ -19,6 +19,7 @@ import {
 	IMultiSelectSchema,
 	INumericFieldSchema,
 	IRadioButtonGroupSchema,
+	IRangeSelectSchema,
 	IResetButtonSchema,
 	ISelectSchema,
 	ISubmitButtonSchema,
@@ -81,6 +82,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IFilterSchema
 	| IImageUploadSchema<V>
 	| IMultiSelectSchema<V>
+	| IRangeSelectSchema<V>
 	| INumericFieldSchema<V>
 	| IRadioButtonGroupSchema<V>
 	| IResetButtonSchema
@@ -208,6 +210,7 @@ export enum EFieldType {
 	"EMAIL-FIELD" = "TextField",
 	"IMAGE-UPLOAD" = "ImageUpload",
 	"MULTI-SELECT" = "MultiSelect",
+	"RANGE-SELECT" = "RangeSelect",
 	"NUMERIC-FIELD" = "TextField",
 	RADIO = "RadioButtonGroup",
 	RESET = "ResetButton",
