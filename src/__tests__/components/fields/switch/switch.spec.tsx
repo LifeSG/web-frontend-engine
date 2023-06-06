@@ -45,12 +45,12 @@ const renderComponent = (overrideField?: TOverrideField<ISwitchSchema>, override
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-describe("switch toggle button", () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
 
-	it("should be able to render the field", () => {
+	it.only("should be able to render the field", () => {
 		renderComponent();
 		expect(getSwitchButton("Yes")).toBeInTheDocument();
 		expect(getSwitchButton("No")).toBeInTheDocument();

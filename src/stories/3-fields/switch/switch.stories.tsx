@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ISwitchSchema } from "../../../components/fields/switch/types";
-import { CommonFieldStoryProps, FrontendEngine, ResetStoryTemplate, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	FrontendEngine,
+	ResetStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
+} from "../../common";
 
 export default {
 	title: "Field/Switch",
@@ -45,35 +51,13 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as Story<ISwitchSchema & { defaultValues?: boolean | undefined }>;
-
-export const Default = Template("switch-default").bind({});
+export const Default = DefaultStoryTemplate<ISwitchSchema>("switch-default").bind({});
 Default.args = {
 	uiType: "switch",
 	label: "Switch",
 };
 
-export const DefaultValue = Template("switch-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<ISwitchSchema, boolean>("switch-default-value").bind({});
 DefaultValue.args = {
 	uiType: "switch",
 	label: "Switch",
@@ -93,21 +77,21 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const Disabled = Template("switch-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<ISwitchSchema>("switch-disabled").bind({});
 Disabled.args = {
 	uiType: "switch",
 	label: "Switch",
 	disabled: true,
 };
 
-export const WithValidation = Template("switch-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<ISwitchSchema>("switch-with-validation").bind({});
 WithValidation.args = {
 	uiType: "switch",
 	label: "Switch",
 	validation: [{ required: true }],
 };
 
-export const WithoutBorder = Template("switch-without-border").bind({});
+export const WithoutBorder = DefaultStoryTemplate<ISwitchSchema>("switch-without-border").bind({});
 WithoutBorder.args = {
 	uiType: "switch",
 	label: "Switch",

@@ -1,9 +1,7 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { useEffect, useState } from "react";
-import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
-import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { FlexWrapper } from "./switch.styles";
 import { ISwitchSchema } from "./types";
@@ -13,7 +11,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, disabled, validation, customOptions, ...otherSchema },
+		schema: { label, disabled, validation, customOptions, className, ...otherSchema },
 		id,
 		value,
 		error,
@@ -21,16 +19,10 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	} = props;
 
 	const [stateValue, setStateValue] = useState<boolean>(value || undefined);
-	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-	useEffect(() => {
-		setFieldValidationConfig(id, Yup.boolean(), validation);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
-
 	useEffect(() => {
 		setStateValue(value);
 	}, [value]);
@@ -53,9 +45,12 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 		return `${id}-${type}`;
 	};
 
+	// =========================================================================
+	// RENDER FUNCTIONS
+	// =========================================================================
 	return (
 		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			<FlexWrapper>
+			<FlexWrapper className={className} role="radiogroup" aria-label={label}>
 				<Toggle
 					{...otherSchema}
 					type="yes"
@@ -66,7 +61,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 					checked={isSwitchChecked(true)}
 					onChange={() => handleClick(true)}
 					indicator={true}
-					name="Yes"
+					name={id}
 					error={!!error?.message}
 				>
 					Yes
@@ -81,7 +76,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 					checked={isSwitchChecked(false)}
 					onChange={() => handleClick(false)}
 					indicator={true}
-					name="No"
+					name={id}
 					error={!!error?.message}
 				>
 					No
