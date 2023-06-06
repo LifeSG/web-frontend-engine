@@ -448,18 +448,15 @@ export const OnSubmitError: Story<IFrontendEngineProps> = () => {
 			<div className="margin--bottom">
 				{
 					"This example attempts to navigate the error input's label into view when submitting a form with errors. \
-					An alterate implementation could use the `:has()` pseudo-class, but that may be unsupported in some browsers (Firefox)."
+					An alterate implementation could use the :has() pseudo-class, but that may be unsupported in some browsers (Firefox)."
 				}
 			</div>
 			<FrontendEngine
 				data={{ ...onSubmitErrorData }}
 				ref={ref}
 				onSubmitError={(e) => {
-					console.log("Validation Errors: ", e);
+					action("Validation errors")(e);
 					const invalidElement = document.querySelector("*[aria-invalid=true]");
-					console.log("invalida element: ", invalidElement);
-					console.log("parentelement: ", invalidElement.parentElement);
-					console.log("parentelement: ", invalidElement.parentNode);
 					if (invalidElement && invalidElement.id) {
 						document.querySelector(`label[for=${invalidElement.id}]`).scrollIntoView();
 					} else {
@@ -476,11 +473,6 @@ const onSubmitErrorData: IFrontendEngineData = {
 		section: {
 			uiType: "section",
 			children: {
-				// intro: {
-				// 	uiType: "div",
-				// 	children:
-				// 		"This example navigates to the error input's label, or falls back to the error input. <br />",
-				// },
 				description2: {
 					label: "Feedback",
 					uiType: "textarea",
