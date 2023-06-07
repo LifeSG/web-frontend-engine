@@ -1,13 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { ISwitchSchema } from "../../../components/fields/switch/types";
-import {
-	CommonFieldStoryProps,
-	DefaultStoryTemplate,
-	FrontendEngine,
-	ResetStoryTemplate,
-	SUBMIT_BUTTON_SCHEMA,
-} from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/Switch",

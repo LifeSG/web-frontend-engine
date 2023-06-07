@@ -5,7 +5,7 @@ type TCustomOptions = {
 	border?: boolean | undefined;
 };
 
-export interface ISwitchSchema<V = boolean>
+export interface ISwitchSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"switch", V>,
 		TComponentOmitProps<ToggleProps> {
 	customOptions?: TCustomOptions | undefined;

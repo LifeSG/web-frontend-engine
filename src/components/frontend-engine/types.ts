@@ -87,7 +87,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IResetButtonSchema
 	| ISelectSchema<V>
 	| ISubmitButtonSchema
-	| ISwitchSchema
+	| ISwitchSchema<V>
 	| ITextSchema
 	| ITextareaSchema<V>
 	| ITextFieldSchema<V>
