@@ -19,18 +19,6 @@ export namespace FileHelper {
 	};
 
 	/**
-	 * formats bytes to bigger units
-	 */
-	export const bytesToSize = (bytes: number) => {
-		const sizes = ["B", "KB", "MB", "GB", "TB"];
-		let rounding = 1;
-		if (bytes == 0) return "0 B";
-		const i: number = Math.floor(Math.log(bytes) / Math.log(1024));
-		if (i === 0 || i === 1) rounding = 0;
-		return Number(bytes / Math.pow(1024, i)).toFixed(rounding) + " " + sizes[i];
-	};
-
-	/**
 	 * converts file/blob to dataURL
 	 */
 	export const fileToDataUrl = async (file: File | Blob): Promise<string> => {
