@@ -63,7 +63,7 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 		},
 		validation: {
 			description:
-				"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='/docs/form-validation-schema--required'>Validation Schema</a> stories",
+				"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='../?path=/docs/form-validation-schema--required'>Validation Schema</a> stories",
 			table: {
 				type: {
 					summary: "array",
@@ -74,7 +74,7 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 		},
 		showIf: {
 			description:
-				"A set of conditions to render the field. For more info, refer to the <a href='/docs/form-conditional-rendering--filled'>Conditional Rendering</a> stories",
+				"A set of conditions to render the field. For more info, refer to the <a href='../?path=/docs/form-conditional-rendering--filled'>Conditional Rendering</a> stories",
 			table: {
 				type: {
 					summary: "array",
