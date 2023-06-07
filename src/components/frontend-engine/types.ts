@@ -23,6 +23,7 @@ import {
 	IResetButtonSchema,
 	ISelectSchema,
 	ISubmitButtonSchema,
+	ISwitchSchema,
 	ITextFieldSchema,
 	ITextareaSchema,
 	ITimeFieldSchema,
@@ -88,6 +89,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IResetButtonSchema
 	| ISelectSchema<V>
 	| ISubmitButtonSchema
+	| ISwitchSchema<V>
 	| ITextSchema
 	| ITextareaSchema<V>
 	| ITextFieldSchema<V>
@@ -216,6 +218,7 @@ export enum EFieldType {
 	RESET = "ResetButton",
 	SELECT = "Select",
 	SUBMIT = "SubmitButton",
+	SWITCH = "Switch",
 	TEXTAREA = "Textarea",
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
