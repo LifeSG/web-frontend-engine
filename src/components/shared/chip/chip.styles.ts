@@ -12,6 +12,7 @@ export const ChipButton = styled.button<IChipButtonProps>`
 	border-radius: 1rem;
 	display: inline-block;
 	padding: 0.063rem 0.438rem;
+	overflow-wrap: anywhere;
 
 	:hover {
 		box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.2);
