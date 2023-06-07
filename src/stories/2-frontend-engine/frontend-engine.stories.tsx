@@ -181,6 +181,15 @@ export default {
 				},
 			},
 		},
+		onSubmitError: {
+			description:
+				"Submit event handler for when form fails validation, will receive error fields and respective error messages",
+			table: {
+				type: {
+					summary: "(values: TFrontendEngineValues) => unknown",
+				},
+			},
+		},
 		ref: {
 			description: "Functions same as React refs, provides a way to access the component",
 			table: {
@@ -428,5 +437,130 @@ export const Reset: Story<IFrontendEngineProps> = () => {
 };
 
 Reset.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+export const OnSubmitError: Story<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+
+	return (
+		<>
+			<div className="margin--bottom">
+				{
+					"This example attempts to navigate the error input's label into view when submitting a form with errors. \
+					An alterate implementation could use the :has() pseudo-class, but that may be unsupported in some browsers (Firefox)."
+				}
+			</div>
+			<FrontendEngine
+				data={{ ...onSubmitErrorData }}
+				ref={ref}
+				onSubmitError={(e) => {
+					action("Validation errors")(e);
+					const invalidElement = document.querySelector("*[aria-invalid=true]");
+					if (invalidElement && invalidElement.id) {
+						document.querySelector(`label[for=${invalidElement.id}]`).scrollIntoView();
+					} else {
+						document.querySelector(`*[aria-invalid=true]`).scrollIntoView();
+					}
+				}}
+			/>
+		</>
+	);
+};
+
+const onSubmitErrorData: IFrontendEngineData = {
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				description2: {
+					label: "Feedback",
+					uiType: "textarea",
+					rows: 3,
+					resizable: true,
+					validation: [{ required: true }],
+					chipTexts: ["Best", "Good", "Bad", "Horrible"],
+				},
+				name: {
+					label: "What is your name",
+					uiType: "text-field",
+					validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+				},
+				email: {
+					label: "Email address",
+					uiType: "email-field",
+					validation: [{ required: true }],
+				},
+				sex: {
+					uiType: "select",
+					label: "Sex",
+					options: [
+						{ label: "Male", value: "male" },
+						{ label: "Female", value: "female" },
+					],
+				},
+				radio: {
+					uiType: "radio",
+					label: "Excessive Radio Button",
+					options: [
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+					],
+					validation: [{ required: true }],
+				},
+				unit: {
+					label: "Unit Number",
+					uiType: "unit-number-field",
+				},
+				multi: {
+					uiType: "multi-select",
+					label: "Fruits",
+					options: [
+						{ value: "1", label: "1" },
+						{ value: "2", label: "2" },
+						{ value: "3", label: "3" },
+					],
+				},
+				description: {
+					label: "Feedback",
+					uiType: "textarea",
+					rows: 3,
+					resizable: true,
+					validation: [{ required: true }],
+					chipTexts: ["Best", "Good", "Bad", "Horrible"],
+				},
+				...SUBMIT_BUTTON_SCHEMA,
+			},
+		},
+	},
+	validationMode: "onSubmit",
+};
+
+OnSubmitError.parameters = {
 	controls: { hideNoControlsWarning: true },
 };

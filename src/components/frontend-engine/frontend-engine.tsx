@@ -26,6 +26,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		className = null,
 		onChange,
 		onSubmit,
+		onSubmitError,
 	} = props;
 
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
@@ -67,7 +68,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		reset,
 		setErrors,
 		setValue,
-		submit: reactFormHookSubmit(handleSubmit),
+		submit: reactFormHookSubmit(handleSubmit, handleSubmitError),
 	}));
 
 	const checkIsFormValid = useCallback(() => {
@@ -81,6 +82,12 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const handleSubmit = (data: TFrontendEngineValues): void => {
 		onSubmit?.(data);
+	};
+
+	const handleSubmitError = (errors: TFrontendEngineValues): void => {
+		// NOTE: this delays the callback into the process tick, ensuring the dom has updated by then
+		// this allows for potential error handling targeting attribute tags like `aria-invalid`
+		setTimeout(() => onSubmitError?.(errors));
 	};
 
 	// NOTE: Wrapper component contains nested fields
@@ -167,7 +174,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				data-testid={TestHelper.generateId(id, "frontend-engine")}
 				className={formClassNames}
 				noValidate
-				onSubmit={reactFormHookSubmit(handleSubmit)}
+				onSubmit={reactFormHookSubmit(handleSubmit, handleSubmitError)}
 				ref={ref}
 			>
 				<Sections warnings={warnings} schema={sections} />
