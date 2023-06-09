@@ -30,6 +30,7 @@ import {
 	IUnitNumberFieldSchema,
 } from "../fields";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
+import { ILocationInputSchema } from "../fields/location-input-group/types";
 
 // =============================================================================
 // YUP SCHEMA
@@ -85,7 +86,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IFilterSchema
 	| IImageUploadSchema<V>
 	| IMultiSelectSchema<V>
-	| IRangeSelectSchema<V>
+	| IRangeSelectSchema
 	| INumericFieldSchema<V>
 	| IRadioButtonGroupSchema<V>
 	| IResetButtonSchema
@@ -97,7 +98,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
-	| IWrapperSchema;
+	| IWrapperSchema
+	| ILocationInputSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -225,6 +227,7 @@ export enum EFieldType {
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
+	"LOCATION-INPUT" = "LocationInputGroup",
 }
 
 /**
