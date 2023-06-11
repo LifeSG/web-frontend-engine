@@ -1,3 +1,4 @@
+import isBoolean from "lodash/isBoolean";
 import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
@@ -8,7 +9,7 @@ import "./uinfin";
 /**
  * empty check that is applicable to numbers too
  */
-const isEmptyValue = (value: unknown) => (!isNumber(value) ? isEmpty(value) : isNil(value));
+const isEmptyValue = (value: unknown) => (!isNumber(value) ? isEmpty(value) && !isBoolean(value) : isNil(value));
 
 YupHelper.addCondition("mixed", "filled", (value) => !isEmptyValue(value));
 YupHelper.addCondition("mixed", "empty", (value) => isEmptyValue(value));
