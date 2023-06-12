@@ -23,6 +23,7 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 			staticMapPinColor,
 			disableErrorPromptOnApp,
 			mustHavePostalCode,
+			mastheadHeight = 0,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -85,6 +86,7 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 						disableErrorPromptOnApp={disableErrorPromptOnApp}
 						updateFormValues={updateFormValues}
 						mustHavePostalCode={mustHavePostalCode}
+						mastheadHeight={mastheadHeight}
 					/>
 				)}
 			</Suspense>

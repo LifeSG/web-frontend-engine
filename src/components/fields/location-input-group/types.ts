@@ -8,7 +8,7 @@ import { IStaticMapProps } from "./static-map";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-input", V>,
-		Pick<ILocationModalProps, "locationPermissionErrorMessage">,
+		Pick<ILocationModalProps, "locationPermissionErrorMessage" | "mastheadHeight">,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<ILocationSearchProps, "reverseGeoCodeEndpoint" | "disableErrorPromptOnApp" | "mustHavePostalCode">,
 		Pick<ILocationInputProps, "locationInputPlaceholder">,

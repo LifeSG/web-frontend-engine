@@ -36,6 +36,7 @@ export interface ILocationModalProps
 	locationPermissionErrorMessage?: string | undefined;
 	hotlineContent?: HotlineContent | undefined;
 	updateFormValues: (values: ILocationInputValues) => void;
+	mastheadHeight?: number;
 }
 
 /**
@@ -57,6 +58,7 @@ const LocationModal = ({
 	hotlineContent,
 	updateFormValues,
 	mustHavePostalCode,
+	mastheadHeight,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -181,8 +183,8 @@ const LocationModal = ({
 		setGettingCurrentLocation(false);
 		setLocationAvailable(false);
 
-		console.log("dealing with: ", error);
-
+		// ASK WEILI
+		// FIXME how to refactor this
 		if (isLifeSgApp() && !!disableErrorPromptOnApp) {
 			console.log("handleGetLocationError - disableErrorPromptOnApp");
 
@@ -418,12 +420,7 @@ const LocationModal = ({
 				id={TestHelper.generateId(id, "modal", showLocationModal ? "show" : "hide")}
 				show={showLocationModal}
 			>
-				<ModalBox
-					id={TestHelper.generateId(id, "box")}
-					showCloseButton={false}
-					// mastheadHeight={isLifeSgApp() ? window.lifeSgView?.mastheadHeight : 0}
-					mastheadHeight={0}
-				>
+				<ModalBox id={TestHelper.generateId(id, "box")} showCloseButton={false} mastheadHeight={mastheadHeight}>
 					{hasInternetConnectivity ? (
 						<>
 							<LocationSearch
