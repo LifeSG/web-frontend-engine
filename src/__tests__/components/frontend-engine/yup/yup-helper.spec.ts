@@ -111,44 +111,50 @@ describe("YupHelper", () => {
 
 	describe("mapRules", () => {
 		it.each`
-			type        | condition            | config                              | valid                                     | invalid
-			${"string"} | ${"required"}        | ${{ required: true }}               | ${"hello"}                                | ${undefined}
-			${"string"} | ${"email"}           | ${{ email: true }}                  | ${"john@doe.tld"}                         | ${"hello"}
-			${"string"} | ${"url"}             | ${{ url: true }}                    | ${"https://www.domain.tld"}               | ${"hello"}
-			${"string"} | ${"uuid"}            | ${{ uuid: true }}                   | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"} | ${"hello"}
-			${"string"} | ${"uinfin"}          | ${{ uinfin: true }}                 | ${"S1234567D"}                            | ${"S1234567A"}
-			${"string"} | ${"matches"}         | ${{ matches: "/^(hello)/" }}        | ${"hello world"}                          | ${"hi there"}
-			${"string"} | ${"length"}          | ${{ length: 1 }}                    | ${"h"}                                    | ${"hi"}
-			${"string"} | ${"min"}             | ${{ min: 1 }}                       | ${"h"}                                    | ${""}
-			${"string"} | ${"max"}             | ${{ max: 1 }}                       | ${"h"}                                    | ${"hi"}
-			${"string"} | ${"filled"}          | ${{ filled: true }}                 | ${"hello"}                                | ${undefined}
-			${"string"} | ${"empty"}           | ${{ empty: true }}                  | ${undefined}                              | ${"hello"}
-			${"string"} | ${"equals"}          | ${{ equals: "hello" }}              | ${"hello"}                                | ${"hi"}
-			${"string"} | ${"notEquals"}       | ${{ notEquals: "hello" }}           | ${"hi"}                                   | ${"hello"}
-			${"number"} | ${"required"}        | ${{ required: true }}               | ${1}                                      | ${undefined}
-			${"number"} | ${"min"}             | ${{ min: 1 }}                       | ${1}                                      | ${0}
-			${"number"} | ${"max"}             | ${{ max: 1 }}                       | ${1}                                      | ${2}
-			${"number"} | ${"filled"}          | ${{ filled: true }}                 | ${1}                                      | ${undefined}
-			${"number"} | ${"empty"}           | ${{ empty: true }}                  | ${undefined}                              | ${1}
-			${"number"} | ${"equals"}          | ${{ equals: 1 }}                    | ${1}                                      | ${2}
-			${"number"} | ${"notEquals"}       | ${{ notEquals: 1 }}                 | ${2}                                      | ${1}
-			${"number"} | ${"lessThan"}        | ${{ lessThan: 1 }}                  | ${0}                                      | ${1}
-			${"number"} | ${"moreThan"}        | ${{ moreThan: 1 }}                  | ${2}                                      | ${1}
-			${"number"} | ${"positive"}        | ${{ positive: true }}               | ${1}                                      | ${-1}
-			${"number"} | ${"negative"}        | ${{ negative: true }}               | ${-1}                                     | ${1}
-			${"number"} | ${"integer"}         | ${{ integer: true }}                | ${1}                                      | ${1.1}
-			${"array"}  | ${"required"}        | ${{ required: true }}               | ${["hello"]}                              | ${undefined}
-			${"array"}  | ${"filled"}          | ${{ filled: true }}                 | ${["hello"]}                              | ${[]}
-			${"array"}  | ${"empty"}           | ${{ empty: true }}                  | ${[]}                                     | ${["hello"]}
-			${"array"}  | ${"equals"}          | ${{ equals: ["hello"] }}            | ${["hello"]}                              | ${["hi"]}
-			${"array"}  | ${"notEquals"}       | ${{ notEquals: ["hello"] }}         | ${["hi"]}                                 | ${["hello"]}
-			${"array"}  | ${"length"}          | ${{ length: 1 }}                    | ${["hello"]}                              | ${["hello", "world"]}
-			${"array"}  | ${"min"}             | ${{ min: 1 }}                       | ${["hello"]}                              | ${[]}
-			${"array"}  | ${"max"}             | ${{ max: 1 }}                       | ${["hello"]}                              | ${["hello", "world"]}
-			${"array"}  | ${"includes string"} | ${{ includes: "hello" }}            | ${["hello"]}                              | ${["hi"]}
-			${"array"}  | ${"excludes string"} | ${{ excludes: "hello" }}            | ${["hi"]}                                 | ${["hello"]}
-			${"array"}  | ${"includes array"}  | ${{ includes: ["hello", "world"] }} | ${["hello", "world"]}                     | ${["hi"]}
-			${"array"}  | ${"excludes array"}  | ${{ excludes: ["hello", "world"] }} | ${["hi"]}                                 | ${["hello", "hi", "world"]}
+			type         | condition            | config                              | valid                                     | invalid
+			${"string"}  | ${"required"}        | ${{ required: true }}               | ${"hello"}                                | ${undefined}
+			${"string"}  | ${"email"}           | ${{ email: true }}                  | ${"john@doe.tld"}                         | ${"hello"}
+			${"string"}  | ${"url"}             | ${{ url: true }}                    | ${"https://www.domain.tld"}               | ${"hello"}
+			${"string"}  | ${"uuid"}            | ${{ uuid: true }}                   | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"} | ${"hello"}
+			${"string"}  | ${"uinfin"}          | ${{ uinfin: true }}                 | ${"S1234567D"}                            | ${"S1234567A"}
+			${"string"}  | ${"matches"}         | ${{ matches: "/^(hello)/" }}        | ${"hello world"}                          | ${"hi there"}
+			${"string"}  | ${"length"}          | ${{ length: 1 }}                    | ${"h"}                                    | ${"hi"}
+			${"string"}  | ${"min"}             | ${{ min: 1 }}                       | ${"h"}                                    | ${""}
+			${"string"}  | ${"max"}             | ${{ max: 1 }}                       | ${"h"}                                    | ${"hi"}
+			${"string"}  | ${"filled"}          | ${{ filled: true }}                 | ${"hello"}                                | ${undefined}
+			${"string"}  | ${"empty"}           | ${{ empty: true }}                  | ${undefined}                              | ${"hello"}
+			${"string"}  | ${"equals"}          | ${{ equals: "hello" }}              | ${"hello"}                                | ${"hi"}
+			${"string"}  | ${"equals"}          | ${{ equals: "hello" }}              | ${"hello"}                                | ${undefined}
+			${"string"}  | ${"equals"}          | ${{ equals: "hello" }}              | ${"hello"}                                | ${""}
+			${"string"}  | ${"notEquals"}       | ${{ notEquals: "hello" }}           | ${"hi"}                                   | ${"hello"}
+			${"number"}  | ${"required"}        | ${{ required: true }}               | ${1}                                      | ${undefined}
+			${"number"}  | ${"min"}             | ${{ min: 1 }}                       | ${1}                                      | ${0}
+			${"number"}  | ${"max"}             | ${{ max: 1 }}                       | ${1}                                      | ${2}
+			${"number"}  | ${"filled"}          | ${{ filled: true }}                 | ${1}                                      | ${undefined}
+			${"number"}  | ${"empty"}           | ${{ empty: true }}                  | ${undefined}                              | ${1}
+			${"number"}  | ${"equals"}          | ${{ equals: 1 }}                    | ${1}                                      | ${2}
+			${"number"}  | ${"notEquals"}       | ${{ notEquals: 1 }}                 | ${2}                                      | ${1}
+			${"number"}  | ${"lessThan"}        | ${{ lessThan: 1 }}                  | ${0}                                      | ${1}
+			${"number"}  | ${"moreThan"}        | ${{ moreThan: 1 }}                  | ${2}                                      | ${1}
+			${"number"}  | ${"positive"}        | ${{ positive: true }}               | ${1}                                      | ${-1}
+			${"number"}  | ${"negative"}        | ${{ negative: true }}               | ${-1}                                     | ${1}
+			${"number"}  | ${"integer"}         | ${{ integer: true }}                | ${1}                                      | ${1.1}
+			${"array"}   | ${"required"}        | ${{ required: true }}               | ${["hello"]}                              | ${undefined}
+			${"array"}   | ${"filled"}          | ${{ filled: true }}                 | ${["hello"]}                              | ${[]}
+			${"array"}   | ${"empty"}           | ${{ empty: true }}                  | ${[]}                                     | ${["hello"]}
+			${"array"}   | ${"equals"}          | ${{ equals: ["hello"] }}            | ${["hello"]}                              | ${["hi"]}
+			${"array"}   | ${"notEquals"}       | ${{ notEquals: ["hello"] }}         | ${["hi"]}                                 | ${["hello"]}
+			${"array"}   | ${"length"}          | ${{ length: 1 }}                    | ${["hello"]}                              | ${["hello", "world"]}
+			${"array"}   | ${"min"}             | ${{ min: 1 }}                       | ${["hello"]}                              | ${[]}
+			${"array"}   | ${"max"}             | ${{ max: 1 }}                       | ${["hello"]}                              | ${["hello", "world"]}
+			${"array"}   | ${"includes string"} | ${{ includes: "hello" }}            | ${["hello"]}                              | ${["hi"]}
+			${"array"}   | ${"excludes string"} | ${{ excludes: "hello" }}            | ${["hi"]}                                 | ${["hello"]}
+			${"array"}   | ${"includes array"}  | ${{ includes: ["hello", "world"] }} | ${["hello", "world"]}                     | ${["hi"]}
+			${"array"}   | ${"excludes array"}  | ${{ excludes: ["hello", "world"] }} | ${["hi"]}                                 | ${["hello", "hi", "world"]}
+			${"boolean"} | ${"equals"}          | ${{ equals: true }}                 | ${true}                                   | ${undefined}
+			${"mixed"}   | ${"equals"}          | ${{ equals: true }}                 | ${true}                                   | ${"true"}
+			${"mixed"}   | ${"equals"}          | ${{ equals: 1 }}                    | ${1}                                      | ${null}
+			${"mixed"}   | ${"equals"}          | ${{ equals: 1 }}                    | ${1}                                      | ${undefined}
 		`("should support $condition condition for Yup $type type", ({ type, config, valid, invalid }) => {
 			const schema = YupHelper.mapRules(YupHelper.mapSchemaType(type), [
 				{ ...config, errorMessage: ERROR_MESSAGE },

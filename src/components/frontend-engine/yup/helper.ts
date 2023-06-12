@@ -90,7 +90,7 @@ export namespace YupHelper {
 			case "number":
 				return Yup.number().typeError("Only number values are allowed");
 			case "boolean":
-				return Yup.boolean().typeError("Only boolean values are allowed");
+				return Yup.boolean().strict().typeError("Only boolean values are allowed");
 			case "array":
 				return Yup.array().typeError("Only array values are allowed");
 			case "object":

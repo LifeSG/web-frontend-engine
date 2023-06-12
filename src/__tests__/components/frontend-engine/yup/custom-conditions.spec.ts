@@ -1,3 +1,4 @@
+import * as Yup from "yup";
 import { YupHelper } from "../../../../components/frontend-engine/yup";
 import { TestHelper } from "../../../../utils";
 
