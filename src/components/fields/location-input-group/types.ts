@@ -1,18 +1,18 @@
 import { IColor, OneMapSearchBuildingResult } from "../../../services/onemap/types";
 import { ILocationCoord } from "../../../utils";
-import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
+import { IFrontendEngineBaseFieldJsonSchema, TErrorPayload } from "../../frontend-engine";
 import { ILocationInputProps } from "./location-input";
-// import { ILocationModalProps } from "./location-modal/location-modal";
-// import { ILocationPickerProps } from "./location-modal/location-picker";
+import { ILocationModalProps } from "./location-modal/location-modal";
+import { ILocationPickerProps } from "./location-modal/location-picker";
+import { IStaticMapProps } from "./static-map";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-input", V>,
-		Pick<ILocationInputProps, "locationInputPlaceholder"> {
-	// Pick<ILocationModalProps, "locationPermissionErrorMessage">
-	// Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
-	// Pick<ILocationSearchProps, "reverseGeoCodeEndpoint" | "disableErrorPromptOnApp" | "mustHavePostalCode">
-	// staticMapPinColor?: IColor | undefined;
-}
+		Pick<ILocationModalProps, "locationPermissionErrorMessage">,
+		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
+		Pick<ILocationSearchProps, "reverseGeoCodeEndpoint" | "disableErrorPromptOnApp" | "mustHavePostalCode">,
+		Pick<ILocationInputProps, "locationInputPlaceholder">,
+		Pick<IStaticMapProps, "staticMapPinColor"> {}
 
 export type TSinglePanelInputMode = "search" | "map";
 
@@ -62,10 +62,7 @@ export interface ILocationSearchProps {
 	disableErrorPromptOnApp?: boolean | undefined;
 	reverseGeoCodeEndpoint?: string | undefined;
 	onGetLocationCallback: (lat?: number | undefined, lng?: number | undefined) => void;
-	onGetLocationError: (
-		geolocationPositionError?: GeolocationPositionError | undefined,
-		disableErrorPromptOnApp?: boolean | undefined
-	) => void;
+	onGetLocationError: (error?: any | undefined, disableErrorPromptOnApp?: boolean | undefined) => void;
 	onAddressChange: () => void;
 	showLocationModal: boolean;
 	mapPickedLatLng?: ILocationCoord | undefined;
@@ -74,3 +71,12 @@ export interface ILocationSearchProps {
 	formValues?: ILocationInputValues | undefined;
 	updateFormValues: (values: ILocationInputValues) => void;
 }
+
+// TODO compile event types
+export interface ILocationInputEventDetail<T = unknown> {
+	payload?: T | undefined;
+	errors?: TErrorPayload;
+}
+export type TSetCurrentLocationDetail = ILocationInputEventDetail<ILocationCoord>;
+
+export type TLocationInputEvent = CustomEvent<ILocationInputEventDetail>;

@@ -107,6 +107,8 @@ export type TValidationMode = keyof ValidationMode;
 
 export type TErrorMessage = string | string[] | Record<string, string | string[]>;
 export type TErrorPayload = Record<string, TErrorMessage>;
+
+// FIXME add better typing, maybe generic
 export interface IFrontendEngineRef extends HTMLFormElement {
 	addCustomValidation: (
 		type: TYupSchemaType | "mixed",
@@ -116,10 +118,10 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	addFieldEventListener: (
 		type: string,
 		id: string,
-		listener: (ev: Event) => any,
+		listener: (ev: CustomEvent) => void,
 		options?: boolean | AddEventListenerOptions
 	) => void;
-	dispatchFieldEvent: (type: string, id: string, detail?: any) => boolean;
+	dispatchFieldEvent: <T = any>(type: string, id: string, detail?: T) => boolean;
 	/** gets form values */
 	getValues: () => TFrontendEngineValues;
 	/** checks if form is valid */
@@ -128,7 +130,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	removeFieldEventListener: (
 		type: string,
 		id: string,
-		listener: (ev: Event) => any,
+		listener: (ev: CustomEvent) => void,
 		options?: boolean | EventListenerOptions
 	) => void;
 	/** resets the form to the default state */

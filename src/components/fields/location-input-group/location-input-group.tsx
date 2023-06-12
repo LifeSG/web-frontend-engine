@@ -1,10 +1,12 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { StyledStaticMap } from "./location-input-group.styles";
 import { LocationInput } from "./location-input/location-input";
 import { ILocationInputSchema, ILocationInputValues } from "./types";
+import { TestHelper } from "../../../utils";
+import { useFieldEvent } from "../../../utils/hooks";
 
-// const LocationModal = lazy(() => import("./location-modal/location-modal"));
+const LocationModal = lazy(() => import("./location-modal/location-modal"));
 
 export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchema>) => {
 	// =============================================================================
@@ -15,12 +17,12 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 		schema: {
 			label,
 			locationInputPlaceholder,
-			// interactiveMapPinIconUrl,
-			// mapPanZoom,
-			// reverseGeoCodeEndpoint,
-			// staticMapPinColor,
-			// disableErrorPromptOnApp,
-			// mustHavePostalCode,
+			interactiveMapPinIconUrl,
+			mapPanZoom,
+			reverseGeoCodeEndpoint,
+			staticMapPinColor,
+			disableErrorPromptOnApp,
+			mustHavePostalCode,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -28,6 +30,14 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 	} = props;
 
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
+	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
+
+	// =============================================================================
+	// USEEFFECTS
+	// =============================================================================
+	useEffect(() => {
+		dispatchFieldEvent("mount", id);
+	}, []);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -40,7 +50,7 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 	// =============================================================================
 
 	return (
-		<div>
+		<div id={id} data-testid={TestHelper.generateId(id)}>
 			<LocationInput
 				id={id}
 				label={label}
@@ -52,15 +62,16 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 				}}
 				value={formValue?.address || ""}
 			/>
-			{/* {formValue?.lat && formValue?.lng && (
+			{formValue?.lat && formValue?.lng && (
 				<StyledStaticMap
+					id={id}
 					lat={formValue.lat}
 					lng={formValue.lng}
-					pinColor={staticMapPinColor}
+					staticMapPinColor={staticMapPinColor}
 					onClick={() => setShowLocationModal(true)}
 				/>
-			)} */}
-			{/* <Suspense fallback={null}>
+			)}
+			<Suspense fallback={null}>
 				{LocationModal && (
 					<LocationModal
 						id={id}
@@ -76,7 +87,7 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 						mustHavePostalCode={mustHavePostalCode}
 					/>
 				)}
-			</Suspense> */}
+			</Suspense>
 		</div>
 	);
 };
