@@ -27,7 +27,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.boolean(), validation);
+		setFieldValidationConfig(id, Yup.boolean().strict(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
