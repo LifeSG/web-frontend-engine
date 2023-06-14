@@ -14,7 +14,7 @@ const clientWithCredentials = new AxiosApiClient(
 	true
 );
 
-type ReverseGeocodeParams = {
+type TReverseGeocodeParams = {
 	route: string;
 	latitude: number;
 	longitude: number;
@@ -30,7 +30,7 @@ const reverseGeocode = async ({
 	abortSignal,
 	bufferRadius,
 	otherFeatures,
-}: ReverseGeocodeParams) => {
+}: TReverseGeocodeParams) => {
 	const res = await clientWithCredentials.get<{ data: { GeocodeInfo: OneMapGeocodeInfo[] } }>(route, {
 		params: { latitude, longitude, bufferRadius, otherFeatures },
 		signal: abortSignal,
@@ -39,6 +39,8 @@ const reverseGeocode = async ({
 	return res.data.GeocodeInfo;
 };
 
+// one map has a bug where it cant match exact matchs
+// splitting the query allows it to match....
 const searchByAddress = async (param: OneMapSearchParam): Promise<OneMapSearchResults> => {
 	const { searchValue, returnGeom, getAddressDetails, pageNum } = param;
 	const res = await client.get<OneMapSearchResults>("https://developers.onemap.sg/commonapi/search", {
@@ -55,5 +57,5 @@ const getStaticMap = (lat: number, lng: number, width: number, height: number, p
 export const OneMapService = {
 	reverseGeocode,
 	searchByAddress,
-	getStaticMap,
+	getStaticMapUrl,
 };

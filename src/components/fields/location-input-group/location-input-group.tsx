@@ -1,10 +1,9 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useState } from "react";
+import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { StyledStaticMap } from "./location-input-group.styles";
 import { LocationInput } from "./location-input/location-input";
 import { ILocationInputSchema, ILocationInputValues } from "./types";
-import { TestHelper } from "../../../utils";
-import { useFieldEvent } from "../../../utils/hooks";
 
 const LocationModal = lazy(() => import("./location-modal/location-modal"));
 
@@ -17,13 +16,16 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 		schema: {
 			label,
 			locationInputPlaceholder,
-			interactiveMapPinIconUrl,
-			mapPanZoom,
-			reverseGeoCodeEndpoint,
 			staticMapPinColor,
-			disableErrorPromptOnApp,
-			mustHavePostalCode,
+
 			mastheadHeight = 0,
+			/* eslint-disable @typescript-eslint/no-unused-vars */
+			showIf,
+			validation,
+			uiType,
+			customOptions,
+			/* eslint-disable @typescript-eslint/no-unused-vars */
+			...otherSchema
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -31,14 +33,10 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 	} = props;
 
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
-	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 
 	// =============================================================================
 	// USEEFFECTS
 	// =============================================================================
-	useEffect(() => {
-		dispatchFieldEvent("mount", id);
-	}, []);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -76,17 +74,13 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 				{LocationModal && (
 					<LocationModal
 						id={id}
+						mastheadHeight={mastheadHeight}
 						showLocationModal={showLocationModal}
 						onClose={() => setShowLocationModal(false)}
 						formValues={formValue}
-						mapPanZoom={mapPanZoom}
-						interactiveMapPinIconUrl={interactiveMapPinIconUrl}
-						reverseGeoCodeEndpoint={reverseGeoCodeEndpoint}
 						onConfirm={updateFormValues}
-						disableErrorPromptOnApp={disableErrorPromptOnApp}
 						updateFormValues={updateFormValues}
-						mustHavePostalCode={mustHavePostalCode}
-						mastheadHeight={mastheadHeight}
+						{...otherSchema}
 					/>
 				)}
 			</Suspense>

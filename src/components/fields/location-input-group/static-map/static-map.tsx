@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
 import { MediaWidths } from "@lifesg/react-design-system/media";
-import { OneMapService } from "src/services";
+import { useEffect, useRef, useState } from "react";
 import StaticMapPlaceholder from "../../../../assets/img/map/static_map_placeholder.png";
-import { StaticMapElement, StaticMapWrapper, staticMapDimensions } from "./static-map.styles";
 import { IColor } from "../../../../services/onemap/types";
 import { TestHelper } from "../../../../utils";
+import { LocationHelper } from "../location-helper";
+import { StaticMapElement, StaticMapWrapper, staticMapDimensions } from "./static-map.styles";
 
 export interface IStaticMapProps {
 	id: string;
@@ -42,7 +42,7 @@ export const StaticMap = ({
 			const mapDimensions = newIsMobile ? staticMapDimensions.mobile : staticMapDimensions.desktop;
 			const oneMapCreditsOverlayHeight = 15;
 			const mapHeight = mapDimensions.height + oneMapCreditsOverlayHeight;
-			setMapSrc(OneMapService.getStaticMap(lat, lng, mapDimensions.width, mapHeight, staticMapPinColor));
+			setMapSrc(LocationHelper.getStaticMapUrl(lat, lng, mapDimensions.width, mapHeight, staticMapPinColor));
 			renderedCenter.current = [lat, lng];
 		}
 	};

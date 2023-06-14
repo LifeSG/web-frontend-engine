@@ -2,10 +2,10 @@ import { MediaWidths } from "@lifesg/react-design-system";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
-import { TestHelper } from "../../../../../utils";
 import CurrentLocationUnavailable from "../../../../../assets/img/icons/current-location-unavailable.svg";
 import CurrentLocation from "../../../../../assets/img/icons/current-location.svg";
 import LocationPinBlue from "../../../../../assets/img/icons/location-pin-blue.svg";
+import { TestHelper } from "../../../../../utils";
 import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
 
 interface ILocationCoord {
@@ -85,19 +85,17 @@ export const LocationPicker = ({
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-
 	/**
 	 * Attach map and keep ref
 	 */
 	useEffect(() => {
 		/**
-		 * If component has mounted and is in map mode OR double panel (location panel is alway on for double panel)
-		 */ if (leafletWrapperRef.current && showLocationPicker) {
+		 * If component has mounted and is in map mode OR double panel (location picker is alway on for double panel)
+		 */
+		if (leafletWrapperRef.current && showLocationPicker) {
 			/**
 			 * If there is not map set currently and show changed and should show, generate map
-			 * Map is mounted on leafletWrapperRef
-			 * Ref is attached to mapRef for controls
-			 * Add marker to the map
+			 * cache map on location modal
 			 */
 			if (!mapRef.current) {
 				mapRef.current = L.map(leafletWrapperRef.current, { zoomControl: false });
@@ -123,62 +121,58 @@ export const LocationPicker = ({
 				[1.16, 103.502],
 			]);
 			basemap.addTo(mapRef.current);
-
-			if (selectedLocationCoord?.lat && selectedLocationCoord?.lng) zoomWithMarkers(selectedLocationCoord);
 		}
-		return () => {
-			mapRef.current?.off();
-			mapRef.current?.remove();
-			mapRef.current = undefined;
-		};
 	}, [showLocationPicker]);
 
-	/**
-	 * Whenever a map mounts, attach the listeners
-	 */
 	useEffect(() => {
 		const map = mapRef.current;
+
+		// reattach map from location modal
 		if (!showLocationPicker || !map) return;
 
-		// To centre on the current location after it has been retrieved,
-		// even if it didn't change, as it may have panned off-centre.
-		if (!gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
-			// NOTE: map will zoom when input is cleared in search panelInputMode and switches to map panelInputMode
-			zoomWithMarkers({ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng });
-		}
+		map.on("click", ({ latlng }: L.LeafletMouseEvent) => {
+			if (!gettingCurrentLocation) {
+				// console.log("zooming with map click");
+				onMapCenterChange(latlng);
+			}
+		});
 
-		map.on("click", handleClickMap);
-
-		const onZoomEnd = () => map.setMinZoom(mapPanZoom?.min ?? MIN_ZOOM_VALUE);
-		map.on("zoomend", onZoomEnd);
+		map.on("zoomend", () => map.setMinZoom(mapPanZoom?.min ?? MIN_ZOOM_VALUE));
 
 		return () => {
-			map.off("click", handleClickMap);
-			map.off("zoomend", onZoomEnd);
+			console.log("map unmount");
+
+			map.off("click");
+			map.off("zoomend");
 		};
-	}, [showLocationPicker, mapRef, gettingCurrentLocation]);
+	}, [showLocationPicker, mapRef, gettingCurrentLocation, onMapCenterChange]);
+
+	useEffect(() => {
+		if (!showLocationPicker) return;
+		// TODO move this else where
+		// To centre on the current location after it has been retrieved,
+		// even if it didn't change, as it may have panned off-centre.
+		// when toggling from search to map?
+		if (!gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
+			// NOTE: map will zoom when input is cleared in search panelInputMode and switches to map panelInputMode
+			console.log(
+				"zooming when !gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng"
+			);
+
+			zoomWithMarkers({ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng });
+		}
+	}, [showLocationPicker]);
 
 	/**
 	 * Centre map to selected location from search result
 	 */
 	useEffect(() => {
-		if (selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
+		if (showLocationPicker && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
 			zoomWithMarkers(selectedLocationCoord);
 		} else {
 			resetView();
 		}
-	}, [selectedLocationCoord]);
-
-	// =============================================================================
-	// EVENT HANDLERS
-	// =============================================================================
-
-	const handleClickMap = ({ latlng }: L.LeafletMouseEvent) => {
-		if (!gettingCurrentLocation) {
-			zoomWithMarkers(latlng);
-			onMapCenterChange(latlng);
-		}
-	};
+	}, [selectedLocationCoord.lat, selectedLocationCoord.lng]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -212,7 +206,7 @@ export const LocationPicker = ({
 		<LocationPickerWrapper
 			className={className}
 			id={TestHelper.generateId(id, "location-picker")}
-			data-testid={TestHelper.generateId(id, "location-picker")}
+			data-testid={TestHelper.generateId(id, "location-picker", showLocationPicker ? "show" : "hide")}
 		>
 			<LeafletWrapper ref={leafletWrapperRef} />
 			<ButtonLocation onClick={onGetCurrentLocation}>

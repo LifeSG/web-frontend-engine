@@ -1,6 +1,6 @@
-import { IColor, OneMapSearchBuildingResult } from "../../../services/onemap/types";
-import { ILocationCoord } from "../../../utils";
+import { OneMapSearchBuildingResult } from "../../../services/onemap/types";
 import { IFrontendEngineBaseFieldJsonSchema, TErrorPayload } from "../../frontend-engine";
+import { ILocationCoord } from "./location-helper";
 import { ILocationInputProps } from "./location-input";
 import { ILocationModalProps } from "./location-modal/location-modal";
 import { ILocationPickerProps } from "./location-modal/location-picker";
@@ -8,9 +8,15 @@ import { IStaticMapProps } from "./static-map";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-input", V>,
-		Pick<ILocationModalProps, "locationPermissionErrorMessage" | "mastheadHeight">,
+		Pick<ILocationModalProps, "locationPermissionErrorMessage" | "mastheadHeight" | "hotlineContent">,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
-		Pick<ILocationSearchProps, "reverseGeoCodeEndpoint" | "disableErrorPromptOnApp" | "mustHavePostalCode">,
+		Pick<
+			ILocationSearchProps,
+			| "reverseGeoCodeEndpoint"
+			| "disableErrorPromptOnApp"
+			| "mustHavePostalCode"
+			| "gettingCurrentLocationFetchMessage"
+		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder">,
 		Pick<IStaticMapProps, "staticMapPinColor"> {}
 
@@ -45,11 +51,11 @@ export interface IListItem extends ILocationInputValues {
 	displayText?: string | undefined;
 }
 
+// why is this here?
 export interface ILocationSearchProps {
 	id?: string;
 	onCancel: () => void;
 	onConfirm: () => void;
-	isSinglePanel: boolean;
 	panelInputMode: TPanelInputMode;
 	addressFieldPlaceholder?: string | undefined;
 	gettingCurrentLocation: boolean;
@@ -66,7 +72,7 @@ export interface ILocationSearchProps {
 	onAddressChange: () => void;
 	showLocationModal: boolean;
 	mapPickedLatLng?: ILocationCoord | undefined;
-	didUserClickMap: boolean;
+	// didUserClickMap: boolean;
 	onClearInput: () => void;
 	formValues?: ILocationInputValues | undefined;
 	updateFormValues: (values: ILocationInputValues) => void;
@@ -75,8 +81,15 @@ export interface ILocationSearchProps {
 // TODO compile event types
 export interface ILocationInputEventDetail<T = unknown> {
 	payload?: T | undefined;
-	errors?: TErrorPayload;
+	errors?: TErrorPayload | undefined;
 }
 export type TSetCurrentLocationDetail = ILocationInputEventDetail<ILocationCoord>;
 
 export type TLocationInputEvent = CustomEvent<ILocationInputEventDetail>;
+
+// Refactor
+// How we want to consolidate and reexport?
+export type TLocationInputEvents = {
+	"get-current-location": undefined;
+	"set-current-location": TSetCurrentLocationDetail;
+};

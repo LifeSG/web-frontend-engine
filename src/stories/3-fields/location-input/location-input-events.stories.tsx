@@ -33,11 +33,12 @@ const GeolocationTemplate = (eventName: string, detail?: TSetCurrentLocationDeta
 	((args) => {
 		const id = `location-input-${eventName}`;
 		const formRef = useRef<IFrontendEngineRef>();
-		const handleMount = (e: TLocationInputEvent) => action(eventName)(e);
 
 		const handleGetCurrentLocation = (e: TLocationInputEvent) => {
 			//Add mock call device geolocation here if needed
+			e.preventDefault();
 
+			console.log(">>>> running app impl");
 			formRef.current.dispatchFieldEvent<TSetCurrentLocationDetail>(
 				"set-current-location",
 				id,
@@ -46,24 +47,24 @@ const GeolocationTemplate = (eventName: string, detail?: TSetCurrentLocationDeta
 						lat: 1.29994179707526,
 						lng: 103.789404349716,
 					},
-					// TODO: improve the naming scheme
-					errors: {
-						GeolocationPositionError2: {
-							code: "3",
-						},
-					},
+					// errors: {
+					// 	GeolocationPositionError2: {
+					// 		code: "3",
+					// 	},
+					// },
 				}
 			);
 			return action(eventName)(e);
 		};
 
 		useEffect(() => {
+			console.log("app");
 			const currentFormRef = formRef.current;
+
 			currentFormRef.addFieldEventListener(eventName, id, handleGetCurrentLocation);
-			currentFormRef.addFieldEventListener("mount", id, handleMount);
+
 			return () => {
 				currentFormRef.removeFieldEventListener(eventName, id, handleGetCurrentLocation);
-				currentFormRef.removeFieldEventListener("mount", id, handleMount);
 			};
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);

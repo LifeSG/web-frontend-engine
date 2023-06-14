@@ -1,84 +1,59 @@
-import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within } from "@testing-library/react";
+import { MediaWidths } from "@lifesg/react-design-system";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
+import { useEffect, useRef } from "react";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
 import { ILocationInputSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
+import { LocationHelper } from "../../../../components/fields/location-input-group/location-helper";
+import { GeoLocationHelper, TestHelper } from "../../../../utils";
+import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema } from "../../../common";
 import {
-	FRONTEND_ENGINE_ID,
-	TOverrideField,
-	TOverrideSchema,
-	getField,
-	getResetButtonProps,
-	getSubmitButtonProps,
-} from "../../../common";
-import { TestHelper } from "../../../../utils";
-import { MediaWidths } from "@lifesg/react-design-system";
-import { MutableRefObject, useEffect, useRef } from "react";
-const { matchMedia } = global;
+	mock1PageFetchAddressResponse,
+	mockEmptyFetchAddressResponse,
+	mockInputValues,
+	mockReverseGeoCodeResponse,
+	mockStaticMapDataUri,
+} from "./mock-values";
+jest.mock("../../../../services/onemap/onemap-service.ts");
 
-class MockMediaQueryList {
-	public readonly media: string;
-	public matches: boolean;
-	private defaultMedia = "desktop maybe?";
-	private listeners?: ((e: MediaQueryListEvent) => void)[];
+// Object.defineProperty(window, "matchMedia", {
+// 	writable: true,
+// 	value: jest.fn().mockImplementation((query) => ({
+// 		matches: false,
+// 		media: query,
+// 		onchange: null,
+// 		addListener: jest.fn(), // deprecated
+// 		removeListener: jest.fn(), // deprecated
+// 		addEventListener: jest.fn(),
+// 		removeEventListener: jest.fn(),
+// 		dispatchEvent: jest.fn(),
+// 	})),
+// });
 
-	public constructor(media: string) {
-		this.media = media;
-		this.listeners = [];
-		this.matches = media == this.defaultMedia; // FIXME
-	}
+const io = mockIntersectionObserver();
 
-	public addEventListener(listener) {
-		this.listeners.push(listener);
-	}
+// function createMockImageDataUri(url) {
+// 	const img = new Image();
+// 	img.src = url;
+// 	img.addEventListener("load", () => {
+// 		img.complete = true;
+// 		img.naturalWidth = 100;
+// 		img.naturalHeight = 100;
+// 		img.dispatchEvent(new Event("load"));
+// 	});
+// 	return img;
+// }
 
-	public removeEventListener(listener) {
-		const index = this.listeners.indexOf(listener);
-		if (index > -1) {
-			this.listeners.splice(index, 1);
-		}
-	}
-
-	// Simulate the change event by triggering the listeners
-	public change(newMediaQuery: string) {
-		this.matches = newMediaQuery === this.media;
-		this.listeners.forEach((listener) =>
-			listener(new MediaQueryListEvent("change", { matches: this.matches, media: this.media }))
-		);
-	}
-}
-
-const mockGeolocation = {
-	getCurrentPosition: jest.fn(),
-	watchPosition: jest.fn(),
-	clearWatch: jest.fn(),
-};
-
-const setWindowInnerWidth = (width) => {
-	Object.defineProperty(window, "innerWidth", {
-		writable: true,
-		configurable: true,
-		value: width,
-	});
-	window.dispatchEvent(new Event("resize"));
-};
-
-class GeolocationPositionError extends Error {
-	readonly code: number;
-	readonly message: string;
-	readonly PERMISSION_DENIED: number;
-	readonly POSITION_UNAVAILABLE: number;
-	readonly TIMEOUT: number;
-
-	constructor(msg?: string) {
-		super(msg);
-	}
-}
+// Object.defineProperty(window, "Image", {
+// 	writable: true,
+// 	value: jest.fn().mockImplementation((url) => createMockImageDataUri(mockStaticMapDataUri)),
+// });
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "location-input";
 const LABEL = "Location input";
 
-const mountSpy = jest.fn();
 const setCurrentLocationSpy = jest.fn();
 
 enum ELocationInputEvents {
@@ -98,14 +73,23 @@ const FrontendEngineWithEventListener = ({
 	const formRef = useRef<IFrontendEngineRef>();
 
 	useEffect(() => {
-		if (!withEvents && locationDetails) return;
+		if (!withEvents || !locationDetails) {
+			console.log("useEffect for test setup FE");
+
+			return;
+		}
+
+		console.log("useEffect for test setup FE: should not reach here");
+
 		const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = formRef.current;
 
 		const handleAddFieldEventListener = () => {
 			addFieldEventListener(
 				ELocationInputEvents.GET_CURRENT_LOCATION,
 				COMPONENT_ID,
-				setCurrentLocationSpy.mockImplementation(() => {
+				setCurrentLocationSpy.mockImplementation((e) => {
+					e.preventDefault();
+
 					dispatchFieldEvent<TSetCurrentLocationDetail>(
 						ELocationInputEvents.SET_CURRENT_LOCATION,
 						COMPONENT_ID,
@@ -113,8 +97,6 @@ const FrontendEngineWithEventListener = ({
 					);
 				})
 			);
-
-			addFieldEventListener(ELocationInputEvents.MOUNT, COMPONENT_ID, mountSpy);
 		};
 
 		const handleRemoveFieldEventListener = () => {
@@ -123,6 +105,8 @@ const FrontendEngineWithEventListener = ({
 
 		handleAddFieldEventListener();
 		return () => handleRemoveFieldEventListener();
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return <FrontendEngine {...otherProps} ref={formRef} />;
@@ -149,13 +133,15 @@ const renderComponent = (
 						uiType: UI_TYPE,
 						...overrideField,
 					},
-					...getSubmitButtonProps(),
-					...getResetButtonProps(),
+					// ...getSubmitButtonProps(),
+					// ...getResetButtonProps(),
 				},
 			},
 		},
 		...overrideSchema,
 	};
+
+	console.log("!!! should run once");
 
 	return render(
 		<FrontendEngineWithEventListener
@@ -165,6 +151,55 @@ const renderComponent = (
 			withEvents={withEvents}
 		/>
 	);
+};
+
+const testIdCmd = (query = false) => {
+	return query ? screen.queryByTestId : screen.getByTestId;
+};
+
+const getLocationModal = (query = false, view = "show") => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "modal", view));
+};
+
+const getLocationPicker = (query = false, view = "show") => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-picker", view));
+};
+
+const getLocationSearch = (query = false) => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-search"));
+};
+
+const getLocationSearchResults = (query = false, view = "double") => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-search-results", view));
+};
+
+const getLocationCloseButton = (query = false) => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-search-modal-close"));
+};
+
+const getCurrentLocationErrorModal = (query = false) => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "get-location-error", "show"));
+};
+
+const getLocationSearchInput = (query = false) => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-search-modal-input"));
+};
+
+const getLocationInput = (query = false) => {
+	return within(testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-input"))).getByTestId("input");
+	// return testIdCmd(query)("input");
+};
+
+const getLocationSearchClearButton = (query = false) => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-search-input-clear"));
+};
+
+const getLocationModalControlButtons = (type, query = false) => {
+	return within(testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-search-controls"))).getByText(type);
+};
+
+const getStaticMap = (query = false) => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "static-map"));
 };
 
 // assert network error
@@ -186,10 +221,61 @@ const renderComponent = (
  * - error handling
  *
  * TODO:
- * mock one map
+ * double check all network calls are mocked
+ * trace broken test
+ * break down test files
+ * - events
+ * - search
+ * - map
+ * - full flow
  */
 
 describe("location-input-group", () => {
+	// TODO clean spy logic
+	let fetchAddressSpy;
+	let getCurrentLocationSpy;
+	let reverseGeocodeSpy;
+	let viewport: MockViewport;
+	let staticMapSpy;
+	let fetchSingleLocationByAddressSpy;
+
+	console.log = jest.fn();
+
+	const setWindowAndViewPort = (width: number, height = MediaWidths.tablet) => {
+		Object.defineProperty(window, "innerWidth", {
+			writable: true,
+			value: MediaWidths.mobileS, // Set the desired screen width for the desktop view
+		});
+		Object.defineProperty(window, "innerHeight", {
+			writable: true,
+			value: MediaWidths.mobileS, // Set the desired screen width for the desktop view
+		});
+
+		const createMockVisualViewport = (width, height) => ({
+			width,
+			height,
+			offsetLeft: 0,
+			offsetTop: 0,
+			pageLeft: 0,
+			pageTop: 0,
+			scale: 1,
+			zoom: 1,
+			addEventListener: jest.fn(),
+			removeEventListener: jest.fn(),
+		});
+
+		const mockVisualViewport = createMockVisualViewport(width, height);
+		Object.defineProperty(window, "visualViewport", {
+			writable: true,
+			value: mockVisualViewport,
+		});
+
+		viewport.set({
+			width,
+			height: MediaWidths.tablet,
+		});
+	};
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 		jest.restoreAllMocks();
@@ -200,14 +286,29 @@ describe("location-input-group", () => {
 		// MockMediaQueryList
 		// use global.matchMedia.simulateChange
 
-		delete window.matchMedia;
-		global.matchMedia = jest.fn().mockImplementation((query: string) => {
-			return new MockMediaQueryList(query);
+		getCurrentLocationSpy = jest.spyOn(GeoLocationHelper, "getCurrentLocation");
+		fetchAddressSpy = jest.spyOn(LocationHelper, "debounceFetchAddress");
+		reverseGeocodeSpy = jest.spyOn(LocationHelper, "reverseGeocode");
+		fetchSingleLocationByAddressSpy = jest.spyOn(LocationHelper, "fetchSingleLocationByAddress");
+		staticMapSpy = jest.spyOn(LocationHelper, "getStaticMapUrl").mockImplementation(() => mockStaticMapDataUri);
+
+		viewport = mockViewport({
+			width: MediaWidths.tablet,
+			height: MediaWidths.tablet,
 		});
+		setWindowAndViewPort(MediaWidths.desktopL);
 	});
 
 	afterEach(() => {
-		window.matchMedia = matchMedia;
+		delete window.visualViewport;
+		delete window.innerWidth;
+		delete window.innerHeight;
+		viewport.cleanup();
+		getCurrentLocationSpy.mockReset();
+		fetchAddressSpy.mockRestore();
+		reverseGeocodeSpy.mockRestore();
+		staticMapSpy.mockRestore();
+		fetchSingleLocationByAddressSpy.mockRestore();
 	});
 
 	/**
@@ -229,16 +330,39 @@ describe("location-input-group", () => {
 	 */
 	describe("events", () => {
 		// test cleanup
-		it("should fire mount event on mount", async () => {
-			await renderComponent();
 
-			expect(mountSpy).toBeCalled();
-		});
 		// device geolocation
-		describe.only("geolocation events", () => {
+		describe("geolocation events", () => {
 			// When does it request
 			// - open location
 			// - when you click on the picker button
+
+			it("should run default location getCurrentLocation", async () => {
+				getCurrentLocationSpy.mockResolvedValue({
+					lat: 1.29994179707526,
+					lng: 103.789404349716,
+				});
+
+				renderComponent({ withEvents: false });
+
+				await waitFor(() => window.dispatchEvent(new Event("online")));
+
+				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
+				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+
+				getLocationInput().focus();
+
+				await waitFor(() => {
+					expect(getCurrentLocationErrorModal(true)).not.toBeInTheDocument();
+					expect(getLocationPicker(true)).toBeInTheDocument();
+					expect(getLocationSearch(true)).toBeInTheDocument();
+				});
+			});
+
+			it.todo(
+				"should handle when navigator does not support geolocation in default location getCurrentLocation "
+			);
+
 			it("should set-current-location when FE requests for current location", async () => {
 				const locationDetails = {
 					payload: {
@@ -252,7 +376,7 @@ describe("location-input-group", () => {
 				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
-				screen.getByTestId("input").focus();
+				getLocationInput().focus();
 
 				expect(setCurrentLocationSpy).toBeCalled();
 
@@ -307,9 +431,7 @@ describe("location-input-group", () => {
 					).not.toBeInTheDocument();
 				});
 
-				expect(
-					screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "modal", "show"))
-				).not.toBeInTheDocument();
+				expect(getLocationModal(false, "hide")).toBeInTheDocument();
 			});
 
 			it("should handle non app error when FE requests for current location", async () => {
@@ -353,26 +475,137 @@ describe("location-input-group", () => {
 				expect(screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "modal", "show"))).toBeVisible();
 			});
 		});
+
 		// isLifeSGapp
 		// should we also invert the onemap service?
 	});
 
 	describe("functionality", () => {
-		it("should be able to render the location input field", async () => {
-			await renderComponent();
+		describe("when rendering the input field", () => {
+			it("should be able to render the location input field", async () => {
+				renderComponent();
 
-			expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-			expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
-		});
+				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
+				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+			});
 
-		describe.skip("when there are default values", () => {
-			it.todo("should show both static map and input value and open the modal when clicked");
+			// test functionality
+			describe("when there are default values", () => {
+				describe("when only address", () => {
+					beforeEach(async () => {
+						fetchSingleLocationByAddressSpy.mockImplementation((_, onSuccess) => {
+							console.log("fetchAddressSpy called");
+							onSuccess(mockInputValues);
+						});
+						reverseGeocodeSpy.mockImplementation(() => {
+							return mockReverseGeoCodeResponse;
+						});
+						renderComponent({
+							withEvents: false,
+							overrideSchema: {
+								defaultValues: {
+									[COMPONENT_ID]: {
+										address: "Fusionopolis View",
+									},
+								},
+							},
+						});
 
-			it.todo("should show static map only and open the modal when clicked");
+						await waitFor(() => {
+							expect(getLocationInput(true)).toBeInTheDocument();
+							expect(getStaticMap(true)).toBeInTheDocument();
+						});
+					});
 
-			it.todo("show input value only and open the modal when clicked");
+					it("should open location modal when static map is clicked", async () => {
+						fireEvent.click(getStaticMap());
 
-			// What other scenarios?
+						await waitFor(() => {
+							expect(getLocationModal(true)).toBeInTheDocument();
+						});
+					});
+
+					it("should open location model when location input is clicked", async () => {
+						getLocationInput().focus();
+
+						await waitFor(() => {
+							expect(getLocationModal(true)).toBeInTheDocument();
+						});
+					});
+
+					// FIXME reverse geocode is broken for full address searches
+					describe("when location modal is open", () => {
+						it.todo("should have search input field and single search result shown and selected");
+					});
+				});
+
+				describe("when only lat lng", () => {
+					beforeEach(async () => {
+						fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							onSuccess(mock1PageFetchAddressResponse);
+						});
+						reverseGeocodeSpy.mockImplementation(() => mockReverseGeoCodeResponse);
+						renderComponent({
+							withEvents: false,
+							overrideSchema: {
+								defaultValues: {
+									[COMPONENT_ID]: {
+										lat: 1.29994179707526,
+										lng: 103.789404349716,
+									},
+								},
+							},
+							overrideField: {
+								reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+							},
+						});
+
+						await waitFor(() => {
+							expect(reverseGeocodeSpy).toBeCalledTimes(1);
+							expect(getLocationInput(true)).toBeInTheDocument();
+							expect(getStaticMap(true)).toBeInTheDocument();
+						});
+					});
+
+					it("should show static map only and open the modal when clicked", async () => {
+						fireEvent.click(getStaticMap());
+
+						await waitFor(() => {
+							expect(getLocationModal(true)).toBeInTheDocument();
+						});
+					});
+
+					it("show input value only and open the modal when clicked", async () => {
+						getLocationInput().focus();
+
+						await waitFor(() => {
+							expect(getLocationModal(true)).toBeInTheDocument();
+						});
+					});
+
+					describe("when location modal is open", () => {
+						it.todo("should have search input field and single search result shown and selected");
+					});
+				});
+
+				describe("when both address and lat lng", () => {
+					// TODO
+				});
+
+				it.todo("should show static map only and open the modal when clicked");
+
+				it.todo("show input value only and open the modal when clicked");
+
+				describe("when there are network errors", () => {
+					it.todo("handle when static map endpoint is down");
+
+					it.todo("handle when fetch address endpoint is down");
+
+					it.todo("handle when reverse geocode endpoint is down");
+				});
+
+				// What other scenarios?
+			});
 		});
 
 		// cancelled
@@ -385,175 +618,444 @@ describe("location-input-group", () => {
 			// desktop
 
 			describe("when there is internet connectivity", () => {
-				beforeEach(async () => {
-					await renderComponent();
-
-					await waitFor(() => window.dispatchEvent(new Event("online")));
-				});
-
-				// on what state and flow
 				it("should open location modal when input is clicked", async () => {
-					fireEvent.click(screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input")));
+					renderComponent();
 
-					// this case might a false pass
+					expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
+					expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+
+					getLocationInput().focus();
+
 					await waitFor(() => {
-						expect(
-							screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-picker"))
-						).toBeInTheDocument();
+						expect(getLocationModal(true)).toBeInTheDocument();
 					});
 				});
 
-				describe.skip("when geolocation is not supported", () => {
-					// ?
-				});
-
-				// FIX geolocation mocking
-				describe.skip("when geolocation is supported", () => {
-					describe.skip("when geolocation is not enabled", () => {
+				describe("when geolocation is supported", () => {
+					describe("when geolocation is not enabled", () => {
 						it("should warn user about location not enabled and allow the user to continue after dismissing modal", async () => {
-							await waitFor(() =>
-								fireEvent.click(
-									screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input"))
-								)
-							);
+							renderComponent();
+
+							await waitFor(() => window.dispatchEvent(new Event("online")));
+
+							getLocationInput().focus();
 
 							await waitFor(() => {
-								expect(
-									screen.getByTestId(
-										TestHelper.generateId(COMPONENT_ID, "get-location-error", "show")
-									)
-								).toBeInTheDocument();
+								expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
 							});
 
-							await waitFor(() =>
-								fireEvent.click(screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "btn-ok")))
-							);
+							within(getCurrentLocationErrorModal(true)).getByRole("button").click();
 
-							expect(
-								screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-picker"))
-							).toBeInTheDocument();
+							await waitFor(() => {
+								expect(getLocationPicker(true)).toBeVisible();
+								expect(getLocationSearchResults(true, "double")).toBeInTheDocument();
+							});
 						});
 					});
 
-					describe.skip("when geolocation is enabled", () => {
-						// do smth
+					describe("when geolocation is enabled", () => {
+						// get current location
 					});
 
 					// geolocation state changes?
 				});
 
 				// rename
-				describe("when user does smth", () => {
-					// device specific screen behaviour
-					describe.skip("when on tablet", () => {
-						// beforeEach(() => {
-						// 	setWindowInnerWidth(MediaWidths.tablet);
-						// });
-						// verifiy map and search switching behaviour
+				describe("when geolocation is disabled", () => {
+					describe("modal controls", () => {
+						describe("for tablet and below", () => {
+							mockViewportForTestGroup({ width: MediaWidths.mobileL, height: MediaWidths.mobileL });
+							it("should allow user to close the location modal when in map mode", async () => {
+								setWindowAndViewPort(MediaWidths.mobileL);
+
+								renderComponent();
+
+								await waitFor(() => window.dispatchEvent(new Event("online")));
+
+								getLocationInput().focus();
+
+								await waitFor(() => {
+									expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+								});
+
+								within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+
+								await waitFor(() => {
+									expect(getLocationModal(true)).toBeVisible();
+									expect(getLocationPicker(true)).toBeVisible();
+									expect(getLocationSearchResults(true, "map")).toBeInTheDocument();
+								});
+
+								fireEvent.click(getLocationCloseButton());
+
+								await waitFor(() => {
+									expect(getLocationModal(true, "hide")).toBeInTheDocument();
+								});
+							});
+
+							it("should allow user to close the modal when in search mode", async () => {
+								setWindowAndViewPort(MediaWidths.mobileL);
+
+								renderComponent();
+
+								await waitFor(() => window.dispatchEvent(new Event("online")));
+
+								getLocationInput().focus();
+
+								await waitFor(() => {
+									expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+								});
+
+								await waitFor(() => {
+									within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+								});
+
+								await waitFor(() => {
+									expect(getLocationPicker(true)).toBeVisible();
+									expect(getLocationSearchResults(true, "map")).toBeInTheDocument();
+								});
+
+								fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+									onSuccess(mock1PageFetchAddressResponse);
+								});
+
+								fireEvent.change(getLocationSearchInput(), { target: { value: "A" } });
+
+								expect(fetchAddressSpy).toHaveBeenCalled();
+
+								await waitFor(() => {
+									expect(getLocationModal(true)).toBeVisible();
+									expect(getLocationPicker(true, "hide")).toBeInTheDocument();
+									expect(getLocationSearchResults(true, "search")).toBeInTheDocument();
+								});
+
+								fireEvent.click(getLocationCloseButton());
+
+								await waitFor(() => {
+									expect(getLocationModal(true, "hide")).toBeInTheDocument();
+								});
+							});
+						});
+
+						describe("for desktop", () => {
+							it("should allow user to cancel", async () => {
+								setWindowAndViewPort(MediaWidths.desktopL);
+
+								renderComponent();
+
+								await waitFor(() => window.dispatchEvent(new Event("online")));
+
+								getLocationInput().focus();
+
+								await waitFor(() => {
+									expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+								});
+
+								within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+
+								await waitFor(() => {
+									expect(getLocationPicker(true)).toBeVisible();
+									expect(getLocationSearchResults(true, "double")).toBeInTheDocument();
+								});
+
+								const buttons = screen.getAllByTestId("button");
+								const [cancelButton] = buttons.filter((el) => {
+									return el.textContent === "Cancel";
+								});
+
+								expect(cancelButton).toBeInTheDocument();
+
+								cancelButton.click();
+
+								await waitFor(() => {
+									expect(getLocationModal(true)).not.toBeInTheDocument();
+								});
+							});
+						});
+
+						it.todo("should allow user to continue with selection");
 					});
 
-					describe.skip("when on desktop", () => {
-						// beforeEach(() => {
-						// 	setWindowInnerWidth(MediaWidths.desktopL);
-						// });
-						// verify double panel behaviour
+					// library so no need
+					describe("map controls", () => {
+						// move
+						// click
+						// click zoom +/-
+						// click location
+						// location variants
 					});
 
-					// on what state?
-					// on what flow
-					// how to detect double or single panel?
-					it("should show the map picker", () => {
-						expect(
-							screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-search-modal-input"))
-						).toBeInTheDocument();
-
-						expect(
-							screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-picker"))
-						).toBeInTheDocument();
-
-						expect(
-							screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-search-results"))
-								.offsetHeight
-						).toEqual(0);
-
-						expect(
-							screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-search-controls"))
-						).toBeInTheDocument();
-					});
-
-					// fix broken test
-					describe.skip("when using location picker", () => {
+					describe("when using location picker", () => {
 						// map touch controls
 						// zoom
 						// recenter
 						// click to search
 					});
 
-					describe.skip("when using location search", () => {
-						// query interaction
-						it("should automatically search as user types", () => {
-							// how does user navigate to the search input
-							// click
-							// type
-							// select
+					describe("when using location search in desktop", () => {
+						beforeEach(async () => {
+							renderComponent();
 
-							// click
-							// type
-							// clear
-							fireEvent.change(
-								screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-search-modal-input")),
-								{ target: { value: "A" } }
-							);
+							await waitFor(() => window.dispatchEvent(new Event("online")));
 
-							// write better test
-							// how to test external components?
-							expect(
-								screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-search-results"))
-									.offsetHeight
-							).not.toEqual(0);
+							getLocationInput().focus();
+
+							await waitFor(() => {
+								expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+							});
+
+							within(getCurrentLocationErrorModal(true)).getByRole("button").click();
 						});
 
-						it.todo("should allow user to select result");
+						it("should automatically search as user types", async () => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								onSuccess(mockEmptyFetchAddressResponse);
+							});
 
-						it.todo("should allow user to scroll to see more results");
+							fireEvent.change(getLocationSearchInput(), { target: { value: "found nothing" } });
 
-						it.todo("should allow user to clear query string");
+							expect(fetchAddressSpy).toHaveBeenCalled();
+
+							await waitFor(() => {
+								expect(getLocationSearchResults(true)).toHaveTextContent("No results found");
+							});
+
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								onSuccess(mock1PageFetchAddressResponse);
+							});
+
+							fireEvent.change(getLocationSearchInput(), { target: { value: "found something" } });
+
+							expect(fetchAddressSpy).toHaveBeenCalled();
+
+							await waitFor(() => {
+								expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
+							});
+						});
+
+						it("should allow user to clear query string", async () => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								onSuccess(mock1PageFetchAddressResponse);
+							});
+
+							fireEvent.change(getLocationSearchInput(), { target: { value: "found something" } });
+
+							expect(fetchAddressSpy).toHaveBeenCalled();
+
+							await waitFor(() => {
+								expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
+							});
+
+							fireEvent.click(getLocationSearchClearButton());
+
+							await waitFor(() => {
+								expect(getLocationSearchInput()).toHaveValue("");
+								expect(getLocationSearchResults(true)).toBeEmptyDOMElement();
+							});
+						});
+
+						it("should allow user to select result", async () => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								onSuccess(mock1PageFetchAddressResponse);
+							});
+
+							fireEvent.change(getLocationSearchInput(), { target: { value: "found somthing" } });
+
+							expect(fetchAddressSpy).toHaveBeenCalled();
+
+							await waitFor(() => {
+								expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
+							});
+
+							const resultContainer = getLocationSearchResults();
+							const selectedResult = resultContainer.getElementsByTagName("div")[0];
+							fireEvent.click(selectedResult);
+
+							await waitFor(() => {
+								expect(selectedResult).toHaveAttribute(
+									"data-testid",
+									expect.stringContaining("active")
+								);
+								expect(getLocationModalControlButtons("Confirm")).not.toHaveAttribute("disabled");
+							});
+						});
+
+						it("should allow user to scroll to see more results", async () => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								onSuccess(mock1PageFetchAddressResponse);
+							});
+
+							fireEvent.change(getLocationSearchInput(), { target: { value: "found somthing" } });
+
+							expect(fetchAddressSpy).toHaveBeenCalledTimes(1);
+
+							await waitFor(() => {
+								expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
+							});
+
+							const resultContainer = getLocationSearchResults();
+							fireEvent.scroll(resultContainer, {
+								target: {
+									scrollTop: (resultContainer.scrollTop += 9999),
+								},
+							});
+
+							act(() => {
+								io.enterNode(screen.getByTestId("InfiniteScrollList__InfiniteListItem-sentryRef"));
+							});
+
+							await waitFor(() => {
+								expect(fetchAddressSpy).toHaveBeenCalledTimes(2);
+							});
+						});
+
+						it("should close location modal when confirm", async () => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								onSuccess(mock1PageFetchAddressResponse);
+							});
+
+							fireEvent.change(getLocationSearchInput(), { target: { value: "found somthing" } });
+
+							expect(fetchAddressSpy).toHaveBeenCalled();
+
+							await waitFor(() => {
+								expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
+							});
+
+							const resultContainer = getLocationSearchResults();
+							const selectedResult = resultContainer.getElementsByTagName("div")[0];
+							fireEvent.click(selectedResult);
+
+							await waitFor(() => {
+								expect(selectedResult).toHaveAttribute(
+									"data-testid",
+									expect.stringContaining("active")
+								);
+								expect(getLocationModalControlButtons("Confirm")).not.toHaveAttribute("disabled");
+							});
+
+							fireEvent.click(getLocationModalControlButtons("Confirm"));
+
+							await waitFor(() => {
+								expect(getLocationModal(true)).not.toBeInTheDocument();
+							});
+
+							// should I assert static map?
+						});
 					});
 
-					describe.skip("when actions cause cross component state change", () => {
+					describe("when using location search in mobile", () => {
+						beforeEach(async () => {
+							setWindowAndViewPort(MediaWidths.mobileL);
+
+							renderComponent();
+
+							await waitFor(() => window.dispatchEvent(new Event("online")));
+
+							getLocationInput().focus();
+
+							await waitFor(() => {
+								expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+							});
+
+							within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+						});
+						// FIXME confirm behaviour
+						it("should switch to map mode when result is selected", async () => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								onSuccess(mock1PageFetchAddressResponse);
+							});
+
+							fireEvent.change(getLocationSearchInput(), { target: { value: "found somthing" } });
+
+							expect(fetchAddressSpy).toHaveBeenCalled();
+
+							await waitFor(() => {
+								expect(getLocationSearchResults(true, "search")).not.toBeEmptyDOMElement();
+							});
+
+							const resultContainer = getLocationSearchResults(false, "search");
+							const selectedResult = resultContainer.getElementsByTagName("div")[0];
+							fireEvent.click(selectedResult);
+
+							await waitFor(() => {
+								expect(getLocationModal(true)).toBeVisible();
+								expect(getLocationPicker(true)).toBeVisible();
+								expect(getLocationSearchResults(true, "map")).toBeInTheDocument();
+							});
+						});
+
+						it("should close location modal when confirm", async () => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								onSuccess(mock1PageFetchAddressResponse);
+							});
+
+							fireEvent.change(getLocationSearchInput(), { target: { value: "found somthing" } });
+
+							expect(fetchAddressSpy).toHaveBeenCalled();
+
+							await waitFor(() => {
+								expect(getLocationSearchResults(true, "search")).not.toBeEmptyDOMElement();
+							});
+
+							const resultContainer = getLocationSearchResults(false, "search");
+							const selectedResult = resultContainer.getElementsByTagName("div")[0];
+							fireEvent.click(selectedResult);
+
+							await waitFor(() => {
+								expect(selectedResult).toHaveAttribute(
+									"data-testid",
+									expect.stringContaining("active")
+								);
+								expect(getLocationModalControlButtons("Confirm location")).not.toHaveAttribute(
+									"disabled"
+								);
+							});
+
+							fireEvent.click(getLocationModalControlButtons("Confirm location"));
+
+							await waitFor(() => {
+								expect(getLocationModal(true)).not.toBeInTheDocument();
+							});
+
+							// should I assert static map?
+						});
+					});
+
+					describe("when actions cause cross component state change", () => {
 						// search behaviours?
-						describe.skip("when user click map", () => {
+						describe("when user click map", () => {
 							// do smth
 						});
 
-						describe.skip("when user selects a search result", () => {
+						describe("when user selects a search result", () => {
 							// do smth
 						});
 
-						describe.skip("when user clears query", () => {
+						describe("when user clears query in tablet or smaller screens", () => {
 							// do smth
 						});
 
-						describe.skip("when user recenters", () => {
+						describe("when user recenters", () => {
 							// do smth
 						});
 					});
 
-					describe.skip("map controls", () => {
-						it.todo("should allow user to close the modal");
-
-						it.todo("should allow user to cancel");
-
-						it.todo("should allow user to continue with selection");
+					describe("when user cancels", () => {
+						// restore value as untouched
+						// reopen behaviour
+						// as is input visual
 					});
 
-					describe.skip("when user continue", () => {
+					// test screen resize?
+
+					describe("when user continue", () => {
 						it.todo("should show both static map and input value and dismiss location modal");
 					});
 				});
 			});
 
-			describe.skip("when internet connectivity errors occurs", () => {
+			describe("when internet connectivity errors occurs", () => {
 				it("should show no internet connectivity error modal if no internet", async () => {
 					await renderComponent();
 
@@ -587,7 +1089,7 @@ describe("location-input-group", () => {
 			});
 
 			// TODO
-			describe.skip("network errors", () => {
+			describe("network errors", () => {
 				// show one map error
 				// - first load useEffect
 				// - query searching
@@ -604,7 +1106,7 @@ describe("location-input-group", () => {
 		});
 	});
 
-	describe.skip("customisation", () => {
+	describe("customisation", () => {
 		it.todo("should support placeholder texts");
 	});
 });

@@ -33,7 +33,7 @@ export const InfiniteScrollList = (props: InfiniteScrollProp): JSX.Element => {
 		<>
 			{items}
 			{(loading || hasNextPage) && (
-				<InfiniteListItem ref={sentryRef}>
+				<InfiniteListItem data-testid={"InfiniteScrollList__InfiniteListItem-sentryRef"} ref={sentryRef}>
 					<LoadingIndicator />
 				</InfiniteListItem>
 			)}
