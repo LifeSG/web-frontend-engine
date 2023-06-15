@@ -104,7 +104,6 @@ export const LocationSearch = ({
 	// =============================================================================
 	// check if any of the services is working
 	useEffect(() => {
-		// TODO: do we need this behaviour?
 		if (!showLocationModal) return;
 		// check if one map or reverse code is working
 		// - get location error
@@ -189,7 +188,7 @@ export const LocationSearch = ({
 			// - zoom with markers
 			onChangeSelectedAddressInfo(locationInputValue);
 
-			// FIXME reopening more than once the location modal will not cause a query string rerender
+			// FIXME edge case: reopening more than once the location modal will not cause a query string rerender
 			// search deps
 			// - if no address, reset list
 			// - debounceFetchAddress
@@ -420,7 +419,6 @@ export const LocationSearch = ({
 	const displayResultsFromLatLng = async (addressLat: number, addressLng: number) => {
 		if (!reverseGeoCodeEndpoint) return;
 
-		// FIXME: fetching logic
 		let resultListItem: IResultListItem[];
 		try {
 			resultListItem = await fetchLocationList(
@@ -437,7 +435,6 @@ export const LocationSearch = ({
 			return;
 		}
 
-		// FIXME: presentational logic
 		if (resultListItem.length === 0) {
 			setQueryString("");
 			const shouldPanToCurrentLocation =

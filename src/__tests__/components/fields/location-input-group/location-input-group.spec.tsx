@@ -951,7 +951,7 @@ describe("location-input-group", () => {
 
 							within(getCurrentLocationErrorModal(true)).getByRole("button").click();
 						});
-						// FIXME confirm behaviour
+
 						it("should switch to map mode when result is selected", async () => {
 							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);

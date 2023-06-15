@@ -14,9 +14,6 @@ import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 import { PrefetchImage } from "./no-network-modal/no-network-modal.styles";
 
-// FIXME
-// use mol app assets once its fixed
-// delete custom types once ported over
 const ErrorSvg = "https://assets.life.gov.sg/web-frontend-engine/img/common/error.svg";
 const OfflineImage = "https://assets.life.gov.sg/web-frontend-engine/img/common/no-network.png";
 const TimeoutSvg = "https://assets.life.gov.sg/web-frontend-engine/img/icons/get-location-timeout.svg";
@@ -51,26 +48,24 @@ export interface ILocationModalProps
  */
 const LocationModal = ({
 	id = "location-modal",
-	formValues, // modal, search, inputgroup
-	showLocationModal, // modal, search, inputgroup
-	disableErrorPromptOnApp, // modal, inputgroup
-	mapPanZoom, // picker
-	interactiveMapPinIconUrl, // picker
-	reverseGeoCodeEndpoint, // search
+	formValues,
+	showLocationModal,
+	disableErrorPromptOnApp,
+	mapPanZoom,
+	interactiveMapPinIconUrl,
+	reverseGeoCodeEndpoint,
 	gettingCurrentLocationFetchMessage,
-	locationPermissionErrorMessage, // modal
-	hotlineContent, // modal, input group
-	mustHavePostalCode, // modal, search
-	mastheadHeight, // input group
+	locationPermissionErrorMessage,
+	hotlineContent,
+	mustHavePostalCode,
+	mastheadHeight,
 	onClose,
 	onConfirm,
-	updateFormValues, // input, modal, input group
+	updateFormValues,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	// TODO remove this ref
-
 	const [panelInputMode, setPanelInputMode] = useState<TPanelInputMode>("double");
 
 	// Temporarily hold the selection
@@ -325,7 +320,6 @@ const LocationModal = ({
 		);
 	};
 
-	// FIXME use testhelper id
 	const renderNetworkErrorPrompt = () => {
 		/**
 		 * Do not render any other error if there is no internet connectivity
