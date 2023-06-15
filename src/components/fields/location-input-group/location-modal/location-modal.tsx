@@ -1,26 +1,25 @@
 import { MediaWidths, Modal } from "@lifesg/react-design-system";
 import { Text } from "@lifesg/react-design-system/text";
-import * as L from "leaflet";
-import { useEffect, useRef, useState } from "react";
+import { isEmpty } from "lodash";
+import { useEffect, useState } from "react";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
+import { useFieldEvent } from "../../../../utils/hooks";
+import { Prompt } from "../../../shared";
+import { Description } from "../../../shared/prompt/prompt.styles";
+import { ILocationCoord, ONE_MAP_ERROR_NAME } from "../location-helper";
 import { ILocationInputValues, ILocationSearchProps, TPanelInputMode, TSetCurrentLocationDetail } from "../types";
 import { ErrorImage, ModalBox, StyledLocationPicker } from "./location-modal.styles";
 import { ILocationPickerProps } from "./location-picker";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 import { PrefetchImage } from "./no-network-modal/no-network-modal.styles";
-import { isEmpty } from "lodash";
-import { useFieldEvent } from "../../../../utils/hooks";
-import { Prompt } from "../../../shared";
-import { Description } from "../../../shared/prompt/prompt.styles";
-import { ILocationCoord, ONE_MAP_ERROR_NAME } from "../location-helper";
 
 // FIXME
 // use mol app assets once its fixed
 // delete custom types once ported over
-import ErrorSvg from "../../../../assets/common/error.svg";
-import OfflineImage from "../../../../assets/common/no-network.png";
-import TimeoutSvg from "../../../../assets/img/icons/get-location-timeout.svg";
+const ErrorSvg = "https://assets.life.gov.sg/web-frontend-engine/img/common/error.svg";
+const OfflineImage = "https://assets.life.gov.sg/web-frontend-engine/img/common/no-network.png";
+const TimeoutSvg = "https://assets.life.gov.sg/web-frontend-engine/img/icons/get-location-timeout.svg";
 
 interface HotlineContent {
 	name: string;

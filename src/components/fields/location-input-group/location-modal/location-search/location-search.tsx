@@ -1,8 +1,6 @@
 import { Text } from "@lifesg/react-design-system/text";
 import { isEmpty } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import LocationPinBlack from "../../../../../assets/img/icons/location-pin-black.svg";
-import SearchSvg from "../../../../../assets/img/icons/search.svg";
 import { OneMapBoolean } from "../../../../../services/onemap/types";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
@@ -32,6 +30,9 @@ import {
 	SearchBarModalCross,
 	SearchWrapper,
 } from "./location-search.styles";
+
+const LocationPinBlack = "https://assets.life.gov.sg/web-frontend-engine/img/icons/location-pin-black.svg";
+const SearchSvg = "https://assets.life.gov.sg/web-frontend-engine/img/icons/search.svg";
 
 export const LocationSearch = ({
 	id = "location-search",

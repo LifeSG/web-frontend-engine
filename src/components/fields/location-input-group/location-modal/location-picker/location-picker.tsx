@@ -2,16 +2,14 @@ import { MediaWidths } from "@lifesg/react-design-system";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
-import CurrentLocationUnavailable from "../../../../../assets/img/icons/current-location-unavailable.svg";
-import CurrentLocation from "../../../../../assets/img/icons/current-location.svg";
-import LocationPinBlue from "../../../../../assets/img/icons/location-pin-blue.svg";
 import { TestHelper } from "../../../../../utils";
+import { ILocationCoord } from "../../location-helper";
 import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
 
-interface ILocationCoord {
-	lat: number;
-	lng: number;
-}
+const CurrentLocationUnavailable =
+	"https://assets.life.gov.sg/web-frontend-engine/img/icons/current-location-unavailable.svg";
+const CurrentLocation = "https://assets.life.gov.sg/web-frontend-engine/img/icons/current-location.svg";
+const LocationPinBlue = "https://assets.life.gov.sg/web-frontend-engine/img/icons/location-pin-blue.svg";
 
 interface IMapPin extends ILocationCoord {
 	address?: string | undefined;
