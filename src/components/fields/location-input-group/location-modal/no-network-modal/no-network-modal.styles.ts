@@ -48,7 +48,3 @@ export const ButtonWrapper = styled(Button.Default)`
 		max-width: 16.5rem;
 	}
 `;
-
-export const PrefetchImage = styled.img`
-	display: none;
-`;

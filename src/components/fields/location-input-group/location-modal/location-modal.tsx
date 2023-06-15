@@ -8,11 +8,10 @@ import { Prompt } from "../../../shared";
 import { Description } from "../../../shared/prompt/prompt.styles";
 import { ILocationCoord, ONE_MAP_ERROR_NAME } from "../location-helper";
 import { ILocationInputValues, ILocationSearchProps, TPanelInputMode, TSetCurrentLocationDetail } from "../types";
-import { ErrorImage, ModalBox, StyledLocationPicker } from "./location-modal.styles";
+import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
 import { ILocationPickerProps } from "./location-picker";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
-import { PrefetchImage } from "./no-network-modal/no-network-modal.styles";
 
 const ErrorSvg = "https://assets.life.gov.sg/web-frontend-engine/img/common/error.svg";
 const OfflineImage = "https://assets.life.gov.sg/web-frontend-engine/img/common/no-network.png";

@@ -58,3 +58,7 @@ export const ErrorImage = styled.img`
 		margin-top: 2.5rem;
 	}
 `;
+
+export const PrefetchImage = styled.img`
+	display: none;
+`;

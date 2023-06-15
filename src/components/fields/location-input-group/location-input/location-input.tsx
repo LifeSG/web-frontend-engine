@@ -24,7 +24,7 @@ export const LocationInput = (props: ILocationInputProps) => {
 				},
 				position: "right",
 			}}
-			onFocus={(e) => onFocus(e)}
+			onFocus={onFocus}
 			placeholder={locationInputPlaceholder}
 			value={value}
 		/>

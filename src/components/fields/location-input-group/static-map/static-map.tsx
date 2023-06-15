@@ -17,7 +17,6 @@ export interface IStaticMapProps {
 	onClick?: () => void | undefined;
 }
 
-// #1976D5
 export const StaticMap = ({
 	id,
 	lat,
@@ -27,9 +26,30 @@ export const StaticMap = ({
 	className,
 	onClick,
 }: IStaticMapProps) => {
+	// =============================================================================
+	// CONST, STATE, REFS
+	// =============================================================================
 	const isMobile = useRef(false);
 	const [mapSrc, setMapSrc] = useState<string>("");
 	const renderedCenter = useRef<[number, number]>([0, 0]);
+
+	// =============================================================================
+	// USEEFFECTS
+	// =============================================================================
+	useEffect(() => {
+		window.addEventListener("resize", reloadImage);
+		if (lat && lng) {
+			reloadImage();
+		}
+
+		return () => {
+			window.removeEventListener("resize", reloadImage);
+		};
+	}, [lat, lng]);
+
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
 
 	const reloadImage = () => {
 		if (!lat || !lng) return;
@@ -47,17 +67,6 @@ export const StaticMap = ({
 			renderedCenter.current = [lat, lng];
 		}
 	};
-
-	useEffect(() => {
-		window.addEventListener("resize", reloadImage);
-		if (lat && lng) {
-			reloadImage();
-		}
-
-		return () => {
-			window.removeEventListener("resize", reloadImage);
-		};
-	}, [lat, lng]);
 
 	if (!lat || !lng) return null;
 

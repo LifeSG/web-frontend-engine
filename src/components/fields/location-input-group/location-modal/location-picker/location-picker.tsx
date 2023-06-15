@@ -72,13 +72,10 @@ export const LocationPicker = ({
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
 	const markersRef = useRef<L.Marker[]>();
 	const isMobile = window.matchMedia(`(max-width: ${MediaWidths.tablet}px)`).matches;
-	const MIN_ZOOM_VALUE = 11;
-	const PAN_ZOOM_VALUE = Math.max(
-		mapPanZoom?.min ?? MIN_ZOOM_VALUE,
-		isMobile ? mapPanZoom?.mobile ?? 18 : mapPanZoom?.nonMobile ?? 17
-	);
-	const MAX_ZOOM_VALUE = isMobile ? 20 : 19;
-	const MAX_NATIVE_ZOOM_VALUE = 18;
+	const leafletConfig: L.MapOptions = {
+		minZoom: 11,
+		maxZoom: isMobile ? 20 : 19,
+	};
 
 	// =============================================================================
 	// EFFECTS
@@ -101,10 +98,6 @@ export const LocationPicker = ({
 		 * If component has mounted and is in map mode OR double panel (location picker is alway on for double panel)
 		 */
 		if (leafletWrapperRef.current && showLocationPicker) {
-			/**
-			 * If there is not map set currently and show changed and should show, generate map
-			 * cache map on location modal
-			 */
 			if (!mapRef.current) {
 				mapRef.current = L.map(leafletWrapperRef.current, { zoomControl: false });
 				resetView();
@@ -116,9 +109,9 @@ export const LocationPicker = ({
 			}
 			const basemap = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", {
 				detectRetina: true,
-				maxNativeZoom: MAX_NATIVE_ZOOM_VALUE,
-				maxZoom: MAX_ZOOM_VALUE,
-				minZoom: MIN_ZOOM_VALUE,
+				maxNativeZoom: 18,
+				maxZoom: isMobile ? 20 : 19,
+				minZoom: leafletConfig.minZoom,
 				// Do not remove this attribution
 				attribution:
 					'<div class="onemap"><img src="https://www.onemap.gov.sg/docs/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a></div>',
@@ -144,7 +137,7 @@ export const LocationPicker = ({
 			}
 		});
 
-		map.on("zoomend", () => map.setMinZoom(mapPanZoom?.min ?? MIN_ZOOM_VALUE));
+		map.on("zoomend", () => map.setMinZoom(mapPanZoom?.min ?? leafletConfig.minZoom));
 
 		return () => {
 			map.off("click");
@@ -193,11 +186,15 @@ export const LocationPicker = ({
 		removeMarkers(markersRef.current);
 
 		markersRef.current = [markerFrom(target, interactiveMapPinIconUrl).addTo(map)];
+		const panZoomValue = Math.max(
+			mapPanZoom?.min ?? leafletConfig.minZoom,
+			isMobile ? mapPanZoom?.mobile ?? 18 : mapPanZoom?.nonMobile ?? 17
+		);
 
 		const zoomValue =
-			map.getBounds().contains([target.lat, target.lng]) && map.getZoom() > PAN_ZOOM_VALUE
+			map.getBounds().contains([target.lat, target.lng]) && map.getZoom() > panZoomValue
 				? map.getZoom()
-				: PAN_ZOOM_VALUE;
+				: panZoomValue;
 
 		map.flyTo(L.latLng(target.lat, target.lng), zoomValue);
 		setTimeout(() => map.invalidateSize(), 500);

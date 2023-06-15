@@ -25,15 +25,6 @@ export type TSinglePanelInputMode = "search" | "map";
 // double means both search and map will be seen
 export type TPanelInputMode = "search" | "map" | "double";
 
-// export interface ILocationDisplayListParams {
-// 	results: OneMapSearchBuildingResult[];
-// 	queryString?: string | undefined;
-// 	boldResults?: boolean | undefined;
-// 	apiPageNum?: number | undefined;
-// 	totalNumPages?: number | undefined;
-// 	updateData?: boolean | undefined;
-// }
-
 export interface ILocationInputValues {
 	address?: string | undefined;
 	blockNo?: string | undefined;
@@ -45,10 +36,6 @@ export interface ILocationInputValues {
 	x?: number | undefined;
 	y?: number | undefined;
 }
-
-// export interface IListItem extends ILocationInputValues {
-// 	displayText?: string | undefined;
-// }
 
 export interface IResultListItem extends ILocationInputValues {
 	displayAddressText?: string | undefined;
@@ -67,7 +54,7 @@ export interface IDisplayResultListParams extends IResultsMetaData {
 
 // why is this here?
 export interface ILocationSearchProps {
-	id?: string;
+	id?: string | undefined;
 	onCancel: () => void;
 	onConfirm: () => void;
 	panelInputMode: TPanelInputMode;

@@ -35,15 +35,12 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
 
 	// =============================================================================
-	// USEEFFECTS
-	// =============================================================================
-
-	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const updateFormValues = (updatedValues: ILocationInputValues) => {
 		onChange?.({ target: { value: updatedValues } });
 	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
