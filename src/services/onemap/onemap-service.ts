@@ -49,7 +49,7 @@ const searchByAddress = async (param: OneMapSearchParam): Promise<OneMapSearchRe
 	return res;
 };
 
-const getStaticMap = (lat: number, lng: number, width: number, height: number, pinColor: IColor): string => {
+const getStaticMapUrl = (lat: number, lng: number, width: number, height: number, pinColor: IColor): string => {
 	const { r, g, b } = pinColor;
 	return `https://developers.onemap.sg/commonapi/staticmap/getStaticImage?layerchosen=default&lat=${lat}&lng=${lng}&zoom=17&height=${height}&width=${width}&points=[${lat},${lng},"${r},${g},${b}"]`;
 };
