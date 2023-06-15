@@ -110,19 +110,21 @@ export const LocationSearch = ({
 		// - get location error
 		// - first load
 		// the map should not be usable if any of these services fail
-		debounceFetchAddress("singapore", 1, undefined, handleApiErrors);
-		try {
-			LocationHelper.reverseGeocode({
-				route: reverseGeoCodeEndpoint,
-				latitude: 1.29994179707526,
-				longitude: 103.789404349716,
-				bufferRadius: 1,
-				abortSignal: reverseGeocodeAborter.current.signal,
-				otherFeatures: OneMapBoolean.YES,
-			});
-		} catch (error) {
-			handleApiErrors(new Error(ONE_MAP_ERROR_NAME, { cause: error }));
-		}
+		const reverseGeoCodeCheck = async () => {
+			try {
+				LocationHelper.reverseGeocode({
+					route: reverseGeoCodeEndpoint,
+					latitude: 1.29994179707526,
+					longitude: 103.789404349716,
+					bufferRadius: 1,
+					abortSignal: reverseGeocodeAborter.current.signal,
+					otherFeatures: OneMapBoolean.YES,
+				});
+			} catch (error) {
+				handleApiErrors(new Error(ONE_MAP_ERROR_NAME, { cause: error }));
+			}
+		};
+		Promise.all([debounceFetchAddress("singapore", 1, undefined, handleApiErrors), reverseGeoCodeCheck()]);
 	}, []);
 
 	useEffect(() => {
