@@ -46,7 +46,6 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 		  }
 		| undefined;
 	showLocationPicker: boolean;
-	mapRef: React.MutableRefObject<L.Map | undefined>;
 	selectedLocationCoord?: ILocationCoord | undefined;
 	interactiveMapPinIconUrl?: string | undefined;
 	getCurrentLocation: () => void;
@@ -60,7 +59,6 @@ export const LocationPicker = ({
 	className,
 	mapPanZoom,
 	showLocationPicker,
-	mapRef,
 	selectedLocationCoord,
 	interactiveMapPinIconUrl = LocationPinBlue,
 	getCurrentLocation,
@@ -71,6 +69,8 @@ export const LocationPicker = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const mapRef = useRef<L.Map>();
+
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
 	const markersRef = useRef<L.Marker[]>();
 	const isMobile = window.matchMedia(`(max-width: ${MediaWidths.tablet}px)`).matches;
@@ -85,6 +85,16 @@ export const LocationPicker = ({
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		return () => {
+			if (mapRef.current) {
+				mapRef.current?.off();
+				mapRef.current?.remove();
+				mapRef.current = undefined;
+			}
+		};
+	}, []);
+
 	/**
 	 * Attach map and keep ref
 	 */

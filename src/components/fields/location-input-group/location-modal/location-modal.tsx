@@ -71,7 +71,6 @@ const LocationModal = ({
 	// CONST, STATE, REFS
 	// =============================================================================
 	// TODO remove this ref
-	const mapRef = useRef<L.Map>();
 
 	const [panelInputMode, setPanelInputMode] = useState<TPanelInputMode>("double");
 
@@ -158,9 +157,6 @@ const LocationModal = ({
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleCloseLocationModal = () => {
-		mapRef.current?.off();
-		mapRef.current?.remove();
-		mapRef.current = undefined;
 		onClose();
 	};
 
@@ -465,7 +461,6 @@ const LocationModal = ({
 									lat: selectedAddressInfo.lat,
 									lng: selectedAddressInfo.lng,
 								}}
-								mapRef={mapRef}
 								getCurrentLocation={getCurrentLocation}
 								onMapCenterChange={handleMapClick}
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
