@@ -13,7 +13,7 @@ import { isEmpty } from "lodash";
 import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
 import { Description } from "../../../shared/prompt/prompt.styles";
-import { ILocationCoord } from "../location-helper";
+import { ILocationCoord, ONE_MAP_ERROR_NAME } from "../location-helper";
 
 // FIXME
 // use mol app assets once its fixed
@@ -31,10 +31,7 @@ export interface ILocationModalProps
 	extends Pick<ILocationPickerProps, "mapPanZoom" | "interactiveMapPinIconUrl">,
 		Pick<
 			ILocationSearchProps,
-			| "reverseGeoCodeEndpoint"
-			| "disableErrorPromptOnApp"
-			| "mustHavePostalCode"
-			| "gettingCurrentLocationFetchMessage"
+			"reverseGeoCodeEndpoint" | "mustHavePostalCode" | "gettingCurrentLocationFetchMessage"
 		> {
 	id: string;
 	showLocationModal: boolean;
@@ -45,6 +42,7 @@ export interface ILocationModalProps
 	hotlineContent?: HotlineContent | undefined;
 	updateFormValues: (values: ILocationInputValues) => void;
 	mastheadHeight?: number;
+	disableErrorPromptOnApp?: boolean;
 }
 
 /**
@@ -56,7 +54,7 @@ const LocationModal = ({
 	id = "location-modal",
 	formValues, // modal, search, inputgroup
 	showLocationModal, // modal, search, inputgroup
-	disableErrorPromptOnApp, // modal, search, inputgroup
+	disableErrorPromptOnApp, // modal, inputgroup
 	mapPanZoom, // picker
 	interactiveMapPinIconUrl, // picker
 	reverseGeoCodeEndpoint, // search
@@ -72,6 +70,7 @@ const LocationModal = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	// TODO remove this ref
 	const mapRef = useRef<L.Map>();
 
 	const [panelInputMode, setPanelInputMode] = useState<TPanelInputMode>("double");
@@ -82,66 +81,35 @@ const LocationModal = ({
 	const [selectedAddressInfo, setSelectedAddressInfo] = useState<ILocationInputValues>({});
 
 	const [locationAvailable, setLocationAvailable] = useState(true);
-	// FIXME can this be replaced with events logic?
+
 	const [gettingCurrentLocation, setGettingCurrentLocation] = useState(false);
-	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
+	const { dispatchFieldEvent } = useFieldEvent();
 
 	const [hasInternetConnectivity, setHasInternetConnectivity] = useState(true);
+
 	const [showGetLocationError, setShowGetLocationError] = useState(false);
 	const [showOneMapError, setShowOneMapError] = useState(false);
 	const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
 
+	// map picked lat lng vs selectedAddressInfo
+	// map picked value can be falsy/ no address found
+	// selectedAddressInfo have valid addresses from one map
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
-	// const [didUserClickMap, setDidUserClickMap] = useState<boolean>(false);
-	// Show the location picker if:
-	// 1) Location modal should be shown (show === true), AND
-	// 2) Screen width > MediaWidths.tablet (dual-panel modal)
-	//    OR screen width <= MediaWidths.tablet (single-panel modal) and mobileMode === "map"
-	//    (mobileMode === "map" means the map is shown,
-	//     mobileMode === "search" means the search results are shown instead of the map)
+
+	// Show picker when
+	// tablet: "map" mode
+	// desktop : always on "double" mode
+	// Hide when tablet: "search" mode
 	const showLocationPicker = showLocationModal && (panelInputMode === "double" || panelInputMode === "map");
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-	/**
-	 * Network connectivity
-	 * Resize affects panels
-	 */
 	useEffect(() => {
 		if (!window) return;
-		/**
-		 * There are two instances where permissions can be checked
-		 * - checking on the permissions api
-		 * - getting value/ error when using the getCurrentLocation function
-		 */
-
-		// FIXME this is not working as intended (defer this?)
-		if (!isLifeSgApp() && !("geolocation" in navigator)) {
-			// Geolocation is not supported by this browser
-			setLocationAvailable(false);
-		}
-		// else {
-
-		// navigator.permissions.query({ name: "geolocation" }).then((result) => {
-		// 	setLocationAvailable(result.state === "granted");
-		// 	setShowGetLocationError(!isLifeSgApp() || !!disableErrorPromptOnApp);
-		// 	/**
-		// 	 * Safari onchange for permissions change will not trigger
-		// 	 * the only impact is the retrieve current location icon will not change icon type
-		// 	 * dont set error since the modal should only be shown on first load
-		// 	 */
-		// 	result.onchange = () => {
-		// 		setLocationAvailable(result.state === "granted");
-		// 	};
-		// });
-		// }
 
 		const mql = matchMedia(`(max-width: ${MediaWidths.tablet}px)`);
-		// Default to map for now, we could see if there is search results then we show search?
 		setPanelInputMode(mql.matches ? "map" : "double");
-
-		console.log(`matchMedia: we are in ${mql.matches ? "map" : "double"} panel mode`);
 
 		const handleHasInternetConnectivity = () => setHasInternetConnectivity(true);
 		const handleNoInternetConnectivity = () => setHasInternetConnectivity(false);
@@ -163,8 +131,6 @@ const LocationModal = ({
 
 	useEffect(() => {
 		if (!showLocationModal) return;
-		console.log("showLocationModal effect: should run once");
-
 		/**
 		 * We should only getCurrentLocation when nothing is prefilled
 		 * when formvalues are prefilled, the useEffect will recenter
@@ -203,15 +169,13 @@ const LocationModal = ({
 		setLocationAvailable(true);
 	};
 
-	const handleGetLocationError = (error?: any, disableErrorPromptOnApp?: boolean) => {
+	const handleGetLocationError = (error?: any) => {
 		setGettingCurrentLocation(false);
 		setLocationAvailable(false);
 
-		// ASK WEILI
-		// FIXME how to refactor this
+		// TODO: dispatch
+		// EVENT
 		if (isLifeSgApp() && !!disableErrorPromptOnApp) {
-			console.log("handleGetLocationError - disableErrorPromptOnApp");
-
 			setShowGetLocationTimeoutError(false);
 			return;
 		}
@@ -221,8 +185,35 @@ const LocationModal = ({
 			!!error["GeolocationPositionError"] &&
 			Number.parseInt(error["GeolocationPositionError"]?.code) === global.GeolocationPositionError.TIMEOUT
 		) {
-			console.log("handleGetLocationError - timeout");
+			setShowGetLocationTimeoutError(true);
+			return;
+		}
 
+		setShowGetLocationError(true);
+	};
+
+	const handleApiErrors = (error?: any) => {
+		setGettingCurrentLocation(false);
+
+		if (error?.message === ONE_MAP_ERROR_NAME) {
+			restoreFormvalues();
+			setShowOneMapError(true);
+			return;
+		}
+
+		setLocationAvailable(false);
+
+		if (isLifeSgApp() && !!disableErrorPromptOnApp) {
+			setShowGetLocationTimeoutError(false);
+			return;
+		}
+
+		// try with typeof
+		if (
+			!isLifeSgApp() &&
+			!!error["GeolocationPositionError"] &&
+			Number.parseInt(error["GeolocationPositionError"]?.code) === global.GeolocationPositionError.TIMEOUT
+		) {
 			setShowGetLocationTimeoutError(true);
 			return;
 		}
@@ -261,7 +252,7 @@ const LocationModal = ({
 		setPanelInputMode(inputMode);
 	};
 
-	// Refactor usage
+	// REMOVE
 	const isLifeSgApp = (): boolean => {
 		return typeof window !== "undefined" && window.sessionStorage.getItem("lifeSg") === "true";
 	};
@@ -271,22 +262,13 @@ const LocationModal = ({
 	 * no actual work is to be done here
 	 */
 	const getCurrentLocation = async () => {
-		// FIXME fix this when working on permission change event
-		// when to skip this?
-		// if (!locationAvailable || !reverseGeoCodeEndpoint) {
-		// 	handleGetLocationError(undefined, disableErrorPromptOnApp);
-		// 	return;
-		// }
-
 		setGettingCurrentLocation(true);
 
 		// TODO add documentation for how to cancel events and handle default
-		// should debounce
+		// should debounce?
 		const shouldPreventDefault = !dispatchFieldEvent("get-current-location", id);
 
 		if (!shouldPreventDefault) {
-			console.log(">>>>> running default logic");
-
 			const detail: TSetCurrentLocationDetail = {};
 
 			try {
@@ -391,8 +373,6 @@ const LocationModal = ({
 		}
 
 		if (showGetLocationError) {
-			console.log("Should render showGetLocationError");
-
 			return (
 				<Prompt
 					id={TestHelper.generateId(id, "get-location-error")}
@@ -416,8 +396,6 @@ const LocationModal = ({
 		}
 
 		if (showGetLocationTimeoutError) {
-			console.log("Should render showGetLocationTimeoutError");
-
 			return (
 				<Prompt
 					id={TestHelper.generateId(id, "get-location-timeout-error")}
@@ -469,34 +447,29 @@ const LocationModal = ({
 								mapPickedLatLng={mapPickedLatLng}
 								formValues={formValues}
 								onChangeSelectedAddressInfo={setSelectedAddressInfo}
-								onOneMapError={handleOneMapError}
+								handleApiErrors={handleApiErrors}
 								onGetLocationCallback={handleGetLocationCallback}
-								onGetLocationError={handleGetLocationError}
-								onAddressChange={() => setSinglePanelMode("search")}
-								onClearInput={() => setSinglePanelMode("map")}
+								setSinglePanelMode={setSinglePanelMode}
 								showLocationModal={showLocationModal}
 								reverseGeoCodeEndpoint={reverseGeoCodeEndpoint}
 								gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
-								disableErrorPromptOnApp={disableErrorPromptOnApp}
 								mustHavePostalCode={mustHavePostalCode}
 							/>
 							<StyledLocationPicker
 								id={id}
 								panelInputMode={panelInputMode}
-								mapPanZoom={mapPanZoom}
+								locationAvailable={locationAvailable}
+								gettingCurrentLocation={gettingCurrentLocation}
 								showLocationPicker={showLocationPicker}
 								selectedLocationCoord={{
 									lat: selectedAddressInfo.lat,
 									lng: selectedAddressInfo.lng,
 								}}
-								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapRef={mapRef}
-								onGetCurrentLocation={() => {
-									locationAvailable && getCurrentLocation();
-								}}
-								locationAvailable={locationAvailable}
-								gettingCurrentLocation={gettingCurrentLocation}
+								getCurrentLocation={getCurrentLocation}
 								onMapCenterChange={handleMapClick}
+								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
+								mapPanZoom={mapPanZoom}
 							/>
 						</>
 					) : (

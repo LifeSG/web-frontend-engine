@@ -49,7 +49,7 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 	mapRef: React.MutableRefObject<L.Map | undefined>;
 	selectedLocationCoord?: ILocationCoord | undefined;
 	interactiveMapPinIconUrl?: string | undefined;
-	onGetCurrentLocation: () => void;
+	getCurrentLocation: () => void;
 	locationAvailable: boolean;
 	gettingCurrentLocation: boolean;
 	onMapCenterChange: (latlng: ILocationCoord) => void;
@@ -63,7 +63,7 @@ export const LocationPicker = ({
 	mapRef,
 	selectedLocationCoord,
 	interactiveMapPinIconUrl = LocationPinBlue,
-	onGetCurrentLocation,
+	getCurrentLocation,
 	locationAvailable,
 	gettingCurrentLocation,
 	onMapCenterChange,
@@ -132,7 +132,6 @@ export const LocationPicker = ({
 
 		map.on("click", ({ latlng }: L.LeafletMouseEvent) => {
 			if (!gettingCurrentLocation) {
-				// console.log("zooming with map click");
 				onMapCenterChange(latlng);
 			}
 		});
@@ -140,8 +139,6 @@ export const LocationPicker = ({
 		map.on("zoomend", () => map.setMinZoom(mapPanZoom?.min ?? MIN_ZOOM_VALUE));
 
 		return () => {
-			console.log("map unmount");
-
 			map.off("click");
 			map.off("zoomend");
 		};
@@ -155,10 +152,6 @@ export const LocationPicker = ({
 		// when toggling from search to map?
 		if (!gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
 			// NOTE: map will zoom when input is cleared in search panelInputMode and switches to map panelInputMode
-			console.log(
-				"zooming when !gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng"
-			);
-
 			zoomWithMarkers({ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng });
 		}
 	}, [showLocationPicker]);
@@ -209,7 +202,11 @@ export const LocationPicker = ({
 			data-testid={TestHelper.generateId(id, "location-picker", showLocationPicker ? "show" : "hide")}
 		>
 			<LeafletWrapper ref={leafletWrapperRef} />
-			<ButtonLocation onClick={onGetCurrentLocation}>
+			<ButtonLocation
+				onClick={() => {
+					locationAvailable && getCurrentLocation();
+				}}
+			>
 				<ButtonLocationImage
 					src={locationAvailable ? CurrentLocation : CurrentLocationUnavailable}
 					alt={`Current location ${locationAvailable ? "available" : "unavailable"}`}

@@ -1,24 +1,18 @@
 import { Text } from "@lifesg/react-design-system/text";
-import { isEmpty, isEqual } from "lodash";
+import { isEmpty } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import LocationPinBlack from "../../../../../assets/img/icons/location-pin-black.svg";
 import SearchSvg from "../../../../../assets/img/icons/search.svg";
-import { OneMapService } from "../../../../../services";
-import {
-	OneMapBoolean,
-	OneMapGeocodeInfo,
-	OneMapSearchBuildingResult,
-	OneMapSearchResults,
-} from "../../../../../services/onemap/types";
-import { GeoLocationHelper, TestHelper } from "../../../../../utils";
+import { OneMapBoolean } from "../../../../../services/onemap/types";
+import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { Prompt } from "../../../../shared";
-import { LocationHelper } from "../../location-helper";
+import { LocationHelper, ONE_MAP_ERROR_NAME } from "../../location-helper";
 import {
-	IListItem,
-	ILocationDisplayListParams,
-	ILocationInputValues,
+	IDisplayResultListParams,
 	ILocationSearchProps,
+	IResultListItem,
+	IResultsMetaData,
 	TSetCurrentLocationDetail,
 } from "../../types";
 import { InfiniteScrollList } from "../infinite-scroll";
@@ -42,12 +36,10 @@ import {
 export const LocationSearch = ({
 	id = "location-search",
 	formValues,
-
 	gettingCurrentLocation,
 
 	showLocationModal,
 	mustHavePostalCode,
-	disableErrorPromptOnApp,
 
 	panelInputMode,
 	selectedAddressInfo,
@@ -58,18 +50,14 @@ export const LocationSearch = ({
 	gettingCurrentLocationFetchMessage = "Getting current location...",
 	locationListTitle = "Select location",
 
-	onOneMapError,
-	onGetLocationError,
+	handleApiErrors,
 
 	onGetLocationCallback,
-
 	onChangeSelectedAddressInfo,
-	onAddressChange,
-
-	onClearInput,
 	onCancel,
 	onConfirm,
 
+	setSinglePanelMode,
 	updateFormValues,
 }: ILocationSearchProps) => {
 	// =============================================================================
@@ -89,10 +77,10 @@ export const LocationSearch = ({
 	const [resultState, setResultState] = useState<"pristine" | "found" | "not-found">("pristine");
 
 	// USED TO SHOW AS SEARCH RESULTS
-	const [searchBuildingResults, setSearchBuildingResults] = useState<OneMapSearchBuildingResult[]>([]);
 	const [loading, setLoading] = useState(false);
-	const [apiResults, setAPIResults] = useState<OneMapSearchBuildingResult[]>([]);
 	const [selectedIndex, setSelectedIndex] = useState(-1);
+	const [searchBuildingResults, setSearchBuildingResults] = useState<IResultListItem[]>([]);
+	const [apiResults, setAPIResults] = useState<IResultListItem[]>([]);
 
 	// pagination logic
 	const PAGE_SIZE = 10;
@@ -103,142 +91,25 @@ export const LocationSearch = ({
 	const {
 		pagination,
 		debounceFetchAddress,
-		boldResultsWithQuery,
 		cleanHtml,
 		fetchSingleLocationByAddress,
 		fetchSingleLocationByLatLng,
+		boldResultsWithQuery,
 		fetchLocationList,
 	} = LocationHelper;
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-
-	// Prefill previous values on mount
+	// check if any of the services is working
 	useEffect(() => {
-		const onSuccess = (locationInputValue: ILocationInputValues) => {
-			const validPostalCode =
-				!mustHavePostalCode || LocationHelper.hasGotAddressValue(locationInputValue.postalCode);
-
-			console.log("sanity onSuccess: ", {
-				locationInputValue,
-				validPostalCode,
-				emptyTest: isEmpty(locationInputValue) || !validPostalCode,
-			});
-
-			if (isEmpty(locationInputValue) || !validPostalCode) {
-				console.log("prefill updating empty");
-
-				updateFormValues({});
-				console.log("selectedAddressInfo changed: empty Prefill");
-
-				onChangeSelectedAddressInfo({});
-				return;
-			}
-
-			console.log("prefill updating: ", locationInputValue);
-
-			// sync form state
-			updateFormValues(locationInputValue);
-
-			// set map mode
-			// reset user click map
-			// trigger smth in search
-			// - no references
-			// trigger smth in picker
-			// - zoom with markers
-			console.log("selectedAddressInfo changed: Prefill fetch callback");
-
-			onChangeSelectedAddressInfo(locationInputValue);
-
-			// search deps
-			// - if no address, reset list
-			// - debounceFetchAddress
-			//   - setSelectedIndex
-			// 	 - populateDisplayList
-			console.log("prefill updating after: ", locationInputValue);
-			console.log("loc address: ", locationInputValue.address);
-
-			setQueryString(locationInputValue.address);
-		};
-
-		// if both
-		if (formValues?.lat && formValues?.lng && formValues?.address) {
-			// ASK WEILI
-			// Two ways
-			// we trust user
-			// OR
-			// we validate and search by lat lng (less buggy)
-			// hold in temporary selection
-			console.log("selectedAddressInfo changed: prefill trust");
-			onChangeSelectedAddressInfo(formValues);
-			setQueryString(formValues.address);
-			setResultState("found");
-			// fill result?
-
-			// if only address
-		} else if (formValues?.address && !formValues?.lat && !formValues?.lng) {
-			fetchSingleLocationByAddress(formValues.address, onSuccess);
-			// if only latlng
-		} else if (reverseGeoCodeEndpoint && !formValues?.address && formValues?.lat && formValues?.lng) {
-			fetchSingleLocationByLatLng(reverseGeoCodeEndpoint, formValues.lat, formValues.lng, onSuccess);
-		}
-	}, []);
-
-	// Attach event handlers
-	useEffect(() => {
-		addFieldEventListener<TSetCurrentLocationDetail>("set-current-location", id, (e) => {
-			// TODO better value format
-			const {
-				detail: { payload, errors },
-			} = e;
-
-			// what takes priority?
-			// should i check if i need to block on getting current location
-			// if (!reverseGeoCodeEndpoint) {
-			// 	return;
-			// }
-
-			console.log("handling event: set-current-location");
-
-			if (!isEmpty(errors)) {
-				onGetLocationError(errors, disableErrorPromptOnApp);
-				return;
-			}
-
-			if (!payload?.lat || !payload?.lng) {
-				// no op or error? onGetLocationError(undefined, disableErrorPromptOnApp)
-				console.log("no op");
-
-				return;
-			}
-
-			const { lat, lng } = payload;
-			//TODO check if need to be synchronous?
-
-			displayLocationList(lat, lng);
-
-			// sync location available
-			// finish state
-			onGetLocationCallback(lat, lng);
-			console.log("completed set-current-location");
-		});
-
-		return () => {
-			removeFieldEventListener("set-current-location", id, () => {
-				// no op
-			});
-		};
-	}, []);
-
-	// check if any of the services is vorking
-	useEffect(() => {
+		// TODO: do we need this behaviour?
 		if (!showLocationModal) return;
 		// check if one map or reverse code is working
 		// - get location error
 		// - first load
 		// the map should not be usable if any of these services fail
-		debounceFetchAddress("singapore", 1, undefined, onOneMapError);
+		debounceFetchAddress("singapore", 1, undefined, handleApiErrors);
 		try {
 			LocationHelper.reverseGeocode({
 				route: reverseGeoCodeEndpoint,
@@ -249,7 +120,7 @@ export const LocationSearch = ({
 				otherFeatures: OneMapBoolean.YES,
 			});
 		} catch (error) {
-			onOneMapError();
+			handleApiErrors(new Error(ONE_MAP_ERROR_NAME, { cause: error }));
 		}
 	}, []);
 
@@ -257,20 +128,96 @@ export const LocationSearch = ({
 		if (!navigator.onLine) return;
 		// internet restored
 		if (!queryString && selectedAddressInfo?.lat && selectedAddressInfo?.lng) {
-			displayLocationList(selectedAddressInfo.lat, selectedAddressInfo.lng);
+			displayResultsFromLatLng(selectedAddressInfo.lat, selectedAddressInfo.lng);
 			return;
 		}
 	}, [navigator.onLine]);
 
+	// Attach event handlers
+	useEffect(() => {
+		const setCurrentLocationHandler = ({ detail: { payload, errors } }: CustomEvent<TSetCurrentLocationDetail>) => {
+			if (!isEmpty(errors)) {
+				handleApiErrors(errors);
+				return;
+			}
+
+			// TODO: no op or error? onGetLocationError(undefined, disableErrorPromptOnApp)
+			if (!payload?.lat || !payload?.lng) return;
+
+			const { lat, lng } = payload;
+			displayResultsFromLatLng(lat, lng);
+			onGetLocationCallback(lat, lng);
+		};
+
+		addFieldEventListener("set-current-location", id, setCurrentLocationHandler);
+
+		return () => {
+			removeFieldEventListener("set-current-location", id, setCurrentLocationHandler);
+		};
+	}, []);
+
 	/**
-	 * Gets the address of the location where user clicks on the map
+	 * Prefill based on lat lng or address with the appropriate api
 	 */
 	useEffect(() => {
-		// if (!mapPickedLatLng?.lat || !mapPickedLatLng?.lng || !didUserClickMap) return;
+		/**
+		 * then the external api will have transform to this internal representation
+		 *
+		 * when saving to form we transform into the forms representation
+		 */
+		const handleResult = ({ displayAddressText, ...locationInputValue }: IResultListItem) => {
+			const validPostalCode =
+				!mustHavePostalCode || LocationHelper.hasGotAddressValue(locationInputValue.postalCode);
+
+			if (isEmpty(locationInputValue) || !validPostalCode) {
+				updateFormValues({});
+				onChangeSelectedAddressInfo({});
+				return;
+			}
+
+			// complete form state with valid location
+			updateFormValues(locationInputValue);
+
+			// set map mode
+			// reset user click map
+			// trigger smth in search
+			// - no references
+			// trigger smth in picker
+			// - zoom with markers
+			onChangeSelectedAddressInfo(locationInputValue);
+
+			// FIXME reopening more than once the location modal will not cause a query string rerender
+			// search deps
+			// - if no address, reset list
+			// - debounceFetchAddress
+			//   - setSelectedIndex
+			// 	 - populateDisplayList
+			setQueryString(locationInputValue.address);
+		};
+
+		if (formValues?.lat && formValues?.lng && formValues?.address) {
+			// TODO: trust input or validate formvalue?
+			fetchSingleLocationByAddress(formValues.address, handleResult, handleApiErrors);
+		} else if (formValues?.address && !formValues?.lat && !formValues?.lng) {
+			fetchSingleLocationByAddress(formValues.address, handleResult, handleApiErrors);
+		} else if (reverseGeoCodeEndpoint && !formValues?.address && formValues?.lat && formValues?.lng) {
+			fetchSingleLocationByLatLng(
+				reverseGeoCodeEndpoint,
+				formValues.lat,
+				formValues.lng,
+				handleResult,
+				handleApiErrors
+			);
+		}
+	}, []);
+
+	/**
+	 * Gets the address of the location with lat lng when user clicks on the map
+	 */
+	useEffect(() => {
 		if (!mapPickedLatLng?.lat || !mapPickedLatLng?.lng) return;
-		displayLocationList(mapPickedLatLng.lat, mapPickedLatLng.lng);
-		// }, [mapPickedLatLng, didUserClickMap]);
-	}, [mapPickedLatLng]);
+		displayResultsFromLatLng(mapPickedLatLng.lat, mapPickedLatLng.lng);
+	}, [mapPickedLatLng?.lat, mapPickedLatLng?.lng]);
 
 	/**
 	 * Handles query searching and search results display
@@ -283,61 +230,50 @@ export const LocationSearch = ({
 	 * - handleClickCancel (nr) (p)
 	 * - handleInputChange (r)
 	 * - handleClearInput (nr)
-	 * - handleClickResult (nr) (p)
+	 * - handleClickResult (nr) (p) handled
 	 * - displayLocationList
 	 */
 	useEffect(() => {
-		console.log("isResultsFound", resultState);
-		console.log("validateQueryString", queryString);
-
 		if (resultState === "found") return;
-
 		const parsedString = validateQueryString(queryString);
-
-		if (!parsedString) return resetList();
-
+		if (!parsedString) return resetResultsList();
 		if (
-			inputRef.current?.value !== gettingCurrentLocationFetchMessage &&
-			inputRef.current?.value !== selectedAddressInfo?.address
+			(inputRef.current?.value !== gettingCurrentLocationFetchMessage &&
+				inputRef.current?.value !== selectedAddressInfo?.address) ||
+			resultState === "pristine"
 		) {
 			setLoading(true);
 		}
 
-		console.log("going to debounceFetchAddress");
-
 		debounceFetchAddress(
 			parsedString,
 			1,
-			(res: OneMapSearchResults) => {
+			(res: IResultsMetaData) => {
 				if (selectedAddressInfo?.address === parsedString) {
 					setSelectedIndex(0);
 				} else {
 					setSelectedIndex(-1);
 				}
-				console.log("going to populateDisplayList");
 
 				// paginated
 				populateDisplayList({
 					results: res.results,
 					queryString,
 					boldResults: true,
-					apiPageNum: res.pageNum,
+					apiPageNum: res.apiPageNum,
 					totalNumPages: res.totalNumPages,
 				});
-
-				console.log("should populate");
 
 				if (resultRef.current.scrollTo) {
 					resultRef.current.scrollTo(0, 0);
 				}
 			},
 			(e) => {
-				// This might break if I update api client error handling
 				if (e instanceof SyntaxError || e instanceof TypeError) {
 					populateDisplayList({ results: [], queryString });
 				} else {
-					resetList();
-					onOneMapError();
+					resetResultsList();
+					handleApiErrors(new Error(ONE_MAP_ERROR_NAME, { cause: e }));
 				}
 			}
 		);
@@ -358,47 +294,47 @@ export const LocationSearch = ({
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleClickCancel = () => {
-		resetList();
+		resetResultsList();
 		setQueryString(formValues?.address || "");
+		setResultState("pristine");
 		onCancel();
 	};
 
 	const handleInputFocus = () => {
 		inputRef.current?.focus();
+		if (searchBuildingResults.length > 0) {
+			setSinglePanelMode("search");
+		}
 	};
 
 	const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const value = event.target.value;
 		setQueryString(value);
 		setResultState("pristine");
-		onAddressChange();
+		setSinglePanelMode("search");
 	};
 
 	const handleClearInput = () => {
 		setQueryString("");
-		resetList();
 		setResultState("pristine");
-		onClearInput();
+		setSinglePanelMode("map");
 	};
 
-	const handleClickResult = (listitem: IListItem, index: number) => {
-		const { displayText, ...locationInputValue } = listitem;
+	const handleClickResult = (listitem: IResultListItem, index: number) => {
+		const { displayAddressText, ...locationInputValue } = listitem;
 		if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(locationInputValue.postalCode)) {
 			setShowPostalCodeError(true);
 			return;
 		}
 
+		setResultState("found");
 		setSelectedIndex(index);
 		setQueryString(locationInputValue.address ?? "");
-		setResultState("found");
-		console.log("selectedAddressInfo changed: handleClickResult");
 		onChangeSelectedAddressInfo(locationInputValue);
 	};
 
 	const handleScrollResult = () => {
 		if (resultRef.current) {
-			console.log("should scroll");
-
 			if (resultRef.current.scrollTop > 0 && !hasScrolled) {
 				setHasScrolled(true);
 			} else if (resultRef.current.scrollTop <= 0 && hasScrolled) {
@@ -410,7 +346,7 @@ export const LocationSearch = ({
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const resetList = () => {
+	const resetResultsList = () => {
 		setLoading(false);
 		setSelectedIndex(-1);
 		setCurrentPaginationPageNum(1);
@@ -423,21 +359,19 @@ export const LocationSearch = ({
 		}
 	};
 
-	const getMoreAddress = () => {
-		console.log("getMoreAddress");
-
+	/**
+	 * two get more address use case
+	 * if you are searching by fetch address
+	 * - searching through input field
+	 * there will be pagination through the api
+	 *
+	 * if your are searching by reverse geocode endpoint
+	 * clicking on map
+	 * all the data will be dumped into you
+	 */
+	const getMoreLocationResults = () => {
 		setLoading(true);
 
-		// two get more address use case
-		// if you are searching by fetch address
-		// - searching through input field
-		// there will be pagination through the api
-
-		// if your are searching by reverse geocode endpoint
-		// clicking on map
-		// all the data will be dumped into you
-
-		// how is api results possibly more than searchBuildingResults?
 		if (searchBuildingResults.length < apiResults.length) {
 			const newCurrentPageNum = currentPaginationPageNum + 1;
 			setCurrentPaginationPageNum(newCurrentPageNum);
@@ -449,7 +383,7 @@ export const LocationSearch = ({
 			debounceFetchAddress(
 				queryString,
 				apiPageNum + 1,
-				(res: OneMapSearchResults) => {
+				(res) => {
 					const results = boldResultsWithQuery(res.results, queryString);
 					if (results.length > PAGE_SIZE) {
 						const data = pagination(results, PAGE_SIZE, 1);
@@ -461,11 +395,11 @@ export const LocationSearch = ({
 					setAPIResults(apiResults.concat(results));
 					setTotalNumPages(res.totalNumPages);
 					setLoading(false);
-					setAPIPageNum(res.pageNum);
+					setAPIPageNum(res.apiPageNum);
 				},
 				() => {
-					resetList();
-					onOneMapError();
+					resetResultsList();
+					handleApiErrors(new Error(ONE_MAP_ERROR_NAME));
 				}
 			);
 		}
@@ -480,107 +414,72 @@ export const LocationSearch = ({
 	 * When in map mode, should the view switch search mode?
 	 * If not, result is hidden
 	 */
-	const displayLocationList = async (addressLat: number, addressLng: number) => {
+	const displayResultsFromLatLng = async (addressLat: number, addressLng: number) => {
 		if (!reverseGeoCodeEndpoint) return;
 
 		// FIXME: fetching logic
-		const onemapLocationList = await fetchLocationList(
-			reverseGeoCodeEndpoint,
-			addressLat,
-			addressLng,
-			mustHavePostalCode,
-			reverseGeocodeAborter,
-			onOneMapError
-		);
-
-		// FIXME: parsing logic
-		resultRef.current?.scrollTo(0, 0);
-		// not bolding searchval because it's not searching by keyword
-		const locationList = onemapLocationList
-			.map<OneMapSearchBuildingResult>((geoCodeInfo: OneMapGeocodeInfo) => {
-				const address = LocationHelper.formatAddressFromGeocodeInfo(geoCodeInfo, true);
-				return {
-					SEARCHVAL: geoCodeInfo.BUILDINGNAME,
-					BLK_NO: geoCodeInfo.BLOCK,
-					ROAD_NAME: geoCodeInfo.ROAD,
-					BUILDING: geoCodeInfo.BUILDINGNAME,
-					POSTAL: geoCodeInfo.POSTALCODE,
-					X: geoCodeInfo.XCOORD,
-					Y: geoCodeInfo.YCOORD,
-					LATITUDE: geoCodeInfo.LATITUDE,
-					LONGITUDE: geoCodeInfo.LONGITUDE,
-					LONGTITUDE: geoCodeInfo.LONGTITUDE,
-					ADDRESS: address,
-					DISPLAY_ADDRESS: address,
-				};
-			})
-			.filter(({ SEARCHVAL }) => SEARCHVAL !== "JOHOR (MALAYSIA)");
+		let resultListItem: IResultListItem[];
+		try {
+			resultListItem = await fetchLocationList(
+				reverseGeoCodeEndpoint,
+				addressLat,
+				addressLng,
+				mustHavePostalCode,
+				reverseGeocodeAborter,
+				handleApiErrors,
+				true
+			);
+		} catch (error) {
+			setQueryString("");
+			return;
+		}
 
 		// FIXME: presentational logic
-		if (locationList.length === 0) {
-			// FIXME: "error" logic
-			/**
-			 * If nothing is found, clear everything and if the selected address is
-			 * not the same at the currently searched latlg, change it to be the current one
-			 * - current latlng
-			 * - mapPicked latlng
-			 * - selectedAddress
-			 */
-			resetList();
+		if (resultListItem.length === 0) {
 			setQueryString("");
-			const updatedInfo = {
-				lat: addressLat,
-				lng: addressLng,
-			};
-			if (!isEqual(selectedAddressInfo, updatedInfo)) {
-				console.log("selectedAddressInfo changed: !isEqual(selectedAddressInfo, updatedInfo)");
-				onChangeSelectedAddressInfo(updatedInfo);
+			const shouldPanToCurrentLocation =
+				selectedAddressInfo.lat !== addressLat || selectedAddressInfo.lng !== addressLng;
+			if (shouldPanToCurrentLocation) {
+				onChangeSelectedAddressInfo({
+					lat: addressLat,
+					lng: addressLng,
+				});
 			}
 			return;
 		}
 
-		populateDisplayList({ results: locationList });
-		const [{ POSTAL, ADDRESS, BLK_NO, BUILDING, ROAD_NAME, X, Y }] = locationList;
+		resultRef.current?.scrollTo(0, 0);
+		populateDisplayList({ results: resultListItem });
 
-		if (!mustHavePostalCode || (mustHavePostalCode && LocationHelper.hasGotAddressValue(POSTAL))) {
-			setQueryString(ADDRESS);
-			console.log("selectedAddressInfo changed: displayLocationList");
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const [{ displayAddressText, ...firstItem }] = resultListItem;
 
-			onChangeSelectedAddressInfo({
-				address: ADDRESS,
-				blockNo: BLK_NO,
-				building: BUILDING,
-				postalCode: POSTAL,
-				roadName: ROAD_NAME,
-				lat: addressLat,
-				lng: addressLng,
-				x: parseFloat(X) || undefined,
-				y: parseFloat(Y) || undefined,
-			});
-			setSelectedIndex(0);
-		} else if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(POSTAL)) {
+		if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(firstItem.address)) {
 			setShowPostalCodeError(true);
 			setQueryString("");
+			return;
 		}
+
+		setQueryString(firstItem.address);
+
+		onChangeSelectedAddressInfo(firstItem);
+		setSelectedIndex(0);
 	};
 
 	// reverse geocode dumps all
-	const populateDisplayList = (params: ILocationDisplayListParams) => {
+	/**
+	 * Handles how much to initially show
+	 * Configures pagination
+	 * Stores proper state
+	 */
+	const populateDisplayList = (params: IDisplayResultListParams) => {
 		const { results, boldResults, apiPageNum, totalNumPages, queryString } = params;
 
-		let displayResults = results.map((obj) => {
-			//convert to follow our standard address
-			return {
-				...obj,
-				ADDRESS: LocationHelper.formatAddressFromGeocodeInfo(obj, true), // builds from address info, fallback back to pin location latlng
-				DISPLAY_ADDRESS: obj.ADDRESS,
-			};
-		});
+		let displayResults = results;
 		if (boldResults && queryString) {
 			displayResults = boldResultsWithQuery(displayResults, queryString);
 		}
 
-		// REFACTOR THIS
 		if (displayResults.length > PAGE_SIZE) {
 			const data = pagination(displayResults, PAGE_SIZE, 1);
 			setSearchBuildingResults(data);
@@ -604,22 +503,7 @@ export const LocationSearch = ({
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderList = () => {
-		const searchBuildingResultToListItem = (result: OneMapSearchBuildingResult): IListItem => ({
-			address: result.ADDRESS,
-			blockNo: result.BLK_NO,
-			building: result.BUILDING,
-			postalCode: result.POSTAL,
-			roadName: result.ROAD_NAME,
-			lat: parseFloat(result.LATITUDE) || undefined,
-			lng: parseFloat(result.LONGITUDE) || undefined,
-			x: parseFloat(result.X) || undefined,
-			y: parseFloat(result.Y) || undefined,
-			displayText: result.DISPLAY_ADDRESS,
-		});
-
-		const list: IListItem[] = searchBuildingResults.map(searchBuildingResultToListItem);
-
-		return list.map((item, index) => (
+		return searchBuildingResults.map((item, index) => (
 			<ResultItem
 				key={`${index}_${item.lat}_${item.lng}`}
 				onClick={() => handleClickResult(item, index)}
@@ -632,11 +516,12 @@ export const LocationSearch = ({
 				)}
 			>
 				<ResultItemPin src={LocationPinBlack} alt="Location" />
-				<Text.BodySmall dangerouslySetInnerHTML={cleanHtml(item.displayText)}></Text.BodySmall>
+				<Text.BodySmall dangerouslySetInnerHTML={cleanHtml(item.displayAddressText)}></Text.BodySmall>
 			</ResultItem>
 		));
 	};
 
+	// TODO: make it generic?
 	const renderPostalCodeError = () => (
 		<Prompt
 			id={`${id}-postal-code-error`}
@@ -710,7 +595,7 @@ export const LocationSearch = ({
 								items={renderList()}
 								loading={loading}
 								hasNextPage={hasNextPage}
-								loadMore={getMoreAddress}
+								loadMore={getMoreLocationResults}
 							/>
 							{!loading && resultState === "not-found" && (
 								<NoResultTitle>No results found for &ldquo;{queryString}&rdquo;</NoResultTitle>

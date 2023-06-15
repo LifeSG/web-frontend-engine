@@ -10,8 +10,6 @@ export interface IGetCurrentLocationOptions {
 export namespace GeoLocationHelper {
 	const _getCurrentLocation = async (timeout: number, maximumAge: number): Promise<ILocationCoord> => {
 		return new Promise<ILocationCoord>((resolve, reject) => {
-			console.log("_getCurrentLocation", "geolocation" in navigator);
-
 			if ("geolocation" in navigator) {
 				navigator.geolocation.getCurrentPosition(
 					({ coords }: GeolocationPosition) => resolve({ lat: coords.latitude, lng: coords.longitude }),

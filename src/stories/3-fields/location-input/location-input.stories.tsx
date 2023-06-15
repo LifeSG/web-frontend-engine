@@ -58,8 +58,8 @@ InitialLatLng.args = {
 	uiType: "location-input",
 	label: "Default",
 	defaultValues: {
-		lat: 1.29994179707526,
-		lng: 103.789404349716,
+		lat: 1.2418352709904754,
+		lng: 103.61478567123413,
 	},
 	reverseGeoCodeEndpoint: "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code",
 };

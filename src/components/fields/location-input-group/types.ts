@@ -1,4 +1,3 @@
-import { OneMapSearchBuildingResult } from "../../../services/onemap/types";
 import { IFrontendEngineBaseFieldJsonSchema, TErrorPayload } from "../../frontend-engine";
 import { ILocationCoord } from "./location-helper";
 import { ILocationInputProps } from "./location-input";
@@ -8,14 +7,14 @@ import { IStaticMapProps } from "./static-map";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-input", V>,
-		Pick<ILocationModalProps, "locationPermissionErrorMessage" | "mastheadHeight" | "hotlineContent">,
+		Pick<
+			ILocationModalProps,
+			"locationPermissionErrorMessage" | "mastheadHeight" | "hotlineContent" | "disableErrorPromptOnApp"
+		>,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<
 			ILocationSearchProps,
-			| "reverseGeoCodeEndpoint"
-			| "disableErrorPromptOnApp"
-			| "mustHavePostalCode"
-			| "gettingCurrentLocationFetchMessage"
+			"reverseGeoCodeEndpoint" | "mustHavePostalCode" | "gettingCurrentLocationFetchMessage"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder">,
 		Pick<IStaticMapProps, "staticMapPinColor"> {}
@@ -25,6 +24,15 @@ export type TSinglePanelInputMode = "search" | "map";
 // search and map will implicitly mean single panel can only show one view at a time: search or map
 // double means both search and map will be seen
 export type TPanelInputMode = "search" | "map" | "double";
+
+// export interface ILocationDisplayListParams {
+// 	results: OneMapSearchBuildingResult[];
+// 	queryString?: string | undefined;
+// 	boldResults?: boolean | undefined;
+// 	apiPageNum?: number | undefined;
+// 	totalNumPages?: number | undefined;
+// 	updateData?: boolean | undefined;
+// }
 
 export interface ILocationInputValues {
 	address?: string | undefined;
@@ -38,17 +46,23 @@ export interface ILocationInputValues {
 	y?: number | undefined;
 }
 
-export interface ILocationDisplayListParams {
-	results: OneMapSearchBuildingResult[];
-	queryString?: string | undefined;
-	boldResults?: boolean | undefined;
-	apiPageNum?: number | undefined;
-	totalNumPages?: number | undefined;
-	updateData?: boolean | undefined;
+// export interface IListItem extends ILocationInputValues {
+// 	displayText?: string | undefined;
+// }
+
+export interface IResultListItem extends ILocationInputValues {
+	displayAddressText?: string | undefined;
 }
 
-export interface IListItem extends ILocationInputValues {
-	displayText?: string | undefined;
+export interface IResultsMetaData {
+	results: IResultListItem[];
+	apiPageNum?: number | undefined;
+	totalNumPages?: number | undefined;
+}
+
+export interface IDisplayResultListParams extends IResultsMetaData {
+	queryString?: string | undefined;
+	boldResults?: boolean | undefined;
 }
 
 // why is this here?
@@ -63,19 +77,15 @@ export interface ILocationSearchProps {
 	locationListTitle?: string | undefined;
 	selectedAddressInfo: ILocationInputValues;
 	onChangeSelectedAddressInfo: (addressInfo: ILocationInputValues) => void;
-	onOneMapError: () => void;
+	handleApiErrors: (error: any) => void;
 	mustHavePostalCode?: boolean | undefined;
-	disableErrorPromptOnApp?: boolean | undefined;
 	reverseGeoCodeEndpoint?: string | undefined;
 	onGetLocationCallback: (lat?: number | undefined, lng?: number | undefined) => void;
-	onGetLocationError: (error?: any | undefined, disableErrorPromptOnApp?: boolean | undefined) => void;
-	onAddressChange: () => void;
 	showLocationModal: boolean;
 	mapPickedLatLng?: ILocationCoord | undefined;
-	// didUserClickMap: boolean;
-	onClearInput: () => void;
 	formValues?: ILocationInputValues | undefined;
 	updateFormValues: (values: ILocationInputValues) => void;
+	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
 }
 
 // TODO compile event types

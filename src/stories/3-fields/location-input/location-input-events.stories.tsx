@@ -37,8 +37,6 @@ const GeolocationTemplate = (eventName: string, detail?: TSetCurrentLocationDeta
 		const handleGetCurrentLocation = (e: TLocationInputEvent) => {
 			//Add mock call device geolocation here if needed
 			e.preventDefault();
-
-			console.log(">>>> running app impl");
 			formRef.current.dispatchFieldEvent<TSetCurrentLocationDetail>(
 				"set-current-location",
 				id,
@@ -58,7 +56,6 @@ const GeolocationTemplate = (eventName: string, detail?: TSetCurrentLocationDeta
 		};
 
 		useEffect(() => {
-			console.log("app");
 			const currentFormRef = formRef.current;
 
 			currentFormRef.addFieldEventListener(eventName, id, handleGetCurrentLocation);
