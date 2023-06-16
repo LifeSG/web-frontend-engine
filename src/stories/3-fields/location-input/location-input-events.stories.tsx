@@ -2,10 +2,15 @@ import { action } from "@storybook/addon-actions";
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { useEffect, useRef } from "react";
-import { ILocationInputSchema, TLocationInputEvent, TSetCurrentLocationDetail } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-input.stories";
+import {
+	ILocationInputSchema,
+	TIsOnAppDetail,
+	TLocationInputEvents,
+	TSetCurrentLocationDetail,
+} from "../../../components/fields";
 
 export default {
 	title: "Field/LocationInput/Events",
@@ -29,41 +34,26 @@ export default {
 } as Meta;
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const GeolocationTemplate = (eventName: string, detail?: TSetCurrentLocationDetail) =>
+const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 	((args) => {
-		const id = `location-input-${eventName}`;
+		const id = "location-input-get-current-location";
 		const formRef = useRef<IFrontendEngineRef>();
 
-		const handleGetCurrentLocation = (e: TLocationInputEvent) => {
+		const handleGetCurrentLocation = (e: TLocationInputEvents["get-current-location"]) => {
 			//Add mock call device geolocation here if needed
 			e.preventDefault();
-			formRef.current.dispatchFieldEvent<TSetCurrentLocationDetail>(
-				"set-current-location",
-				id,
-				detail || {
-					payload: {
-						lat: 1.29994179707526,
-						lng: 103.789404349716,
-					},
-					// errors: {
-					// 	GeolocationPositionError2: {
-					// 		code: "3",
-					// 	},
-					// },
-				}
-			);
-			return action(eventName)(e);
+			formRef.current.dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
+			return action("get-current-location")(e);
 		};
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
 
-			currentFormRef.addFieldEventListener(eventName, id, handleGetCurrentLocation);
+			currentFormRef.addFieldEventListener("get-current-location", id, handleGetCurrentLocation);
 
 			return () => {
-				currentFormRef.removeFieldEventListener(eventName, id, handleGetCurrentLocation);
+				currentFormRef.removeFieldEventListener("get-current-location", id, handleGetCurrentLocation);
 			};
-			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
 
 		return (
@@ -85,8 +75,76 @@ const GeolocationTemplate = (eventName: string, detail?: TSetCurrentLocationDeta
 	}) as Story<ILocationInputSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const Geolocation = GeolocationTemplate("get-current-location").bind({});
+export const Geolocation = GeolocationTemplate({
+	payload: {
+		lat: 1.29994179707526,
+		lng: 103.789404349716,
+	},
+}).bind({});
 Geolocation.args = {
 	uiType: "location-input",
 	label: "Geolocation",
+};
+
+export const GeolocationWithErrors = GeolocationTemplate({
+	errors: {
+		GeolocationPositionError2: {
+			code: "3",
+		},
+	},
+});
+Geolocation.args = {
+	uiType: "location-input",
+	label: "Geolocation with errors",
+};
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const AppQueryTemplate = (detail: TIsOnAppDetail) =>
+	((args) => {
+		const id = "location-input-get-is-app";
+		const formRef = useRef<IFrontendEngineRef>();
+
+		const handleAppQuery = (e: TLocationInputEvents["get-is-app"]) => {
+			formRef.current.dispatchFieldEvent("set-is-app", id, detail);
+			return action("get-is-app")(e);
+		};
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+
+			currentFormRef.addFieldEventListener("get-is-app", id, handleAppQuery);
+
+			return () => {
+				currentFormRef.removeFieldEventListener("get-is-app", id, handleAppQuery);
+			};
+		}, []);
+
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				}}
+			/>
+		);
+	}) as Story<ILocationInputSchema>;
+/* eslint-enable react-hooks/rules-of-hooks */
+
+export const AppQuery = AppQueryTemplate({
+	payload: {
+		isOnApp: true,
+	},
+});
+AppQuery.args = {
+	uiType: "location-input",
+	label: "App query with disableErrorPromptOnApp",
+	disableErrorPromptOnApp: true,
 };

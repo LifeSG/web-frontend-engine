@@ -75,18 +75,21 @@ export interface ILocationSearchProps {
 	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
 }
 
-// TODO compile event types
-export interface ILocationInputEventDetail<T = unknown> {
+export type TSetIsApp = {
+	isOnApp: boolean;
+};
+export interface TLocationInputDetail<T = unknown> {
 	payload?: T | undefined;
 	errors?: TErrorPayload | undefined;
 }
-export type TSetCurrentLocationDetail = ILocationInputEventDetail<ILocationCoord>;
+// TODO: component specific? move this out?
+export type TSetCurrentLocationDetail = TLocationInputDetail<ILocationCoord>;
+export type TIsOnAppDetail = TLocationInputDetail<TSetIsApp>;
 
-export type TLocationInputEvent = CustomEvent<ILocationInputEventDetail>;
-
-// Refactor
-// How we want to consolidate and reexport?
+// TODO: how to nicely consolidate this?
 export type TLocationInputEvents = {
-	"get-current-location": undefined;
-	"set-current-location": TSetCurrentLocationDetail;
+	"get-current-location": CustomEvent;
+	"set-current-location": CustomEvent<TSetCurrentLocationDetail>;
+	"get-is-app": CustomEvent;
+	"set-is-app": CustomEvent<TIsOnAppDetail>;
 };

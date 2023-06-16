@@ -7,7 +7,13 @@ import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
 import { Description } from "../../../shared/prompt/prompt.styles";
 import { ILocationCoord, ONE_MAP_ERROR_NAME } from "../location-helper";
-import { ILocationInputValues, ILocationSearchProps, TPanelInputMode, TSetCurrentLocationDetail } from "../types";
+import {
+	ILocationInputValues,
+	ILocationSearchProps,
+	TLocationInputEvents,
+	TPanelInputMode,
+	TSetCurrentLocationDetail,
+} from "../types";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
 import { ILocationPickerProps } from "./location-picker";
 import { LocationSearch } from "./location-search";
@@ -75,10 +81,10 @@ const LocationModal = ({
 	const [locationAvailable, setLocationAvailable] = useState(true);
 
 	const [gettingCurrentLocation, setGettingCurrentLocation] = useState(false);
-	const { dispatchFieldEvent } = useFieldEvent();
+	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 
 	const [hasInternetConnectivity, setHasInternetConnectivity] = useState(true);
-
+	const [isOnApp, setOnApp] = useState(false);
 	const [showGetLocationError, setShowGetLocationError] = useState(false);
 	const [showOneMapError, setShowOneMapError] = useState(false);
 	const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
@@ -97,6 +103,21 @@ const LocationModal = ({
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		console.log("isOnApp", isOnApp);
+	}, [isOnApp]);
+	useEffect(() => {
+		const handleAppQuery = (e: TLocationInputEvents["set-is-app"]) => {
+			setOnApp(!!e.detail?.payload?.isOnApp);
+		};
+		addFieldEventListener("set-is-app", id, handleAppQuery);
+		dispatchFieldEvent("get-is-app", id);
+
+		return () => {
+			removeFieldEventListener("set-is-app", id, handleAppQuery);
+		};
+	}, []);
+
 	useEffect(() => {
 		if (!window) return;
 
@@ -158,29 +179,6 @@ const LocationModal = ({
 		setLocationAvailable(true);
 	};
 
-	const handleGetLocationError = (error?: any) => {
-		setGettingCurrentLocation(false);
-		setLocationAvailable(false);
-
-		// TODO: dispatch
-		// EVENT
-		if (isLifeSgApp() && !!disableErrorPromptOnApp) {
-			setShowGetLocationTimeoutError(false);
-			return;
-		}
-
-		if (
-			!isLifeSgApp() &&
-			!!error["GeolocationPositionError"] &&
-			Number.parseInt(error["GeolocationPositionError"]?.code) === global.GeolocationPositionError.TIMEOUT
-		) {
-			setShowGetLocationTimeoutError(true);
-			return;
-		}
-
-		setShowGetLocationError(true);
-	};
-
 	const handleApiErrors = (error?: any) => {
 		setGettingCurrentLocation(false);
 
@@ -192,14 +190,14 @@ const LocationModal = ({
 
 		setLocationAvailable(false);
 
-		if (isLifeSgApp() && !!disableErrorPromptOnApp) {
+		if (isOnApp && !!disableErrorPromptOnApp) {
 			setShowGetLocationTimeoutError(false);
 			return;
 		}
 
 		// try with typeof
 		if (
-			!isLifeSgApp() &&
+			!isOnApp &&
 			!!error["GeolocationPositionError"] &&
 			Number.parseInt(error["GeolocationPositionError"]?.code) === global.GeolocationPositionError.TIMEOUT
 		) {
@@ -241,10 +239,10 @@ const LocationModal = ({
 		setPanelInputMode(inputMode);
 	};
 
-	// REMOVE
-	const isLifeSgApp = (): boolean => {
-		return typeof window !== "undefined" && window.sessionStorage.getItem("lifeSg") === "true";
-	};
+	// // REMOVE
+	// const isLifeSgApp = (): boolean => {
+	// 	return typeof window !== "undefined" && window.sessionStorage.getItem("lifeSg") === "true";
+	// };
 
 	/**
 	 * getCurrentLocation is to trigger the child components to carry their specific tasks

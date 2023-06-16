@@ -31,6 +31,7 @@ import {
 } from "../fields";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 import { ILocationInputSchema } from "../fields/location-input-group/types";
+import { ILocationCoord } from "../fields/location-input-group/location-helper";
 
 // =============================================================================
 // YUP SCHEMA
@@ -108,17 +109,16 @@ export type TValidationMode = keyof ValidationMode;
 export type TErrorMessage = string | string[] | Record<string, string | string[]>;
 export type TErrorPayload = Record<string, TErrorMessage>;
 
-// FIXME add better typing, maybe generic
 export interface IFrontendEngineRef extends HTMLFormElement {
 	addCustomValidation: (
 		type: TYupSchemaType | "mixed",
 		name: string,
 		fn: (value: unknown, arg: unknown) => boolean
 	) => void;
-	addFieldEventListener: (
+	addFieldEventListener: <T = any>(
 		type: string,
 		id: string,
-		listener: (ev: CustomEvent) => void,
+		listener: (ev: T) => void,
 		options?: boolean | AddEventListenerOptions
 	) => void;
 	dispatchFieldEvent: <T = any>(type: string, id: string, detail?: T) => boolean;
