@@ -8,7 +8,10 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Textfield";
 
-const renderComponent = (overrideSubmit?: Partial<ISubmitButtonSchema> | undefined) => {
+const renderComponent = (
+	overrideSubmit?: Partial<ISubmitButtonSchema> | undefined,
+	defaultValues?: Record<string, any>
+) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		sections: {
@@ -28,6 +31,7 @@ const renderComponent = (overrideSubmit?: Partial<ISubmitButtonSchema> | undefin
 				},
 			},
 		},
+		defaultValues,
 	};
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
@@ -57,5 +61,10 @@ describe("submit", () => {
 
 		fireEvent.change(getTextfield(), { target: { value: "hello" } });
 		expect(getSubmitButton()).not.toBeDisabled();
+	});
+
+	it("should not be disabled if disabled=invalid-form and form is prefilled with valid values", async () => {
+		renderComponent({ disabled: "invalid-form" }, { [COMPONENT_ID]: "hello world" });
+		expect(getSubmitButton()).toBeEnabled();
 	});
 });

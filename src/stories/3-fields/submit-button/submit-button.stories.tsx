@@ -91,7 +91,7 @@ Styled.args = {
 	styleType: "secondary",
 };
 
-export const DisabledOnInvalidForm = (args: ISubmitButtonSchema) => (
+export const WithValidityCheck = (args: ISubmitButtonSchema) => (
 	<FrontendEngine
 		data={{
 			sections: {
@@ -115,8 +115,43 @@ export const DisabledOnInvalidForm = (args: ISubmitButtonSchema) => (
 		}}
 	/>
 );
-DisabledOnInvalidForm.args = {
+WithValidityCheck.args = {
 	uiType: "submit",
 	label: "Submit",
 	disabled: "invalid-form",
 };
+
+export const WithPrefilling = (args: ISubmitButtonSchema) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						required: {
+							uiType: "text-field",
+							label: "Required",
+							validation: [{ required: true }],
+						},
+						email: {
+							uiType: "email-field",
+							label: "Email",
+							validation: [{ required: true }],
+						},
+						submit: args,
+					},
+				},
+			},
+			defaultValues: {
+				required: "hello world",
+				email: "john@doe.com",
+			},
+		}}
+	/>
+);
+WithPrefilling.args = {
+	uiType: "submit",
+	label: "Submit",
+	disabled: "invalid-form",
+};
+WithPrefilling.storyName = "Validity check for prefilled form";

@@ -38,7 +38,7 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 				setIsDisabled(true);
 			}
 		}
-	}, [formValues]);
+	}, [formValues, hardValidationSchema]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
