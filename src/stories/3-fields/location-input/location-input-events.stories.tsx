@@ -88,12 +88,10 @@ Geolocation.args = {
 
 export const GeolocationWithErrors = GeolocationTemplate({
 	errors: {
-		GeolocationPositionError2: {
-			code: "3",
-		},
-	},
+		code: 3,
+	} as GeolocationPositionError,
 });
-Geolocation.args = {
+GeolocationWithErrors.args = {
 	uiType: "location-input",
 	label: "Geolocation with errors",
 };

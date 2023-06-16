@@ -52,3 +52,14 @@ export interface IColor {
 	g: number;
 	b: number;
 }
+
+export class OneMapError extends Error {
+	public innerError: any;
+
+	public constructor(error: any, message = "One map error") {
+		super(message);
+		this.name = "OneMapError";
+		this.innerError = error;
+		Error.captureStackTrace(this, OneMapError);
+	}
+}

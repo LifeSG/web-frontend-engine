@@ -6,7 +6,7 @@ import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
 import { Description } from "../../../shared/prompt/prompt.styles";
-import { ILocationCoord, ONE_MAP_ERROR_NAME } from "../location-helper";
+import { ILocationCoord } from "../location-helper";
 import {
 	ILocationInputValues,
 	ILocationSearchProps,
@@ -18,6 +18,7 @@ import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./loc
 import { ILocationPickerProps } from "./location-picker";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
+import { OneMapError } from "../../../../services/onemap/types";
 
 const ErrorSvg = "https://assets.life.gov.sg/web-frontend-engine/img/common/error.svg";
 const OfflineImage = "https://assets.life.gov.sg/web-frontend-engine/img/common/no-network.png";
@@ -182,7 +183,7 @@ const LocationModal = ({
 	const handleApiErrors = (error?: any) => {
 		setGettingCurrentLocation(false);
 
-		if (error?.message === ONE_MAP_ERROR_NAME) {
+		if (error instanceof OneMapError) {
 			restoreFormvalues();
 			setShowOneMapError(true);
 			return;
@@ -190,17 +191,11 @@ const LocationModal = ({
 
 		setLocationAvailable(false);
 
-		if (isOnApp && !!disableErrorPromptOnApp) {
-			setShowGetLocationTimeoutError(false);
-			return;
-		}
-
-		// try with typeof
-		if (
-			!isOnApp &&
-			!!error["GeolocationPositionError"] &&
-			Number.parseInt(error["GeolocationPositionError"]?.code) === global.GeolocationPositionError.TIMEOUT
-		) {
+		if (error instanceof GeolocationPositionError && error.code === GeolocationPositionError.TIMEOUT) {
+			if (isOnApp && !!disableErrorPromptOnApp) {
+				setShowGetLocationTimeoutError(false);
+				return;
+			}
 			setShowGetLocationTimeoutError(true);
 			return;
 		}
@@ -261,9 +256,7 @@ const LocationModal = ({
 			try {
 				detail["payload"] = await GeoLocationHelper.getCurrentLocation();
 			} catch (error) {
-				detail["errors"] = {
-					getCurrentLocation: error,
-				};
+				detail["errors"] = error;
 			}
 
 			dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);

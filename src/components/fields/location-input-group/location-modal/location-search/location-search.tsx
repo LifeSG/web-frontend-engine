@@ -1,11 +1,11 @@
 import { Text } from "@lifesg/react-design-system/text";
 import { isEmpty } from "lodash";
 import { useEffect, useRef, useState } from "react";
-import { OneMapBoolean } from "../../../../../services/onemap/types";
+import { OneMapBoolean, OneMapError } from "../../../../../services/onemap/types";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { Prompt } from "../../../../shared";
-import { LocationHelper, ONE_MAP_ERROR_NAME } from "../../location-helper";
+import { LocationHelper } from "../../location-helper";
 import {
 	IDisplayResultListParams,
 	ILocationSearchProps,
@@ -120,7 +120,7 @@ export const LocationSearch = ({
 					otherFeatures: OneMapBoolean.YES,
 				});
 			} catch (error) {
-				handleApiErrors(new Error(ONE_MAP_ERROR_NAME, { cause: error }));
+				handleApiErrors(new OneMapError(error));
 			}
 		};
 		Promise.all([debounceFetchAddress("singapore", 1, undefined, handleApiErrors), reverseGeoCodeCheck()]);
@@ -270,12 +270,12 @@ export const LocationSearch = ({
 					resultRef.current.scrollTo(0, 0);
 				}
 			},
-			(e) => {
-				if (e instanceof SyntaxError || e instanceof TypeError) {
+			(error) => {
+				if (error instanceof SyntaxError || error instanceof TypeError) {
 					populateDisplayList({ results: [], queryString });
 				} else {
 					resetResultsList();
-					handleApiErrors(new Error(ONE_MAP_ERROR_NAME, { cause: e }));
+					handleApiErrors(new OneMapError(error));
 				}
 			}
 		);
@@ -399,9 +399,9 @@ export const LocationSearch = ({
 					setLoading(false);
 					setAPIPageNum(res.apiPageNum);
 				},
-				() => {
+				(error) => {
 					resetResultsList();
-					handleApiErrors(new Error(ONE_MAP_ERROR_NAME));
+					handleApiErrors(new OneMapError(error));
 				}
 			);
 		}
@@ -418,6 +418,10 @@ export const LocationSearch = ({
 	 */
 	const displayResultsFromLatLng = async (addressLat: number, addressLng: number) => {
 		if (!reverseGeoCodeEndpoint) return;
+		const onError = (error: any) => {
+			setQueryString("");
+			handleApiErrors(error);
+		};
 
 		let resultListItem: IResultListItem[];
 		try {
@@ -427,11 +431,10 @@ export const LocationSearch = ({
 				addressLng,
 				mustHavePostalCode,
 				reverseGeocodeAborter,
-				handleApiErrors,
+				onError,
 				true
 			);
 		} catch (error) {
-			setQueryString("");
 			return;
 		}
 

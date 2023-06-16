@@ -1,4 +1,4 @@
-import { IFrontendEngineBaseFieldJsonSchema, TErrorPayload } from "../../frontend-engine";
+import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
 import { ILocationCoord } from "./location-helper";
 import { ILocationInputProps } from "./location-input";
 import { ILocationModalProps } from "./location-modal/location-modal";
@@ -80,7 +80,7 @@ export type TSetIsApp = {
 };
 export interface TLocationInputDetail<T = unknown> {
 	payload?: T | undefined;
-	errors?: TErrorPayload | undefined;
+	errors?: any | undefined;
 }
 // TODO: component specific? move this out?
 export type TSetCurrentLocationDetail = TLocationInputDetail<ILocationCoord>;

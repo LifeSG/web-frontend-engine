@@ -2,7 +2,12 @@ import { debounce } from "lodash";
 import { MutableRefObject } from "react";
 import sanitizeHtml from "sanitize-html";
 import { OneMapService } from "../../../services";
-import { OneMapBoolean, OneMapGeocodeInfo, OneMapSearchBuildingResult } from "../../../services/onemap/types";
+import {
+	OneMapBoolean,
+	OneMapError,
+	OneMapGeocodeInfo,
+	OneMapSearchBuildingResult,
+} from "../../../services/onemap/types";
 import { MathHelper } from "../../../utils";
 
 import { IResultListItem, IResultsMetaData } from "./types";
@@ -30,8 +35,6 @@ type TReverseGeocodeParams = {
 		excludeNonSG: boolean;
 	};
 };
-
-export const ONE_MAP_ERROR_NAME = "one-map-error";
 
 // this is intermediary layer so use this as source of truth
 // should oneMapservice transform to conform to the data specified here?
@@ -101,7 +104,7 @@ export namespace LocationHelper {
 
 			return onemapLocationList;
 		} catch (error) {
-			const oneMapError = new Error(ONE_MAP_ERROR_NAME, { cause: error });
+			const oneMapError = new OneMapError(error);
 			onError(oneMapError);
 			throw oneMapError;
 		}
@@ -143,7 +146,7 @@ export namespace LocationHelper {
 				totalNumPages,
 			});
 		} catch (error) {
-			onFail?.(new Error(ONE_MAP_ERROR_NAME, { cause: error }));
+			onFail?.(new OneMapError(error));
 		}
 	};
 
