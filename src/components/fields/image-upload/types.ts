@@ -13,8 +13,8 @@ export interface IImageUploadValidationRule extends IYupValidationRule {
 	maxSizeInKb?: number | undefined;
 }
 
-export interface IImageUploadSchema<V = IImageUploadValidationRule>
-	extends IFrontendEngineBaseFieldJsonSchema<"image-upload", V> {
+export interface IImageUploadSchema<V = undefined>
+	extends IFrontendEngineBaseFieldJsonSchema<"image-upload", IImageUploadValidationRule> {
 	buttonLabel?: string | undefined;
 	description?: string | undefined;
 	editImage?: boolean | undefined;
