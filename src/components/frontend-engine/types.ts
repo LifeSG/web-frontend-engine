@@ -118,7 +118,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	addFieldEventListener: <T = any>(
 		type: string,
 		id: string,
-		listener: (ev: T) => void,
+		listener: (ev: CustomEvent<T>) => void,
 		options?: boolean | AddEventListenerOptions
 	) => void;
 	dispatchFieldEvent: <T = any>(type: string, id: string, detail?: T) => boolean;
@@ -127,10 +127,10 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	/** checks if form is valid */
 	isValid: () => boolean;
 	/** adds custom validation rule */
-	removeFieldEventListener: (
+	removeFieldEventListener: <T = any>(
 		type: string,
 		id: string,
-		listener: (ev: CustomEvent) => void,
+		listener: (ev: CustomEvent<T>) => void,
 		options?: boolean | EventListenerOptions
 	) => void;
 	/** resets the form to the default state */

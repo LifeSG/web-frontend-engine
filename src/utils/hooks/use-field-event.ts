@@ -19,10 +19,10 @@ export const useFieldEvent = () => {
 		eventManagerRef.current?.addEventListener(`${id}:${type}`, listener, options);
 	};
 
-	const removeFieldEventListener = (
+	const removeFieldEventListener = <T = any>(
 		type: string,
 		id: string,
-		listener: (ev: CustomEvent) => void,
+		listener: (ev: CustomEvent<T>) => void,
 		options?: boolean | EventListenerOptions
 	) => {
 		eventManagerRef.current?.removeEventListener(`${id}:${type}`, listener, options);
