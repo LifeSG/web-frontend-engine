@@ -137,17 +137,21 @@ export const ImageManager = (props: IProps) => {
 		setErrorCount((prev) => Math.max(0, prev + updatedManagerErrorCount - managerErrorCount));
 		setManagerErrorCount(updatedManagerErrorCount);
 
-		onChange({
-			target: {
-				value: images
-					.filter(({ status }) => status === EImageStatus.UPLOADED)
-					.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
-						fileName: name,
-						dataURL: drawingDataURL || dataURL,
-						uploadResponse,
-					})),
-			},
-		});
+		// checking for previous images to prevent firing onChange on first mount
+		// otherwise it will crash on SSR (likely due to calling validation when field is not registered)
+		if (previousImages) {
+			onChange({
+				target: {
+					value: images
+						.filter(({ status }) => status === EImageStatus.UPLOADED)
+						.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
+							fileName: name,
+							dataURL: drawingDataURL || dataURL,
+							uploadResponse,
+						})),
+				},
+			});
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [images.map((image) => image.status).join(",")]);
 
