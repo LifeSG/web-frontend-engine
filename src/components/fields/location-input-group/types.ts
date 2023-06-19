@@ -93,3 +93,13 @@ export type TLocationInputEvents = {
 	"get-is-app": CustomEvent;
 	"set-is-app": CustomEvent<TIsOnAppDetail>;
 };
+
+export class GeolocationPositionErrorWrapper extends Error {
+	public code;
+	public message;
+
+	public constructor(error: GeolocationPositionError) {
+		super();
+		Object.assign(this, error);
+	}
+}

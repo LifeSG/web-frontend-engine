@@ -44,7 +44,6 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-
 	return (
 		<div id={id} data-testid={TestHelper.generateId(id)}>
 			<LocationInput
@@ -58,7 +57,7 @@ export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchem
 				}}
 				value={formValue?.address || ""}
 			/>
-			{formValue?.lat && formValue?.lng && (
+			{!!formValue?.lat && !!formValue?.lng && (
 				<StyledStaticMap
 					id={id}
 					lat={formValue.lat}

@@ -8,6 +8,7 @@ import { Prompt } from "../../../shared";
 import { Description } from "../../../shared/prompt/prompt.styles";
 import { ILocationCoord } from "../location-helper";
 import {
+	GeolocationPositionErrorWrapper,
 	ILocationInputValues,
 	ILocationSearchProps,
 	TLocationInputEvents,
@@ -105,9 +106,6 @@ const LocationModal = ({
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		console.log("isOnApp", isOnApp);
-	}, [isOnApp]);
-	useEffect(() => {
 		const handleAppQuery = (e: TLocationInputEvents["set-is-app"]) => {
 			setOnApp(!!e.detail?.payload?.isOnApp);
 		};
@@ -191,7 +189,18 @@ const LocationModal = ({
 
 		setLocationAvailable(false);
 
-		if (error instanceof GeolocationPositionError && error.code === GeolocationPositionError.TIMEOUT) {
+		console.log("handle timeout", {
+			GeolocationPositionErrorWrapper: error instanceof GeolocationPositionErrorWrapper,
+			code: error.code === GeolocationPositionError.TIMEOUT,
+			codeNumber: error.code,
+			typeOF: typeof error.code,
+			typeof: typeof GeolocationPositionError.TIMEOUT,
+		});
+
+		if (
+			error instanceof GeolocationPositionErrorWrapper &&
+			error.code.toString() === GeolocationPositionError.TIMEOUT.toString()
+		) {
 			if (isOnApp && !!disableErrorPromptOnApp) {
 				setShowGetLocationTimeoutError(false);
 				return;

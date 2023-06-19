@@ -7,6 +7,7 @@ import { useFieldEvent } from "../../../../../utils/hooks";
 import { Prompt } from "../../../../shared";
 import { LocationHelper } from "../../location-helper";
 import {
+	GeolocationPositionErrorWrapper,
 	IDisplayResultListParams,
 	ILocationSearchProps,
 	IResultListItem,
@@ -138,6 +139,14 @@ export const LocationSearch = ({
 	// Attach event handlers
 	useEffect(() => {
 		const setCurrentLocationHandler = ({ detail: { payload, errors } }: CustomEvent<TSetCurrentLocationDetail>) => {
+			// FIXME geolocationPositionErrors cannot be copied or instantiated
+			// TODO find another way to reliably detect them
+			// wrap the original geolocationPositionError
+			if (errors instanceof Object && errors.code !== undefined) {
+				handleApiErrors(new GeolocationPositionErrorWrapper(errors));
+				return;
+			}
+
 			if (!isEmpty(errors)) {
 				handleApiErrors(errors);
 				return;
@@ -266,8 +275,8 @@ export const LocationSearch = ({
 					totalNumPages: res.totalNumPages,
 				});
 
-				if (resultRef.current.scrollTo) {
-					resultRef.current.scrollTo(0, 0);
+				if (resultRef.current?.scrollTo) {
+					resultRef.current?.scrollTo(0, 0);
 				}
 			},
 			(error) => {
@@ -337,9 +346,9 @@ export const LocationSearch = ({
 
 	const handleScrollResult = () => {
 		if (resultRef.current) {
-			if (resultRef.current.scrollTop > 0 && !hasScrolled) {
+			if (resultRef.current?.scrollTop > 0 && !hasScrolled) {
 				setHasScrolled(true);
-			} else if (resultRef.current.scrollTop <= 0 && hasScrolled) {
+			} else if (resultRef.current?.scrollTop <= 0 && hasScrolled) {
 				setHasScrolled(false);
 			}
 		}
@@ -356,8 +365,8 @@ export const LocationSearch = ({
 		setAPIPageNum(0);
 		setAPIResults([]);
 		setSearchBuildingResults([]);
-		if (resultRef.current.scrollTo) {
-			resultRef.current.scrollTo(0, 0);
+		if (resultRef.current?.scrollTo) {
+			resultRef.current?.scrollTo(0, 0);
 		}
 	};
 

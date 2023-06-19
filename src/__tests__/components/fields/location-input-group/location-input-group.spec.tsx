@@ -8,6 +8,7 @@ import { LocationHelper } from "../../../../components/fields/location-input-gro
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema } from "../../../common";
 import {
+	fetchSingleLocationByLatLngSingleReponse,
 	mock1PageFetchAddressResponse,
 	mockEmptyFetchAddressResponse,
 	mockInputValues,
@@ -220,6 +221,12 @@ const getStaticMap = (query = false) => {
  * - search
  * - map
  * - full flow
+ *
+ * FIXME
+ * Testing geolocation errors is inconsistent and unpredictabl
+ * - hard to mock
+ * - geolocation error is not an instanceof erro
+ * - cant seem to match the GeolocationPositionError class
  */
 
 describe("location-input-group", () => {
@@ -230,8 +237,7 @@ describe("location-input-group", () => {
 	let viewport: MockViewport;
 	let staticMapSpy;
 	let fetchSingleLocationByAddressSpy;
-
-	console.log = jest.fn();
+	let fetchSingleLocationByLatLngSpy;
 
 	const setWindowAndViewPort = (width: number, height = MediaWidths.tablet) => {
 		Object.defineProperty(window, "innerWidth", {
@@ -282,7 +288,8 @@ describe("location-input-group", () => {
 		fetchAddressSpy = jest.spyOn(LocationHelper, "debounceFetchAddress");
 		reverseGeocodeSpy = jest.spyOn(LocationHelper, "reverseGeocode");
 		fetchSingleLocationByAddressSpy = jest.spyOn(LocationHelper, "fetchSingleLocationByAddress");
-		staticMapSpy = jest.spyOn(LocationHelper, "getStaticMapUrl").mockImplementation(() => mockStaticMapDataUri);
+		staticMapSpy = jest.spyOn(LocationHelper, "getStaticMapUrl").mockReturnValue(mockStaticMapDataUri);
+		fetchSingleLocationByLatLngSpy = jest.spyOn(LocationHelper, "fetchSingleLocationByLatLng");
 
 		viewport = mockViewport({
 			width: MediaWidths.tablet,
@@ -301,6 +308,7 @@ describe("location-input-group", () => {
 		reverseGeocodeSpy.mockRestore();
 		staticMapSpy.mockRestore();
 		fetchSingleLocationByAddressSpy.mockRestore();
+		fetchSingleLocationByLatLngSpy.mockRestore();
 	});
 
 	/**
@@ -388,9 +396,7 @@ describe("location-input-group", () => {
 					withEvents: true,
 					locationDetails: {
 						errors: {
-							GeolocationPositionError: {
-								code: "3",
-							},
+							code: "3",
 						},
 					},
 				});
@@ -482,7 +488,7 @@ describe("location-input-group", () => {
 			});
 
 			// test functionality
-			describe.skip("when there are default values", () => {
+			describe("when there are default values", () => {
 				describe("when only address", () => {
 					beforeEach(async () => {
 						fetchSingleLocationByAddressSpy.mockImplementation((_, onSuccess) => {
@@ -535,7 +541,11 @@ describe("location-input-group", () => {
 						fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
 							onSuccess(mock1PageFetchAddressResponse);
 						});
-						reverseGeocodeSpy.mockImplementation(() => mockReverseGeoCodeResponse);
+						fetchSingleLocationByLatLngSpy.mockImplementation(
+							(_reverseGeoCodeEndpoint, _lat, _lng, handleResult) => {
+								handleResult(fetchSingleLocationByLatLngSingleReponse);
+							}
+						);
 						renderComponent({
 							withEvents: false,
 							overrideSchema: {
@@ -552,7 +562,7 @@ describe("location-input-group", () => {
 						});
 
 						await waitFor(() => {
-							expect(reverseGeocodeSpy).toBeCalledTimes(1);
+							expect(fetchSingleLocationByLatLngSpy).toBeCalledTimes(1);
 							expect(getLocationInput(true)).toBeInTheDocument();
 							expect(getStaticMap(true)).toBeInTheDocument();
 						});
@@ -625,6 +635,9 @@ describe("location-input-group", () => {
 				describe("when geolocation is supported", () => {
 					describe("when geolocation is not enabled", () => {
 						it("should warn user about location not enabled and allow the user to continue after dismissing modal", async () => {
+							getCurrentLocationSpy.mockRejectedValue({
+								code: 1,
+							});
 							renderComponent();
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
@@ -653,9 +666,15 @@ describe("location-input-group", () => {
 
 				// rename
 				describe("when geolocation is disabled", () => {
+					beforeEach(() => {
+						getCurrentLocationSpy.mockRejectedValue({
+							code: 1,
+						});
+					});
 					describe("modal controls", () => {
 						describe("for tablet and below", () => {
 							mockViewportForTestGroup({ width: MediaWidths.mobileL, height: MediaWidths.mobileL });
+
 							it("should allow user to close the location modal when in map mode", async () => {
 								setWindowAndViewPort(MediaWidths.mobileL);
 
@@ -938,7 +957,9 @@ describe("location-input-group", () => {
 					describe("when using location search in mobile", () => {
 						beforeEach(async () => {
 							setWindowAndViewPort(MediaWidths.mobileL);
-
+							getCurrentLocationSpy.mockRejectedValue({
+								code: 1,
+							});
 							renderComponent();
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));

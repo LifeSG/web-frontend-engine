@@ -121,6 +121,19 @@ export const mock1PageFetchAddressResponse = {
 	],
 };
 
+export const fetchSingleLocationByLatLngSingleReponse = {
+	address: "661 BUKIT TIMAH ROAD HWA CHONG INSTITUTION (ONG TENG CHEONG SALT CENTRE) SINGAPORE 269734",
+	blockNo: "661",
+	building: "HWA CHONG INSTITUTION (ONG TENG CHEONG SALT CENTRE)",
+	displayAddressText: "661 BUKIT TIMAH ROAD HWA CHONG INSTITUTION (ONG TENG CHEONG SALT CENTRE) SINGAPORE 269734",
+	lat: 1.327524154255827,
+	lng: 103.80140504104062,
+	postalCode: "269734",
+	roadName: "BUKIT TIMAH ROAD",
+	x: 24448.3481666,
+	y: 34416.4159513,
+};
+
 export const mockReverseGeoCodeResponse = [
 	{
 		address: "661 BUKIT TIMAH ROAD HWA CHONG INSTITUTION (ONG TENG CHEONG SALT CENTRE) SINGAPORE 269734",
