@@ -1,8 +1,9 @@
 import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
 import { IStaticMapProps } from "../../shared/static-map";
 import { ILocationInputProps } from "./location-input";
-import { ILocationModalProps } from "./location-modal/location-modal";
+import { ILocationModalProps } from "./location-modal/types";
 import { ILocationPickerProps } from "./location-modal/location-picker/types";
+import { ILocationSearchProps } from "./location-modal/location-search/types";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-field", V>,
@@ -56,32 +57,10 @@ export interface IDisplayResultListParams extends IResultsMetaData {
 	boldResults?: boolean | undefined;
 }
 
-// why is this here?
-export interface ILocationSearchProps {
-	id?: string | undefined;
-	onCancel: () => void;
-	onConfirm: () => void;
-	panelInputMode: TPanelInputMode;
-	addressFieldPlaceholder?: string | undefined;
-	gettingCurrentLocation: boolean;
-	gettingCurrentLocationFetchMessage?: string | undefined;
-	locationListTitle?: string | undefined;
-	selectedAddressInfo: ILocationInputValues;
-	onChangeSelectedAddressInfo: (addressInfo: ILocationInputValues) => void;
-	handleApiErrors: (error: any) => void;
-	mustHavePostalCode?: boolean | undefined;
-	reverseGeoCodeEndpoint?: string | undefined;
-	onGetLocationCallback: (lat?: number | undefined, lng?: number | undefined) => void;
-	showLocationModal: boolean;
-	mapPickedLatLng?: ILocationCoord | undefined;
-	formValues?: ILocationInputValues | undefined;
-	updateFormValues: (values: ILocationInputValues) => void;
-	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
-}
-
 export type TSetIsApp = {
 	isOnApp: boolean;
 };
+
 export interface TLocationInputDetail<T = unknown> {
 	payload?: T | undefined;
 	errors?: any | undefined;

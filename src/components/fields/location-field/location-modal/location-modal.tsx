@@ -11,42 +11,23 @@ import {
 	GeolocationPositionErrorWrapper,
 	ILocationCoord,
 	ILocationInputValues,
-	ILocationSearchProps,
 	TLocationInputEvents,
 	TPanelInputMode,
 	TSetCurrentLocationDetail,
 } from "../types";
 import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
-import { ILocationPickerProps } from "./location-picker/types";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
+import { ILocationModalProps } from "./types";
 
 // TODO move this out
 // service should implement this
 // move the code into story
 // pair with weili on this
-interface HotlineContent {
+export interface HotlineContent {
 	name: string;
 	number: string;
-}
-
-export interface ILocationModalProps
-	extends Pick<ILocationPickerProps, "mapPanZoom" | "interactiveMapPinIconUrl">,
-		Pick<
-			ILocationSearchProps,
-			"reverseGeoCodeEndpoint" | "mustHavePostalCode" | "gettingCurrentLocationFetchMessage"
-		> {
-	id: string;
-	showLocationModal: boolean;
-	formValues?: ILocationInputValues | undefined;
-	onClose: () => void;
-	onConfirm: (values: ILocationInputValues) => void;
-	locationPermissionErrorMessage?: string | undefined; // TODO ask weili if jsx allowed?
-	hotlineContent?: HotlineContent | undefined;
-	updateFormValues: (values: ILocationInputValues) => void;
-	mastheadHeight?: number;
-	disableErrorPromptOnApp?: boolean;
 }
 
 /**

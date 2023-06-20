@@ -8,11 +8,11 @@ import { LocationHelper } from "../../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
 	IDisplayResultListParams,
-	ILocationSearchProps,
 	IResultListItem,
 	IResultsMetaData,
 	TSetCurrentLocationDetail,
 } from "../../types";
+import { ILocationSearchProps } from "./types";
 import { InfiniteScrollList } from "../infinite-scroll";
 import { boldResultsWithQuery, pagination } from "./helper";
 import {
