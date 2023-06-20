@@ -18,7 +18,7 @@ settings:
 # default
 # ================================
 
-test:
+library:
   trigger:
     include: .pipeline/library/.gitlab-ci.yml
   rules:
