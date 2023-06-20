@@ -40,7 +40,7 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 		const formRef = useRef<IFrontendEngineRef>();
 
 		const handleGetCurrentLocation = (e: TLocationInputEvents["get-current-location"]) => {
-			//Add mock call device geolocation here if needed
+			// Here is where you would call the device geolocation api
 			e.preventDefault();
 			formRef.current.dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
 			return action("get-current-location")(e);

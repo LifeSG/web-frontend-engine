@@ -17,38 +17,7 @@ import {
 } from "./mock-values";
 jest.mock("../../../../services/onemap/onemap-service.ts");
 
-// Object.defineProperty(window, "matchMedia", {
-// 	writable: true,
-// 	value: jest.fn().mockImplementation((query) => ({
-// 		matches: false,
-// 		media: query,
-// 		onchange: null,
-// 		addListener: jest.fn(), // deprecated
-// 		removeListener: jest.fn(), // deprecated
-// 		addEventListener: jest.fn(),
-// 		removeEventListener: jest.fn(),
-// 		dispatchEvent: jest.fn(),
-// 	})),
-// });
-
 const io = mockIntersectionObserver();
-
-// function createMockImageDataUri(url) {
-// 	const img = new Image();
-// 	img.src = url;
-// 	img.addEventListener("load", () => {
-// 		img.complete = true;
-// 		img.naturalWidth = 100;
-// 		img.naturalHeight = 100;
-// 		img.dispatchEvent(new Event("load"));
-// 	});
-// 	return img;
-// }
-
-// Object.defineProperty(window, "Image", {
-// 	writable: true,
-// 	value: jest.fn().mockImplementation((url) => createMockImageDataUri(mockStaticMapDataUri)),
-// });
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -128,8 +97,6 @@ const renderComponent = (
 						uiType: UI_TYPE,
 						...overrideField,
 					},
-					// ...getSubmitButtonProps(),
-					// ...getResetButtonProps(),
 				},
 			},
 		},
@@ -180,7 +147,6 @@ const getLocationSearchInput = (query = false) => {
 
 const getLocationInput = (query = false) => {
 	return within(testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-input"))).getByTestId("input");
-	// return testIdCmd(query)("input");
 };
 
 const getLocationSearchClearButton = (query = false) => {
@@ -230,7 +196,6 @@ const getStaticMap = (query = false) => {
  */
 
 describe("location-input-group", () => {
-	// TODO clean spy logic
 	let fetchAddressSpy;
 	let getCurrentLocationSpy;
 	let reverseGeocodeSpy;
@@ -278,12 +243,6 @@ describe("location-input-group", () => {
 		jest.clearAllMocks();
 		jest.restoreAllMocks();
 
-		// Possibly refactor screen size detection
-		// How to synchronize
-		// global.matchMedia
-		// MockMediaQueryList
-		// use global.matchMedia.simulateChange
-
 		getCurrentLocationSpy = jest.spyOn(GeoLocationHelper, "getCurrentLocation");
 		fetchAddressSpy = jest.spyOn(LocationHelper, "debounceFetchAddress");
 		reverseGeocodeSpy = jest.spyOn(LocationHelper, "reverseGeocode");
@@ -329,9 +288,6 @@ describe("location-input-group", () => {
 	 * - unintuitive
 	 */
 	describe("events", () => {
-		// test cleanup
-
-		// device geolocation
 		describe("geolocation events", () => {
 			// When does it request
 			// - open location
@@ -475,7 +431,6 @@ describe("location-input-group", () => {
 		});
 
 		// isLifeSGapp
-		// should we also invert the onemap service?
 	});
 
 	describe("functionality", () => {

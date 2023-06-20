@@ -1,7 +1,5 @@
 import { ILocationCoord, ILocationInputValues, TPanelInputMode, TSinglePanelInputMode } from "../../types";
 
-// why is this here?
-
 export interface ILocationSearchProps {
 	id?: string | undefined;
 	onCancel: () => void;

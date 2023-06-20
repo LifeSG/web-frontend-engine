@@ -25,6 +25,7 @@ import { ILocationModalProps } from "./types";
 // service should implement this
 // move the code into story
 // pair with weili on this
+// moving forward we should document how to augment FEE behaviours
 export interface HotlineContent {
 	name: string;
 	number: string;
@@ -219,7 +220,6 @@ const LocationModal = ({
 		setGettingCurrentLocation(true);
 
 		// TODO add documentation for how to cancel events and handle default
-		// should debounce?
 		const shouldPreventDefault = !dispatchFieldEvent("get-current-location", id);
 
 		if (!shouldPreventDefault) {
@@ -290,9 +290,6 @@ const LocationModal = ({
 		 */
 		if (!hasInternetConnectivity || !showLocationModal) return;
 
-		/**
-		 * Should I render all prompts and use the show prop to decide which to render?
-		 */
 		if (showOneMapError) {
 			return (
 				<Prompt

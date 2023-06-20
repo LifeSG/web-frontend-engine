@@ -76,7 +76,6 @@ export const LocationPicker = ({
 			basemap.addTo(mapRef.current);
 
 			// even if it didn't change, as it may have panned off-centre.
-			// when toggling from search to map?
 			if (!gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
 				// NOTE: map will zoom when input is cleared in search panelInputMode and switches to map panelInputMode
 				zoomWithMarkers({ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng });

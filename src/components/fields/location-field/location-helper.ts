@@ -172,7 +172,6 @@ export namespace LocationHelper {
 			};
 		});
 
-		// default to false
 		if (options?.excludeNonSG) {
 			parsedLocationList = parsedLocationList.filter(({ building }) => building !== "JOHOR (MALAYSIA)");
 		}

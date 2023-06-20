@@ -53,6 +53,13 @@ export const LocationSearch = ({
 	handleApiErrors,
 
 	onGetLocationCallback,
+
+	// set map mode
+	// reset user click map
+	// trigger smth in search
+	// - no references
+	// trigger smth in picker
+	// - zoom with markers
 	onChangeSelectedAddressInfo,
 	onCancel,
 	onConfirm,
@@ -130,9 +137,6 @@ export const LocationSearch = ({
 	// Attach event handlers
 	useEffect(() => {
 		const setCurrentLocationHandler = ({ detail: { payload, errors } }: CustomEvent<TSetCurrentLocationDetail>) => {
-			// FIXME geolocationPositionErrors cannot be copied or instantiated
-			// TODO find another way to reliably detect them
-			// wrap the original geolocationPositionError
 			if (errors instanceof Object && errors.code !== undefined) {
 				handleApiErrors(new GeolocationPositionErrorWrapper(errors));
 				return;
@@ -143,7 +147,7 @@ export const LocationSearch = ({
 				return;
 			}
 
-			// TODO: no op or error? onGetLocationError(undefined, disableErrorPromptOnApp)
+			// TODO: no op or error?
 			if (!payload?.lat || !payload?.lng) return;
 
 			const { lat, lng } = payload;
@@ -162,11 +166,6 @@ export const LocationSearch = ({
 	 * Prefill based on lat lng or address with the appropriate api
 	 */
 	useEffect(() => {
-		/**
-		 * then the external api will have transform to this internal representation
-		 *
-		 * when saving to form we transform into the forms representation
-		 */
 		const handleResult = ({ displayAddressText, ...locationInputValue }: IResultListItem) => {
 			const validPostalCode =
 				!mustHavePostalCode || LocationHelper.hasGotAddressValue(locationInputValue.postalCode);
@@ -179,21 +178,7 @@ export const LocationSearch = ({
 
 			// complete form state with valid location
 			updateFormValues(locationInputValue);
-
-			// set map mode
-			// reset user click map
-			// trigger smth in search
-			// - no references
-			// trigger smth in picker
-			// - zoom with markers
 			onChangeSelectedAddressInfo(locationInputValue);
-
-			// FIXME edge case: reopening more than once the location modal will not cause a query string rerender
-			// search deps
-			// - if no address, reset list
-			// - debounceFetchAddress
-			//   - setSelectedIndex
-			// 	 - populateDisplayList
 			setQueryString(locationInputValue.address);
 		};
 
@@ -223,17 +208,6 @@ export const LocationSearch = ({
 
 	/**
 	 * Handles query searching and search results display
-	 * when to search
-	 * - querystring changes
-	 * - querystring is not empty
-	 * when will query string change
-	 * (which should not cause this to run again)
-	 * - prefill on mount (r)
-	 * - handleClickCancel (nr) (p)
-	 * - handleInputChange (r)
-	 * - handleClearInput (nr)
-	 * - handleClickResult (nr) (p) handled
-	 * - displayLocationList
 	 */
 	useEffect(() => {
 		if (resultState === "found") return;
@@ -374,7 +348,7 @@ export const LocationSearch = ({
 	 *
 	 * if your are searching by reverse geocode endpoint
 	 * clicking on map
-	 * all the data will be dumped into you
+	 * all the data will be fetched
 	 */
 	const getMoreLocationResults = () => {
 		setLoading(true);
@@ -417,9 +391,6 @@ export const LocationSearch = ({
 	 * - getting current location
 	 * - internet restored
 	 * - map picked latlng
-	 *
-	 * When in map mode, should the view switch search mode?
-	 * If not, result is hidden
 	 */
 	const displayResultsFromLatLng = async (addressLat: number, addressLng: number) => {
 		if (!reverseGeoCodeEndpoint) return;
@@ -474,7 +445,6 @@ export const LocationSearch = ({
 		setSelectedIndex(0);
 	};
 
-	// reverse geocode dumps all
 	/**
 	 * Handles how much to initially show
 	 * Configures pagination

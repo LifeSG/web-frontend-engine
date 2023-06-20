@@ -14,7 +14,7 @@ export interface ILocationModalProps
 	formValues?: ILocationInputValues | undefined;
 	onClose: () => void;
 	onConfirm: (values: ILocationInputValues) => void;
-	locationPermissionErrorMessage?: string | undefined; // TODO ask weili if jsx allowed?
+	locationPermissionErrorMessage?: string | undefined;
 	hotlineContent?: HotlineContent | undefined;
 	updateFormValues: (values: ILocationInputValues) => void;
 	mastheadHeight?: number;
