@@ -25,7 +25,7 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { watch } = useFormContext();
+	const { watch, getValues } = useFormContext();
 	const { formValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 	const [show, toggleShow] = useState(false);
 	const [formValues, setFormValues] = useState<FieldValues>();
@@ -33,6 +33,11 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		const values = getValues();
+		setFormValues(values);
+	}, []);
+
 	useEffect(() => {
 		const subscription = watch((value) => setFormValues(value));
 
