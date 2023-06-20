@@ -4,7 +4,7 @@ import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTe
 import { useEffect, useRef } from "react";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
 import { ILocationInputSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
-import { LocationHelper } from "../../../../components/fields/location-input-group/location-helper";
+import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema } from "../../../common";
 import {
@@ -52,8 +52,8 @@ const io = mockIntersectionObserver();
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
-const UI_TYPE = "location-input";
-const LABEL = "Location input";
+const UI_TYPE = "location-field";
+const LABEL = "Location field";
 
 const setCurrentLocationSpy = jest.fn();
 

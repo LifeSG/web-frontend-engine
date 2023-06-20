@@ -1,13 +1,13 @@
 import { Suspense, lazy, useState } from "react";
 import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { StyledStaticMap } from "./location-input-group.styles";
+import { StyledStaticMap } from "./location-field.styles";
 import { LocationInput } from "./location-input/location-input";
 import { ILocationInputSchema, ILocationInputValues } from "./types";
 
 const LocationModal = lazy(() => import("./location-modal/location-modal"));
 
-export const LocationInputGroup = (props: IGenericFieldProps<ILocationInputSchema>) => {
+export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================

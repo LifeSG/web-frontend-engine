@@ -3,7 +3,7 @@ export * from "./chips";
 export * from "./contact-field";
 export * from "./date-field";
 export * from "./image-upload";
-export * from "./location-input-group";
+export * from "./location-field";
 export * from "./multi-select";
 export * from "./radio-button";
 export * from "./range-select";

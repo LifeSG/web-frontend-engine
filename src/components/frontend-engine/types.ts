@@ -30,8 +30,8 @@ import {
 	IUnitNumberFieldSchema,
 } from "../fields";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
-import { ILocationInputSchema } from "../fields/location-input-group/types";
-import { ILocationCoord } from "../fields/location-input-group/location-helper";
+import { ILocationInputSchema } from "../fields/location-field/types";
+import { ILocationCoord } from "../fields/location-field/location-helper";
 
 // =============================================================================
 // YUP SCHEMA
@@ -229,7 +229,7 @@ export enum EFieldType {
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
-	"LOCATION-INPUT" = "LocationInputGroup",
+	"LOCATION-FIELD" = "LocationField",
 }
 
 /**

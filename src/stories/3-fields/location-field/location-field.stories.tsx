@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { ILocationInputSchema, ILocationInputValues } from "../../../components/fields/location-input-group/types";
+import { ILocationInputSchema, ILocationInputValues } from "../../../components/fields/location-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
 
 export default {
@@ -23,21 +23,21 @@ export default {
 		},
 	},
 	argTypes: {
-		...CommonFieldStoryProps("location-input"),
+		...CommonFieldStoryProps("location-field"),
 	},
 } as Meta;
 
-export const Default = DefaultStoryTemplate<ILocationInputSchema>("location-input-default").bind({});
+export const Default = DefaultStoryTemplate<ILocationInputSchema>("location-field-default").bind({});
 Default.args = {
-	uiType: "location-input",
+	uiType: "location-field",
 	label: "Default",
 };
 
 export const InitialAddress = DefaultStoryTemplate<ILocationInputSchema, ILocationInputValues>(
-	"location-input-initial-address"
+	"location-field-initial-address"
 ).bind({});
 InitialAddress.args = {
-	uiType: "location-input",
+	uiType: "location-field",
 	label: "Default",
 	defaultValues: {
 		address: "Fusionopolis View",
@@ -52,10 +52,10 @@ InitialAddress.parameters = {
 };
 
 export const InitialLatLng = DefaultStoryTemplate<ILocationInputSchema, ILocationInputValues>(
-	"location-input-initial-address"
+	"location-field-initial-address"
 ).bind({});
 InitialLatLng.args = {
-	uiType: "location-input",
+	uiType: "location-field",
 	label: "Default",
 	defaultValues: {
 		lat: 1.2418352709904754,
@@ -72,10 +72,10 @@ InitialLatLng.parameters = {
 };
 
 export const FullInitialAddress = DefaultStoryTemplate<ILocationInputSchema, ILocationInputValues>(
-	"location-input-initial-address"
+	"location-field-initial-address"
 ).bind({});
 FullInitialAddress.args = {
-	uiType: "location-input",
+	uiType: "location-field",
 	label: "Default",
 	defaultValues: {
 		address: "1 FUSIONOPOLIS VIEW ECLIPSE SINGAPORE 138577",

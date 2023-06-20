@@ -4,7 +4,7 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
-import Default from "./location-input.stories";
+import Default from "./location-field.stories";
 import {
 	ILocationInputSchema,
 	TIsOnAppDetail,
@@ -36,7 +36,7 @@ export default {
 /* eslint-disable react-hooks/rules-of-hooks */
 const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 	((args) => {
-		const id = "location-input-get-current-location";
+		const id = "location-field-get-current-location";
 		const formRef = useRef<IFrontendEngineRef>();
 
 		const handleGetCurrentLocation = (e: TLocationInputEvents["get-current-location"]) => {
@@ -82,7 +82,7 @@ export const Geolocation = GeolocationTemplate({
 	},
 }).bind({});
 Geolocation.args = {
-	uiType: "location-input",
+	uiType: "location-field",
 	label: "Geolocation",
 };
 
@@ -92,14 +92,14 @@ export const GeolocationWithErrors = GeolocationTemplate({
 	} as GeolocationPositionError,
 });
 GeolocationWithErrors.args = {
-	uiType: "location-input",
+	uiType: "location-field",
 	label: "Geolocation with errors",
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
 const AppQueryTemplate = (detail: TIsOnAppDetail) =>
 	((args) => {
-		const id = "location-input-get-is-app";
+		const id = "location-field-get-is-app";
 		const formRef = useRef<IFrontendEngineRef>();
 
 		const handleAppQuery = (e: TLocationInputEvents["get-is-app"]) => {
@@ -142,7 +142,7 @@ export const AppQuery = AppQueryTemplate({
 	},
 });
 AppQuery.args = {
-	uiType: "location-input",
+	uiType: "location-field",
 	label: "App query with disableErrorPromptOnApp",
 	disableErrorPromptOnApp: true,
 };

@@ -1,4 +1,4 @@
-import { ILocationCoord } from "../components/fields/location-input-group/location-helper";
+import { ILocationCoord } from "../components/fields/location-field/location-helper";
 
 export interface IGetCurrentLocationOptions {
 	maxAttempts?: number;

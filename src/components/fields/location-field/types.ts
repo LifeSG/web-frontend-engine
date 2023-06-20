@@ -6,7 +6,7 @@ import { ILocationPickerProps } from "./location-modal/location-picker";
 import { IStaticMapProps } from "./static-map";
 
 export interface ILocationInputSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"location-input", V>,
+	extends IFrontendEngineBaseFieldJsonSchema<"location-field", V>,
 		Pick<
 			ILocationModalProps,
 			"locationPermissionErrorMessage" | "mastheadHeight" | "hotlineContent" | "disableErrorPromptOnApp"
