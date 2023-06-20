@@ -2,13 +2,14 @@ import { MediaWidths, Modal } from "@lifesg/react-design-system";
 import { Text } from "@lifesg/react-design-system/text";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
+import { OneMapError } from "../../../../services/onemap/types";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
 import { Description } from "../../../shared/prompt/prompt.styles";
-import { ILocationCoord } from "../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
+	ILocationCoord,
 	ILocationInputValues,
 	ILocationSearchProps,
 	TLocationInputEvents,
@@ -16,10 +17,9 @@ import {
 	TSetCurrentLocationDetail,
 } from "../types";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
+import { ILocationPickerProps } from "./location-picker/types";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
-import { OneMapError } from "../../../../services/onemap/types";
-import { ILocationPickerProps } from "./location-picker/types";
 
 const ErrorSvg = "https://assets.life.gov.sg/web-frontend-engine/img/common/error.svg";
 const OfflineImage = "https://assets.life.gov.sg/web-frontend-engine/img/common/no-network.png";

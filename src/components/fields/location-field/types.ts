@@ -1,8 +1,7 @@
 import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
-import { ILocationCoord } from "./location-helper";
+import { IStaticMapProps } from "../../shared/static-map";
 import { ILocationInputProps } from "./location-input";
 import { ILocationModalProps } from "./location-modal/location-modal";
-import { IStaticMapProps } from "../../shared/static-map";
 import { ILocationPickerProps } from "./location-modal/location-picker/types";
 
 export interface ILocationInputSchema<V = undefined>
@@ -35,6 +34,11 @@ export interface ILocationInputValues {
 	lng?: number | undefined;
 	x?: number | undefined;
 	y?: number | undefined;
+}
+
+export interface ILocationCoord {
+	lat: number;
+	lng: number;
 }
 
 export interface IResultListItem extends ILocationInputValues {

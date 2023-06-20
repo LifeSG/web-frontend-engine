@@ -1,4 +1,3 @@
-import { Text } from "@lifesg/react-design-system/text";
 import { isEmpty } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { OneMapBoolean, OneMapError } from "../../../../../services/onemap/types";
@@ -15,6 +14,7 @@ import {
 	TSetCurrentLocationDetail,
 } from "../../types";
 import { InfiniteScrollList } from "../infinite-scroll";
+import { boldResultsWithQuery, pagination } from "./helper";
 import {
 	ButtonItem,
 	ButtonWrapper,
@@ -90,14 +90,8 @@ export const LocationSearch = ({
 	const [totalNumPages, setTotalNumPages] = useState(0);
 	const [apiPageNum, setAPIPageNum] = useState(1);
 	const [currentPaginationPageNum, setCurrentPaginationPageNum] = useState(1);
-	const {
-		pagination,
-		debounceFetchAddress,
-		fetchSingleLocationByAddress,
-		fetchSingleLocationByLatLng,
-		boldResultsWithQuery,
-		fetchLocationList,
-	} = LocationHelper;
+	const { debounceFetchAddress, fetchSingleLocationByAddress, fetchSingleLocationByLatLng, fetchLocationList } =
+		LocationHelper;
 
 	// =============================================================================
 	// EFFECTS

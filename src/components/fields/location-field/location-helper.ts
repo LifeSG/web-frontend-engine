@@ -1,6 +1,5 @@
 import { debounce } from "lodash";
 import { MutableRefObject } from "react";
-import sanitizeHtml from "sanitize-html";
 import { OneMapService } from "../../../services";
 import {
 	OneMapBoolean,
@@ -8,21 +7,8 @@ import {
 	OneMapGeocodeInfo,
 	OneMapSearchBuildingResult,
 } from "../../../services/onemap/types";
-import { MathHelper } from "../../../utils";
 
 import { IResultListItem, IResultsMetaData } from "./types";
-
-export interface ILocationCoord {
-	lat: number;
-	lng: number;
-}
-
-export interface IGetCurrentLocationOptions {
-	maxAttempts?: number;
-	timeout?: number;
-	maximumAge?: number;
-	disableErrorPromptOnApp?: boolean;
-}
 
 type TReverseGeocodeParams = {
 	route: string;
@@ -36,8 +22,6 @@ type TReverseGeocodeParams = {
 	};
 };
 
-// this is intermediary layer so use this as source of truth
-// should oneMapservice transform to conform to the data specified here?
 export namespace LocationHelper {
 	const mapService = OneMapService;
 
@@ -198,7 +182,6 @@ export namespace LocationHelper {
 		};
 	};
 
-	// prefill on mount
 	export const fetchSingleLocationByLatLng = async (
 		reverseGeoCodeEndpoint: string,
 		lat: number,
@@ -224,24 +207,6 @@ export namespace LocationHelper {
 	// =========================================================================
 	// HELPERS
 	// =========================================================================
-	export const boldResultsWithQuery = (arr: IResultListItem[], query: string) => {
-		const regex = new RegExp(query, "gi");
-		return arr.map((obj) => {
-			const newAddress = (obj.displayAddressText || obj.address).replace(
-				regex,
-				`<span class="keyword">${query}</span>`
-			);
-			return {
-				...obj,
-				displayAddressText: newAddress,
-			};
-		});
-	};
-
-	export const pagination = <T>(array: T[], pageSize: number, pageNum: number) => {
-		return array.slice((pageNum - 1) * pageSize, pageNum * pageSize);
-	};
-
 	export const hasGotAddressValue = (value?: string): boolean => {
 		const lowercased = value?.toLowerCase();
 		return !!value && lowercased !== "nil" && lowercased !== "null";
@@ -300,30 +265,5 @@ export namespace LocationHelper {
 		geoCodeInfo: OneMapGeocodeInfo | OneMapSearchBuildingResult
 	): geoCodeInfo is OneMapSearchBuildingResult => {
 		return (geoCodeInfo as OneMapSearchBuildingResult).BLK_NO !== undefined;
-	};
-
-	/**
-	 * Calculates the distance between two coordinates in metres, using the Haversine formula.
-	 * Formula reference: https://www.geodatasource.com/developers/javascript
-	 */
-	export const distanceBetweenTwoPoints = (coord1: ILocationCoord, coord2: ILocationCoord) => {
-		if (coord1.lat === coord2.lat && coord1.lng === coord2.lng) {
-			return 0;
-		}
-
-		const { degreesToRadians, radiansToDegrees, nauticalMilesToMetres } = MathHelper;
-		const radlat1 = degreesToRadians(coord1.lat);
-		const radlat2 = degreesToRadians(coord2.lat);
-
-		const radtheta = degreesToRadians(coord1.lng - coord2.lng);
-
-		let distInLat =
-			Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-
-		if (distInLat > 1) {
-			distInLat = 1;
-		}
-
-		return nauticalMilesToMetres(radiansToDegrees(Math.acos(distInLat)) * 60); // 60 minutes in 1 degree, 1 minute = 1 nautical mile
 	};
 }

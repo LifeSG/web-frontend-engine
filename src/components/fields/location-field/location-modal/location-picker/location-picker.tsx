@@ -3,11 +3,11 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
-import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
+import { ILocationCoord } from "../../types";
+import { markerFrom, removeMarkers } from "./helper";
 import { CurrentLocation, CurrentLocationUnavailable, LocationPinBlue } from "./location-picker.data";
-import { ILocationCoord } from "../../location-helper";
+import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
 import { ILocationPickerProps } from "./types";
-import { markerFrom, removeMarkers } from "./picker-helper";
 
 // Show picker when
 // tablet: "map" mode

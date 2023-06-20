@@ -1,5 +1,5 @@
 import { TPanelInputMode } from "../..";
-import { ILocationCoord } from "../../location-helper";
+import { ILocationCoord } from "../../types";
 
 export interface IMapPin extends ILocationCoord {
 	address?: string | undefined;

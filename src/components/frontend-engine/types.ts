@@ -29,9 +29,8 @@ import {
 	ITimeFieldSchema,
 	IUnitNumberFieldSchema,
 } from "../fields";
-import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 import { ILocationInputSchema } from "../fields/location-field/types";
-import { ILocationCoord } from "../fields/location-field/location-helper";
+import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 
 // =============================================================================
 // YUP SCHEMA
