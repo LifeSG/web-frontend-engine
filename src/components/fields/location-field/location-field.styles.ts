@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { StaticMap } from "./static-map";
+import { StaticMap } from "../../shared/static-map";
 
 export const StyledStaticMap = styled(StaticMap)`
 	cursor: pointer;

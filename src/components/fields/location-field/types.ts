@@ -3,7 +3,7 @@ import { ILocationCoord } from "./location-helper";
 import { ILocationInputProps } from "./location-input";
 import { ILocationModalProps } from "./location-modal/location-modal";
 import { ILocationPickerProps } from "./location-modal/location-picker";
-import { IStaticMapProps } from "./static-map";
+import { IStaticMapProps } from "../../shared/static-map";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-field", V>,
@@ -82,11 +82,9 @@ export interface TLocationInputDetail<T = unknown> {
 	payload?: T | undefined;
 	errors?: any | undefined;
 }
-// TODO: component specific? move this out?
 export type TSetCurrentLocationDetail = TLocationInputDetail<ILocationCoord>;
 export type TIsOnAppDetail = TLocationInputDetail<TSetIsApp>;
 
-// TODO: how to nicely consolidate this?
 export type TLocationInputEvents = {
 	"get-current-location": CustomEvent;
 	"set-current-location": CustomEvent<TSetCurrentLocationDetail>;

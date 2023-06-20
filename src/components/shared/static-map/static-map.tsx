@@ -1,8 +1,8 @@
 import { MediaWidths } from "@lifesg/react-design-system/media";
 import { useEffect, useRef, useState } from "react";
-import { IColor } from "../../../../services/onemap/types";
-import { TestHelper } from "../../../../utils";
-import { LocationHelper } from "../location-helper";
+import { IColor } from "../../../services/onemap/types";
+import { TestHelper } from "../../../utils";
+import { LocationHelper } from "../../fields/location-field/location-helper";
 import { StaticMapElement, StaticMapWrapper, staticMapDimensions } from "./static-map.styles";
 
 const StaticMapPlaceholder = "https://assets.life.gov.sg/web-frontend-engine/img/map/static_map_placeholder.png";
