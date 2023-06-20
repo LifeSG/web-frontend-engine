@@ -31,9 +31,7 @@ import {
 	SearchBarModalCross,
 	SearchWrapper,
 } from "./location-search.styles";
-
-const LocationPinBlack = "https://assets.life.gov.sg/web-frontend-engine/img/icons/location-pin-black.svg";
-const SearchSvg = "https://assets.life.gov.sg/web-frontend-engine/img/icons/search.svg";
+import { LOCATION_PIN_BLACK, SEARCH_SVG } from "./location-search.data";
 
 export const LocationSearch = ({
 	id = "location-search",
@@ -525,7 +523,7 @@ export const LocationSearch = ({
 					selectedIndex === index ? "active" : undefined
 				)}
 			>
-				<ResultItemPin src={LocationPinBlack} alt="Location" />
+				<ResultItemPin src={LOCATION_PIN_BLACK} alt="Location" />
 				<Sanitize
 					sanitizeOptions={{
 						allowedTags: ["span"],
@@ -578,7 +576,7 @@ export const LocationSearch = ({
 						onClick={handleInputFocus}
 						id={TestHelper.generateId(id, "location-search-modal-search")}
 					>
-						<SearchBarIcon src={SearchSvg} alt="Search" />
+						<SearchBarIcon src={SEARCH_SVG} alt="Search" />
 					</SearchBarIconButton>
 					<SearchBarInput
 						id={TestHelper.generateId(id, "location-search-modal-input")}

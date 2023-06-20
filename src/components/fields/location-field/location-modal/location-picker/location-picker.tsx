@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
-import { CurrentLocation, CurrentLocationUnavailable, LocationPinBlue } from "./location-picker.data";
+import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE, LOCATION_PIN_BLUE } from "./location-picker.data";
 import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
 import { ILocationPickerProps } from "./types";
 
@@ -20,7 +20,7 @@ export const LocationPicker = ({
 	panelInputMode,
 	showLocationModal,
 	selectedLocationCoord,
-	interactiveMapPinIconUrl = LocationPinBlue,
+	interactiveMapPinIconUrl = LOCATION_PIN_BLUE,
 	getCurrentLocation,
 	locationAvailable,
 	gettingCurrentLocation,
@@ -157,7 +157,7 @@ export const LocationPicker = ({
 				}}
 			>
 				<ButtonLocationImage
-					src={locationAvailable ? CurrentLocation : CurrentLocationUnavailable}
+					src={locationAvailable ? CURRENT_LOCATION : CURRENT_LOCATION_UNAVAILABLE}
 					alt={`Current location ${locationAvailable ? "available" : "unavailable"}`}
 				/>
 			</ButtonLocation>

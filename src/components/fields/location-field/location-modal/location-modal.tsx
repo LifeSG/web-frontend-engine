@@ -16,15 +16,16 @@ import {
 	TPanelInputMode,
 	TSetCurrentLocationDetail,
 } from "../types";
+import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
 import { ILocationPickerProps } from "./location-picker/types";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 
-const ErrorSvg = "https://assets.life.gov.sg/web-frontend-engine/img/common/error.svg";
-const OfflineImage = "https://assets.life.gov.sg/web-frontend-engine/img/common/no-network.png";
-const TimeoutSvg = "https://assets.life.gov.sg/web-frontend-engine/img/icons/get-location-timeout.svg";
-
+// TODO move this out
+// service should implement this
+// move the code into story
+// pair with weili on this
 interface HotlineContent {
 	name: string;
 	number: string;
@@ -319,7 +320,7 @@ const LocationModal = ({
 					title="Map not available"
 					size="large"
 					show={true}
-					image={<ErrorImage src={ErrorSvg} />}
+					image={<ErrorImage src={ERROR_SVG} />}
 					description={
 						<Description weight="regular">
 							Sorry, there was a problem with the map. You&rsquo;ll not be able to enter the location
@@ -372,7 +373,7 @@ const LocationModal = ({
 					title="Something went wrong"
 					size="large"
 					show={true}
-					image={<ErrorImage src={TimeoutSvg} />}
+					image={<ErrorImage src={TIMEOUT_SVG} />}
 					description={
 						<Description weight="regular">
 							It&rsquo;s taking longer than expected to retrieve your location. Please exit the map and
@@ -397,7 +398,7 @@ const LocationModal = ({
 
 	return (
 		<>
-			<PrefetchImage src={OfflineImage} alt="no internet connectivity" />
+			<PrefetchImage src={OFFLINE_IMAGE} alt="no internet connectivity" />
 			<Modal
 				id={TestHelper.generateId(id, "modal", showLocationModal ? "show" : "hide")}
 				show={showLocationModal}
@@ -441,7 +442,7 @@ const LocationModal = ({
 							/>
 						</>
 					) : (
-						<NoNetworkModal id={id} cachedImage={OfflineImage} refreshNetwork={refreshNetwork} />
+						<NoNetworkModal id={id} cachedImage={OFFLINE_IMAGE} refreshNetwork={refreshNetwork} />
 					)}
 				</ModalBox>
 			</Modal>
