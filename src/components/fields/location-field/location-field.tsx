@@ -17,15 +17,15 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 			label,
 			locationInputPlaceholder,
 			staticMapPinColor,
-
 			mastheadHeight = 0,
-			/* eslint-disable @typescript-eslint/no-unused-vars */
-			showIf,
-			validation,
-			uiType,
-			customOptions,
-			/* eslint-disable @typescript-eslint/no-unused-vars */
-			...otherSchema
+			disableErrorPromptOnApp,
+			mapPanZoom,
+			interactiveMapPinIconUrl,
+			reverseGeoCodeEndpoint,
+			gettingCurrentLocationFetchMessage,
+			locationPermissionErrorMessage,
+			hotlineContent,
+			mustHavePostalCode,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -76,7 +76,14 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 						formValues={formValue}
 						onConfirm={updateFormValues}
 						updateFormValues={updateFormValues}
-						{...otherSchema}
+						disableErrorPromptOnApp={disableErrorPromptOnApp}
+						mapPanZoom={mapPanZoom}
+						reverseGeoCodeEndpoint={reverseGeoCodeEndpoint}
+						interactiveMapPinIconUrl={interactiveMapPinIconUrl}
+						gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
+						locationPermissionErrorMessage={locationPermissionErrorMessage}
+						hotlineContent={hotlineContent}
+						mustHavePostalCode={mustHavePostalCode}
 					/>
 				)}
 			</Suspense>

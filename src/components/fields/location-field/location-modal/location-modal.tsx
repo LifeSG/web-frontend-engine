@@ -235,15 +235,6 @@ const LocationModal = ({
 		setPanelInputMode(inputMode);
 	};
 
-	// // REMOVE
-	// const isLifeSgApp = (): boolean => {
-	// 	return typeof window !== "undefined" && window.sessionStorage.getItem("lifeSg") === "true";
-	// };
-
-	/**
-	 * getCurrentLocation is to trigger the child components to carry their specific tasks
-	 * no actual work is to be done here
-	 */
 	const getCurrentLocation = async () => {
 		setGettingCurrentLocation(true);
 
