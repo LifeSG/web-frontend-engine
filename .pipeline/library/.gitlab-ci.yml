@@ -1,0 +1,16 @@
+stages:
+  - trigger
+
+# =================================
+# default workflow (childpipeline)
+# =================================
+
+workflow:
+  rules:
+    - when: always
+
+trigger-job:
+    stage: trigger
+    trigger:
+        project: "wog/gvt/lifesg/gvt-lifesg/lifesg/libraries/web-frontend-engine"
+        branch: "MOL-12712"
