@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { OneMapBoolean, OneMapError } from "../../../../../services/onemap/types";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
-import { Prompt } from "../../../../shared";
+import { Prompt, Sanitize } from "../../../../shared";
 import { LocationHelper } from "../../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
@@ -93,7 +93,6 @@ export const LocationSearch = ({
 	const {
 		pagination,
 		debounceFetchAddress,
-		cleanHtml,
 		fetchSingleLocationByAddress,
 		fetchSingleLocationByLatLng,
 		boldResultsWithQuery,
@@ -283,7 +282,6 @@ export const LocationSearch = ({
 				if (error instanceof SyntaxError || error instanceof TypeError) {
 					populateDisplayList({ results: [], queryString });
 				} else {
-					setLoading(false);
 					resetResultsList();
 					handleApiErrors(new OneMapError(error));
 				}
@@ -415,7 +413,6 @@ export const LocationSearch = ({
 					setAPIPageNum(res.apiPageNum);
 				},
 				(error) => {
-					setLoading(false);
 					resetResultsList();
 					handleApiErrors(new OneMapError(error));
 				}
@@ -535,7 +532,16 @@ export const LocationSearch = ({
 				)}
 			>
 				<ResultItemPin src={LocationPinBlack} alt="Location" />
-				<Text.BodySmall dangerouslySetInnerHTML={cleanHtml(item.displayAddressText)}></Text.BodySmall>
+				<Sanitize
+					sanitizeOptions={{
+						allowedTags: ["span"],
+						allowedAttributes: {
+							span: ["class"],
+						},
+					}}
+				>
+					{item.displayAddressText}
+				</Sanitize>
 			</ResultItem>
 		));
 	};

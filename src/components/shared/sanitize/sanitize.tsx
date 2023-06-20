@@ -1,17 +1,18 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import sanitize from "sanitize-html";
+import sanitize, { IOptions } from "sanitize-html";
 import { TestHelper } from "../../../utils";
 
 interface IProps {
 	id?: string;
 	children: string | React.ReactNode;
+	sanitizeOptions?: IOptions;
 }
 
 export const Sanitize = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { id, children } = props;
+	const { id, children, sanitizeOptions } = props;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -24,7 +25,7 @@ export const Sanitize = (props: IProps) => {
 	};
 
 	const getSanitizedHtml = (): string => {
-		return sanitize(formatHTMLString());
+		return sanitize(formatHTMLString(), sanitizeOptions);
 	};
 
 	const formatId = (): string => {

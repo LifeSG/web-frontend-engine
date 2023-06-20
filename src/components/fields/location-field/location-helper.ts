@@ -242,18 +242,6 @@ export namespace LocationHelper {
 		return array.slice((pageNum - 1) * pageSize, pageNum * pageSize);
 	};
 
-	export const cleanHtml = (html: string | undefined) => {
-		if (!html) return;
-		return {
-			__html: sanitizeHtml(html, {
-				allowedTags: ["span"],
-				allowedAttributes: {
-					span: ["class"],
-				},
-			}),
-		};
-	};
-
 	export const hasGotAddressValue = (value?: string): boolean => {
 		const lowercased = value?.toLowerCase();
 		return !!value && lowercased !== "nil" && lowercased !== "null";
@@ -337,16 +325,5 @@ export namespace LocationHelper {
 		}
 
 		return nauticalMilesToMetres(radiansToDegrees(Math.acos(distInLat)) * 60); // 60 minutes in 1 degree, 1 minute = 1 nautical mile
-	};
-
-	/**
-	 * Checks whether a location is within a certain distance from another.
-	 * @param coord1 The coordinates of the first location.
-	 * @param coord2 The coordinates of the second location.
-	 * @param radius The distance in metres.
-	 * @returns true if the distance between coord1 and coord2 is <= radius, false otherwise.
-	 */
-	export const checkIsWithinRadius = (coord1: ILocationCoord, coord2: ILocationCoord, radius: number) => {
-		return distanceBetweenTwoPoints(coord1, coord2) <= radius;
 	};
 }
