@@ -3,8 +3,10 @@ import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
 import { usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import { EImageStatus, IImage, ISharedImageProps, TImageUploadOutputFileType, TUploadMethod } from "../types";
+import { useFormContext } from "react-hook-form";
 
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
+	isDirty: boolean;
 	editImage: boolean;
 	onChange: (...event: any[]) => void;
 	compress: boolean;
@@ -25,8 +27,9 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { accepts, compress, dimensions, editImage, maxSizeInKb, onChange, outputType, upload, value } = props;
+	const { accepts, compress, dimensions, editImage, id, isDirty, maxSizeInKb, outputType, upload, value } = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
+	const { setValue } = useFormContext();
 	const previousImages = usePrevious(images);
 	const [managerErrorCount, setManagerErrorCount] = useState(0);
 	const previousValue = usePrevious(value);
@@ -137,21 +140,19 @@ export const ImageManager = (props: IProps) => {
 		setErrorCount((prev) => Math.max(0, prev + updatedManagerErrorCount - managerErrorCount));
 		setManagerErrorCount(updatedManagerErrorCount);
 
-		// checking for previous images to prevent firing onChange on first mount
-		// otherwise it will crash on SSR (likely due to calling validation when field is not registered)
-		if (previousImages) {
-			onChange({
-				target: {
-					value: images
-						.filter(({ status }) => status === EImageStatus.UPLOADED)
-						.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
-							fileName: name,
-							dataURL: drawingDataURL || dataURL,
-							uploadResponse,
-						})),
-				},
-			});
-		}
+		setValue(
+			id,
+			images
+				.filter(({ status }) => status === EImageStatus.UPLOADED)
+				.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
+					fileName: name,
+					dataURL: drawingDataURL || dataURL,
+					uploadResponse,
+				})),
+			{ shouldValidate: isDirty, shouldDirty: true }
+			// shouldValidate: isDirty to prevent validation on first set value
+			// this is a workaround to prevent crash on SSR (likely due to calling validation when field is not registered)
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [images.map((image) => image.status).join(",")]);
 
