@@ -13,7 +13,7 @@ import {
 } from "../../../components/fields";
 
 export default {
-	title: "Field/LocationInput/Events",
+	title: "Field/LocationField/Events",
 	parameters: {
 		docs: {
 			page: () => (

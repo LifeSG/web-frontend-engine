@@ -2,8 +2,8 @@ import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
 import { ILocationCoord } from "./location-helper";
 import { ILocationInputProps } from "./location-input";
 import { ILocationModalProps } from "./location-modal/location-modal";
-import { ILocationPickerProps } from "./location-modal/location-picker";
 import { IStaticMapProps } from "../../shared/static-map";
+import { ILocationPickerProps } from "./location-modal/location-picker/types";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-field", V>,

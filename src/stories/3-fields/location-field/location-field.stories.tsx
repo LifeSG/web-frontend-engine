@@ -4,7 +4,7 @@ import { ILocationInputSchema, ILocationInputValues } from "../../../components/
 import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
 
 export default {
-	title: "Field/LocationInput",
+	title: "Field/LocationField",
 	parameters: {
 		docs: {
 			page: () => (

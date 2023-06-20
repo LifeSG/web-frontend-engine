@@ -3,60 +3,22 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
-import { ILocationCoord } from "../../location-helper";
 import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
+import { CurrentLocation, CurrentLocationUnavailable, LocationPinBlue } from "./location-picker.data";
+import { ILocationCoord } from "../../location-helper";
+import { ILocationPickerProps } from "./types";
+import { markerFrom, removeMarkers } from "./picker-helper";
 
-const CurrentLocationUnavailable =
-	"https://assets.life.gov.sg/web-frontend-engine/img/icons/current-location-unavailable.svg";
-const CurrentLocation = "https://assets.life.gov.sg/web-frontend-engine/img/icons/current-location.svg";
-const LocationPinBlue = "https://assets.life.gov.sg/web-frontend-engine/img/icons/location-pin-blue.svg";
-
-interface IMapPin extends ILocationCoord {
-	address?: string | undefined;
-	resultListItemText?: string | undefined;
-}
-
-const markerFrom = ({ lat, lng }: IMapPin, iconUrl: string, isSelected?: boolean | undefined): L.Marker => {
-	const pinSize = isSelected ? 44 : 32;
-
-	return L.marker([lat, lng], {
-		icon: L.icon({
-			iconUrl,
-			iconSize: [pinSize, pinSize],
-			iconAnchor: [pinSize / 2, pinSize],
-		}),
-	});
-};
-
-const removeMarkers = (markers: L.Marker[] | undefined) => {
-	if (!markers) return;
-	markers.forEach((marker) => marker.remove());
-};
-
-export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivElement> {
-	id?: string | undefined;
-	className?: string | undefined;
-	mapPanZoom?:
-		| {
-				mobile?: number | undefined;
-				nonMobile?: number | undefined;
-				min?: number | undefined;
-		  }
-		| undefined;
-	showLocationPicker: boolean;
-	selectedLocationCoord?: ILocationCoord | undefined;
-	interactiveMapPinIconUrl?: string | undefined;
-	getCurrentLocation: () => void;
-	locationAvailable: boolean;
-	gettingCurrentLocation: boolean;
-	onMapCenterChange: (latlng: ILocationCoord) => void;
-}
-
+// Show picker when
+// tablet: "map" mode
+// desktop : always on "double" mode
+// Hide when tablet: "search" mode
 export const LocationPicker = ({
 	id = "location-picker",
 	className,
 	mapPanZoom,
-	showLocationPicker,
+	panelInputMode,
+	showLocationModal,
 	selectedLocationCoord,
 	interactiveMapPinIconUrl = LocationPinBlue,
 	getCurrentLocation,
@@ -80,16 +42,6 @@ export const LocationPicker = ({
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-	useEffect(() => {
-		return () => {
-			if (mapRef.current) {
-				mapRef.current?.off();
-				mapRef.current?.remove();
-				mapRef.current = undefined;
-			}
-		};
-	}, []);
-
 	/**
 	 * Attach map and keep ref
 	 */
@@ -97,7 +49,7 @@ export const LocationPicker = ({
 		/**
 		 * If component has mounted and is in map mode OR double panel (location picker is alway on for double panel)
 		 */
-		if (leafletWrapperRef.current && showLocationPicker) {
+		if (leafletWrapperRef.current && showLocationModal) {
 			if (!mapRef.current) {
 				mapRef.current = L.map(leafletWrapperRef.current, { zoomControl: false });
 				resetView();
@@ -122,57 +74,49 @@ export const LocationPicker = ({
 				[1.16, 103.502],
 			]);
 			basemap.addTo(mapRef.current);
-		}
-	}, [showLocationPicker]);
 
-	useEffect(() => {
-		const map = mapRef.current;
-
-		// reattach map from location modal
-		if (!showLocationPicker || !map) return;
-
-		map.on("click", ({ latlng }: L.LeafletMouseEvent) => {
-			if (!gettingCurrentLocation) {
-				onMapCenterChange(latlng);
+			// even if it didn't change, as it may have panned off-centre.
+			// when toggling from search to map?
+			if (!gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
+				// NOTE: map will zoom when input is cleared in search panelInputMode and switches to map panelInputMode
+				zoomWithMarkers({ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng });
 			}
-		});
+			const map = mapRef.current;
 
-		map.on("zoomend", () => map.setMinZoom(mapPanZoom?.min ?? leafletConfig.minZoom));
+			// Reattach event listeners
+			map.on("click", ({ latlng }: L.LeafletMouseEvent) => {
+				if (!gettingCurrentLocation) {
+					onMapCenterChange(latlng);
+				}
+			});
 
-		return () => {
-			map.off("click");
-			map.off("zoomend");
-		};
-	}, [showLocationPicker, mapRef, gettingCurrentLocation, onMapCenterChange]);
-
-	useEffect(() => {
-		if (!showLocationPicker) return;
-		// TODO move this else where
-		// To centre on the current location after it has been retrieved,
-		// even if it didn't change, as it may have panned off-centre.
-		// when toggling from search to map?
-		if (!gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
-			// NOTE: map will zoom when input is cleared in search panelInputMode and switches to map panelInputMode
-			zoomWithMarkers({ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng });
+			map.on("zoomend", () => map.setMinZoom(mapPanZoom?.min ?? leafletConfig.minZoom));
+		} else {
+			if (mapRef.current) {
+				mapRef.current?.off();
+				mapRef.current?.remove();
+				mapRef.current = undefined;
+			}
 		}
-	}, [showLocationPicker]);
+	}, [showLocationModal]);
 
 	/**
 	 * Centre map to selected location from search result
+	 * Show the pan when we can see the map
 	 */
 	useEffect(() => {
-		if (showLocationPicker && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
+		if (selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
 			zoomWithMarkers(selectedLocationCoord);
 		} else {
 			resetView();
 		}
-	}, [selectedLocationCoord.lat, selectedLocationCoord.lng]);
+	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const resetView = () => {
-		if (mapRef.current && showLocationPicker) {
+		if (mapRef.current) {
 			removeMarkers(markersRef.current);
 			const center = L.bounds([1.56073, 104.11475], [1.16, 103.502]).getCenter();
 			mapRef.current.setView([center.x, center.y], 12);
@@ -182,7 +126,7 @@ export const LocationPicker = ({
 
 	const zoomWithMarkers = (target: ILocationCoord) => {
 		const map = mapRef.current;
-		if (!showLocationPicker || !map) return;
+		if (!map) return;
 		removeMarkers(markersRef.current);
 
 		markersRef.current = [markerFrom(target, interactiveMapPinIconUrl).addTo(map)];
@@ -204,7 +148,7 @@ export const LocationPicker = ({
 		<LocationPickerWrapper
 			className={className}
 			id={TestHelper.generateId(id, "location-picker")}
-			data-testid={TestHelper.generateId(id, "location-picker", showLocationPicker ? "show" : "hide")}
+			data-testid={TestHelper.generateId(id, "location-picker", panelInputMode === "search" ? "hide" : "show")}
 		>
 			<LeafletWrapper ref={leafletWrapperRef} />
 			<ButtonLocation

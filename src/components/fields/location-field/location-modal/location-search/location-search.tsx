@@ -283,6 +283,7 @@ export const LocationSearch = ({
 				if (error instanceof SyntaxError || error instanceof TypeError) {
 					populateDisplayList({ results: [], queryString });
 				} else {
+					setLoading(false);
 					resetResultsList();
 					handleApiErrors(new OneMapError(error));
 				}
@@ -305,8 +306,14 @@ export const LocationSearch = ({
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleClickCancel = () => {
-		resetResultsList();
-		setQueryString(formValues?.address || "");
+		const validFormLocation = formValues?.address && formValues?.lat && formValues?.lng;
+		if (validFormLocation) {
+			setQueryString(formValues.address);
+		} else {
+			setQueryString("");
+			resetResultsList();
+		}
+
 		setResultState("pristine");
 		onCancel();
 	};
@@ -358,7 +365,6 @@ export const LocationSearch = ({
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const resetResultsList = () => {
-		setLoading(false);
 		setSelectedIndex(-1);
 		setCurrentPaginationPageNum(1);
 		setTotalNumPages(0);
@@ -409,6 +415,7 @@ export const LocationSearch = ({
 					setAPIPageNum(res.apiPageNum);
 				},
 				(error) => {
+					setLoading(false);
 					resetResultsList();
 					handleApiErrors(new OneMapError(error));
 				}

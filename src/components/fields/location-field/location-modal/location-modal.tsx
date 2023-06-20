@@ -16,10 +16,10 @@ import {
 	TSetCurrentLocationDetail,
 } from "../types";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
-import { ILocationPickerProps } from "./location-picker";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 import { OneMapError } from "../../../../services/onemap/types";
+import { ILocationPickerProps } from "./location-picker/types";
 
 const ErrorSvg = "https://assets.life.gov.sg/web-frontend-engine/img/common/error.svg";
 const OfflineImage = "https://assets.life.gov.sg/web-frontend-engine/img/common/no-network.png";
@@ -96,12 +96,6 @@ const LocationModal = ({
 	// selectedAddressInfo have valid addresses from one map
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
 
-	// Show picker when
-	// tablet: "map" mode
-	// desktop : always on "double" mode
-	// Hide when tablet: "search" mode
-	const showLocationPicker = showLocationModal && (panelInputMode === "double" || panelInputMode === "map");
-
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -142,7 +136,11 @@ const LocationModal = ({
 	}, []);
 
 	useEffect(() => {
-		if (!showLocationModal) return;
+		if (!showLocationModal) {
+			// Reset to map when one single panel view
+			panelInputMode !== "double" && setPanelInputMode("map");
+			return;
+		}
 		/**
 		 * We should only getCurrentLocation when nothing is prefilled
 		 * when formvalues are prefilled, the useEffect will recenter
@@ -191,7 +189,7 @@ const LocationModal = ({
 
 		if (
 			error instanceof GeolocationPositionErrorWrapper &&
-			error.code.toString() === GeolocationPositionError.TIMEOUT.toString()
+			error?.code?.toString() === GeolocationPositionError.TIMEOUT.toString()
 		) {
 			if (isOnApp && !!disableErrorPromptOnApp) {
 				setShowGetLocationTimeoutError(false);
@@ -431,7 +429,7 @@ const LocationModal = ({
 								panelInputMode={panelInputMode}
 								locationAvailable={locationAvailable}
 								gettingCurrentLocation={gettingCurrentLocation}
-								showLocationPicker={showLocationPicker}
+								showLocationModal={showLocationModal}
 								selectedLocationCoord={{
 									lat: selectedAddressInfo.lat,
 									lng: selectedAddressInfo.lng,
