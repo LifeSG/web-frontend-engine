@@ -189,14 +189,6 @@ const LocationModal = ({
 
 		setLocationAvailable(false);
 
-		console.log("handle timeout", {
-			GeolocationPositionErrorWrapper: error instanceof GeolocationPositionErrorWrapper,
-			code: error.code === GeolocationPositionError.TIMEOUT,
-			codeNumber: error.code,
-			typeOF: typeof error.code,
-			typeof: typeof GeolocationPositionError.TIMEOUT,
-		});
-
 		if (
 			error instanceof GeolocationPositionErrorWrapper &&
 			error.code.toString() === GeolocationPositionError.TIMEOUT.toString()
