@@ -9,10 +9,6 @@ export const Wrapper = styled.div`
 	border-radius: 0.25rem;
 	padding: 2rem;
 
-	> :not(:last-child) {
-		margin-bottom: 1rem;
-	}
-
 	${MediaQuery.MaxWidth.tablet} {
 		padding: 2rem 1.25rem;
 	}

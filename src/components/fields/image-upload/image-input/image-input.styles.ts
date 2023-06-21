@@ -5,6 +5,10 @@ import { MediaQuery } from "@lifesg/react-design-system/media";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 
+export interface SubtitleProps {
+	hasDescription?: boolean;
+}
+
 export const Wrapper = styled.div`
 	margin: 1.25rem 0;
 	border-radius: 0.25rem;
@@ -13,17 +17,14 @@ export const Wrapper = styled.div`
 		/* Generated background-image for the dashed border from https://kovart.github.io/dashed-border-generator/  */
 		return `background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${color}' stroke-width='4' stroke-dasharray='8%2c 8' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");`;
 	}}
-
-	> :not(:last-child) {
-		margin-bottom: 2.5rem;
-	}
 `;
 
-export const Subtitle = styled(Text.Body)`
-	margin-bottom: 0.55rem;
+export const Subtitle = styled(Text.Body)<SubtitleProps>`
+	margin-bottom: ${(props) => (props.hasDescription ? "0.5rem" : "1rem")};
 `;
 
 export const Content = styled(Text.BodySmall)`
+	margin-bottom: 1.5rem;
 	color: ${Color.Neutral[4]};
 `;
 

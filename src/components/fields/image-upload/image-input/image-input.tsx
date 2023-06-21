@@ -19,7 +19,7 @@ import {
 interface IImageInputProps extends ISharedImageProps {
 	label: string;
 	buttonLabel?: string | undefined;
-	description: string;
+	description?: string;
 	dimensions: { width: number; height: number };
 	validation: IImageUploadValidationRule[];
 	errorMessage?: string | undefined;
@@ -175,12 +175,18 @@ export const ImageInput = (props: IImageInputProps) => {
 			aria-describedby={!!errorMessage && TestHelper.generateId(id, "error")}
 		>
 			<DragUpload id={`${id}-drag-upload`} accept={accepts} onInput={handleInput} ref={dragUploadRef}>
-				<Subtitle as="label" htmlFor={TestHelper.generateId(id, "file-input-add-button")} weight="semibold">
+				<Subtitle
+					as="label"
+					htmlFor={TestHelper.generateId(id, "file-input-add-button")}
+					hasDescription={!!description}
+				>
 					{label}
 				</Subtitle>
-				<Content>
-					<Sanitize>{description}</Sanitize>
-				</Content>
+				{description && (
+					<Content>
+						<Sanitize>{description}</Sanitize>
+					</Content>
+				)}
 				{renderFiles()}
 				{exceededFiles ? renderFileExceededAlert() : null}
 				{errorMessage && renderCustomError(errorMessage)}
