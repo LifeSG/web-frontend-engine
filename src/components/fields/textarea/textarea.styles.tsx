@@ -14,8 +14,8 @@ export const Wrapper = styled.div<{ chipPosition?: "top" | "bottom" | undefined 
 	flex-direction: ${({ chipPosition }) => (chipPosition !== "bottom" ? "column" : "column-reverse")};
 `;
 
-export const ChipContainer = styled.div`
-	margin: 0.5rem 0 1rem;
+export const ChipContainer = styled.div<{ chipPosition?: "top" | "bottom" | undefined }>`
+	margin: ${({ chipPosition }) => (chipPosition === "bottom" ? "1rem 0 1rem" : "0.5rem 0 1rem")};
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.5rem;
