@@ -14,7 +14,10 @@ const FIELD_ONE_LABEL = "Field one";
 const FIELD_TWO_LABEL = "Field two";
 const FIELD_THREE_LABEL = "Field three";
 
-const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => {
+const renderComponent = (
+	fields: Record<string, TFrontendEngineFieldSchema>,
+	defaultValues?: Record<string, unknown> | undefined
+) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		sections: {
@@ -26,6 +29,7 @@ const renderComponent = (fields: Record<string, TFrontendEngineFieldSchema>) => 
 				},
 			},
 		},
+		defaultValues,
 	};
 
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
@@ -222,6 +226,28 @@ describe("conditional-renderer", () => {
 		fireEvent.change(getFieldOne(), { target: { value: null } });
 		fireEvent.change(getFieldTwo(), { target: { value: "hello" } });
 		expect(getFieldThree()).toBeInTheDocument();
+	});
+
+	it("should render conditional field if form is prefilled with matching value", () => {
+		const fields: Record<string, TFrontendEngineFieldSchema> = {
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
+				uiType: "text-field",
+			},
+			wrapper: {
+				uiType: "div",
+				children: {
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType: "text-field",
+					},
+				},
+				showIf: [{ [FIELD_ONE_ID]: [{ filled: true }] }],
+			},
+		};
+		renderComponent(fields, { [FIELD_ONE_ID]: "hello" });
+
+		expect(getFieldTwo()).toBeInTheDocument();
 	});
 
 	it("should remove validation schema for fields that are conditionally hidden", async () => {
