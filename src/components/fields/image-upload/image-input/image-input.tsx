@@ -6,7 +6,15 @@ import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
 import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps } from "../types";
 import { FileItem } from "./file-item";
-import { AddButton, AlertContainer, Content, Subtitle, UploadWrapper, Wrapper } from "./image-input.styles";
+import {
+	AddButton,
+	AlertContainer,
+	Content,
+	DropThemHereText,
+	Subtitle,
+	UploadWrapper,
+	Wrapper,
+} from "./image-input.styles";
 
 interface IImageInputProps extends ISharedImageProps {
 	label: string;
@@ -127,6 +135,7 @@ export const ImageInput = (props: IImageInputProps) => {
 				>
 					{buttonLabel}
 				</AddButton>
+				<DropThemHereText>or drop them here</DropThemHereText>
 			</UploadWrapper>
 		);
 	};

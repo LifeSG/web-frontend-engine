@@ -24,10 +24,13 @@ export const Subtitle = styled(Text.Body)`
 `;
 
 export const Content = styled(Text.BodySmall)`
-	color: ${Color.Neutral[3]};
+	color: ${Color.Neutral[4]};
 `;
 
 export const UploadWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
 	margin-top: 2rem;
 `;
 
