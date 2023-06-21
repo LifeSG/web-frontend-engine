@@ -10,7 +10,9 @@ import {
 	IDisplayResultListParams,
 	IResultListItem,
 	IResultsMetaData,
+	TCustomErrorModal,
 	TSetCurrentLocationDetail,
+	TShowErrorModalDetail,
 } from "../../types";
 import { ILocationSearchProps } from "./types";
 import { InfiniteScrollList } from "../infinite-scroll";
@@ -98,6 +100,7 @@ export const LocationSearch = ({
 	const { debounceFetchAddress, fetchSingleLocationByAddress, fetchSingleLocationByLatLng, fetchLocationList } =
 		LocationHelper;
 
+	const { dispatchFieldEvent } = useFieldEvent();
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -305,7 +308,9 @@ export const LocationSearch = ({
 	const handleClickResult = (listitem: IResultListItem, index: number) => {
 		const { displayAddressText, ...locationInputValue } = listitem;
 		if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(locationInputValue.postalCode)) {
-			setShowPostalCodeError(true);
+			handleErrorModal("PostalCodeError", () => {
+				setShowPostalCodeError(true);
+			});
 			return;
 		}
 
@@ -328,6 +333,17 @@ export const LocationSearch = ({
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
+	const handleErrorModal = (modalName: TCustomErrorModal["modalName"], defaultHandle: () => void) => {
+		const shouldPreventDefault = !dispatchFieldEvent<TShowErrorModalDetail>("show-error-modal", id, {
+			payload: {
+				modalName,
+			},
+		});
+
+		if (shouldPreventDefault) return;
+		defaultHandle();
+	};
+
 	const resetResultsList = () => {
 		setSelectedIndex(-1);
 		setCurrentPaginationPageNum(1);
@@ -508,14 +524,13 @@ export const LocationSearch = ({
 		));
 	};
 
-	// TODO: make it generic?
 	const renderPostalCodeError = () => (
 		<Prompt
 			id={`${id}-postal-code-error`}
 			title="Oops"
 			size="large"
 			show={true}
-			description="The location you have selected does not contain a postal code. Please pick the building where the high-rise littering took place."
+			description="The location you have selected does not contain a postal code."
 			buttons={[
 				{
 					id: "ok",

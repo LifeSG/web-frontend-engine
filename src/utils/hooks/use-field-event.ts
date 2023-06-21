@@ -28,6 +28,9 @@ export const useFieldEvent = () => {
 		eventManagerRef.current?.removeEventListener(`${id}:${type}`, listener, options);
 	};
 
+	/**
+	 * Dispatches a custom event to target and returns true if either event's cancelable attribute value is false or its preventDefault() method was not invoked, and false otherwise.
+	 */
 	const dispatchFieldEvent = <T = any>(type: string, id: string, detail?: T): boolean => {
 		return eventManagerRef.current?.dispatchEvent(
 			new CustomEvent(`${id}:${type}`, { cancelable: true, detail: { id, ...detail } })

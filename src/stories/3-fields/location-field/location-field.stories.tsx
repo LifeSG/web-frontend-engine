@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react/types-6-0";
 import { ILocationInputSchema, ILocationInputValues } from "../../../components/fields/location-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
 
@@ -96,4 +96,11 @@ FullInitialAddress.parameters = {
 			story: "If both are present, no prepopulation logic will be done. The first search result will be selected.",
 		},
 	},
+};
+
+export const MustHavePostalCode = DefaultStoryTemplate<ILocationInputSchema>("location-field-postal-code").bind({});
+MustHavePostalCode.args = {
+	uiType: "location-field",
+	label: "MustHavePostalCode",
+	mustHavePostalCode: true,
 };

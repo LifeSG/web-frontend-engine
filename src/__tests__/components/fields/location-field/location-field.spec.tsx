@@ -431,6 +431,12 @@ describe("location-input-group", () => {
 		});
 
 		// isLifeSGapp
+
+		// custom error modal
+		// OneMapError
+		// GetLocationError
+		// GetLocationTimeoutError
+		// PostalCodeError
 	});
 
 	describe("functionality", () => {

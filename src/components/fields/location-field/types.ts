@@ -1,16 +1,13 @@
 import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
 import { IStaticMapProps } from "../../shared/static-map";
 import { ILocationInputProps } from "./location-input";
-import { ILocationModalProps } from "./location-modal/types";
 import { ILocationPickerProps } from "./location-modal/location-picker/types";
 import { ILocationSearchProps } from "./location-modal/location-search/types";
+import { ILocationModalProps } from "./location-modal/types";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-field", V>,
-		Pick<
-			ILocationModalProps,
-			"locationPermissionErrorMessage" | "mastheadHeight" | "hotlineContent" | "disableErrorPromptOnApp"
-		>,
+		Pick<ILocationModalProps, "mastheadHeight" | "disableErrorPromptOnApp">,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<
 			ILocationSearchProps,
@@ -61,6 +58,10 @@ export type TSetIsApp = {
 	isOnApp: boolean;
 };
 
+export type TCustomErrorModal = {
+	modalName: "OneMapError" | "GetLocationError" | "GetLocationTimeoutError" | "PostalCodeError";
+};
+
 export interface TLocationInputDetail<T = unknown> {
 	payload?: T | undefined;
 	errors?: any | undefined;
@@ -68,11 +69,16 @@ export interface TLocationInputDetail<T = unknown> {
 export type TSetCurrentLocationDetail = TLocationInputDetail<ILocationCoord>;
 export type TIsOnAppDetail = TLocationInputDetail<TSetIsApp>;
 
+// Set the error in detail.error
+export type TShowErrorModalDetail = TLocationInputDetail<TCustomErrorModal>;
+
 export type TLocationInputEvents = {
 	"get-current-location": CustomEvent;
 	"set-current-location": CustomEvent<TSetCurrentLocationDetail>;
 	"get-is-app": CustomEvent;
 	"set-is-app": CustomEvent<TIsOnAppDetail>;
+	"show-error-modal": CustomEvent<TShowErrorModalDetail>;
+	"close-error-modal": CustomEvent<TShowErrorModalDetail>;
 };
 
 export class GeolocationPositionErrorWrapper extends Error {

@@ -23,8 +23,6 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 			interactiveMapPinIconUrl,
 			reverseGeoCodeEndpoint,
 			gettingCurrentLocationFetchMessage,
-			locationPermissionErrorMessage,
-			hotlineContent,
 			mustHavePostalCode,
 		},
 		// form values can initially be undefined when passed in via props
@@ -81,8 +79,6 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 						reverseGeoCodeEndpoint={reverseGeoCodeEndpoint}
 						interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 						gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
-						locationPermissionErrorMessage={locationPermissionErrorMessage}
-						hotlineContent={hotlineContent}
 						mustHavePostalCode={mustHavePostalCode}
 					/>
 				)}

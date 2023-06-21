@@ -1,5 +1,4 @@
 import { MediaWidths, Modal } from "@lifesg/react-design-system";
-import { Text } from "@lifesg/react-design-system/text";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
@@ -11,25 +10,17 @@ import {
 	GeolocationPositionErrorWrapper,
 	ILocationCoord,
 	ILocationInputValues,
+	TCustomErrorModal,
 	TLocationInputEvents,
 	TPanelInputMode,
 	TSetCurrentLocationDetail,
+	TShowErrorModalDetail,
 } from "../types";
 import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 import { ILocationModalProps } from "./types";
-
-// TODO move this out
-// service should implement this
-// move the code into story
-// pair with weili on this
-// moving forward we should document how to augment FEE behaviours
-export interface HotlineContent {
-	name: string;
-	number: string;
-}
 
 /**
  * Location modal screen variation
@@ -45,8 +36,6 @@ const LocationModal = ({
 	interactiveMapPinIconUrl,
 	reverseGeoCodeEndpoint,
 	gettingCurrentLocationFetchMessage,
-	locationPermissionErrorMessage,
-	hotlineContent,
 	mustHavePostalCode,
 	mastheadHeight,
 	onClose,
@@ -88,6 +77,22 @@ const LocationModal = ({
 		};
 		addFieldEventListener("set-is-app", id, handleAppQuery);
 		dispatchFieldEvent("get-is-app", id);
+
+		addFieldEventListener<TShowErrorModalDetail>("close-error-modal", id, (e) => {
+			const modalName = e.detail?.payload?.modalName;
+			if (!modalName) return;
+
+			switch (modalName) {
+				case "OneMapError":
+				case "GetLocationTimeoutError":
+					handleCloseLocationModal();
+					break;
+				case "GetLocationError":
+				case "PostalCodeError":
+				default:
+					break;
+			}
+		});
 
 		return () => {
 			removeFieldEventListener("set-is-app", id, handleAppQuery);
@@ -160,11 +165,26 @@ const LocationModal = ({
 	};
 
 	const handleApiErrors = (error?: any) => {
+		const handleErrorModal = (modalName: TCustomErrorModal["modalName"], defaultHandle: () => void) => {
+			const shouldPreventDefault = !dispatchFieldEvent<TShowErrorModalDetail>("show-error-modal", id, {
+				payload: {
+					modalName,
+				},
+				errors: error,
+			});
+
+			if (shouldPreventDefault) return;
+			defaultHandle();
+		};
+
 		setGettingCurrentLocation(false);
 
 		if (error instanceof OneMapError) {
-			restoreFormvalues();
-			setShowOneMapError(true);
+			handleErrorModal("OneMapError", () => {
+				restoreFormvalues();
+				setShowOneMapError(true);
+			});
+
 			return;
 		}
 
@@ -178,11 +198,15 @@ const LocationModal = ({
 				setShowGetLocationTimeoutError(false);
 				return;
 			}
-			setShowGetLocationTimeoutError(true);
+			handleErrorModal("GetLocationTimeoutError", () => {
+				setShowGetLocationTimeoutError(true);
+			});
 			return;
 		}
 
-		setShowGetLocationError(true);
+		handleErrorModal("GetLocationError", () => {
+			setShowGetLocationError(true);
+		});
 	};
 
 	const handleCancel = () => {
@@ -201,11 +225,6 @@ const LocationModal = ({
 
 	const handleMapClick = (latlng: ILocationCoord) => {
 		setMapPickedLatLng(latlng);
-	};
-
-	const handleOneMapError = () => {
-		restoreFormvalues();
-		setShowOneMapError(true);
 	};
 
 	// =============================================================================
@@ -254,34 +273,6 @@ const LocationModal = ({
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderUnableToSubmitReport = (): JSX.Element => {
-		return (
-			<>
-				<br />
-				<br />
-				Do note that you&rsquo;ll not be able to submit your report without entering the location.
-			</>
-		);
-	};
-
-	const renderHotlineDetails = ({ name, number }: HotlineContent): JSX.Element => {
-		return (
-			<>
-				<br />
-				<br />
-				Alternatively, you can call the&nbsp;
-				<Text.Body inline weight="semibold">
-					{name} hotline&nbsp;
-				</Text.Body>
-				at&nbsp;
-				<Text.Hyperlink.Default weight="semibold" href={`tel:${number}`}>
-					{number}
-				</Text.Hyperlink.Default>
-				.
-			</>
-		);
-	};
-
 	const renderNetworkErrorPrompt = () => {
 		/**
 		 * Do not render any other error if there is no internet connectivity
@@ -303,7 +294,9 @@ const LocationModal = ({
 						<Description weight="regular">
 							Sorry, there was a problem with the map. You&rsquo;ll not be able to enter the location
 							right now. Please try again later.
-							{hotlineContent ? renderHotlineDetails(hotlineContent) : renderUnableToSubmitReport()}
+							<br />
+							<br />
+							Do note that you&rsquo;ll not be able to submit your report without entering the location.
 						</Description>
 					}
 					buttons={[
@@ -329,7 +322,6 @@ const LocationModal = ({
 					size="large"
 					show={true}
 					description={
-						locationPermissionErrorMessage ??
 						"We need your permission to determine your location. Enable location access in your browser and device settings, or enter your location manually."
 					}
 					buttons={[
@@ -356,7 +348,6 @@ const LocationModal = ({
 						<Description weight="regular">
 							It&rsquo;s taking longer than expected to retrieve your location. Please exit the map and
 							try again.
-							{hotlineContent && renderHotlineDetails(hotlineContent)}
 						</Description>
 					}
 					buttons={[
