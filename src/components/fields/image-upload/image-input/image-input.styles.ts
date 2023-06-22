@@ -6,7 +6,7 @@ import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 
 export interface SubtitleProps {
-	hasDescription?: boolean;
+	$hasDescription?: boolean;
 }
 
 export const Wrapper = styled.div`
@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Subtitle = styled(Text.Body)<SubtitleProps>`
-	margin-bottom: ${(props) => (props.hasDescription ? "0.5rem" : "1rem")};
+	margin-bottom: ${(props) => (props.$hasDescription ? "0.5rem" : "1rem")};
 `;
 
 export const Content = styled(Text.BodySmall)`
