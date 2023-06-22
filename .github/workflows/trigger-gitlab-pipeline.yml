@@ -13,9 +13,8 @@ jobs:
       - name: Trigger GitLab Pipeline
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-          GITLAB_PROJECT_ID: 19225
         run: |
           curl --request POST \
             --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
-            "https://sgts.gitlab-dedicated.com/api/v4/projects/$GITLAB_PROJECT_ID/pipeline"
+            "$GITLAB_ENDPOINT/$GITLAB_PROJECT_ID/pipeline"
 
