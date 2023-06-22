@@ -10,13 +10,16 @@ export interface SubtitleProps {
 }
 
 export const Wrapper = styled.div`
-	margin: 1.25rem 0;
 	border-radius: 0.25rem;
 	${(props) => {
 		const color = encodeURIComponent(Color.Neutral[5](props));
 		/* Generated background-image for the dashed border from https://kovart.github.io/dashed-border-generator/  */
 		return `background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${color}' stroke-width='4' stroke-dasharray='8%2c 8' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");`;
 	}}
+
+	&:not(:last-child) {
+		margin-bottom: 2rem;
+	}
 `;
 
 export const Subtitle = styled(Text.Body)<SubtitleProps>`
