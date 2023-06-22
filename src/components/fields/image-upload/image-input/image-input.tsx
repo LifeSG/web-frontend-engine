@@ -19,7 +19,7 @@ import {
 interface IImageInputProps extends ISharedImageProps {
 	label: string;
 	buttonLabel?: string | undefined;
-	description?: string;
+	description?: string | undefined;
 	dimensions: { width: number; height: number };
 	validation: IImageUploadValidationRule[];
 	errorMessage?: string | undefined;
