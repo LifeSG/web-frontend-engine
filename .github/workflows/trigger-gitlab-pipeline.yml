@@ -15,12 +15,8 @@ jobs:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
           GITLAB_ENDPOINT: ${{ vars.GITLAB_ENDPOINT }}
           GITLAB_PROJECT_ID: ${{ vars.GITLAB_PROJECT_ID }}
-          TARGET_BRANCH: MOL-12712
+          TARGET_BRANCH: "MOL-12712"
         run: |
-          git checkout $TARGET_BRANCH
-          git merge main --commit --no-edit
-          git push origin $TARGET_BRANCH
-
           curl --request POST \
             --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
             "$GITLAB_ENDPOINT/$GITLAB_PROJECT_ID/pipeline?ref=$TARGET_BRANCH"
