@@ -78,7 +78,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	const renderChips = () => {
 		return (
 			chipTexts?.length && (
-				<ChipContainer chipPosition={chipPosition}>
+				<ChipContainer $chipPosition={chipPosition}>
 					{chipTexts.map((text, index) => (
 						<Chip
 							key={text}
