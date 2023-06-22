@@ -184,7 +184,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	return (
 		<Form.CustomField label={label} errorMessage={error?.message} {...otherProps}>
-			<ChipContainer data-testid={TestHelper.generateId(id, "chips")}>
+			<ChipContainer data-testid={TestHelper.generateId(id, "chips")} $showTextarea={showTextarea}>
 				{renderChips()}
 				{renderTextareaChip()}
 			</ChipContainer>
