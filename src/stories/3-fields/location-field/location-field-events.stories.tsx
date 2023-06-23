@@ -5,10 +5,9 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import { useEffect, useRef, useState } from "react";
 import {
 	ILocationInputSchema,
-	TIsOnAppDetail,
-	TLocationInputEvents,
+	TLocationFieldErrorDetail,
+	TLocationFieldEvents,
 	TSetCurrentLocationDetail,
-	TShowErrorModalDetail,
 } from "../../../components/fields";
 import { ERROR_SVG, TIMEOUT_SVG } from "../../../components/fields/location-field/location-modal/location-modal.data";
 import { ErrorImage } from "../../../components/fields/location-field/location-modal/location-modal.styles";
@@ -46,7 +45,7 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 		const id = "location-field-get-current-location";
 		const formRef = useRef<IFrontendEngineRef>();
 
-		const handleGetCurrentLocation = (e: TLocationInputEvents["get-current-location"]) => {
+		const handleGetCurrentLocation = (e: TLocationFieldEvents["get-current-location"]) => {
 			// Here is where you would call the device geolocation api
 			e.preventDefault();
 			formRef.current.dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
@@ -103,57 +102,6 @@ GeolocationWithErrors.args = {
 	label: "Geolocation with errors",
 };
 
-/* eslint-disable react-hooks/rules-of-hooks */
-const AppQueryTemplate = (detail: TIsOnAppDetail) =>
-	((args) => {
-		const id = "location-field-get-is-app";
-		const formRef = useRef<IFrontendEngineRef>();
-
-		const handleAppQuery = (e: TLocationInputEvents["get-is-app"]) => {
-			formRef.current.dispatchFieldEvent("set-is-app", id, detail);
-			return action("get-is-app")(e);
-		};
-
-		useEffect(() => {
-			const currentFormRef = formRef.current;
-
-			currentFormRef.addFieldEventListener("get-is-app", id, handleAppQuery);
-
-			return () => {
-				currentFormRef.removeFieldEventListener("get-is-app", id, handleAppQuery);
-			};
-		}, []);
-
-		return (
-			<FrontendEngine
-				ref={formRef}
-				data={{
-					sections: {
-						section: {
-							uiType: "section",
-							children: {
-								[id]: args,
-								...SUBMIT_BUTTON_SCHEMA,
-							},
-						},
-					},
-				}}
-			/>
-		);
-	}) as Story<ILocationInputSchema>;
-/* eslint-enable react-hooks/rules-of-hooks */
-
-export const AppQuery = AppQueryTemplate({
-	payload: {
-		isOnApp: true,
-	},
-});
-AppQuery.args = {
-	uiType: "location-field",
-	label: "App query with disableErrorPromptOnApp",
-	disableErrorPromptOnApp: true,
-};
-
 interface HotlineContent {
 	name: string;
 	number: string;
@@ -165,7 +113,7 @@ const hotlineContent: HotlineContent = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const ShowErrorModalsTemplate = () =>
+const ErrorEventsTemplate = () =>
 	((args) => {
 		const id = "location-field-get-current-location";
 		const formRef = useRef<IFrontendEngineRef>();
@@ -226,11 +174,15 @@ const ShowErrorModalsTemplate = () =>
 								title: "OK",
 								onClick: () => {
 									setShowOneMapError(false);
-									formRef.current.dispatchFieldEvent<TShowErrorModalDetail>("close-error-modal", id, {
-										payload: {
-											modalName: "OneMapError",
-										},
-									});
+									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>(
+										"location-field-error-handled",
+										id,
+										{
+											payload: {
+												errorType: "OneMapError",
+											},
+										}
+									);
 								},
 							},
 						]}
@@ -253,11 +205,15 @@ const ShowErrorModalsTemplate = () =>
 								title: "OK",
 								onClick: () => {
 									setShowGetLocationError(false);
-									formRef.current.dispatchFieldEvent<TShowErrorModalDetail>("close-error-modal", id, {
-										payload: {
-											modalName: "GetLocationError",
-										},
-									});
+									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>(
+										"location-field-error-handled",
+										id,
+										{
+											payload: {
+												errorType: "GetLocationError",
+											},
+										}
+									);
 								},
 							},
 						]}
@@ -297,11 +253,15 @@ const ShowErrorModalsTemplate = () =>
 								title: "OK",
 								onClick: () => {
 									setShowGetLocationTimeoutError(false);
-									formRef.current.dispatchFieldEvent<TShowErrorModalDetail>("close-error-modal", id, {
-										payload: {
-											modalName: "GetLocationTimeoutError",
-										},
-									});
+									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>(
+										"location-field-error-handled",
+										id,
+										{
+											payload: {
+												errorType: "GetLocationTimeoutError",
+											},
+										}
+									);
 								},
 							},
 						]}
@@ -329,17 +289,15 @@ const ShowErrorModalsTemplate = () =>
 			}
 		};
 
-		const handleShowErrorModal = (e: TLocationInputEvents["show-error-modal"]) => {
-			// match error
-			// show modal
-			const modalName = e.detail?.payload?.modalName;
+		const handleShowErrorModal = (e: TLocationFieldEvents["location-field-error-detected"]) => {
+			const errorType = e.detail?.payload?.errorType;
 
-			if (!modalName) {
+			if (!errorType) {
 				// deal with unsupported errors
 				return;
 			}
 
-			switch (modalName) {
+			switch (errorType) {
 				case "GetLocationError":
 					e.preventDefault();
 					setShowGetLocationError(true);
@@ -361,16 +319,16 @@ const ShowErrorModalsTemplate = () =>
 					break;
 			}
 
-			return action("show-error-modal")(e);
+			return action("location-field-error-detected")(e);
 		};
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
 
-			currentFormRef.addFieldEventListener("show-error-modal", id, handleShowErrorModal);
+			currentFormRef.addFieldEventListener("location-field-error-detected", id, handleShowErrorModal);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("show-error-modal", id, handleShowErrorModal);
+				currentFormRef.removeFieldEventListener("location-field-error-detected", id, handleShowErrorModal);
 			};
 		}, []);
 
@@ -396,10 +354,10 @@ const ShowErrorModalsTemplate = () =>
 	}) as Story<ILocationInputSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const CustomErrorModals = ShowErrorModalsTemplate().bind(this);
-CustomErrorModals.args = {
+export const CustomErrorHandling = ErrorEventsTemplate().bind(this);
+CustomErrorHandling.args = {
 	uiType: "location-field",
-	label: "CustomErrorModal",
+	label: "Custom error handling",
 	mustHavePostalCode: true,
 	reverseGeoCodeEndpoint: "willBreak",
 };

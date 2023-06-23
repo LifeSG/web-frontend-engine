@@ -10,9 +10,9 @@ import {
 	IDisplayResultListParams,
 	IResultListItem,
 	IResultsMetaData,
-	TCustomErrorModal,
+	TErrorType,
+	TLocationFieldErrorDetail,
 	TSetCurrentLocationDetail,
-	TShowErrorModalDetail,
 } from "../../types";
 import { ILocationSearchProps } from "./types";
 import { InfiniteScrollList } from "../infinite-scroll";
@@ -308,7 +308,7 @@ export const LocationSearch = ({
 	const handleClickResult = (listitem: IResultListItem, index: number) => {
 		const { displayAddressText, ...locationInputValue } = listitem;
 		if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(locationInputValue.postalCode)) {
-			handleErrorModal("PostalCodeError", () => {
+			handleError("PostalCodeError", () => {
 				setShowPostalCodeError(true);
 			});
 			return;
@@ -333,12 +333,16 @@ export const LocationSearch = ({
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const handleErrorModal = (modalName: TCustomErrorModal["modalName"], defaultHandle: () => void) => {
-		const shouldPreventDefault = !dispatchFieldEvent<TShowErrorModalDetail>("show-error-modal", id, {
-			payload: {
-				modalName,
-			},
-		});
+	const handleError = (errorType: TErrorType["errorType"], defaultHandle: () => void) => {
+		const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>(
+			"location-field-error-detected",
+			id,
+			{
+				payload: {
+					errorType,
+				},
+			}
+		);
 
 		if (shouldPreventDefault) return;
 		defaultHandle();

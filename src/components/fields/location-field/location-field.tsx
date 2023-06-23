@@ -17,8 +17,6 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 			label,
 			locationInputPlaceholder,
 			staticMapPinColor,
-			mastheadHeight = 0,
-			disableErrorPromptOnApp,
 			mapPanZoom,
 			interactiveMapPinIconUrl,
 			reverseGeoCodeEndpoint,
@@ -68,13 +66,11 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 				{LocationModal && (
 					<LocationModal
 						id={id}
-						mastheadHeight={mastheadHeight}
 						showLocationModal={showLocationModal}
 						onClose={() => setShowLocationModal(false)}
 						formValues={formValue}
 						onConfirm={updateFormValues}
 						updateFormValues={updateFormValues}
-						disableErrorPromptOnApp={disableErrorPromptOnApp}
 						mapPanZoom={mapPanZoom}
 						reverseGeoCodeEndpoint={reverseGeoCodeEndpoint}
 						interactiveMapPinIconUrl={interactiveMapPinIconUrl}

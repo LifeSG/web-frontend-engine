@@ -9,7 +9,7 @@ interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
 }
 
-export const ModalBox = styled(Modal.Box)<{ mastheadHeight: number }>`
+export const ModalBox = styled(Modal.Box)`
 	flex-direction: row;
 	width: 70%;
 	max-width: 45rem;
@@ -27,7 +27,6 @@ export const ModalBox = styled(Modal.Box)<{ mastheadHeight: number }>`
 	${MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
 		height: 100%;
 		width: 100%;
-		${({ mastheadHeight }) => (mastheadHeight ? `padding-top: ${mastheadHeight / 16}rem;` : "")}
 		flex-direction: column;
 		max-width: none;
 		max-height: none;

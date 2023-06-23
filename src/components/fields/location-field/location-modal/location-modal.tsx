@@ -10,11 +10,11 @@ import {
 	GeolocationPositionErrorWrapper,
 	ILocationCoord,
 	ILocationInputValues,
-	TCustomErrorModal,
-	TLocationInputEvents,
+	TErrorType,
+	TLocationFieldErrorDetail,
+	TLocationFieldEvents,
 	TPanelInputMode,
 	TSetCurrentLocationDetail,
-	TShowErrorModalDetail,
 } from "../types";
 import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
@@ -31,13 +31,11 @@ const LocationModal = ({
 	id = "location-modal",
 	formValues,
 	showLocationModal,
-	disableErrorPromptOnApp,
 	mapPanZoom,
 	interactiveMapPinIconUrl,
 	reverseGeoCodeEndpoint,
 	gettingCurrentLocationFetchMessage,
 	mustHavePostalCode,
-	mastheadHeight,
 	onClose,
 	onConfirm,
 	updateFormValues,
@@ -58,7 +56,6 @@ const LocationModal = ({
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 
 	const [hasInternetConnectivity, setHasInternetConnectivity] = useState(true);
-	const [isOnApp, setOnApp] = useState(false);
 	const [showGetLocationError, setShowGetLocationError] = useState(false);
 	const [showOneMapError, setShowOneMapError] = useState(false);
 	const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
@@ -72,17 +69,11 @@ const LocationModal = ({
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const handleAppQuery = (e: TLocationInputEvents["set-is-app"]) => {
-			setOnApp(!!e.detail?.payload?.isOnApp);
-		};
-		addFieldEventListener("set-is-app", id, handleAppQuery);
-		dispatchFieldEvent("get-is-app", id);
+		const handleError = (e: TLocationFieldEvents["location-field-error-handled"]) => {
+			const errorType = e.detail?.payload?.errorType;
+			if (!errorType) return;
 
-		addFieldEventListener<TShowErrorModalDetail>("close-error-modal", id, (e) => {
-			const modalName = e.detail?.payload?.modalName;
-			if (!modalName) return;
-
-			switch (modalName) {
+			switch (errorType) {
 				case "OneMapError":
 				case "GetLocationTimeoutError":
 					handleCloseLocationModal();
@@ -92,10 +83,12 @@ const LocationModal = ({
 				default:
 					break;
 			}
-		});
+		};
+
+		addFieldEventListener("location-field-error-handled", id, handleError);
 
 		return () => {
-			removeFieldEventListener("set-is-app", id, handleAppQuery);
+			removeFieldEventListener("location-field-error-handled", id, handleError);
 		};
 	}, []);
 
@@ -165,13 +158,17 @@ const LocationModal = ({
 	};
 
 	const handleApiErrors = (error?: any) => {
-		const handleErrorModal = (modalName: TCustomErrorModal["modalName"], defaultHandle: () => void) => {
-			const shouldPreventDefault = !dispatchFieldEvent<TShowErrorModalDetail>("show-error-modal", id, {
-				payload: {
-					modalName,
-				},
-				errors: error,
-			});
+		const handleError = (errorType: TErrorType["errorType"], defaultHandle: () => void) => {
+			const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>(
+				"location-field-error-detected",
+				id,
+				{
+					payload: {
+						errorType,
+					},
+					errors: error,
+				}
+			);
 
 			if (shouldPreventDefault) return;
 			defaultHandle();
@@ -180,7 +177,7 @@ const LocationModal = ({
 		setGettingCurrentLocation(false);
 
 		if (error instanceof OneMapError) {
-			handleErrorModal("OneMapError", () => {
+			handleError("OneMapError", () => {
 				restoreFormvalues();
 				setShowOneMapError(true);
 			});
@@ -194,17 +191,13 @@ const LocationModal = ({
 			error instanceof GeolocationPositionErrorWrapper &&
 			error?.code?.toString() === GeolocationPositionError.TIMEOUT.toString()
 		) {
-			if (isOnApp && !!disableErrorPromptOnApp) {
-				setShowGetLocationTimeoutError(false);
-				return;
-			}
-			handleErrorModal("GetLocationTimeoutError", () => {
+			handleError("GetLocationTimeoutError", () => {
 				setShowGetLocationTimeoutError(true);
 			});
 			return;
 		}
 
-		handleErrorModal("GetLocationError", () => {
+		handleError("GetLocationError", () => {
 			setShowGetLocationError(true);
 		});
 	};
@@ -372,7 +365,11 @@ const LocationModal = ({
 				id={TestHelper.generateId(id, "modal", showLocationModal ? "show" : "hide")}
 				show={showLocationModal}
 			>
-				<ModalBox id={TestHelper.generateId(id, "box")} showCloseButton={false} mastheadHeight={mastheadHeight}>
+				<ModalBox
+					id={TestHelper.generateId(id, "modal-box")}
+					className="location-field-modal-box"
+					showCloseButton={false}
+				>
 					{hasInternetConnectivity ? (
 						<>
 							<LocationSearch

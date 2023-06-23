@@ -14,6 +14,4 @@ export interface ILocationModalProps
 	onClose: () => void;
 	onConfirm: (values: ILocationInputValues) => void;
 	updateFormValues: (values: ILocationInputValues) => void;
-	mastheadHeight?: number;
-	disableErrorPromptOnApp?: boolean;
 }

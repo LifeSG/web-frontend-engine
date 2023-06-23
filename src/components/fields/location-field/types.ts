@@ -3,11 +3,9 @@ import { IStaticMapProps } from "../../shared/static-map";
 import { ILocationInputProps } from "./location-input";
 import { ILocationPickerProps } from "./location-modal/location-picker/types";
 import { ILocationSearchProps } from "./location-modal/location-search/types";
-import { ILocationModalProps } from "./location-modal/types";
 
 export interface ILocationInputSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-field", V>,
-		Pick<ILocationModalProps, "mastheadHeight" | "disableErrorPromptOnApp">,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<
 			ILocationSearchProps,
@@ -54,31 +52,24 @@ export interface IDisplayResultListParams extends IResultsMetaData {
 	boldResults?: boolean | undefined;
 }
 
-export type TSetIsApp = {
-	isOnApp: boolean;
+export type TErrorType = {
+	errorType: "OneMapError" | "GetLocationError" | "GetLocationTimeoutError" | "PostalCodeError";
 };
 
-export type TCustomErrorModal = {
-	modalName: "OneMapError" | "GetLocationError" | "GetLocationTimeoutError" | "PostalCodeError";
-};
-
-export interface TLocationInputDetail<T = unknown> {
+export interface TLocationFieldDetail<T = unknown> {
 	payload?: T | undefined;
 	errors?: any | undefined;
 }
-export type TSetCurrentLocationDetail = TLocationInputDetail<ILocationCoord>;
-export type TIsOnAppDetail = TLocationInputDetail<TSetIsApp>;
+export type TSetCurrentLocationDetail = TLocationFieldDetail<ILocationCoord>;
 
 // Set the error in detail.error
-export type TShowErrorModalDetail = TLocationInputDetail<TCustomErrorModal>;
+export type TLocationFieldErrorDetail = TLocationFieldDetail<TErrorType>;
 
-export type TLocationInputEvents = {
+export type TLocationFieldEvents = {
 	"get-current-location": CustomEvent;
 	"set-current-location": CustomEvent<TSetCurrentLocationDetail>;
-	"get-is-app": CustomEvent;
-	"set-is-app": CustomEvent<TIsOnAppDetail>;
-	"show-error-modal": CustomEvent<TShowErrorModalDetail>;
-	"close-error-modal": CustomEvent<TShowErrorModalDetail>;
+	"location-field-error-detected": CustomEvent<TLocationFieldErrorDetail>;
+	"location-field-error-handled": CustomEvent<TLocationFieldErrorDetail>;
 };
 
 export class GeolocationPositionErrorWrapper extends Error {

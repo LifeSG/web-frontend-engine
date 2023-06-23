@@ -4,7 +4,6 @@ export interface IGetCurrentLocationOptions {
 	maxAttempts?: number;
 	timeout?: number;
 	maximumAge?: number;
-	disableErrorPromptOnApp?: boolean;
 }
 
 export namespace GeoLocationHelper {
