@@ -232,7 +232,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					dimensions={dimensions}
 					editImage={editImage}
 					id={id}
-					isDirty={isDirty}
 					maxSizeInKb={maxFileSize}
 					onChange={onChange}
 					outputType={outputType}

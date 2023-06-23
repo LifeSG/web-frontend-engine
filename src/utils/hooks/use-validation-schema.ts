@@ -11,8 +11,8 @@ import { ObjectHelper } from "../object-helper";
  */
 export const useValidationSchema = () => {
 	const { formValidationConfig } = useContext(YupContext);
-	const [hardValidationSchema, setHardValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>();
-	const [softValidationSchema, setSoftValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>();
+	const [hardValidationSchema, setHardValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>(Yup.object());
+	const [softValidationSchema, setSoftValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>(Yup.object());
 	const [warnings, setWarnings] = useState<Record<string, string>>({});
 
 	useEffect(() => {
