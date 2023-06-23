@@ -34,7 +34,7 @@ export const StaticMap = ({
 	const renderedCenter = useRef<[number, number]>([0, 0]);
 
 	// =============================================================================
-	// USEEFFECTS
+	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
 		window.addEventListener("resize", reloadImage);
@@ -67,6 +67,10 @@ export const StaticMap = ({
 			renderedCenter.current = [lat, lng];
 		}
 	};
+
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
 
 	if (!lat || !lng) return null;
 
