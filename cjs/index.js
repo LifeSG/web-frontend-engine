@@ -1,0 +1,2 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("./chunks/index.a9146783.js");require("react/jsx-runtime"),require("react"),require("events"),require("buffer"),require("styled-components"),require("react-dom"),require("react-dom/server"),require("@lifesg/react-design-system"),require("@lifesg/react-icons/cross"),exports.FrontendEngine=e.FrontendEngine;
+//# sourceMappingURL=index.js.map
