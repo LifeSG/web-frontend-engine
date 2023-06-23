@@ -29,6 +29,7 @@ import {
 	ITimeFieldSchema,
 	IUnitNumberFieldSchema,
 } from "../fields";
+import { ILocationFieldSchema } from "../fields/location-field/types";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 
 // =============================================================================
@@ -85,7 +86,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IFilterSchema
 	| IImageUploadSchema<V>
 	| IMultiSelectSchema<V>
-	| IRangeSelectSchema<V>
+	| IRangeSelectSchema
 	| INumericFieldSchema<V>
 	| IRadioButtonGroupSchema<V>
 	| IResetButtonSchema
@@ -97,7 +98,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
-	| IWrapperSchema;
+	| IWrapperSchema
+	| ILocationFieldSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -105,28 +107,29 @@ export type TValidationMode = keyof ValidationMode;
 
 export type TErrorMessage = string | string[] | Record<string, string | string[]>;
 export type TErrorPayload = Record<string, TErrorMessage>;
+
 export interface IFrontendEngineRef extends HTMLFormElement {
 	addCustomValidation: (
 		type: TYupSchemaType | "mixed",
 		name: string,
 		fn: (value: unknown, arg: unknown) => boolean
 	) => void;
-	addFieldEventListener: (
+	addFieldEventListener: <T = any>(
 		type: string,
 		id: string,
-		listener: (ev: Event) => any,
+		listener: (ev: CustomEvent<T>) => void,
 		options?: boolean | AddEventListenerOptions
 	) => void;
-	dispatchFieldEvent: (type: string, id: string, detail?: any) => boolean;
+	dispatchFieldEvent: <T = any>(type: string, id: string, detail?: T) => boolean;
 	/** gets form values */
 	getValues: () => TFrontendEngineValues;
 	/** checks if form is valid */
 	isValid: () => boolean;
 	/** adds custom validation rule */
-	removeFieldEventListener: (
+	removeFieldEventListener: <T = any>(
 		type: string,
 		id: string,
-		listener: (ev: Event) => any,
+		listener: (ev: CustomEvent<T>) => void,
 		options?: boolean | EventListenerOptions
 	) => void;
 	/** resets the form to the default state */
@@ -225,6 +228,7 @@ export enum EFieldType {
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
+	"LOCATION-FIELD" = "LocationField",
 }
 
 /**

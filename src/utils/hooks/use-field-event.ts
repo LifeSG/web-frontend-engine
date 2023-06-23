@@ -5,28 +5,33 @@ import { EventContext } from "../../components/frontend-engine/event";
  * Hook that interacts with the event context provider
  * use this hook to add/dispatch/remove event listeners
  */
+
+// TODO how to make better typing
 export const useFieldEvent = () => {
 	const { eventManagerRef } = useContext(EventContext);
 
-	const addFieldEventListener = (
+	const addFieldEventListener = <T = any>(
 		type: string,
 		id: string,
-		listener: (ev: Event) => unknown,
+		listener: (ev: CustomEvent<T>) => void,
 		options?: boolean | AddEventListenerOptions
 	) => {
 		eventManagerRef.current?.addEventListener(`${id}:${type}`, listener, options);
 	};
 
-	const removeFieldEventListener = (
+	const removeFieldEventListener = <T = any>(
 		type: string,
 		id: string,
-		listener: (ev: Event) => unknown,
+		listener: (ev: CustomEvent<T>) => void,
 		options?: boolean | EventListenerOptions
 	) => {
 		eventManagerRef.current?.removeEventListener(`${id}:${type}`, listener, options);
 	};
 
-	const dispatchFieldEvent = (type: string, id: string, detail?: any): boolean => {
+	/**
+	 * Dispatches a custom event to target and returns true if either event's cancelable attribute value is false or its preventDefault() method was not invoked, and false otherwise.
+	 */
+	const dispatchFieldEvent = <T = any>(type: string, id: string, detail?: T): boolean => {
 		return eventManagerRef.current?.dispatchEvent(
 			new CustomEvent(`${id}:${type}`, { cancelable: true, detail: { id, ...detail } })
 		);
