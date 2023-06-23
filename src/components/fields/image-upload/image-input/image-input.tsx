@@ -179,6 +179,7 @@ export const ImageInput = (props: IImageInputProps) => {
 					as="label"
 					htmlFor={TestHelper.generateId(id, "file-input-add-button")}
 					$hasDescription={!!description}
+					weight="semibold"
 				>
 					{label}
 				</Subtitle>
