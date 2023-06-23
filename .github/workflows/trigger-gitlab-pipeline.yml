@@ -15,7 +15,7 @@ jobs:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
           GITLAB_ENDPOINT: ${{ vars.GITLAB_ENDPOINT }}
           GITLAB_PROJECT_ID: ${{ vars.GITLAB_PROJECT_ID }}
-          TARGET_BRANCH: "MOL-12712"
+          TARGET_BRANCH: ${{ vars.GITLAB_PIPELINE_BRANCH }}
         run: |
           curl --request POST \
             --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
