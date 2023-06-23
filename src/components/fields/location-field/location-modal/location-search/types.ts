@@ -1,4 +1,4 @@
-import { ILocationCoord, ILocationInputValues, TPanelInputMode, TSinglePanelInputMode } from "../../types";
+import { ILocationCoord, ILocationFieldValues, TPanelInputMode, TSinglePanelInputMode } from "../../types";
 
 export interface ILocationSearchProps {
 	id?: string | undefined;
@@ -9,15 +9,15 @@ export interface ILocationSearchProps {
 	gettingCurrentLocation: boolean;
 	gettingCurrentLocationFetchMessage?: string | undefined;
 	locationListTitle?: string | undefined;
-	selectedAddressInfo: ILocationInputValues;
-	onChangeSelectedAddressInfo: (addressInfo: ILocationInputValues) => void;
+	selectedAddressInfo: ILocationFieldValues;
+	onChangeSelectedAddressInfo: (addressInfo: ILocationFieldValues) => void;
 	handleApiErrors: (error: any) => void;
 	mustHavePostalCode?: boolean | undefined;
 	reverseGeoCodeEndpoint?: string | undefined;
 	onGetLocationCallback: (lat?: number | undefined, lng?: number | undefined) => void;
 	showLocationModal: boolean;
 	mapPickedLatLng?: ILocationCoord | undefined;
-	formValues?: ILocationInputValues | undefined;
-	updateFormValues: (values: ILocationInputValues) => void;
+	formValues?: ILocationFieldValues | undefined;
+	updateFormValues: (values: ILocationFieldValues) => void;
 	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
 }

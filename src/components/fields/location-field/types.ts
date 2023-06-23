@@ -4,7 +4,7 @@ import { ILocationInputProps } from "./location-input";
 import { ILocationPickerProps } from "./location-modal/location-picker/types";
 import { ILocationSearchProps } from "./location-modal/location-search/types";
 
-export interface ILocationInputSchema<V = undefined>
+export interface ILocationFieldSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"location-field", V>,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<
@@ -12,7 +12,9 @@ export interface ILocationInputSchema<V = undefined>
 			"reverseGeoCodeEndpoint" | "mustHavePostalCode" | "gettingCurrentLocationFetchMessage"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder">,
-		Pick<IStaticMapProps, "staticMapPinColor"> {}
+		Pick<IStaticMapProps, "staticMapPinColor"> {
+	className?: string;
+}
 
 export type TSinglePanelInputMode = "search" | "map";
 
@@ -20,7 +22,7 @@ export type TSinglePanelInputMode = "search" | "map";
 // double means both search and map will be seen
 export type TPanelInputMode = "search" | "map" | "double";
 
-export interface ILocationInputValues {
+export interface ILocationFieldValues {
 	address?: string | undefined;
 	blockNo?: string | undefined;
 	building?: string | undefined;
@@ -37,7 +39,7 @@ export interface ILocationCoord {
 	lng: number;
 }
 
-export interface IResultListItem extends ILocationInputValues {
+export interface IResultListItem extends ILocationFieldValues {
 	displayAddressText?: string | undefined;
 }
 
@@ -68,8 +70,8 @@ export type TLocationFieldErrorDetail = TLocationFieldDetail<TErrorType>;
 export type TLocationFieldEvents = {
 	"get-current-location": CustomEvent;
 	"set-current-location": CustomEvent<TSetCurrentLocationDetail>;
-	"location-field-error-detected": CustomEvent<TLocationFieldErrorDetail>;
-	"location-field-error-handled": CustomEvent<TLocationFieldErrorDetail>;
+	error: CustomEvent<TLocationFieldErrorDetail>;
+	"error-end": CustomEvent<TLocationFieldErrorDetail>;
 };
 
 export class GeolocationPositionErrorWrapper extends Error {

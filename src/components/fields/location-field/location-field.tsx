@@ -3,11 +3,11 @@ import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { StyledStaticMap } from "./location-field.styles";
 import { LocationInput } from "./location-input/location-input";
-import { ILocationInputSchema, ILocationInputValues } from "./types";
+import { ILocationFieldSchema, ILocationFieldValues } from "./types";
 
 const LocationModal = lazy(() => import("./location-modal/location-modal"));
 
-export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) => {
+export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -15,6 +15,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 		id,
 		schema: {
 			label,
+			className = "location",
 			locationInputPlaceholder,
 			staticMapPinColor,
 			mapPanZoom,
@@ -33,7 +34,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const updateFormValues = (updatedValues: ILocationInputValues) => {
+	const updateFormValues = (updatedValues: ILocationFieldValues) => {
 		onChange?.({ target: { value: updatedValues } });
 	};
 
@@ -66,6 +67,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationInputSchema>) =
 				{LocationModal && (
 					<LocationModal
 						id={id}
+						className={className}
 						showLocationModal={showLocationModal}
 						onClose={() => setShowLocationModal(false)}
 						formValues={formValue}

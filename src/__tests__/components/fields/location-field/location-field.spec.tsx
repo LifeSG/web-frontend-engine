@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { useEffect, useRef } from "react";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
-import { ILocationInputSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
+import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema } from "../../../common";
@@ -77,7 +77,7 @@ const FrontendEngineWithEventListener = ({
 };
 
 interface IRenderProps {
-	overrideField?: TOverrideField<ILocationInputSchema>;
+	overrideField?: TOverrideField<ILocationFieldSchema>;
 	overrideSchema?: TOverrideSchema;
 	withEvents: boolean;
 	locationDetails?: TSetCurrentLocationDetail;

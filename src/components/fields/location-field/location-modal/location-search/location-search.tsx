@@ -169,20 +169,20 @@ export const LocationSearch = ({
 	 * Prefill based on lat lng or address with the appropriate api
 	 */
 	useEffect(() => {
-		const handleResult = ({ displayAddressText, ...locationInputValue }: IResultListItem) => {
+		const handleResult = ({ displayAddressText, ...locationFieldValue }: IResultListItem) => {
 			const validPostalCode =
-				!mustHavePostalCode || LocationHelper.hasGotAddressValue(locationInputValue.postalCode);
+				!mustHavePostalCode || LocationHelper.hasGotAddressValue(locationFieldValue.postalCode);
 
-			if (isEmpty(locationInputValue) || !validPostalCode) {
+			if (isEmpty(locationFieldValue) || !validPostalCode) {
 				updateFormValues({});
 				onChangeSelectedAddressInfo({});
 				return;
 			}
 
 			// complete form state with valid location
-			updateFormValues(locationInputValue);
-			onChangeSelectedAddressInfo(locationInputValue);
-			setQueryString(locationInputValue.address);
+			updateFormValues(locationFieldValue);
+			onChangeSelectedAddressInfo(locationFieldValue);
+			setQueryString(locationFieldValue.address);
 		};
 
 		if (formValues?.lat && formValues?.lng && formValues?.address) {
@@ -306,8 +306,8 @@ export const LocationSearch = ({
 	};
 
 	const handleClickResult = (listitem: IResultListItem, index: number) => {
-		const { displayAddressText, ...locationInputValue } = listitem;
-		if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(locationInputValue.postalCode)) {
+		const { displayAddressText, ...locationFieldValue } = listitem;
+		if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(locationFieldValue.postalCode)) {
 			handleError("PostalCodeError", () => {
 				setShowPostalCodeError(true);
 			});
@@ -316,8 +316,8 @@ export const LocationSearch = ({
 
 		setResultState("found");
 		setSelectedIndex(index);
-		setQueryString(locationInputValue.address ?? "");
-		onChangeSelectedAddressInfo(locationInputValue);
+		setQueryString(locationFieldValue.address ?? "");
+		onChangeSelectedAddressInfo(locationFieldValue);
 	};
 
 	const handleScrollResult = () => {
@@ -334,15 +334,11 @@ export const LocationSearch = ({
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const handleError = (errorType: TErrorType["errorType"], defaultHandle: () => void) => {
-		const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>(
-			"location-field-error-detected",
-			id,
-			{
-				payload: {
-					errorType,
-				},
-			}
-		);
+		const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>("error", id, {
+			payload: {
+				errorType,
+			},
+		});
 
 		if (shouldPreventDefault) return;
 		defaultHandle();

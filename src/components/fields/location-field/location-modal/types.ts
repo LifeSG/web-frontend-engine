@@ -1,4 +1,4 @@
-import { ILocationInputValues } from "../types";
+import { ILocationFieldValues } from "../types";
 import { ILocationPickerProps } from "./location-picker/types";
 import { ILocationSearchProps } from "./location-search/types";
 
@@ -9,9 +9,10 @@ export interface ILocationModalProps
 			"reverseGeoCodeEndpoint" | "mustHavePostalCode" | "gettingCurrentLocationFetchMessage"
 		> {
 	id: string;
+	className: string;
 	showLocationModal: boolean;
-	formValues?: ILocationInputValues | undefined;
+	formValues?: ILocationFieldValues | undefined;
 	onClose: () => void;
-	onConfirm: (values: ILocationInputValues) => void;
-	updateFormValues: (values: ILocationInputValues) => void;
+	onConfirm: (values: ILocationFieldValues) => void;
+	updateFormValues: (values: ILocationFieldValues) => void;
 }

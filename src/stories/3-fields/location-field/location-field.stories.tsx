@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
-import { ILocationInputSchema, ILocationInputValues } from "../../../components/fields/location-field/types";
+import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields/location-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
 
 export default {
@@ -27,13 +27,13 @@ export default {
 	},
 } as Meta;
 
-export const Default = DefaultStoryTemplate<ILocationInputSchema>("location-field-default").bind({});
+export const Default = DefaultStoryTemplate<ILocationFieldSchema>("location-field-default").bind({});
 Default.args = {
 	uiType: "location-field",
 	label: "Default",
 };
 
-export const InitialAddress = DefaultStoryTemplate<ILocationInputSchema, ILocationInputValues>(
+export const InitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
 	"location-field-initial-address"
 ).bind({});
 InitialAddress.args = {
@@ -51,7 +51,7 @@ InitialAddress.parameters = {
 	},
 };
 
-export const InitialLatLng = DefaultStoryTemplate<ILocationInputSchema, ILocationInputValues>(
+export const InitialLatLng = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
 	"location-field-initial-address"
 ).bind({});
 InitialLatLng.args = {
@@ -71,7 +71,7 @@ InitialLatLng.parameters = {
 	},
 };
 
-export const FullInitialAddress = DefaultStoryTemplate<ILocationInputSchema, ILocationInputValues>(
+export const FullInitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
 	"location-field-initial-address"
 ).bind({});
 FullInitialAddress.args = {
@@ -98,7 +98,7 @@ FullInitialAddress.parameters = {
 	},
 };
 
-export const MustHavePostalCode = DefaultStoryTemplate<ILocationInputSchema>("location-field-postal-code").bind({});
+export const MustHavePostalCode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-postal-code").bind({});
 MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",

@@ -4,7 +4,7 @@ import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { useEffect, useRef, useState } from "react";
 import {
-	ILocationInputSchema,
+	ILocationFieldSchema,
 	TLocationFieldErrorDetail,
 	TLocationFieldEvents,
 	TSetCurrentLocationDetail,
@@ -78,7 +78,7 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 				}}
 			/>
 		);
-	}) as Story<ILocationInputSchema>;
+	}) as Story<ILocationFieldSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
 export const Geolocation = GeolocationTemplate({
@@ -174,15 +174,11 @@ const ErrorEventsTemplate = () =>
 								title: "OK",
 								onClick: () => {
 									setShowOneMapError(false);
-									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>(
-										"location-field-error-handled",
-										id,
-										{
-											payload: {
-												errorType: "OneMapError",
-											},
-										}
-									);
+									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>("error-end", id, {
+										payload: {
+											errorType: "OneMapError",
+										},
+									});
 								},
 							},
 						]}
@@ -205,15 +201,11 @@ const ErrorEventsTemplate = () =>
 								title: "OK",
 								onClick: () => {
 									setShowGetLocationError(false);
-									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>(
-										"location-field-error-handled",
-										id,
-										{
-											payload: {
-												errorType: "GetLocationError",
-											},
-										}
-									);
+									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>("error-end", id, {
+										payload: {
+											errorType: "GetLocationError",
+										},
+									});
 								},
 							},
 						]}
@@ -253,15 +245,11 @@ const ErrorEventsTemplate = () =>
 								title: "OK",
 								onClick: () => {
 									setShowGetLocationTimeoutError(false);
-									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>(
-										"location-field-error-handled",
-										id,
-										{
-											payload: {
-												errorType: "GetLocationTimeoutError",
-											},
-										}
-									);
+									formRef.current.dispatchFieldEvent<TLocationFieldErrorDetail>("error-end", id, {
+										payload: {
+											errorType: "GetLocationTimeoutError",
+										},
+									});
 								},
 							},
 						]}
@@ -289,7 +277,7 @@ const ErrorEventsTemplate = () =>
 			}
 		};
 
-		const handleShowErrorModal = (e: TLocationFieldEvents["location-field-error-detected"]) => {
+		const handleShowErrorModal = (e: TLocationFieldEvents["error"]) => {
 			const errorType = e.detail?.payload?.errorType;
 
 			if (!errorType) {
@@ -319,16 +307,16 @@ const ErrorEventsTemplate = () =>
 					break;
 			}
 
-			return action("location-field-error-detected")(e);
+			return action("error")(e);
 		};
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
 
-			currentFormRef.addFieldEventListener("location-field-error-detected", id, handleShowErrorModal);
+			currentFormRef.addFieldEventListener("error", id, handleShowErrorModal);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("location-field-error-detected", id, handleShowErrorModal);
+				currentFormRef.removeFieldEventListener("error", id, handleShowErrorModal);
 			};
 		}, []);
 
@@ -351,7 +339,7 @@ const ErrorEventsTemplate = () =>
 				{renderNetworkErrorPrompt()}
 			</div>
 		);
-	}) as Story<ILocationInputSchema>;
+	}) as Story<ILocationFieldSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
 export const CustomErrorHandling = ErrorEventsTemplate().bind(this);

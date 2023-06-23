@@ -29,7 +29,7 @@ import {
 	ITimeFieldSchema,
 	IUnitNumberFieldSchema,
 } from "../fields";
-import { ILocationInputSchema } from "../fields/location-field/types";
+import { ILocationFieldSchema } from "../fields/location-field/types";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
 
 // =============================================================================
@@ -99,7 +99,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
 	| IWrapperSchema
-	| ILocationInputSchema<V>;
+	| ILocationFieldSchema<V>;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;

@@ -9,7 +9,7 @@ import { Description } from "../../../shared/prompt/prompt.styles";
 import {
 	GeolocationPositionErrorWrapper,
 	ILocationCoord,
-	ILocationInputValues,
+	ILocationFieldValues,
 	TErrorType,
 	TLocationFieldErrorDetail,
 	TLocationFieldEvents,
@@ -29,6 +29,7 @@ import { ILocationModalProps } from "./types";
  */
 const LocationModal = ({
 	id = "location-modal",
+	className,
 	formValues,
 	showLocationModal,
 	mapPanZoom,
@@ -48,7 +49,7 @@ const LocationModal = ({
 	// Temporarily hold the selection
 	// onConfirm we will save to state
 	// if cancel, this value will need to be reset to form state value
-	const [selectedAddressInfo, setSelectedAddressInfo] = useState<ILocationInputValues>({});
+	const [selectedAddressInfo, setSelectedAddressInfo] = useState<ILocationFieldValues>({});
 
 	const [locationAvailable, setLocationAvailable] = useState(true);
 
@@ -69,7 +70,7 @@ const LocationModal = ({
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const handleError = (e: TLocationFieldEvents["location-field-error-handled"]) => {
+		const handleError = (e: TLocationFieldEvents["error-end"]) => {
 			const errorType = e.detail?.payload?.errorType;
 			if (!errorType) return;
 
@@ -85,10 +86,10 @@ const LocationModal = ({
 			}
 		};
 
-		addFieldEventListener("location-field-error-handled", id, handleError);
+		addFieldEventListener("error-end", id, handleError);
 
 		return () => {
-			removeFieldEventListener("location-field-error-handled", id, handleError);
+			removeFieldEventListener("error-end", id, handleError);
 		};
 	}, []);
 
@@ -159,16 +160,12 @@ const LocationModal = ({
 
 	const handleApiErrors = (error?: any) => {
 		const handleError = (errorType: TErrorType["errorType"], defaultHandle: () => void) => {
-			const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>(
-				"location-field-error-detected",
-				id,
-				{
-					payload: {
-						errorType,
-					},
-					errors: error,
-				}
-			);
+			const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>("error", id, {
+				payload: {
+					errorType,
+				},
+				errors: error,
+			});
 
 			if (shouldPreventDefault) return;
 			defaultHandle();
@@ -367,7 +364,7 @@ const LocationModal = ({
 			>
 				<ModalBox
 					id={TestHelper.generateId(id, "modal-box")}
-					className="location-field-modal-box"
+					className={`${className}-modal-box`}
 					showCloseButton={false}
 				>
 					{hasInternetConnectivity ? (
