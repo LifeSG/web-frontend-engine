@@ -4,7 +4,7 @@ import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHan
 import { FormProvider, useForm } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
-import { useFieldEvent, useValidationSchema } from "../../utils/hooks";
+import { useFieldEvent, useValidationConfig, useValidationSchema } from "../../utils/hooks";
 import { Sections } from "../elements/sections";
 import { EventProvider } from "./event";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
@@ -31,6 +31,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 	const { warnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
+	const { formValidationConfig } = useValidationConfig();
 	const formMethods = useForm({
 		mode: validationMode,
 		reValidateMode: revalidationMode,
@@ -117,16 +118,19 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		if (onChange) {
+		// attach / fire onChange event only formValidationConfig has values
+		// otherwise isValid will be returned incorrectly as true
+		if (onChange && Object.keys(formValidationConfig || {}).length) {
 			const subscription = watch((value) => {
 				onChange(value, checkIsFormValid());
 			});
+			onChange(getValues(), checkIsFormValid());
 
 			return () => subscription.unsubscribe();
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [checkIsFormValid, onChange, watch]);
+	}, [checkIsFormValid, onChange, watch, formValidationConfig]);
 
 	useEffect(() => {
 		const errors = formState.errors;

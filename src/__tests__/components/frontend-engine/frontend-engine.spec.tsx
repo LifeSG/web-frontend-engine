@@ -140,6 +140,30 @@ describe("frontend-engine", () => {
 		expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
 	});
 
+	it("should return the correct validity in the onChange prop when form is prefilled with valid values", async () => {
+		const onChange = jest.fn();
+		renderComponent(
+			{ onChange },
+			{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[FIELD_ONE_ID]: {
+								uiType: "text-field",
+								label: FIELD_ONE_LABEL,
+								validation: [{ min: 5 }],
+							},
+						},
+					},
+				},
+				defaultValues: { [FIELD_ONE_ID]: "a" },
+			}
+		);
+
+		expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false);
+	});
+
 	it("should call onSubmit prop on submit", async () => {
 		const onSubmit = jest.fn();
 		renderComponent({
