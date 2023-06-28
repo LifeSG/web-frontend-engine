@@ -15,10 +15,11 @@ jobs:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
           GITLAB_ENDPOINT: ${{ vars.GITLAB_ENDPOINT }}
           GITLAB_PROJECT_ID: ${{ vars.GITLAB_PROJECT_ID }}
-          TARGET_BRANCH: ${{ vars.GITLAB_PIPELINE_BRANCH }}
+          GITLAB_REPO_NAME: ${{ vars.GITLAB_REPO_NAME }}
         run: |
           curl --request POST \
-            --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
-            "$GITLAB_ENDPOINT/$GITLAB_PROJECT_ID/pipeline?ref=$TARGET_BRANCH"
+            --form PRIVATE-TOKEN=$GITLAB_TOKEN \
+            --form "variables[PIPELINE_PROJECT_NAME]=$GITLAB_REPO_NAME" \
+            "$GITLAB_ENDPOINT/$GITLAB_PROJECT_ID/pipeline"
 
 
