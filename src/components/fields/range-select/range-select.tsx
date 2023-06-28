@@ -1,6 +1,5 @@
-import { InputRangeProp } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
-import { InputRangeSelect } from "@lifesg/react-design-system/input-select";
+import { InputRangeProp } from "@lifesg/react-design-system/input-range-select";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -8,8 +7,8 @@ import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
-import { IRangeSelectOption, IRangeSelectSchema } from "./types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
+import { IRangeSelectOption, IRangeSelectSchema } from "./types";
 
 export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	// =============================================================================
@@ -18,10 +17,10 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	const {
 		schema: { label, validation, options, ...otherSchema },
 		id,
-		name,
 		value = { from: undefined, to: undefined },
 		error,
 		onChange,
+		...otherProps
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -94,21 +93,20 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			<InputRangeSelect
-				{...otherSchema}
-				id={id}
-				data-testid={TestHelper.generateId(id, "range-select")}
-				name={name}
-				options={options}
-				onSelectOption={handleChange}
-				selectedOptions={getSelectedOptions()}
-				valueToStringFunction={(value) => `${value.from} - ${value.to}`}
-				valueExtractor={(item: IRangeSelectOption) => ({ from: item.value, to: item.value })}
-				displayValueExtractor={(item: IRangeSelectOption) => item.label}
-				listExtractor={(item: IRangeSelectOption) => item.label}
-				error={!!error?.message}
-			/>
-		</Form.CustomField>
+		<Form.RangeSelect
+			{...otherSchema}
+			{...otherProps}
+			id={id}
+			data-testid={TestHelper.generateId(id)}
+			label={label}
+			options={options}
+			onSelectOption={handleChange}
+			selectedOptions={getSelectedOptions()}
+			valueToStringFunction={(value) => `${value.from} - ${value.to}`}
+			valueExtractor={(item: IRangeSelectOption) => ({ from: item.value, to: item.value })}
+			displayValueExtractor={(item: IRangeSelectOption) => item.label}
+			listExtractor={(item: IRangeSelectOption) => item.label}
+			errorMessage={error?.message}
+		/>
 	);
 };

@@ -1,4 +1,4 @@
-import { InputRangeSelectProps } from "@lifesg/react-design-system/input-select/types";
+import { InputRangeSelectProps } from "@lifesg/react-design-system/input-range-select/types";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 export interface IRangeSelectOption {

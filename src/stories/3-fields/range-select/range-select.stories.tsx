@@ -1,4 +1,4 @@
-import { InputRangeProp } from "@lifesg/react-design-system";
+import { InputRangeProp } from "@lifesg/react-design-system/input-range-select";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { IRangeSelectSchema } from "../../../components/fields";
