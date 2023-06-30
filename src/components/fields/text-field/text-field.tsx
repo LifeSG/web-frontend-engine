@@ -84,7 +84,10 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value || "");
+		if (value !== stateValue) {
+			setStateValue(value || "");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
 	// =============================================================================
@@ -96,6 +99,8 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		} else {
 			onChange(event);
 		}
+
+		setStateValue(event.target.value);
 	};
 
 	// =============================================================================
