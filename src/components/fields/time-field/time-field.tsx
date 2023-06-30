@@ -46,8 +46,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (value: string): void => {
-		// TODO: temporary fix to uppercase am/pm,to remove setting uppercase when design system is using uppercase
-		onChange({ target: { value: value.toUpperCase() } });
+		onChange({ target: { value } });
 	};
 
 	// =============================================================================
