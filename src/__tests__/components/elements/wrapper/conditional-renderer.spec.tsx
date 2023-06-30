@@ -156,7 +156,7 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		await waitFor(() => fireEvent.click(getField("button", "Select")));
+		await waitFor(() => fireEvent.click(getField("button", FIELD_ONE_LABEL)));
 
 		invalid?.forEach((value: string) => {
 			fireEvent.click(screen.getByText(value).closest("button"));
