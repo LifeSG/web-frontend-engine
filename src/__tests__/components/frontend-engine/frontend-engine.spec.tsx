@@ -152,6 +152,30 @@ describe("frontend-engine", () => {
 							[FIELD_ONE_ID]: {
 								uiType: "text-field",
 								label: FIELD_ONE_LABEL,
+								validation: [{ required: true }],
+							},
+						},
+					},
+				},
+				defaultValues: { [FIELD_ONE_ID]: "a" },
+			}
+		);
+
+		expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), true);
+	});
+
+	it("should return the correct validity in the onChange prop when form is prefilled with invalid values", async () => {
+		const onChange = jest.fn();
+		renderComponent(
+			{ onChange },
+			{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[FIELD_ONE_ID]: {
+								uiType: "text-field",
+								label: FIELD_ONE_LABEL,
 								validation: [{ min: 5 }],
 							},
 						},
