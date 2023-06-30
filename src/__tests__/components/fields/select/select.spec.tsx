@@ -91,7 +91,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent(defaultLabel);
+		expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent(defaultLabel);
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
@@ -208,7 +208,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent("Select");
+			expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent("Select");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -221,7 +221,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent("A");
+			expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent("A");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});
