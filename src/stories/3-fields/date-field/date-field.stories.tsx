@@ -1,3 +1,5 @@
+import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
+import { Locale } from "@js-joda/locale_en-us";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { IDateFieldSchema } from "src/components/fields/date-field/types";
@@ -50,8 +52,25 @@ export default {
 				defaultValue: { summary: "uuuu-MM-dd" },
 			},
 		},
+		allowDisabledSelection: {
+			description:
+				"Specifies if dates normally disabled by `future`, `past`, `notFuture`, `notPast`, `minDate`, `maxDate` and `excludedDates` validation rules are still selectable",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 } as Meta;
+
+const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+	.withResolverStyle(ResolverStyle.STRICT)
+	.withLocale(Locale.ENGLISH);
 
 export const Default = DefaultStoryTemplate<IDateFieldSchema>("date-default").bind({});
 Default.args = {
@@ -105,6 +124,39 @@ WithValidation.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }],
+};
+
+export const WithDisabledDates = DefaultStoryTemplate<IDateFieldSchema>("date-disabled-dates").bind({});
+WithDisabledDates.args = {
+	uiType: "date-field",
+	label: "Disabled yesterday and tomorrow's dates",
+	validation: [
+		{
+			excludedDates: [
+				LocalDate.now().minusDays(1).format(DEFAULT_DATE_FORMATTER),
+				LocalDate.now().plusDays(1).format(DEFAULT_DATE_FORMATTER),
+			],
+			errorMessage: "This date should not be selected",
+		},
+	],
+};
+
+export const AllowedDisabledSelection = DefaultStoryTemplate<IDateFieldSchema>("date-disabled-dates-selection").bind(
+	{}
+);
+AllowedDisabledSelection.args = {
+	uiType: "date-field",
+	label: "Disabled yesterday and tomorrow's dates with allowed selection",
+	allowDisabledSelection: true,
+	validation: [
+		{
+			excludedDates: [
+				LocalDate.now().minusDays(1).format(DEFAULT_DATE_FORMATTER),
+				LocalDate.now().plusDays(1).format(DEFAULT_DATE_FORMATTER),
+			],
+			errorMessage: "This date should not be selected",
+		},
+	],
 };
 
 export const FutureDateOnly = DefaultStoryTemplate<IDateFieldSchema>("date-future").bind({});

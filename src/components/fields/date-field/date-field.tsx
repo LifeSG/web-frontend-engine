@@ -1,5 +1,6 @@
 import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
+import { DateInputProps } from "@lifesg/react-design-system/date-input";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -30,7 +31,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	} = props;
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
-	const [rangeProps, setRangeProps] = useState({ minDate: "", maxDate: "" });
+	const [derivedProps, setDerivedProps] = useState<Pick<DateInputProps, "minDate" | "maxDate" | "disabledDates">>();
 	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
@@ -43,6 +44,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		const notPastRule = validation?.find((rule) => "notPast" in rule);
 		const minDateRule = validation?.find((rule) => "minDate" in rule);
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
+		const excludedDatesRule = validation?.find((rule) => "excludedDates" in rule);
 
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
@@ -102,11 +104,19 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 						const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 						return !localDate?.isAfter(maxDate);
 					}
+				)
+				.test(
+					"excluded-dates",
+					excludedDatesRule?.["errorMessage"] || ERROR_MESSAGES.DATE.DISABLED_DATES,
+					(value) => {
+						if (!isValidDate(value) || !excludedDatesRule) return true;
+						return !excludedDatesRule["excludedDates"].includes(value);
+					}
 				),
 			validation
 		);
 
-		// set minDate / maxDate props
+		// set minDate / maxDate / disabledDates props
 		const minDateProp = getLatestDate([
 			minDate,
 			futureRule?.["future"] && LocalDate.now().plusDays(1),
@@ -117,11 +127,13 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 			pastRule?.["past"] && LocalDate.now().minusDays(1),
 			notFutureRule?.["notFuture"] && LocalDate.now(),
 		]);
-		if (minDateProp || maxDateProp) {
-			setRangeProps((props) => ({
+		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
+		if (minDateProp || maxDateProp || disabledDatesProps) {
+			setDerivedProps((props) => ({
 				...props,
 				minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
 				maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
+				disabledDates: disabledDatesProps,
 			}));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,7 +213,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		<Form.DateInput
 			{...otherSchema}
 			{...otherProps}
-			{...rangeProps}
+			{...derivedProps}
 			id={id}
 			data-testid={TestHelper.generateId(id, "date")}
 			label={label}
