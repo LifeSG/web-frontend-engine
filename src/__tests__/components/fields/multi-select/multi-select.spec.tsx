@@ -138,9 +138,11 @@ describe(UI_TYPE, () => {
 		const selectAllButton = getField("button", "Select all");
 
 		await waitFor(() => fireEvent.click(selectAllButton));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(selectAllButton));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
