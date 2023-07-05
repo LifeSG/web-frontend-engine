@@ -72,6 +72,8 @@ export interface IFrontendEngineData<V = undefined> {
 	revalidationMode?: TRevalidationMode | undefined;
 	/** Validation strategy before a user submits the form (onSubmit event) */
 	validationMode?: TValidationMode | undefined;
+	/** Additional properties to mutate the sections schema on-the-fly */
+	overrides?: Record<string, RecursivePartial<TFrontendEngineFieldSchema<V>>> | undefined;
 }
 
 // NOTE: add all possible schema types here except section schema
@@ -294,3 +296,7 @@ export interface IGenericFieldProps<T = TFrontendEngineFieldSchema>
  * https://stackoverflow.com/questions/56687668/a-way-to-disable-type-argument-inference-in-generics
  */
 export type TNoInfer<T, U> = [T][T extends U ? 0 : never];
+
+export type RecursivePartial<T> = {
+	[P in keyof T]?: RecursivePartial<T[P]>;
+};
