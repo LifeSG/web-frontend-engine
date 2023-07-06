@@ -3,13 +3,14 @@ import cloneDeep from "lodash/cloneDeep";
 import isEmpty from "lodash/isEmpty";
 import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
+import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
-import { useFieldEvent, useValidationConfig, useValidationSchema } from "../../utils/hooks";
+import { useFieldEvent, useFormSchema, useValidationConfig, useValidationSchema } from "../../utils/hooks";
 import { Sections } from "../elements/sections";
 import { EventProvider } from "./event";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
+import { FormSchemaProvider } from "./form-schema";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
@@ -43,6 +44,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			return await yupResolver(hardValidationSchema)(data, context, options);
 		},
 	});
+	const { setFormSchema } = useFormSchema();
 
 	const {
 		reset,
@@ -166,6 +168,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		reset(cloneDeep(defaultValues));
 	}, [defaultValues]);
 
+	useDeepCompareEffect(() => {
+		setFormSchema(props.data);
+	}, [props.data]);
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -197,7 +203,9 @@ export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProp
 	return (
 		<YupProvider>
 			<EventProvider>
-				<FrontendEngineInner {...props} ref={ref} />
+				<FormSchemaProvider>
+					<FrontendEngineInner {...props} ref={ref} />
+				</FormSchemaProvider>
 			</EventProvider>
 		</YupProvider>
 	);
