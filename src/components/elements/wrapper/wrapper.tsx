@@ -1,9 +1,11 @@
 import isEmpty from "lodash/isEmpty";
+import merge from "lodash/merge";
 import React, { Fragment, ReactNode, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as FrontendEngineElements from "..";
-import { TestHelper } from "../../../utils";
+import { ObjectHelper, TestHelper } from "../../../utils";
+import { useFormSchema } from "../../../utils/hooks";
 import * as FrontendEngineCustomComponents from "../../custom";
 import * as FrontendEngineFields from "../../fields";
 import {
@@ -11,11 +13,12 @@ import {
 	ECustomFieldType,
 	EElementType,
 	EFieldType,
+	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
 } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
-import { IWrapperProps } from "./types";
+import { IWrapperProps, IWrapperSchema } from "./types";
 import { DSAlert } from "./wrapper.styles";
 
 const fieldTypeKeys = Object.keys(EFieldType);
@@ -29,6 +32,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	const { showIf, uiType, children: schemaChildren, ...otherSchema } = schema || {};
 	const [components, setComponents] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
+	const {
+		formSchema: { overrides },
+	} = useFormSchema();
 
 	// =============================================================================
 	// EFFECTS
@@ -40,7 +46,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	 * - otherwise show field not supported error
 	 */
 	useDeepCompareEffect(() => {
-		const wrapperChildren = schemaChildren || children;
+		const wrapperChildren = overrideSchema(schemaChildren || children, overrides);
 		if (typeof wrapperChildren === "object") {
 			const renderComponents: JSX.Element[] = [];
 
@@ -76,11 +82,29 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 			setComponents(ERROR_MESSAGES.GENERIC.UNSUPPORTED);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [schemaChildren || children, control, warnings]);
+	}, [schemaChildren || children, overrides, control, warnings]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
+	const overrideSchema = (children: IWrapperSchema["children"], overrides: IFrontendEngineData["overrides"]) => {
+		if (isEmpty(overrides) || typeof children === "string") return children;
+
+		let filteredOverrides = {};
+		Object.keys(children).forEach((childId) => {
+			const overrideEntry = ObjectHelper.getNestedValueByKey(overrides, childId);
+			if (!isEmpty(overrideEntry)) {
+				filteredOverrides = { ...filteredOverrides, ...overrideEntry };
+			}
+		});
+
+		if (!isEmpty(filteredOverrides)) {
+			return merge(children, filteredOverrides);
+		}
+
+		return children;
+	};
+
 	const buildConditionalRenderer =
 		(childId: string, childSchema: TFrontendEngineFieldSchema) =>
 		(buildFn: (childId: string, child: TFrontendEngineFieldSchema) => JSX.Element) =>
