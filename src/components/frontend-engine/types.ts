@@ -82,11 +82,12 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ICheckboxGroupSchema<V>
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
-	| ICustomComponentJsonSchema<V>
+	| ICustomComponentJsonSchema<string>
 	| IDateFieldSchema<V>
 	| IEmailFieldSchema<V>
 	| IFilterSchema
 	| IImageUploadSchema<V>
+	| ILocationFieldSchema<V>
 	| IMultiSelectSchema<V>
 	| IRangeSelectSchema
 	| INumericFieldSchema<V>
@@ -100,8 +101,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
-	| IWrapperSchema
-	| ILocationFieldSchema<V>;
+	| IWrapperSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -218,6 +218,7 @@ export enum EFieldType {
 	"DATE-FIELD" = "DateField",
 	"EMAIL-FIELD" = "TextField",
 	"IMAGE-UPLOAD" = "ImageUpload",
+	"LOCATION-FIELD" = "LocationField",
 	"MULTI-SELECT" = "MultiSelect",
 	"RANGE-SELECT" = "RangeSelect",
 	"NUMERIC-FIELD" = "TextField",
@@ -230,7 +231,6 @@ export enum EFieldType {
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
-	"LOCATION-FIELD" = "LocationField",
 }
 
 /**
