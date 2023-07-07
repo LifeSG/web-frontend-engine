@@ -1,6 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FrontendEngine } from "../../../components";
 import { IYupValidationRule } from "../../../components/frontend-engine/yup";
 import { ERROR_MESSAGES } from "../../../components/shared";
@@ -566,5 +566,151 @@ describe("frontend-engine", () => {
 		fireEvent.click(screen.getByRole("button", { name: "Remove field event listener" }));
 		fireEvent.click(screen.getByRole("button", { name: "Dispatch field event listener" }));
 		expect(testFn).toBeCalledTimes(1);
+	});
+
+	describe("overrides", () => {
+		it("should support overriding of schema on mount", () => {
+			renderComponent(undefined, {
+				overrides: {
+					[FIELD_ONE_ID]: {
+						disabled: true,
+					},
+				},
+			});
+
+			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
+		});
+
+		it("should remove entries on overriding with null values", () => {
+			renderComponent(undefined, {
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[FIELD_ONE_ID]: {
+								uiType: "chips",
+								label: FIELD_ONE_LABEL,
+								disabled: true,
+								options: [
+									{ label: "A", value: "Apple" },
+									{ label: "B", value: "Berry" },
+								],
+							},
+						},
+					},
+				},
+				overrides: {
+					[FIELD_ONE_ID]: {
+						disabled: null,
+						options: [null],
+					},
+				},
+			});
+
+			expect(getField("button", "A", true)).not.toBeInTheDocument();
+			expect(getField("button", "B")).toBeInTheDocument();
+			expect(getField("button", "B")).toBeEnabled();
+		});
+
+		it("should not change or remove entries on overriding with undefined values", () => {
+			renderComponent(undefined, {
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[FIELD_ONE_ID]: {
+								uiType: "chips",
+								label: FIELD_ONE_LABEL,
+								options: [
+									{ label: "A", value: "Apple" },
+									{ label: "B", value: "Berry" },
+								],
+							},
+						},
+					},
+				},
+				overrides: {
+					[FIELD_ONE_ID]: {
+						label: undefined,
+						options: [undefined],
+					},
+				},
+			});
+
+			expect(screen.getByText(FIELD_ONE_LABEL)).toBeInTheDocument();
+			expect(getField("button", "A")).toBeInTheDocument();
+		});
+
+		it("should allow overriding of schema after mount", () => {
+			const FrontendEngineWithOverrides = () => {
+				const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
+				const handleClick = () =>
+					setSchema((state) => ({
+						...state,
+						overrides: {
+							[FIELD_ONE_ID]: { disabled: true },
+						},
+					}));
+
+				return (
+					<>
+						<FrontendEngine data={schema} />
+						<Button.Default onClick={handleClick}>Override schema</Button.Default>
+					</>
+				);
+			};
+			render(<FrontendEngineWithOverrides />);
+
+			expect(getField("textbox", FIELD_ONE_LABEL)).not.toBeDisabled();
+
+			fireEvent.click(screen.getByRole("button", { name: "Override schema" }));
+
+			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
+		});
+
+		it("should allow overriding of conditionally rendered components", () => {
+			renderComponent(undefined, {
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[FIELD_ONE_ID]: {
+								label: FIELD_ONE_LABEL,
+								uiType: UI_TYPE,
+							},
+							[FIELD_TWO_ID]: {
+								label: FIELD_TWO_LABEL,
+								uiType: UI_TYPE,
+								showIf: [{ FIELD_ONE_ID: [{ filled: true }] }],
+							},
+						},
+					},
+				},
+				overrides: {
+					[FIELD_TWO_ID]: {
+						disabled: true,
+					},
+				},
+			});
+			fireEvent.change(getField("textbox", FIELD_ONE_LABEL), { target: { value: "hello" } });
+
+			expect(getField("textbox", FIELD_TWO_LABEL)).toBeDisabled();
+		});
+
+		it("should retain defaultValues after overriding", () => {
+			renderComponent(undefined, {
+				overrides: {
+					[FIELD_ONE_ID]: {
+						disabled: true,
+					},
+				},
+				defaultValues: {
+					[FIELD_ONE_ID]: "hello world",
+				},
+			});
+
+			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
+			expect(getField("textbox", FIELD_ONE_LABEL)).toHaveValue("hello world");
+		});
 	});
 });
