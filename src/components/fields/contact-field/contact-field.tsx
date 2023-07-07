@@ -133,7 +133,9 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		}
 
 		setStateValue(number);
-		onChange({ target: { value: phoneNumberWithPrefix } });
+		// react-hook-form reverts to the default value when value is undefined (user trying to clear field)
+		// set to empty string to overcome this behaviour
+		onChange({ target: { value: phoneNumberWithPrefix || "" } });
 	};
 
 	// =============================================================================
