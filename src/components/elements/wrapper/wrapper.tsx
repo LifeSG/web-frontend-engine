@@ -1,3 +1,4 @@
+import cloneDeep from "lodash/cloneDeep";
 import isEmpty from "lodash/isEmpty";
 import merge from "lodash/merge";
 import React, { Fragment, ReactNode, useState } from "react";
@@ -99,7 +100,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		});
 
 		if (!isEmpty(filteredOverrides)) {
-			return merge(children, filteredOverrides);
+			return merge(cloneDeep(children), filteredOverrides);
 		}
 
 		return children;
