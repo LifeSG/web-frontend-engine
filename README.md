@@ -12,7 +12,7 @@ The intention of frontend engine is to take out the heavy lifting of form develo
 
 Developers are expected to have the following packages installed:
 
--   @lifesg/react-design-system 1.1.0-canary.1
+-   @lifesg/react-design-system 2.0.0
 -   @lifesg/react-icons 1.2.0
 -   react 17.0.2 or 18
 -   react-dom 17.0.2 or 18
