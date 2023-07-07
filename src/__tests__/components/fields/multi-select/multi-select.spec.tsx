@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IMultiSelectSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
+import { cloneDeep, merge } from "lodash";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -21,30 +22,52 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "multi-select";
 
+const JSON_SCHEMA: IFrontendEngineData = {
+	id: FRONTEND_ENGINE_ID,
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				[COMPONENT_ID]: {
+					label: "Multiselect",
+					uiType: UI_TYPE,
+					options: [
+						{ label: "A", value: "Apple" },
+						{ label: "B", value: "Berry" },
+						{ label: "C", value: "Cherry" },
+						{ label: "D", value: "Durian" },
+					],
+				},
+				...getSubmitButtonProps(),
+				...getResetButtonProps(),
+			},
+		},
+	},
+};
+
 const renderComponent = (overrideField?: TOverrideField<IMultiSelectSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = {
-		id: FRONTEND_ENGINE_ID,
+	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
+	merge(json, {
 		sections: {
 			section: {
-				uiType: "section",
 				children: {
-					[COMPONENT_ID]: {
-						label: "Multiselect",
-						uiType: UI_TYPE,
-						options: [
-							{ label: "A", value: "Apple" },
-							{ label: "B", value: "Berry" },
-						],
-						...overrideField,
-					},
-					...getSubmitButtonProps(),
-					...getResetButtonProps(),
+					[COMPONENT_ID]: overrideField,
 				},
 			},
 		},
-		...overrideSchema,
-	};
+	});
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+};
+
+const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineData) => IFrontendEngineData }) => {
+	const { onClick } = props;
+	const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
+	return (
+		<>
+			<FrontendEngine data={schema} onSubmit={SUBMIT_FN} />
+			<Button.Default onClick={() => setSchema(onClick)}>Update options</Button.Default>
+		</>
+	);
 };
 
 const getComponent = (): HTMLElement => {
@@ -139,7 +162,9 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(selectAllButton));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
+		expect(SUBMIT_FN).toBeCalledWith(
+			expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry", "Cherry", "Durian"] })
+		);
 
 		await waitFor(() => fireEvent.click(selectAllButton));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -147,45 +172,6 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("update options schema", () => {
-		const CustomComponent = () => {
-			const [options, setOptions] = useState([
-				{ label: "A", value: "Apple" },
-				{ label: "B", value: "Berry" },
-				{ label: "C", value: "Cherry" },
-				{ label: "D", value: "Durian" },
-			]);
-			return (
-				<>
-					<FrontendEngine
-						data={{
-							id: FRONTEND_ENGINE_ID,
-							sections: {
-								section: {
-									uiType: "section",
-									children: {
-										[COMPONENT_ID]: { label: "Multiselect", uiType: UI_TYPE, options },
-										...getSubmitButtonProps(),
-									},
-								},
-							},
-						}}
-						onSubmit={SUBMIT_FN}
-					/>
-					<Button.Default
-						onClick={() =>
-							setOptions([
-								{ label: "A", value: "Apple" },
-								{ label: "B", value: "Berry" },
-								{ label: "C", value: "C" },
-								{ label: "E", value: "Eggplant" },
-							])
-						}
-					>
-						Update options
-					</Button.Default>
-				</>
-			);
-		};
 		it.each`
 			scenario                                                                             | selected      | expectedValueBeforeUpdate | expectedValueAfterUpdate
 			${"should retain field values if option is not removed on schema update"}            | ${["A", "B"]} | ${["Apple", "Berry"]}     | ${["Apple", "Berry"]}
@@ -194,7 +180,71 @@ describe(UI_TYPE, () => {
 		`(
 			"$scenario",
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
-				render(<CustomComponent />);
+				render(
+					<ComponentWithSetSchemaButton
+						onClick={(data) =>
+							merge(cloneDeep(data), {
+								sections: {
+									section: {
+										children: {
+											[COMPONENT_ID]: {
+												options: [
+													{ label: "A", value: "Apple" },
+													{ label: "B", value: "Berry" },
+													{ label: "C", value: "C" },
+													{ label: "E", value: "Eggplant" },
+												],
+											},
+										},
+									},
+								},
+							})
+						}
+					/>
+				);
+
+				await waitFor(() => fireEvent.click(getComponent()));
+
+				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toBeCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
+				);
+
+				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+			}
+		);
+	});
+
+	describe("update options through overrides", () => {
+		fit.each`
+			scenario                                                                          | selected      | expectedValueBeforeUpdate | expectedValueAfterUpdate
+			${"should retain field values if particular field is not overridden"}             | ${["A", "B"]} | ${["Apple", "Berry"]}     | ${["Apple", "Berry"]}
+			${"should clear field values if option is removed through overriding"}            | ${["C", "D"]} | ${["Cherry", "Durian"]}   | ${[]}
+			${"should retain the field values of options that are not removed on overriding"} | ${["A", "D"]} | ${["Apple", "Durian"]}    | ${["Apple"]}
+		`(
+			"$scenario",
+			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
+				render(
+					<ComponentWithSetSchemaButton
+						onClick={(data) => ({
+							...data,
+							overrides: {
+								[COMPONENT_ID]: {
+									options: [
+										{ label: "A", value: "Apple" },
+										{ label: "B", value: "Berry" },
+										{ label: "C", value: "c" },
+										{ label: "E", value: "Eggplant" },
+									],
+								},
+							},
+						})}
+					/>
+				);
+
 				await waitFor(() => fireEvent.click(getComponent()));
 
 				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
