@@ -105,6 +105,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		return children;
 	};
 
+	/* eslint-disable indent */
 	const buildConditionalRenderer =
 		(childId: string, childSchema: TFrontendEngineFieldSchema) =>
 		(buildFn: (childId: string, child: TFrontendEngineFieldSchema) => JSX.Element) =>
@@ -118,6 +119,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 					{buildFn(childId, childSchema)}
 				</ConditionalRenderer>
 			);
+	/* eslint-enable indent */
 
 	const buildField = (childId: string, childSchema: TFrontendEngineFieldSchema) => {
 		let Field;
