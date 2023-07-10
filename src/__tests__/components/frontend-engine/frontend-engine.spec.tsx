@@ -683,6 +683,25 @@ describe("frontend-engine", () => {
 			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
 		});
 
+		it("should allow overriding of validation config", async () => {
+			const onSubmit = jest.fn();
+			renderComponent(
+				{ onSubmit },
+				{
+					overrides: {
+						[FIELD_ONE_ID]: {
+							validation: [undefined, { min: 3, errorMessage: ERROR_MESSAGE }],
+						},
+					},
+				}
+			);
+			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(onSubmit).not.toBeCalled();
+			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
+		});
+
 		it("should retain defaultValues after overriding", () => {
 			renderComponent(undefined, {
 				overrides: {
