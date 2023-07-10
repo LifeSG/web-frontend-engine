@@ -93,7 +93,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 		let filteredOverrides = {};
 		Object.keys(children).forEach((childId) => {
-			const overrideEntry = ObjectHelper.getNestedValueByKey(overrides, childId);
+			const overrideEntry = ObjectHelper.getNestedValueByKey(overrides, childId, {
+				searchIn: ["children"],
+			});
 			if (!isEmpty(overrideEntry)) {
 				filteredOverrides = { ...filteredOverrides, ...overrideEntry };
 			}
