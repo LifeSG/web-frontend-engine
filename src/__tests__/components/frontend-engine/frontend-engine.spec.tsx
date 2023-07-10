@@ -578,7 +578,7 @@ describe("frontend-engine", () => {
 				},
 			});
 
-			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
+			expect(getFieldOne()).toBeDisabled();
 		});
 
 		it("should remove entries on overriding with null values", () => {
@@ -676,40 +676,11 @@ describe("frontend-engine", () => {
 			};
 			render(<FrontendEngineWithOverrides />);
 
-			expect(getField("textbox", FIELD_ONE_LABEL)).not.toBeDisabled();
+			expect(getFieldOne()).not.toBeDisabled();
 
 			fireEvent.click(screen.getByRole("button", { name: "Override schema" }));
 
 			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
-		});
-
-		it("should allow overriding of conditionally rendered components", () => {
-			renderComponent(undefined, {
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[FIELD_ONE_ID]: {
-								label: FIELD_ONE_LABEL,
-								uiType: UI_TYPE,
-							},
-							[FIELD_TWO_ID]: {
-								label: FIELD_TWO_LABEL,
-								uiType: UI_TYPE,
-								showIf: [{ FIELD_ONE_ID: [{ filled: true }] }],
-							},
-						},
-					},
-				},
-				overrides: {
-					[FIELD_TWO_ID]: {
-						disabled: true,
-					},
-				},
-			});
-			fireEvent.change(getField("textbox", FIELD_ONE_LABEL), { target: { value: "hello" } });
-
-			expect(getField("textbox", FIELD_TWO_LABEL)).toBeDisabled();
 		});
 
 		it("should retain defaultValues after overriding", () => {

@@ -16,7 +16,8 @@ const FIELD_THREE_LABEL = "Field three";
 
 const renderComponent = (
 	fields: Record<string, TFrontendEngineFieldSchema>,
-	defaultValues?: Record<string, unknown> | undefined
+	defaultValues?: Record<string, unknown> | undefined,
+	overrides?: Record<string, unknown> | undefined
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -30,6 +31,7 @@ const renderComponent = (
 			},
 		},
 		defaultValues,
+		overrides,
 	};
 
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
@@ -339,5 +341,82 @@ describe("conditional-renderer", () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
 		expect(SUBMIT_FN).toBeCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
+	});
+
+	describe("overrides", () => {
+		const uiType = "text-field";
+
+		it("should allow overriding of conditionally rendered components", () => {
+			renderComponent(
+				{
+					[FIELD_ONE_ID]: {
+						label: FIELD_ONE_LABEL,
+						uiType,
+					},
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType,
+						showIf: [{ [FIELD_ONE_ID]: [{ filled: true }] }],
+					},
+				},
+				undefined,
+				{
+					[FIELD_TWO_ID]: {
+						disabled: true,
+					},
+				}
+			);
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+			expect(getFieldTwo()).toBeDisabled();
+		});
+
+		it("should allow overriding of component into being conditionally rendered", () => {
+			renderComponent(
+				{
+					[FIELD_ONE_ID]: {
+						label: FIELD_ONE_LABEL,
+						uiType,
+					},
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType,
+					},
+				},
+				undefined,
+				{
+					[FIELD_TWO_ID]: {
+						showIf: [{ [FIELD_ONE_ID]: [{ filled: true }] }],
+					},
+				}
+			);
+
+			expect(getFieldTwo(true)).not.toBeInTheDocument();
+		});
+
+		it("should allow overriding of conditional rendering rules", () => {
+			renderComponent(
+				{
+					[FIELD_ONE_ID]: {
+						label: FIELD_ONE_LABEL,
+						uiType,
+					},
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType,
+						showIf: [{ [FIELD_ONE_ID]: [{ equals: "hello" }] }],
+					},
+				},
+				undefined,
+				{
+					[FIELD_TWO_ID]: {
+						showIf: [{ [FIELD_ONE_ID]: [{ equals: "hi" }] }],
+					},
+				}
+			);
+			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+
+			expect(getFieldTwo()).toBeInTheDocument();
+		});
 	});
 });
