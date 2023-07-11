@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { ICheckboxGroupSchema } from "../../../components/fields/checkbox-group";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/Checkbox/Toggle",
@@ -226,3 +232,22 @@ ResetWithDefaultValues.argTypes = {
 		type: { name: "object", value: {} },
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<ICheckboxGroupSchema>("checkbox-overrides").bind({});
+Overrides.args = {
+	uiType: "checkbox",
+	label: "Checkbox",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	overrides: {
+		label: "Overridden",
+		options: [{ label: "New field", value: "new" }],
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

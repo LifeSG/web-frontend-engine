@@ -1,7 +1,8 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { CommonCustomStoryProps, FrontendEngine } from "../../common";
+import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
+import { IFilterItemSchema } from "../../../components/custom/filter/filter-item/types";
 
 export default {
 	title: "Custom/Filter/Filter-Item",
@@ -124,3 +125,35 @@ FilterItem.args = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<IFilterSchema>("filter-item-overrides", false).bind({});
+Overrides.args = {
+	referenceKey: "filter",
+	children: {
+		filterItem1: {
+			label: "Collapsible item",
+			referenceKey: "filter-item",
+			collapsible: true,
+			showDivider: true,
+			children: {
+				text: {
+					uiType: "text-body",
+					children: "This is a collapsible item",
+				},
+			},
+		},
+	},
+	overrides: {
+		children: {
+			filterItem1: {
+				label: "Overridden item",
+				children: {
+					text: {
+						children: "This is an overridden collapsible item",
+					},
+				},
+			},
+		},
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields/location-field/types";
-import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
 export default {
 	title: "Field/LocationField",
@@ -104,3 +104,13 @@ MustHavePostalCode.args = {
 	label: "MustHavePostalCode",
 	mustHavePostalCode: true,
 };
+
+export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>("location-field-overrides").bind({});
+Overrides.args = {
+	uiType: "location-field",
+	label: "Location",
+	overrides: {
+		label: "Overridden",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

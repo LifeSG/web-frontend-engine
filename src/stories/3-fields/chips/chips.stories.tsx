@@ -5,6 +5,8 @@ import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
 	FrontendEngine,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
 	RESET_BUTTON_SCHEMA,
 	ResetStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
@@ -318,3 +320,43 @@ ResetWithTextarea.args = {
 	],
 	textarea: { label: "Durian", rows: 1 },
 };
+
+export const Overrides = OverrideStoryTemplate<IChipsSchema>("chips-overrides").bind({});
+Overrides.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	overrides: {
+		label: "Overridden",
+		options: [{ label: "New field", value: "new" }],
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const OverrideTextarea = OverrideStoryTemplate<IChipsSchema>("chips-overrides-textarea").bind({});
+OverrideTextarea.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: {
+		label: "Durian",
+		placeholder: "Fill in something",
+	},
+	overrides: {
+		label: "Overridden",
+		textarea: {
+			label: "Overridden",
+			placeholder: "Overridden",
+			rows: 2,
+		},
+	},
+};
+OverrideTextarea.argTypes = OVERRIDES_ARG_TYPE;

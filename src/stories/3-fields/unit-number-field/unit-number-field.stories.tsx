@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { IUnitNumberFieldSchema } from "src/components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/UnitNumberField",
@@ -119,3 +125,13 @@ ResetWithDefaultValues.argTypes = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<IUnitNumberFieldSchema>("unit-number-overrides").bind({});
+Overrides.args = {
+	label: "Unit Number",
+	uiType: "unit-number-field",
+	overrides: {
+		label: "Overridden",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

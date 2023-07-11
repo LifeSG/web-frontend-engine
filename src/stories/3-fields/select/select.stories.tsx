@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { ISelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/Select",
@@ -174,3 +180,19 @@ ResetWithDefaultValues.argTypes = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<ISelectSchema>("select-overrides").bind({});
+Overrides.args = {
+	uiType: "select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	overrides: {
+		label: "Overridden",
+		options: [{ label: "New field", value: "new" }],
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

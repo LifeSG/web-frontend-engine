@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { IEmailFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/EmailField",
@@ -157,3 +163,14 @@ ResetWithDefaultValues.argTypes = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<IEmailFieldSchema>("email-overrides").bind({});
+Overrides.args = {
+	uiType: "email-field",
+	label: "Email",
+	overrides: {
+		label: "Overridden",
+		placeholder: "Overridden",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

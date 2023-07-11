@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { ITextareaSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/Textarea",
@@ -164,3 +170,14 @@ ResetWithDefaultValues.argTypes = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<ITextareaSchema>("textarea-overrides").bind({});
+Overrides.args = {
+	uiType: "textarea",
+	label: "Textarea",
+	overrides: {
+		label: "Overridden",
+		resizable: true,
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;
