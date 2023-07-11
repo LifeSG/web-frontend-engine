@@ -102,7 +102,10 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		});
 
 		if (!isEmpty(filteredOverrides)) {
-			return merge(cloneDeep(children), filteredOverrides);
+			const clonedChildren = cloneDeep(children);
+			const overriddenChildren = merge(clonedChildren, filteredOverrides);
+			const noNil = ObjectHelper.removeNil(overriddenChildren);
+			return noNil;
 		}
 
 		return children;
