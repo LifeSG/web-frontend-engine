@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IWrapperSchema } from "../../../components/elements/wrapper";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import {
+	CommonFieldStoryProps,
+	FrontendEngine,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
+} from "../../common";
 
 export default {
 	title: "Element/Wrapper",
@@ -213,3 +219,25 @@ Layout.args = {
 	},
 };
 Layout.parameters = VariousElements.parameters;
+
+export const Overrides = OverrideStoryTemplate<IWrapperSchema>("wrapper-overrides", false).bind({});
+Overrides.args = {
+	uiType: "div",
+	children: {
+		name: {
+			label: "What is your name",
+			uiType: "textarea",
+			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+			chipTexts: ["John", "Doe"],
+		},
+	},
+	overrides: {
+		children: {
+			name: {
+				label: "Overridden textarea",
+				chipTexts: ["Overridden", "Chip"],
+			},
+		},
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

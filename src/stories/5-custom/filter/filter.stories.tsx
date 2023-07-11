@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { CommonCustomStoryProps, FrontendEngine } from "../../common";
+import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 import { useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
@@ -115,3 +115,28 @@ DisabledClearButton.args = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<IFilterSchema>("filter-overrides", false).bind({});
+Overrides.args = {
+	referenceKey: "filter",
+	label: "Filters Desktop",
+	toggleFilterButtonLabel: "Filters Mobile",
+	children: {
+		filterItem1: {
+			label: "Search",
+			referenceKey: "filter-item",
+			children: {
+				name: {
+					label: "",
+					uiType: "text-field",
+					placeholder: "Enter keyword",
+				},
+			},
+		},
+	},
+	overrides: {
+		label: "Overridden",
+		toggleFilterButtonLabel: "Overridden",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

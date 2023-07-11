@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { IDateFieldSchema } from "src/components/fields/date-field/types";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/DateField",
@@ -172,3 +178,14 @@ ResetToCurrentDate.args = {
 	label: "Date",
 	useCurrentDate: true,
 };
+
+export const Overrides = OverrideStoryTemplate<IDateFieldSchema>("date-overrides").bind({});
+Overrides.args = {
+	uiType: "date-field",
+	label: "Date",
+	overrides: {
+		label: "Overridden",
+		useCurrentDate: true,
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

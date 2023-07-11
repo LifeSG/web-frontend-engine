@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IAlertSchema } from "../../../components/elements";
-import { CommonFieldStoryProps, FrontendEngine } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
 export default {
 	title: "Element/Alert",
@@ -148,3 +148,15 @@ SanitizedHTMLString.args = {
 	type: "success",
 	children: "<p>This component should not contain a script tag<script>console.log('hello world')</script></p>",
 };
+
+export const Overrides = OverrideStoryTemplate<IAlertSchema>("alert-overrides", false).bind({});
+Overrides.args = {
+	uiType: "alert",
+	type: "success",
+	children: "This is a success message",
+	overrides: {
+		type: "warning",
+		children: "This has been overridden",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

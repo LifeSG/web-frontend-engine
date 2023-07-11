@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { INumericFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/NumericField",
@@ -152,3 +158,14 @@ ResetWithDefaultValues.argTypes = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<INumericFieldSchema>("numeric-overrides").bind({});
+Overrides.args = {
+	label: "Number",
+	uiType: "numeric-field",
+	overrides: {
+		label: "Overridden",
+		placeholder: "Overridden",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

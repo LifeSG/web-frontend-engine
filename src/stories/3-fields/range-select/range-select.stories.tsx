@@ -2,7 +2,13 @@ import { InputRangeProp } from "@lifesg/react-design-system";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { IRangeSelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/RangeSelect",
@@ -251,3 +257,27 @@ ResetWithDefaultValues.argTypes = {
 		type: { name: "object", value: {} },
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<IRangeSelectSchema>("range-select-overrides").bind({});
+Overrides.args = {
+	uiType: "range-select",
+	label: "Directions",
+	options: {
+		from: [
+			{ label: "North", value: "North" },
+			{ label: "East", value: "East" },
+		],
+		to: [
+			{ label: "South", value: "South" },
+			{ label: "West", value: "West" },
+		],
+	},
+	overrides: {
+		label: "Overridden",
+		options: {
+			from: [{ label: "New", value: "new" }],
+			to: [{ label: "New", value: "new" }],
+		},
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

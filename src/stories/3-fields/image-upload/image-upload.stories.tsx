@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { IImageUploadSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 import { jpgDataURL } from "./image-data-url";
 
 export default {
@@ -288,3 +294,15 @@ ResetWithDefaultValues.argTypes = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<IImageUploadSchema>("upload-overrides").bind({});
+Overrides.args = {
+	uiType: "image-upload",
+	label: "Provide images",
+	overrides: {
+		label: "Overridden",
+		description: "Overridden to output as png format",
+		outputType: "png",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { ISwitchSchema } from "../../../components/fields/switch/types";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/Switch",
@@ -108,3 +114,13 @@ ResetWithDefaultValues.args = {
 	label: "Switch",
 	defaultValues: true,
 };
+
+export const Overrides = OverrideStoryTemplate<ISwitchSchema>("switch-overrides").bind({});
+Overrides.args = {
+	uiType: "switch",
+	label: "Switch",
+	overrides: {
+		label: "Overridden",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

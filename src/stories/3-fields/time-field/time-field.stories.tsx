@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { ITimeFieldSchema } from "src/components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/TimeField",
@@ -150,3 +156,14 @@ ResetToCurrentTime.args = {
 	uiType: "time-field",
 	useCurrentTime: true,
 };
+
+export const Overrides = OverrideStoryTemplate<ITimeFieldSchema>("time-overrides").bind({});
+Overrides.args = {
+	label: "Time",
+	uiType: "time-field",
+	overrides: {
+		label: "Overridden",
+		useCurrentTime: true,
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;
