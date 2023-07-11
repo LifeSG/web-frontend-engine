@@ -2,7 +2,7 @@ import { Button } from "@lifesg/react-design-system/button";
 import { action } from "@storybook/addon-actions";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../common";
 
@@ -63,6 +63,7 @@ const DATA: IFrontendEngineData = {
 			},
 		},
 	},
+	overrides: {},
 };
 
 export default {
@@ -115,6 +116,15 @@ export default {
 			table: {
 				type: {
 					summary: "TFrontendEngineValues",
+				},
+			},
+		},
+		"data.overrides": {
+			description:
+				"Changes the schema by applying on top of it, this can be done on-the-fly and is declared outside `sections`",
+			table: {
+				type: {
+					summary: "{}",
 				},
 			},
 		},
@@ -273,6 +283,71 @@ export const ExternalSubmit: Story<IFrontendEngineProps> = () => {
 ExternalSubmit.storyName = "External Submit Button";
 ExternalSubmit.parameters = {
 	controls: { hideNoControlsWarning: true },
+};
+
+export const OverrideSchema: Story<IFrontendEngineProps> = () => {
+	const [schema, setSchema] = useState<IFrontendEngineData>({
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					name: {
+						label: "What is your name",
+						uiType: "text-field",
+						validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+					},
+					email: {
+						label: "Email address",
+						uiType: "email-field",
+						validation: [{ required: true }],
+						showIf: [{ radio: [{ filled: true }] }],
+					},
+					radio: {
+						uiType: "radio",
+						label: "Radio Button",
+						options: [
+							{ label: "Apple", value: "Apple" },
+							{ label: "Berry", value: "Berry" },
+							{ label: "Cherry", value: "Cherry" },
+						],
+					},
+					...SUBMIT_BUTTON_SCHEMA,
+				},
+			},
+		},
+		defaultValues: {
+			name: "BOB",
+			email: "BOB@hotmail.com",
+		},
+	});
+
+	const handleClick = () => {
+		setSchema((state) => {
+			return {
+				...state,
+				overrides: {
+					name: {
+						label: "Overriden label",
+						disabled: true,
+					},
+					email: {
+						disabled: true,
+					},
+					radio: {
+						options: [undefined, undefined, undefined, { label: "Durian", value: "Durian" }],
+					},
+				},
+			};
+		});
+	};
+	return (
+		<>
+			<FrontendEngine data={schema} />
+			<Button.Default styleType="secondary" onClick={handleClick}>
+				Override fields
+			</Button.Default>
+		</>
+	);
 };
 
 export const GetValues: Story<IFrontendEngineProps> = () => {
