@@ -109,10 +109,12 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				setErrors(value as TErrorPayload);
 			} else {
 				const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
-				const errorMessage = Object.values(errorObject)[0];
-				const fieldKey = Object.keys(errorObject)[0];
+				if (!isEmpty(errorObject)) {
+					const errorMessage = Object.values(errorObject)[0];
+					const fieldKey = Object.keys(errorObject)[0];
 
-				setError(fieldKey, { type: "api", message: errorMessage as string });
+					setError(fieldKey, { type: "api", message: errorMessage as string });
+				}
 			}
 		});
 	};
