@@ -1,9 +1,10 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { useState } from "react";
 import { IChipsSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
-import { cloneDeep, merge } from "lodash";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,

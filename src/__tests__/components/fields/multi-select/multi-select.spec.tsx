@@ -1,10 +1,11 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IMultiSelectSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { cloneDeep, merge } from "lodash";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -219,7 +220,7 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("update options through overrides", () => {
-		fit.each`
+		it.each`
 			scenario                                                                          | selected      | expectedValueBeforeUpdate | expectedValueAfterUpdate
 			${"should retain field values if particular field is not overridden"}             | ${["A", "B"]} | ${["Apple", "Berry"]}     | ${["Apple", "Berry"]}
 			${"should clear field values if option is removed through overriding"}            | ${["C", "D"]} | ${["Cherry", "Durian"]}   | ${[]}
