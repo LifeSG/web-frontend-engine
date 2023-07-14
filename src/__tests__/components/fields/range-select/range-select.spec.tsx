@@ -1,5 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IRangeSelectSchema } from "../../../../components/fields";
@@ -16,7 +18,6 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { cloneDeep, merge } from "lodash";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -191,7 +192,7 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("update options schema", () => {
-		fit.each`
+		it.each`
 			scenario                                                                        | selected      | expectedValueBeforeUpdate          | expectedValueAfterUpdate
 			${"should retain field values if option is not removed on override"}            | ${["A", "C"]} | ${{ from: "Apple", to: "Cherry" }} | ${{ from: "Apple", to: "Cherry" }}
 			${"should clear field values if option is removed on override"}                 | ${["B", "D"]} | ${{ from: "Berry", to: "Date" }}   | ${{ from: "", to: "" }}

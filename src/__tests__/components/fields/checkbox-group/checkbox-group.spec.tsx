@@ -1,9 +1,10 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { useState } from "react";
 import { ICheckboxGroupSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
-import { cloneDeep, merge } from "lodash";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -194,7 +195,7 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("update options schema", () => {
-		fit.each`
+		it.each`
 			scenario                                                                             | selected      | expectedValueBeforeUpdate | expectedValueAfterUpdate
 			${"should retain field values if option is not removed on schema update"}            | ${["A", "B"]} | ${["Apple", "Berry"]}     | ${["Apple", "Berry"]}
 			${"should clear field values if option is removed on schema update"}                 | ${["C", "D"]} | ${["Cherry", "Durian"]}   | ${[]}

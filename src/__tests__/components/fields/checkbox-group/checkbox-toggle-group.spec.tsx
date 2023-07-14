@@ -1,5 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { useState } from "react";
 import { ICheckboxGroupSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -14,7 +16,6 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { cloneDeep, merge } from "lodash";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
