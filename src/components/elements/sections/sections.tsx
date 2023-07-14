@@ -1,3 +1,4 @@
+import { useFormSchema } from "../../../utils/hooks";
 import { Section } from "../section";
 import { ISectionsProps } from "./types";
 
@@ -18,12 +19,16 @@ export const Sections = (props: ISectionsProps) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const { schema, warnings } = props;
+	const {
+		formSchema: { overrides },
+		overrideSchema,
+	} = useFormSchema();
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderSections = () => {
-		return Object.entries(schema).map(([id, section], i) => (
+		return Object.entries(overrideSchema(schema, overrides)).map(([id, section], i) => (
 			<Section key={`section-${i}`} id={id} sectionSchema={section} warnings={warnings} />
 		));
 	};

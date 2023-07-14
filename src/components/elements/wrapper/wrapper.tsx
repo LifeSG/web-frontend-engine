@@ -1,11 +1,9 @@
-import cloneDeep from "lodash/cloneDeep";
 import isEmpty from "lodash/isEmpty";
-import merge from "lodash/merge";
 import React, { Fragment, ReactNode, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as FrontendEngineElements from "..";
-import { ObjectHelper, TestHelper } from "../../../utils";
+import { TestHelper } from "../../../utils";
 import { useFormSchema } from "../../../utils/hooks";
 import * as FrontendEngineCustomComponents from "../../custom";
 import * as FrontendEngineFields from "../../fields";
@@ -14,12 +12,11 @@ import {
 	ECustomFieldType,
 	EElementType,
 	EFieldType,
-	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
 } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
-import { IWrapperProps, IWrapperSchema } from "./types";
+import { IWrapperProps } from "./types";
 import { DSAlert } from "./wrapper.styles";
 
 const fieldTypeKeys = Object.keys(EFieldType);
@@ -35,6 +32,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	const { control } = useFormContext();
 	const {
 		formSchema: { overrides },
+		overrideSchema,
 	} = useFormSchema();
 
 	// =============================================================================
@@ -88,29 +86,6 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const overrideSchema = (children: IWrapperSchema["children"], overrides: IFrontendEngineData["overrides"]) => {
-		if (isEmpty(overrides) || typeof children === "string") return children;
-
-		let filteredOverrides = {};
-		Object.keys(children).forEach((childId) => {
-			const overrideEntry = ObjectHelper.getNestedValueByKey(overrides, childId, {
-				searchIn: ["children"],
-			});
-			if (!isEmpty(overrideEntry)) {
-				filteredOverrides = { ...filteredOverrides, ...overrideEntry };
-			}
-		});
-
-		if (!isEmpty(filteredOverrides)) {
-			const clonedChildren = cloneDeep(children);
-			const overriddenChildren = merge(clonedChildren, filteredOverrides);
-			const noNil = ObjectHelper.removeNil(overriddenChildren);
-			return noNil;
-		}
-
-		return children;
-	};
-
 	/* eslint-disable indent */
 	const buildConditionalRenderer =
 		(childId: string, childSchema: TFrontendEngineFieldSchema) =>

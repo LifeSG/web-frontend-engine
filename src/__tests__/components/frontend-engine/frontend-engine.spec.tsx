@@ -582,34 +582,49 @@ describe("frontend-engine", () => {
 		});
 
 		it("should remove entries on overriding with null values", () => {
-			renderComponent(undefined, {
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[FIELD_ONE_ID]: {
-								uiType: "chips",
-								label: FIELD_ONE_LABEL,
-								disabled: true,
-								options: [
-									{ label: "A", value: "Apple" },
-									{ label: "B", value: "Berry" },
-								],
+			render(
+				<FrontendEngine
+					data={{
+						sections: {
+							section1: {
+								uiType: "section",
+								children: {
+									[FIELD_ONE_ID]: {
+										uiType: "chips",
+										label: FIELD_ONE_LABEL,
+										disabled: true,
+										options: [
+											{ label: "A", value: "Apple" },
+											{ label: "B", value: "Berry" },
+										],
+									},
+								},
+							},
+							section2: {
+								uiType: "section",
+								children: {
+									[FIELD_TWO_ID]: {
+										uiType: "text-field",
+										label: FIELD_TWO_LABEL,
+									},
+								},
 							},
 						},
-					},
-				},
-				overrides: {
-					[FIELD_ONE_ID]: {
-						disabled: null,
-						options: [null],
-					},
-				},
-			});
+						overrides: {
+							[FIELD_ONE_ID]: {
+								disabled: null,
+								options: [null],
+							},
+							section2: null,
+						},
+					}}
+				/>
+			);
 
 			expect(getField("button", "A", true)).not.toBeInTheDocument();
 			expect(getField("button", "B")).toBeInTheDocument();
 			expect(getField("button", "B")).toBeEnabled();
+			expect(getField("textbox", FIELD_TWO_LABEL, true)).not.toBeInTheDocument();
 		});
 
 		it("should not change or remove entries on overriding with undefined values", () => {
