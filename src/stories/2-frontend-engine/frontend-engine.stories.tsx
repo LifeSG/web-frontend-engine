@@ -120,11 +120,10 @@ export default {
 			},
 		},
 		"data.overrides": {
-			description:
-				"Changes the schema by applying on top of it, this can be done on-the-fly and is declared outside `sections`",
+			description: "Applies field schema properties on-the-fly over the schema without modifying `sections`",
 			table: {
 				type: {
-					summary: "{}",
+					summary: "Record<string, RecursivePartial<TFrontendEngineFieldSchema<V>>>",
 				},
 			},
 		},
