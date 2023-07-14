@@ -287,9 +287,26 @@ ExternalSubmit.parameters = {
 export const OverrideSchema: Story<IFrontendEngineProps> = () => {
 	const [schema, setSchema] = useState<IFrontendEngineData>({
 		sections: {
-			section: {
+			section1: {
 				uiType: "section",
 				children: {
+					title1: {
+						uiType: "h5",
+						children: "Section to be removed when overridden",
+					},
+					field: {
+						label: "Section field",
+						uiType: "text-field",
+					},
+				},
+			},
+			section2: {
+				uiType: "section",
+				children: {
+					title2: {
+						uiType: "h5",
+						children: "Section",
+					},
 					name: {
 						label: "What is your name",
 						uiType: "text-field",
@@ -310,6 +327,11 @@ export const OverrideSchema: Story<IFrontendEngineProps> = () => {
 							{ label: "Cherry", value: "Cherry" },
 						],
 					},
+				},
+			},
+			section3: {
+				uiType: "section",
+				children: {
 					...SUBMIT_BUTTON_SCHEMA,
 				},
 			},
@@ -325,8 +347,9 @@ export const OverrideSchema: Story<IFrontendEngineProps> = () => {
 			return {
 				...state,
 				overrides: {
+					section1: null,
 					name: {
-						label: "Overriden label",
+						label: "Overridden label",
 						disabled: true,
 					},
 					email: {
@@ -342,6 +365,7 @@ export const OverrideSchema: Story<IFrontendEngineProps> = () => {
 	return (
 		<>
 			<FrontendEngine data={schema} />
+			<br />
 			<Button.Default styleType="secondary" onClick={handleClick}>
 				Override fields
 			</Button.Default>
