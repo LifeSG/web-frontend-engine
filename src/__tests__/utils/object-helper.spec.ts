@@ -32,8 +32,8 @@ describe("object-helper", () => {
 		});
 
 		it("should be able to get nested data if key exists", () => {
-			const expected = { c: 3 };
-			const data = { a: { b: { c: 3 } } };
+			const expected = { c: 2 };
+			const data = { a: { b: { e: 1 }, d: { c: 2 } } };
 
 			const result = ObjectHelper.getNestedValueByKey(data, "c");
 
