@@ -60,6 +60,8 @@ export class OneMapError extends Error {
 		super(message);
 		this.name = "OneMapError";
 		this.innerError = error;
-		Error.captureStackTrace(this, OneMapError);
+		if (Error.captureStackTrace) {
+			Error.captureStackTrace(this, OneMapError);
+		}
 	}
 }
