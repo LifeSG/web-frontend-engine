@@ -36,7 +36,11 @@ export namespace ObjectHelper {
 		for (const [parentKey, value] of Object.entries(data)) {
 			if (typeof value === "object") {
 				if (!searchIn || searchIn.includes(parentKey)) {
-					return getNestedValueByKey(value as Record<string, T>, key, { ...options, skipRoot: false });
+					const matches = getNestedValueByKey(value as Record<string, T>, key, {
+						...options,
+						skipRoot: false,
+					});
+					if (!isEmpty(matches)) return matches;
 				}
 			}
 		}
