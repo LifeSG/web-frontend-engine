@@ -12,6 +12,7 @@ export interface ILocationModalProps
 	className: string;
 	showLocationModal: boolean;
 	formValues?: ILocationFieldValues | undefined;
+	mastheadHeight?: number;
 	onClose: () => void;
 	onConfirm: (values: ILocationFieldValues) => void;
 	updateFormValues: (values: ILocationFieldValues) => void;

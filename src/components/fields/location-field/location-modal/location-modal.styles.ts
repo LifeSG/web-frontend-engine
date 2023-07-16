@@ -9,7 +9,11 @@ interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
 }
 
-export const ModalBox = styled(Modal.Box)`
+interface IModalBoxStyle {
+	mastheadHeight?: number;
+}
+
+export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 	flex-direction: row;
 	width: 70%;
 	max-width: 45rem;
@@ -17,6 +21,8 @@ export const ModalBox = styled(Modal.Box)`
 
 	// set z-index to get past safari border-radius issue
 	z-index: 1;
+
+	padding-top: ${({ mastheadHeight }) => (mastheadHeight ? mastheadHeight : "0")}px;
 
 	${MediaQuery.MaxWidth.tablet} {
 		flex-direction: column;
