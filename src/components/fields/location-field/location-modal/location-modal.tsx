@@ -37,7 +37,7 @@ const LocationModal = ({
 	reverseGeoCodeEndpoint,
 	gettingCurrentLocationFetchMessage,
 	mustHavePostalCode,
-	mastheadHeight,
+	locationModalStyles,
 	onClose,
 	onConfirm,
 	updateFormValues,
@@ -367,7 +367,7 @@ const LocationModal = ({
 					id={TestHelper.generateId(id, "modal-box")}
 					className={`${className}-modal-box`}
 					showCloseButton={false}
-					mastheadHeight={mastheadHeight}
+					locationModalStyles={locationModalStyles}
 				>
 					{hasInternetConnectivity ? (
 						<>

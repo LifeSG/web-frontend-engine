@@ -105,9 +105,9 @@ MustHavePostalCode.args = {
 	mustHavePostalCode: true,
 };
 
-export const WithMastheadHeight = DefaultStoryTemplate<ILocationFieldSchema>("location-field-masthead-height").bind({});
-WithMastheadHeight.args = {
+export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind({});
+WithCustomStyles.args = {
 	uiType: "location-field",
-	label: "WithMastheadHeight",
-	mastheadHeight: 50,
+	label: "WithCustomStyles",
+	locationModalStyles: "padding-top: 50px; margin-right: 10px;",
 };
