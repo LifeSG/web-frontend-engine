@@ -104,3 +104,10 @@ MustHavePostalCode.args = {
 	label: "MustHavePostalCode",
 	mustHavePostalCode: true,
 };
+
+export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind({});
+WithCustomStyles.args = {
+	uiType: "location-field",
+	label: "WithCustomStyles",
+	locationModalStyles: "padding-top: 50px; margin-right: 10px;",
+};

@@ -1,15 +1,18 @@
-import { MediaWidths } from "@lifesg/react-design-system/media";
-import { MediaQuery } from "@lifesg/react-design-system/media";
+import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import styled from "styled-components";
-import { LocationPicker } from "./location-picker";
 import { TPanelInputMode } from "../types";
+import { LocationPicker } from "./location-picker";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
 }
 
-export const ModalBox = styled(Modal.Box)`
+interface IModalBoxStyle {
+	locationModalStyles?: string | undefined;
+}
+
+export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 	flex-direction: row;
 	width: 70%;
 	max-width: 45rem;
@@ -17,6 +20,10 @@ export const ModalBox = styled(Modal.Box)`
 
 	// set z-index to get past safari border-radius issue
 	z-index: 1;
+
+	${({ locationModalStyles }) => {
+		if (locationModalStyles) return `${locationModalStyles}`;
+	}}
 
 	${MediaQuery.MaxWidth.tablet} {
 		flex-direction: column;

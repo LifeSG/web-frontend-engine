@@ -22,16 +22,15 @@ export namespace GeoLocationHelper {
 	};
 
 	/**
-	 * @param options An optional options object that lets you specify the maximum no. of attempts (default: 1),
-	 * the timeout in milliseconds (default: 2000), the maximum age of a possible cached position in milliseconds (default: 2000),
-	 * and whether to disable the error prompt in the LifeSG app (default: false).
+	 * @param options An optional options object that lets you specify the maximum no. of attempts (default: 3),
+	 * the timeout in milliseconds (default: 2000), the maximum age of a possible cached position in milliseconds (default: 2000)
 	 * A minimum of one attempt will be made, even if maxAttempts is 0.
 	 * @returns A Promise that gets the current location.
 	 * @resolve type: ILocationCoord
 	 * @reject type: GeolocationPositionError | undefined
 	 */
 	export const getCurrentLocation = async (options: IGetCurrentLocationOptions = {}): Promise<ILocationCoord> => {
-		const { maxAttempts = 1, timeout = 2000, maximumAge = 2000 } = options;
+		const { maxAttempts = 3, timeout = 2000, maximumAge = 2000 } = options;
 		let attemptCount = 0;
 
 		// Use do-while loop so that _getCurrentLocation() is called at least once, even if maxAttempts is 0.
