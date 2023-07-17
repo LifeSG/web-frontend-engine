@@ -14,7 +14,7 @@ export interface ILocationFieldSchema<V = undefined>
 		Pick<ILocationInputProps, "locationInputPlaceholder">,
 		Pick<IStaticMapProps, "staticMapPinColor"> {
 	className?: string;
-	locationModalStyles?: string;
+	locationModalStyles?: string | undefined;
 }
 
 export type TSinglePanelInputMode = "search" | "map";

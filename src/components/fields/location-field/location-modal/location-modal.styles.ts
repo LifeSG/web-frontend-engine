@@ -9,7 +9,7 @@ interface ISinglePanelStyle {
 }
 
 interface IModalBoxStyle {
-	locationModalStyles?: string;
+	locationModalStyles?: string | undefined;
 }
 
 export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`

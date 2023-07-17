@@ -12,7 +12,7 @@ export interface ILocationModalProps
 	className: string;
 	showLocationModal: boolean;
 	formValues?: ILocationFieldValues | undefined;
-	locationModalStyles?: string;
+	locationModalStyles?: string | undefined;
 	onClose: () => void;
 	onConfirm: (values: ILocationFieldValues) => void;
 	updateFormValues: (values: ILocationFieldValues) => void;
