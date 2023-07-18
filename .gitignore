@@ -11,3 +11,5 @@ yarn-error.log*
 .env
 
 /storybook-static
+
+junit.xml
