@@ -27,4 +27,5 @@ module.exports = async () => ({
 	verbose: true,
 	bail: false,
 	// transformIgnorePatterns: ["/node_modules/(?!leaflet)"],
+	reporters: ["default", ["jest-junit", { outputName: "junit.xml" }]],
 });
