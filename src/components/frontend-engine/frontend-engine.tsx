@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import cloneDeep from "lodash/cloneDeep";
 import isEmpty from "lodash/isEmpty";
 import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -35,7 +36,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const formMethods = useForm({
 		mode: validationMode,
 		reValidateMode: revalidationMode,
-		defaultValues: defaultValues,
+		defaultValues,
 		resolver: async (data, context, options) => {
 			performSoftValidation(softValidationSchema, data);
 
@@ -162,7 +163,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [formState, watch]);
 
 	useDeepCompareEffectNoCheck(() => {
-		reset(defaultValues);
+		reset(cloneDeep(defaultValues));
 	}, [defaultValues]);
 
 	// =============================================================================
