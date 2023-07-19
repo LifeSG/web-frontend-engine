@@ -116,7 +116,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 				// runs on mount and reset
 				if (useCurrentDate) {
 					const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
-					setValue(id, currentDate, { shouldDirty: true });
+					setTimeout(() => setValue(id, currentDate, { shouldDirty: true }));
 
 					const inputDate = DateTimeHelper.formatDateTime(
 						LocalDate.now().toString(),
