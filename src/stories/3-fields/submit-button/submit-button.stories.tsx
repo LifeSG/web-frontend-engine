@@ -1,9 +1,9 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { ISubmitButtonSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/SubmitButton",
 	parameters: {
 		docs: {
@@ -53,7 +53,8 @@ export default {
 			},
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 const Template = (id: string) =>
 	((args) => (
@@ -72,7 +73,7 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as Story<ISubmitButtonSchema & { overrides?: Record<string, unknown> | undefined }>;
+	)) as StoryFn<ISubmitButtonSchema & { overrides?: Record<string, unknown> | undefined }>;
 
 export const Default = Template("submit-default").bind({});
 Default.args = {

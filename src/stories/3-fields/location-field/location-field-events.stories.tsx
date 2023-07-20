@@ -1,7 +1,7 @@
 import { Text } from "@lifesg/react-design-system";
 import { action } from "@storybook/addon-actions";
 import { Description, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
 import {
 	ILocationFieldSchema,
@@ -18,7 +18,7 @@ import { TestHelper } from "../../../utils";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-field.stories";
 
-export default {
+const meta: Meta = {
 	title: "Field/LocationField/Events",
 	parameters: {
 		docs: {
@@ -37,7 +37,8 @@ export default {
 		},
 	},
 	argTypes: Default.argTypes,
-} as Meta;
+};
+export default meta;
 
 /* eslint-disable react-hooks/rules-of-hooks */
 const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
@@ -78,7 +79,7 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 				}}
 			/>
 		);
-	}) as Story<ILocationFieldSchema>;
+	}) as StoryFn<ILocationFieldSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
 export const Geolocation = GeolocationTemplate({
@@ -339,7 +340,7 @@ const ErrorEventsTemplate = () =>
 				{renderNetworkErrorPrompt()}
 			</div>
 		);
-	}) as Story<ILocationFieldSchema>;
+	}) as StoryFn<ILocationFieldSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
 export const CustomErrorHandling = ErrorEventsTemplate().bind(this);

@@ -1,11 +1,11 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 import { useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 
-export default {
+const meta: Meta = {
 	title: "Custom/Filter",
 	parameters: {
 		docs: {
@@ -53,9 +53,11 @@ export default {
 			type: { name: "object", value: {}, required: true },
 		},
 	},
-} as Meta;
-const Template = (id: string) =>
-	((args) => {
+};
+export default meta;
+const Template =
+	(id: string): StoryFn<IFilterSchema> =>
+	(args) => {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const formRef = useRef<IFrontendEngineRef>(null);
 		return (
@@ -73,7 +75,7 @@ const Template = (id: string) =>
 				}}
 			/>
 		);
-	}) as Story<IFilterSchema>;
+	};
 
 export const Default = Template("wrapper-default").bind({});
 Default.args = {

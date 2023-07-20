@@ -1,9 +1,9 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import * as Yup from "yup";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
-export default {
+const meta: Meta = {
 	title: "Form/Validation Schema/Strings",
 	component: null,
 	parameters: {
@@ -25,9 +25,10 @@ export default {
 			table: { disable: true },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
-const Template: Story<IValidationComponentProps> = (args) => (
+const Template: StoryFn<IValidationComponentProps> = (args) => (
 	<ValidationComponent type={args.type} rule={args.rule} value={args.value} />
 );
 

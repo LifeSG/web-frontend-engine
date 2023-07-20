@@ -1,13 +1,13 @@
 import { action } from "@storybook/addon-actions";
 import { Description, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IImageUploadSchema } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import DefaultImageUploadConfig from "./image-upload.stories";
 
-export default {
+const meta: Meta = {
 	title: "Field/ImageUpload/Events",
 	parameters: {
 		docs: {
@@ -26,7 +26,8 @@ export default {
 		},
 	},
 	argTypes: DefaultImageUploadConfig.argTypes,
-} as Meta;
+};
+export default meta;
 
 /* eslint-disable react-hooks/rules-of-hooks */
 const Template = (eventName: string) =>
@@ -56,7 +57,7 @@ const Template = (eventName: string) =>
 				}}
 			/>
 		);
-	}) as Story<IImageUploadSchema>;
+	}) as StoryFn<IImageUploadSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
 export const Mount = Template("mount").bind({});
@@ -135,7 +136,7 @@ const SaveReviewImagesTemplate = (eventName: string) =>
 				}}
 			/>
 		);
-	}) as Story<IImageUploadSchema>;
+	}) as StoryFn<IImageUploadSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
 export const SaveReviewImages = SaveReviewImagesTemplate("save-review-images").bind({});

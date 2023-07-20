@@ -1,7 +1,7 @@
 import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { IDateFieldSchema } from "src/components/fields/date-field/types";
 import {
 	CommonFieldStoryProps,
@@ -11,7 +11,7 @@ import {
 	ResetStoryTemplate,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/DateField",
 	parameters: {
 		docs: {
@@ -66,7 +66,8 @@ export default {
 			},
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd")
 	.withResolverStyle(ResolverStyle.STRICT)

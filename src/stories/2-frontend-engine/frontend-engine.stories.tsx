@@ -1,7 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { action } from "@storybook/addon-actions";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../common";
@@ -66,7 +66,7 @@ const DATA: IFrontendEngineData = {
 	overrides: {},
 };
 
-export default {
+const meta: Meta = {
 	title: "Form/Frontend Engine",
 	component: FrontendEngine,
 	parameters: {
@@ -221,9 +221,10 @@ export default {
 			},
 		},
 	},
-} as Meta;
+};
+export default meta;
 
-const Template: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
+const Template: StoryFn<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -270,13 +271,13 @@ ValidateOnAll.args = {
 	},
 };
 
-export const OnChange: Story<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
+export const OnChange: StoryFn<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
 OnChange.args = {
 	data: DATA,
 	onChange: (values, isValid) => action("change")(values, isValid),
 };
 
-export const ExternalSubmit: Story<IFrontendEngineProps> = () => {
+export const ExternalSubmit: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
 		ref.current.submit();
@@ -297,7 +298,7 @@ ExternalSubmit.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-export const OverrideSchema: Story<IFrontendEngineProps> = () => {
+export const OverrideSchema: StoryFn<IFrontendEngineProps> = () => {
 	const [schema, setSchema] = useState<IFrontendEngineData>({
 		sections: {
 			section1: {
@@ -386,7 +387,7 @@ export const OverrideSchema: Story<IFrontendEngineProps> = () => {
 	);
 };
 
-export const GetValues: Story<IFrontendEngineProps> = () => {
+export const GetValues: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
 		console.log(ref.current.getValues());
@@ -406,7 +407,7 @@ GetValues.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-export const SetValue: Story<IFrontendEngineProps> = () => {
+export const SetValue: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
 		ref.current.setValue("name", "Erik");
@@ -426,7 +427,7 @@ SetValue.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-export const CheckIsValid: Story<IFrontendEngineProps> = () => {
+export const CheckIsValid: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
 		console.log(ref.current.isValid());
@@ -449,7 +450,7 @@ CheckIsValid.parameters = {
 interface IYupCustomValidationRule {
 	mustBeHello?: boolean | undefined;
 }
-export const AddCustomValidation: Story = () => {
+export const AddCustomValidation: StoryFn = () => {
 	const ref = useRef<IFrontendEngineRef>();
 
 	useEffect(() => {
@@ -487,7 +488,7 @@ AddCustomValidation.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-export const SetCustomErrors: Story<IFrontendEngineProps> = () => {
+export const SetCustomErrors: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
 		try {
@@ -530,7 +531,7 @@ SetCustomErrors.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-export const Reset: Story<IFrontendEngineProps> = () => {
+export const Reset: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
 		ref.current.reset();
@@ -551,7 +552,7 @@ Reset.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-export const OnSubmitError: Story<IFrontendEngineProps> = () => {
+export const OnSubmitError: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 
 	return (

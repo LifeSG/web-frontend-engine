@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { IWrapperSchema } from "../../../components/elements/wrapper";
 import {
 	CommonFieldStoryProps,
@@ -9,7 +9,7 @@ import {
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Element/Wrapper",
 	parameters: {
 		docs: {
@@ -57,7 +57,8 @@ export default {
 			type: { name: "object", value: {}, required: true },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 const Template = (id: string) =>
 	((args) => (
@@ -73,9 +74,9 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as Story<IWrapperSchema>;
+	)) as StoryFn<IWrapperSchema>;
 
-const SectionTemplate: Story<Record<string, IWrapperSchema>> = (args) => (
+const SectionTemplate: StoryFn<Record<string, IWrapperSchema>> = (args) => (
 	<FrontendEngine
 		data={{
 			sections: {

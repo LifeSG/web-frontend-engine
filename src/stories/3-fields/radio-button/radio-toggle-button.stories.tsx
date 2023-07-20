@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
 import {
 	CommonFieldStoryProps,
@@ -9,7 +9,7 @@ import {
 	ResetStoryTemplate,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/RadioButton/Toggle",
 	parameters: {
 		docs: {
@@ -60,7 +60,8 @@ export default {
 			type: { name: "object", value: {} },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 export const Default = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-default").bind({});
 Default.args = {

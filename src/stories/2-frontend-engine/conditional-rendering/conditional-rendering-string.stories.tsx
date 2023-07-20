@@ -1,10 +1,10 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { FrontendEngine } from "../../../components";
 import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Form/Conditional Rendering/Rules/Strings",
 	component: null,
 	parameters: {
@@ -24,9 +24,10 @@ export default {
 		field2: { table: { disable: true } },
 		"submit-button": { table: { disable: true } },
 	},
-} as Meta;
+};
+export default meta;
 
-const Template: Story<Record<string, TFrontendEngineFieldSchema>> = (args) => (
+const Template: StoryFn<Record<string, TFrontendEngineFieldSchema>> = (args) => (
 	<FrontendEngine
 		data={{
 			sections: {

@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
@@ -11,7 +11,7 @@ import {
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Custom/Filter/FilterCheckbox",
 	parameters: {
 		docs: {
@@ -91,7 +91,8 @@ export default {
 			defaultValue: [],
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 const Template = (id: string) =>
 	(({ defaultValues, submitBtn, ...args }) => {
@@ -118,7 +119,7 @@ const Template = (id: string) =>
 				}}
 			/>
 		);
-	}) as Story<IFilterSchema & { defaultValues?: string[] | undefined; submitBtn?: boolean }>;
+	}) as StoryFn<IFilterSchema & { defaultValues?: string[] | undefined; submitBtn?: boolean }>;
 
 export const Default = Template("wrapper-default").bind({});
 Default.args = {

@@ -1,9 +1,9 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields/location-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/LocationField",
 	parameters: {
 		docs: {
@@ -25,7 +25,8 @@ export default {
 	argTypes: {
 		...CommonFieldStoryProps("location-field"),
 	},
-} as Meta;
+};
+export default meta;
 
 export const Default = DefaultStoryTemplate<ILocationFieldSchema>("location-field-default").bind({});
 Default.args = {

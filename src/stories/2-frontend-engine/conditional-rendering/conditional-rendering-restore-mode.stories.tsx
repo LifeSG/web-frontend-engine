@@ -1,6 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { Description, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { useRef } from "react";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
@@ -48,7 +48,7 @@ const DATA: IFrontendEngineData = {
 	},
 };
 
-export default {
+const meta: Meta = {
 	title: "Form/Conditional Rendering/Restoring Values",
 	component: null,
 	parameters: {
@@ -65,9 +65,10 @@ export default {
 			),
 		},
 	},
-} as Meta;
+};
+export default meta;
 
-const Template: Story<IFrontendEngineProps> = (args) => {
+const Template: StoryFn<IFrontendEngineProps> = (args) => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleReset = () => {
 		ref.current.reset();

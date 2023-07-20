@@ -1,10 +1,9 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
-import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
+import { Meta, StoryFn } from "@storybook/react";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
-import { IFilterItemSchema } from "../../../components/custom/filter/filter-item/types";
+import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Custom/Filter/Filter-Item",
 	parameters: {
 		docs: {
@@ -52,7 +51,8 @@ export default {
 			type: { name: "object", value: {}, required: true },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 const Template = (id: string) =>
 	((args) => (
@@ -68,7 +68,7 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as Story<IFilterSchema>;
+	)) as StoryFn<IFilterSchema>;
 
 export const FilterItem = Template("wrapper-default").bind({});
 FilterItem.args = {
