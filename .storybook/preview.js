@@ -1,6 +1,5 @@
 import { withA11y } from "@storybook/addon-a11y";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
-import { addDecorator } from "@storybook/react";
 
 export const parameters = {
 	viewport: {
@@ -15,7 +14,5 @@ export const parameters = {
 			order: ["Introduction", "Form", ["Frontend Engine", "Validation Schema", "Conditional Rendering"]],
 		},
 	},
+	decorators: [withA11y],
 };
-
-addDecorator(withA11y);
-//["Frontend Engine", "Validation Schema", "Conditional Rendering"]
