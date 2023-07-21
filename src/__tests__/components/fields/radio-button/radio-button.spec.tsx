@@ -139,7 +139,7 @@ describe(UI_TYPE, () => {
 		expect(getRadioButtonB()).toBeDisabled();
 	});
 
-	describe("update options schema", () => {
+	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                 | selected | expectedValueBeforeUpdate | expectedValueAfterUpdate
 			${"should retain field value if option is not removed on schema update"} | ${"A"}   | ${"Apple"}                | ${"Apple"}
