@@ -152,18 +152,23 @@ describe("radio toggle button", () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string>) => {
 				render(
 					<ComponentWithSetSchemaButton
-						onClick={(data) => ({
-							...data,
-							overrides: {
-								[COMPONENT_ID]: {
-									options: [
-										{ label: "A", value: "Apple" },
-										{ label: "B", value: "b" },
-										{ label: "C", value: "Cherry" },
-									],
+						onClick={(data) =>
+							merge(cloneDeep(data), {
+								sections: {
+									section: {
+										children: {
+											[COMPONENT_ID]: {
+												options: [
+													{ label: "A", value: "Apple" },
+													{ label: "B", value: "b" },
+													{ label: "C", value: "Cherry" },
+												],
+											},
+										},
+									},
 								},
-							},
-						})}
+							})
+						}
 					/>
 				);
 
