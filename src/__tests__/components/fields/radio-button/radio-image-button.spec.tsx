@@ -137,7 +137,7 @@ describe("radio toggle button", () => {
 		expect(getRadioButtonB()).toBeDisabled();
 	});
 
-	describe("update options schema", () => {
+	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                 | selected | expectedValueBeforeUpdate | expectedValueAfterUpdate
 			${"should retain field value if option is not removed on schema update"} | ${"A"}   | ${"Apple"}                | ${"Apple"}
@@ -147,18 +147,23 @@ describe("radio toggle button", () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string>) => {
 				render(
 					<ComponentWithSetSchemaButton
-						onClick={(data) => ({
-							...data,
-							overrides: {
-								[COMPONENT_ID]: {
-									options: [
-										{ label: "A", value: "Apple" },
-										{ label: "B", value: "b" },
-										{ label: "C", value: "Cherry" },
-									],
+						onClick={(data) =>
+							merge(cloneDeep(data), {
+								sections: {
+									section: {
+										children: {
+											[COMPONENT_ID]: {
+												options: [
+													{ label: "A", value: "Apple" },
+													{ label: "B", value: "b" },
+													{ label: "C", value: "Cherry" },
+												],
+											},
+										},
+									},
 								},
-							},
-						})}
+							})
+						}
 					/>
 				);
 

@@ -146,7 +146,7 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } }));
 	});
 
-	describe("update options schema", () => {
+	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                             | selected      | expectedValueBeforeUpdate          | expectedValueAfterUpdate
 			${"should retain field values if option is not removed on schema update"}            | ${["A", "C"]} | ${{ from: "Apple", to: "Cherry" }} | ${{ from: "Apple", to: "Cherry" }}
@@ -157,23 +157,28 @@ describe(UI_TYPE, () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(
 					<ComponentWithSetSchemaButton
-						onClick={(data) => ({
-							...data,
-							overrides: {
-								[COMPONENT_ID]: {
-									options: {
-										from: [
-											{ label: "A", value: "Apple" },
-											{ label: "B", value: "Banana" },
-										],
-										to: [
-											{ label: "C", value: "Cherry" },
-											{ label: "E", value: "Eggplant" },
-										],
+						onClick={(data) =>
+							merge(cloneDeep(data), {
+								sections: {
+									section: {
+										children: {
+											[COMPONENT_ID]: {
+												options: {
+													from: [
+														{ label: "A", value: "Apple" },
+														{ label: "B", value: "Banana" },
+													],
+													to: [
+														{ label: "C", value: "Cherry" },
+														{ label: "E", value: "Eggplant" },
+													],
+												},
+											},
+										},
 									},
 								},
-							},
-						})}
+							})
+						}
 					/>
 				);
 				await waitFor(() => fireEvent.click(getComponent()));
@@ -191,7 +196,7 @@ describe(UI_TYPE, () => {
 		);
 	});
 
-	describe("update options schema", () => {
+	describe("update options through overrides", () => {
 		it.each`
 			scenario                                                                        | selected      | expectedValueBeforeUpdate          | expectedValueAfterUpdate
 			${"should retain field values if option is not removed on override"}            | ${["A", "C"]} | ${{ from: "Apple", to: "Cherry" }} | ${{ from: "Apple", to: "Cherry" }}

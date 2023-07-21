@@ -172,7 +172,7 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
-	describe("update options schema", () => {
+	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                             | selected      | expectedValueBeforeUpdate | expectedValueAfterUpdate
 			${"should retain field values if option is not removed on schema update"}            | ${["A", "B"]} | ${["Apple", "Berry"]}     | ${["Apple", "Berry"]}

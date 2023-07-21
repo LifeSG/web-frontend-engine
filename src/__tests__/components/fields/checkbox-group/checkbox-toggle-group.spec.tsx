@@ -174,7 +174,7 @@ describe("checkbox toggle group", () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
-	describe("update options schema", () => {
+	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                             | selected      | expectedValueBeforeUpdate | expectedValueAfterUpdate
 			${"should retain field values if option is not removed on schema update"}            | ${["A", "B"]} | ${["Apple", "Berry"]}     | ${["Apple", "Berry"]}
@@ -185,19 +185,24 @@ describe("checkbox toggle group", () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(
 					<ComponentWithSetSchemaButton
-						onClick={(data) => ({
-							...data,
-							overrides: {
-								[COMPONENT_ID]: {
-									options: [
-										{ label: "A", value: "Apple" },
-										{ label: "B", value: "Berry" },
-										{ label: "C", value: "c" },
-										{ label: "E", value: "Eggplant" },
-									],
+						onClick={(data) =>
+							merge(cloneDeep(data), {
+								sections: {
+									section: {
+										children: {
+											[COMPONENT_ID]: {
+												options: [
+													{ label: "A", value: "Apple" },
+													{ label: "B", value: "Berry" },
+													{ label: "C", value: "c" },
+													{ label: "E", value: "Eggplant" },
+												],
+											},
+										},
+									},
 								},
-							},
-						})}
+							})
+						}
 					/>
 				);
 
