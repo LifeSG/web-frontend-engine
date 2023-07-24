@@ -161,15 +161,15 @@ export namespace LocationHelper {
 		const locationList = await mapService.reverseGeocode(others);
 
 		if (locationList.length === 0) {
-			const lat = others.latitude || 0;
-			const lng = others.longitude || 0;
+			const lat = others.latitude;
+			const lng = others.longitude;
 
 			return {
 				results: [
 					{
-						address: `${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`,
-						lat: others.latitude || undefined,
-						lng: others.longitude || undefined,
+						address: `Pin location ${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`,
+						lat: others.latitude,
+						lng: others.longitude,
 					},
 				],
 			};
