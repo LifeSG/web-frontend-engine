@@ -165,8 +165,8 @@ export namespace LocationHelper {
 				results: [
 					{
 						address: `Pin location ${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`,
-						lat: others.latitude,
-						lng: others.longitude,
+						lat,
+						lng,
 					},
 				],
 			};
