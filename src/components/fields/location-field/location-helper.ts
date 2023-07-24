@@ -156,6 +156,22 @@ export namespace LocationHelper {
 	// =========================================================================
 	export const reverseGeocode = async ({ options, ...others }: TReverseGeocodeParams): Promise<IResultsMetaData> => {
 		const locationList = await mapService.reverseGeocode(others);
+
+		if (locationList.length === 0) {
+			const lat = others.latitude || 0;
+			const lng = others.longitude || 0;
+
+			return {
+				results: [
+					{
+						address: `${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`,
+						lat: others.latitude || undefined,
+						lng: others.longitude || undefined,
+					},
+				],
+			};
+		}
+
 		let parsedLocationList = locationList.map<IResultListItem>((geoCodeInfo) => {
 			const address = LocationHelper.formatAddressFromGeocodeInfo(geoCodeInfo, true);
 			return {
