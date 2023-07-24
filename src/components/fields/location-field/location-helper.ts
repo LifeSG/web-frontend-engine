@@ -88,6 +88,8 @@ export namespace LocationHelper {
 
 			return onemapLocationList;
 		} catch (error) {
+			if (error.code === "ERR_CANCELED") throw error;
+
 			const oneMapError = new OneMapError(error);
 			onError(oneMapError);
 			throw oneMapError;
