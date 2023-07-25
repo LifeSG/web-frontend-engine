@@ -112,7 +112,6 @@ export class AxiosApiClient {
 	}
 
 	private _handleError(error: any) {
-		// Something happened in setting up the request that triggered an Error
 		return Promise.reject(error);
 	}
 }
