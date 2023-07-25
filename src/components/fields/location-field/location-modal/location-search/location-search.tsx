@@ -14,9 +14,9 @@ import {
 	TLocationFieldErrorDetail,
 	TSetCurrentLocationDetail,
 } from "../../types";
-import { ILocationSearchProps } from "./types";
 import { InfiniteScrollList } from "../infinite-scroll";
 import { boldResultsWithQuery, pagination } from "./helper";
+import { LOCATION_PIN_BLACK, SEARCH_SVG } from "./location-search.data";
 import {
 	ButtonItem,
 	ButtonWrapper,
@@ -33,7 +33,7 @@ import {
 	SearchBarModalCross,
 	SearchWrapper,
 } from "./location-search.styles";
-import { LOCATION_PIN_BLACK, SEARCH_SVG } from "./location-search.data";
+import { ILocationSearchProps } from "./types";
 
 export const LocationSearch = ({
 	id = "location-search",
@@ -414,6 +414,10 @@ export const LocationSearch = ({
 			setQueryString("");
 			handleApiErrors(error);
 		};
+
+		if (!LocationHelper.isCoordinateInBounds({ lat: addressLat, lng: addressLng })) {
+			return onError(new OneMapError(new Error("Coordinate is outside Singapore")));
+		}
 
 		let resultListItem: IResultListItem[];
 		try {

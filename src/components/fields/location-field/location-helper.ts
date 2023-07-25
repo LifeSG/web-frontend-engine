@@ -1,3 +1,4 @@
+import * as L from "leaflet";
 import { debounce } from "lodash";
 import { MutableRefObject } from "react";
 import { OneMapService } from "../../../services";
@@ -7,8 +8,7 @@ import {
 	OneMapGeocodeInfo,
 	OneMapSearchBuildingResult,
 } from "../../../services/onemap/types";
-
-import { IResultListItem, IResultsMetaData } from "./types";
+import { ILocationCoord, IResultListItem, IResultsMetaData } from "./types";
 
 type TReverseGeocodeParams = {
 	route: string;
@@ -24,6 +24,10 @@ type TReverseGeocodeParams = {
 
 export namespace LocationHelper {
 	const mapService = OneMapService;
+
+	export const getMapBounds = (): L.LatLngBounds => {
+		return L.latLngBounds(L.latLng(1.56073, 104.1147), L.latLng(1.16, 103.502));
+	};
 
 	export const getStaticMapUrl = mapService.getStaticMapUrl;
 
@@ -280,5 +284,10 @@ export namespace LocationHelper {
 		geoCodeInfo: OneMapGeocodeInfo | OneMapSearchBuildingResult
 	): geoCodeInfo is OneMapSearchBuildingResult => {
 		return (geoCodeInfo as OneMapSearchBuildingResult).BLK_NO !== undefined;
+	};
+
+	export const isCoordinateInBounds = (coordinate: ILocationCoord): boolean => {
+		const mapBounds = getMapBounds();
+		return mapBounds.contains(L.latLng(coordinate.lat, coordinate.lng));
 	};
 }
