@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
-import { CommonFieldStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import {
+	CommonFieldStoryProps,
+	FrontendEngine,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
+} from "../../common";
 
 export default {
 	title: "Field/RadioButton/ImageButton",
@@ -172,3 +178,24 @@ WithValidation.args = {
 	],
 	validation: [{ required: true }],
 };
+
+export const Overrides = OverrideStoryTemplate<IRadioButtonGroupSchema>("radio-overrides").bind({});
+Overrides.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	customOptions: {
+		styleType: "image-button",
+	},
+	options: [
+		{ label: "Apple", value: "Apple", imgSrc: "https://cdn-icons-png.flaticon.com/512/415/415733.png" },
+		{ label: "Berry", value: "Berry", imgSrc: "https://cdn-icons-png.flaticon.com/128/2105/2105891.png" },
+		{ label: "Cherry", value: "Cherry", imgSrc: "https://cdn-icons-png.flaticon.com/128/7254/7254245.png" },
+	],
+	overrides: {
+		label: "Overridden",
+		options: [
+			{ label: "New field", value: "new", imgSrc: "https://cdn-icons-png.flaticon.com/512/891/891448.png" },
+		],
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

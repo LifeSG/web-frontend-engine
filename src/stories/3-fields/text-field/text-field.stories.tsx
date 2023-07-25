@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react/types-6-0";
 import { ITextFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 export default {
 	title: "Field/TextField",
@@ -151,3 +157,14 @@ ResetWithDefaultValues.argTypes = {
 		},
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<ITextFieldSchema>("text-overrides").bind({});
+Overrides.args = {
+	label: "Textfield",
+	uiType: "text-field",
+	overrides: {
+		label: "Overridden",
+		placeholder: "Overridden",
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

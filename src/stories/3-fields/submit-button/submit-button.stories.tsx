@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { ISubmitButtonSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE } from "../../common";
 
 export default {
 	title: "Field/SubmitButton",
@@ -67,9 +67,12 @@ const Template = (id: string) =>
 						},
 					},
 				},
+				overrides: {
+					[id]: args.overrides,
+				},
 			}}
 		/>
-	)) as Story<ISubmitButtonSchema>;
+	)) as Story<ISubmitButtonSchema & { overrides?: Record<string, unknown> | undefined }>;
 
 export const Default = Template("submit-default").bind({});
 Default.args = {
@@ -155,3 +158,11 @@ WithPrefilling.args = {
 	disabled: "invalid-form",
 };
 WithPrefilling.storyName = "Validity check for prefilled form";
+
+export const Overrides = Template("submit-overrides").bind({});
+Overrides.args = {
+	uiType: "submit",
+	label: "Submit",
+	overrides: { label: "Overridden" },
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

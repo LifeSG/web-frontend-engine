@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IResetButtonSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, FrontendEngine } from "../../common";
+import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE } from "../../common";
 
 export default {
 	title: "Field/ResetButton",
@@ -67,7 +67,7 @@ export default {
 	},
 } as Meta;
 
-const Template = (id: string, defaultValue?: string) =>
+const Template = (id: string, defaultValue?: string | undefined) =>
 	((args) => (
 		<FrontendEngine
 			data={{
@@ -85,9 +85,10 @@ const Template = (id: string, defaultValue?: string) =>
 					},
 				},
 				defaultValues: { field: defaultValue },
+				overrides: { [id]: args.overrides },
 			}}
 		/>
-	)) as Story<IResetButtonSchema>;
+	)) as Story<IResetButtonSchema & { overrides?: Record<string, unknown> | undefined }>;
 
 export const Default = Template("reset-default").bind({});
 Default.args = {
@@ -121,3 +122,11 @@ IgnoreDefaultValue.args = {
 	label: "Reset",
 	ignoreDefaultValues: true,
 };
+
+export const Overrides = Template("reset-overrides").bind({});
+Overrides.args = {
+	uiType: "reset",
+	label: "Reset",
+	overrides: { label: "Overridden" },
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

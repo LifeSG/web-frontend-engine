@@ -1,11 +1,17 @@
-import { MediaQuery, MediaWidths } from "@lifesg/react-design-system";
+import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { action } from "@storybook/addon-actions";
 import { Story } from "@storybook/react/types-6-0";
 import { ReactElement, Ref, forwardRef } from "react";
 import styled from "styled-components";
 import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
-import { IFrontendEngineRef, TFrontendEngineFieldSchema, TNoInfer } from "../components/frontend-engine";
+import {
+	IFrontendEngineRef,
+	RecursivePartial,
+	TFrontendEngineFieldSchema,
+	TNoInfer,
+} from "../components/frontend-engine";
+import { ArgTypes } from "@storybook/components";
 
 const EXCLUDED_STORY_PROPS = {
 	invalid: { table: { disable: true } },
@@ -108,6 +114,18 @@ export const CommonCustomStoryProps = (referenceKey: string) => {
 			},
 		},
 	};
+};
+
+export const OVERRIDES_ARG_TYPE: ArgTypes = {
+	overrides: {
+		description: "Applies field schema properties on-the-fly over the schema without modifying `sections`",
+		table: {
+			type: {
+				summary: "Record<string, RecursivePartial<TFrontendEngineFieldSchema<V>>>",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
 };
 
 export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
@@ -226,3 +244,32 @@ export const ResetStoryTemplate = <T, U = string>(id: string) =>
 			}}
 		/>
 	)) as Story<T & { defaultValues?: U | undefined }>;
+
+/**
+ * Story template that contains the component, a submit button and an override button
+ *
+ * &lt;T&gt; generic: component schema definition
+ */
+export const OverrideStoryTemplate = <T,>(id: string, showSubmitButton = true) =>
+	(({ overrides, ...args }) => {
+		return (
+			<FrontendEngine
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args as unknown as TFrontendEngineFieldSchema,
+								...(showSubmitButton && { ...SUBMIT_BUTTON_SCHEMA }),
+							},
+						},
+					},
+					...(!!overrides && {
+						overrides: {
+							[id]: overrides,
+						},
+					}),
+				}}
+			/>
+		);
+	}) as Story<T & { overrides?: RecursivePartial<T> | undefined }>;

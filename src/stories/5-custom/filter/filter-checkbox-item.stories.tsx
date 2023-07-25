@@ -3,7 +3,13 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import { useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
-import { CommonCustomStoryProps, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import {
+	CommonCustomStoryProps,
+	FrontendEngine,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
+} from "../../common";
 
 export default {
 	title: "Custom/Filter/FilterCheckbox",
@@ -214,3 +220,28 @@ WithDefaultValues.argTypes = {
 		type: { name: "object", value: {} },
 	},
 };
+
+export const Overrides = OverrideStoryTemplate<IFilterSchema>("filter-checkbox-overrides", false).bind({});
+Overrides.args = {
+	referenceKey: "filter",
+	children: {
+		filterCheckbox: {
+			label: "Checkboxes",
+			referenceKey: "filter-checkbox",
+			options: [
+				{ label: "red", value: "red" },
+				{ label: "blue", value: "blue" },
+			],
+		},
+	},
+	overrides: {
+		children: {
+			filterCheckbox: {
+				label: "Overridden",
+				referenceKey: "filter-checkbox",
+				options: [{ label: "new option", value: "new" }],
+			},
+		},
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;

@@ -72,6 +72,8 @@ export interface IFrontendEngineData<V = undefined> {
 	revalidationMode?: TRevalidationMode | undefined;
 	/** Validation strategy before a user submits the form (onSubmit event) */
 	validationMode?: TValidationMode | undefined;
+	/** Additional properties to mutate the sections schema on-the-fly */
+	overrides?: Record<string, RecursivePartial<TFrontendEngineFieldSchema<V>>> | undefined;
 }
 
 // NOTE: add all possible schema types here except section schema
@@ -80,11 +82,12 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ICheckboxGroupSchema<V>
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
-	| ICustomComponentJsonSchema<V>
+	| ICustomComponentJsonSchema<string>
 	| IDateFieldSchema<V>
 	| IEmailFieldSchema<V>
 	| IFilterSchema
 	| IImageUploadSchema<V>
+	| ILocationFieldSchema<V>
 	| IMultiSelectSchema<V>
 	| IRangeSelectSchema
 	| INumericFieldSchema<V>
@@ -98,8 +101,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
-	| IWrapperSchema
-	| ILocationFieldSchema<V>;
+	| IWrapperSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -216,6 +218,7 @@ export enum EFieldType {
 	"DATE-FIELD" = "DateField",
 	"EMAIL-FIELD" = "TextField",
 	"IMAGE-UPLOAD" = "ImageUpload",
+	"LOCATION-FIELD" = "LocationField",
 	"MULTI-SELECT" = "MultiSelect",
 	"RANGE-SELECT" = "RangeSelect",
 	"NUMERIC-FIELD" = "TextField",
@@ -228,7 +231,6 @@ export enum EFieldType {
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
-	"LOCATION-FIELD" = "LocationField",
 }
 
 /**
@@ -294,3 +296,7 @@ export interface IGenericFieldProps<T = TFrontendEngineFieldSchema>
  * https://stackoverflow.com/questions/56687668/a-way-to-disable-type-argument-inference-in-generics
  */
 export type TNoInfer<T, U> = [T][T extends U ? 0 : never];
+
+export type RecursivePartial<T> = {
+	[P in keyof T]?: RecursivePartial<T[P]>;
+};
