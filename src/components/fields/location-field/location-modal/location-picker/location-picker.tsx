@@ -8,6 +8,7 @@ import { markerFrom, removeMarkers } from "./helper";
 import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE, LOCATION_PIN_BLUE } from "./location-picker.data";
 import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
 import { ILocationPickerProps } from "./types";
+import { LocationHelper } from "../../location-helper";
 
 // Show picker when
 // tablet: "map" mode
@@ -69,10 +70,7 @@ export const LocationPicker = ({
 					'<div class="onemap"><img src="https://www.onemap.gov.sg/docs/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a></div>',
 			});
 
-			mapRef.current.setMaxBounds([
-				[1.56073, 104.1147],
-				[1.16, 103.502],
-			]);
+			mapRef.current.setMaxBounds(LocationHelper.getMapBounds());
 			basemap.addTo(mapRef.current);
 
 			// even if it didn't change, as it may have panned off-centre.
