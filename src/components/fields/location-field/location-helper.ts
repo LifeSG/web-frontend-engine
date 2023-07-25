@@ -1,3 +1,4 @@
+import axios from "axios";
 import { debounce } from "lodash";
 import { MutableRefObject } from "react";
 import { OneMapService } from "../../../services";
@@ -88,6 +89,8 @@ export namespace LocationHelper {
 
 			return onemapLocationList;
 		} catch (error) {
+			if (axios.isCancel(error)) throw error;
+
 			const oneMapError = new OneMapError(error);
 			onError(oneMapError);
 			throw oneMapError;
