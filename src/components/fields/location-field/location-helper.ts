@@ -167,11 +167,10 @@ export namespace LocationHelper {
 		}
 
 		const locationList = await mapService.reverseGeocode(others);
+		const lat = others.latitude;
+		const lng = others.longitude;
 
 		if (locationList.length === 0) {
-			const lat = others.latitude;
-			const lng = others.longitude;
-
 			return {
 				results: [
 					{
@@ -201,6 +200,18 @@ export namespace LocationHelper {
 
 		if (options?.excludeNonSG) {
 			parsedLocationList = parsedLocationList.filter(({ building }) => building !== "JOHOR (MALAYSIA)");
+		}
+
+		if (parsedLocationList.length === 0) {
+			return {
+				results: [
+					{
+						address: `Pin location ${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`,
+						lat,
+						lng,
+					},
+				],
+			};
 		}
 
 		return {
