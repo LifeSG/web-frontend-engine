@@ -415,10 +415,6 @@ export const LocationSearch = ({
 			handleApiErrors(error);
 		};
 
-		if (!LocationHelper.isCoordinateInBounds({ lat: addressLat, lng: addressLng })) {
-			return onError(new OneMapError(new Error("Coordinate is outside Singapore")));
-		}
-
 		let resultListItem: IResultListItem[];
 		try {
 			resultListItem = await fetchLocationList(
