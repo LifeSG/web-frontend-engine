@@ -89,6 +89,7 @@ export namespace LocationHelper {
 				expandedSearchDistanceLocations.results
 			);
 			reverseGeocodeAborter.current = null;
+			console.log(onemapLocationList, "onemapLocationList");
 
 			return onemapLocationList;
 		} catch (error) {
@@ -167,18 +168,6 @@ export namespace LocationHelper {
 		const lat = others.latitude;
 		const lng = others.longitude;
 
-		if (locationList.length === 0) {
-			return {
-				results: [
-					{
-						address: `Pin location ${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`,
-						lat,
-						lng,
-					},
-				],
-			};
-		}
-
 		let parsedLocationList = locationList.map<IResultListItem>((geoCodeInfo) => {
 			const address = LocationHelper.formatAddressFromGeocodeInfo(geoCodeInfo, true);
 			return {
@@ -200,12 +189,14 @@ export namespace LocationHelper {
 		}
 
 		if (parsedLocationList.length === 0) {
+			const address = `Pin location ${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`;
 			return {
 				results: [
 					{
-						address: `Pin location ${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`,
+						address,
 						lat,
 						lng,
+						displayAddressText: address,
 					},
 				],
 			};
