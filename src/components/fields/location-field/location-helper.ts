@@ -89,7 +89,6 @@ export namespace LocationHelper {
 				expandedSearchDistanceLocations.results
 			);
 			reverseGeocodeAborter.current = null;
-			console.log(onemapLocationList, "onemapLocationList");
 
 			return onemapLocationList;
 		} catch (error) {
