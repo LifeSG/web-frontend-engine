@@ -159,6 +159,10 @@ export namespace LocationHelper {
 	// reverseGeoCodeEndpoint
 	// =========================================================================
 	export const reverseGeocode = async ({ options, ...others }: TReverseGeocodeParams): Promise<IResultsMetaData> => {
+		if (!LocationHelper.isCoordinateInBounds({ lat: others.latitude, lng: others.longitude })) {
+			throw new Error("Coordinate is outside Singapore");
+		}
+
 		const locationList = await mapService.reverseGeocode(others);
 
 		if (locationList.length === 0) {
@@ -218,7 +222,8 @@ export namespace LocationHelper {
 
 				onSuccess(locationList.results[0] || undefined);
 			} catch (error) {
-				onError(error);
+				const oneMapError = new OneMapError(error);
+				onError(oneMapError);
 			}
 		})();
 	};
