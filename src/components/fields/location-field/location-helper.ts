@@ -1,5 +1,4 @@
 import axios from "axios";
-import * as L from "leaflet";
 import { debounce } from "lodash";
 import { MutableRefObject } from "react";
 import { OneMapService } from "../../../services";
@@ -26,8 +25,11 @@ type TReverseGeocodeParams = {
 export namespace LocationHelper {
 	const mapService = OneMapService;
 
-	export const getMapBounds = (): L.LatLngBounds => {
-		return L.latLngBounds(L.latLng(1.56073, 104.1147), L.latLng(1.16, 103.502));
+	export const getMapBounds = () => {
+		return [
+			{ lat: 1.56073, lng: 104.1147 }, // NE
+			{ lat: 1.16, lng: 103.502 }, // SW
+		];
 	};
 
 	export const getStaticMapUrl = mapService.getStaticMapUrl;
@@ -296,7 +298,11 @@ export namespace LocationHelper {
 	};
 
 	export const isCoordinateInBounds = (coordinate: ILocationCoord): boolean => {
-		const mapBounds = getMapBounds();
-		return mapBounds.contains(L.latLng(coordinate.lat, coordinate.lng));
+		const [ne, sw] = getMapBounds();
+		const { lat, lng } = coordinate;
+		if (lat <= ne.lat && lat >= sw.lat && lng <= ne.lng && lng >= sw.lng) {
+			return true;
+		}
+		return false;
 	};
 }
