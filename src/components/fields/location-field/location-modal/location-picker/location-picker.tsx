@@ -70,7 +70,8 @@ export const LocationPicker = ({
 					'<div class="onemap"><img src="https://www.onemap.gov.sg/docs/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a></div>',
 			});
 
-			mapRef.current.setMaxBounds(LocationHelper.getMapBounds());
+			const [ne, sw] = LocationHelper.getMapBounds();
+			mapRef.current.setMaxBounds(L.latLngBounds(L.latLng(ne), L.latLng(sw)));
 			basemap.addTo(mapRef.current);
 
 			// even if it didn't change, as it may have panned off-centre.
