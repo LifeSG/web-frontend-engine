@@ -4,7 +4,7 @@ import { OneMapService } from "../../services";
 import { LocationHelper } from "../../components/fields/location-field/location-helper";
 
 describe("when reverseGeoCode returns an error", () => {
-	let mockError;
+	let mockError: Error;
 	const mockOnError = jest.fn();
 	const mockRef: React.MutableRefObject<AbortController | null> = {
 		current: null,
