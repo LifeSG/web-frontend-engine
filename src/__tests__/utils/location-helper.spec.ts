@@ -31,6 +31,7 @@ describe("when reverseGeoCode returns an error", () => {
 		} catch (error) {
 			expect(mockOnError).toBeCalled();
 		}
+		expect.hasAssertions();
 	});
 
 	it("should not call onError function if the error is a canceled error", async () => {
@@ -49,5 +50,6 @@ describe("when reverseGeoCode returns an error", () => {
 		} catch (error) {
 			expect(mockOnError).not.toBeCalled();
 		}
+		expect.hasAssertions();
 	});
 });
