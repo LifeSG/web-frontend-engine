@@ -1,6 +1,6 @@
 {
 	"name": "@lifesg/web-frontend-engine",
-	"version": "1.0.0-alpha.12",
+	"version": "1.0.0-alpha.13",
 	"description": "A frontend engine for LifeSG React apps",
 	"main": "dist/cjs/index.js",
 	"module": "dist/index.js",
