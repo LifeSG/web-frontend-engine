@@ -1,0 +1,1 @@
+export declare const StyledStaticMap: import("styled-components").StyledComponent<({ id, lat, lng, address, staticMapPinColor, className, onClick, }: import("../../shared/static-map").IStaticMapProps) => import("react/jsx-runtime").JSX.Element, any, {}, never>;
