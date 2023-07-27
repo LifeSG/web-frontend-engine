@@ -550,6 +550,46 @@ describe("location-input-group", () => {
 					});
 				});
 
+				describe("when location is a pin location with only latlng values", () => {
+					beforeEach(async () => {
+						fetchSingleLocationByLatLngSpy.mockImplementation(
+							(_reverseGeoCodeEndpoint, _lat, _lng, handleResult) => {
+								handleResult(fetchSingleLocationByLatLngSingleReponse);
+							}
+						);
+						renderComponent({
+							withEvents: false,
+							overrideSchema: {
+								defaultValues: {
+									[COMPONENT_ID]: {
+										lat: 1.29994179707526,
+										lng: 103.789404349716,
+										address: "Pin location 1.30, 103.79",
+									},
+								},
+							},
+							overrideField: {
+								reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+							},
+						});
+
+						await waitFor(() => {
+							expect(fetchSingleLocationByLatLngSpy).toBeCalledTimes(1);
+							expect(fetchSingleLocationByAddressSpy).not.toBeCalled();
+							expect(getLocationInput(true)).toBeInTheDocument();
+							expect(getStaticMap(true)).toBeInTheDocument();
+						});
+					});
+
+					it("show input value only and open the modal when clicked", async () => {
+						getLocationInput().focus();
+
+						await waitFor(() => {
+							expect(getLocationModal(true)).toBeInTheDocument();
+						});
+					});
+				});
+
 				describe("when both address and lat lng", () => {
 					// TODO
 				});

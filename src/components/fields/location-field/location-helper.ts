@@ -193,7 +193,7 @@ export namespace LocationHelper {
 		}
 
 		if (parsedLocationList.length === 0) {
-			const address = `Pin location ${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`;
+			const address = `Pin location: ${lat}, ${lng}`;
 			return {
 				results: [
 					{
@@ -271,7 +271,7 @@ export namespace LocationHelper {
 		) {
 			const lat = parseFloat(geocodeInfo.LATITUDE) || 0;
 			const lng = parseFloat(geocodeInfo.LONGITUDE) || 0;
-			return `Pin location ${Math.round(lat * 100) / 100}, ${Math.round(lng * 100) / 100}`;
+			return `Pin location: ${lat}, ${lng}`;
 		}
 
 		if (hasGotAddressValue(BLOCK) && hasGotAddressValue(ROAD)) {

@@ -185,18 +185,36 @@ export const LocationSearch = ({
 			setQueryString(locationFieldValue.address);
 		};
 
-		const validAddressString = formValues?.address && !formValues?.address.includes("Pin location");
+		const validAddressString = formValues?.address && !formValues?.address.toLowerCase().includes("pin location");
 
 		if (formValues?.lat && formValues?.lng && validAddressString) {
 			// TODO: trust input or validate formvalue?
 			fetchSingleLocationByAddress(formValues.address, handleResult, handleApiErrors);
 		} else if (validAddressString && !formValues?.lat && !formValues?.lng) {
 			fetchSingleLocationByAddress(formValues.address, handleResult, handleApiErrors);
-		} else if (reverseGeoCodeEndpoint && !validAddressString && formValues?.lat && formValues?.lng) {
+		} else if (reverseGeoCodeEndpoint && !validAddressString) {
+			let reverseGeoCodeLat = formValues?.lat;
+			let reverseGeoCodeLng = formValues?.lng;
+			// extract latlng
+			// falls back to formValues.lat, formValues.lng if address string is in the wrong format
+			if (/^(pin location:) -?\d{0,3}.\d*, -?\d{0,3}.\d*$/i.test(formValues?.address)) {
+				const [lat, lng] = formValues.address
+					.split(":")[1]
+					.split(",")
+					.map((value) => parseFloat(value.trim()));
+
+				reverseGeoCodeLat = lat;
+				reverseGeoCodeLng = lng;
+			}
+
+			if (!reverseGeoCodeLat || !reverseGeoCodeLng) {
+				return;
+			}
+
 			fetchSingleLocationByLatLng(
 				reverseGeoCodeEndpoint,
-				formValues.lat,
-				formValues.lng,
+				reverseGeoCodeLat,
+				reverseGeoCodeLng,
 				handleResult,
 				handleApiErrors
 			);
