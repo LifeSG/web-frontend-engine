@@ -185,12 +185,14 @@ export const LocationSearch = ({
 			setQueryString(locationFieldValue.address);
 		};
 
-		if (formValues?.lat && formValues?.lng && formValues?.address) {
+		const validAddressString = formValues?.address && !formValues?.address.includes("Pin location");
+
+		if (formValues?.lat && formValues?.lng && validAddressString) {
 			// TODO: trust input or validate formvalue?
 			fetchSingleLocationByAddress(formValues.address, handleResult, handleApiErrors);
-		} else if (formValues?.address && !formValues?.lat && !formValues?.lng) {
+		} else if (validAddressString && !formValues?.lat && !formValues?.lng) {
 			fetchSingleLocationByAddress(formValues.address, handleResult, handleApiErrors);
-		} else if (reverseGeoCodeEndpoint && !formValues?.address && formValues?.lat && formValues?.lng) {
+		} else if (reverseGeoCodeEndpoint && !validAddressString && formValues?.lat && formValues?.lng) {
 			fetchSingleLocationByLatLng(
 				reverseGeoCodeEndpoint,
 				formValues.lat,
