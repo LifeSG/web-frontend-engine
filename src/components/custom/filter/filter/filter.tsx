@@ -1,8 +1,13 @@
 import { Filter as FilterComponent } from "@lifesg/react-design-system";
-import _ from "lodash";
+import isArray from "lodash/isArray";
+import isEmpty from "lodash/isEmpty";
+import isNumber from "lodash/isNumber";
+import isString from "lodash/isString";
 import { useFormContext } from "react-hook-form";
-import { TestHelper, ObjectHelper } from "../../../../utils";
+import { ObjectHelper, TestHelper } from "../../../../utils";
 import { Wrapper } from "../../../elements/wrapper";
+import { IFilterCheckboxSchema } from "../filter-checkbox/types";
+import { IFilterItemSchema } from "../filter-item/types";
 import { IFilterProps } from "./types";
 
 export const Filter = (props: IFilterProps) => {
@@ -10,7 +15,7 @@ export const Filter = (props: IFilterProps) => {
 	// CONST, STATE, REF
 	// =============================================================================
 
-	const { resetField, getValues } = useFormContext();
+	const { setValue, getValues } = useFormContext();
 
 	const {
 		id,
@@ -20,23 +25,31 @@ export const Filter = (props: IFilterProps) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const getChildrenFormControlNamesList = (): string[] => {
-		const list = [];
+	const getChildrenFormFields = () => {
+		const fields: Record<string, IFilterItemSchema | IFilterCheckboxSchema> = {};
 		const formValues = getValues();
 		for (const key in formValues) {
-			if (!_.isEmpty(ObjectHelper.getNestedValueByKey(children, key))) {
-				list.push(key);
+			const nested = ObjectHelper.getNestedValueByKey(children, key);
+
+			if (!isEmpty(nested)) {
+				fields[key] = formValues[key];
 			}
 		}
-		return list;
+		return fields;
 	};
 
-	const resetChildrenFormFields = (fields: string[]): void => {
-		fields.forEach((item) => resetField(item));
+	const resetChildrenFormFields = (fields: Record<string, IFilterItemSchema | IFilterCheckboxSchema>): void => {
+		Object.entries(fields).forEach(([key, value]) => {
+			if (isArray(value)) {
+				setValue(key, []);
+			} else if (isString(value) || isNumber(value)) {
+				setValue(key, "");
+			}
+		});
 	};
 
 	const clearData = () => {
-		const fields = getChildrenFormControlNamesList();
+		const fields = getChildrenFormFields();
 		resetChildrenFormFields(fields);
 	};
 

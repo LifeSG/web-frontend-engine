@@ -4,7 +4,6 @@ import { useState } from "react";
 import { IFilterCheckboxSchema } from "../../../../components/custom/filter/filter-checkbox/types";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
-	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	TOverrideField,
 	TOverrideSchema,
@@ -96,6 +95,20 @@ describe(REFERENCE_KEY, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
+	it("should be able to clear default values", async () => {
+		const defaultValues = ["Apple"];
+		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
+
+		fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		defaultValues.forEach((val) => {
+			const checkBox = getCheckboxByVal(val);
+			expect(checkBox.checked).toBeFalsy();
+		});
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+	});
+
 	it("should be able to toggle the checkboxes", async () => {
 		renderComponent();
 		const checkboxes = getCheckboxes();
@@ -121,10 +134,9 @@ describe(REFERENCE_KEY, () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
-		const [clearBtn] = screen.queryAllByText("Clear");
-		await waitFor(() => fireEvent.click(clearBtn));
+		fireEvent.click(screen.getByRole("button", { name: "Clear" }));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
 	describe("update options schema", () => {
