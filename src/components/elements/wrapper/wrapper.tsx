@@ -1,6 +1,6 @@
 import isEmpty from "lodash/isEmpty";
 import React, { Fragment, ReactNode, useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
@@ -16,6 +16,7 @@ import {
 } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
+import { FieldWrapper } from "./field-wrapper";
 import { IWrapperProps } from "./types";
 import { DSAlert } from "./wrapper.styles";
 
@@ -111,22 +112,14 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		}
 
 		if (!Field) return null;
+
+		const warning = warnings?.[childId];
+
 		return (
-			<Controller
-				control={control}
-				name={childId}
-				shouldUnregister={true}
-				render={({ field, fieldState }) => {
-					const fieldProps = { ...field, id: childId, ref: undefined }; // not passing ref because not all components have fields to be manipulated
-					const warning = warnings?.[childId];
-					return (
-						<>
-							<Field schema={childSchema} {...fieldProps} {...fieldState} />
-							{warning && <DSAlert type="warning">{warning}</DSAlert>}
-						</>
-					);
-				}}
-			/>
+			<>
+				<FieldWrapper id={childId} schema={childSchema} Field={Field} />
+				{warning && <DSAlert type="warning">{warning}</DSAlert>}
+			</>
 		);
 	};
 

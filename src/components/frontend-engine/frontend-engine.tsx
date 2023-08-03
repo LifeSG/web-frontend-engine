@@ -5,7 +5,13 @@ import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHan
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
-import { useFieldEvent, useFormSchema, useValidationConfig, useValidationSchema } from "../../utils/hooks";
+import {
+	useFieldEvent,
+	useFormSchema,
+	useFormValues,
+	useValidationConfig,
+	useValidationSchema,
+} from "../../utils/hooks";
 import { Sections } from "../elements/sections";
 import { EventProvider } from "./event";
 import { FormSchemaProvider } from "./form-schema";
@@ -46,6 +52,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		},
 	});
 	const { setFormSchema } = useFormSchema();
+	const { resetFields } = useFormValues();
 
 	const {
 		reset,
@@ -169,6 +176,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	useDeepCompareEffectNoCheck(() => {
 		reset(cloneDeep(defaultValues));
+		resetFields(defaultValues);
 	}, [defaultValues]);
 
 	useDeepCompareEffect(() => {

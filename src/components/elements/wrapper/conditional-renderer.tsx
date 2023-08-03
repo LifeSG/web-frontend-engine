@@ -1,13 +1,12 @@
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
-import React, { useEffect, useState } from "react";
-import { FieldValues, useFormContext } from "react-hook-form";
+import React, { useState } from "react";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
-import { useValidationConfig } from "../../../utils/hooks";
+import { useFormValues, useValidationConfig } from "../../../utils/hooks";
+import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
+import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
-import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
-import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 
 interface IProps {
 	id: string;
@@ -25,24 +24,9 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { watch, getValues } = useFormContext();
 	const { formValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 	const [show, toggleShow] = useState(false);
-	const [formValues, setFormValues] = useState<FieldValues>();
-
-	// =============================================================================
-	// EFFECTS
-	// =============================================================================
-	useEffect(() => {
-		const values = getValues();
-		setFormValues(values);
-	}, []);
-
-	useEffect(() => {
-		const subscription = watch((value) => setFormValues(value));
-
-		return () => subscription.unsubscribe();
-	}, [watch]);
+	const { formValues } = useFormValues();
 
 	useDeepCompareEffectNoCheck(() => {
 		if (isEmpty(renderRules)) return;

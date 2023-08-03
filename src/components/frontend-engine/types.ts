@@ -74,6 +74,7 @@ export interface IFrontendEngineData<V = undefined> {
 	validationMode?: TValidationMode | undefined;
 	/** Additional properties to mutate the sections schema on-the-fly */
 	overrides?: Record<string, RecursivePartial<TFrontendEngineFieldSchema<V>>> | undefined;
+	restoreMode?: "default-value" | "user-input" | undefined;
 }
 
 // NOTE: add all possible schema types here except section schema
