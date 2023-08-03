@@ -8,9 +8,10 @@ import { ObjectHelper, TestHelper } from "../../utils";
 import { useFieldEvent, useFormSchema, useValidationConfig, useValidationSchema } from "../../utils/hooks";
 import { Sections } from "../elements/sections";
 import { EventProvider } from "./event";
+import { FormSchemaProvider } from "./form-schema";
+import { FormValuesProvider } from "./form-values";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
-import { FormSchemaProvider } from "./form-schema";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
@@ -206,7 +207,9 @@ export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProp
 		<YupProvider>
 			<EventProvider>
 				<FormSchemaProvider>
-					<FrontendEngineInner {...props} ref={ref} />
+					<FormValuesProvider>
+						<FrontendEngineInner {...props} ref={ref} />
+					</FormValuesProvider>
 				</FormSchemaProvider>
 			</EventProvider>
 		</YupProvider>
