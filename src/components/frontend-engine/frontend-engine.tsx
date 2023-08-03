@@ -77,7 +77,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		getValues,
 		isValid: checkIsFormValid,
 		removeFieldEventListener,
-		reset,
+		reset: (values, options) => {
+			reset(values, options);
+			resetFields(values ?? defaultValues);
+		},
 		setErrors,
 		setValue,
 		submit: reactFormHookSubmit(handleSubmit, handleSubmitError),
