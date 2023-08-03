@@ -92,7 +92,6 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		setShowTextarea(show);
 		if (!show) {
 			removeFieldValidationConfig(getTextareaId());
-			setValue(getTextareaId(), undefined);
 		}
 	};
 

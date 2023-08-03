@@ -10,49 +10,32 @@ interface IProps {
 }
 
 export const FieldWrapper = ({ Field, id, schema }: IProps) => {
-	const { control, watch, setValue } = useFormContext();
+	const { control, setValue } = useFormContext();
 
 	const {
 		formSchema: { defaultValues, restoreMode },
 	} = useFormSchema();
-	const { formValues, setField } = useFormValues();
+	const { formValues, setField, isFieldShown, setFieldShown } = useFormValues();
 
 	useEffect(() => {
-		const value = getInitialValue();
-		setField(id, value);
-		setValue(id, value);
-	}, []);
-
-	useEffect(() => {
-		const subscription = watch((value, { name, type }) => {
-			if (name) {
-				if (name === id) {
-					setField(id, value[name]);
-				}
-			}
-		});
-
-		return () => subscription.unsubscribe();
-	}, [watch]);
-
-	// =========================================================================
-	// HELPERS
-	// =========================================================================
-
-	function getInitialValue() {
-		switch (restoreMode) {
-			case "default-value":
-				return defaultValues?.[id];
-			case "user-input":
-			default:
-				return formValues[id];
+		if (isFieldShown(id)) {
+			// for conditionally rendered fields, we have to put the field back into the react-hook-form state
+			setValue(id, formValues[id]);
+		} else {
+			setFieldShown(id);
 		}
-	}
+
+		return () => {
+			if (restoreMode === "default-value") {
+				setField(id, defaultValues?.[id]);
+			}
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	// =========================================================================
 	// RENDER
 	// =========================================================================
-
 	return (
 		<Controller
 			control={control}

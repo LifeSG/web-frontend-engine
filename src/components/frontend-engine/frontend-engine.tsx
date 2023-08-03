@@ -52,7 +52,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		},
 	});
 	const { setFormSchema } = useFormSchema();
-	const { resetFields } = useFormValues();
+	const { resetFields, setFields, setField } = useFormValues();
 
 	const {
 		reset,
@@ -134,6 +134,21 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		setFields(getValues());
+	}, []);
+
+	useEffect(() => {
+		const subscription = watch((value, { name, type }) => {
+			if (name) {
+				setField(name, value[name]);
+			} else {
+				setFields(value);
+			}
+		});
+		return () => subscription.unsubscribe();
+	}, []);
+
+	useEffect(() => {
 		// attach / fire onChange event only formValidationConfig has values
 		// otherwise isValid will be returned incorrectly as true
 		if (onChange && Object.keys(formValidationConfig || {}).length) {
@@ -179,7 +194,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	useDeepCompareEffectNoCheck(() => {
 		reset(cloneDeep(defaultValues));
-		resetFields(defaultValues);
 	}, [defaultValues]);
 
 	useDeepCompareEffect(() => {
