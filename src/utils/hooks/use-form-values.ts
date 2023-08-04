@@ -2,29 +2,38 @@ import { useContext } from "react";
 import { FormValuesContext } from "../../components/frontend-engine/form-values";
 
 export const useFormValues = () => {
-	const { setFormValues, formValues, setFieldHistory, fieldHistory } = useContext(FormValuesContext);
+	const { setFormValues, formValues, formValuesRef, setFieldHistory, fieldHistory } = useContext(FormValuesContext);
+
+	const getField = (id: string) => {
+		return formValuesRef.current[id];
+	};
 
 	const setField = (id: string, value: unknown) => {
 		setFormValues((formValues) => {
-			return {
+			const newState = {
 				...formValues,
 				[id]: value,
 			};
+			formValuesRef.current = newState;
+			return newState;
 		});
 	};
 
 	const setFields = (values: Record<string, unknown>) => {
 		setFormValues((formValues) => {
-			const res = {
+			const newState = {
 				...formValues,
 				...values,
 			};
-			return res;
+			formValuesRef.current = newState;
+			return newState;
 		});
 	};
 
 	const resetFields = (values: Record<string, unknown>) => {
-		setFormValues({ ...values });
+		const newState = { ...values };
+		formValuesRef.current = newState;
+		setFormValues(newState);
 	};
 
 	const isFieldShown = (id: string): boolean => {
@@ -32,13 +41,13 @@ export const useFormValues = () => {
 	};
 
 	const setFieldShown = (id: string) => {
-		setFieldHistory((fieldHistory) => {
+		setFieldHistory((state) => {
 			return {
-				...fieldHistory,
+				...state,
 				[id]: true,
 			};
 		});
 	};
 
-	return { formValues, setFields, setField, resetFields, fieldHistory, isFieldShown, setFieldShown };
+	return { formValues, getField, setFields, setField, resetFields, fieldHistory, isFieldShown, setFieldShown };
 };

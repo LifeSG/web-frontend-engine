@@ -15,12 +15,12 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 	const {
 		formSchema: { defaultValues, restoreMode },
 	} = useFormSchema();
-	const { formValues, setField, isFieldShown, setFieldShown } = useFormValues();
+	const { getField, setField, isFieldShown, setFieldShown } = useFormValues();
 
 	useEffect(() => {
 		if (isFieldShown(id)) {
 			// for conditionally rendered fields, we have to put the field back into the react-hook-form state
-			setValue(id, formValues[id]);
+			setValue(id, getField(id));
 		} else {
 			setFieldShown(id);
 		}
@@ -45,7 +45,7 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 				const fieldProps = {
 					...field,
 					id,
-					value: formValues[id],
+					value: getField(id),
 					ref: undefined, // not passing ref because not all components have fields to be manipulated
 				};
 				return <Field schema={schema} {...fieldProps} {...fieldState} />;

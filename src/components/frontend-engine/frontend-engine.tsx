@@ -79,7 +79,12 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		removeFieldEventListener,
 		reset: (values, options) => {
 			reset(values, options);
-			resetFields(values ?? defaultValues);
+
+			if (typeof values === "function") {
+				resetFields(values(formMethods.getValues()) ?? defaultValues);
+			} else {
+				resetFields(values ?? defaultValues);
+			}
 		},
 		setErrors,
 		setValue,
@@ -138,7 +143,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, []);
 
 	useEffect(() => {
-		const subscription = watch((value, { name, type }) => {
+		const subscription = watch((value, { name }) => {
 			if (name) {
 				setField(name, value[name]);
 			} else {
