@@ -28,12 +28,19 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextarea, setShowTextarea] = useState(false);
 	const [multi, setMulti] = useState(true);
-	const { setValue } = useFormContext();
+	const { setValue, unregister } = useFormContext();
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		if (!showTextarea) {
+			// at the start, the textarea's default value has to be manually cleared from the form state
+			unregister(getTextareaId());
+		}
+	}, []);
+
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
