@@ -15,15 +15,10 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 	const {
 		formSchema: { defaultValues, restoreMode },
 	} = useFormSchema();
-	const { getField, setField, isFieldShown, setFieldShown } = useFormValues();
+	const { getField, setField } = useFormValues();
 
 	useEffect(() => {
-		if (isFieldShown(id)) {
-			// for conditionally rendered fields, we have to put the field back into the react-hook-form state
-			setValue(id, getField(id));
-		} else {
-			setFieldShown(id);
-		}
+		setValue(id, getField(id));
 
 		return () => {
 			if (restoreMode === "default-value") {
