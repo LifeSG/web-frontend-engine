@@ -37,14 +37,6 @@ const DATA: IFrontendEngineData = {
 						label: "Others",
 					},
 				},
-				unrelated: {
-					label: "Unrelated field",
-					uiType: "text-field",
-				},
-				unrelatedWithDefault: {
-					label: "Unrelated field with default",
-					uiType: "text-field",
-				},
 				...SUBMIT_BUTTON_SCHEMA,
 			},
 		},
@@ -53,20 +45,20 @@ const DATA: IFrontendEngineData = {
 		field1: "show",
 		field2: "2023-01-01",
 		"field3-textarea": "hello",
-		unrelatedWithDefault: "default",
 	},
 };
 
 export default {
-	title: "Form/Conditional Rendering/Restore",
+	title: "Form/Conditional Rendering/Restoring Values",
 	component: null,
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>Restore conditionally rendered fields</Title>
+					<Title>Restore values</Title>
 					<Description>
-						You can configure if the current value of a field is persisted when its visibility is toggled.
+						When a field&apos;s visibility is restored, the value that is populated can be configured via
+						the `restoreMode` flag.
 					</Description>
 					<Stories includePrimary={true} title="Examples" />
 				</>

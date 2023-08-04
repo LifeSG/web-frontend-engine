@@ -5,7 +5,7 @@ import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine"
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 export default {
-	title: "Form/Conditional Rendering",
+	title: "Form/Conditional Rendering/Rules",
 	component: null,
 	parameters: {
 		docs: {
