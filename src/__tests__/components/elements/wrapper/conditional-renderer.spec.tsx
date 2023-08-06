@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { setupJestCanvasMock } from "jest-canvas-mock";
 import {
 	FrontendEngine,
 	IFrontendEngineData,
@@ -136,6 +137,7 @@ describe("conditional-renderer", () => {
 		${"excludes (string)"} | ${{ excludes: "Berry" }}             | ${["Apple", "Berry"]}           | ${["Apple", "Cherry"]}
 		${"excludes (array)"}  | ${{ excludes: ["Berry", "Cherry"] }} | ${["Apple", "Berry"]}           | ${["Apple"]}
 	`("should support $condition condition for array conditional rendering", async ({ config, invalid, valid }) => {
+		setupJestCanvasMock();
 		const fieldOneType = "multi-select";
 		const fieldTwoType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
