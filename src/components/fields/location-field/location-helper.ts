@@ -103,41 +103,60 @@ export namespace LocationHelper {
 		}
 	};
 
+	// Added useFallback arg to handle pin location address.
 	export const fetchAddress = async (
 		query: string,
 		pageNumber: number,
+		useFallback: boolean,
 		onSuccess?: (results: IResultsMetaData) => void,
 		onFail?: (error: unknown) => void
 	) => {
 		if (!query) return;
 		try {
-			const { results, pageNum, totalNumPages } = await searchByAddress({
-				searchValue: query,
-				getAddressDetails: OneMapBoolean.YES,
-				returnGeom: OneMapBoolean.YES,
-				pageNum: pageNumber,
-			});
+			if (useFallback && query.toLowerCase().includes("pin location")) {
+				const latLngArray = query.split(": ")[1].split(", ");
+				const parsedResult = [
+					{
+						address: query,
+						lat: parseFloat(latLngArray[0]),
+						lng: parseFloat(latLngArray[1]),
+					},
+				];
 
-			const parsedResults = results.map((obj) => {
-				const address = formatAddressFromGeocodeInfo(obj, true);
-				return {
-					address: address,
-					blockNo: obj.BLK_NO,
-					building: obj.BUILDING,
-					postalCode: obj.POSTAL,
-					roadName: obj.ROAD_NAME,
-					lat: parseFloat(obj.LATITUDE) || undefined,
-					lng: parseFloat(obj.LONGITUDE) || undefined,
-					x: parseFloat(obj.X) || undefined,
-					y: parseFloat(obj.Y) || undefined,
-				};
-			});
+				onSuccess?.({
+					results: parsedResult,
+					apiPageNum: pageNumber,
+					totalNumPages: pageNumber,
+				});
+			} else {
+				const { results, pageNum, totalNumPages } = await searchByAddress({
+					searchValue: query,
+					getAddressDetails: OneMapBoolean.YES,
+					returnGeom: OneMapBoolean.YES,
+					pageNum: pageNumber,
+				});
 
-			onSuccess?.({
-				results: parsedResults,
-				apiPageNum: pageNum,
-				totalNumPages,
-			});
+				const parsedResults = results.map((obj) => {
+					const address = formatAddressFromGeocodeInfo(obj, true);
+					return {
+						address: address,
+						blockNo: obj.BLK_NO,
+						building: obj.BUILDING,
+						postalCode: obj.POSTAL,
+						roadName: obj.ROAD_NAME,
+						lat: parseFloat(obj.LATITUDE) || undefined,
+						lng: parseFloat(obj.LONGITUDE) || undefined,
+						x: parseFloat(obj.X) || undefined,
+						y: parseFloat(obj.Y) || undefined,
+					};
+				});
+
+				onSuccess?.({
+					results: parsedResults,
+					apiPageNum: pageNum,
+					totalNumPages,
+				});
+			}
 		} catch (error) {
 			onFail?.(new OneMapError(error));
 		}
@@ -151,6 +170,7 @@ export namespace LocationHelper {
 		await debounceFetchAddress(
 			address,
 			1,
+			false,
 			(res) => {
 				onSuccess(res.results?.[0] || undefined);
 			},

@@ -234,8 +234,12 @@ export const LocationSearch = ({
 	 */
 	useEffect(() => {
 		if (resultState === "found") return;
+
 		const parsedString = validateQueryString(queryString);
-		if (!parsedString) return resetResultsList();
+		// Only trigger resetResultsList() if parsedString is empty.
+		if (!parsedString) {
+			return resetResultsList();
+		}
 		if (
 			(inputRef.current?.value !== gettingCurrentLocationFetchMessage &&
 				inputRef.current?.value !== selectedAddressInfo?.address) ||
@@ -247,6 +251,7 @@ export const LocationSearch = ({
 		debounceFetchAddress(
 			parsedString,
 			1,
+			formValues.address === parsedString ? true : false,
 			(res: IResultsMetaData) => {
 				if (selectedAddressInfo?.address === parsedString) {
 					setSelectedIndex(0);
@@ -296,12 +301,12 @@ export const LocationSearch = ({
 		const validFormLocation = formValues?.address && formValues?.lat && formValues?.lng;
 		if (validFormLocation) {
 			setQueryString(formValues.address);
+			setSelectedIndex(0);
 		} else {
 			setQueryString("");
 			resetResultsList();
+			setResultState("pristine");
 		}
-
-		setResultState("pristine");
 		onCancel();
 	};
 
@@ -320,8 +325,13 @@ export const LocationSearch = ({
 	};
 
 	const handleClearInput = () => {
+		// Only set result state as "pristine" when there is no valid formValues available.
+		const validFormLocation = formValues?.address && formValues?.lat && formValues?.lng;
+		if (!validFormLocation) {
+			setResultState("pristine");
+		}
+		setSelectedIndex(-1);
 		setQueryString("");
-		setResultState("pristine");
 		setSinglePanelMode("map");
 	};
 
@@ -400,6 +410,7 @@ export const LocationSearch = ({
 			debounceFetchAddress(
 				queryString,
 				apiPageNum + 1,
+				false,
 				(res) => {
 					const results = boldResultsWithQuery(res.results, queryString);
 					if (results.length > PAGE_SIZE) {
