@@ -107,22 +107,29 @@ export namespace LocationHelper {
 	export const fetchAddress = async (
 		query: string,
 		pageNumber: number,
-		useFallback: boolean,
+		lat: number,
+		lng: number,
 		onSuccess?: (results: IResultsMetaData) => void,
 		onFail?: (error: unknown) => void
 	) => {
 		if (!query) return;
 		try {
-			if (useFallback && query.toLowerCase().includes("pin location")) {
-				const latLngArray = query.split(": ")[1].split(", ");
-				const parsedResult = [
-					{
-						address: query,
-						lat: parseFloat(latLngArray[0]),
-						lng: parseFloat(latLngArray[1]),
-					},
-				];
-
+			const regex = /^pin location/;
+			if (regex.test(query.toLowerCase())) {
+				const [queryLat, queryLng] = query
+					.split(":")[1]
+					.split(",")
+					.map((value) => parseFloat(value.trim()));
+				let parsedResult = [];
+				if (lat && lng && lat === queryLat && lng === queryLng) {
+					parsedResult = [
+						{
+							address: query,
+							lat: queryLat,
+							lng: queryLng,
+						},
+					];
+				}
 				onSuccess?.({
 					results: parsedResult,
 					apiPageNum: pageNumber,
@@ -170,7 +177,8 @@ export namespace LocationHelper {
 		await debounceFetchAddress(
 			address,
 			1,
-			false,
+			undefined,
+			undefined,
 			(res) => {
 				onSuccess(res.results?.[0] || undefined);
 			},

@@ -499,7 +499,7 @@ describe("location-input-group", () => {
 
 				describe("when only lat lng", () => {
 					beforeEach(async () => {
-						fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+						fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 							onSuccess(mock1PageFetchAddressResponse);
 						});
 						fetchSingleLocationByLatLngSpy.mockImplementation(
@@ -726,11 +726,9 @@ describe("location-input-group", () => {
 									expect(getLocationSearchResults(true, "map")).toBeInTheDocument();
 								});
 
-								fetchAddressSpy.mockImplementation(
-									(queryString, pageNumber, useFallback, onSuccess) => {
-										onSuccess(mock1PageFetchAddressResponse);
-									}
-								);
+								fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
+									onSuccess(mock1PageFetchAddressResponse);
+								});
 
 								fireEvent.change(getLocationSearchInput(), { target: { value: "A" } });
 
@@ -821,7 +819,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should automatically search as user types", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 								onSuccess(mockEmptyFetchAddressResponse);
 							});
 
@@ -833,7 +831,7 @@ describe("location-input-group", () => {
 								expect(getLocationSearchResults(true)).toHaveTextContent("No results found");
 							});
 
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -847,7 +845,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to clear query string", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -868,7 +866,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to select result", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -894,7 +892,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to scroll to see more results", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -923,7 +921,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should close location modal when confirm", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -977,7 +975,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should switch to map mode when result is selected", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1001,7 +999,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should close location modal when confirm", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, useFallback, onSuccess) => {
+							fetchAddressSpy.mockImplementation((queryString, pageNumber, lat, lng, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 

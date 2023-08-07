@@ -125,7 +125,10 @@ export const LocationSearch = ({
 				handleApiErrors(new OneMapError(error));
 			}
 		};
-		Promise.all([debounceFetchAddress("singapore", 1, false, undefined, handleApiErrors), reverseGeoCodeCheck()]);
+		Promise.all([
+			debounceFetchAddress("singapore", 1, formValues?.lat, formValues?.lng, handleApiErrors),
+			reverseGeoCodeCheck(),
+		]);
 	}, []);
 
 	useEffect(() => {
@@ -251,7 +254,8 @@ export const LocationSearch = ({
 		debounceFetchAddress(
 			parsedString,
 			1,
-			formValues?.address !== undefined && !!formValues?.address,
+			formValues?.lat,
+			formValues?.lng,
 			(res: IResultsMetaData) => {
 				if (selectedAddressInfo?.address === parsedString) {
 					setSelectedIndex(0);
@@ -410,7 +414,8 @@ export const LocationSearch = ({
 			debounceFetchAddress(
 				queryString,
 				apiPageNum + 1,
-				false,
+				formValues?.lat,
+				formValues?.lng,
 				(res) => {
 					const results = boldResultsWithQuery(res.results, queryString);
 					if (results.length > PAGE_SIZE) {
