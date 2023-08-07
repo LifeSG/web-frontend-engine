@@ -97,12 +97,6 @@ const LocationModal = ({
 	useEffect(() => {
 		if (!window) return;
 
-		// If formValues persist upon re-entry into the location modal,
-		// then set selectedAddressInfo accordingly.
-		if (formValues) {
-			setSelectedAddressInfo(formValues);
-		}
-
 		const mql = matchMedia(`(max-width: ${MediaWidths.tablet}px)`);
 		setPanelInputMode(mql.matches ? "map" : "double");
 
