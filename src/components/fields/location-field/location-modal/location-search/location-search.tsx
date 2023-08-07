@@ -251,7 +251,7 @@ export const LocationSearch = ({
 		debounceFetchAddress(
 			parsedString,
 			1,
-			formValues.address === parsedString ? true : false,
+			formValues?.address !== undefined && formValues?.address === parsedString ? true : false,
 			(res: IResultsMetaData) => {
 				if (selectedAddressInfo?.address === parsedString) {
 					setSelectedIndex(0);
