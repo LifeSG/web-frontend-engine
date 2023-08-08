@@ -1,3 +1,4 @@
+import { PhoneNumberInputValue } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -5,10 +6,9 @@ import { TestHelper } from "../../../utils";
 import { usePrevious, useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
-import { getCountryFromPrefix, getInternationalCallingCodeMap } from "./data";
+import { getCountryFromPrefix, getInternationalCallingCodeMap, getPrefixFromCountry } from "./data";
 import { IContactFieldSchema, ISelectedCountry, TCallingCodeMap, TCountry, TSingaporeNumberRule } from "./types";
 import { PhoneHelper } from "./utils";
-import { PhoneNumberInputValue } from "@lifesg/react-design-system";
 
 export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => {
 	// =============================================================================
@@ -30,7 +30,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	const [internationalCodeMap] = useState<TCallingCodeMap>(getInternationalCallingCodeMap());
 	const [selectedCountry, setSelectedCountry] = useState<ISelectedCountry>();
 	const [singaporeRule, setSingaporeRule] = useState<TSingaporeNumberRule>();
-	const [fixedCountry, setFixedCountry] = useState<boolean>(false);
+	const [fixedCountry, setFixedCountry] = useState<boolean>(undefined);
 	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
@@ -48,6 +48,8 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		} else if ((["default", "house", "mobile"] as TSingaporeNumberRule[]).includes(singaporeRule)) {
 			setCountryValue("Singapore");
 			setFixedCountry(true);
+		} else {
+			setFixedCountry(false);
 		}
 
 		setSingaporeRule(singaporeRule);
@@ -107,11 +109,22 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation, defaultCountry]);
 
-	// handle changes in value through reset
+	// handles changes in value through reset or defaultValues
+	// adds prefix if it is not specified
 	useEffect(() => {
-		const { number } = PhoneHelper.getParsedPhoneNumber(value || "");
-		setStateValue(number);
-	}, [value]);
+		if (fixedCountry !== undefined) {
+			const { prefix, number } = PhoneHelper.getParsedPhoneNumber(value || "");
+			const prefixWithoutPlus = prefix.replace(/\+/g, "");
+			const schemaPrefix = getPrefixFromCountry(countryValue || "Singapore");
+			if (!fixedCountry || (fixedCountry && prefixWithoutPlus === schemaPrefix)) {
+				const fieldPrefix = prefix || schemaPrefix;
+				handleChange({ countryCode: fieldPrefix, number });
+			} else {
+				handleChange({ countryCode: "", number: "" });
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, fixedCountry, countryValue]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -123,13 +136,15 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		const phoneNumberWithPrefix = PhoneHelper.formatPhoneNumber(countryCode, number);
 
 		// update country code
-		if (countryCodeWithoutPlus !== selectedCountry.prefix) {
+		if (fixedCountry === false && countryCodeWithoutPlus !== selectedCountry?.prefix) {
 			const countryName = getCountryFromPrefix(countryCodeWithoutPlus, internationalCodeMap);
 
-			setSelectedCountry({
-				name: countryName,
-				prefix: countryCode,
-			});
+			if (countryName) {
+				setSelectedCountry({
+					name: countryName,
+					prefix: countryCode,
+				});
+			}
 		}
 
 		setStateValue(number);

@@ -250,3 +250,13 @@ export const getCountryFromPrefix = (prefix: string, country: Map<TCountry, stri
 
 	return undefined;
 };
+
+export const getPrefixFromCountry = (country: string) => {
+	for (const [countryName, , , prefix] of CountryData) {
+		if (countryName === country) {
+			return prefix;
+		}
+	}
+
+	return undefined;
+};

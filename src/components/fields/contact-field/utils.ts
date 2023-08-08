@@ -56,6 +56,11 @@ export namespace PhoneHelper {
 		if (!prefix) {
 			return value;
 		}
+
+		if (prefix.indexOf("+") !== 0) {
+			return `+${prefix} ${value}`;
+		}
+
 		return `${prefix} ${value}`;
 	};
 }

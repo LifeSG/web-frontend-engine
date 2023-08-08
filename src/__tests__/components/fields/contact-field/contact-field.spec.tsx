@@ -107,6 +107,52 @@ describe(UI_TYPE, () => {
 		expect(getField("textbox", "search-input")).toBeInTheDocument();
 	});
 
+	describe("defaultValues", () => {
+		it("should support defaultValues", async () => {
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: "+65 91234567" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "+65 91234567" }));
+		});
+
+		it("should prepend country code if not specified in defaultValues", async () => {
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: "91234567" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "+65 91234567" }));
+		});
+
+		it("should switch country if another country code is specified in defaultValues", async () => {
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: "+60 91234567" } });
+
+			expect(screen.getByText("+60")).toBeInTheDocument();
+		});
+
+		it("should not switch country if an invalid country code is specified in defaultValues", async () => {
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: "+999 91234567" } });
+
+			expect(screen.getByText("+65")).toBeInTheDocument();
+		});
+
+		it("should not use defaultValues if field has fixed country yet another country number is provided", async () => {
+			renderComponent(
+				{
+					validation: [
+						{
+							contactNumber: {
+								internationalNumber: "Ireland",
+							},
+						},
+					],
+				},
+				{ defaultValues: { [COMPONENT_ID]: "+65 91234567" } }
+			);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "" }));
+		});
+	});
+
 	describe("it should be able to verify Singapore numbers", () => {
 		it("+65 98123456 should be a valid number", async () => {
 			const contactNumber = "98123456";
@@ -277,11 +323,11 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(getContactField()).toHaveValue("");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "" }));
 		});
 
 		it("should revert to default value on reset", async () => {
-			const defaultValues = "91234567";
+			const defaultValues = "+65 91234567";
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
 			fireEvent.change(getContactField(), { target: { value: "987654321" } });

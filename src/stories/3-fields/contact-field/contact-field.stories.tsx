@@ -110,6 +110,25 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const DefaultForeignNumber = DefaultStoryTemplate<IContactFieldSchema>("contact-default-foreign-number").bind(
+	{}
+);
+DefaultForeignNumber.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
+	defaultValues: "+60 91234567",
+};
+DefaultForeignNumber.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string",
+			},
+		},
+	},
+};
+
 export const Disabled = DefaultStoryTemplate<IContactFieldSchema>("contact-disabled").bind({});
 Disabled.args = {
 	uiType: "contact-field",
