@@ -31,9 +31,9 @@ export const useFormValues = () => {
 	};
 
 	const resetFields = (values: Record<string, unknown>) => {
-		const newState = { ...values };
-		formValuesRef.current = newState;
-		setFormValues(newState);
+		// ensure object references are different
+		formValuesRef.current = { ...values };
+		setFormValues(() => ({ ...values }));
 	};
 
 	return { formValues, getField, setFields, setField, resetFields };
