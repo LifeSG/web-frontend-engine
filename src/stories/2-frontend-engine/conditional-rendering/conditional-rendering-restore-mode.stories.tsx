@@ -85,6 +85,14 @@ const Template: Story<IFrontendEngineProps> = (args) => {
 	);
 };
 
+export const None = Template.bind({});
+None.args = {
+	data: {
+		...DATA,
+		restoreMode: "none",
+	},
+};
+
 export const RestoreDefaultValue = Template.bind({});
 RestoreDefaultValue.args = {
 	data: {

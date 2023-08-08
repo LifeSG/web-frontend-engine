@@ -1,3 +1,6 @@
+import isArray from "lodash/isArray";
+import isNumber from "lodash/isNumber";
+import isString from "lodash/isString";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useFormSchema, useFormValues } from "../../../utils/hooks";
@@ -13,7 +16,7 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 	const { control, setValue } = useFormContext();
 
 	const {
-		formSchema: { defaultValues, restoreMode },
+		formSchema: { defaultValues, restoreMode = "none" },
 	} = useFormSchema();
 	const { getField, setField } = useFormValues();
 
@@ -21,8 +24,19 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 		setValue(id, getField(id));
 
 		return () => {
-			if (restoreMode === "default-value") {
-				setField(id, defaultValues?.[id]);
+			switch (restoreMode) {
+				case "default-value":
+					setField(id, defaultValues?.[id]);
+					break;
+				case "none": {
+					const value = getField(id);
+					if (isArray(value)) {
+						setField(id, []);
+					} else if (isString(value) || isNumber(value)) {
+						setField(id, "");
+					}
+					break;
+				}
 			}
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps

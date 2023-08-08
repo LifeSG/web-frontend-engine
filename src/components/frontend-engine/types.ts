@@ -107,7 +107,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export type TValidationMode = keyof ValidationMode;
-export type TRestoreMode = "default-value" | "user-input";
+export type TRestoreMode = "none" | "default-value" | "user-input";
 
 export type TErrorMessage = string | string[] | Record<string, string | string[]>;
 export type TErrorPayload = Record<string, TErrorMessage>;
