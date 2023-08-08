@@ -1,15 +1,21 @@
-import { LocalDate } from "@js-joda/core";
+import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
+import { Locale } from "@js-joda/locale_en-us";
+import { DateInputProps } from "@lifesg/react-design-system/date-input";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { IDateFieldSchema } from "./types";
-import { useFormContext } from "react-hook-form";
 
 const DEFAULT_DATE_FORMAT = "uuuu-MM-dd";
+const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)
+	.withResolverStyle(ResolverStyle.STRICT)
+	.withLocale(Locale.ENGLISH);
+
 export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
@@ -25,6 +31,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	} = props;
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
+	const [derivedProps, setDerivedProps] = useState<Pick<DateInputProps, "minDate" | "maxDate" | "disabledDates">>();
 	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
@@ -37,6 +44,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		const notPastRule = validation?.find((rule) => "notPast" in rule);
 		const minDateRule = validation?.find((rule) => "minDate" in rule);
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
+		const excludedDatesRule = validation?.find((rule) => "excludedDates" in rule);
 
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
@@ -96,9 +104,38 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 						const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 						return !localDate?.isAfter(maxDate);
 					}
+				)
+				.test(
+					"excluded-dates",
+					excludedDatesRule?.["errorMessage"] || ERROR_MESSAGES.DATE.DISABLED_DATES,
+					(value) => {
+						if (!isValidDate(value) || !excludedDatesRule) return true;
+						return !excludedDatesRule["excludedDates"].includes(value);
+					}
 				),
 			validation
 		);
+
+		// set minDate / maxDate / disabledDates props
+		const minDateProp = getLatestDate([
+			minDate,
+			futureRule?.["future"] && LocalDate.now().plusDays(1),
+			notPastRule?.["notPast"] && LocalDate.now(),
+		]);
+		const maxDateProp = getEarliestDate([
+			maxDate,
+			pastRule?.["past"] && LocalDate.now().minusDays(1),
+			notFutureRule?.["notFuture"] && LocalDate.now(),
+		]);
+		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
+		if (minDateProp || maxDateProp || disabledDatesProps) {
+			setDerivedProps((props) => ({
+				...props,
+				minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
+				maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
+				disabledDates: disabledDatesProps,
+			}));
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
@@ -147,32 +184,23 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	// =============================================================================
 	// EVENT HANDLER
 	// =============================================================================
-	const handleChange = ([day, month, year]: string[]) => {
-		if (!day && !month && !year) {
-			onChange({
-				target: { value: "" },
-			});
-		} else if (day.length < 2 || month.length < 2 || year.length < 4) {
-			onChange({
-				target: { value: ERROR_MESSAGES.DATE.INVALID },
-			});
-		} else {
-			onChange({
-				target: {
-					value: DateTimeHelper.formatDateTime(
-						[year, month, day].join("-"),
-						dateFormat,
-						"date",
-						ERROR_MESSAGES.DATE.INVALID
-					),
-				},
-			});
-		}
+	const handleChange = (value: string) => {
+		onChange({
+			target: {
+				value: DateTimeHelper.formatDateTime(value, dateFormat, "date", ERROR_MESSAGES.DATE.INVALID),
+			},
+		});
 	};
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
+	const getEarliestDate = (localDates: LocalDate[]) =>
+		localDates.filter((ld) => ld).sort((a, b) => (a.isAfter(b) ? 1 : -1))?.[0];
+
+	const getLatestDate = (localDates: LocalDate[]) =>
+		localDates.filter((ld) => ld).sort((a, b) => (a.isBefore(b) ? 1 : -1))?.[0];
+
 	const isValidDate = (value: string): boolean => {
 		return value && value !== ERROR_MESSAGES.DATE.INVALID;
 	};
@@ -185,11 +213,12 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		<Form.DateInput
 			{...otherSchema}
 			{...otherProps}
+			{...derivedProps}
 			id={id}
 			data-testid={TestHelper.generateId(id, "date")}
 			label={label}
 			errorMessage={error?.message}
-			onChangeRaw={handleChange}
+			onChange={handleChange}
 			value={stateValue}
 		/>
 	);

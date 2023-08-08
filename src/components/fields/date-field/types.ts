@@ -8,11 +8,12 @@ export interface IDateFieldValidationRule {
 	notPast?: boolean | undefined;
 	minDate?: string | undefined;
 	maxDate?: string | undefined;
+	excludedDates?: string[] | undefined;
 }
 
 export interface IDateFieldSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"date-field", V, IDateFieldValidationRule>,
-		TComponentOmitProps<DateInputProps> {
+		TComponentOmitProps<DateInputProps, "minDate" | "maxDate" | "disabledDates"> {
 	useCurrentDate?: boolean | undefined;
 	dateFormat?: string | undefined;
 }

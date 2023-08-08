@@ -1,5 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { setupJestCanvasMock } from "jest-canvas-mock";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { useState } from "react";
@@ -91,6 +92,7 @@ const getOptionC = (): HTMLElement => {
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
+		setupJestCanvasMock();
 	});
 
 	it("should be able to render the field", () => {
@@ -124,7 +126,7 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getComponent().parentElement).toHaveAttribute("disabled");
+		expect(getComponent()).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom placeholder", () => {

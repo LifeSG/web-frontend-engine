@@ -44,15 +44,15 @@ const renderComponent = (overrideField?: TOverrideField<IDateFieldSchema>, overr
 };
 
 const getDayInput = (): HTMLElement => {
-	return getField("textbox", "start-day-input");
+	return getField("textbox", "day");
 };
 
 const getMonthInput = (): HTMLElement => {
-	return getField("textbox", "start-month-input");
+	return getField("textbox", "month");
 };
 
 const getYearInput = (): HTMLElement => {
-	return getField("textbox", "start-year-input");
+	return getField("textbox", "year");
 };
 
 describe(UI_TYPE, () => {
@@ -163,13 +163,14 @@ describe(UI_TYPE, () => {
 	});
 
 	describe.each`
-		condition       | config                       | invalid                 | valid
-		${"future"}     | ${{ future: true }}          | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"past"}       | ${{ past: true }}            | ${["01", "01", "2022"]} | ${["12", "31", "2021"]}
-		${"non-future"} | ${{ notFuture: true }}       | ${["02", "01", "2022"]} | ${["01", "01", "2022"]}
-		${"non-past"}   | ${{ notPast: true }}         | ${["31", "12", "2021"]} | ${["01", "01", "2022"]}
-		${"min-date"}   | ${{ minDate: "2022-01-02" }} | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"max-date"}   | ${{ maxDate: "2022-01-02" }} | ${["03", "01", "2022"]} | ${["02", "01", "2022"]}
+		condition           | config                               | invalid                 | valid
+		${"future"}         | ${{ future: true }}                  | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"past"}           | ${{ past: true }}                    | ${["01", "01", "2022"]} | ${["12", "31", "2021"]}
+		${"non-future"}     | ${{ notFuture: true }}               | ${["02", "01", "2022"]} | ${["01", "01", "2022"]}
+		${"non-past"}       | ${{ notPast: true }}                 | ${["31", "12", "2021"]} | ${["01", "01", "2022"]}
+		${"min-date"}       | ${{ minDate: "2022-01-02" }}         | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"max-date"}       | ${{ maxDate: "2022-01-02" }}         | ${["03", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"excluded-dates"} | ${{ excludedDates: ["2022-01-02"] }} | ${["02", "01", "2022"]} | ${["03", "01", "2022"]}
 	`("$condition validation", ({ condition, config, invalid, valid }) => {
 		beforeEach(() => {
 			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
@@ -179,42 +180,90 @@ describe(UI_TYPE, () => {
 			jest.restoreAllMocks();
 		});
 
-		it(`should be able to validate for ${condition} dates`, async () => {
-			renderComponent({ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] });
+		it(`should ignore the invalid input values if there is validation for ${condition} dates`, async () => {
+			renderComponent({ validation: [config] });
 
 			fireEvent.change(getDayInput(), { target: { value: invalid[0] } });
 			fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
 			fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
-
-			fireEvent.click(screen.getByText("Done"));
+			fireEvent.click(getField("button", "Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(getErrorMessage()).toBeInTheDocument();
 
-			fireEvent.change(getDayInput(), { target: { value: valid[0] } });
-			fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
-			fireEvent.change(getYearInput(), { target: { value: valid[2] } });
-			await waitFor(() => fireEvent.click(screen.getByText("Done")));
-			expect(getErrorMessage(true)).not.toBeInTheDocument();
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		});
+
+		it(`should show error message on submit if there is valididation for ${condition} dates and invalid default dates`, async () => {
+			renderComponent(
+				{ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] },
+				{ defaultValues: { [COMPONENT_ID]: `${invalid[2]}-${invalid[1]}-${invalid[0]}` } }
+			);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).not.toBeCalled();
+			expect(getErrorMessage()).toBeInTheDocument();
 		});
 
 		it(`should be able to validate for ${condition} dates for a different date format`, async () => {
-			renderComponent({ validation: [{ errorMessage: ERROR_MESSAGE, dateFormat: "d MMMM uuuu", ...config }] });
+			renderComponent({ validation: [{ dateFormat: "d MMMM uuuu", ...config }] });
 
 			fireEvent.change(getDayInput(), { target: { value: invalid[0] } });
 			fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
 			fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
-
-			await waitFor(() => fireEvent.click(screen.getByText("Done")));
+			fireEvent.click(getField("button", "Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(getErrorMessage()).toBeInTheDocument();
+
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
 			fireEvent.focus(getDayInput());
 			fireEvent.change(getDayInput(), { target: { value: valid[0] } });
 			fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
 			fireEvent.change(getYearInput(), { target: { value: valid[2] } });
-			await waitFor(() => fireEvent.click(screen.getByText("Done")));
+			await waitFor(() => fireEvent.click(getField("button", "Done")));
+
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
+	});
+
+	it("should derive the latest of the allowed dates if there are minDate, future and notPast rules", async () => {
+		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
+		renderComponent({ validation: [{ minDate: "2022-01-15" }, { future: true }, { notPast: true }] });
+
+		fireEvent.change(getDayInput(), { target: { value: "05" } });
+		fireEvent.change(getMonthInput(), { target: { value: "01" } });
+		fireEvent.change(getYearInput(), { target: { value: "2022" } });
+		fireEvent.click(getField("button", "Done"));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+
+		fireEvent.change(getDayInput(), { target: { value: "15" } });
+		fireEvent.change(getMonthInput(), { target: { value: "01" } });
+		fireEvent.change(getYearInput(), { target: { value: "2022" } });
+		fireEvent.click(getField("button", "Done"));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "2022-01-15" }));
+	});
+
+	it("should derive the earliest of the allowed dates if there are maxDate, past and notFuture rules", async () => {
+		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
+		renderComponent({ validation: [{ maxDate: "2021-12-15" }, { past: true }, { notFuture: true }] });
+
+		fireEvent.change(getDayInput(), { target: { value: "30" } });
+		fireEvent.change(getMonthInput(), { target: { value: "12" } });
+		fireEvent.change(getYearInput(), { target: { value: "2021" } });
+		fireEvent.click(getField("button", "Done"));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+
+		fireEvent.change(getDayInput(), { target: { value: "15" } });
+		fireEvent.change(getMonthInput(), { target: { value: "12" } });
+		fireEvent.change(getYearInput(), { target: { value: "2021" } });
+		fireEvent.click(getField("button", "Done"));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "2021-12-15" }));
 	});
 
 	describe("reset", () => {

@@ -1,5 +1,4 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { InputSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -16,10 +15,10 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	const {
 		schema: { label, validation, options, ...otherSchema },
 		id,
-		name,
 		value,
 		error,
 		onChange,
+		...otherProps
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -60,20 +59,19 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			<InputSelect
-				{...otherSchema}
-				id={id}
-				data-testid={TestHelper.generateId(id, "select")}
-				name={name}
-				error={!!error?.message}
-				options={options}
-				onSelectOption={handleChange}
-				selectedOption={getSelectOption()}
-				displayValueExtractor={(item: ISelectOption) => item.label}
-				valueExtractor={(item: ISelectOption) => item.value}
-				listExtractor={(item: ISelectOption) => item.label}
-			/>
-		</Form.CustomField>
+		<Form.Select
+			{...otherSchema}
+			{...otherProps}
+			id={id}
+			data-testid={TestHelper.generateId(id, "select")}
+			label={label}
+			errorMessage={error?.message}
+			options={options}
+			onSelectOption={handleChange}
+			selectedOption={getSelectOption()}
+			displayValueExtractor={(item: ISelectOption) => item.label}
+			valueExtractor={(item: ISelectOption) => item.value}
+			listExtractor={(item: ISelectOption) => item.label}
+		/>
 	);
 };

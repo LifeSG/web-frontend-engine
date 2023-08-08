@@ -1,5 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { setupJestCanvasMock } from "jest-canvas-mock";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { useState } from "react";
@@ -76,6 +77,7 @@ const getSelectToggle = (): HTMLElement => {
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
+		setupJestCanvasMock();
 	});
 
 	it("should be able to render the field", () => {
@@ -91,7 +93,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent(defaultLabel);
+		expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent(defaultLabel);
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
@@ -208,7 +210,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent("Select");
+			expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent("Select");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -221,7 +223,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent("A");
+			expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent("A");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});

@@ -1,5 +1,4 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { InputMultiSelect } from "@lifesg/react-design-system/input-select";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -18,10 +17,10 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	const {
 		schema: { label, validation, options, ...otherSchema },
 		id,
-		name,
 		value,
 		onChange,
 		error,
+		...otherProps
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -78,19 +77,18 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			<InputMultiSelect
-				{...otherSchema}
-				id={id}
-				data-testid={TestHelper.generateId(id, "multi-select")}
-				name={name}
-				options={options}
-				onSelectOptions={handleChange}
-				selectedOptions={getSelectOptions()}
-				valueExtractor={(item: IMultiSelectOption) => item.value}
-				listExtractor={(item: IMultiSelectOption) => item.label}
-				error={!!error?.message}
-			/>
-		</Form.CustomField>
+		<Form.MultiSelect
+			{...otherSchema}
+			{...otherProps}
+			id={id}
+			data-testid={TestHelper.generateId(id)}
+			label={label}
+			options={options}
+			onSelectOptions={handleChange}
+			selectedOptions={getSelectOptions()}
+			valueExtractor={(item: IMultiSelectOption) => item.value}
+			listExtractor={(item: IMultiSelectOption) => item.label}
+			errorMessage={error?.message}
+		/>
 	);
 };

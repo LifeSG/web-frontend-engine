@@ -1,5 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { setupJestCanvasMock } from "jest-canvas-mock";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { useState } from "react";
@@ -21,6 +22,7 @@ import {
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
+const FIELD_LABEL = "Multiselect";
 const UI_TYPE = "multi-select";
 
 const JSON_SCHEMA: IFrontendEngineData = {
@@ -72,7 +74,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 const getComponent = (): HTMLElement => {
-	return getField("button", "Select");
+	return getField("button", FIELD_LABEL);
 };
 
 const getCheckboxA = (): HTMLElement => {
@@ -86,6 +88,7 @@ const getCheckboxB = (): HTMLElement => {
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
+		setupJestCanvasMock();
 	});
 
 	it("should be able to render the field", () => {
@@ -98,8 +101,7 @@ describe(UI_TYPE, () => {
 		const defaultValues = ["Apple"];
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
-		const toggle = getField("button", "1 selected");
-		await waitFor(() => fireEvent.click(toggle));
+		await waitFor(() => fireEvent.click(getComponent()));
 		expect(getCheckboxA().querySelector("svg")).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -158,16 +160,16 @@ describe(UI_TYPE, () => {
 	it("should be able to toggle all the checkboxes at once", async () => {
 		renderComponent();
 
-		await waitFor(() => fireEvent.click(getComponent()));
+		fireEvent.click(getComponent());
 		const selectAllButton = getField("button", "Select all");
 
-		await waitFor(() => fireEvent.click(selectAllButton));
+		fireEvent.click(selectAllButton);
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(
 			expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry", "Cherry", "Durian"] })
 		);
 
-		await waitFor(() => fireEvent.click(selectAllButton));
+		fireEvent.click(selectAllButton);
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
@@ -284,7 +286,7 @@ describe(UI_TYPE, () => {
 			const defaultValues = ["Apple"];
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
-			fireEvent.click(getField("button", "1 selected"));
+			fireEvent.click(getComponent());
 			const apple = getCheckboxA();
 			const berry = getCheckboxB();
 

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { setupJestCanvasMock } from "jest-canvas-mock";
 import { FrontendEngine } from "../../../../components";
 import { IContactFieldSchema, TSingaporeNumberRule } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -56,6 +57,7 @@ const getDefaultDropdownToggle = (): HTMLElement => {
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
+		setupJestCanvasMock();
 	});
 
 	it("should be able to render the field", () => {
@@ -84,7 +86,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-		const afghanCode = getField("button", "Afghanistan+93");
+		const afghanCode = getField("button", "Afghanistan +93");
 		await waitFor(() => fireEvent.click(afghanCode));
 
 		expect(screen.getByText("+93")).toBeInTheDocument();
@@ -154,7 +156,7 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-			const japanCode = getField("button", "Japan+81");
+			const japanCode = getField("button", "Japan +81");
 
 			await waitFor(() => fireEvent.click(japanCode));
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
@@ -169,7 +171,7 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-			const japanCode = getField("button", "Japan+81");
+			const japanCode = getField("button", "Japan +81");
 
 			await waitFor(() => fireEvent.click(japanCode));
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });

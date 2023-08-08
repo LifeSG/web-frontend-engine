@@ -1,4 +1,4 @@
-import { InputMultiSelectProps } from "@lifesg/react-design-system";
+import { InputMultiSelectProps } from "@lifesg/react-design-system/input-multi-select";
 import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
 
 export interface IMultiSelectOption {
