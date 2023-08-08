@@ -163,7 +163,7 @@ export default {
 		},
 		"data.validationMode": {
 			description:
-				"Validation strategy before a user submits the form (onSubmit event). RRefer to React Hook Form's <a href='https://react-hook-form.com/api/useform/#props' target='_blank' rel='noopener noreferrer'>documentation</a> for more info.",
+				"Validation strategy before a user submits the form (onSubmit event). Refer to React Hook Form's <a href='https://react-hook-form.com/api/useform/#props' target='_blank' rel='noopener noreferrer'>documentation</a> for more info.",
 			table: {
 				type: {
 					summary: "TValidationMode",
@@ -171,6 +171,19 @@ export default {
 				},
 				defaultValue: {
 					summary: "onTouched",
+				},
+			},
+		},
+		"data.restoreMode": {
+			description:
+				"Specifies how the value of a conditionally rendered field is populated when it is shown again.",
+			table: {
+				type: {
+					summary: "TRestoreMode",
+					detail: "none | default-value | user-input",
+				},
+				defaultValue: {
+					summary: "none",
 				},
 			},
 		},

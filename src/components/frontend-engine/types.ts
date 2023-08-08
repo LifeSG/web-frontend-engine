@@ -74,6 +74,12 @@ export interface IFrontendEngineData<V = undefined> {
 	validationMode?: TValidationMode | undefined;
 	/** Additional properties to mutate the sections schema on-the-fly */
 	overrides?: Record<string, RecursivePartial<TFrontendEngineFieldSchema<V>>> | undefined;
+	/**
+	 * Specifies how a conditionally rendered field gets populated when it is shown again
+	 * - `"none"`: cleared
+	 * - `"default-value"`: the initial value
+	 * - `"user-input"`: the latest value
+	 */
 	restoreMode?: TRestoreMode | undefined;
 }
 
