@@ -103,7 +103,7 @@ export namespace LocationHelper {
 		}
 	};
 
-	// Added useFallback arg to handle pin location address.
+	// Added lat, lng arguments to handle pin location address in query field.
 	export const fetchAddress = async (
 		query: string,
 		pageNumber: number,
@@ -114,14 +114,19 @@ export namespace LocationHelper {
 	) => {
 		if (!query) return;
 		try {
+			// if query contains "Pin location" i.e. in address field.
 			const regex = /^pin location/;
 			if (regex.test(query.toLowerCase())) {
+				// Extract out the lat and lng values from the query.
 				const [queryLat, queryLng] = query
 					.split(":")[1]
 					.split(",")
 					.map((value) => parseFloat(value.trim()));
 				let parsedResult = [];
+				// Compare the lat, lng values of the query with the lat, lng values of the formValues.
+				// This is done to prevent the user from filling in their own lat, lng values in the form field.
 				if (lat && lng && lat === queryLat && lng === queryLng) {
+					// If the lat, lng values tally, we produce the result item to be put into the result list.
 					parsedResult = [
 						{
 							address: query,
