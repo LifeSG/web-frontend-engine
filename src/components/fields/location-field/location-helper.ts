@@ -107,71 +107,67 @@ export namespace LocationHelper {
 	export const fetchAddress = async (
 		query: string,
 		pageNumber: number,
-		lat: number,
-		lng: number,
 		onSuccess?: (results: IResultsMetaData) => void,
 		onFail?: (error: unknown) => void
 	) => {
 		if (!query) return;
 		try {
-			// if query contains "Pin location" i.e. in address field.
-			const regex = /^pin location/;
-			if (regex.test(query.toLowerCase())) {
-				// Extract out the lat and lng values from the query.
-				const [queryLat, queryLng] = query
-					.split(":")[1]
-					.split(",")
-					.map((value) => parseFloat(value.trim()));
-				let parsedResult = [];
-				// Compare the lat, lng values of the query with the lat, lng values of the formValues.
-				// This is done to prevent the user from filling in their own lat, lng values in the form field.
-				if (lat && lng && lat === queryLat && lng === queryLng) {
-					// If the lat, lng values tally, we produce the result item to be put into the result list.
-					parsedResult = [
-						{
-							address: query,
-							lat: queryLat,
-							lng: queryLng,
-						},
-					];
-				}
-				onSuccess?.({
-					results: parsedResult,
-					apiPageNum: pageNumber,
-					totalNumPages: pageNumber,
-				});
-			} else {
-				const { results, pageNum, totalNumPages } = await searchByAddress({
-					searchValue: query,
-					getAddressDetails: OneMapBoolean.YES,
-					returnGeom: OneMapBoolean.YES,
-					pageNum: pageNumber,
-				});
+			const { results, pageNum, totalNumPages } = await searchByAddress({
+				searchValue: query,
+				getAddressDetails: OneMapBoolean.YES,
+				returnGeom: OneMapBoolean.YES,
+				pageNum: pageNumber,
+			});
 
-				const parsedResults = results.map((obj) => {
-					const address = formatAddressFromGeocodeInfo(obj, true);
-					return {
-						address: address,
-						blockNo: obj.BLK_NO,
-						building: obj.BUILDING,
-						postalCode: obj.POSTAL,
-						roadName: obj.ROAD_NAME,
-						lat: parseFloat(obj.LATITUDE) || undefined,
-						lng: parseFloat(obj.LONGITUDE) || undefined,
-						x: parseFloat(obj.X) || undefined,
-						y: parseFloat(obj.Y) || undefined,
-					};
-				});
+			const parsedResults = results.map((obj) => {
+				const address = formatAddressFromGeocodeInfo(obj, true);
+				return {
+					address: address,
+					blockNo: obj.BLK_NO,
+					building: obj.BUILDING,
+					postalCode: obj.POSTAL,
+					roadName: obj.ROAD_NAME,
+					lat: parseFloat(obj.LATITUDE) || undefined,
+					lng: parseFloat(obj.LONGITUDE) || undefined,
+					x: parseFloat(obj.X) || undefined,
+					y: parseFloat(obj.Y) || undefined,
+				};
+			});
 
-				onSuccess?.({
-					results: parsedResults,
-					apiPageNum: pageNum,
-					totalNumPages,
-				});
-			}
+			onSuccess?.({
+				results: parsedResults,
+				apiPageNum: pageNum,
+				totalNumPages,
+			});
 		} catch (error) {
 			onFail?.(new OneMapError(error));
 		}
+	};
+
+	export const checkAndSetPinLocationAsResult = (query: string, lat: number, lng: number): IResultsMetaData => {
+		// Extract out the lat and lng values from the query.
+		const [queryLat, queryLng] = query
+			.split(":")[1]
+			.split(",")
+			.map((value) => parseFloat(value.trim()));
+		let parsedResult = [];
+		// Compare the lat, lng values of the query with the lat, lng values of the formValues.
+		// This is done to prevent the user from filling in their own lat, lng values in the form field.
+		if (lat && lng && lat === queryLat && lng === queryLng) {
+			// If the lat, lng values tally, we produce the result item to be put into the result list.
+			parsedResult = [
+				{
+					address: query,
+					lat: queryLat,
+					lng: queryLng,
+				},
+			];
+		}
+		return {
+			results: parsedResult,
+			apiPageNum: 1,
+			totalNumPages: 1,
+		};
 	};
 
 	export const fetchSingleLocationByAddress = async (
@@ -182,8 +178,6 @@ export namespace LocationHelper {
 		await debounceFetchAddress(
 			address,
 			1,
-			undefined,
-			undefined,
 			(res) => {
 				onSuccess(res.results?.[0] || undefined);
 			},
@@ -273,6 +267,12 @@ export namespace LocationHelper {
 	export const hasGotAddressValue = (value?: string): boolean => {
 		const lowercased = value?.toLowerCase();
 		return !!value && lowercased !== "nil" && lowercased !== "null";
+	};
+
+	export const hasGotPinLocationValue = (value?: string): boolean => {
+		if (!value) return false;
+		const regex = /^Pin location:\s*-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/;
+		return regex.test(value);
 	};
 
 	export const formatAddressFromGeocodeInfo = (

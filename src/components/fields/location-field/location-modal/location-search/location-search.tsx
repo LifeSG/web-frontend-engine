@@ -97,8 +97,14 @@ export const LocationSearch = ({
 	const [totalNumPages, setTotalNumPages] = useState(0);
 	const [apiPageNum, setAPIPageNum] = useState(1);
 	const [currentPaginationPageNum, setCurrentPaginationPageNum] = useState(1);
-	const { debounceFetchAddress, fetchSingleLocationByAddress, fetchSingleLocationByLatLng, fetchLocationList } =
-		LocationHelper;
+	const {
+		debounceFetchAddress,
+		fetchSingleLocationByAddress,
+		fetchSingleLocationByLatLng,
+		fetchLocationList,
+		hasGotPinLocationValue,
+		checkAndSetPinLocationAsResult,
+	} = LocationHelper;
 
 	const { dispatchFieldEvent } = useFieldEvent();
 	// =============================================================================
@@ -125,10 +131,7 @@ export const LocationSearch = ({
 				handleApiErrors(new OneMapError(error));
 			}
 		};
-		Promise.all([
-			debounceFetchAddress("singapore", 1, formValues?.lat, formValues?.lng, handleApiErrors),
-			reverseGeoCodeCheck(),
-		]);
+		Promise.all([debounceFetchAddress("singapore", 1, handleApiErrors), reverseGeoCodeCheck()]);
 	}, []);
 
 	useEffect(() => {
@@ -254,9 +257,11 @@ export const LocationSearch = ({
 		debounceFetchAddress(
 			parsedString,
 			1,
-			formValues?.lat,
-			formValues?.lng,
 			(res: IResultsMetaData) => {
+				if (res.results.length == 0 && hasGotPinLocationValue(parsedString)) {
+					res = checkAndSetPinLocationAsResult(queryString, formValues.lat, formValues.lng);
+				}
+
 				if (selectedAddressInfo?.address === parsedString) {
 					setSelectedIndex(0);
 				} else {
@@ -414,8 +419,6 @@ export const LocationSearch = ({
 			debounceFetchAddress(
 				queryString,
 				apiPageNum + 1,
-				formValues?.lat,
-				formValues?.lng,
 				(res) => {
 					const results = boldResultsWithQuery(res.results, queryString);
 					if (results.length > PAGE_SIZE) {
