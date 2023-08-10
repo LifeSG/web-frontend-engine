@@ -143,22 +143,18 @@ export namespace LocationHelper {
 		}
 	};
 
-	export const checkAndSetPinLocationAsResult = (query: string, lat: number, lng: number): IResultsMetaData => {
-		// Extract out the lat and lng values from the query.
-		const [queryLat, queryLng] = query
+	export const checkAndSetPinLocationAsResult = (query: string): IResultsMetaData => {
+		const [lat, lng] = query
 			.split(":")[1]
 			.split(",")
 			.map((value) => parseFloat(value.trim()));
 		let parsedResult = [];
-		// Compare the lat, lng values of the query with the lat, lng values of the formValues.
-		// This is done to prevent the user from filling in their own lat, lng values in the form field.
-		if (lat && lng && lat === queryLat && lng === queryLng) {
-			// If the lat, lng values tally, we produce the result item to be put into the result list.
+		if (LocationHelper.isCoordinateInBounds({ lat: lat, lng: lng })) {
 			parsedResult = [
 				{
 					address: query,
-					lat: queryLat,
-					lng: queryLng,
+					lat: lat,
+					lng: lng,
 				},
 			];
 		}

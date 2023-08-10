@@ -256,7 +256,7 @@ export const LocationSearch = ({
 			1,
 			(res: IResultsMetaData) => {
 				if (res.results.length == 0 && hasGotPinLocationValue(parsedString)) {
-					res = checkAndSetPinLocationAsResult(queryString, formValues.lat, formValues.lng);
+					res = checkAndSetPinLocationAsResult(queryString);
 				}
 
 				if (selectedAddressInfo?.address === parsedString) {
@@ -307,12 +307,11 @@ export const LocationSearch = ({
 		const validFormLocation = formValues?.address && formValues?.lat && formValues?.lng;
 		if (validFormLocation) {
 			setQueryString(formValues.address);
-			setSelectedIndex(0);
 		} else {
 			setQueryString("");
 			resetResultsList();
-			setResultState("pristine");
 		}
+		setResultState("pristine");
 		onCancel();
 	};
 
