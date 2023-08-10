@@ -21,6 +21,15 @@ export const ERROR_MESSAGES = {
 		DISABLED_DATES: "Date is not allowed.",
 		INVALID: "Invalid date",
 	},
+	DATE_RANGE: {
+		MUST_BE_FUTURE: "Dates must be in the future.",
+		MUST_BE_PAST: "Dates must be in the past.",
+		MIN_DATE: (date: string) => `Dates cannot be earlier than ${date}`,
+		MAX_DATE: (date: string) => `Dates cannot be later than ${date}`,
+		DISABLED_DATES: "Date range should not include disabled dates.",
+		INVALID: "Invalid dates",
+		REQUIRED: "Both dates are required",
+	},
 	EMAIL: {
 		INVALID: "Invalid email address",
 	},
