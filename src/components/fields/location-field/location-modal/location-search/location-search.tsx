@@ -131,7 +131,7 @@ export const LocationSearch = ({
 				handleApiErrors(new OneMapError(error));
 			}
 		};
-		Promise.all([debounceFetchAddress("singapore", 1, handleApiErrors), reverseGeoCodeCheck()]);
+		Promise.all([debounceFetchAddress("singapore", 1, undefined, handleApiErrors), reverseGeoCodeCheck()]);
 	}, []);
 
 	useEffect(() => {
@@ -242,10 +242,7 @@ export const LocationSearch = ({
 		if (resultState === "found") return;
 
 		const parsedString = validateQueryString(queryString);
-		// Only trigger resetResultsList() if parsedString is empty.
-		if (!parsedString) {
-			return resetResultsList();
-		}
+		if (!parsedString) return resetResultsList();
 		if (
 			(inputRef.current?.value !== gettingCurrentLocationFetchMessage &&
 				inputRef.current?.value !== selectedAddressInfo?.address) ||
