@@ -4,6 +4,7 @@ import {
 	FrontendEngine,
 	IFrontendEngineData,
 	TFrontendEngineFieldSchema,
+	TRestoreMode,
 } from "../../../../components/frontend-engine";
 import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getField, getSubmitButton, getSubmitButtonProps } from "../../../common";
 
@@ -18,7 +19,8 @@ const FIELD_THREE_LABEL = "Field three";
 const renderComponent = (
 	fields: Record<string, TFrontendEngineFieldSchema>,
 	defaultValues?: Record<string, unknown> | undefined,
-	overrides?: Record<string, unknown> | undefined
+	overrides?: Record<string, unknown> | undefined,
+	restoreMode?: TRestoreMode | undefined
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -33,6 +35,7 @@ const renderComponent = (
 		},
 		defaultValues,
 		overrides,
+		restoreMode,
 	};
 
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
@@ -419,6 +422,103 @@ describe("conditional-renderer", () => {
 			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 
 			expect(getFieldTwo()).toBeInTheDocument();
+		});
+	});
+
+	describe("restore mode", () => {
+		const defaultValue = "world";
+		const userInput = "bye";
+		const uiType = "text-field";
+		const defaultValues = { [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: defaultValue };
+
+		it.each`
+			restoreMode        | expected
+			${"none"}          | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: "" }}
+			${"default-value"} | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: defaultValue }}
+			${"user-input"}    | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: userInput }}
+		`("should populate conditionally rendered field in `$restoreMode` mode", async ({ restoreMode, expected }) => {
+			renderComponent(
+				{
+					[FIELD_ONE_ID]: {
+						label: FIELD_ONE_LABEL,
+						uiType,
+					},
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType,
+						showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
+					},
+				},
+				defaultValues,
+				undefined,
+				restoreMode
+			);
+
+			fireEvent.change(getFieldTwo(), { target: { value: userInput } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: userInput })
+			);
+
+			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
+			expect(SUBMIT_FN).toBeCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining(expected));
+		});
+
+		it.each`
+			restoreMode        | expected
+			${"none"}          | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: "" }}
+			${"default-value"} | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: defaultValue }}
+			${"user-input"}    | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: userInput }}
+		`("should reset hidden field in `$restoreMode` mode", async ({ restoreMode }) => {
+			renderComponent(
+				{
+					[FIELD_ONE_ID]: {
+						label: FIELD_ONE_LABEL,
+						uiType,
+					},
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType,
+						showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
+					},
+					reset: {
+						label: "Reset",
+						uiType: "reset",
+					},
+				},
+				defaultValues,
+				undefined,
+				restoreMode
+			);
+
+			fireEvent.change(getFieldTwo(), { target: { value: userInput } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: userInput })
+			);
+
+			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
+			expect(SUBMIT_FN).toBeCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
+
+			fireEvent.click(screen.queryByText("Reset"));
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: defaultValue })
+			);
 		});
 	});
 });

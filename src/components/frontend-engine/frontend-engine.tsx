@@ -5,12 +5,19 @@ import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHan
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { ObjectHelper, TestHelper } from "../../utils";
-import { useFieldEvent, useFormSchema, useValidationConfig, useValidationSchema } from "../../utils/hooks";
+import {
+	useFieldEvent,
+	useFormSchema,
+	useFormValues,
+	useValidationConfig,
+	useValidationSchema,
+} from "../../utils/hooks";
 import { Sections } from "../elements/sections";
 import { EventProvider } from "./event";
+import { FormSchemaProvider } from "./form-schema";
+import { FormValuesProvider } from "./form-values";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
 import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
-import { FormSchemaProvider } from "./form-schema";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
@@ -45,6 +52,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		},
 	});
 	const { setFormSchema } = useFormSchema();
+	const { resetFields, setFields, setField } = useFormValues();
 
 	const {
 		reset,
@@ -69,7 +77,15 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		getValues,
 		isValid: checkIsFormValid,
 		removeFieldEventListener,
-		reset,
+		reset: (values, options) => {
+			reset(values, options);
+
+			if (typeof values === "function") {
+				resetFields(values(formMethods.getValues()) ?? defaultValues);
+			} else {
+				resetFields(values ?? defaultValues);
+			}
+		},
 		setErrors,
 		setValue,
 		submit: reactFormHookSubmit(handleSubmit, handleSubmitError),
@@ -122,6 +138,21 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		setFields(getValues());
+	}, []);
+
+	useEffect(() => {
+		const subscription = watch((value, { name }) => {
+			if (name) {
+				setField(name, value[name]);
+			} else {
+				setFields(value);
+			}
+		});
+		return () => subscription.unsubscribe();
+	}, []);
+
 	useEffect(() => {
 		// attach / fire onChange event only formValidationConfig has values
 		// otherwise isValid will be returned incorrectly as true
@@ -206,7 +237,9 @@ export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProp
 		<YupProvider>
 			<EventProvider>
 				<FormSchemaProvider>
-					<FrontendEngineInner {...props} ref={ref} />
+					<FormValuesProvider>
+						<FrontendEngineInner {...props} ref={ref} />
+					</FormValuesProvider>
 				</FormSchemaProvider>
 			</EventProvider>
 		</YupProvider>

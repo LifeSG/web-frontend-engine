@@ -80,7 +80,7 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 		},
 		showIf: {
 			description:
-				"A set of conditions to render the field. For more info, refer to the <a href='../?path=/docs/form-conditional-rendering--filled'>Conditional Rendering</a> stories",
+				"A set of conditions to render the field. For more info, refer to the <a href='../?path=/docs/form-conditional-rendering-rules--filled'>Conditional Rendering</a> stories",
 			table: {
 				type: {
 					summary: "array",

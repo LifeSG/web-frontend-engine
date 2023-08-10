@@ -74,6 +74,13 @@ export interface IFrontendEngineData<V = undefined> {
 	validationMode?: TValidationMode | undefined;
 	/** Additional properties to mutate the sections schema on-the-fly */
 	overrides?: Record<string, RecursivePartial<TFrontendEngineFieldSchema<V>>> | undefined;
+	/**
+	 * Specifies how a conditionally rendered field gets populated when it is shown again
+	 * - `"none"`: cleared
+	 * - `"default-value"`: the initial value
+	 * - `"user-input"`: the latest value
+	 */
+	restoreMode?: TRestoreMode | undefined;
 }
 
 // NOTE: add all possible schema types here except section schema
@@ -106,6 +113,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export type TValidationMode = keyof ValidationMode;
+export type TRestoreMode = "none" | "default-value" | "user-input";
 
 export type TErrorMessage = string | string[] | Record<string, string | string[]>;
 export type TErrorPayload = Record<string, TErrorMessage>;

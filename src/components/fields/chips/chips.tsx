@@ -1,10 +1,11 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { FieldWrapper } from "../../elements/wrapper/field-wrapper";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { Chip, ERROR_MESSAGES } from "../../shared";
 import { ITextareaSchema, Textarea } from "../textarea";
@@ -27,12 +28,19 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextarea, setShowTextarea] = useState(false);
 	const [multi, setMulti] = useState(true);
-	const { control, setValue } = useFormContext();
+	const { setValue, unregister } = useFormContext();
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		if (!showTextarea) {
+			// at the start, the textarea's default value has to be manually cleared from the form state
+			unregister(getTextareaId());
+		}
+	}, []);
+
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
@@ -91,7 +99,6 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		setShowTextarea(show);
 		if (!show) {
 			removeFieldValidationConfig(getTextareaId());
-			setValue(getTextareaId(), undefined);
 		}
 	};
 
@@ -167,19 +174,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			label,
 			...textarea,
 		};
-		return showTextarea ? (
-			<Controller
-				control={control}
-				name={textareaId}
-				shouldUnregister={false}
-				render={({ field, fieldState }) => {
-					const fieldProps = { ...field, id: textareaId, ref: undefined };
-					return <Textarea schema={schema} {...fieldProps} {...fieldState} />;
-				}}
-			/>
-		) : (
-			<></>
-		);
+		return showTextarea ? <FieldWrapper id={textareaId} schema={schema} Field={Textarea} /> : <></>;
 	};
 
 	return (

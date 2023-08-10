@@ -1,8 +1,9 @@
-import isArray from "lodash/isArray";
-import isString from "lodash/isString";
-import isNumber from "lodash/isNumber";
 import { Button } from "@lifesg/react-design-system/button";
+import isArray from "lodash/isArray";
+import isNumber from "lodash/isNumber";
+import isString from "lodash/isString";
 import { useFormContext } from "react-hook-form";
+import { useFormSchema, useFormValues } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { IResetButtonSchema } from "./types";
 
@@ -17,6 +18,10 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 	} = props;
 
 	const { reset, getValues } = useFormContext();
+	const { resetFields } = useFormValues();
+	const {
+		formSchema: { defaultValues },
+	} = useFormSchema();
 
 	// =============================================================================
 	// EFFECTS
@@ -32,7 +37,11 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 				}
 			});
 			reset(values);
-		} else reset();
+			resetFields(values);
+		} else {
+			reset();
+			resetFields(defaultValues);
+		}
 	};
 
 	// =============================================================================
