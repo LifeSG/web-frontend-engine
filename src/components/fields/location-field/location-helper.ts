@@ -103,7 +103,6 @@ export namespace LocationHelper {
 		}
 	};
 
-	// Added lat, lng arguments to handle pin location address in query field.
 	export const fetchAddress = async (
 		query: string,
 		pageNumber: number,

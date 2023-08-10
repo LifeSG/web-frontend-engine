@@ -7,7 +7,6 @@
 	"typings": "dist/index.d.ts",
 	"scripts": {
 		"build": "npm run rollup && npm run post:build",
-		"build:ci": "./scripts/build.sh",
 		"build-watch": "rollup -c -w",
 		"build-storybook": "build-storybook",
 		"build-check": "npm run rollup",
