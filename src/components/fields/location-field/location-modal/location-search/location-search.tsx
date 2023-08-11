@@ -330,7 +330,6 @@ export const LocationSearch = ({
 	};
 
 	const handleClearInput = () => {
-		// Only set result state as "pristine" when there is no valid formValues available.
 		const validFormLocation = formValues?.address && formValues?.lat && formValues?.lng;
 		if (!validFormLocation) {
 			setResultState("pristine");
