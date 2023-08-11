@@ -143,6 +143,28 @@ export namespace LocationHelper {
 		}
 	};
 
+	export const checkAndSetPinLocationAsResult = (query: string): IResultsMetaData => {
+		const [lat, lng] = query
+			.split(":")[1]
+			.split(",")
+			.map((value) => parseFloat(value));
+		let parsedResult = [];
+		if (LocationHelper.isCoordinateInBounds({ lat, lng })) {
+			parsedResult = [
+				{
+					address: query,
+					lat,
+					lng,
+				},
+			];
+		}
+		return {
+			results: parsedResult,
+			apiPageNum: 1,
+			totalNumPages: 1,
+		};
+	};
+
 	export const fetchSingleLocationByAddress = async (
 		address: string,
 		onSuccess: (resultListItem: IResultListItem | undefined) => void,
@@ -240,6 +262,12 @@ export namespace LocationHelper {
 	export const hasGotAddressValue = (value?: string): boolean => {
 		const lowercased = value?.toLowerCase();
 		return !!value && lowercased !== "nil" && lowercased !== "null";
+	};
+
+	export const hasGotPinLocationValue = (value?: string): boolean => {
+		if (!value) return false;
+		const regex = /^(pin location:) -?\d{0,3}.\d*, -?\d{0,3}.\d*$/i;
+		return regex.test(value.toLowerCase());
 	};
 
 	export const formatAddressFromGeocodeInfo = (

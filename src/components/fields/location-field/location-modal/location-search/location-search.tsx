@@ -97,8 +97,14 @@ export const LocationSearch = ({
 	const [totalNumPages, setTotalNumPages] = useState(0);
 	const [apiPageNum, setAPIPageNum] = useState(1);
 	const [currentPaginationPageNum, setCurrentPaginationPageNum] = useState(1);
-	const { debounceFetchAddress, fetchSingleLocationByAddress, fetchSingleLocationByLatLng, fetchLocationList } =
-		LocationHelper;
+	const {
+		debounceFetchAddress,
+		fetchSingleLocationByAddress,
+		fetchSingleLocationByLatLng,
+		fetchLocationList,
+		hasGotPinLocationValue,
+		checkAndSetPinLocationAsResult,
+	} = LocationHelper;
 
 	const { dispatchFieldEvent } = useFieldEvent();
 	// =============================================================================
@@ -197,7 +203,7 @@ export const LocationSearch = ({
 			let reverseGeoCodeLng = formValues?.lng;
 			// extract latlng
 			// falls back to formValues.lat, formValues.lng if address string is in the wrong format
-			if (/^(pin location:) -?\d{0,3}.\d*, -?\d{0,3}.\d*$/i.test(formValues?.address)) {
+			if (hasGotPinLocationValue(formValues?.address)) {
 				const [lat, lng] = formValues.address
 					.split(":")[1]
 					.split(",")
@@ -234,6 +240,7 @@ export const LocationSearch = ({
 	 */
 	useEffect(() => {
 		if (resultState === "found") return;
+
 		const parsedString = validateQueryString(queryString);
 		if (!parsedString) return resetResultsList();
 		if (
@@ -248,6 +255,10 @@ export const LocationSearch = ({
 			parsedString,
 			1,
 			(res: IResultsMetaData) => {
+				if (res.results.length == 0 && hasGotPinLocationValue(parsedString)) {
+					res = checkAndSetPinLocationAsResult(queryString);
+				}
+
 				if (selectedAddressInfo?.address === parsedString) {
 					setSelectedIndex(0);
 				} else {
@@ -300,7 +311,6 @@ export const LocationSearch = ({
 			setQueryString("");
 			resetResultsList();
 		}
-
 		setResultState("pristine");
 		onCancel();
 	};
