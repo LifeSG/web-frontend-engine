@@ -6,66 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../common";
 
-const DATA: IFrontendEngineData = {
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				name: {
-					label: "What is your name",
-					uiType: "text-field",
-					validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-				},
-				email: {
-					label: "Email address",
-					uiType: "email-field",
-					validation: [{ required: true }],
-				},
-				sex: {
-					uiType: "select",
-					label: "Sex",
-					options: [
-						{ label: "Male", value: "male" },
-						{ label: "Female", value: "female" },
-					],
-				},
-				radio: {
-					uiType: "radio",
-					label: "Radio Button",
-					options: [
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-					],
-				},
-				unit: {
-					label: "Unit Number",
-					uiType: "unit-number-field",
-				},
-				multi: {
-					uiType: "multi-select",
-					label: "Fruits",
-					options: [
-						{ value: "1", label: "1" },
-						{ value: "2", label: "2" },
-						{ value: "3", label: "3" },
-					],
-				},
-				description: {
-					label: "Feedback",
-					uiType: "textarea",
-					rows: 3,
-					resizable: true,
-					validation: [{ required: true }],
-					chipTexts: ["Best", "Good", "Bad", "Horrible"],
-				},
-				...SUBMIT_BUTTON_SCHEMA,
-			},
-		},
-	},
-	overrides: {},
-};
-
 const meta: Meta = {
 	title: "Form/Frontend Engine",
 	component: FrontendEngine,
@@ -223,6 +163,66 @@ const meta: Meta = {
 	},
 };
 export default meta;
+
+const DATA: IFrontendEngineData = {
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				name: {
+					label: "What is your name",
+					uiType: "text-field",
+					validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+				},
+				email: {
+					label: "Email address",
+					uiType: "email-field",
+					validation: [{ required: true }],
+				},
+				sex: {
+					uiType: "select",
+					label: "Sex",
+					options: [
+						{ label: "Male", value: "male" },
+						{ label: "Female", value: "female" },
+					],
+				},
+				radio: {
+					uiType: "radio",
+					label: "Radio Button",
+					options: [
+						{ label: "Apple", value: "Apple" },
+						{ label: "Berry", value: "Berry" },
+						{ label: "Cherry", value: "Cherry" },
+					],
+				},
+				unit: {
+					label: "Unit Number",
+					uiType: "unit-number-field",
+				},
+				multi: {
+					uiType: "multi-select",
+					label: "Fruits",
+					options: [
+						{ value: "1", label: "1" },
+						{ value: "2", label: "2" },
+						{ value: "3", label: "3" },
+					],
+				},
+				description: {
+					label: "Feedback",
+					uiType: "textarea",
+					rows: 3,
+					resizable: true,
+					validation: [{ required: true }],
+					chipTexts: ["Best", "Good", "Bad", "Horrible"],
+				},
+				...SUBMIT_BUTTON_SCHEMA,
+			},
+		},
+	},
+	overrides: {},
+};
 
 const Template: StoryFn<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
 
@@ -390,7 +390,7 @@ export const OverrideSchema: StoryFn<IFrontendEngineProps> = () => {
 export const GetValues: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
-		console.log(ref.current.getValues());
+		action("getValues")(ref.current.getValues());
 	};
 
 	return (
@@ -430,7 +430,7 @@ SetValue.parameters = {
 export const CheckIsValid: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
-		console.log(ref.current.isValid());
+		action("isValid")(ref.current.isValid());
 	};
 
 	return (
@@ -438,7 +438,7 @@ export const CheckIsValid: StoryFn<IFrontendEngineProps> = () => {
 			<FrontendEngine data={DATA} ref={ref} />
 			<br />
 			<Button.Default styleType="secondary" onClick={handleClick}>
-				Get form state (check console)
+				Check form validity
 			</Button.Default>
 		</>
 	);
@@ -556,27 +556,19 @@ export const OnSubmitError: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 
 	return (
-		<>
-			<div className="margin--bottom">
-				{
-					"This example attempts to navigate the error input's label into view when submitting a form with errors. \
-					An alterate implementation could use the :has() pseudo-class, but that may be unsupported in some browsers (Firefox)."
+		<FrontendEngine
+			data={{ ...onSubmitErrorData }}
+			ref={ref}
+			onSubmitError={(e) => {
+				action("onSubmitError")(e);
+				const invalidElement = document.querySelector("*[aria-invalid=true]");
+				if (invalidElement && invalidElement.id) {
+					document.querySelector(`label[for=${invalidElement.id}]`).scrollIntoView();
+				} else {
+					document.querySelector(`*[aria-invalid=true]`).scrollIntoView();
 				}
-			</div>
-			<FrontendEngine
-				data={{ ...onSubmitErrorData }}
-				ref={ref}
-				onSubmitError={(e) => {
-					action("Validation errors")(e);
-					const invalidElement = document.querySelector("*[aria-invalid=true]");
-					if (invalidElement && invalidElement.id) {
-						document.querySelector(`label[for=${invalidElement.id}]`).scrollIntoView();
-					} else {
-						document.querySelector(`*[aria-invalid=true]`).scrollIntoView();
-					}
-				}}
-			/>
-		</>
+			}}
+		/>
 	);
 };
 
@@ -585,88 +577,13 @@ const onSubmitErrorData: IFrontendEngineData = {
 		section: {
 			uiType: "section",
 			children: {
-				description2: {
-					label: "Feedback",
-					uiType: "textarea",
-					rows: 3,
-					resizable: true,
-					validation: [{ required: true }],
-					chipTexts: ["Best", "Good", "Bad", "Horrible"],
+				explanation: {
+					uiType: "div",
+					className: "margin--bottom",
+					children:
+						"This example attempts to navigate the error input's label into view when submitting a form with errors. An alterate implementation could use the :has() pseudo-class, but that may be unsupported in some browsers (Firefox).",
 				},
-				name: {
-					label: "What is your name",
-					uiType: "text-field",
-					validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-				},
-				email: {
-					label: "Email address",
-					uiType: "email-field",
-					validation: [{ required: true }],
-				},
-				sex: {
-					uiType: "select",
-					label: "Sex",
-					options: [
-						{ label: "Male", value: "male" },
-						{ label: "Female", value: "female" },
-					],
-				},
-				radio: {
-					uiType: "radio",
-					label: "Excessive Radio Button",
-					options: [
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-						{ label: "Apple", value: "Apple" },
-						{ label: "Berry", value: "Berry" },
-						{ label: "Cherry", value: "Cherry" },
-					],
-					validation: [{ required: true }],
-				},
-				unit: {
-					label: "Unit Number",
-					uiType: "unit-number-field",
-				},
-				multi: {
-					uiType: "multi-select",
-					label: "Fruits",
-					options: [
-						{ value: "1", label: "1" },
-						{ value: "2", label: "2" },
-						{ value: "3", label: "3" },
-					],
-				},
-				description: {
-					label: "Feedback",
-					uiType: "textarea",
-					rows: 3,
-					resizable: true,
-					validation: [{ required: true }],
-					chipTexts: ["Best", "Good", "Bad", "Horrible"],
-				},
-				...SUBMIT_BUTTON_SCHEMA,
+				...DATA.sections.section.children,
 			},
 		},
 	},
