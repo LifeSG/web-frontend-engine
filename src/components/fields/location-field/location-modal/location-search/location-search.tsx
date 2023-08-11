@@ -330,12 +330,8 @@ export const LocationSearch = ({
 	};
 
 	const handleClearInput = () => {
-		const validFormLocation = formValues?.address && formValues?.lat && formValues?.lng;
-		if (!validFormLocation) {
-			setResultState("pristine");
-		}
-		setSelectedIndex(-1);
 		setQueryString("");
+		setResultState("pristine");
 		setSinglePanelMode("map");
 	};
 
