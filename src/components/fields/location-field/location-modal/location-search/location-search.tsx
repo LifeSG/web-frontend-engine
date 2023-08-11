@@ -203,7 +203,7 @@ export const LocationSearch = ({
 			let reverseGeoCodeLng = formValues?.lng;
 			// extract latlng
 			// falls back to formValues.lat, formValues.lng if address string is in the wrong format
-			if (/^(pin location:) -?\d{0,3}.\d*, -?\d{0,3}.\d*$/i.test(formValues?.address)) {
+			if (hasGotPinLocationValue(formValues?.address)) {
 				const [lat, lng] = formValues.address
 					.split(":")[1]
 					.split(",")
