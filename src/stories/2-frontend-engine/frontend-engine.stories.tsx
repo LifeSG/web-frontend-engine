@@ -398,7 +398,7 @@ export const GetValues: StoryFn<IFrontendEngineProps> = () => {
 			<FrontendEngine data={DATA} ref={ref} />
 			<br />
 			<Button.Default styleType="secondary" onClick={handleClick}>
-				Get form state (check console)
+				Get form state
 			</Button.Default>
 		</>
 	);
