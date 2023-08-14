@@ -1,4 +1,3 @@
-import { withA11y } from "@storybook/addon-a11y";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
 export const parameters = {
@@ -14,5 +13,4 @@ export const parameters = {
 			order: ["Introduction", "Form", ["Frontend Engine", "Validation Schema", "Conditional Rendering"]],
 		},
 	},
-	decorators: [withA11y],
 };
