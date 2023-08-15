@@ -44,6 +44,7 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 		const minDateRule = validation?.find((rule) => "minDate" in rule);
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
+		const excludedDatesRule = validation?.find((rule) => "excludedDates" in rule);
 
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
@@ -113,6 +114,28 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 						return !localDateFrom?.isAfter(maxDate) && !localDateTo?.isAfter(maxDate);
 					}
+				)
+				.test(
+					"excluded-dates",
+					excludedDatesRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.DISABLED_DATES,
+					(value) => {
+						if (variant === "week") return true;
+						if (!isValidDate(value.from) || !isValidDate(value.to) || !excludedDatesRule) return true;
+						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
+						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
+						try {
+							const mappedexcludedDates = excludedDatesRule["excludedDates"].map((date) =>
+								DateTimeHelper.toLocalDateOrTime(date, dateFormat, "date")
+							);
+							for (const excludedDate of mappedexcludedDates) {
+								if (localDateFrom.isEqual(excludedDate) || localDateTo.isEqual(excludedDate))
+									return false;
+							}
+							return true;
+						} catch {
+							return false;
+						}
+					}
 				),
 			validation
 		);
@@ -128,12 +151,13 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 			pastRule?.["past"] && LocalDate.now().minusDays(1),
 			notFutureRule?.["notFuture"] && LocalDate.now(),
 		]);
-
-		if (minDateProp || maxDateProp) {
+		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
+		if (minDateProp || maxDateProp || disabledDatesProps) {
 			setDerivedProps((props) => ({
 				...props,
 				minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
 				maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
+				disabledDates: disabledDatesProps,
 			}));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

@@ -9,6 +9,7 @@ import {
 	FRONTEND_ENGINE_ID,
 	getErrorMessage,
 	getField,
+	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
@@ -146,11 +147,12 @@ describe(UI_TYPE, () => {
 	});
 
 	describe.each`
-		condition     | config                       | invalid                                                     | valid
-		${"future"}   | ${{ future: true }}          | ${{ from: ["01", "01", "2021"], to: ["01", "01", "2022"] }} | ${{ from: ["01", "January", "2023"], to: ["01", "February", "2024"] }}
-		${"past"}     | ${{ past: true }}            | ${{ from: ["01", "01", "2022"], to: ["01", "02", "2022"] }} | ${{ from: ["01", "January", "2020"], to: ["01", "February", "2021"] }}
-		${"min-date"} | ${{ minDate: "2022-01-02" }} | ${{ from: ["01", "01", "2021"], to: ["01", "02", "2021"] }} | ${{ from: ["01", "January", "2023"], to: ["01", "February", "2024"] }}
-		${"max-date"} | ${{ maxDate: "2022-01-02" }} | ${{ from: ["01", "01", "2023"], to: ["01", "02", "2024"] }} | ${{ from: ["01", "January", "2020"], to: ["01", "February", "2021"] }}
+		condition           | config                               | invalid                                                     | valid
+		${"future"}         | ${{ future: true }}                  | ${{ from: ["01", "01", "2021"], to: ["01", "01", "2022"] }} | ${{ from: ["01", "January", "2023"], to: ["01", "February", "2024"] }}
+		${"past"}           | ${{ past: true }}                    | ${{ from: ["01", "01", "2022"], to: ["01", "02", "2022"] }} | ${{ from: ["01", "January", "2020"], to: ["01", "February", "2021"] }}
+		${"min-date"}       | ${{ minDate: "2022-01-02" }}         | ${{ from: ["01", "01", "2021"], to: ["01", "02", "2021"] }} | ${{ from: ["01", "January", "2023"], to: ["01", "February", "2024"] }}
+		${"max-date"}       | ${{ maxDate: "2022-01-02" }}         | ${{ from: ["01", "01", "2023"], to: ["01", "02", "2024"] }} | ${{ from: ["01", "January", "2020"], to: ["01", "February", "2021"] }}
+		${"excluded-dates"} | ${{ excludedDates: ["2022-01-02"] }} | ${{ from: ["02", "01", "2022"], to: ["01", "02", "2022"] }} | ${{ from: ["01", "January", "2022"], to: ["01", "February", "2022"] }}
 	`("$condition validation", ({ condition, config, invalid, valid }) => {
 		beforeEach(() => {
 			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
@@ -242,6 +244,64 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+	});
+
+	describe("reset", () => {
+		it("should clear selection on reset", async () => {
+			renderComponent();
+
+			fireEvent.focus(getDayInput(TDateRangeInputType.START));
+			fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: "25" } });
+			fireEvent.change(getMonthInput(TDateRangeInputType.START), { target: { value: "01" } });
+			fireEvent.change(getYearInput(TDateRangeInputType.START), { target: { value: "2022" } });
+			fireEvent.click(screen.getByText("Done"));
+			fireEvent.change(getDayInput(TDateRangeInputType.END), { target: { value: "25" } });
+			fireEvent.change(getMonthInput(TDateRangeInputType.END), { target: { value: "02" } });
+			fireEvent.change(getYearInput(TDateRangeInputType.END), { target: { value: "2022" } });
+			fireEvent.click(screen.getByText("Done"));
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getDayInput(TDateRangeInputType.START)).toHaveAttribute("value", "");
+			expect(getMonthInput(TDateRangeInputType.START)).toHaveAttribute("value", "");
+			expect(getYearInput(TDateRangeInputType.START)).toHaveAttribute("value", "");
+			expect(getDayInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
+			expect(getMonthInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
+			expect(getYearInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
+			);
+		});
+
+		it("should revert to default value on reset", async () => {
+			const defaultDay = "01";
+			const defaultMonth = "01";
+			const defaultYear = "2022";
+			const defaultValue = `${defaultYear}-${defaultMonth}-${defaultDay}`;
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: { from: defaultValue, to: defaultValue } } });
+
+			fireEvent.focus(getDayInput(TDateRangeInputType.START));
+			fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: "25" } });
+			fireEvent.change(getMonthInput(TDateRangeInputType.START), { target: { value: "05" } });
+			fireEvent.change(getYearInput(TDateRangeInputType.START), { target: { value: "2021" } });
+			fireEvent.click(screen.getByText("Done"));
+			fireEvent.change(getDayInput(TDateRangeInputType.END), { target: { value: "25" } });
+			fireEvent.change(getMonthInput(TDateRangeInputType.END), { target: { value: "05" } });
+			fireEvent.change(getYearInput(TDateRangeInputType.END), { target: { value: "2021" } });
+			fireEvent.click(screen.getByText("Done"));
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getDayInput(TDateRangeInputType.START)).toHaveAttribute("value", defaultDay);
+			expect(getMonthInput(TDateRangeInputType.START)).toHaveAttribute("value", defaultMonth);
+			expect(getYearInput(TDateRangeInputType.START)).toHaveAttribute("value", defaultYear);
+			expect(getDayInput(TDateRangeInputType.END)).toHaveAttribute("value", defaultDay);
+			expect(getMonthInput(TDateRangeInputType.END)).toHaveAttribute("value", defaultMonth);
+			expect(getYearInput(TDateRangeInputType.END)).toHaveAttribute("value", defaultYear);
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: { from: defaultValue, to: defaultValue } })
+			);
 		});
 	});
 });

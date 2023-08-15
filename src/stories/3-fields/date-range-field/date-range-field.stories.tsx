@@ -37,7 +37,7 @@ export default {
 		},
 		allowDisabledSelection: {
 			description:
-				"Specifies if dates normally disabled by `future`, `past`, `notFuture`, `notPast`, `minDate`, `maxDate` and `excludedDates` validation rules are still selectable",
+				"Specifies if dates normally disabled by `future`, `past`, `minDate`, `maxDate` and `excludedDates` validation rules are still selectable",
 			table: {
 				type: {
 					summary: "boolean",
@@ -49,8 +49,8 @@ export default {
 			},
 		},
 		variant: {
-			description: `When the <code>week</code> is specified, the component
-			is a week selection.`,
+			description:
+				"When the <code>week</code> is specified, the component is a week selection. WARNING: This disables `future`, `past`, `minDate`, `maxDate` and `excludedDates` validation rules",
 			table: {
 				type: {
 					summary: "range | week",
