@@ -1,6 +1,4 @@
-import { withA11y } from "@storybook/addon-a11y";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
-import { addDecorator } from "@storybook/react";
 
 export const parameters = {
 	viewport: {
@@ -16,6 +14,3 @@ export const parameters = {
 		},
 	},
 };
-
-addDecorator(withA11y);
-//["Frontend Engine", "Validation Schema", "Conditional Rendering"]

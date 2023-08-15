@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { ICheckboxGroupSchema } from "../../../components/fields/checkbox-group";
 import {
 	CommonFieldStoryProps,
@@ -9,7 +9,7 @@ import {
 	ResetStoryTemplate,
 } from "../../common";
 
-export default {
+const meta: Meta<ICheckboxGroupSchema> = {
 	title: "Field/Checkbox/Default",
 	parameters: {
 		docs: {
@@ -63,7 +63,8 @@ export default {
 			type: { name: "object", value: {} },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 export const Default = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
 Default.args = {

@@ -8,7 +8,7 @@
 	"scripts": {
 		"build": "npm run rollup && npm run post:build",
 		"build-watch": "rollup -c -w",
-		"build-storybook": "build-storybook",
+		"build-storybook": "storybook build",
 		"build-check": "npm run rollup",
 		"post:build": "node ./scripts/post-build.js",
 		"publish-lib": "npm publish ./dist",
@@ -16,7 +16,7 @@
 		"test": "jest --config jest/jest.config.js --coverage --runInBand",
 		"test-watch": "jest --config jest/jest.config.js --watch --onlyChanged",
 		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
-		"storybook": "start-storybook -p 6006 -c .storybook",
+		"storybook": "storybook dev -p 6006 -c .storybook",
 		"prepare": "(test -d ./.git && npx husky install) || true",
 		"build-fabric": "test -d ./node_modules/fabric && cd ./node_modules/fabric && node build.js modules=ALL exclude=assessors || true",
 		"postinstall": "npm run build-fabric"
@@ -72,15 +72,14 @@
 		"@rollup/plugin-image": "^2.1.1",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^14.1.0",
-		"@storybook/addon-a11y": "^6.5.12",
-		"@storybook/addon-actions": "^6.5.12",
-		"@storybook/addon-essentials": "^6.5.12",
-		"@storybook/addon-interactions": "^6.5.12",
-		"@storybook/addon-links": "^6.5.12",
-		"@storybook/builder-webpack5": "^6.5.12",
-		"@storybook/manager-webpack5": "^6.5.12",
-		"@storybook/react": "^6.5.12",
-		"@storybook/testing-library": "^0.0.13",
+		"@storybook/addon-a11y": "^7.1.0",
+		"@storybook/addon-actions": "^7.1.0",
+		"@storybook/addon-essentials": "^7.1.0",
+		"@storybook/addon-interactions": "^7.1.0",
+		"@storybook/addon-links": "^7.1.0",
+		"@storybook/react": "^7.1.0",
+		"@storybook/react-webpack5": "^7.1.0",
+		"@storybook/testing-library": "^0.2.0",
 		"@testing-library/jest-dom": "^5.16.5",
 		"@testing-library/react": "^12.1.5",
 		"@testing-library/user-event": "^14.4.3",
@@ -112,6 +111,7 @@
 		"lint-staged": "^13.0.3",
 		"postcss": "^8.4.17",
 		"postcss-import": "^15.0.0",
+		"postcss-loader": "^7.3.3",
 		"prettier": "^2.7.1",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
@@ -120,6 +120,7 @@
 		"rollup-plugin-postcss": "^4.0.2",
 		"rollup-plugin-terser": "^7.0.2",
 		"rollup-plugin-typescript2": "^0.34.1",
+		"storybook": "^7.1.0",
 		"style-loader": "^3.3.1",
 		"styled-components": "^5.3.5",
 		"typescript": "^4.8.4"
@@ -128,13 +129,5 @@
 		"*.{js,jsx,ts,tsx}": [
 			"npm run lint"
 		]
-	},
-	"overrides": {
-		"glob-parent@<5.1.2": "5.1.2",
-		"nwsapi@2.2.6": "2.2.5",
-		"semver@<7.5.2": "^7.5.2",
-		"trim-newlines@<3.0.1": "3.0.1",
-		"trim-newlines@4.0.0": "4.0.1",
-		"trim@<0.0.3": "0.0.3"
 	}
 }

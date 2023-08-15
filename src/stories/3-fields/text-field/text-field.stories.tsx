@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { ITextFieldSchema } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
@@ -9,7 +9,7 @@ import {
 	ResetStoryTemplate,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/TextField",
 	parameters: {
 		docs: {
@@ -64,7 +64,8 @@ export default {
 			control: { type: "object" },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 export const Default = DefaultStoryTemplate<ITextFieldSchema>("text-default").bind({});
 Default.args = {

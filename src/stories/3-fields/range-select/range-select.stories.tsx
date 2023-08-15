@@ -1,6 +1,6 @@
 import { InputRangeProp } from "@lifesg/react-design-system/input-range-select";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { IRangeSelectSchema } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
@@ -10,7 +10,7 @@ import {
 	ResetStoryTemplate,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/RangeSelect",
 	parameters: {
 		docs: {
@@ -72,7 +72,8 @@ export default {
 			},
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 export const Default = DefaultStoryTemplate<IRangeSelectSchema>("range-select-default").bind({});
 Default.args = {

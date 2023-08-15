@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
 import {
 	CommonFieldStoryProps,
@@ -9,7 +9,7 @@ import {
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/RadioButton/ImageButton",
 	parameters: {
 		docs: {
@@ -62,7 +62,8 @@ export default {
 			type: { name: "object", value: {} },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 const Template = (id: string) =>
 	(({ defaultValues, ...args }) => (
@@ -84,7 +85,7 @@ const Template = (id: string) =>
 				}),
 			}}
 		/>
-	)) as Story<IRadioButtonGroupSchema & { defaultValues?: string | undefined }>;
+	)) as StoryFn<IRadioButtonGroupSchema & { defaultValues?: string | undefined }>;
 
 export const Default = Template("radio-default").bind({});
 Default.args = {

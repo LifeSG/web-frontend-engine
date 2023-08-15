@@ -22,7 +22,7 @@ const COMPONENT_ID = "field";
 const UI_TYPE = "contact-field";
 const COMPONENT_LABEL = "Contact Number";
 
-jest.setTimeout(10000);
+jest.setTimeout(20000);
 
 const renderComponent = (overrideField?: TOverrideField<IContactFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {

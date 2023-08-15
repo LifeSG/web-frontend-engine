@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { IChipsSchema } from "../../../components/fields/chips";
 import {
 	CommonFieldStoryProps,
@@ -12,7 +12,7 @@ import {
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/Chips",
 	parameters: {
 		docs: {
@@ -71,7 +71,8 @@ export default {
 			},
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 export const Default = DefaultStoryTemplate<IChipsSchema>("chips-default").bind({});
 Default.args = {
@@ -107,7 +108,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const DefaultTextareaValue: Story<IChipsSchema> = (args) => (
+export const DefaultTextareaValue: StoryFn<IChipsSchema> = (args) => (
 	<FrontendEngine
 		data={{
 			sections: {
@@ -284,7 +285,7 @@ ResetWithDefaultValues.argTypes = {
 	},
 };
 
-export const ResetWithTextarea: Story<IChipsSchema> = (args) => (
+export const ResetWithTextarea: StoryFn<IChipsSchema> = (args) => (
 	<FrontendEngine
 		data={{
 			sections: {

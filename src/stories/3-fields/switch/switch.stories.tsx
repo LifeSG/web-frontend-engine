@@ -1,5 +1,5 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
+import { Meta } from "@storybook/react";
 import { ISwitchSchema } from "../../../components/fields/switch/types";
 import {
 	CommonFieldStoryProps,
@@ -9,7 +9,7 @@ import {
 	ResetStoryTemplate,
 } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/Switch",
 	parameters: {
 		docs: {
@@ -49,7 +49,8 @@ export default {
 			type: { name: "object", value: {} },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 export const Default = DefaultStoryTemplate<ISwitchSchema>("switch-default").bind({});
 Default.args = {

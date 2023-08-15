@@ -1,10 +1,10 @@
 import { Description, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { FrontendEngine, IFrontendEngineProps } from "../../../components";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
-export default {
+const meta: Meta = {
 	title: "Form/Validation Schema",
 	component: null,
 	parameters: {
@@ -51,9 +51,10 @@ export default {
 			table: { disable: true },
 		},
 	},
-} as Meta;
+};
+export default meta;
 
-const Template: Story<IValidationComponentProps> = (args) => (
+const Template: StoryFn<IValidationComponentProps> = (args) => (
 	<ValidationComponent type={args.type} rule={args.rule} value={args.value} />
 );
 
@@ -85,7 +86,7 @@ NotEquals.args = {
 	value: { name: "hello world" },
 };
 
-export const SoftValidation: Story<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
+export const SoftValidation: StoryFn<IFrontendEngineProps> = (args) => <FrontendEngine {...args} />;
 SoftValidation.args = {
 	data: {
 		sections: {

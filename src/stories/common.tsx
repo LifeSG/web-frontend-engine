@@ -1,6 +1,6 @@
 import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { action } from "@storybook/addon-actions";
-import { Story } from "@storybook/react/types-6-0";
+import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef } from "react";
 import styled from "styled-components";
 import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
@@ -11,9 +11,8 @@ import {
 	TFrontendEngineFieldSchema,
 	TNoInfer,
 } from "../components/frontend-engine";
-import { ArgTypes } from "@storybook/components";
 
-const EXCLUDED_STORY_PROPS = {
+const EXCLUDED_STORY_PROPS: ArgTypes = {
 	invalid: { table: { disable: true } },
 	isTouched: { table: { disable: true } },
 	isDirty: { table: { disable: true } },
@@ -24,7 +23,7 @@ const EXCLUDED_STORY_PROPS = {
 	name: { table: { disable: true } },
 };
 
-export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => {
+export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false): ArgTypes => {
 	if (onlyFieldType) {
 		return {
 			...EXCLUDED_STORY_PROPS,
@@ -75,7 +74,7 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 					summary: "array",
 				},
 			},
-			type: { name: "object" },
+			type: { name: "object", value: {} },
 			defaultValue: [],
 		},
 		showIf: {
@@ -86,13 +85,13 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false) => 
 					summary: "array",
 				},
 			},
-			type: { name: "object" },
+			type: { name: "object", value: {} },
 			defaultValue: [],
 		},
 	};
 };
 
-export const CommonCustomStoryProps = (referenceKey: string) => {
+export const CommonCustomStoryProps = (referenceKey: string): ArgTypes => {
 	return {
 		referenceKey: {
 			description: `Use <code>${referenceKey}</code> to show this field`,
@@ -207,7 +206,7 @@ export const DefaultStoryTemplate = <T, U = string>(id: string) =>
 				}),
 			}}
 		/>
-	)) as Story<T & { defaultValues?: U | undefined }>;
+	)) as StoryFn<(args: T & { defaultValues?: U | undefined }) => ReactElement>;
 
 /**
  * Story template that contains the component, a reset button and a submit button
@@ -243,7 +242,7 @@ export const ResetStoryTemplate = <T, U = string>(id: string) =>
 				}),
 			}}
 		/>
-	)) as Story<T & { defaultValues?: U | undefined }>;
+	)) as StoryFn<(args: T & { defaultValues?: U | undefined }) => ReactElement>;
 
 /**
  * Story template that contains the component, a submit button and an override button
@@ -272,4 +271,4 @@ export const OverrideStoryTemplate = <T,>(id: string, showSubmitButton = true) =
 				}}
 			/>
 		);
-	}) as Story<T & { overrides?: RecursivePartial<T> | undefined }>;
+	}) as StoryFn<(args: T & { overrides?: RecursivePartial<T> | undefined }) => ReactElement>;

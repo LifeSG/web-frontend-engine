@@ -1,9 +1,9 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { Meta, StoryFn } from "@storybook/react";
 import { IAlertSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Element/Alert",
 	parameters: {
 		docs: {
@@ -65,7 +65,8 @@ export default {
 			},
 		},
 	},
-} as Meta;
+};
+export default meta;
 
 const anchorProps = {
 	href: "https://www.google.com",
@@ -87,13 +88,14 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as Story<IAlertSchema>;
+	)) as StoryFn<IAlertSchema>;
 
 export const Default = Template("alert-default").bind({});
 Default.args = {
 	uiType: "alert",
 	type: "success",
 	children: "This is a success message",
+	className: "margin--bottom",
 };
 
 export const Warning = Template("alert-warning").bind({});
