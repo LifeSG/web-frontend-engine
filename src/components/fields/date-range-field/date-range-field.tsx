@@ -8,7 +8,7 @@ import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
-import { IDateRangeFieldSchema } from "./types";
+import { IDateRangeFieldSchema, TDateRangeInputType } from "./types";
 
 const DEFAULT_DATE_FORMAT = "uuuu-MM-dd";
 const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)
@@ -43,7 +43,6 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 		const notPastRule = validation?.find((rule) => "notPast" in rule);
 		const minDateRule = validation?.find((rule) => "minDate" in rule);
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
-		const excludedDatesRule = validation?.find((rule) => "excludedDates" in rule);
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
@@ -75,17 +74,16 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 				})
 				.test("future", futureRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE, (value) => {
 					if (!isValidDate(value.from) || !isValidDate(value.to) || !futureRule?.["future"]) return true;
-					if (variant === "range") return true;
+					if (variant === "week") return true;
 					const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 					const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 					return !!localDateFrom?.isAfter(LocalDate.now()) && !!localDateTo?.isAfter(LocalDate.now());
 				})
 				.test("past", pastRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.MUST_BE_PAST, (value) => {
 					if (!isValidDate(value.from) || !isValidDate(value.to) || !pastRule?.["past"]) return true;
-					if (variant === "range") return true;
+					if (variant === "week") return true;
 					const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 					const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-					console.log("reached", localDateFrom, localDateTo);
 					return !!localDateFrom?.isBefore(LocalDate.now()) && !!localDateTo?.isBefore(LocalDate.now());
 				})
 				.test(
@@ -96,7 +94,7 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 						),
 					(value) => {
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !minDate) return true;
-						if (variant === "range") return true;
+						if (variant === "week") return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 						return !localDateFrom?.isBefore(minDate) && !localDateTo?.isBefore(minDate);
@@ -110,32 +108,10 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 						),
 					(value) => {
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !maxDate) return true;
-						if (variant === "range") return true;
+						if (variant === "week") return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 						return !localDateFrom?.isAfter(maxDate) && !localDateTo?.isAfter(maxDate);
-					}
-				)
-				.test(
-					"excluded-dates",
-					excludedDatesRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.DISABLED_DATES,
-					(value) => {
-						if (!isValidDate(value.from) || !isValidDate(value.to) || !excludedDatesRule) return true;
-						if (variant === "range") return true;
-						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
-						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						try {
-							const mappedexcludedDates = excludedDatesRule["excludedDates"].map((date) =>
-								DateTimeHelper.toLocalDateOrTime(date, dateFormat, "date")
-							);
-							for (const excludedDate of mappedexcludedDates) {
-								if (localDateFrom.isBefore(excludedDate) && localDateTo.isAfter(excludedDate))
-									return false;
-							}
-							return true;
-						} catch {
-							return false;
-						}
 					}
 				),
 			validation
@@ -152,13 +128,12 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 			pastRule?.["past"] && LocalDate.now().minusDays(1),
 			notFutureRule?.["notFuture"] && LocalDate.now(),
 		]);
-		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
-		if (minDateProp || maxDateProp || disabledDatesProps) {
+
+		if (minDateProp || maxDateProp) {
 			setDerivedProps((props) => ({
 				...props,
 				minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
 				maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
-				disabledDates: disabledDatesProps,
 			}));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,53 +145,16 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 	 * - if value is provided, store it in the intended format
 	 * - otherwise if value cannot be parsed, clear both local state and registered value
 	 */
-	useEffect(() => {
-		if (!dateFormat) return;
-
-		if (!value.to) {
-			if (!isDirty) {
-				// runs on mount and reset
-				setStateValue(undefined);
-			}
-		} else if (!isValidDate(value.to)) {
-			setStateValue(ERROR_MESSAGES.DATE_RANGE.INVALID);
-		} else {
-			const localDate = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date"); // convert to LocalDate first to parse defaultValue
-			setStateValueEnd(
-				DateTimeHelper.formatDateTime(
-					localDate?.toString(),
-					DEFAULT_DATE_FORMAT,
-					"date",
-					ERROR_MESSAGES.DATE_RANGE.INVALID
-				)
-			);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value.to, dateFormat, isDirty]);
 
 	useEffect(() => {
-		if (!dateFormat) return;
-
-		if (!value.from) {
-			if (!isDirty) {
-				// runs on mount and reset
-				setStateValueEnd(undefined);
-			}
-		} else if (!isValidDate(value.from)) {
-			setStateValue(ERROR_MESSAGES.DATE_RANGE.INVALID);
-		} else {
-			const localDate = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date"); // convert to LocalDate first to parse defaultValue
-			setStateValue(
-				DateTimeHelper.formatDateTime(
-					localDate?.toString(),
-					DEFAULT_DATE_FORMAT,
-					"date",
-					ERROR_MESSAGES.DATE_RANGE.INVALID
-				)
-			);
-		}
+		setState(TDateRangeInputType.START);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value.from, dateFormat, isDirty]);
+
+	useEffect(() => {
+		setState(TDateRangeInputType.END);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value.to, dateFormat, isDirty]);
 
 	// =============================================================================
 	// EVENT HANDLER
@@ -248,6 +186,31 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 
 	const isValidDate = (value: string): boolean => {
 		return value && value !== ERROR_MESSAGES.DATE_RANGE.INVALID;
+	};
+
+	const setState = (type: TDateRangeInputType) => {
+		const currentValue = type === TDateRangeInputType.START ? value.from : value.to;
+		const setStateFn = type === TDateRangeInputType.START ? setStateValue : setStateValueEnd;
+		if (!dateFormat) return;
+
+		if (!currentValue) {
+			if (!isDirty) {
+				// runs on mount and reset
+				setStateFn(undefined);
+			}
+		} else if (!isValidDate(currentValue)) {
+			setStateFn(ERROR_MESSAGES.DATE_RANGE.INVALID);
+		} else {
+			const localDate = DateTimeHelper.toLocalDateOrTime(currentValue, dateFormat, "date"); // convert to LocalDate first to parse defaultValue
+			setStateFn(
+				DateTimeHelper.formatDateTime(
+					localDate?.toString(),
+					DEFAULT_DATE_FORMAT,
+					"date",
+					ERROR_MESSAGES.DATE_RANGE.INVALID
+				)
+			);
+		}
 	};
 
 	// =============================================================================

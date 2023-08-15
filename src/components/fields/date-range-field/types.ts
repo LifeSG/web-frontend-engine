@@ -16,5 +16,9 @@ export interface IDateRangeFieldSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"date-range-field", V, IDateRangeFieldValidationRule>,
 		TComponentOmitProps<DateRangeInputProps, "valueEnd"> {
 	dateFormat?: string | undefined;
-	variant?: Exclude<Variant, "single"> | undefined;
+}
+
+export enum TDateRangeInputType {
+	START = "start",
+	END = "end",
 }
