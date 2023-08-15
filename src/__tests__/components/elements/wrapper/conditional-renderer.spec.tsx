@@ -336,16 +336,68 @@ describe("conditional-renderer", () => {
 				uiType,
 				showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
 			},
+			nested: {
+				uiType: "div",
+				children: {
+					[FIELD_THREE_ID]: {
+						label: FIELD_THREE_LABEL,
+						uiType,
+						showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
+					},
+				},
+			},
 		};
 		renderComponent(fields);
 
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		fireEvent.change(getFieldTwo(), { target: { value: "world" } });
+		fireEvent.change(getFieldThree(), { target: { value: "kitty" } });
 		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
-		expect(SUBMIT_FN).toBeCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
+
+		const values = SUBMIT_FN.mock.lastCall[0];
+		expect(values).not.toHaveProperty(FIELD_TWO_ID);
+		expect(values).not.toHaveProperty(FIELD_THREE_ID);
+	});
+
+	it("should not submit prefilled fields that are conditionally hidden", async () => {
+		const uiType = "text-field";
+		const fields: Record<string, TFrontendEngineFieldSchema> = {
+			[FIELD_ONE_ID]: {
+				label: FIELD_ONE_LABEL,
+				uiType,
+			},
+			[FIELD_TWO_ID]: {
+				label: FIELD_TWO_LABEL,
+				uiType,
+				showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
+			},
+			nested: {
+				uiType: "div",
+				children: {
+					[FIELD_THREE_ID]: {
+						label: FIELD_THREE_LABEL,
+						uiType,
+						showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
+					},
+				},
+			},
+		};
+		const defaultValues = {
+			[FIELD_ONE_ID]: "hi",
+			[FIELD_TWO_ID]: "world",
+			[FIELD_THREE_ID]: "kitty",
+		};
+		renderComponent(fields, defaultValues);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
+
+		const values = SUBMIT_FN.mock.lastCall[0];
+		expect(values).not.toHaveProperty(FIELD_TWO_ID);
+		expect(values).not.toHaveProperty(FIELD_THREE_ID);
 	});
 
 	describe("overrides", () => {
