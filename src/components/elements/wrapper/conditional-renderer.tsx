@@ -1,6 +1,7 @@
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { useFormValues, useValidationConfig } from "../../../utils/hooks";
 import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
@@ -25,8 +26,9 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 	// CONST, STATE, REF
 	// =============================================================================
 	const { formValidationConfig, removeFieldValidationConfig } = useValidationConfig();
-	const [show, toggleShow] = useState(false);
+	const [show, toggleShow] = useState(undefined);
 	const { formValues } = useFormValues();
+	const { unregister } = useFormContext();
 
 	useDeepCompareEffectNoCheck(() => {
 		if (isEmpty(renderRules)) return;
@@ -34,8 +36,11 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 		const canShow = canRender();
 		if (canShow !== show) {
 			if (!canShow) {
-				const idsToDelete = [id, ...listAllChildIds(schema?.["children"])];
-				idsToDelete.forEach((idToDelete) => removeFieldValidationConfig(idToDelete));
+				const idsToDelete = [id, ...listAllChildIds(schema)];
+				idsToDelete.forEach((idToDelete) => {
+					removeFieldValidationConfig(idToDelete);
+					unregister(idToDelete);
+				});
 			}
 			toggleShow(canShow);
 		}
@@ -80,8 +85,16 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 	/**
 	 * Return all object keys by recursively looping through the object children
 	 */
-	const listAllChildIds = (children: unknown) => {
+	const listAllChildIds = (schema: IProps["schema"]) => {
+		const children = schema["children"];
 		const childIdList: string[] = [];
+
+		// Handle special fields that render additional fields
+		if (schema.uiType === "chips") {
+			childIdList.push(id + "-textarea");
+		}
+
+		// Handle nested fields
 		if (isEmpty(children) || !isObject(children)) {
 			return childIdList;
 		}
