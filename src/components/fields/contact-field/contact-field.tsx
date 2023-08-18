@@ -1,6 +1,7 @@
 import { PhoneNumberInputValue } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { usePrevious, useValidationConfig } from "../../../utils/hooks";
@@ -24,6 +25,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		...otherProps
 	} = props;
 
+	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const prevDefaultCountry = usePrevious(defaultCountry);
 	const [countryValue, setCountryValue] = useState<TCountry>(defaultCountry);
@@ -118,9 +120,11 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			const schemaPrefix = getPrefixFromCountry(countryValue || "Singapore");
 			if (!fixedCountry || (fixedCountry && prefixWithoutPlus === schemaPrefix)) {
 				const fieldPrefix = prefix || schemaPrefix;
-				handleChange({ countryCode: fieldPrefix, number });
+				const phoneNumberWithPrefix = parseAndApplyNumber({ countryCode: fieldPrefix, number });
+				setValue(id, phoneNumberWithPrefix, { shouldDirty: false });
 			} else {
-				handleChange({ countryCode: "", number: "" });
+				const phoneNumberWithPrefix = parseAndApplyNumber({ countryCode: "", number: "" });
+				setValue(id, phoneNumberWithPrefix, { shouldDirty: false });
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,27 +134,8 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (value: PhoneNumberInputValue): void => {
-		const { countryCode, number } = value;
-
-		const countryCodeWithoutPlus = countryCode.replace(/\+/g, "");
-		const phoneNumberWithPrefix = PhoneHelper.formatPhoneNumber(countryCode, number);
-
-		// update country code
-		if (fixedCountry === false && countryCodeWithoutPlus !== selectedCountry?.prefix) {
-			const countryName = getCountryFromPrefix(countryCodeWithoutPlus, internationalCodeMap);
-
-			if (countryName) {
-				setSelectedCountry({
-					name: countryName,
-					prefix: countryCode,
-				});
-			}
-		}
-
-		setStateValue(number);
-		// react-hook-form reverts to the default value when value is undefined (user trying to clear field)
-		// set to empty string to overcome this behaviour
-		onChange({ target: { value: phoneNumberWithPrefix || "" } });
+		const phoneNumberWithPrefix = parseAndApplyNumber(value);
+		onChange({ target: { value: phoneNumberWithPrefix } });
 	};
 
 	// =============================================================================
@@ -176,6 +161,33 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		}
 
 		return "Enter contact number";
+	};
+
+	/**
+	 * sets number to be used in PhoneNumberInput
+	 * switches country if applicable
+	 * return phone number with prefix
+	 */
+	const parseAndApplyNumber = (value: PhoneNumberInputValue) => {
+		const { countryCode, number } = value;
+		const countryCodeWithoutPlus = countryCode.replace(/\+/g, "");
+
+		// update country code
+		if (fixedCountry === false && countryCodeWithoutPlus !== selectedCountry?.prefix) {
+			const countryName = getCountryFromPrefix(countryCodeWithoutPlus, internationalCodeMap);
+
+			if (countryName) {
+				setSelectedCountry({
+					name: countryName,
+					prefix: countryCode,
+				});
+			}
+		}
+		setStateValue(number);
+
+		// react-hook-form reverts to the default value when value is undefined (user trying to clear field)
+		// set to empty string to overcome this behaviour
+		return PhoneHelper.formatPhoneNumber(value.countryCode, value.number) || "";
 	};
 
 	// =============================================================================
