@@ -6,7 +6,7 @@ import { Meta } from "@storybook/react/types-6-0";
 import { IDateRangeFieldSchema } from "src/components/fields/date-range-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
-export default {
+const meta: Meta = {
 	title: "Field/DateRangeField",
 	parameters: {
 		docs: {
@@ -63,7 +63,9 @@ export default {
 			defaultValue: `range`,
 		},
 	},
-} as Meta;
+};
+
+export default meta;
 
 const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd")
 	.withResolverStyle(ResolverStyle.STRICT)
