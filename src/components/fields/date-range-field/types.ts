@@ -1,22 +1,41 @@
 import { DateRangeInputProps } from "@lifesg/react-design-system/date-range-input";
-import { Variant } from "@lifesg/react-design-system/shared/internal-calendar/types";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine/types";
+import {
+	IFrontendEngineBaseFieldJsonSchema,
+	IYupValidationRule,
+	TComponentOmitProps,
+} from "../../frontend-engine/types";
 
 export interface IDateRangeFieldValidationRule {
 	future?: boolean | undefined;
 	past?: boolean | undefined;
-	notFuture?: boolean | undefined;
-	notPast?: boolean | undefined;
 	minDate?: string | undefined;
 	maxDate?: string | undefined;
 	excludedDates?: string[] | undefined;
 }
 
-export interface IDateRangeFieldSchema<V = undefined>
+interface IDateRangeFieldValidationRuleNever {
+	future: never;
+	past: never;
+	minDate: never;
+	maxDate: never;
+	excludedDates: never;
+}
+interface WeekSchema<V = undefined>
+	extends Omit<IFrontendEngineBaseFieldJsonSchema<"date-range-field", V, undefined>, "validation">,
+		TComponentOmitProps<DateRangeInputProps, "valueEnd"> {
+	variant: "week";
+	dateFormat?: string | undefined;
+	validation?: (V | IYupValidationRule | IDateRangeFieldValidationRuleNever)[];
+}
+
+interface RangeSchema<V = undefined>
 	extends IFrontendEngineBaseFieldJsonSchema<"date-range-field", V, IDateRangeFieldValidationRule>,
 		TComponentOmitProps<DateRangeInputProps, "valueEnd"> {
+	variant: "range";
 	dateFormat?: string | undefined;
 }
+
+export type IDateRangeFieldSchema<V = undefined> = RangeSchema<V> | WeekSchema<V>;
 
 export enum TDateRangeInputType {
 	START = "start",

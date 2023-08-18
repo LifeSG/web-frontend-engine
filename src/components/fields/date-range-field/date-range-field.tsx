@@ -2,6 +2,7 @@ import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { DateInputProps } from "@lifesg/react-design-system/date-input";
 import { Form } from "@lifesg/react-design-system/form";
+import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { DateTimeHelper, TestHelper } from "../../../utils";
@@ -65,24 +66,24 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 					}
 				)
 				.test("is-date", ERROR_MESSAGES.DATE_RANGE.INVALID, (value) => {
-					if (!value || value.from === "" || value.to === "") return true;
-					if (value.from === undefined || value.to === undefined) return true;
-					if (!isValidDate(value.from) || !isValidDate(value.to)) return false;
+					if (isEmpty(value?.from) || isEmpty(value?.to)) return true;
 					return (
-						!!DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date") ||
+						isValidDate(value.from) &&
+						isValidDate(value.to) &&
+						!!DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date") &&
 						!!DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date")
 					);
 				})
 				.test("future", futureRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE, (value) => {
-					if (!isValidDate(value.from) || !isValidDate(value.to) || !futureRule?.["future"]) return true;
 					if (variant === "week") return true;
+					if (!isValidDate(value.from) || !isValidDate(value.to) || !futureRule?.["future"]) return true;
 					const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 					const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 					return !!localDateFrom?.isAfter(LocalDate.now()) && !!localDateTo?.isAfter(LocalDate.now());
 				})
 				.test("past", pastRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.MUST_BE_PAST, (value) => {
-					if (!isValidDate(value.from) || !isValidDate(value.to) || !pastRule?.["past"]) return true;
 					if (variant === "week") return true;
+					if (!isValidDate(value.from) || !isValidDate(value.to) || !pastRule?.["past"]) return true;
 					const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 					const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 					return !!localDateFrom?.isBefore(LocalDate.now()) && !!localDateTo?.isBefore(LocalDate.now());
@@ -94,8 +95,8 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 							DateTimeHelper.formatDateTime(minDateRule?.["minDate"], "dd/MM/uuuu", "date")
 						),
 					(value) => {
-						if (!isValidDate(value.from) || !isValidDate(value.to) || !minDate) return true;
 						if (variant === "week") return true;
+						if (!isValidDate(value.from) || !isValidDate(value.to) || !minDate) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 						return !localDateFrom?.isBefore(minDate) && !localDateTo?.isBefore(minDate);
@@ -108,8 +109,8 @@ export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>)
 							DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date")
 						),
 					(value) => {
-						if (!isValidDate(value.from) || !isValidDate(value.to) || !maxDate) return true;
 						if (variant === "week") return true;
+						if (!isValidDate(value.from) || !isValidDate(value.to) || !maxDate) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 						return !localDateFrom?.isAfter(maxDate) && !localDateTo?.isAfter(maxDate);

@@ -13,15 +13,15 @@ import {
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideField,
 	TOverrideSchema,
 } from "../../../common";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
-const UI_TYPE = "date-range-field";
-
-const renderComponent = (overrideField?: TOverrideField<IDateRangeFieldSchema>, overrideSchema?: TOverrideSchema) => {
+const label = "Date";
+const uiType = "date-range-field";
+const variant = "range";
+const renderComponent = (overrideField?: IDateRangeFieldSchema, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		sections: {
@@ -29,8 +29,9 @@ const renderComponent = (overrideField?: TOverrideField<IDateRangeFieldSchema>, 
 				uiType: "section",
 				children: {
 					[COMPONENT_ID]: {
-						label: "Date",
-						uiType: UI_TYPE,
+						uiType,
+						label,
+						variant,
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
@@ -55,7 +56,7 @@ const getYearInput = (type: TDateRangeInputType): HTMLElement => {
 	return screen.getByTestId(`${type}-year-input`);
 };
 
-describe(UI_TYPE, () => {
+describe(uiType, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		window.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -102,7 +103,7 @@ describe(UI_TYPE, () => {
 			${"uuuu MMM dd"} | ${{ from: "2022 Jan 25", to: "2022 Feb 26" }}
 		`("$dateFormat", ({ dateFormat, value }) => {
 			it("should support date format", async () => {
-				renderComponent({ dateFormat });
+				renderComponent({ uiType, label, dateFormat, variant });
 				fireEvent.focus(getDayInput(TDateRangeInputType.START));
 				fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: "25" } });
 				fireEvent.change(getMonthInput(TDateRangeInputType.START), { target: { value: "01" } });
@@ -118,7 +119,7 @@ describe(UI_TYPE, () => {
 			});
 
 			it("should accept defaultValue in the format as defined by dateFormat", async () => {
-				renderComponent({ dateFormat }, { defaultValues: { [COMPONENT_ID]: value } });
+				renderComponent({ uiType, label, dateFormat, variant }, { defaultValues: { [COMPONENT_ID]: value } });
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -127,8 +128,8 @@ describe(UI_TYPE, () => {
 
 			it("should reject defaultValue if it did not follow dateFormat", async () => {
 				renderComponent(
-					{ dateFormat },
-					{ defaultValues: { [COMPONENT_ID]: { from: "2022-01-25", to: "2022-02-25" } } }
+					{ uiType, label, dateFormat, variant },
+					{ defaultValues: { [COMPONENT_ID]: { from: "25 January 2022", to: "2022-02-25" } } }
 				);
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -138,13 +139,21 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	it("should support validation schema", async () => {
-		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
+	it.each(["week", "range"])(
+		"should support validation schema 'required' for %s variant",
+		async (variantVal: "week" | "range") => {
+			renderComponent({
+				uiType,
+				label,
+				variant: variantVal,
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+			});
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(getErrorMessage()).toBeInTheDocument();
-	});
+			expect(getErrorMessage()).toBeInTheDocument();
+		}
+	);
 
 	describe.each`
 		condition           | config                               | invalid                                                     | valid
@@ -163,7 +172,7 @@ describe(UI_TYPE, () => {
 		});
 
 		it(`should ignore the invalid input values if there is validation for ${condition} dates`, async () => {
-			renderComponent({ validation: [config] });
+			renderComponent({ uiType, label, variant, validation: [config] });
 
 			fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: invalid.from[0] } });
 			fireEvent.change(getMonthInput(TDateRangeInputType.START), { target: { value: invalid.from[1] } });
@@ -182,7 +191,7 @@ describe(UI_TYPE, () => {
 
 		it(`should show error message on submit if there is valididation for ${condition} dates and invalid default dates`, async () => {
 			renderComponent(
-				{ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] },
+				{ uiType, label, variant, validation: [{ errorMessage: ERROR_MESSAGE, ...config }] },
 				{
 					defaultValues: {
 						[COMPONENT_ID]: {
@@ -200,7 +209,7 @@ describe(UI_TYPE, () => {
 
 		it(`should not show error messages if week variant on submit if there is valididation for ${condition} dates and invalid default dates`, async () => {
 			renderComponent(
-				{ validation: [{ errorMessage: ERROR_MESSAGE, ...config }], variant: "week" },
+				{ uiType, label, validation: [{ errorMessage: ERROR_MESSAGE, ...config }], variant: "week" },
 				{
 					defaultValues: {
 						[COMPONENT_ID]: {
@@ -217,7 +226,7 @@ describe(UI_TYPE, () => {
 		});
 
 		it(`should be able to validate for ${condition} dates for a different date format`, async () => {
-			renderComponent({ validation: [{ dateFormat: "d MMMM uuuu", ...config }] });
+			renderComponent({ uiType, label, variant, validation: [{ dateFormat: "d MMMM uuuu", ...config }] });
 
 			fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: invalid.from[0] } });
 			fireEvent.change(getMonthInput(TDateRangeInputType.START), { target: { value: invalid.from[1] } });
