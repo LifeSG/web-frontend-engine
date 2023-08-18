@@ -1,4 +1,5 @@
 // mostly copied from mol-lib-api-contract
+import isEmpty from "lodash/isEmpty";
 import { YupHelper } from "../helper";
 
 enum EUinfinType {
@@ -56,4 +57,7 @@ function getUinfinChecksum(uinfin: string): string {
 	return checkSum;
 }
 
-YupHelper.addCondition("string", "uinfin", (uinfin: string) => validateUinfin(uinfin));
+YupHelper.addCondition("string", "uinfin", (uinfin: string) => {
+	if (isEmpty(uinfin)) return true;
+	return validateUinfin(uinfin);
+});
