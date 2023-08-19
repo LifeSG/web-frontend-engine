@@ -28,7 +28,7 @@ import {
 	ITextareaSchema,
 	ITimeFieldSchema,
 	IUnitNumberFieldSchema,
-	IDateRangeFieldSchema,
+	TDateRangeFieldSchema,
 } from "../fields";
 import { ILocationFieldSchema } from "../fields/location-field/types";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
@@ -92,7 +92,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IContactFieldSchema<V>
 	| ICustomComponentJsonSchema<string>
 	| IDateFieldSchema<V>
-	| IDateRangeFieldSchema<V>
+	| TDateRangeFieldSchema<V>
 	| IEmailFieldSchema<V>
 	| IFilterSchema
 	| IImageUploadSchema<V>

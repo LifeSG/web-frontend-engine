@@ -2,8 +2,8 @@ import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { InputRangeProp } from "@lifesg/react-design-system/input-range-select/types";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react/types-6-0";
-import { IDateRangeFieldSchema } from "src/components/fields/date-range-field/types";
+import { Meta } from "@storybook/react";
+import { TDateRangeFieldSchema } from "src/components/fields/date-range-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
 
 const meta: Meta = {
@@ -71,13 +71,13 @@ const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd")
 	.withResolverStyle(ResolverStyle.STRICT)
 	.withLocale(Locale.ENGLISH);
 
-export const Default = DefaultStoryTemplate<IDateRangeFieldSchema>("date-default").bind({});
+export const Default = DefaultStoryTemplate<TDateRangeFieldSchema>("date-default").bind({});
 Default.args = {
 	uiType: "date-range-field",
 	label: "Date",
 };
 
-export const DefaultValue = DefaultStoryTemplate<IDateRangeFieldSchema, InputRangeProp<string>>(
+export const DefaultValue = DefaultStoryTemplate<TDateRangeFieldSchema, InputRangeProp<string>>(
 	"date-default-value"
 ).bind({});
 DefaultValue.args = {
@@ -97,14 +97,14 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const DateFormat = DefaultStoryTemplate<IDateRangeFieldSchema>("date-format").bind({});
+export const DateFormat = DefaultStoryTemplate<TDateRangeFieldSchema>("date-format").bind({});
 DateFormat.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	dateFormat: "d MMMM uuuu",
 };
 
-export const DateFormatDefaultValues = DefaultStoryTemplate<IDateRangeFieldSchema, InputRangeProp<string>>(
+export const DateFormatDefaultValues = DefaultStoryTemplate<TDateRangeFieldSchema, InputRangeProp<string>>(
 	"date-format-default"
 ).bind({});
 DateFormatDefaultValues.storyName = "Date Format with Default Value";
@@ -116,14 +116,14 @@ DateFormatDefaultValues.args = {
 };
 DateFormatDefaultValues.argTypes = DefaultValue.argTypes;
 
-export const WithValidation = DefaultStoryTemplate<IDateRangeFieldSchema>("date-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<TDateRangeFieldSchema>("date-with-validation").bind({});
 WithValidation.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	validation: [{ required: true }],
 };
 
-export const WithDisabledDates = DefaultStoryTemplate<IDateRangeFieldSchema>("date-disabled-dates").bind({});
+export const WithDisabledDates = DefaultStoryTemplate<TDateRangeFieldSchema>("date-disabled-dates").bind({});
 WithDisabledDates.args = {
 	uiType: "date-range-field",
 	label: "Disabled yesterday and tomorrow's dates",
@@ -137,7 +137,7 @@ WithDisabledDates.args = {
 	],
 };
 
-export const AllowedDisabledSelection = DefaultStoryTemplate<IDateRangeFieldSchema>(
+export const AllowedDisabledSelection = DefaultStoryTemplate<TDateRangeFieldSchema>(
 	"date-disabled-dates-selection"
 ).bind({});
 AllowedDisabledSelection.args = {
@@ -155,41 +155,41 @@ AllowedDisabledSelection.args = {
 	],
 };
 
-export const FutureDateOnly = DefaultStoryTemplate<IDateRangeFieldSchema>("date-future").bind({});
+export const FutureDateOnly = DefaultStoryTemplate<TDateRangeFieldSchema>("date-future").bind({});
 FutureDateOnly.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	validation: [{ required: true }, { future: true, errorMessage: "Only future dates allowed" }],
 };
 
-export const PastDateOnly = DefaultStoryTemplate<IDateRangeFieldSchema>("date-past").bind({});
+export const PastDateOnly = DefaultStoryTemplate<TDateRangeFieldSchema>("date-past").bind({});
 PastDateOnly.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	validation: [{ required: true }, { past: true, errorMessage: "Only past dates allowed" }],
 };
 
-export const MinDate = DefaultStoryTemplate<IDateRangeFieldSchema>("min-date").bind({});
+export const MinDate = DefaultStoryTemplate<TDateRangeFieldSchema>("min-date").bind({});
 MinDate.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	validation: [{ required: true }, { minDate: LocalDate.now().minusMonths(1).format(DEFAULT_DATE_FORMATTER) }],
 };
 
-export const MaxDate = DefaultStoryTemplate<IDateRangeFieldSchema>("max-date").bind({});
+export const MaxDate = DefaultStoryTemplate<TDateRangeFieldSchema>("max-date").bind({});
 MaxDate.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	validation: [{ required: true }, { maxDate: LocalDate.now().plusMonths(1).format(DEFAULT_DATE_FORMATTER) }],
 };
 
-export const Reset = ResetStoryTemplate<IDateRangeFieldSchema>("date-reset").bind({});
+export const Reset = ResetStoryTemplate<TDateRangeFieldSchema>("date-reset").bind({});
 Reset.args = {
 	uiType: "date-range-field",
 	label: "Date",
 };
 
-export const ResetWithDefaultValues = ResetStoryTemplate<IDateRangeFieldSchema, InputRangeProp<string>>(
+export const ResetWithDefaultValues = ResetStoryTemplate<TDateRangeFieldSchema, InputRangeProp<string>>(
 	"date-reset-default-values"
 ).bind({});
 ResetWithDefaultValues.args = {
@@ -208,7 +208,7 @@ ResetWithDefaultValues.argTypes = {
 	},
 };
 
-export const WeekRange = DefaultStoryTemplate<IDateRangeFieldSchema>("week-range").bind({});
+export const WeekRange = DefaultStoryTemplate<TDateRangeFieldSchema>("week-range").bind({});
 WeekRange.args = {
 	uiType: "date-range-field",
 	label: "Date",

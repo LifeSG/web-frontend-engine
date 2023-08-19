@@ -9,14 +9,14 @@ import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
-import { IDateRangeFieldSchema, TDateRangeInputType } from "./types";
+import { TDateRangeFieldSchema, TDateRangeInputType } from "./types";
 
 const DEFAULT_DATE_FORMAT = "uuuu-MM-dd";
 const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)
 	.withResolverStyle(ResolverStyle.STRICT)
 	.withLocale(Locale.ENGLISH);
 
-export const DateRangeField = (props: IGenericFieldProps<IDateRangeFieldSchema>) => {
+export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
