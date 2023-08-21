@@ -28,6 +28,7 @@ import {
 	ITextareaSchema,
 	ITimeFieldSchema,
 	IUnitNumberFieldSchema,
+	TDateRangeFieldSchema,
 } from "../fields";
 import { ILocationFieldSchema } from "../fields/location-field/types";
 import { IYupValidationRule, TRenderRules, TYupSchemaType } from "./yup";
@@ -91,6 +92,7 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| IContactFieldSchema<V>
 	| ICustomComponentJsonSchema<string>
 	| IDateFieldSchema<V>
+	| TDateRangeFieldSchema<V>
 	| IEmailFieldSchema<V>
 	| IFilterSchema
 	| IImageUploadSchema<V>
@@ -224,6 +226,7 @@ export enum EFieldType {
 	CHIPS = "Chips",
 	"CONTACT-FIELD" = "ContactField",
 	"DATE-FIELD" = "DateField",
+	"DATE-RANGE-FIELD" = "DateRangeField",
 	"EMAIL-FIELD" = "TextField",
 	"IMAGE-UPLOAD" = "ImageUpload",
 	"LOCATION-FIELD" = "LocationField",
