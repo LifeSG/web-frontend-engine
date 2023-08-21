@@ -1,4 +1,3 @@
-import * as Yup from "yup";
 import { YupHelper } from "../../../../components/frontend-engine/yup";
 import { TestHelper } from "../../../../utils";
 
@@ -16,6 +15,12 @@ describe("validateUinfin", () => {
 				{ uinfin: true, errorMessage: "error" },
 			]);
 			expect(TestHelper.getError(() => schema.validateSync("S1234567A")).message).toBe("error");
+		});
+
+		it("should pass when given an empty value", async () => {
+			const schema = YupHelper.buildFieldSchema(YupHelper.mapSchemaType("string"), [{ uinfin: true }]);
+			expect(() => schema.validateSync("")).not.toThrowError();
+			expect(() => schema.validateSync(undefined)).not.toThrowError();
 		});
 	});
 });
