@@ -60,14 +60,14 @@ export const LocationPicker = ({
 					})
 					.addTo(mapRef.current);
 			}
-			const basemap = L.tileLayer("https://maps-{s}.onemap.sg/v3/Default/{z}/{x}/{y}.png", {
+			const basemap = L.tileLayer("https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png", {
 				detectRetina: true,
 				maxNativeZoom: 18,
 				maxZoom: isMobile ? 20 : 19,
 				minZoom: leafletConfig.minZoom,
 				// Do not remove this attribution
 				attribution:
-					'<div class="onemap"><img src="https://www.onemap.gov.sg/docs/maps/images/oneMap64-01.png" style="height:20px;width:20px;"/> OneMap | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a></div>',
+					'<div class="onemap"><img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png" style="height:20px;width:20px;"/>&nbsp;<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener noreferrer">OneMap</a>&nbsp;&copy;&nbsp;contributors&nbsp;&#124;&nbsp;<a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a></div>',
 			});
 
 			const [ne, sw] = LocationHelper.getMapBounds();
