@@ -31,7 +31,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		id,
 		isDirty,
 		value,
-		onChange,
 		...otherProps
 	} = props;
 	const { images, setImages } = useContext(ImageContext);
@@ -233,7 +232,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					editImage={editImage}
 					id={id}
 					maxSizeInKb={maxFileSize}
-					onChange={onChange}
 					outputType={outputType}
 					upload={uploadOnAddingFile}
 					value={value}

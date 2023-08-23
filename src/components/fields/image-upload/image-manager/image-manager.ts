@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
 import { usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
@@ -6,7 +7,6 @@ import { EImageStatus, IImage, ISharedImageProps, TImageUploadOutputFileType, TU
 
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	editImage: boolean;
-	onChange: (...event: any[]) => void;
 	compress: boolean;
 	dimensions: { width: number; height: number };
 	outputType: TImageUploadOutputFileType;
@@ -25,11 +25,12 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { accepts, compress, dimensions, editImage, onChange, maxSizeInKb, outputType, upload, value } = props;
+	const { accepts, compress, dimensions, editImage, id, maxSizeInKb, outputType, upload, value } = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const [managerErrorCount, setManagerErrorCount] = useState(0);
 	const previousValue = usePrevious(value);
+	const { setValue } = useFormContext();
 	const sessionId = useRef<string>();
 
 	// =============================================================================
@@ -137,17 +138,19 @@ export const ImageManager = (props: IProps) => {
 		setErrorCount((prev) => Math.max(0, prev + updatedManagerErrorCount - managerErrorCount));
 		setManagerErrorCount(updatedManagerErrorCount);
 
-		onChange({
-			target: {
-				value: images
-					.filter(({ status }) => status === EImageStatus.UPLOADED)
-					.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
-						fileName: name,
-						dataURL: drawingDataURL || dataURL,
-						uploadResponse,
-					})),
-			},
-		});
+		const shouldDirty = images.filter(({ addedFrom }) => addedFrom !== "schema").length > 0;
+		setValue(
+			id,
+			images
+				.filter(({ status }) => status === EImageStatus.UPLOADED)
+				.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
+					fileName: name,
+					dataURL: drawingDataURL || dataURL,
+					uploadResponse,
+				})),
+			// TODO: set true if not default value
+			{ shouldDirty }
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [images.map((image) => image.status).join(",")]);
 
