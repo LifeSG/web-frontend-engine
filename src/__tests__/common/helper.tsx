@@ -1,6 +1,14 @@
 import { ByRoleOptions, screen } from "@testing-library/react";
-import { TFrontendEngineFieldSchema } from "../../components/frontend-engine";
+import {
+	FrontendEngine,
+	IFrontendEngineData,
+	IFrontendEngineProps,
+	IFrontendEngineRef,
+	TFrontendEngineFieldSchema,
+	TFrontendEngineValues,
+} from "../../components/frontend-engine";
 import { ERROR_MESSAGE, RESET_BUTTON_ID, RESET_BUTTON_LABEL, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
+import { useRef } from "react";
 
 type TAriaRoles = "textbox" | "generic" | "button" | "spinbutton" | "radio" | "list";
 
@@ -58,3 +66,22 @@ export const getErrorMessage = (isQuery = false): HTMLElement => {
 };
 
 export const flushPromise = (delay = 0) => new Promise((resolve) => setTimeout(resolve, delay));
+
+export const FrontendEngineWithCustomButton = (props: {
+	onClick: (ref: React.MutableRefObject<IFrontendEngineRef>) => void;
+	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
+	data: IFrontendEngineData;
+	overrideProps?: Partial<Exclude<IFrontendEngineProps, "onSubmit">>;
+}) => {
+	const { data, onClick, onSubmit, overrideProps } = props;
+	const ref = useRef<IFrontendEngineRef>();
+
+	return (
+		<>
+			<FrontendEngine {...overrideProps} data={data} ref={ref} onSubmit={onSubmit} />
+			<button type="button" onClick={() => onClick(ref)}>
+				Custom Button
+			</button>
+		</>
+	);
+};

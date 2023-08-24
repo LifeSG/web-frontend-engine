@@ -9,6 +9,7 @@ import { TestHelper } from "../../../utils";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
@@ -20,7 +21,7 @@ const FIELD_ONE_ID = "field1";
 const FIELD_ONE_LABEL = "Field 1";
 const FIELD_TWO_ID = "field2";
 const FIELD_TWO_LABEL = "Field 2";
-const CUSTOM_BUTTON_LABEL = "custom button";
+const CUSTOM_BUTTON_LABEL = "Custom Button";
 const COMPONENT_TEST_ID = TestHelper.generateId(FRONTEND_ENGINE_ID, "frontend-engine");
 
 const JSON_SCHEMA: IFrontendEngineData = {
@@ -79,24 +80,6 @@ const getFieldTwo = (): HTMLElement => {
 
 const getCustomButton = (): HTMLElement => {
 	return screen.getByRole("button", { name: CUSTOM_BUTTON_LABEL });
-};
-
-const FrontendEngineWithCustomButton = (props: {
-	onSubmit?: () => void;
-	onClick: (ref: React.MutableRefObject<IFrontendEngineRef>) => void;
-	isNested?: boolean;
-}) => {
-	const { onSubmit, onClick, isNested } = props;
-	const ref = useRef<IFrontendEngineRef>();
-
-	return (
-		<>
-			<FrontendEngine data={isNested ? NESTED_JSON_SCHEMA : JSON_SCHEMA} ref={ref} onSubmit={onSubmit} />
-			<button type="button" onClick={() => onClick(ref)}>
-				{CUSTOM_BUTTON_LABEL}
-			</button>
-		</>
-	);
 };
 
 const renderComponent = (
@@ -225,7 +208,7 @@ describe("frontend-engine", () => {
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 			formValues = ref.current.getValues();
 		};
-		render(<FrontendEngineWithCustomButton onClick={handleClick} />);
+		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		fireEvent.click(getCustomButton());
@@ -238,7 +221,7 @@ describe("frontend-engine", () => {
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 			ref.current.setValue(FIELD_ONE_ID, "hello");
 		};
-		render(<FrontendEngineWithCustomButton onClick={handleClick} onSubmit={onSubmit} />);
+		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} onSubmit={onSubmit} />);
 
 		fireEvent.click(getCustomButton());
 		await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -251,7 +234,7 @@ describe("frontend-engine", () => {
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 			isValid = ref.current.isValid();
 		};
-		render(<FrontendEngineWithCustomButton onClick={handleClick} />);
+		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 
 		fireEvent.click(getCustomButton());
 		expect(isValid).toBe(false);
@@ -261,10 +244,25 @@ describe("frontend-engine", () => {
 		expect(isValid).toBe(true);
 	});
 
+	it("should return form isDirty state accordingly", async () => {
+		let isDirty = false;
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			isDirty = ref.current.isValid();
+		};
+		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+
+		fireEvent.click(getCustomButton());
+		expect(isDirty).toBe(false);
+
+		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		fireEvent.click(getCustomButton());
+		expect(isDirty).toBe(true);
+	});
+
 	it("should submit through submit method", async () => {
 		const submitFn = jest.fn();
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => ref.current.submit();
-		render(<FrontendEngineWithCustomButton onSubmit={submitFn} onClick={handleClick} />);
+		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} onSubmit={submitFn} />);
 
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getCustomButton()));
@@ -277,7 +275,7 @@ describe("frontend-engine", () => {
 			ref.current.reset();
 		};
 
-		render(<FrontendEngineWithCustomButton onClick={handleClick} />);
+		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 		const field = getFieldOne();
 		fireEvent.change(field, { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getCustomButton()));
@@ -382,21 +380,21 @@ describe("frontend-engine", () => {
 		};
 
 		it("should support setting of custom errors", async () => {
-			render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClickDefault} />);
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
 			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
 		it("should support setting of custom errors for nested fields", async () => {
-			render(<FrontendEngineWithCustomButton onClick={handleClickNested} isNested />);
+			render(<FrontendEngineWithCustomButton data={NESTED_JSON_SCHEMA} onClick={handleClickNested} />);
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
 			expect(getFieldTwo().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
 		it("should clear the error message related to API when the user edits the field", async () => {
-			render(<FrontendEngineWithCustomButton onClick={handleClickDefault} />);
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClickDefault} />);
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
 			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
@@ -412,10 +410,10 @@ describe("frontend-engine", () => {
 			`("should suppport error message of $type type", async ({ type, onClick }) => {
 				switch (type) {
 					case "string":
-						render(<FrontendEngineWithCustomButton onClick={onClick} />);
+						render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={onClick} />);
 						break;
 					case "array":
-						render(<FrontendEngineWithCustomButton onClick={onClick} />);
+						render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={onClick} />);
 						break;
 				}
 				await waitFor(() => fireEvent.click(getCustomButton()));
