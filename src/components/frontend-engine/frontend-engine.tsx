@@ -75,6 +75,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		addCustomValidation: YupHelper.addCondition,
 		dispatchFieldEvent,
 		getValues,
+		isDirty: formState.isDirty,
 		isValid: checkIsFormValid,
 		removeFieldEventListener,
 		reset: (values, options) => {
@@ -169,6 +170,8 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [checkIsFormValid, onChange, watch, formValidationConfig]);
 
 	useEffect(() => {
+		// console.log("*** rhf isDirty", formState.isDirty);
+		// console.log("*** rhf touchedFields", formState.touchedFields);
 		const errors = formState.errors;
 
 		if (errors && !isEmpty(errors)) {
