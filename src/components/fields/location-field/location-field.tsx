@@ -1,4 +1,5 @@
 import { Suspense, lazy, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { TestHelper } from "../../../utils";
 import { IGenericFieldProps } from "../../frontend-engine";
 import { StyledStaticMap } from "./location-field.styles";
@@ -27,16 +28,16 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
-		onChange,
 	} = props;
 
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
+	const { setValue } = useFormContext();
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const updateFormValues = (updatedValues: ILocationFieldValues) => {
-		onChange?.({ target: { value: updatedValues } });
+	const updateFormValues = (updatedValues: ILocationFieldValues, shouldDirty = true) => {
+		setValue(id, updatedValues, { shouldDirty });
 	};
 
 	// =============================================================================
