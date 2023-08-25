@@ -85,8 +85,17 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (option: InputRangeProp<IRangeSelectOption>): void => {
-		if (option.from) onChange({ target: { value: { from: option.from.value, to: toStateValue } } });
+		if (option.from == undefined && option.to == undefined)
+			onChange({ target: { value: { from: undefined, to: undefined } } });
+		if (option.from) onChange({ target: { value: { from: option.from.value, to: undefined } } });
 		if (option.to) onChange({ target: { value: { to: option.to.value, from: fromStateValue } } });
+	};
+
+	const handleWrapperBlur = () => {
+		if (!value.from || !value.to) {
+			setToStateValue(undefined);
+			setFromStateValue(undefined);
+		}
 	};
 
 	// =============================================================================
@@ -97,6 +106,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			onHideOptions={handleWrapperBlur}
 			data-testid={TestHelper.generateId(id)}
 			label={label}
 			options={options}
