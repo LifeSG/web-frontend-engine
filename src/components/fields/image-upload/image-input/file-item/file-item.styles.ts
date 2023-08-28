@@ -115,9 +115,6 @@ export const DeleteButton = styled(IconButton)`
 	// additional 0.5 negative marginRight because the image itself has padding already
 	background-color: transparent;
 	outline-style: none;
-
-	span {
-		font-size: 2rem;
-		color: ${Color.Neutral[3]};
-	}
+	color: ${Color.Neutral[3]};
+	font-size: 2rem;
 `;
