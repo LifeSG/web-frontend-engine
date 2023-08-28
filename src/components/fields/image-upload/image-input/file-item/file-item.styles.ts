@@ -116,5 +116,9 @@ export const DeleteButton = styled(IconButton)`
 	background-color: transparent;
 	outline-style: none;
 	color: ${Color.Neutral[3]};
-	font-size: 2rem;
+
+	svg {
+		height: 1.875rem;
+		width: 1.875rem;
+	}
 `;
