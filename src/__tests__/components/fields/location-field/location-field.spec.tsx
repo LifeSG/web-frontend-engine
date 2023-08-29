@@ -2,11 +2,25 @@ import { MediaWidths } from "@lifesg/react-design-system";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { useEffect, useRef } from "react";
-import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
+import {
+	FrontendEngine,
+	IFrontendEngineData,
+	IFrontendEngineProps,
+	IFrontendEngineRef,
+	IYupValidationRule,
+} from "../../../../components";
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
-import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema } from "../../../common";
+import {
+	ERROR_MESSAGE,
+	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	TOverrideSchema,
+	getErrorMessage,
+	getSubmitButton,
+	getSubmitButtonProps,
+} from "../../../common";
 import {
 	fetchSingleLocationByLatLngSingleReponse,
 	mock1PageFetchAddressResponse,
@@ -81,10 +95,11 @@ interface IRenderProps {
 	overrideSchema?: TOverrideSchema;
 	withEvents: boolean;
 	locationDetails?: TSetCurrentLocationDetail;
+	validation?: IYupValidationRule[];
 }
 
 const renderComponent = (
-	{ overrideField, overrideSchema, locationDetails, withEvents }: IRenderProps = { withEvents: false }
+	{ overrideField, overrideSchema, locationDetails, withEvents, validation }: IRenderProps = { withEvents: false }
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -95,8 +110,10 @@ const renderComponent = (
 					[COMPONENT_ID]: {
 						label: LABEL,
 						uiType: UI_TYPE,
+						validation,
 						...overrideField,
 					},
+					...getSubmitButtonProps(),
 				},
 			},
 		},
@@ -1121,5 +1138,13 @@ describe("location-input-group", () => {
 
 	describe("customisation", () => {
 		it.todo("should support placeholder texts");
+	});
+
+	it("should support validation schema", async () => {
+		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }], withEvents: false });
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(getErrorMessage()).toBeInTheDocument();
 	});
 });
