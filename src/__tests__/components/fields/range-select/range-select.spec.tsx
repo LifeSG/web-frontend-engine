@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, queryByText, render, screen, waitFor } from "@testing-library/react";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
@@ -81,6 +81,14 @@ const getComponent = (): HTMLElement => {
 	return getField("button", "Select Select");
 };
 
+const getRangeSelector = (): HTMLElement => {
+	return screen.getByTestId("field-base");
+};
+
+const getClearButton = (): HTMLElement => {
+	return screen.getByRole("button", { name: /Clear/i });
+};
+
 const getOptionA = (): HTMLElement => {
 	return screen.getAllByText("A")[0];
 };
@@ -146,6 +154,21 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(getOptionC()));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } }));
+	});
+
+	it("should be able to clear all inputs when only 1st option is selected and then click away outside of component", async () => {
+		renderComponent();
+
+		await waitFor(() => fireEvent.click(getComponent()));
+		await waitFor(() => fireEvent.click(getOptionA()));
+		fireEvent.mouseDown(document.body);
+		await waitFor(() => fireEvent.click(getComponent()));
+		expect(queryByText(getRangeSelector(), "A")).toBeNull();
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toBeCalledWith(
+			expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
+		);
 	});
 
 	describe("update options through schema", () => {
@@ -270,6 +293,52 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		});
+	});
+
+	describe("clear button", () => {
+		it("should clear selection when clicking the cross icon and submit, submitted values should be empty", async () => {
+			renderComponent();
+
+			await waitFor(() => fireEvent.click(getComponent()));
+			await waitFor(() => fireEvent.click(getOptionA()));
+			await waitFor(() => fireEvent.click(getOptionC()));
+			await waitFor(() => fireEvent.click(getClearButton()));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
+			);
+		});
+
+		it("should clear selection when clicking the cross icon, values should remain empty upon clicking back the component", async () => {
+			renderComponent();
+
+			await waitFor(() => fireEvent.click(getComponent()));
+			await waitFor(() => fireEvent.click(getOptionA()));
+			await waitFor(() => fireEvent.click(getOptionC()));
+			await waitFor(() => fireEvent.click(getClearButton()));
+			await waitFor(() => fireEvent.click(getComponent()));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
+			);
+		});
+
+		it("should clear selection when clicking submit and then clicking the cross icon, to value should remain empty upon reselecting the from value", async () => {
+			renderComponent();
+
+			await waitFor(() => fireEvent.click(getComponent()));
+			await waitFor(() => fireEvent.click(getOptionA()));
+			await waitFor(() => fireEvent.click(getOptionC()));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			await waitFor(() => fireEvent.click(getClearButton()));
+			await waitFor(() => fireEvent.click(getComponent()));
+			await waitFor(() => fireEvent.click(getOptionA()));
+
+			expect(queryByText(getRangeSelector(), "A")).toBeTruthy();
+			expect(queryByText(getRangeSelector(), "C")).toBeNull();
 		});
 	});
 });

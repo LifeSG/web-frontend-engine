@@ -46,8 +46,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 					isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTIONS,
 					(value) => {
 						if (!value || !isRequiredRule?.required) return true;
-
-						return value.from.length > 0 && value.to.length > 0;
+						return value.from?.length > 0 && value.to?.length > 0;
 					}
 				),
 			validation
@@ -85,8 +84,16 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (option: InputRangeProp<IRangeSelectOption>): void => {
-		if (option.from) onChange({ target: { value: { from: option.from.value, to: toStateValue } } });
+		if (option.from === undefined && option.to === undefined)
+			onChange({ target: { value: { from: undefined, to: undefined } } });
+		if (option.from) onChange({ target: { value: { from: option.from.value, to: undefined } } });
 		if (option.to) onChange({ target: { value: { to: option.to.value, from: fromStateValue } } });
+	};
+
+	const handleBlur = () => {
+		if (!value.from || !value.to) {
+			onChange({ target: { value: { from: undefined, to: undefined } } });
+		}
 	};
 
 	// =============================================================================
@@ -97,6 +104,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 			{...otherSchema}
 			{...otherProps}
 			id={id}
+			onHideOptions={handleBlur}
 			data-testid={TestHelper.generateId(id)}
 			label={label}
 			options={options}
