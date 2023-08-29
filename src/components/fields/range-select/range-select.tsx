@@ -46,8 +46,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 					isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTIONS,
 					(value) => {
 						if (!value || !isRequiredRule?.required) return true;
-
-						return value.from.length > 0 && value.to.length > 0;
+						return value.from?.length > 0 && value.to?.length > 0;
 					}
 				),
 			validation

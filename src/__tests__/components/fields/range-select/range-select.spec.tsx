@@ -156,7 +156,7 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } }));
 	});
 
-	it.only("should be able to clear all inputs when only 1st option is selected and then click away outside of component", async () => {
+	it("should be able to clear all inputs when only 1st option is selected and then click away outside of component", async () => {
 		renderComponent();
 
 		await waitFor(() => fireEvent.click(getComponent()));
