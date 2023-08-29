@@ -121,10 +121,10 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			if (!fixedCountry || (fixedCountry && prefixWithoutPlus === schemaPrefix)) {
 				const fieldPrefix = prefix || schemaPrefix;
 				const phoneNumberWithPrefix = parseAndApplyNumber({ countryCode: fieldPrefix, number });
-				setValue(id, phoneNumberWithPrefix, { shouldDirty: false });
+				setValue(id, phoneNumberWithPrefix);
 			} else {
 				const phoneNumberWithPrefix = parseAndApplyNumber({ countryCode: "", number: "" });
-				setValue(id, phoneNumberWithPrefix, { shouldDirty: false });
+				setValue(id, phoneNumberWithPrefix);
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
