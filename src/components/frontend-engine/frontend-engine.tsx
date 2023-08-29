@@ -170,8 +170,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [checkIsFormValid, onChange, watch, formValidationConfig]);
 
 	useEffect(() => {
-		// console.log("*** rhf isDirty", formState.isDirty);
-		// console.log("*** rhf touchedFields", formState.touchedFields);
 		const errors = formState.errors;
 
 		if (errors && !isEmpty(errors)) {

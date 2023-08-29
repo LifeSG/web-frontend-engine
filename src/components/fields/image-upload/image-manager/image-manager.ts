@@ -148,7 +148,6 @@ export const ImageManager = (props: IProps) => {
 					dataURL: drawingDataURL || dataURL,
 					uploadResponse,
 				})),
-			// TODO: set true if not default value
 			{ shouldDirty }
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
