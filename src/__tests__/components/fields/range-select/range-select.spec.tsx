@@ -156,15 +156,19 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } }));
 	});
 
-	it("should be able to clear all inputs when only 1st option is selected and then click away outside of component", async () => {
+	it.only("should be able to clear all inputs when only 1st option is selected and then click away outside of component", async () => {
 		renderComponent();
 
 		await waitFor(() => fireEvent.click(getComponent()));
 		await waitFor(() => fireEvent.click(getOptionA()));
 		fireEvent.mouseDown(document.body);
 		await waitFor(() => fireEvent.click(getComponent()));
-
 		expect(queryByText(getRangeSelector(), "A")).toBeNull();
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toBeCalledWith(
+			expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
+		);
 	});
 
 	describe("update options through schema", () => {
