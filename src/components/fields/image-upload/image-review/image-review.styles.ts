@@ -50,7 +50,7 @@ export const ReviewCloseButton = styled(IconButton)`
 	padding: 0.25rem;
 	background-color: transparent;
 	outline-style: none;
-	span {
+	> svg {
 		font-size: 2rem;
 		color: ${Color.Primary};
 	}

@@ -96,6 +96,7 @@ export const AddImageButton = styled(IconButton)`
 	padding: 0;
 	width: 3rem;
 	height: 3rem;
+	background: #fff;
 
 	> img {
 		width: inherit;
