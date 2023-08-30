@@ -11,6 +11,7 @@ import {
 } from "../../../../components";
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
@@ -1140,11 +1141,53 @@ describe("location-input-group", () => {
 		it.todo("should support placeholder texts");
 	});
 
-	it("should support validation schema", async () => {
-		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }], withEvents: false });
+	describe("validation", () => {
+		it("should support validation schema", async () => {
+			renderComponent({
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+				withEvents: false,
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage()).toBeInTheDocument();
+		});
+
+		it("should validate mustHavePostalCode", async () => {
+			renderComponent({
+				withEvents: false,
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: {
+							address: "Fusionopolis View",
+						},
+					},
+				},
+				overrideField: {
+					mustHavePostalCode: true,
+				},
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText(ERROR_MESSAGES.LOCATION.MUST_HAVE_POSTAL_CODE)).toBeInTheDocument();
+		});
+	});
+
+	it("should contain lat, lng, x, and y", async () => {
+		renderComponent({
+			withEvents: false,
+			overrideSchema: {
+				defaultValues: {
+					[COMPONENT_ID]: {
+						address: "Fusionopolis View",
+					},
+				},
+			},
+		});
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(getErrorMessage()).toBeInTheDocument();
+		expect(screen.getByText(ERROR_MESSAGES.LOCATION.INVALID_LOCATION)).toBeInTheDocument();
 	});
 });
