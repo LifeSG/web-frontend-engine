@@ -75,7 +75,12 @@ export const ImageInput = (props: IImageInputProps) => {
 
 	const handleDeleteFile = (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
-		setImages((prev) => prev.filter((f, i) => i !== index));
+		setImages((prev) =>
+			prev.map((image, i) => ({
+				...image,
+				...(i === index ? { status: EImageStatus.TO_DELETE } : {}),
+			}))
+		);
 		setExceedError(false);
 	};
 

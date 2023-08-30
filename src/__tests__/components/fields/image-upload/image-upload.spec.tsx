@@ -9,6 +9,7 @@ import { AxiosApiClient, FileHelper, ImageHelper, WindowHelper } from "../../../
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
 	flushPromise,
@@ -879,6 +880,154 @@ describe("image-upload", () => {
 					]),
 				})
 			);
+		});
+	});
+
+	describe("dirty state", () => {
+		let formIsDirty: boolean;
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			formIsDirty = ref.current.isDirty;
+		};
+		const json: IFrontendEngineData = {
+			id: FRONTEND_ENGINE_ID,
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						[COMPONENT_ID]: {
+							label: "Image Upload",
+							uiType: UI_TYPE,
+							compress: false,
+						},
+						...getSubmitButtonProps(),
+						...getResetButtonProps(),
+					},
+				},
+			},
+		};
+
+		beforeEach(() => {
+			formIsDirty = undefined;
+			jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
+			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
+			jest.spyOn(FileHelper, "getMimeType").mockResolvedValue("image/jpeg");
+		});
+
+		it("should mount without setting field state as dirty", () => {
+			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should set form state as dirty if user adds an image", async () => {
+			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			await act(async () => {
+				fireEvent.change(getDragInputUploadField(), {
+					target: {
+						files: [FILE_1],
+					},
+				});
+			});
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(true);
+		});
+
+		it("should support default value without setting form state as dirty", async () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{
+						...json,
+						defaultValues: {
+							[COMPONENT_ID]: [
+								{
+									fileName: FILE_1.name,
+									dataURL: JPG_BASE64,
+								},
+							],
+						},
+					}}
+					onClick={handleClick}
+				/>
+			);
+			await act(async () => {
+				await flushPromise();
+			});
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should set form state as dirty if user removes an image", async () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{
+						...json,
+						defaultValues: {
+							[COMPONENT_ID]: [
+								{
+									fileName: FILE_1.name,
+									dataURL: JPG_BASE64,
+								},
+							],
+						},
+					}}
+					onClick={handleClick}
+				/>
+			);
+			await waitFor(() => fireEvent.click(screen.getByTestId(`${COMPONENT_ID}-file-item-1__btn-delete`)));
+			await flushPromise();
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(true);
+		});
+
+		it("should reset and revert form dirty state to false", async () => {
+			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			await act(async () => {
+				fireEvent.change(getDragInputUploadField(), {
+					target: {
+						files: [FILE_1],
+					},
+				});
+				await flushPromise(100);
+				await waitFor(() => fireEvent.click(getResetButton()));
+			});
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset to default value without setting form state as dirty", async () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{
+						...json,
+						defaultValues: {
+							[COMPONENT_ID]: [
+								{
+									fileName: FILE_1.name,
+									dataURL: JPG_BASE64,
+								},
+							],
+						},
+					}}
+					onClick={handleClick}
+				/>
+			);
+			await act(async () => {
+				fireEvent.change(getDragInputUploadField(), {
+					target: {
+						files: [FILE_2],
+					},
+				});
+				await flushPromise(100);
+				await waitFor(() => fireEvent.click(getResetButton()));
+			});
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
 		});
 	});
 });

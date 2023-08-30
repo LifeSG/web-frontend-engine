@@ -30,7 +30,7 @@ export const ImageManager = (props: IProps) => {
 	const previousImages = usePrevious(images);
 	const [managerErrorCount, setManagerErrorCount] = useState(0);
 	const previousValue = usePrevious(value);
-	const { setValue } = useFormContext();
+	const { setValue, getFieldState } = useFormContext();
 	const sessionId = useRef<string>();
 
 	// =============================================================================
@@ -118,6 +118,9 @@ export const ImageManager = (props: IProps) => {
 					case EImageStatus.UPLOAD_READY:
 						uploadImage(index, image);
 						break;
+					case EImageStatus.TO_DELETE:
+						setImages((prev) => prev.filter(({ status }) => status !== EImageStatus.TO_DELETE));
+						break;
 				}
 			}
 		});
@@ -138,16 +141,25 @@ export const ImageManager = (props: IProps) => {
 		setErrorCount((prev) => Math.max(0, prev + updatedManagerErrorCount - managerErrorCount));
 		setManagerErrorCount(updatedManagerErrorCount);
 
-		const shouldDirty = images.filter(({ addedFrom }) => addedFrom !== "schema").length > 0;
+		const uploadedImages = images.filter(({ status }) => status === EImageStatus.UPLOADED);
+		const notPrefilledImages = uploadedImages.filter(({ addedFrom }) => addedFrom !== "schema");
+		const gotDeleteImages = images.filter(({ status }) => status === EImageStatus.TO_DELETE).length > 0;
+
+		/**
+		 * should dirty if
+		 * - it is dirty in the first place
+		 * - there are non-prefilled images
+		 * - user deleted image (differentiated from reset)
+		 */
+		const shouldDirty = notPrefilledImages.length > 0 || gotDeleteImages;
+
 		setValue(
 			id,
-			images
-				.filter(({ status }) => status === EImageStatus.UPLOADED)
-				.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
-					fileName: name,
-					dataURL: drawingDataURL || dataURL,
-					uploadResponse,
-				})),
+			uploadedImages.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
+				fileName: name,
+				dataURL: drawingDataURL || dataURL,
+				uploadResponse,
+			})),
 			{ shouldDirty }
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
