@@ -15,5 +15,5 @@ export interface ILocationModalProps
 	locationModalStyles?: string | undefined;
 	onClose: () => void;
 	onConfirm: (values: ILocationFieldValues) => void;
-	updateFormValues: (values: ILocationFieldValues) => void;
+	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 }

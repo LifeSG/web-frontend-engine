@@ -180,13 +180,13 @@ export const LocationSearch = ({
 				!mustHavePostalCode || LocationHelper.hasGotAddressValue(locationFieldValue.postalCode);
 
 			if (isEmpty(locationFieldValue) || !validPostalCode) {
-				updateFormValues({});
+				updateFormValues({}, false);
 				onChangeSelectedAddressInfo({});
 				return;
 			}
 
 			// complete form state with valid location
-			updateFormValues(locationFieldValue);
+			updateFormValues(locationFieldValue, false);
 			onChangeSelectedAddressInfo(locationFieldValue);
 			setQueryString(locationFieldValue.address);
 		};

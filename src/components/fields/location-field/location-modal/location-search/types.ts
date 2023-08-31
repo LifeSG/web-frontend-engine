@@ -18,6 +18,6 @@ export interface ILocationSearchProps {
 	showLocationModal: boolean;
 	mapPickedLatLng?: ILocationCoord | undefined;
 	formValues?: ILocationFieldValues | undefined;
-	updateFormValues: (values: ILocationFieldValues) => void;
+	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
 }

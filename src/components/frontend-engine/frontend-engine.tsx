@@ -75,6 +75,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		addCustomValidation: YupHelper.addCondition,
 		dispatchFieldEvent,
 		getValues,
+		isDirty: formState.isDirty,
 		isValid: checkIsFormValid,
 		removeFieldEventListener,
 		reset: (values, options) => {

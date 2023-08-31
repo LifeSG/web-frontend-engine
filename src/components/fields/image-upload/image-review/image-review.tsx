@@ -143,7 +143,12 @@ export const ImageReview = (props: IProps) => {
 
 	const handleDeleteDecision = (decision: boolean) => {
 		if (decision) {
-			setImages(images.filter((image, i) => i !== activeFileIndex));
+			setImages((prev) =>
+				prev.map((image, i) => ({
+					...image,
+					...(i === activeFileIndex ? { status: EImageStatus.TO_DELETE } : {}),
+				}))
+			);
 			setActiveFileIndex(Math.max(0, activeFileIndex - 1));
 		}
 		setActivePrompt(null);

@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
 import { usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
@@ -6,7 +7,6 @@ import { EImageStatus, IImage, ISharedImageProps, TImageUploadOutputFileType, TU
 
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	editImage: boolean;
-	onChange: (...event: any[]) => void;
 	compress: boolean;
 	dimensions: { width: number; height: number };
 	outputType: TImageUploadOutputFileType;
@@ -25,11 +25,12 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { accepts, compress, dimensions, editImage, onChange, maxSizeInKb, outputType, upload, value } = props;
+	const { accepts, compress, dimensions, editImage, id, maxSizeInKb, outputType, upload, value } = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const [managerErrorCount, setManagerErrorCount] = useState(0);
 	const previousValue = usePrevious(value);
+	const { setValue, getFieldState } = useFormContext();
 	const sessionId = useRef<string>();
 
 	// =============================================================================
@@ -117,6 +118,9 @@ export const ImageManager = (props: IProps) => {
 					case EImageStatus.UPLOAD_READY:
 						uploadImage(index, image);
 						break;
+					case EImageStatus.TO_DELETE:
+						setImages((prev) => prev.filter(({ status }) => status !== EImageStatus.TO_DELETE));
+						break;
 				}
 			}
 		});
@@ -137,17 +141,27 @@ export const ImageManager = (props: IProps) => {
 		setErrorCount((prev) => Math.max(0, prev + updatedManagerErrorCount - managerErrorCount));
 		setManagerErrorCount(updatedManagerErrorCount);
 
-		onChange({
-			target: {
-				value: images
-					.filter(({ status }) => status === EImageStatus.UPLOADED)
-					.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
-						fileName: name,
-						dataURL: drawingDataURL || dataURL,
-						uploadResponse,
-					})),
-			},
-		});
+		const uploadedImages = images.filter(({ status }) => status === EImageStatus.UPLOADED);
+		const notPrefilledImages = uploadedImages.filter(({ addedFrom }) => addedFrom !== "schema");
+		const gotDeleteImages = images.filter(({ status }) => status === EImageStatus.TO_DELETE).length > 0;
+
+		/**
+		 * should dirty if
+		 * - it is dirty in the first place
+		 * - there are non-prefilled images
+		 * - user deleted image (differentiated from reset)
+		 */
+		const shouldDirty = notPrefilledImages.length > 0 || gotDeleteImages;
+
+		setValue(
+			id,
+			uploadedImages.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
+				fileName: name,
+				dataURL: drawingDataURL || dataURL,
+				uploadResponse,
+			})),
+			{ shouldDirty }
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [images.map((image) => image.status).join(",")]);
 
