@@ -1,9 +1,10 @@
 import capitalize from "lodash/capitalize";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { FileHelper } from "../../utils/file-helper"; // import directly to avoid circular dependency
 
 export const ERROR_MESSAGES = {
 	COMMON: {
+		FIELD_REQUIRED: "This field is required",
 		REQUIRED_OPTION: "An option is required",
 		REQUIRED_OPTIONS: "Both options are required",
 	},
@@ -76,5 +77,9 @@ export const ERROR_MESSAGES = {
 	}),
 	UNIT_NUMBER: {
 		INVALID: "Invalid unit number",
+	},
+	LOCATION: {
+		MUST_HAVE_POSTAL_CODE: "Selected location must have postal code",
+		INVALID_LOCATION: "Invalid location",
 	},
 };

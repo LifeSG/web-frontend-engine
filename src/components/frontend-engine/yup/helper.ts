@@ -9,6 +9,7 @@ import {
 	TYupSchemaType,
 	YUP_CONDITIONS,
 } from "./types";
+import { ERROR_MESSAGES } from "../../shared";
 
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 
@@ -114,7 +115,7 @@ export namespace YupHelper {
 
 			switch (true) {
 				case rule.required:
-					yupSchema = yupSchema.required(rule.errorMessage || "This field is required");
+					yupSchema = yupSchema.required(rule.errorMessage || ERROR_MESSAGES.COMMON.FIELD_REQUIRED);
 					break;
 				case !!rule.email:
 				case !!rule.url:

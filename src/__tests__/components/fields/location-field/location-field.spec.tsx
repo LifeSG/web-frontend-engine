@@ -2,17 +2,27 @@ import { MediaWidths } from "@lifesg/react-design-system";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { useEffect, useRef } from "react";
-import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
+import {
+	FrontendEngine,
+	IFrontendEngineData,
+	IFrontendEngineProps,
+	IFrontendEngineRef,
+	IYupValidationRule,
+} from "../../../../components";
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import {
+	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
+	getErrorMessage,
 	getResetButton,
 	getResetButtonProps,
+	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
 import {
@@ -89,10 +99,11 @@ interface IRenderProps {
 	overrideSchema?: TOverrideSchema;
 	withEvents: boolean;
 	locationDetails?: TSetCurrentLocationDetail;
+	validation?: IYupValidationRule[];
 }
 
 const renderComponent = (
-	{ overrideField, overrideSchema, locationDetails, withEvents }: IRenderProps = { withEvents: false }
+	{ overrideField, overrideSchema, locationDetails, withEvents, validation }: IRenderProps = { withEvents: false }
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -103,8 +114,10 @@ const renderComponent = (
 					[COMPONENT_ID]: {
 						label: LABEL,
 						uiType: UI_TYPE,
+						validation,
 						...overrideField,
 					},
+					...getSubmitButtonProps(),
 				},
 			},
 		},
@@ -1129,6 +1142,85 @@ describe("location-input-group", () => {
 
 	describe("customisation", () => {
 		it.todo("should support placeholder texts");
+	});
+
+	describe("validation", () => {
+		it("should allow empty if validation not required", async () => {
+			renderComponent({
+				withEvents: false,
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalled();
+		});
+
+		describe.each`
+			name                 | value
+			${"empty"}           | ${{}}
+			${"lat lng missing"} | ${{ address: "Fusionopolis View" }}
+			${"lng missing"}     | ${{ lat: 1 }}
+			${"lat missing"}     | ${{ lng: 1 }}
+		`("$name", (name, value) => {
+			it("should validate if required", async () => {
+				renderComponent({
+					validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: value,
+						},
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(getErrorMessage()).toBeInTheDocument();
+			});
+		});
+
+		it("should pass validation if required values are provided", async () => {
+			renderComponent({
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+				withEvents: false,
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: {
+							address: "Fusionopolis View",
+							lat: 1,
+							lng: 1,
+						},
+					},
+				},
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalled();
+		});
+
+		it("should validate mustHavePostalCode", async () => {
+			renderComponent({
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+				withEvents: false,
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: {
+							address: "Fusionopolis View",
+							lat: 1,
+							lng: 1,
+						},
+					},
+				},
+				overrideField: {
+					mustHavePostalCode: true,
+				},
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText(ERROR_MESSAGES.LOCATION.MUST_HAVE_POSTAL_CODE)).toBeInTheDocument();
+		});
 	});
 
 	describe("dirty state", () => {
