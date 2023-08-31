@@ -60,15 +60,11 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			})
 				.test("is-required", isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.FIELD_REQUIRED, (value) => {
 					if (!isRequiredRule?.required) return true;
-					return !!value && Object.values(value).filter((val) => !!val).length > 0;
+					return !!value && !!value.lat && !!value.lng;
 				})
 				.test("must-have-postal-code", ERROR_MESSAGES.LOCATION.MUST_HAVE_POSTAL_CODE, (value) => {
-					if (!mustHavePostalCode) return true;
+					if (!isRequiredRule || !mustHavePostalCode) return true;
 					return LocationHelper.hasGotAddressValue(value.postalCode);
-				})
-				.test("must-have-location-data", ERROR_MESSAGES.LOCATION.INVALID_LOCATION, (value) => {
-					if (!value) return true;
-					return !!value.x && !!value.y && !!value.lat && !!value.lng;
 				}),
 			validation
 		);

@@ -1142,24 +1142,70 @@ describe("location-input-group", () => {
 	});
 
 	describe("validation", () => {
-		it("should support validation schema", async () => {
+		it("should allow empty if validation not required", async () => {
 			renderComponent({
-				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 				withEvents: false,
 			});
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getErrorMessage()).toBeInTheDocument();
+			expect(SUBMIT_FN).toBeCalled();
 		});
 
-		it("should validate mustHavePostalCode", async () => {
+		describe.each`
+			name                 | value
+			${"empty"}           | ${{}}
+			${"lat lng missing"} | ${{ address: "Fusionopolis View" }}
+			${"lng missing"}     | ${{ lat: 1 }}
+			${"lat missing"}     | ${{ lng: 1 }}
+		`("$name", (name, value) => {
+			it("should validate if required", async () => {
+				renderComponent({
+					validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: value,
+						},
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(getErrorMessage()).toBeInTheDocument();
+			});
+		});
+
+		it("should pass validation if required values are provided", async () => {
 			renderComponent({
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 				withEvents: false,
 				overrideSchema: {
 					defaultValues: {
 						[COMPONENT_ID]: {
 							address: "Fusionopolis View",
+							lat: 1,
+							lng: 1,
+						},
+					},
+				},
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalled();
+		});
+
+		it("should validate mustHavePostalCode", async () => {
+			renderComponent({
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+				withEvents: false,
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: {
+							address: "Fusionopolis View",
+							lat: 1,
+							lng: 1,
 						},
 					},
 				},
@@ -1172,22 +1218,5 @@ describe("location-input-group", () => {
 
 			expect(screen.getByText(ERROR_MESSAGES.LOCATION.MUST_HAVE_POSTAL_CODE)).toBeInTheDocument();
 		});
-	});
-
-	it("should contain lat, lng, x, and y", async () => {
-		renderComponent({
-			withEvents: false,
-			overrideSchema: {
-				defaultValues: {
-					[COMPONENT_ID]: {
-						address: "Fusionopolis View",
-					},
-				},
-			},
-		});
-
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
-		expect(screen.getByText(ERROR_MESSAGES.LOCATION.INVALID_LOCATION)).toBeInTheDocument();
 	});
 });
