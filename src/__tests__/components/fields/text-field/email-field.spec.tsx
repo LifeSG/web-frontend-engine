@@ -3,11 +3,12 @@ import userEvent from "@testing-library/user-event";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
-import { ITextFieldSchema } from "../../../../components/fields";
+import { IEmailFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
@@ -19,9 +20,9 @@ import {
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
-const COMPONENT_LABEL = "Textfield";
-const UI_TYPE = "text-field";
-const EXPECTED_TEXT = "test this has been pasted";
+const COMPONENT_LABEL = "Email";
+const UI_TYPE = "email-field";
+const EXPECTED_VALUE = "aa@aa.com";
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
 	sections: {
@@ -39,7 +40,7 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-const renderComponent = (overrideField?: Partial<ITextFieldSchema> | undefined, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (overrideField?: TOverrideField<IEmailFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
 	merge(json, {
 		sections: {
@@ -53,7 +54,7 @@ const renderComponent = (overrideField?: Partial<ITextFieldSchema> | undefined, 
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-const getTextfield = (): HTMLElement => {
+const getEmailField = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
 };
 
@@ -65,11 +66,22 @@ describe(UI_TYPE, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(getTextfield()).toBeInTheDocument();
+		expect(getEmailField()).toBeInTheDocument();
+	});
+
+	it("should validate email format", async () => {
+		renderComponent();
+
+		fireEvent.change(getEmailField(), { target: { value: "hello" } });
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(screen.getByText("Invalid email address")).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
-		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
+		renderComponent({
+			validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+		});
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -79,23 +91,23 @@ describe(UI_TYPE, () => {
 	it("should apply inputMode according to its type", () => {
 		renderComponent();
 
-		expect(getTextfield()).toHaveAttribute("inputMode", "text");
+		expect(getEmailField()).toHaveAttribute("inputMode", "email");
 	});
 
 	it("should apply maxLength attribute if max validation is specified", () => {
 		renderComponent({ validation: [{ max: 5 }] });
 
-		expect(getTextfield()).toHaveAttribute("maxLength", "5");
+		expect(getEmailField()).toHaveAttribute("maxLength", "5");
 	});
 
 	it("should apply maxLength attribute if length validation is specified", () => {
 		renderComponent({ validation: [{ length: 5 }] });
 
-		expect(getTextfield()).toHaveAttribute("maxLength", "5");
+		expect(getEmailField()).toHaveAttribute("maxLength", "5");
 	});
 
 	it("should support default value", async () => {
-		const defaultValue = "hello";
+		const defaultValue = "john@doe.tld";
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
@@ -111,9 +123,9 @@ describe(UI_TYPE, () => {
 			disabled: true,
 		});
 
-		expect(getTextfield()).toHaveAttribute("placeholder", "placeholder");
-		expect(getTextfield()).toHaveAttribute("readonly");
-		expect(getTextfield()).toBeDisabled();
+		expect(getEmailField()).toHaveAttribute("placeholder", "placeholder");
+		expect(getEmailField()).toHaveAttribute("readOnly");
+		expect(getEmailField()).toBeDisabled();
 	});
 
 	it("should not prevent copy and paste if `preventCopyAndPaste` is false", async () => {
@@ -122,10 +134,10 @@ describe(UI_TYPE, () => {
 				preventCopyAndPaste: false,
 			},
 		});
-		const textField = getTextfield();
+		const textField = getEmailField();
 		textField.focus();
-		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
-		expect(textField).toHaveValue(EXPECTED_TEXT);
+		await waitFor(() => userEvent.paste(EXPECTED_VALUE));
+		expect(textField).toHaveValue(EXPECTED_VALUE);
 	});
 
 	it("should prevent copy and paste if `preventCopyAndPaste` is true", async () => {
@@ -134,34 +146,34 @@ describe(UI_TYPE, () => {
 				preventCopyAndPaste: true,
 			},
 		});
-		const textField = getTextfield();
+		const textField = getEmailField();
 		textField.focus();
-		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
+		await waitFor(() => userEvent.paste(EXPECTED_VALUE));
 		expect(textField).toHaveValue("");
 	});
 
 	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
-	it("should allow drag and drop text into field if preventDragAndDrop is not true", () => {
+	it("should allow drag and drop email into field if preventDragAndDrop is not true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: true,
 			},
 		});
-		const textField = getTextfield();
-		const event = fireEvent.drop(textField, { target: { value: EXPECTED_TEXT } });
-		expect(textField).toHaveValue(EXPECTED_TEXT);
+		const textField = getEmailField();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_VALUE } });
+		expect(textField).toHaveValue(EXPECTED_VALUE);
 		expect(event).toBe(false);
 	});
 
 	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
-	it("should prevent drag & drop text into field if preventDragAndDrop is true", () => {
+	it("should prevent drag & drop email into field if preventDragAndDrop is true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: false,
 			},
 		});
-		const textField = getTextfield();
-		const event = fireEvent.drop(textField, { target: { value: EXPECTED_TEXT } });
+		const textField = getEmailField();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_VALUE } });
 		expect(event).toBe(true);
 	});
 
@@ -169,23 +181,23 @@ describe(UI_TYPE, () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
 
-			fireEvent.change(getTextfield(), { target: { value: "hello" } });
+			fireEvent.change(getEmailField(), { target: { value: "john@doe.com" } });
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getTextfield()).toHaveValue("");
+			expect(getEmailField()).toHaveValue("");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
-			const defaultValue = "hello";
+			const defaultValue = "john@doe.com";
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
-			fireEvent.change(getTextfield(), { target: { value: "world" } });
+			fireEvent.change(getEmailField(), { target: { value: "lorem@ipsum.com" } });
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getTextfield()).toHaveValue(defaultValue);
+			expect(getEmailField()).toHaveValue(defaultValue);
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});
