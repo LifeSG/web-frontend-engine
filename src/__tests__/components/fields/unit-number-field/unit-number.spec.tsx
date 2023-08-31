@@ -1,9 +1,13 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IUnitNumberFieldSchema } from "../../../../components/fields";
-import { IFrontendEngineData } from "../../../../components/frontend-engine";
+import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import {
 	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
 	getField,
@@ -12,32 +16,39 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { ERROR_MESSAGES } from "../../../../components/shared";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Unit Number";
 const UI_TYPE = "unit-number-field";
+const JSON_SCHEMA: IFrontendEngineData = {
+	id: FRONTEND_ENGINE_ID,
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				[COMPONENT_ID]: {
+					label: COMPONENT_LABEL,
+					uiType: UI_TYPE,
+				},
+				...getSubmitButtonProps(),
+				...getResetButtonProps(),
+			},
+		},
+	},
+};
 
 const renderComponent = (overrideField?: TOverrideField<IUnitNumberFieldSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = {
-		id: FRONTEND_ENGINE_ID,
+	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
+	merge(json, {
 		sections: {
 			section: {
-				uiType: "section",
 				children: {
-					[COMPONENT_ID]: {
-						label: COMPONENT_LABEL,
-						uiType: UI_TYPE,
-						...overrideField,
-					},
-					...getSubmitButtonProps(),
-					...getResetButtonProps(),
+					[COMPONENT_ID]: overrideField,
 				},
 			},
 		},
-		...overrideSchema,
-	};
+	});
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
@@ -47,6 +58,11 @@ const getFloorInputField = (): HTMLElement => {
 
 const getUnitInputField = (): HTMLElement => {
 	return getField("textbox", "unit-input");
+};
+
+const setFieldValue = (floor: string, unit: string) => {
+	fireEvent.change(getFloorInputField(), { target: { value: floor } });
+	fireEvent.change(getUnitInputField(), { target: { value: unit } });
 };
 
 describe(UI_TYPE, () => {
@@ -96,8 +112,7 @@ describe(UI_TYPE, () => {
 			const unitNumberValue = `${floorNumber}-${unitNumber}`;
 			renderComponent({ validation: [{ required: true }] });
 
-			fireEvent.change(getFloorInputField(), { target: { value: floorNumber } });
-			fireEvent.change(getUnitInputField(), { target: { value: unitNumber } });
+			setFieldValue(floorNumber, unitNumber);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: unitNumberValue }));
@@ -108,8 +123,7 @@ describe(UI_TYPE, () => {
 			const unitNumber = "";
 			renderComponent({ validation: [{ required: true }] });
 
-			fireEvent.change(getFloorInputField(), { target: { value: floorNumber } });
-			fireEvent.change(getUnitInputField(), { target: { value: unitNumber } });
+			setFieldValue(floorNumber, unitNumber);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGES.UNIT_NUMBER.INVALID)).toBeInTheDocument();
@@ -121,8 +135,7 @@ describe(UI_TYPE, () => {
 			const customError = "Please enter a valid unit number.";
 			renderComponent({ validation: [{ unitNumberFormat: true, errorMessage: customError }] });
 
-			fireEvent.change(getFloorInputField(), { target: { value: floorNumber } });
-			fireEvent.change(getUnitInputField(), { target: { value: unitNumber } });
+			setFieldValue(floorNumber, unitNumber);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(customError)).toBeInTheDocument();
@@ -135,8 +148,7 @@ describe(UI_TYPE, () => {
 			const unitNumber = "20";
 			renderComponent();
 
-			fireEvent.change(getFloorInputField(), { target: { value: floorNumber } });
-			fireEvent.change(getUnitInputField(), { target: { value: unitNumber } });
+			setFieldValue(floorNumber, unitNumber);
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -151,14 +163,74 @@ describe(UI_TYPE, () => {
 			const defaultValue = `${defaultFloor}-${defaultUnit}`;
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
-			fireEvent.change(getFloorInputField(), { target: { value: "12" } });
-			fireEvent.change(getUnitInputField(), { target: { value: "34" } });
+			setFieldValue("12", "34");
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(getFloorInputField()).toHaveValue(defaultFloor);
 			expect(getUnitInputField()).toHaveValue(defaultUnit);
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
+	});
+
+	describe("dirty state", () => {
+		let formIsDirty: boolean;
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			formIsDirty = ref.current.isDirty;
+		};
+
+		beforeEach(() => {
+			formIsDirty = undefined;
+		});
+
+		it("should mount without setting field state as dirty", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should set form state as dirty if user modifies the field", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			setFieldValue("12", "34");
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(true);
+		});
+
+		it("should support default value without setting form state as dirty", () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
+					onClick={handleClick}
+				/>
+			);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset and revert form dirty state to false", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			setFieldValue("12", "34");
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset to default value without setting form state as dirty", () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
+					onClick={handleClick}
+				/>
+			);
+			setFieldValue("12", "34");
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
 		});
 	});
 });

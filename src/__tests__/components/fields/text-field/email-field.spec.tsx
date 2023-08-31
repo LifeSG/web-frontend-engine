@@ -4,10 +4,11 @@ import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IEmailFieldSchema } from "../../../../components/fields";
-import { IFrontendEngineData } from "../../../../components/types";
+import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
@@ -199,6 +200,67 @@ describe(UI_TYPE, () => {
 
 			expect(getEmailField()).toHaveValue(defaultValue);
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
+	});
+
+	describe("dirty state", () => {
+		let formIsDirty: boolean;
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			formIsDirty = ref.current.isDirty;
+		};
+
+		beforeEach(() => {
+			formIsDirty = undefined;
+		});
+
+		it("should mount without setting field state as dirty", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should set form state as dirty if user modifies the field", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.change(getEmailField(), { target: { value: "world" } });
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(true);
+		});
+
+		it("should support default value without setting form state as dirty", () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "john@doe.tld" } }}
+					onClick={handleClick}
+				/>
+			);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset and revert form dirty state to false", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.change(getEmailField(), { target: { value: "world" } });
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset to default value without setting form state as dirty", () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "john@doe.tld" } }}
+					onClick={handleClick}
+				/>
+			);
+			fireEvent.change(getEmailField(), { target: { value: "world" } });
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
 		});
 	});
 });

@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { setupJestCanvasMock } from "jest-canvas-mock";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IContactFieldSchema, TSingaporeNumberRule } from "../../../../components/fields";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
@@ -22,28 +24,36 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "contact-field";
 const COMPONENT_LABEL = "Contact Number";
+const JSON_SCHEMA: IFrontendEngineData = {
+	id: FRONTEND_ENGINE_ID,
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				[COMPONENT_ID]: {
+					label: COMPONENT_LABEL,
+					uiType: UI_TYPE,
+				},
+				...getSubmitButtonProps(),
+				...getResetButtonProps(),
+			},
+		},
+	},
+};
 
 jest.setTimeout(20000);
 
 const renderComponent = (overrideField?: TOverrideField<IContactFieldSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = {
-		id: FRONTEND_ENGINE_ID,
+	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
+	merge(json, {
 		sections: {
 			section: {
-				uiType: "section",
 				children: {
-					[COMPONENT_ID]: {
-						label: COMPONENT_LABEL,
-						uiType: UI_TYPE,
-						...overrideField,
-					},
-					...getSubmitButtonProps(),
-					...getResetButtonProps(),
+					[COMPONENT_ID]: overrideField,
 				},
 			},
 		},
-		...overrideSchema,
-	};
+	});
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
@@ -345,36 +355,20 @@ describe(UI_TYPE, () => {
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 			formIsDirty = ref.current.isDirty;
 		};
-		const json: IFrontendEngineData = {
-			id: FRONTEND_ENGINE_ID,
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						[COMPONENT_ID]: {
-							label: COMPONENT_LABEL,
-							uiType: UI_TYPE,
-						},
-						...getSubmitButtonProps(),
-						...getResetButtonProps(),
-					},
-				},
-			},
-		};
 
 		beforeEach(() => {
 			formIsDirty = undefined;
 		});
 
 		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(false);
 		});
 
 		it("should set form state as dirty if user modifies the field", () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 			fireEvent.change(getContactField(), { target: { value: "+65 91234567" } });
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
@@ -384,7 +378,7 @@ describe(UI_TYPE, () => {
 		it("should support default value without setting form state as dirty", () => {
 			render(
 				<FrontendEngineWithCustomButton
-					data={{ ...json, defaultValues: { [COMPONENT_ID]: "91234567" } }}
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "91234567" } }}
 					onClick={handleClick}
 				/>
 			);
@@ -394,7 +388,7 @@ describe(UI_TYPE, () => {
 		});
 
 		it("should reset and revert form dirty state to false", () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 			fireEvent.change(getContactField(), { target: { value: "+65 91234567" } });
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
@@ -405,7 +399,7 @@ describe(UI_TYPE, () => {
 		it("should reset to default value without setting form state as dirty", () => {
 			render(
 				<FrontendEngineWithCustomButton
-					data={{ ...json, defaultValues: { [COMPONENT_ID]: "91234567" } }}
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "91234567" } }}
 					onClick={handleClick}
 				/>
 			);
