@@ -3,10 +3,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { IDateFieldSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
-import { IFrontendEngineData } from "../../../../components/types";
+import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
@@ -53,6 +54,14 @@ const getMonthInput = (): HTMLElement => {
 
 const getYearInput = (): HTMLElement => {
 	return getField("textbox", "year");
+};
+
+const changeDate = async (day: string, month: string, year: string) => {
+	fireEvent.focus(getDayInput());
+	fireEvent.change(getDayInput(), { target: { value: day } });
+	fireEvent.change(getMonthInput(), { target: { value: month } });
+	fireEvent.change(getYearInput(), { target: { value: year } });
+	await waitFor(() => fireEvent.click(screen.getByText("Done")));
 };
 
 describe(UI_TYPE, () => {
@@ -116,11 +125,7 @@ describe(UI_TYPE, () => {
 		`("$dateFormat", ({ dateFormat, value }) => {
 			it("should support date format", async () => {
 				renderComponent({ dateFormat });
-				fireEvent.focus(getDayInput());
-				fireEvent.change(getDayInput(), { target: { value: "25" } });
-				fireEvent.change(getMonthInput(), { target: { value: "01" } });
-				fireEvent.change(getYearInput(), { target: { value: "2022" } });
-				fireEvent.click(screen.getByText("Done"));
+				await changeDate("25", "01", "2022");
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
 				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
@@ -183,9 +188,7 @@ describe(UI_TYPE, () => {
 		it(`should ignore the invalid input values if there is validation for ${condition} dates`, async () => {
 			renderComponent({ validation: [config] });
 
-			fireEvent.change(getDayInput(), { target: { value: invalid[0] } });
-			fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
-			fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
+			await changeDate(invalid[0], invalid[1], invalid[2]);
 			fireEvent.click(getField("button", "Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -206,19 +209,13 @@ describe(UI_TYPE, () => {
 		it(`should be able to validate for ${condition} dates for a different date format`, async () => {
 			renderComponent({ validation: [{ dateFormat: "d MMMM uuuu", ...config }] });
 
-			fireEvent.change(getDayInput(), { target: { value: invalid[0] } });
-			fireEvent.change(getMonthInput(), { target: { value: invalid[1] } });
-			fireEvent.change(getYearInput(), { target: { value: invalid[2] } });
+			await changeDate(invalid[0], invalid[1], invalid[2]);
 			fireEvent.click(getField("button", "Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
-			fireEvent.focus(getDayInput());
-			fireEvent.change(getDayInput(), { target: { value: valid[0] } });
-			fireEvent.change(getMonthInput(), { target: { value: valid[1] } });
-			fireEvent.change(getYearInput(), { target: { value: valid[2] } });
-			await waitFor(() => fireEvent.click(getField("button", "Done")));
+			await changeDate(valid[0], valid[1], valid[2]);
 
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
@@ -228,17 +225,13 @@ describe(UI_TYPE, () => {
 		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
 		renderComponent({ validation: [{ minDate: "2022-01-15" }, { future: true }, { notPast: true }] });
 
-		fireEvent.change(getDayInput(), { target: { value: "05" } });
-		fireEvent.change(getMonthInput(), { target: { value: "01" } });
-		fireEvent.change(getYearInput(), { target: { value: "2022" } });
+		await changeDate("05", "01", "2022");
 		fireEvent.click(getField("button", "Done"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
-		fireEvent.change(getDayInput(), { target: { value: "15" } });
-		fireEvent.change(getMonthInput(), { target: { value: "01" } });
-		fireEvent.change(getYearInput(), { target: { value: "2022" } });
+		await changeDate("15", "01", "2022");
 		fireEvent.click(getField("button", "Done"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -249,17 +242,13 @@ describe(UI_TYPE, () => {
 		jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
 		renderComponent({ validation: [{ maxDate: "2021-12-15" }, { past: true }, { notFuture: true }] });
 
-		fireEvent.change(getDayInput(), { target: { value: "30" } });
-		fireEvent.change(getMonthInput(), { target: { value: "12" } });
-		fireEvent.change(getYearInput(), { target: { value: "2021" } });
+		await changeDate("30", "12", "2021");
 		fireEvent.click(getField("button", "Done"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
-		fireEvent.change(getDayInput(), { target: { value: "15" } });
-		fireEvent.change(getMonthInput(), { target: { value: "12" } });
-		fireEvent.change(getYearInput(), { target: { value: "2021" } });
+		await changeDate("15", "12", "2021");
 		fireEvent.click(getField("button", "Done"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -270,11 +259,7 @@ describe(UI_TYPE, () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
 
-			fireEvent.focus(getDayInput());
-			fireEvent.change(getDayInput(), { target: { value: "25" } });
-			fireEvent.change(getMonthInput(), { target: { value: "01" } });
-			fireEvent.change(getYearInput(), { target: { value: "2022" } });
-			fireEvent.click(screen.getByText("Done"));
+			await changeDate("25", "01", "2022");
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -291,11 +276,7 @@ describe(UI_TYPE, () => {
 			const defaultValue = `${defaultYear}-${defaultMonth}-${defaultDay}`;
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
-			fireEvent.focus(getDayInput());
-			fireEvent.change(getDayInput(), { target: { value: "25" } });
-			fireEvent.change(getMonthInput(), { target: { value: "05" } });
-			fireEvent.change(getYearInput(), { target: { value: "2021" } });
-			fireEvent.click(screen.getByText("Done"));
+			await changeDate("25", "05", "2021");
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -313,11 +294,7 @@ describe(UI_TYPE, () => {
 			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse(currentDate));
 			renderComponent({ useCurrentDate: true });
 
-			fireEvent.focus(getDayInput());
-			fireEvent.change(getDayInput(), { target: { value: "25" } });
-			fireEvent.change(getMonthInput(), { target: { value: "05" } });
-			fireEvent.change(getYearInput(), { target: { value: "2021" } });
-			fireEvent.click(screen.getByText("Done"));
+			await changeDate("25", "05", "2021");
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -325,6 +302,84 @@ describe(UI_TYPE, () => {
 			expect(getMonthInput()).toHaveAttribute("value", currentMonth);
 			expect(getYearInput()).toHaveAttribute("value", currentYear);
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: currentDate }));
+		});
+	});
+
+	describe("dirty state", () => {
+		let formIsDirty: boolean;
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			formIsDirty = ref.current.isDirty;
+		};
+		const json: IFrontendEngineData = {
+			id: FRONTEND_ENGINE_ID,
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						[COMPONENT_ID]: {
+							label: "Date",
+							uiType: UI_TYPE,
+						},
+						...getSubmitButtonProps(),
+						...getResetButtonProps(),
+					},
+				},
+			},
+		};
+
+		beforeEach(() => {
+			formIsDirty = undefined;
+		});
+
+		it("should mount without setting form state as dirty", () => {
+			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should set form state as dirty if user modifies the field", async () => {
+			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			await changeDate("25", "01", "2022");
+
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(true);
+		});
+
+		it("should support default value without setting form state as dirty", () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...json, defaultValues: { [COMPONENT_ID]: "2022-02-25" } }}
+					onClick={handleClick}
+				/>
+			);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset and revert form dirty state to false", async () => {
+			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			await changeDate("25", "01", "2022");
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset to default value without setting form state as dirty", async () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...json, defaultValues: { [COMPONENT_ID]: "2022-02-25" } }}
+					onClick={handleClick}
+				/>
+			);
+			await changeDate("25", "01", "2022");
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
 		});
 	});
 });

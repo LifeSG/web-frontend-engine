@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks/use-validation-config";
@@ -32,11 +33,11 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
-		onChange,
 		error,
 	} = props;
 
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
+	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
@@ -74,8 +75,8 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const updateFormValues = (updatedValues: ILocationFieldValues) => {
-		onChange?.({ target: { value: updatedValues } });
+	const updateFormValues = (updatedValues: ILocationFieldValues, shouldDirty = true) => {
+		setValue(id, updatedValues, { shouldDirty });
 	};
 
 	// =============================================================================

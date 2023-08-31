@@ -447,6 +447,26 @@ CheckIsValid.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
+export const CheckUserIntervention: StoryFn<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const handleClick = () => {
+		action("isDirty")(ref.current.isDirty);
+	};
+
+	return (
+		<>
+			<FrontendEngine data={DATA} ref={ref} />
+			<br />
+			<Button.Default styleType="secondary" onClick={handleClick}>
+				Check if user has edited the form
+			</Button.Default>
+		</>
+	);
+};
+CheckUserIntervention.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
 interface IYupCustomValidationRule {
 	mustBeHello?: boolean | undefined;
 }

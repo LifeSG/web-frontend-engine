@@ -135,6 +135,12 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	dispatchFieldEvent: <T = any>(type: string, id: string, detail?: T) => boolean;
 	/** gets form values */
 	getValues: () => TFrontendEngineValues;
+	/**
+	 * checks if form has been changed by user
+	 *
+	 * defaultValues do not set this to true
+	 */
+	isDirty: boolean;
 	/** checks if form is valid */
 	isValid: () => boolean;
 	/** adds custom validation rule */
