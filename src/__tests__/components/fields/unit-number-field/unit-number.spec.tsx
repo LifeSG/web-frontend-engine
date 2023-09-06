@@ -201,7 +201,7 @@ describe(UI_TYPE, () => {
 		it("should support default value without setting form state as dirty", () => {
 			render(
 				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "01-02" } }}
 					onClick={handleClick}
 				/>
 			);
@@ -222,7 +222,7 @@ describe(UI_TYPE, () => {
 		it("should reset to default value without setting form state as dirty", () => {
 			render(
 				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "01-02" } }}
 					onClick={handleClick}
 				/>
 			);
