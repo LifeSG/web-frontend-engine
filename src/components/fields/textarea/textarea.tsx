@@ -15,7 +15,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { chipTexts, chipPosition, rows = 1, resizable, label, validation, ...otherSchema },
+		schema: { className, chipTexts, chipPosition, rows = 1, resizable, label, validation, ...otherSchema },
 		id,
 		name,
 		onChange,
@@ -83,6 +83,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 						<Chip
 							key={text}
 							id={TestHelper.generateId(id, `chip-${kebabCase(text)}`, index)}
+							className={className ? `${className}-chip ${className}-chip-${kebabCase(text)}` : undefined}
 							onClick={handleChipOnClick(text)}
 						>
 							{text}
@@ -102,6 +103,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 					{...otherProps}
 					id={id + "-base"}
 					data-testid={TestHelper.generateId(id, "textarea")}
+					className={className}
 					name={name}
 					maxLength={maxLength}
 					rows={rows}
