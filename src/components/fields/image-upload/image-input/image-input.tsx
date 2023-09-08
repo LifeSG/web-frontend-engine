@@ -17,12 +17,13 @@ import {
 } from "./image-input.styles";
 
 interface IImageInputProps extends ISharedImageProps {
-	label: string;
 	buttonLabel?: string | undefined;
+	className?: string | undefined;
 	description?: string | undefined;
 	dimensions: { width: number; height: number };
-	validation: IImageUploadValidationRule[];
 	errorMessage?: string | undefined;
+	label: string;
+	validation: IImageUploadValidationRule[];
 }
 
 /**
@@ -34,6 +35,7 @@ export const ImageInput = (props: IImageInputProps) => {
 	// =============================================================================
 	const {
 		id,
+		className,
 		label,
 		buttonLabel = "Add photos",
 		description,
@@ -176,6 +178,7 @@ export const ImageInput = (props: IImageInputProps) => {
 		<Wrapper
 			id={TestHelper.generateId(id)}
 			data-testid={TestHelper.generateId(id)}
+			className={className}
 			aria-invalid={!!errorMessage}
 			aria-describedby={!!errorMessage && TestHelper.generateId(id, "error")}
 		>

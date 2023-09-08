@@ -55,7 +55,8 @@ const PALETTE_COLORS = [
 ];
 
 interface IProps extends ISharedImageProps {
-	capture?: TFileCapture;
+	capture?: TFileCapture | undefined;
+	className?: string | undefined;
 	compress?: boolean | undefined;
 	dimensions: { width: number; height: number };
 	onExit: () => void;
@@ -70,6 +71,7 @@ export const ImageReview = (props: IProps) => {
 	const {
 		accepts,
 		capture,
+		className,
 		compress,
 		dimensions,
 		id = "image-review",
@@ -254,7 +256,7 @@ export const ImageReview = (props: IProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderHeader = () => (
-		<HeaderSection drawActive={drawActive}>
+		<HeaderSection className={className ? `${className}-header` : undefined} drawActive={drawActive}>
 			{!drawActive ? (
 				<>
 					<ReviewCloseButton
@@ -291,7 +293,7 @@ export const ImageReview = (props: IProps) => {
 	const renderContent = () => (
 		<ContentSection>
 			{images.length > 0 && (
-				<ImageEditorWrapper>
+				<ImageEditorWrapper className={className ? `${className}-editor` : undefined}>
 					<Suspense fallback={null}>
 						<ImageEditor
 							baseImageDataURL={images[activeFileIndex]?.dataURL}
@@ -344,7 +346,7 @@ export const ImageReview = (props: IProps) => {
 	);
 
 	const renderFooter = () => (
-		<FooterSection>
+		<FooterSection className={className ? `${className}-footer` : undefined}>
 			{!drawActive ? (
 				<>
 					<ImageThumbnails
@@ -399,8 +401,16 @@ export const ImageReview = (props: IProps) => {
 	);
 
 	return (
-		<Modal id={TestHelper.generateId(id, undefined, show ? "show" : "hide")} show={show}>
-			<ModalBox className={TestHelper.generateId(id, "modal-box")} statusBarHeight={0} showCloseButton={false}>
+		<Modal
+			id={TestHelper.generateId(id, undefined, show ? "show" : "hide")}
+			className={className ? `${className}-review` : undefined}
+			show={show}
+		>
+			<ModalBox
+				className={className ? `${className}-review-modal-box` : undefined}
+				statusBarHeight={0}
+				showCloseButton={false}
+			>
 				{show ? (
 					<>
 						{renderHeader()}
