@@ -96,9 +96,9 @@ describe(UI_TYPE, () => {
 		const checkboxes = getCheckboxes();
 		checkboxes.forEach((checkbox) => {
 			if (defaultValues.includes((checkbox as HTMLInputElement).value)) {
-				expect(checkbox.nextElementSibling.tagName).toBe("svg");
+				expect(checkbox.parentElement.getAttribute("aria-checked")).toBe("true");
 			} else {
-				expect(checkbox.nextElementSibling).not.toBeInTheDocument();
+				expect(checkbox.parentElement.getAttribute("aria-checked")).toBe("false");
 			}
 		});
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
@@ -288,8 +288,8 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(checkboxes[0].nextElementSibling).not.toBeInTheDocument();
-			expect(checkboxes[1].nextElementSibling).not.toBeInTheDocument();
+			expect(checkboxes[0].parentElement.getAttribute("aria-checked")).toBe("false");
+			expect(checkboxes[1].parentElement.getAttribute("aria-checked")).toBe("false");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -302,8 +302,8 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(checkboxes[0].nextElementSibling.tagName).toBe("svg");
-			expect(checkboxes[1].nextElementSibling).not.toBeInTheDocument();
+			expect(checkboxes[0].parentElement.getAttribute("aria-checked")).toBe("true");
+			expect(checkboxes[1].parentElement.getAttribute("aria-checked")).toBe("false");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
