@@ -144,7 +144,7 @@ export const LocationPicker = ({
 
 	return (
 		<LocationPickerWrapper
-			className={className}
+			className={`${className}-location-picker`}
 			id={TestHelper.generateId(id, "location-picker")}
 			data-testid={TestHelper.generateId(id, "location-picker", panelInputMode === "search" ? "hide" : "show")}
 		>

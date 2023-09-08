@@ -83,10 +83,11 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<div id={id} data-testid={TestHelper.generateId(id)}>
+		<div id={id} data-testid={TestHelper.generateId(id)} className={className}>
 			<LocationInput
 				id={id}
 				label={label}
+				className={className}
 				locationInputPlaceholder={locationInputPlaceholder}
 				onChange={(e) => e.currentTarget.blur()}
 				onFocus={(e) => {
@@ -99,6 +100,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			{!!formValue?.lat && !!formValue?.lng && (
 				<StyledStaticMap
 					id={id}
+					className={`${className}-static-map`}
 					lat={formValue.lat}
 					lng={formValue.lng}
 					staticMapPinColor={staticMapPinColor}

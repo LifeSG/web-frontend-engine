@@ -361,6 +361,7 @@ const LocationModal = ({
 			<PrefetchImage src={OFFLINE_IMAGE} alt="no internet connectivity" />
 			<Modal
 				id={TestHelper.generateId(id, "modal", showLocationModal ? "show" : "hide")}
+				className={`${className}-location-modal`}
 				show={showLocationModal}
 			>
 				<ModalBox
@@ -373,6 +374,7 @@ const LocationModal = ({
 						<>
 							<LocationSearch
 								id={id}
+								className={className}
 								onCancel={handleCancel}
 								onConfirm={handleConfirm}
 								updateFormValues={updateFormValues}
@@ -392,6 +394,7 @@ const LocationModal = ({
 							/>
 							<StyledLocationPicker
 								id={id}
+								className={className}
 								panelInputMode={panelInputMode}
 								locationAvailable={locationAvailable}
 								gettingCurrentLocation={gettingCurrentLocation}

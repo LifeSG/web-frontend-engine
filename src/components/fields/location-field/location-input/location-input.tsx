@@ -9,12 +9,13 @@ export interface ILocationInputProps extends FormInputGroupProps<string, string>
 }
 
 export const LocationInput = (props: ILocationInputProps) => {
-	const { id, label, locationInputPlaceholder = "", onFocus, value, errorMessage } = props;
+	const { className, id, label, locationInputPlaceholder = "", onFocus, value, errorMessage } = props;
 
 	return (
 		<Form.InputGroup
 			id={TestHelper.generateId(id, "location-input")}
 			data-testid={TestHelper.generateId(id, "location-input")}
+			className={`${className}-location-input`}
 			role="button"
 			label={label}
 			addon={{
