@@ -5,10 +5,11 @@ import merge from "lodash/merge";
 import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IRadioButtonGroupSchema } from "../../../../components/fields";
-import { IFrontendEngineData } from "../../../../components/frontend-engine";
+import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
@@ -246,6 +247,67 @@ describe(UI_TYPE, () => {
 			expect(apple).toBeChecked();
 			expect(berry).not.toBeChecked();
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		});
+	});
+
+	describe("dirty state", () => {
+		let formIsDirty: boolean;
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			formIsDirty = ref.current.isDirty;
+		};
+
+		beforeEach(() => {
+			formIsDirty = undefined;
+		});
+
+		it("should mount without setting field state as dirty", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should set form state as dirty if user modifies the field", async () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(getRadioButtonA());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(true);
+		});
+
+		it("should support default value without setting form state as dirty", () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: ["Apple"] } }}
+					onClick={handleClick}
+				/>
+			);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset and revert form dirty state to false", async () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(getRadioButtonA());
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset to default value without setting form state as dirty", async () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: ["Apple"] } }}
+					onClick={handleClick}
+				/>
+			);
+			fireEvent.click(getRadioButtonA());
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
 		});
 	});
 });

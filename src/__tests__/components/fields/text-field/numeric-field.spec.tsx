@@ -3,12 +3,13 @@ import userEvent from "@testing-library/user-event";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
-import { ITextFieldSchema } from "../../../../components/fields";
+import { INumericFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
@@ -20,9 +21,8 @@ import {
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
-const COMPONENT_LABEL = "Textfield";
-const UI_TYPE = "text-field";
-const EXPECTED_TEXT = "test this has been pasted";
+const COMPONENT_LABEL = "Numeric field";
+const UI_TYPE = "numeric-field";
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
 	sections: {
@@ -40,7 +40,7 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-const renderComponent = (overrideField?: Partial<ITextFieldSchema> | undefined, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (overrideField?: TOverrideField<INumericFieldSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
 	merge(json, {
 		sections: {
@@ -54,11 +54,12 @@ const renderComponent = (overrideField?: Partial<ITextFieldSchema> | undefined, 
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-const getTextfield = (): HTMLElement => {
-	return getField("textbox", COMPONENT_LABEL);
+const getNumericField = (): HTMLElement => {
+	return getField("spinbutton", COMPONENT_LABEL);
 };
 
 describe(UI_TYPE, () => {
+	const EXPECTED_NUMBER = 10;
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
@@ -66,7 +67,7 @@ describe(UI_TYPE, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(getTextfield()).toBeInTheDocument();
+		expect(getNumericField()).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {
@@ -80,23 +81,23 @@ describe(UI_TYPE, () => {
 	it("should apply inputMode according to its type", () => {
 		renderComponent();
 
-		expect(getTextfield()).toHaveAttribute("inputMode", "text");
+		expect(getNumericField()).toHaveAttribute("inputMode", "numeric");
 	});
 
-	it("should apply maxLength attribute if max validation is specified", () => {
+	it("should apply min attribute if min validation is specified", () => {
+		renderComponent({ validation: [{ min: 5 }] });
+
+		expect(getNumericField()).toHaveAttribute("min", "5");
+	});
+
+	it("should apply max attribute if max validation is specified", () => {
 		renderComponent({ validation: [{ max: 5 }] });
 
-		expect(getTextfield()).toHaveAttribute("maxLength", "5");
-	});
-
-	it("should apply maxLength attribute if length validation is specified", () => {
-		renderComponent({ validation: [{ length: 5 }] });
-
-		expect(getTextfield()).toHaveAttribute("maxLength", "5");
+		expect(getNumericField()).toHaveAttribute("max", "5");
 	});
 
 	it("should support default value", async () => {
-		const defaultValue = "hello";
+		const defaultValue = 1;
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
@@ -112,9 +113,9 @@ describe(UI_TYPE, () => {
 			disabled: true,
 		});
 
-		expect(getTextfield()).toHaveAttribute("placeholder", "placeholder");
-		expect(getTextfield()).toHaveAttribute("readonly");
-		expect(getTextfield()).toBeDisabled();
+		expect(getNumericField()).toHaveAttribute("placeholder", "placeholder");
+		expect(getNumericField()).toHaveAttribute("readOnly");
+		expect(getNumericField()).toBeDisabled();
 	});
 
 	it("should not prevent copy and paste if `preventCopyAndPaste` is false", async () => {
@@ -123,10 +124,10 @@ describe(UI_TYPE, () => {
 				preventCopyAndPaste: false,
 			},
 		});
-		const textField = getTextfield();
+		const textField = getNumericField();
 		textField.focus();
-		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
-		expect(textField).toHaveValue(EXPECTED_TEXT);
+		await waitFor(() => userEvent.paste(`${EXPECTED_NUMBER}`));
+		expect(textField).toHaveValue(EXPECTED_NUMBER);
 	});
 
 	it("should prevent copy and paste if `preventCopyAndPaste` is true", async () => {
@@ -135,34 +136,34 @@ describe(UI_TYPE, () => {
 				preventCopyAndPaste: true,
 			},
 		});
-		const textField = getTextfield();
+		const textField = getNumericField();
 		textField.focus();
-		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
-		expect(textField).toHaveValue("");
+		await waitFor(() => userEvent.paste(`${EXPECTED_NUMBER}`));
+		expect(textField).toHaveValue(null);
 	});
 
 	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
-	it("should allow drag and drop text into field if preventDragAndDrop is not true", () => {
+	it("should allow drag and drop number into field if preventDragAndDrop is not true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: true,
 			},
 		});
-		const textField = getTextfield();
-		const event = fireEvent.drop(textField, { target: { value: EXPECTED_TEXT } });
-		expect(textField).toHaveValue(EXPECTED_TEXT);
+		const textField = getNumericField();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_NUMBER } });
+		expect(textField).toHaveValue(EXPECTED_NUMBER);
 		expect(event).toBe(false);
 	});
 
 	// testing the return value of drop event because @testing-library/user-event does not respect preventDefault()
-	it("should prevent drag & drop text into field if preventDragAndDrop is true", () => {
+	it("should prevent drag & drop number into field if preventDragAndDrop is true", () => {
 		renderComponent({
 			customOptions: {
 				preventDragAndDrop: false,
 			},
 		});
-		const textField = getTextfield();
-		const event = fireEvent.drop(textField, { target: { value: EXPECTED_TEXT } });
+		const textField = getNumericField();
+		const event = fireEvent.drop(textField, { target: { value: EXPECTED_NUMBER } });
 		expect(event).toBe(true);
 	});
 
@@ -170,23 +171,23 @@ describe(UI_TYPE, () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
 
-			fireEvent.change(getTextfield(), { target: { value: "hello" } });
+			fireEvent.change(getNumericField(), { target: { value: 1 } });
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getTextfield()).toHaveValue("");
+			expect(getNumericField()).toHaveValue(null);
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
-			const defaultValue = "hello";
+			const defaultValue = 1;
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
-			fireEvent.change(getTextfield(), { target: { value: "world" } });
+			fireEvent.change(getNumericField(), { target: { value: 2 } });
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getTextfield()).toHaveValue(defaultValue);
+			expect(getNumericField()).toHaveValue(defaultValue);
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});
@@ -210,7 +211,7 @@ describe(UI_TYPE, () => {
 
 		it("should set form state as dirty if user modifies the field", () => {
 			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getTextfield(), { target: { value: "world" } });
+			fireEvent.change(getNumericField(), { target: { value: 1 } });
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(true);
@@ -219,7 +220,7 @@ describe(UI_TYPE, () => {
 		it("should support default value without setting form state as dirty", () => {
 			render(
 				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: 2 } }}
 					onClick={handleClick}
 				/>
 			);
@@ -230,7 +231,7 @@ describe(UI_TYPE, () => {
 
 		it("should reset and revert form dirty state to false", () => {
 			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getTextfield(), { target: { value: "world" } });
+			fireEvent.change(getNumericField(), { target: { value: 1 } });
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
@@ -240,11 +241,11 @@ describe(UI_TYPE, () => {
 		it("should reset to default value without setting form state as dirty", () => {
 			render(
 				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: 2 } }}
 					onClick={handleClick}
 				/>
 			);
-			fireEvent.change(getTextfield(), { target: { value: "world" } });
+			fireEvent.change(getNumericField(), { target: { value: 1 } });
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 

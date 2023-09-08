@@ -1,5 +1,7 @@
 import { LocalDate } from "@js-joda/core";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IDateFieldSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
@@ -21,26 +23,35 @@ import {
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "date-field";
+const COMPONENT_LABEL = "Date";
+const JSON_SCHEMA: IFrontendEngineData = {
+	id: FRONTEND_ENGINE_ID,
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				[COMPONENT_ID]: {
+					label: COMPONENT_LABEL,
+					uiType: UI_TYPE,
+				},
+				...getSubmitButtonProps(),
+				...getResetButtonProps(),
+			},
+		},
+	},
+};
 
 const renderComponent = (overrideField?: TOverrideField<IDateFieldSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = {
-		id: FRONTEND_ENGINE_ID,
+	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
+	merge(json, {
 		sections: {
 			section: {
-				uiType: "section",
 				children: {
-					[COMPONENT_ID]: {
-						label: "Date",
-						uiType: UI_TYPE,
-						...overrideField,
-					},
-					...getSubmitButtonProps(),
-					...getResetButtonProps(),
+					[COMPONENT_ID]: overrideField,
 				},
 			},
 		},
-		...overrideSchema,
-	};
+	});
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
@@ -310,36 +321,20 @@ describe(UI_TYPE, () => {
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 			formIsDirty = ref.current.isDirty;
 		};
-		const json: IFrontendEngineData = {
-			id: FRONTEND_ENGINE_ID,
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						[COMPONENT_ID]: {
-							label: "Date",
-							uiType: UI_TYPE,
-						},
-						...getSubmitButtonProps(),
-						...getResetButtonProps(),
-					},
-				},
-			},
-		};
 
 		beforeEach(() => {
 			formIsDirty = undefined;
 		});
 
 		it("should mount without setting form state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(false);
 		});
 
 		it("should set form state as dirty if user modifies the field", async () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 			await changeDate("25", "01", "2022");
 
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
@@ -350,7 +345,7 @@ describe(UI_TYPE, () => {
 		it("should support default value without setting form state as dirty", () => {
 			render(
 				<FrontendEngineWithCustomButton
-					data={{ ...json, defaultValues: { [COMPONENT_ID]: "2022-02-25" } }}
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "2022-02-25" } }}
 					onClick={handleClick}
 				/>
 			);
@@ -360,7 +355,7 @@ describe(UI_TYPE, () => {
 		});
 
 		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 			await changeDate("25", "01", "2022");
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
@@ -371,7 +366,7 @@ describe(UI_TYPE, () => {
 		it("should reset to default value without setting form state as dirty", async () => {
 			render(
 				<FrontendEngineWithCustomButton
-					data={{ ...json, defaultValues: { [COMPONENT_ID]: "2022-02-25" } }}
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "2022-02-25" } }}
 					onClick={handleClick}
 				/>
 			);
