@@ -2,6 +2,7 @@ import { ILocationCoord, ILocationFieldValues, TPanelInputMode, TSinglePanelInpu
 
 export interface ILocationSearchProps {
 	id?: string | undefined;
+	className: string;
 	onCancel: () => void;
 	onConfirm: () => void;
 	panelInputMode: TPanelInputMode;

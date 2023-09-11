@@ -37,6 +37,7 @@ import { ILocationSearchProps } from "./types";
 
 export const LocationSearch = ({
 	id = "location-search",
+	className,
 	formValues,
 	gettingCurrentLocation,
 
@@ -576,6 +577,7 @@ export const LocationSearch = ({
 			<SearchWrapper
 				id={TestHelper.generateId(id, "location-search")}
 				data-testid={TestHelper.generateId(id, "location-search")}
+				className={`${className}-location-search`}
 				panelInputMode={panelInputMode}
 			>
 				<SearchBarIconButton

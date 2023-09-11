@@ -19,6 +19,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const {
 		schema: {
 			buttonLabel,
+			className,
 			compress,
 			description,
 			dimensions = { width: 1000, height: 1000 },
@@ -213,6 +214,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				accepts={acceptedFileTypes}
 				dimensions={dimensions}
 				id={id}
+				className={className}
 				maxFiles={maxFiles}
 				maxSizeInKb={maxFileSize}
 				onExit={() => setShowReviewModal(false)}
@@ -239,6 +241,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			</Suspense>
 			<ImageInput
 				id={id}
+				className={className}
 				label={label}
 				description={description}
 				buttonLabel={buttonLabel}

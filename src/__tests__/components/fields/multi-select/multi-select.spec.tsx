@@ -103,7 +103,7 @@ describe(UI_TYPE, () => {
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
 		await waitFor(() => fireEvent.click(getComponent()));
-		expect(getCheckboxA().querySelector("svg")).toBeInTheDocument();
+		expect(getCheckboxA().querySelector("div[aria-checked=true]")).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
@@ -278,8 +278,8 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText("Select")).toBeInTheDocument();
-			expect(apple.querySelector("svg")).not.toBeInTheDocument();
-			expect(berry.querySelector("svg")).not.toBeInTheDocument();
+			expect(apple.querySelector("div[aria-checked=false]")).toBeInTheDocument();
+			expect(berry.querySelector("div[aria-checked=false]")).toBeInTheDocument();
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -296,8 +296,8 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText("1 selected")).toBeInTheDocument();
-			expect(apple.querySelector("svg")).toBeInTheDocument();
-			expect(berry.querySelector("svg")).not.toBeInTheDocument();
+			expect(apple.querySelector("div[aria-checked=true]")).toBeInTheDocument();
+			expect(berry.querySelector("div[aria-checked=false]")).toBeInTheDocument();
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});

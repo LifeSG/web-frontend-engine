@@ -172,6 +172,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		const schema: ITextareaSchema = {
 			uiType: "textarea",
 			label,
+			className: otherSchema.className ? `${otherSchema.className}-textarea` : undefined,
 			...textarea,
 		};
 		return showTextarea ? <FieldWrapper id={textareaId} schema={schema} Field={Textarea} /> : <></>;
