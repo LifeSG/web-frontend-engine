@@ -1,6 +1,7 @@
-import { ICustomComponentJsonSchema, TFrontendEngineFieldSchema } from "../../../frontend-engine";
+import { TFrontendEngineFieldSchema } from "../../../frontend-engine";
+import { ICustomElementJsonSchema } from "../../types";
 
-export interface IFilterItemSchema<V = undefined> extends ICustomComponentJsonSchema<"filter-item"> {
+export interface IFilterItemSchema<V = undefined> extends ICustomElementJsonSchema<"filter-item"> {
 	label: string;
 	children: Record<string, TFrontendEngineFieldSchema<V>>;
 	collapsible?: boolean | undefined;

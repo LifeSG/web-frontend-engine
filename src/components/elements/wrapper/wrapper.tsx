@@ -6,14 +6,9 @@ import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
 import { useFormSchema } from "../../../utils/hooks";
 import * as FrontendEngineCustomComponents from "../../custom";
+import { ECustomElementType, ECustomFieldType } from "../../custom";
 import * as FrontendEngineFields from "../../fields";
-import {
-	ECustomElementType,
-	ECustomFieldType,
-	EElementType,
-	EFieldType,
-	TFrontendEngineFieldSchema,
-} from "../../frontend-engine/types";
+import { EElementType, EFieldType, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { FieldWrapper } from "./field-wrapper";

@@ -5,7 +5,7 @@ import {
 	UseFormSetValue,
 	ValidationMode,
 } from "react-hook-form";
-import { IFilterSchema } from "../custom/filter/filter/types";
+import { ICustomElementJsonSchema, TCustomComponentSchema } from "../custom";
 import { IAlertSchema, ITextSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { IWrapperSchema } from "../elements/wrapper";
@@ -90,11 +90,9 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ICheckboxGroupSchema<V>
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
-	| ICustomComponentJsonSchema<string>
 	| IDateFieldSchema<V>
 	| TDateRangeFieldSchema<V>
 	| IEmailFieldSchema<V>
-	| IFilterSchema
 	| IImageUploadSchema<V>
 	| ILocationFieldSchema<V>
 	| IMultiSelectSchema<V>
@@ -110,7 +108,8 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
-	| IWrapperSchema;
+	| IWrapperSchema
+	| TCustomComponentSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -177,22 +176,6 @@ export interface IFrontendEngineBaseFieldJsonSchema<T, V = undefined, U = undefi
 	validation?: (V | U | IYupValidationRule)[];
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
-}
-
-/**
- * to support custom components from other form / frontend engines
- */
-export interface ICustomComponentJsonSchema<T> {
-	referenceKey: T;
-	uiType?: never | undefined;
-}
-
-export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> extends ICustomComponentJsonSchema<T> {
-	validation?: (V | U | IYupValidationRule)[];
-	/** render conditions
-	 * - need to fulfil at least 1 object in array (OR condition)
-	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
-	showIf?: TRenderRules[] | undefined;
 }
 
 /**
@@ -280,19 +263,6 @@ export enum EElementType {
 	H5 = "Wrapper",
 	H6 = "Wrapper",
 	P = "Wrapper",
-}
-
-/**
- * Custom element types
- * - components that do not have uiType and have specific schema to render
- */
-export enum ECustomElementType {
-	FILTER = "Filter",
-	"FILTER-ITEM" = "FilterItem",
-}
-
-export enum ECustomFieldType {
-	"FILTER-CHECKBOX" = "FilterCheckbox",
 }
 
 // =============================================================================

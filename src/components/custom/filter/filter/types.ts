@@ -1,8 +1,8 @@
-import { ICustomComponentJsonSchema } from "../../../frontend-engine";
+import { ICustomElementJsonSchema } from "../../types";
 import { IFilterCheckboxSchema } from "../filter-checkbox/types";
 import { IFilterItemSchema } from "../filter-item/types";
 
-export interface IFilterSchema extends ICustomComponentJsonSchema<"filter"> {
+export interface IFilterSchema extends ICustomElementJsonSchema<"filter"> {
 	label?: string | undefined;
 	toggleFilterButtonLabel?: string | undefined;
 	children: Record<string, IFilterItemSchema | IFilterCheckboxSchema>;
