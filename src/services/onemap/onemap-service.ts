@@ -43,7 +43,7 @@ const reverseGeocode = async ({
 // splitting the query allows it to match....
 const searchByAddress = async (param: OneMapSearchParam): Promise<OneMapSearchResults> => {
 	const { searchValue, returnGeom, getAddressDetails, pageNum } = param;
-	const res = await client.get<OneMapSearchResults>("https://developers.onemap.sg/commonapi/search", {
+	const res = await client.get<OneMapSearchResults>("https://www.onemap.gov.sg/api/common/elastic/search", {
 		params: { searchVal: searchValue, returnGeom, getAddrDetails: getAddressDetails, pageNum },
 	});
 	return res;
@@ -51,7 +51,7 @@ const searchByAddress = async (param: OneMapSearchParam): Promise<OneMapSearchRe
 
 const getStaticMapUrl = (lat: number, lng: number, width: number, height: number, pinColor: IColor): string => {
 	const { r, g, b } = pinColor;
-	return `https://developers.onemap.sg/commonapi/staticmap/getStaticImage?layerchosen=default&lat=${lat}&lng=${lng}&zoom=17&height=${height}&width=${width}&points=[${lat},${lng},"${r},${g},${b}"]`;
+	return `https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&latitude=${lat}&longitude=${lng}&zoom=17&height=${height}&width=${width}&points=[${lat},${lng},"${r},${g},${b}"]`;
 };
 
 export const OneMapService = {
