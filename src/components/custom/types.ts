@@ -5,6 +5,7 @@
 import type { IYupValidationRule, TFrontendEngineFieldSchema } from "../frontend-engine";
 import type { TRenderRules } from "../frontend-engine/yup";
 import type { IFilterSchema } from "./filter/filter/types";
+import type { IReviewSchema } from "./review";
 
 /**
  * custom element types
@@ -13,6 +14,7 @@ import type { IFilterSchema } from "./filter/filter/types";
 export enum ECustomElementType {
 	FILTER = "Filter",
 	"FILTER-ITEM" = "FilterItem",
+	REVIEW = "Review",
 }
 
 /**
@@ -25,7 +27,7 @@ export enum ECustomFieldType {
 /**
  * union type to represent all custom elements / fields schema
  */
-export type TCustomComponentSchema = ICustomElementJsonSchema<string> | IFilterSchema;
+export type TCustomComponentSchema = ICustomElementJsonSchema<string> | IFilterSchema | IReviewSchema;
 
 /**
  * base schema for custom elements
