@@ -158,10 +158,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		// attach / fire onChange event only formValidationConfig has values
 		// otherwise isValid will be returned incorrectly as true
 		if (onChange && Object.keys(formValidationConfig || {}).length) {
-			const subscription = watch((value) => {
-				onChange(value, checkIsFormValid());
+			const subscription = watch(() => {
+				onChange(getFormValues(stripUnknown), checkIsFormValid());
 			});
-			onChange(getValues(), checkIsFormValid());
+			onChange(getFormValues(stripUnknown), checkIsFormValid());
 
 			return () => subscription.unsubscribe();
 		}

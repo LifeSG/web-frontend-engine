@@ -10,6 +10,7 @@ import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	flushPromise,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
@@ -111,64 +112,90 @@ describe("frontend-engine", () => {
 		expect(getFieldOne()).toBeInTheDocument();
 	});
 
-	it("should call onChange prop on change", async () => {
+	describe("onChange", () => {
 		const onChange = jest.fn();
-		renderComponent({
-			onChange,
+		it("should call onChange prop", async () => {
+			renderComponent({
+				onChange,
+			});
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
 		});
 
-		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
-		expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
-	});
-
-	it("should return the correct validity in the onChange prop when form is prefilled with valid values", async () => {
-		const onChange = jest.fn();
-		renderComponent(
-			{ onChange },
-			{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[FIELD_ONE_ID]: {
-								uiType: "text-field",
-								label: FIELD_ONE_LABEL,
-								validation: [{ required: true }],
+		it("should return the correct validity when form is prefilled with valid values", async () => {
+			renderComponent(
+				{ onChange },
+				{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[FIELD_ONE_ID]: {
+									uiType: "text-field",
+									label: FIELD_ONE_LABEL,
+									validation: [{ required: true }],
+								},
 							},
 						},
 					},
-				},
-				defaultValues: { [FIELD_ONE_ID]: "a" },
-			}
-		);
+					defaultValues: { [FIELD_ONE_ID]: "a" },
+				}
+			);
 
-		expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), true);
-	});
+			expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), true);
+		});
 
-	it("should return the correct validity in the onChange prop when form is prefilled with invalid values", async () => {
-		const onChange = jest.fn();
-		renderComponent(
-			{ onChange },
-			{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[FIELD_ONE_ID]: {
-								uiType: "text-field",
-								label: FIELD_ONE_LABEL,
-								validation: [{ min: 5 }],
+		it("should return the correct validity when form is prefilled with invalid values", async () => {
+			renderComponent(
+				{ onChange },
+				{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[FIELD_ONE_ID]: {
+									uiType: "text-field",
+									label: FIELD_ONE_LABEL,
+									validation: [{ min: 5 }],
+								},
 							},
 						},
 					},
-				},
-				defaultValues: { [FIELD_ONE_ID]: "a" },
-			}
-		);
+					defaultValues: { [FIELD_ONE_ID]: "a" },
+				}
+			);
 
-		expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false);
+			expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false);
+		});
+
+		it("should include form values of unregistered fields if stripUnknown is not true", () => {
+			renderComponent({ onChange }, { ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } });
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+			const finalOnChangeCall = onChange.mock.calls[onChange.mock.calls.length - 1][0];
+			expect(finalOnChangeCall).toEqual({
+				[FIELD_ONE_ID]: "hello",
+				nonExistentField: "hello world",
+				submit: undefined,
+			});
+		});
+
+		it("should exclude form values of unregistered fields if stripUnknown is true", () => {
+			renderComponent(
+				{ onChange },
+				{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }
+			);
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+			const finalOnChangeCall = onChange.mock.calls[onChange.mock.calls.length - 1][0];
+			expect(finalOnChangeCall).toEqual({
+				[FIELD_ONE_ID]: "hello",
+				submit: undefined,
+			});
+		});
 	});
 
 	it("should call onSubmitError prop and not onSubmit prop on submit with validation error(s)", async () => {
