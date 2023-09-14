@@ -865,6 +865,7 @@ describe("image-upload", () => {
 			await act(async () => {
 				await flushPromise(100);
 				fireEvent.click(getResetButton());
+				await flushPromise();
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 			});
 

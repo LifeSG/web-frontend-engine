@@ -8,13 +8,13 @@ import { TDistributiveOmit } from "../../../../utils/ts-helper";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
-	TOverrideSchema,
 } from "../../../common";
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -278,9 +278,7 @@ describe(uiType, () => {
 			expect(getDayInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
 			expect(getMonthInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
 			expect(getYearInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
-			expect(SUBMIT_FN).toBeCalledWith(
-				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
-			);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {

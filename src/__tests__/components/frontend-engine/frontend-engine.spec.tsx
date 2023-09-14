@@ -171,18 +171,6 @@ describe("frontend-engine", () => {
 		expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false);
 	});
 
-	it("should call onSubmit prop on submit", async () => {
-		const onSubmit = jest.fn();
-		renderComponent({
-			onSubmit,
-		});
-
-		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
-		expect(onSubmit).toBeCalled();
-	});
-
 	it("should call onSubmitError prop and not onSubmit prop on submit with validation error(s)", async () => {
 		const onSubmit = jest.fn();
 		const onSubmitError = jest.fn();
@@ -203,17 +191,66 @@ describe("frontend-engine", () => {
 		expect(onSubmit).not.toBeCalled();
 	});
 
-	it("should return form values through getValues method", () => {
-		let formValues: Record<string, any> = {};
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formValues = ref.current.getValues();
-		};
-		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+	describe("getValues()", () => {
+		let formValues: Record<string, unknown> = {};
+		it("should return form values", () => {
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				formValues = ref.current.getValues();
+			};
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 
-		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-		fireEvent.click(getCustomButton());
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			fireEvent.click(getCustomButton());
 
-		expect(formValues?.[FIELD_ONE_ID]).toBe("hello");
+			expect(formValues).toEqual({
+				[FIELD_ONE_ID]: "hello",
+				submit: undefined,
+			});
+		});
+
+		it("should include form values of unregistered fields if stripUnknown is not true", async () => {
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.setValue("nonExistentField2", "john doe");
+				formValues = ref.current.getValues();
+			};
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } }}
+					onClick={handleClick}
+				/>
+			);
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(formValues).toEqual({
+				[FIELD_ONE_ID]: "hello",
+				nonExistentField: "hello world",
+				nonExistentField2: "john doe",
+				submit: undefined,
+			});
+		});
+
+		it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.setValue("nonExistentField2", "john doe");
+				formValues = ref.current.getValues();
+			};
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }}
+					onClick={handleClick}
+				/>
+			);
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(formValues).toEqual({
+				[FIELD_ONE_ID]: "hello",
+				submit: undefined,
+			});
+		});
 	});
 
 	it("should update field value through setValue method", async () => {
@@ -259,15 +296,64 @@ describe("frontend-engine", () => {
 		expect(isDirty).toBe(true);
 	});
 
-	it("should submit through submit method", async () => {
-		const submitFn = jest.fn();
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => ref.current.submit();
-		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} onSubmit={submitFn} />);
+	describe("submit", () => {
+		it("should submit through submit method", async () => {
+			const submitFn = jest.fn();
+			render(<FrontendEngine data={JSON_SCHEMA} onSubmit={submitFn} />);
 
-		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(getCustomButton()));
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalled();
+			expect(submitFn).toBeCalledWith({ [FIELD_ONE_ID]: "hello", submit: undefined });
+		});
+
+		it("should include form values of unregistered fields if stripUnknown is not true", async () => {
+			const submitFn = jest.fn();
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.setValue("nonExistentField2", "john doe");
+			};
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } }}
+					onClick={handleClick}
+					onSubmit={submitFn}
+				/>
+			);
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			fireEvent.click(getCustomButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(submitFn).toBeCalledWith({
+				[FIELD_ONE_ID]: "hello",
+				nonExistentField: "hello world",
+				nonExistentField2: "john doe",
+				submit: undefined,
+			});
+		});
+
+		it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
+			const submitFn = jest.fn();
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.setValue("nonExistentField2", "john doe");
+			};
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }}
+					onClick={handleClick}
+					onSubmit={submitFn}
+				/>
+			);
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			fireEvent.click(getCustomButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(submitFn).toBeCalledWith({
+				[FIELD_ONE_ID]: "hello",
+				submit: undefined,
+			});
+		});
 	});
 
 	it("should reset through reset method", async () => {

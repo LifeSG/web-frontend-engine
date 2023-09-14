@@ -277,9 +277,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getResetButton()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(
-				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
-			);
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {

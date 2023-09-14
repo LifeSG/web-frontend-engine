@@ -176,10 +176,10 @@ describe(UI_TYPE, () => {
 			jest.spyOn(LocalTime, "now").mockReturnValue(LocalTime.parse(currentTime));
 			renderComponent({ useCurrentTime: true });
 			await pickValidTime();
-			await waitFor(() => fireEvent.click(getResetButton()));
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-
+			fireEvent.click(getResetButton());
 			await waitFor(() => expect(getTimePicker()).toHaveValue(`${currentTime}pm`));
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `${currentTime}PM` }));
 		});
 	});
