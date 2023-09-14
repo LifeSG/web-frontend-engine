@@ -160,6 +160,21 @@ const meta: Meta = {
 				},
 			},
 		},
+		stripUnknown: {
+			description:
+				"Excludes values of fields that are not declared in the schema on submit / via getValues(). Note: Conditionally-hidden fields are never included in the form values.",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: {
+					summary: "false",
+				},
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -611,5 +626,50 @@ const onSubmitErrorData: IFrontendEngineData = {
 };
 
 OnSubmitError.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+export const StripUnknown: StoryFn<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const json: IFrontendEngineData = {
+		stripUnknown: true,
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					explanation: {
+						uiType: "div",
+						className: "margin--bottom",
+						children: `When stripUnknown=true, fields that are not declared in the schema will not be included in
+							the submitted values or in getValues()`,
+					},
+					...DATA.sections.section.children,
+				},
+			},
+		},
+	};
+	const handleAddUnknownValues = () => {
+		ref.current.setValue("unknownField", "hello world");
+		action("add unknownField value to form")({ id: "unknownField", value: "hello world" });
+	};
+	const handleGetFormState = () => {
+		action("getValues")(ref.current.getValues());
+	};
+
+	return (
+		<>
+			<FrontendEngine data={json} ref={ref} />
+			<br />
+			<Button.Default styleType="secondary" onClick={handleAddUnknownValues}>
+				Add unknown field value to form
+			</Button.Default>
+			<br />
+			<Button.Default styleType="secondary" onClick={handleGetFormState}>
+				Get values
+			</Button.Default>
+		</>
+	);
+};
+StripUnknown.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
