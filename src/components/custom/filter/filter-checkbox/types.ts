@@ -1,4 +1,5 @@
-import { ICustomFieldJsonSchema } from "../../../frontend-engine";
+import { ICustomFieldJsonSchema } from "../../types";
+
 export interface IFilterCheckboxSchema<V = undefined>
 	extends Omit<ICustomFieldJsonSchema<"filter-checkbox", V>, "validation"> {
 	label: string;
