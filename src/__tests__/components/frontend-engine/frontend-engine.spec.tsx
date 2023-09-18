@@ -175,7 +175,7 @@ describe("frontend-engine", () => {
 			renderComponent({ onChange }, { ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } });
 			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 
-			const finalOnChangeCall = onChange.mock.calls[onChange.mock.calls.length - 1][0];
+			const finalOnChangeCall = onChange.mock.lastCall[0];
 			expect(finalOnChangeCall).toEqual({
 				[FIELD_ONE_ID]: "hello",
 				nonExistentField: "hello world",
@@ -190,7 +190,7 @@ describe("frontend-engine", () => {
 			);
 			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 
-			const finalOnChangeCall = onChange.mock.calls[onChange.mock.calls.length - 1][0];
+			const finalOnChangeCall = onChange.mock.lastCall[0];
 			expect(finalOnChangeCall).toEqual({
 				[FIELD_ONE_ID]: "hello",
 				submit: undefined,
