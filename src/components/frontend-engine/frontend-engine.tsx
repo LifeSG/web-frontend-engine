@@ -29,6 +29,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			defaultValues,
 			sections,
 			id,
+			stripUnknown,
 			revalidationMode = "onChange",
 			validationMode = "onTouched",
 		},
@@ -52,8 +53,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		},
 	});
 	const { setFormSchema } = useFormSchema();
-	const { resetFields, setFields, setField } = useFormValues();
-
 	const {
 		reset,
 		watch,
@@ -64,6 +63,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		formState,
 		clearErrors,
 	} = formMethods;
+	const { resetFields, setFields, setField, getFormValues } = useFormValues(formMethods);
 
 	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
 
@@ -74,7 +74,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		addFieldEventListener,
 		addCustomValidation: YupHelper.addCondition,
 		dispatchFieldEvent,
-		getValues,
+		getValues: () => getFormValues(stripUnknown),
 		isDirty: formState.isDirty,
 		isValid: checkIsFormValid,
 		removeFieldEventListener,
@@ -101,8 +101,8 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		}
 	}, [getValues, hardValidationSchema]);
 
-	const handleSubmit = (data: TFrontendEngineValues): void => {
-		onSubmit?.(data);
+	const handleSubmit = (): void => {
+		onSubmit?.(getFormValues(stripUnknown));
 	};
 
 	const handleSubmitError = (errors: TFrontendEngineValues): void => {
@@ -158,10 +158,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		// attach / fire onChange event only formValidationConfig has values
 		// otherwise isValid will be returned incorrectly as true
 		if (onChange && Object.keys(formValidationConfig || {}).length) {
-			const subscription = watch((value) => {
-				onChange(value, checkIsFormValid());
+			const subscription = watch(() => {
+				onChange(getFormValues(stripUnknown), checkIsFormValid());
 			});
-			onChange(getValues(), checkIsFormValid());
+			onChange(getFormValues(stripUnknown), checkIsFormValid());
 
 			return () => subscription.unsubscribe();
 		}

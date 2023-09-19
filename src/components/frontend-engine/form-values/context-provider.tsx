@@ -6,6 +6,9 @@ interface IFormValuesContext {
 	// allows access to the latest field values without having to wait for a rerender
 	formValuesRef: MutableRefObject<Record<string, unknown>>;
 	setFormValues: Dispatch<SetStateAction<Record<string, unknown>>>;
+	// track ids of registered fields because react-hook-form does not have any ways to do it
+	registeredFields: string[];
+	setRegisteredFields: Dispatch<SetStateAction<string[]>>;
 }
 
 interface IProps {
@@ -16,6 +19,8 @@ export const FormValuesContext = createContext<IFormValuesContext>({
 	formValues: null,
 	formValuesRef: null,
 	setFormValues: null,
+	registeredFields: null,
+	setRegisteredFields: null,
 });
 
 /**
@@ -29,10 +34,13 @@ export const FormValuesContext = createContext<IFormValuesContext>({
  */
 export const FormValuesProvider = ({ children }: IProps) => {
 	const [formValues, setFormValues] = useState<Record<string, unknown>>({});
+	const [registeredFields, setRegisteredFields] = useState<string[]>([]);
 	const formValuesRef = useRef<Record<string, unknown>>(formValues);
 
 	return (
-		<FormValuesContext.Provider value={{ formValues, setFormValues, formValuesRef }}>
+		<FormValuesContext.Provider
+			value={{ formValues, setFormValues, formValuesRef, registeredFields, setRegisteredFields }}
+		>
 			{children}
 		</FormValuesContext.Provider>
 	);

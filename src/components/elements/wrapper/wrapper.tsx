@@ -59,7 +59,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 						renderComponent = buildConditionalRenderer(childId, childSchema)(buildElement);
 					} else {
 						// let custom components fail silently
-						renderComponent = <></>;
+						renderComponent = <Fragment key={childId} />;
 					}
 				} else if ("uiType" in childSchema) {
 					if (fieldTypeKeys.includes(childSchema.uiType.toUpperCase())) {

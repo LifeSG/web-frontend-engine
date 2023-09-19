@@ -18,10 +18,11 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 	const {
 		formSchema: { defaultValues, restoreMode = "none" },
 	} = useFormSchema();
-	const { getField, setField } = useFormValues();
+	const { getField, setField, setRegisteredFields } = useFormValues();
 
 	useEffect(() => {
 		setValue(id, getField(id));
+		setRegisteredFields((prev) => [...prev, id]);
 
 		return () => {
 			switch (restoreMode) {
@@ -38,6 +39,7 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 					break;
 				}
 			}
+			setRegisteredFields((prev) => prev.filter((fieldId) => fieldId !== id));
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

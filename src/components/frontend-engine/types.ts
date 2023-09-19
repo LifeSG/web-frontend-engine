@@ -82,6 +82,10 @@ export interface IFrontendEngineData<V = undefined> {
 	 * - `"user-input"`: the latest value
 	 */
 	restoreMode?: TRestoreMode | undefined;
+	/**
+	 * Excludes values of fields that are not declared in the schema on submit / via getValues()
+	 */
+	stripUnknown?: boolean | undefined;
 }
 
 // NOTE: add all possible schema types here except section schema
