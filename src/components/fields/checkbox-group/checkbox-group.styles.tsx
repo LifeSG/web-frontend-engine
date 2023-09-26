@@ -11,6 +11,7 @@ export const Label = styled(Text.BodySmall)<ILabelProps>`
 
 export const StyledCheckbox = styled(Checkbox)`
 	margin-right: 5px;
+	flex-shrink: 0;
 `;
 
 export const CheckboxContainer = styled.div`
