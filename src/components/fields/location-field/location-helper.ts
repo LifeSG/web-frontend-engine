@@ -9,6 +9,7 @@ import {
 	OneMapSearchBuildingResult,
 } from "../../../services/onemap/types";
 import { ILocationCoord, IResultListItem, IResultsMetaData } from "./types";
+import { MathHelper } from "../../../utils";
 
 type TReverseGeocodeParams = {
 	route: string;
@@ -46,51 +47,24 @@ export namespace LocationHelper {
 		onError: (error: any) => void,
 		excludeNonSG?: boolean
 	): Promise<IResultListItem[]> => {
-		/*
-			2 API calls are made to OneMap due to how the reverse geocoding search works.
-			If a place with no postal code is selected, it will be excluded from the search results
-			if there are other results with postal codes within the search buffer distance. e.g. (Punggol Waterway Park)
-			 */
-
-		let defaultDistanceLocations: IResultListItem[] = [];
-		let onemapLocationList: IResultListItem[] = [];
+		let onemapLocationList: IResultListItem[];
 
 		try {
 			reverseGeocodeAborter.current?.abort();
 			reverseGeocodeAborter.current = new AbortController();
-			// first call will get the location on the spot within 10 meters
-			if (!mustHavePostalCode) {
-				const defaultDistanceLocationsResult = await reverseGeocode({
+			onemapLocationList = (
+				await reverseGeocode({
 					route: reverseGeoCodeEndpoint,
 					latitude: lat,
 					longitude: lng,
 					abortSignal: reverseGeocodeAborter.current.signal,
-					bufferRadius: 10,
+					bufferRadius: 500,
 					otherFeatures: OneMapBoolean.YES,
 					options: {
 						excludeNonSG,
 					},
-				});
-				defaultDistanceLocations = defaultDistanceLocationsResult.results;
-			}
-			// second call with get a list of locations within 500m
-			const expandedSearchDistanceLocations = await reverseGeocode({
-				route: reverseGeoCodeEndpoint,
-				latitude: lat,
-				longitude: lng,
-				abortSignal: reverseGeocodeAborter.current.signal,
-				bufferRadius: 500,
-				otherFeatures: OneMapBoolean.YES,
-				options: {
-					excludeNonSG,
-				},
-			});
-			// ensure that there are no duplicate search results
-			const buildingNames = new Set(expandedSearchDistanceLocations.results.map((val) => val.building));
-			onemapLocationList = onemapLocationList.concat(
-				defaultDistanceLocations.filter((res) => !buildingNames.has(res.building)),
-				expandedSearchDistanceLocations.results
-			);
+				})
+			).results;
 			reverseGeocodeAborter.current = null;
 
 			return onemapLocationList;
@@ -332,5 +306,46 @@ export namespace LocationHelper {
 			return true;
 		}
 		return false;
+	};
+
+	const distanceBetweenTwoPoints = (coord1: ILocationCoord, coord2: ILocationCoord) => {
+		if (coord1.lat === coord2.lat && coord1.lng === coord2.lng) {
+			return 0;
+		}
+
+		const { degreesToRadians, radiansToDegrees, nauticalMilesToMetres } = MathHelper;
+		const radlat1 = degreesToRadians(coord1.lat);
+		const radlat2 = degreesToRadians(coord2.lat);
+
+		const radtheta = degreesToRadians(coord1.lng - coord2.lng);
+
+		let distInLat =
+			Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+
+		if (distInLat > 1) {
+			distInLat = 1;
+		}
+
+		return nauticalMilesToMetres(radiansToDegrees(Math.acos(distInLat)) * 60); // 60 minutes in 1 degree, 1 minute = 1 nautical mile
+	};
+
+	export const getNearestLocationIndexFromList = (
+		locationList: Partial<IResultListItem>[],
+		latitude: number,
+		longitude: number,
+		mustHavePostalCode?: boolean
+	): number => {
+		let shortestDistance = 1000000;
+		let nearestLocationIndex = -1;
+		locationList.forEach(({ lat, lng, postalCode }, index) => {
+			const distance = distanceBetweenTwoPoints({ lat, lng }, { lat: latitude, lng: longitude });
+			if (distance < shortestDistance) {
+				if (!mustHavePostalCode || (mustHavePostalCode && hasGotAddressValue(postalCode))) {
+					shortestDistance = distance;
+					nearestLocationIndex = index;
+				}
+			}
+		});
+		return nearestLocationIndex;
 	};
 }
