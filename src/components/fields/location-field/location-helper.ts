@@ -212,17 +212,27 @@ export namespace LocationHelper {
 		lat: number,
 		lng: number,
 		onSuccess: (resultListItem: IResultListItem | undefined) => void,
-		onError: (e: any) => void
+		onError: (e: any) => void,
+		mustHavePostalCode?: boolean
 	) => {
 		(async () => {
 			try {
-				const locationList = await reverseGeocode({
-					route: reverseGeoCodeEndpoint,
-					latitude: lat,
-					longitude: lng,
-				});
+				const locationList = (
+					await reverseGeocode({
+						route: reverseGeoCodeEndpoint,
+						latitude: lat,
+						longitude: lng,
+					})
+				).results;
 
-				onSuccess(locationList.results[0] || undefined);
+				const nearestLocationIndex = LocationHelper.getNearestLocationIndexFromList(
+					locationList,
+					lat,
+					lng,
+					mustHavePostalCode
+				);
+
+				onSuccess(locationList[nearestLocationIndex] || undefined);
 			} catch (error) {
 				const oneMapError = new OneMapError(error);
 				onError(oneMapError);

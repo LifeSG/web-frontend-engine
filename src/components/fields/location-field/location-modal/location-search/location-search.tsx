@@ -223,7 +223,8 @@ export const LocationSearch = ({
 				reverseGeoCodeLat,
 				reverseGeoCodeLng,
 				handleResult,
-				handleApiErrors
+				handleApiErrors,
+				mustHavePostalCode
 			);
 		}
 	}, []);
@@ -477,19 +478,24 @@ export const LocationSearch = ({
 		resultRef.current?.scrollTo(0, 0);
 		populateDisplayList({ results: resultListItem });
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const [{ displayAddressText, ...firstItem }] = resultListItem;
+		const nearestLocationIndex = LocationHelper.getNearestLocationIndexFromList(
+			resultListItem,
+			addressLat,
+			addressLng,
+			mustHavePostalCode
+		);
+		const nearestLocation = resultListItem[nearestLocationIndex];
 
-		if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(firstItem.address)) {
+		if (!nearestLocation || (mustHavePostalCode && !LocationHelper.hasGotAddressValue(nearestLocation.address))) {
 			setShowPostalCodeError(true);
 			setQueryString("");
 			return;
 		}
 
-		setQueryString(firstItem.address);
+		setQueryString(nearestLocation.address);
 
-		onChangeSelectedAddressInfo(firstItem);
-		setSelectedIndex(0);
+		onChangeSelectedAddressInfo(nearestLocation);
+		setSelectedIndex(nearestLocationIndex);
 	};
 
 	/**
