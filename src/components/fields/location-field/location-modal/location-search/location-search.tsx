@@ -500,6 +500,8 @@ export const LocationSearch = ({
 		const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, addressLat, addressLng);
 		onChangeSelectedAddressInfo({
 			...nearestLocation,
+			lat: addressLat,
+			lng: addressLng,
 			x: X,
 			y: Y,
 		});

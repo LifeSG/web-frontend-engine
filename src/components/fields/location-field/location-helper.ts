@@ -235,7 +235,7 @@ export namespace LocationHelper {
 
 				const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, lat, lng);
 
-				onSuccess({ ...locationList[nearestLocationIndex], x: X, y: Y } || undefined);
+				onSuccess({ ...locationList[nearestLocationIndex], lat, lng, x: X, y: Y } || undefined);
 			} catch (error) {
 				const oneMapError = new OneMapError(error);
 				onError(oneMapError);
