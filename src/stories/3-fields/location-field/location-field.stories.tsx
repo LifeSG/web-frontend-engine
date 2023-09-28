@@ -3,6 +3,8 @@ import { Meta } from "@storybook/react";
 import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields/location-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
+const reverseGeoCodeEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code";
+const convertLatLngToXYEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/convert-latlng-to-xy";
 const meta: Meta = {
 	title: "Field/LocationField",
 	parameters: {
@@ -32,6 +34,8 @@ export const Default = DefaultStoryTemplate<ILocationFieldSchema>("location-fiel
 Default.args = {
 	uiType: "location-field",
 	label: "Default",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 };
 
 export const InitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
@@ -43,6 +47,8 @@ InitialAddress.args = {
 	defaultValues: {
 		address: "Fusionopolis View",
 	},
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 };
 InitialAddress.parameters = {
 	docs: {
@@ -59,10 +65,12 @@ InitialLatLng.args = {
 	uiType: "location-field",
 	label: "Default",
 	defaultValues: {
-		lat: 1.2418352709904754,
-		lng: 103.61478567123413,
+		lat: 1.39309802477142,
+		lng: 104.044933681267,
 	},
-	reverseGeoCodeEndpoint: "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code",
+	mustHavePostalCode: true,
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 };
 InitialLatLng.parameters = {
 	docs: {
@@ -89,7 +97,8 @@ FullInitialAddress.args = {
 		x: 23112.7395757,
 		y: 31366.5202628,
 	},
-	reverseGeoCodeEndpoint: "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 };
 FullInitialAddress.parameters = {
 	docs: {
@@ -104,6 +113,8 @@ MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",
 	mustHavePostalCode: true,
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 };
 
 export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind({});
@@ -111,6 +122,8 @@ WithCustomStyles.args = {
 	uiType: "location-field",
 	label: "WithCustomStyles",
 	locationModalStyles: "padding-top: 50px; margin-right: 10px;",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 };
 
 export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>("location-field-overrides").bind({});
@@ -120,5 +133,7 @@ Overrides.args = {
 	overrides: {
 		label: "Overridden",
 	},
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
