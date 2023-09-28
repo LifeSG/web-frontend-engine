@@ -59,7 +59,6 @@ const convertLatLngToXY = async (
 }> => {
 	const res: any = await clientWithCredentials.get(route, {
 		params: { latitude, longitude },
-		headers: {},
 	});
 	return res?.data;
 };
