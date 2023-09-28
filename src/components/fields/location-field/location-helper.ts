@@ -209,6 +209,7 @@ export namespace LocationHelper {
 
 	export const fetchSingleLocationByLatLng = async (
 		reverseGeoCodeEndpoint: string,
+		convertLatLngToXYEndpoint: string,
 		lat: number,
 		lng: number,
 		onSuccess: (resultListItem: IResultListItem | undefined) => void,
@@ -232,7 +233,9 @@ export namespace LocationHelper {
 					mustHavePostalCode
 				);
 
-				onSuccess(locationList[nearestLocationIndex] || undefined);
+				const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, lat, lng);
+
+				onSuccess({ ...locationList[nearestLocationIndex], x: X, y: Y } || undefined);
 			} catch (error) {
 				const oneMapError = new OneMapError(error);
 				onError(oneMapError);

@@ -34,6 +34,7 @@ import {
 	SearchWrapper,
 } from "./location-search.styles";
 import { ILocationSearchProps } from "./types";
+import { OneMapService } from "../../../../../services";
 
 export const LocationSearch = ({
 	id = "location-search",
@@ -49,6 +50,7 @@ export const LocationSearch = ({
 	mapPickedLatLng,
 
 	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 	addressFieldPlaceholder = "Street Name, Postal Code",
 	gettingCurrentLocationFetchMessage = "Getting current location...",
 	locationListTitle = "Select location",
@@ -220,6 +222,7 @@ export const LocationSearch = ({
 
 			fetchSingleLocationByLatLng(
 				reverseGeoCodeEndpoint,
+				convertLatLngToXYEndpoint,
 				reverseGeoCodeLat,
 				reverseGeoCodeLng,
 				handleResult,
@@ -494,7 +497,13 @@ export const LocationSearch = ({
 
 		setQueryString(nearestLocation.address);
 
-		onChangeSelectedAddressInfo(nearestLocation);
+		const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, addressLat, addressLng);
+		onChangeSelectedAddressInfo({
+			...nearestLocation,
+			x: X,
+			y: Y,
+		});
+
 		setSelectedIndex(nearestLocationIndex);
 	};
 

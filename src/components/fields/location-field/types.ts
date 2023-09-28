@@ -9,7 +9,10 @@ export interface ILocationFieldSchema<V = undefined>
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<
 			ILocationSearchProps,
-			"reverseGeoCodeEndpoint" | "mustHavePostalCode" | "gettingCurrentLocationFetchMessage"
+			| "reverseGeoCodeEndpoint"
+			| "convertLatLngToXYEndpoint"
+			| "mustHavePostalCode"
+			| "gettingCurrentLocationFetchMessage"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder">,
 		Pick<IStaticMapProps, "staticMapPinColor"> {

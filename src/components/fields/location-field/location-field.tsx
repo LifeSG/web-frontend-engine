@@ -26,6 +26,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			mapPanZoom,
 			interactiveMapPinIconUrl,
 			reverseGeoCodeEndpoint,
+			convertLatLngToXYEndpoint,
 			gettingCurrentLocationFetchMessage,
 			mustHavePostalCode,
 			locationModalStyles,
@@ -119,6 +120,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						updateFormValues={updateFormValues}
 						mapPanZoom={mapPanZoom}
 						reverseGeoCodeEndpoint={reverseGeoCodeEndpoint}
+						convertLatLngToXYEndpoint={convertLatLngToXYEndpoint}
 						interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 						gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 						mustHavePostalCode={mustHavePostalCode}
