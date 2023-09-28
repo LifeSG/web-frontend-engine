@@ -488,7 +488,11 @@ export const LocationSearch = ({
 
 		setQueryString(firstItem.address);
 
-		onChangeSelectedAddressInfo(firstItem);
+		onChangeSelectedAddressInfo({
+			...firstItem,
+			lat: addressLat,
+			lng: addressLng,
+		});
 		setSelectedIndex(0);
 	};
 
