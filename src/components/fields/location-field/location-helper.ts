@@ -248,7 +248,7 @@ export namespace LocationHelper {
 					longitude: lng,
 				});
 
-				onSuccess(locationList.results[0] || undefined);
+				onSuccess({ ...locationList.results[0], lat, lng } || undefined);
 			} catch (error) {
 				const oneMapError = new OneMapError(error);
 				onError(oneMapError);
