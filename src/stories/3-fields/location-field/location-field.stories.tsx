@@ -65,10 +65,9 @@ InitialLatLng.args = {
 	uiType: "location-field",
 	label: "Default",
 	defaultValues: {
-		lat: 1.39309802477142,
-		lng: 104.044933681267,
+		lat: 1.2418352709904754,
+		lng: 103.61478567123413,
 	},
-	mustHavePostalCode: true,
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 };
