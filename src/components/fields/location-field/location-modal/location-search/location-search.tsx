@@ -34,6 +34,7 @@ import {
 	SearchWrapper,
 } from "./location-search.styles";
 import { ILocationSearchProps } from "./types";
+import { OneMapService } from "../../../../../services";
 
 export const LocationSearch = ({
 	id = "location-search",
@@ -49,6 +50,7 @@ export const LocationSearch = ({
 	mapPickedLatLng,
 
 	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
 	addressFieldPlaceholder = "Street Name, Postal Code",
 	gettingCurrentLocationFetchMessage = "Getting current location...",
 	locationListTitle = "Select location",
@@ -220,10 +222,12 @@ export const LocationSearch = ({
 
 			fetchSingleLocationByLatLng(
 				reverseGeoCodeEndpoint,
+				convertLatLngToXYEndpoint,
 				reverseGeoCodeLat,
 				reverseGeoCodeLng,
 				handleResult,
-				handleApiErrors
+				handleApiErrors,
+				mustHavePostalCode
 			);
 		}
 	}, []);
@@ -477,23 +481,32 @@ export const LocationSearch = ({
 		resultRef.current?.scrollTo(0, 0);
 		populateDisplayList({ results: resultListItem });
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const [{ displayAddressText, ...firstItem }] = resultListItem;
+		const nearestLocationIndex = LocationHelper.getNearestLocationIndexFromList(
+			resultListItem,
+			addressLat,
+			addressLng,
+			mustHavePostalCode
+		);
+		const nearestLocation = resultListItem[nearestLocationIndex];
 
-		if (mustHavePostalCode && !LocationHelper.hasGotAddressValue(firstItem.address)) {
+		if (!nearestLocation || (mustHavePostalCode && !LocationHelper.hasGotAddressValue(nearestLocation.address))) {
 			setShowPostalCodeError(true);
 			setQueryString("");
 			return;
 		}
 
-		setQueryString(firstItem.address);
+		setQueryString(nearestLocation.address);
 
+		const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, addressLat, addressLng);
 		onChangeSelectedAddressInfo({
-			...firstItem,
+			...nearestLocation,
 			lat: addressLat,
 			lng: addressLng,
+			x: X,
+			y: Y,
 		});
-		setSelectedIndex(0);
+
+		setSelectedIndex(nearestLocationIndex);
 	};
 
 	/**

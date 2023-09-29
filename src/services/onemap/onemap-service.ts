@@ -49,6 +49,20 @@ const searchByAddress = async (param: OneMapSearchParam): Promise<OneMapSearchRe
 	return res;
 };
 
+const convertLatLngToXY = async (
+	route: string,
+	latitude: number,
+	longitude: number
+): Promise<{
+	X: number;
+	Y: number;
+}> => {
+	const res: any = await clientWithCredentials.get(route, {
+		params: { latitude, longitude },
+	});
+	return res?.data;
+};
+
 const getStaticMapUrl = (lat: number, lng: number, width: number, height: number, pinColor: IColor): string => {
 	const { r, g, b } = pinColor;
 	return `https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=default&latitude=${lat}&longitude=${lng}&zoom=17&height=${height}&width=${width}&points=[${lat},${lng},"${r},${g},${b}"]`;
@@ -57,5 +71,6 @@ const getStaticMapUrl = (lat: number, lng: number, width: number, height: number
 export const OneMapService = {
 	reverseGeocode,
 	searchByAddress,
+	convertLatLngToXY,
 	getStaticMapUrl,
 };

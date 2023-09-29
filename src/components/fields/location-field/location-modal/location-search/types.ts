@@ -15,6 +15,7 @@ export interface ILocationSearchProps {
 	handleApiErrors: (error: any) => void;
 	mustHavePostalCode?: boolean | undefined;
 	reverseGeoCodeEndpoint?: string | undefined;
+	convertLatLngToXYEndpoint?: string | undefined;
 	onGetLocationCallback: (lat?: number | undefined, lng?: number | undefined) => void;
 	showLocationModal: boolean;
 	mapPickedLatLng?: ILocationCoord | undefined;

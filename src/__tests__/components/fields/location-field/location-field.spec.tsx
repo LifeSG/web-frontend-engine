@@ -524,7 +524,7 @@ describe("location-input-group", () => {
 							onSuccess(mock1PageFetchAddressResponse);
 						});
 						fetchSingleLocationByLatLngSpy.mockImplementation(
-							(_reverseGeoCodeEndpoint, _lat, _lng, handleResult) => {
+							(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
 								handleResult(fetchSingleLocationByLatLngSingleReponse);
 							}
 						);
@@ -574,7 +574,7 @@ describe("location-input-group", () => {
 				describe("when location is a pin location with only latlng values", () => {
 					beforeEach(async () => {
 						fetchSingleLocationByLatLngSpy.mockImplementation(
-							(_reverseGeoCodeEndpoint, _lat, _lng, handleResult) => {
+							(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
 								handleResult(fetchSingleLocationByLatLngSingleReponse);
 							}
 						);
