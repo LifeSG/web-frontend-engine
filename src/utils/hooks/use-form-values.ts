@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { UseFormReturn, useFormContext } from "react-hook-form";
-import { TFrontendEngineValues } from "../../components";
 import { FormValuesContext } from "../../components/frontend-engine/form-values";
 
 export const useFormValues = (formMethods?: UseFormReturn | undefined) => {
@@ -42,19 +41,35 @@ export const useFormValues = (formMethods?: UseFormReturn | undefined) => {
 
 	/**
 	 * Get form values
+	 * @param payload specify the value(s) by field id(s) to return
 	 * @param stripUnknown whether to exclude values of unregistered fields
 	 */
-	const getFormValues = (stripUnknown = false): TFrontendEngineValues => {
-		const values = formMethods?.getValues() || formContext?.getValues();
-		if (!stripUnknown) return values;
-
-		const registeredFormValues = {};
-		Object.entries(values).forEach(([key, value]) => {
-			if (registeredFields.includes(key)) {
-				registeredFormValues[key] = value;
+	const getFormValues = (payload?: string | string[] | undefined, stripUnknown = false) => {
+		if (typeof payload === "string") {
+			if (!stripUnknown || (stripUnknown && registeredFields.includes(payload))) {
+				return formMethods?.getValues(payload) || formContext?.getValues(payload);
 			}
-		});
-		return registeredFormValues;
+		} else if (Array.isArray(payload)) {
+			if (!stripUnknown) {
+				return formMethods?.getValues(payload) || formContext?.getValues(payload);
+			} else {
+				const registeredFieldIds = payload.filter((fieldId) => registeredFields.includes(fieldId));
+				return formMethods?.getValues(registeredFieldIds) || formContext?.getValues(registeredFieldIds);
+			}
+		} else {
+			const values = formMethods?.getValues() || formContext?.getValues();
+			if (!stripUnknown) {
+				return values;
+			} else {
+				const registeredFormValues = {};
+				Object.entries(values).forEach(([key, value]) => {
+					if (registeredFields.includes(key)) {
+						registeredFormValues[key] = value;
+					}
+				});
+				return registeredFormValues;
+			}
+		}
 	};
 
 	return {

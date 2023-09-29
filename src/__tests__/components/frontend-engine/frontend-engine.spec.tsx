@@ -1,5 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { useEffect, useRef, useState } from "react";
 import { FrontendEngine } from "../../../components";
 import { IYupValidationRule } from "../../../components/frontend-engine/yup";
@@ -10,7 +12,6 @@ import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
-	flushPromise,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
@@ -219,63 +220,201 @@ describe("frontend-engine", () => {
 	});
 
 	describe("getValues()", () => {
-		let formValues: Record<string, unknown> = {};
-		it("should return form values", () => {
-			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				formValues = ref.current.getValues();
-			};
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+		const MULTI_FIELD_SCHEMA = merge(cloneDeep(JSON_SCHEMA), {
+			sections: {
+				section: {
+					children: {
+						[FIELD_TWO_ID]: {
+							label: FIELD_TWO_LABEL,
+							uiType: UI_TYPE,
+							validation: [{ required: true }],
+						},
+					},
+				},
+			},
+		});
 
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-			fireEvent.click(getCustomButton());
+		describe("no payload", () => {
+			let formValues: Record<string, unknown> = {};
+			it("should return form values", () => {
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					formValues = ref.current.getValues();
+				};
+				render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClick} />);
 
-			expect(formValues).toEqual({
-				[FIELD_ONE_ID]: "hello",
-				submit: undefined,
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				fireEvent.change(getFieldTwo(), { target: { value: "world" } });
+				fireEvent.click(getCustomButton());
+
+				expect(formValues).toEqual({
+					[FIELD_ONE_ID]: "hello",
+					[FIELD_TWO_ID]: "world",
+					submit: undefined,
+				});
+			});
+
+			it("should include form values of unregistered fields if stripUnknown is not true", async () => {
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue("nonExistentField2", "john doe");
+					formValues = ref.current.getValues();
+				};
+				render(
+					<FrontendEngineWithCustomButton
+						data={{ ...MULTI_FIELD_SCHEMA, defaultValues: { nonExistentField: "hello world" } }}
+						onClick={handleClick}
+					/>
+				);
+
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				fireEvent.change(getFieldTwo(), { target: { value: "world" } });
+				await waitFor(() => fireEvent.click(getCustomButton()));
+
+				expect(formValues).toEqual({
+					[FIELD_ONE_ID]: "hello",
+					[FIELD_TWO_ID]: "world",
+					nonExistentField: "hello world",
+					nonExistentField2: "john doe",
+					submit: undefined,
+				});
+			});
+
+			it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue("nonExistentField2", "john doe");
+					formValues = ref.current.getValues();
+				};
+				render(
+					<FrontendEngineWithCustomButton
+						data={{
+							...MULTI_FIELD_SCHEMA,
+							stripUnknown: true,
+							defaultValues: { nonExistentField: "hello world" },
+						}}
+						onClick={handleClick}
+					/>
+				);
+
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				fireEvent.change(getFieldTwo(), { target: { value: "world" } });
+				await waitFor(() => fireEvent.click(getCustomButton()));
+
+				expect(formValues).toEqual({
+					[FIELD_ONE_ID]: "hello",
+					[FIELD_TWO_ID]: "world",
+					submit: undefined,
+				});
 			});
 		});
 
-		it("should include form values of unregistered fields if stripUnknown is not true", async () => {
-			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.setValue("nonExistentField2", "john doe");
-				formValues = ref.current.getValues();
-			};
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } }}
-					onClick={handleClick}
-				/>
-			);
+		describe("string payload", () => {
+			it("should return form values", () => {
+				let fieldOneValue: unknown;
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					fieldOneValue = ref.current.getValues(FIELD_ONE_ID);
+				};
+				render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClick} />);
 
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-			await waitFor(() => fireEvent.click(getCustomButton()));
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				fireEvent.change(getFieldTwo(), { target: { value: "world" } });
+				fireEvent.click(getCustomButton());
 
-			expect(formValues).toEqual({
-				[FIELD_ONE_ID]: "hello",
-				nonExistentField: "hello world",
-				nonExistentField2: "john doe",
-				submit: undefined,
+				expect(fieldOneValue).toEqual("hello");
+			});
+
+			it("should include form values of unregistered fields if stripUnknown is not true", async () => {
+				let nonExistentField1Value: unknown;
+				let nonExistentField2Value: unknown;
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue("nonExistentField2", "john doe");
+					nonExistentField1Value = ref.current.getValues("nonExistentField");
+					nonExistentField2Value = ref.current.getValues("nonExistentField2");
+				};
+				render(
+					<FrontendEngineWithCustomButton
+						data={{ ...MULTI_FIELD_SCHEMA, defaultValues: { nonExistentField: "hello world" } }}
+						onClick={handleClick}
+					/>
+				);
+				await waitFor(() => fireEvent.click(getCustomButton()));
+
+				expect(nonExistentField1Value).toEqual("hello world");
+				expect(nonExistentField2Value).toEqual("john doe");
+			});
+
+			it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
+				let nonExistentField1Value: unknown;
+				let nonExistentField2Value: unknown;
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue("nonExistentField2", "john doe");
+					nonExistentField1Value = ref.current.getValues("nonExistentField");
+					nonExistentField2Value = ref.current.getValues("nonExistentField2");
+				};
+				render(
+					<FrontendEngineWithCustomButton
+						data={{
+							...MULTI_FIELD_SCHEMA,
+							stripUnknown: true,
+							defaultValues: { nonExistentField: "hello world" },
+						}}
+						onClick={handleClick}
+					/>
+				);
+				await waitFor(() => fireEvent.click(getCustomButton()));
+
+				expect(nonExistentField1Value).toBeUndefined();
+				expect(nonExistentField2Value).toBeUndefined();
 			});
 		});
 
-		it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
-			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.setValue("nonExistentField2", "john doe");
-				formValues = ref.current.getValues();
-			};
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }}
-					onClick={handleClick}
-				/>
-			);
+		describe("array payload", () => {
+			let formValues: Record<string, unknown> = {};
+			it("should return form values", () => {
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					formValues = ref.current.getValues([FIELD_ONE_ID, FIELD_TWO_ID]);
+				};
+				render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClick} />);
 
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-			await waitFor(() => fireEvent.click(getCustomButton()));
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				fireEvent.change(getFieldTwo(), { target: { value: "world" } });
+				fireEvent.click(getCustomButton());
 
-			expect(formValues).toEqual({
-				[FIELD_ONE_ID]: "hello",
-				submit: undefined,
+				expect(formValues).toEqual(["hello", "world"]);
+			});
+
+			it("should include form values of unregistered fields if stripUnknown is not true", async () => {
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue("nonExistentField2", "john doe");
+					formValues = ref.current.getValues(["nonExistentField", "nonExistentField2"]);
+				};
+				render(
+					<FrontendEngineWithCustomButton
+						data={{ ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } }}
+						onClick={handleClick}
+					/>
+				);
+				await waitFor(() => fireEvent.click(getCustomButton()));
+
+				expect(formValues).toEqual(["hello world", "john doe"]);
+			});
+
+			it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue("nonExistentField2", "john doe");
+					formValues = ref.current.getValues(["nonExistentField", "nonExistentField2"]);
+				};
+				render(
+					<FrontendEngineWithCustomButton
+						data={{
+							...JSON_SCHEMA,
+							stripUnknown: true,
+							defaultValues: { nonExistentField: "hello world" },
+						}}
+						onClick={handleClick}
+					/>
+				);
+				await waitFor(() => fireEvent.click(getCustomButton()));
+
+				expect(formValues).toEqual([]);
 			});
 		});
 	});
