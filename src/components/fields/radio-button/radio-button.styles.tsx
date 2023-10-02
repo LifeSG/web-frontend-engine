@@ -13,6 +13,7 @@ export const Label = styled(Text.BodySmall)<ILabelProps>`
 
 export const StyledRadioButton = styled(RadioButton)`
 	margin-right: 5px;
+	flex-shrink: 0;
 `;
 
 export const StyledImageButton = styled(ImageButton)`
