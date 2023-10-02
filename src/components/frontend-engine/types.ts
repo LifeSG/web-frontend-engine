@@ -136,8 +136,14 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 		options?: boolean | AddEventListenerOptions
 	) => void;
 	dispatchFieldEvent: <T = any>(type: string, id: string, detail?: T) => boolean;
-	/** gets form values */
-	getValues: () => TFrontendEngineValues;
+	/**
+	 * gets form values
+	 * @param payload specify the value(s) by field id(s) to return
+	 * - undefined	Returns the entire form values.
+	 * - string	Gets the value at path of the form values.
+	 * - array	Returns an array of the value at path of the form values.
+	 */
+	getValues: (payload?: string | string[] | undefined) => TFrontendEngineValues;
 	/**
 	 * checks if form has been changed by user
 	 *
