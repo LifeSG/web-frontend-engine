@@ -74,7 +74,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		addFieldEventListener,
 		addCustomValidation: YupHelper.addCondition,
 		dispatchFieldEvent,
-		getValues: () => getFormValues(stripUnknown),
+		getValues: (payload?: string | string[] | undefined) => getFormValues(payload, stripUnknown),
 		isDirty: formState.isDirty,
 		isValid: checkIsFormValid,
 		removeFieldEventListener,
@@ -102,7 +102,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [getValues, hardValidationSchema]);
 
 	const handleSubmit = (): void => {
-		onSubmit?.(getFormValues(stripUnknown));
+		onSubmit?.(getFormValues(undefined, stripUnknown));
 	};
 
 	const handleSubmitError = (errors: TFrontendEngineValues): void => {
@@ -159,9 +159,9 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		// otherwise isValid will be returned incorrectly as true
 		if (onChange && Object.keys(formValidationConfig || {}).length) {
 			const subscription = watch(() => {
-				onChange(getFormValues(stripUnknown), checkIsFormValid());
+				onChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
 			});
-			onChange(getFormValues(stripUnknown), checkIsFormValid());
+			onChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
 
 			return () => subscription.unsubscribe();
 		}
