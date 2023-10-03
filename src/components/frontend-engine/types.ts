@@ -5,10 +5,9 @@ import {
 	UseFormSetValue,
 	ValidationMode,
 } from "react-hook-form";
-import { ICustomElementJsonSchema, TCustomComponentSchema } from "../custom";
-import { IAlertSchema, ITextSchema } from "../elements";
+import { TCustomComponentSchema } from "../custom";
+import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
-import { IWrapperSchema } from "../elements/wrapper";
 import {
 	ICheckboxGroupSchema,
 	IChipsSchema,
@@ -90,7 +89,6 @@ export interface IFrontendEngineData<V = undefined> {
 
 // NOTE: add all possible schema types here except section schema
 export type TFrontendEngineFieldSchema<V = undefined> =
-	| IAlertSchema
 	| ICheckboxGroupSchema<V>
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
@@ -107,13 +105,12 @@ export type TFrontendEngineFieldSchema<V = undefined> =
 	| ISelectSchema<V>
 	| ISubmitButtonSchema
 	| ISwitchSchema<V>
-	| ITextSchema
 	| ITextareaSchema<V>
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
-	| IWrapperSchema
-	| TCustomComponentSchema;
+	| TCustomComponentSchema
+	| TElementSchema;
 
 export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
@@ -202,10 +199,6 @@ export type TFrontendEngineFieldJsonSchemaOmitKeys =
 	| "children"
 	| "value";
 
-// NOTE: Elements should not support validation nor contain labels
-export interface IFrontendEngineElementJsonSchema<T>
-	extends Omit<IFrontendEngineBaseFieldJsonSchema<T>, "label" | "validation"> {}
-
 // NOTE: undefined allows aggregation of keys if exists
 type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
 	? TFrontendEngineFieldJsonSchemaOmitKeys | T
@@ -241,38 +234,6 @@ export enum EFieldType {
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
-}
-
-/**
- * Non-field types
- * - components that do not have values
- * - typically used for layouts and messages
- */
-export enum EElementType {
-	ALERT = "Alert",
-	"TEXT-D1" = "Text",
-	"TEXT-D2" = "Text",
-	"TEXT-DBODY" = "Text",
-	"TEXT-H1" = "Text",
-	"TEXT-H2" = "Text",
-	"TEXT-H3" = "Text",
-	"TEXT-H4" = "Text",
-	"TEXT-H5" = "Text",
-	"TEXT-H6" = "Text",
-	"TEXT-BODY" = "Text",
-	"TEXT-BODYSMALL" = "Text",
-	"TEXT-XSMALL" = "Text",
-	DIV = "Wrapper",
-	SPAN = "Wrapper",
-	HEADER = "Wrapper",
-	FOOTER = "Wrapper",
-	H1 = "Wrapper",
-	H2 = "Wrapper",
-	H3 = "Wrapper",
-	H4 = "Wrapper",
-	H5 = "Wrapper",
-	H6 = "Wrapper",
-	P = "Wrapper",
 }
 
 // =============================================================================

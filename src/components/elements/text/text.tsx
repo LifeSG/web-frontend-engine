@@ -1,12 +1,12 @@
 import isArray from "lodash/isArray";
 import isObject from "lodash/isObject";
 import { TestHelper } from "../../../utils";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { Sanitize } from "../../shared";
+import { IGenericElementProps } from "../types";
 import { TEXT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
 
-export const Text = (props: IGenericFieldProps<ITextSchema>) => {
+export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
