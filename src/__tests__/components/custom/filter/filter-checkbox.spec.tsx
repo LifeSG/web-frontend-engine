@@ -14,6 +14,7 @@ const { ResizeObserver } = window;
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
+const COMPONENT_LABEL = "Filter Item Checkbox";
 const REFERENCE_KEY = "filter-checkbox";
 
 const renderComponent = (overrideField?: TOverrideField<IFilterCheckboxSchema>, overrideSchema?: TOverrideSchema) => {
@@ -28,7 +29,7 @@ const renderComponent = (overrideField?: TOverrideField<IFilterCheckboxSchema>, 
 						label: "Filter Item",
 						children: {
 							[COMPONENT_ID]: {
-								label: "Filter Item Checkbox",
+								label: COMPONENT_LABEL,
 								referenceKey: REFERENCE_KEY,
 								options: [
 									{ label: "Apple", value: "Apple" },
@@ -95,20 +96,6 @@ describe(REFERENCE_KEY, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
-	it("should be able to clear default values", async () => {
-		const defaultValues = ["Apple"];
-		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
-
-		fireEvent.click(screen.getByRole("button", { name: "Clear" }));
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
-		defaultValues.forEach((val) => {
-			const checkBox = getCheckboxByVal(val);
-			expect(checkBox.checked).toBeFalsy();
-		});
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
-	});
-
 	it("should be able to toggle the checkboxes", async () => {
 		renderComponent();
 		const checkboxes = getCheckboxes();
@@ -122,19 +109,6 @@ describe(REFERENCE_KEY, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[1]));
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
-	});
-
-	it("should be able to clear checkboxes", async () => {
-		renderComponent();
-		const checkboxes = getCheckboxes();
-		await waitFor(() => fireEvent.click(checkboxes[0]));
-		await waitFor(() => fireEvent.click(checkboxes[1]));
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
-
-		fireEvent.click(screen.getByRole("button", { name: "Clear" }));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
@@ -161,7 +135,7 @@ describe(REFERENCE_KEY, () => {
 											label: "Filter",
 											children: {
 												[COMPONENT_ID]: {
-													label: "Filter Item Checkbox",
+													label: COMPONENT_LABEL,
 													referenceKey: REFERENCE_KEY,
 													options,
 												},
@@ -210,5 +184,29 @@ describe(REFERENCE_KEY, () => {
 				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
+	});
+
+	describe("clear behaviour on clicking clear button in filter", () => {
+		const defaultValues = ["Apple"];
+		const changedValue = ["Apple", "Berry"];
+
+		it.each`
+			scenario                                             | clearBehavior | expectedValue
+			${"clear values by default"}                         | ${null}       | ${[]}
+			${"clear values if clearBehavior=clear"}             | ${"clear"}    | ${[]}
+			${"revert to default value if clearBehavior=revert"} | ${"revert"}   | ${defaultValues}
+			${"not update value if clearBehavior=retain"}        | ${"retain"}   | ${changedValue}
+		`("it should $scenario", async ({ clearBehavior, expectedValue }) => {
+			renderComponent({ clearBehavior }, { defaultValues: { [COMPONENT_ID]: defaultValues } });
+
+			const checkboxes = getCheckboxes();
+			await waitFor(() => fireEvent.click(checkboxes[1]));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: changedValue }));
+
+			fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValue }));
+		});
 	});
 });
