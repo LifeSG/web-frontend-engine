@@ -1,8 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
-import { useRef } from "react";
-import { IFrontendEngineRef } from "../../../components";
-import { IFilterSchema } from "../../../components/custom/filter/filter/types";
+import { IFilterCheckboxSchema } from "../../../components/custom/filter/filter-checkbox/types";
 import {
 	CommonCustomStoryProps,
 	FrontendEngine,
@@ -10,6 +8,7 @@ import {
 	OverrideStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
+import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 
 const meta: Meta = {
 	title: "Custom/Filter/FilterCheckbox",
@@ -46,6 +45,19 @@ const meta: Meta = {
 			},
 			type: { name: "object", value: {} },
 		},
+		clearBehavior: {
+			description:
+				"Action to update value on clicking clear button in filter, defaults to `clear` behaviour.<br>`clear` - Empties the value<br>`revert` - Revert to defaultValues<br>`retain` - Retain value",
+			table: {
+				type: {
+					summary: "clear|revert|retain",
+				},
+			},
+			control: {
+				type: "select",
+			},
+			options: ["clear", "revert", "retain"],
+		},
 		collapsible: {
 			description: "Specifies if the contents can be collapsed or expanded",
 			control: {
@@ -67,18 +79,6 @@ const meta: Meta = {
 			},
 			defaultValue: true,
 		},
-		// WIll be implemented as a part of a differetn ticket.
-		// validation: {
-		// 	description:
-		// 		"A set of config to ensure the value is acceptable before submission. For more info, refer to the <a href='/docs/form-validation-schema--required'>Validation Schema</a> stories",
-		// 	table: {
-		// 		type: {
-		// 			summary: "array",
-		// 		},
-		// 	},
-		// 	type: { name: "object", value: {} },
-		// 	defaultValue: [],
-		// },
 		showIf: {
 			description:
 				"A set of conditions to render the field. For more info, refer to the <a href='../?path=/docs/form-conditional-rendering-rules--filled'>Conditional Rendering</a> stories",
@@ -94,133 +94,133 @@ const meta: Meta = {
 };
 export default meta;
 
-const Template = (id: string) =>
-	(({ defaultValues, submitBtn, ...args }) => {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const formRef = useRef<IFrontendEngineRef>(null);
+const Template = (id: string, count = 1) =>
+	(({ defaultValues, ...args }) => {
 		return (
 			<FrontendEngine
-				ref={formRef}
 				data={{
 					sections: {
 						section: {
 							uiType: "section",
 							children: {
-								[id]: args,
-								...(submitBtn && { ...SUBMIT_BUTTON_SCHEMA }),
+								[id]: {
+									referenceKey: "filter",
+									children: {
+										...Array(count)
+											.fill("")
+											.reduce(
+												(schema, _, i) => ({
+													...schema,
+													[`${id}-${i}`]: args,
+												}),
+												{}
+											),
+										...SUBMIT_BUTTON_SCHEMA,
+									},
+								},
 							},
 						},
 					},
-					...(!!defaultValues && {
-						defaultValues: {
-							[id]: defaultValues,
-						},
-					}),
+					defaultValues,
 				}}
 			/>
 		);
-	}) as StoryFn<IFilterSchema & { defaultValues?: string[] | undefined; submitBtn?: boolean }>;
+	}) as StoryFn<IFilterCheckboxSchema & { defaultValues?: Record<string, string[]> | undefined }>;
 
-export const Default = Template("wrapper-default").bind({});
+export const Default = Template("filter-checkbox-default").bind({});
 Default.args = {
-	referenceKey: "filter",
-	children: {
-		filterItem1: {
-			label: "With 5 or less items",
-			referenceKey: "filter-checkbox",
-			// validation: [{ required: true, errorMessage: "Choose at least one option" }],
-			options: [
-				{ label: "red", value: "red" },
-				{ label: "blue", value: "blue" },
-			],
-		},
-		filterItem2: {
-			label: "With 5 or more items",
-			referenceKey: "filter-checkbox",
-			options: [
-				{ label: "red", value: "red" },
-				{ label: "blue", value: "blue" },
-				{ label: "green", value: "green" },
-				{ label: "orange", value: "orange" },
-				{ label: "yellow", value: "yellow" },
-				{ label: "black", value: "black" },
-			],
-		},
-		filterItem3: {
-			label: "Collapsible item",
-			referenceKey: "filter-checkbox",
-			collapsible: true,
-			showDivider: true,
-			options: [
-				{ label: "red", value: "red" },
-				{ label: "blue", value: "blue" },
-			],
-		},
-		filterItem4: {
-			label: "Non-Collapsible item",
-			referenceKey: "filter-checkbox",
-			collapsible: false,
-			showDivider: false,
-			options: [
-				{ label: "red", value: "red" },
-				{ label: "blue", value: "blue" },
-			],
-		},
-		filterItem5: {
-			label: "Collapsible item with divider",
-			referenceKey: "filter-checkbox",
-			collapsible: true,
-			showDivider: true,
-			options: [
-				{ label: "red", value: "red" },
-				{ label: "blue", value: "blue" },
-			],
-		},
-		filterItem6: {
-			label: "Collapsible item with mobile divider",
-			referenceKey: "filter-checkbox",
-			collapsible: true,
-			showMobileDivider: true,
-			showDivider: false,
-			options: [
-				{ label: "red", value: "red" },
-				{ label: "blue", value: "blue" },
-			],
-		},
-	},
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	options: [
+		{ label: "red", value: "red" },
+		{ label: "blue", value: "blue" },
+	],
 };
 
-export const WithDefaultValues = Template("wrapper-default-values").bind({});
+export const MoreThan5Options = Template("filter-checkbox-long").bind({});
+MoreThan5Options.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: false,
+	options: [
+		{ label: "red", value: "red" },
+		{ label: "blue", value: "blue" },
+		{ label: "green", value: "green" },
+		{ label: "orange", value: "orange" },
+		{ label: "yellow", value: "yellow" },
+		{ label: "black", value: "black" },
+	],
+};
+
+export const WithDefaultValues = Template("filter-checkbox-default-values").bind({});
 WithDefaultValues.args = {
-	referenceKey: "filter",
-	defaultValues: ["red", "orange"],
-	children: {
-		"wrapper-default-values": {
-			label: "With 5 or more items",
-			referenceKey: "filter-checkbox",
-			options: [
-				{ label: "red", value: "red" },
-				{ label: "blue", value: "blue" },
-				{ label: "green", value: "green" },
-				{ label: "orange", value: "orange" },
-				{ label: "yellow", value: "yellow" },
-				{ label: "black", value: "black" },
-			],
-		},
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: false,
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+	defaultValues: {
+		"filter-checkbox-default-values-0": ["red"],
 	},
 };
-
 WithDefaultValues.argTypes = {
 	defaultValues: {
-		description: "Default value for the field, this is declared outside `sections`",
-		table: {
-			type: {
-				summary: "string[]",
-			},
-		},
-		type: { name: "object", value: {} },
+		description: "Default value for the fields, this is declared outside `sections`",
 	},
 };
+
+export const Expanded = Template("filter-checkbox-collapsible").bind({});
+Expanded.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: false,
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+};
+
+export const HideDivider = Template("filter-checkbox-divider", 2).bind({});
+HideDivider.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	showDivider: false,
+	showMobileDivider: false,
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+};
+
+export const RevertOnClear = Template("filter-checkbox-revert").bind({});
+RevertOnClear.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: false,
+	clearBehavior: "revert",
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+	defaultValues: { "filter-checkbox-revert-0": ["red"] },
+};
+RevertOnClear.argTypes = WithDefaultValues.argTypes;
+
+export const RetainOnClear = Template("filter-checkbox-retain").bind({});
+RetainOnClear.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: false,
+	clearBehavior: "retain",
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+	defaultValues: { "filter-checkbox-retain-0": ["red"] },
+};
+RetainOnClear.argTypes = WithDefaultValues.argTypes;
 
 export const Overrides = OverrideStoryTemplate<IFilterSchema>("filter-checkbox-overrides", false).bind({});
 Overrides.args = {
@@ -229,9 +229,10 @@ Overrides.args = {
 		filterCheckbox: {
 			label: "Checkboxes",
 			referenceKey: "filter-checkbox",
+			collapsible: false,
 			options: [
-				{ label: "red", value: "red" },
-				{ label: "blue", value: "blue" },
+				{ label: "Red", value: "red" },
+				{ label: "Blue", value: "blue" },
 			],
 		},
 	},
@@ -240,7 +241,7 @@ Overrides.args = {
 			filterCheckbox: {
 				label: "Overridden",
 				referenceKey: "filter-checkbox",
-				options: [{ label: "new option", value: "new" }],
+				options: [{ label: "New option", value: "new" }],
 			},
 		},
 	},
