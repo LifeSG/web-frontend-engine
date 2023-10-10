@@ -102,6 +102,9 @@ export const CommonCustomStoryProps = (referenceKey: string): ArgTypes => {
 			},
 			type: { name: "string", required: true },
 			options: [referenceKey],
+			control: {
+				type: "select",
+			},
 			defaultValue: referenceKey,
 		},
 		label: {

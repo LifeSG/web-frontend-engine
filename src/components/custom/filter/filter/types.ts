@@ -14,3 +14,5 @@ export interface IFilterProps {
 	schema: IFilterSchema | undefined;
 	warnings?: Record<string, string> | undefined;
 }
+
+export type TClearBehavior = "clear" | "revert" | "retain";

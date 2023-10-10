@@ -6,17 +6,22 @@ import {
 	FRONTEND_ENGINE_ID,
 	TOverrideField,
 	TOverrideSchema,
+	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	getField,
 } from "../../../common";
+import { IFilterItemSchema } from "../../../../components/custom/filter/filter-item/types";
 const { ResizeObserver } = window;
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const REFERENCE_KEY = "filter-item";
 const TEXTFIELD_LABEL = "Name";
-const renderComponent = (overrideField?: TOverrideField<ITextFieldSchema>, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (
+	overrideField?: TOverrideField<ITextFieldSchema>,
+	overrideFilterItem?: TOverrideField<IFilterItemSchema>,
+	overrideSchema?: TOverrideSchema
+) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		sections: {
@@ -30,6 +35,7 @@ const renderComponent = (overrideField?: TOverrideField<ITextFieldSchema>, overr
 							filterItem1: {
 								referenceKey: REFERENCE_KEY,
 								label: "Filter Item",
+								...overrideFilterItem,
 								children: {
 									[COMPONENT_ID]: {
 										uiType: "text-field",
@@ -75,7 +81,7 @@ describe(REFERENCE_KEY, () => {
 
 	it("should support default value", async () => {
 		const defaultValue = "John Doe";
-		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+		renderComponent(undefined, undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 		// switching to use get all by display value, as filter-item will render two fields for desktop and mobile
 		expect(screen.getAllByDisplayValue(defaultValue)[0]).toBeInTheDocument();
 
@@ -101,5 +107,24 @@ describe(REFERENCE_KEY, () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(screen.getAllByText(ERROR_MESSAGE)[0]).toBeInTheDocument();
+	});
+
+	describe("clear behaviour on clicking clear button in filter", () => {
+		const defaultValue = "John Doe";
+		const changedValue = "Hello world";
+
+		it.each`
+			scenario                                             | clearBehavior | expectedValue
+			${"clear values by default"}                         | ${null}       | ${""}
+			${"clear values if clearBehavior=clear"}             | ${"clear"}    | ${""}
+			${"revert to default value if clearBehavior=revert"} | ${"revert"}   | ${defaultValue}
+			${"not update value if clearBehavior=retain"}        | ${"retain"}   | ${changedValue}
+		`("it should $scenario", async ({ clearBehavior, expectedValue }) => {
+			renderComponent(undefined, { clearBehavior }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+			fireEvent.change(screen.getByLabelText(TEXTFIELD_LABEL), { target: { value: changedValue } });
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Clear" })));
+
+			expect(getTextfield()).toHaveValue(expectedValue);
+		});
 	});
 });

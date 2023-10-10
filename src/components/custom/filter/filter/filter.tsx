@@ -8,14 +8,13 @@ import { ObjectHelper, TestHelper } from "../../../../utils";
 import { Wrapper } from "../../../elements/wrapper";
 import { IFilterCheckboxSchema } from "../filter-checkbox/types";
 import { IFilterItemSchema } from "../filter-item/types";
-import { IFilterProps } from "./types";
+import { IFilterProps, TClearBehavior } from "./types";
 
 export const Filter = (props: IFilterProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-
-	const { setValue, getValues } = useFormContext();
+	const { setValue, getValues, resetField } = useFormContext();
 
 	const {
 		id,
@@ -25,32 +24,51 @@ export const Filter = (props: IFilterProps) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const getChildrenFormFields = () => {
-		const fields: Record<string, IFilterItemSchema | IFilterCheckboxSchema> = {};
+	const getChildrenToClear = () => {
 		const formValues = getValues();
-		for (const key in formValues) {
-			const nested = ObjectHelper.getNestedValueByKey(children, key);
+		const clearableChildren: Record<string, IFilterItemSchema | IFilterCheckboxSchema> = {};
+		const resetChildren: Record<string, IFilterItemSchema | IFilterCheckboxSchema> = {};
+		Object.entries(children).forEach(([key, childSchema]) => {
+			if (!childSchema.clearBehavior || childSchema.clearBehavior === "clear") {
+				clearableChildren[key] = childSchema;
+			} else if (childSchema.clearBehavior === "revert") {
+				resetChildren[key] = childSchema;
+			}
+		});
 
-			if (!isEmpty(nested)) {
-				fields[key] = formValues[key];
+		const childrenToClear: Record<string, { behavior: Omit<TClearBehavior, "retain">; value: unknown }> = {};
+		for (const key in formValues) {
+			const clearableChild = ObjectHelper.getNestedValueByKey(clearableChildren, key);
+			const resetChild = ObjectHelper.getNestedValueByKey(resetChildren, key);
+			if (!isEmpty(clearableChild)) {
+				childrenToClear[key] = { behavior: "clear", value: formValues[key] };
+			}
+			if (!isEmpty(resetChild)) {
+				childrenToClear[key] = { behavior: "revert", value: formValues[key] };
 			}
 		}
-		return fields;
+		return childrenToClear;
 	};
 
-	const resetChildrenFormFields = (fields: Record<string, IFilterItemSchema | IFilterCheckboxSchema>): void => {
-		Object.entries(fields).forEach(([key, value]) => {
-			if (isArray(value)) {
-				setValue(key, []);
-			} else if (isString(value) || isNumber(value)) {
-				setValue(key, "");
+	const resetChildrenFormFields = (
+		fields: Record<string, { behavior: Omit<TClearBehavior, "retain">; value: unknown }>
+	): void => {
+		Object.entries(fields).forEach(([key, { behavior, value }]) => {
+			if (behavior === "clear") {
+				if (isArray(value)) {
+					setValue(key, []);
+				} else if (isString(value) || isNumber(value)) {
+					setValue(key, "");
+				}
+			} else if (behavior === "revert") {
+				resetField(key);
 			}
 		});
 	};
 
 	const clearData = () => {
-		const fields = getChildrenFormFields();
-		resetChildrenFormFields(fields);
+		const childrenToClear = getChildrenToClear();
+		resetChildrenFormFields(childrenToClear);
 	};
 
 	// =========================================================================

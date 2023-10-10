@@ -1,7 +1,8 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
-import { IFilterSchema } from "../../../components/custom/filter/filter/types";
+import { IFilterItemSchema } from "../../../components/custom/filter/filter-item/types";
 import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
+import { IFilterSchema } from "../../../components/custom/filter/filter/types";
 
 const meta: Meta = {
 	title: "Custom/Filter/Filter-Item",
@@ -20,6 +21,28 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonCustomStoryProps("filter-item"),
+		children: {
+			description: "Elements or string that is the descendant of this component",
+			table: {
+				type: {
+					summary: "TFrontendEngineFieldSchema | string | (string | TFrontendEngineFieldSchema)[]",
+				},
+			},
+			type: { name: "object", value: {}, required: true },
+		},
+		clearBehavior: {
+			description:
+				"Action to update value on clicking clear button in filter, defaults to `clear` behaviour.<br>`clear` - Empties the value<br>`revert` - Revert to defaultValues<br>`retain` - Retain value",
+			table: {
+				type: {
+					summary: "clear|revert|retain",
+				},
+			},
+			control: {
+				type: "select",
+			},
+			options: ["clear", "revert", "retain"],
+		},
 		collapsible: {
 			description: "Specifies if the contents can be collapsed or expanded",
 			control: {
@@ -41,90 +64,146 @@ const meta: Meta = {
 			},
 			defaultValue: true,
 		},
-		children: {
-			description: "Elements or string that is the descendant of this component",
-			table: {
-				type: {
-					summary: "TFrontendEngineFieldSchema | string | (string | TFrontendEngineFieldSchema)[]",
-				},
-			},
-			type: { name: "object", value: {}, required: true },
-		},
 	},
 };
 export default meta;
 
-const Template = (id: string) =>
-	((args) => (
+const Template = (id: string, count = 1) =>
+	(({ defaultValues, ...args }) => (
 		<FrontendEngine
 			data={{
 				sections: {
 					section: {
 						uiType: "section",
 						children: {
-							[id]: args,
+							[id]: {
+								referenceKey: "filter",
+								children: {
+									...Array(count)
+										.fill("")
+										.reduce(
+											(schema, _, i) => ({
+												...schema,
+												[`${id}-${i}`]: args,
+											}),
+											{}
+										),
+								},
+							},
 						},
 					},
 				},
+				defaultValues,
 			}}
 		/>
-	)) as StoryFn<IFilterSchema>;
+	)) as StoryFn<IFilterItemSchema & { defaultValues?: Record<string, string> | undefined }>;
 
-export const FilterItem = Template("wrapper-default").bind({});
-FilterItem.args = {
-	referenceKey: "filter",
+export const Default = Template("filter-item-default").bind({});
+Default.args = {
+	label: "Filter item",
+	referenceKey: "filter-item",
 	children: {
-		filterItem1: {
-			label: "Collapsible item",
-			referenceKey: "filter-item",
-			collapsible: true,
-			showDivider: true,
-			children: {
-				text: {
-					uiType: "text-body",
-					children: "This is a collapsible item",
-				},
-			},
-		},
-		filterItem2: {
-			label: "Non-Collapsible item",
-			referenceKey: "filter-item",
-			collapsible: false,
-			showDivider: false,
-			children: {
-				text: {
-					uiType: "text-bodysmall",
-					children: "This is a non-collapsible item",
-				},
-			},
-		},
-		filterItem4: {
-			label: "Collapsible item with divider",
-			referenceKey: "filter-item",
-			collapsible: true,
-			showDivider: true,
-			children: {
-				text: {
-					uiType: "text-bodysmall",
-					children: "This is a collapsible item with divider",
-				},
-			},
-		},
-		filterItem5: {
-			label: "Collapsible item with mobile divider",
-			referenceKey: "filter-item",
-			collapsible: true,
-			showMobileDivider: true,
-			showDivider: false,
-			children: {
-				text: {
-					uiType: "text-bodysmall",
-					children: "This is a collapsible item with divider in mobile only",
-				},
-			},
+		text: {
+			uiType: "text-body",
+			children: "This is a filter item",
 		},
 	},
 };
+
+export const WithDefaultValues = Template("filter-item-default-values").bind({});
+WithDefaultValues.args = {
+	label: "Filter item",
+	referenceKey: "filter-item",
+	collapsible: false,
+	children: {
+		fruits: {
+			uiType: "radio",
+			label: "Fruits",
+			options: [
+				{ label: "Apple", value: "Apple" },
+				{ label: "Berry", value: "Berry" },
+				{ label: "Cherry", value: "Cherry" },
+			],
+		},
+	},
+	defaultValues: {
+		fruits: "Apple",
+	},
+};
+WithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the fields, this is declared outside `sections`",
+	},
+};
+
+export const Expanded = Template("filter-item-expanded").bind({});
+Expanded.args = {
+	label: "Filter item",
+	referenceKey: "filter-item",
+	collapsible: false,
+	children: {
+		text: {
+			uiType: "text-body",
+			children: "This is expanded by default",
+		},
+	},
+};
+
+export const HideDivider = Template("filter-item-divider", 2).bind({});
+HideDivider.args = {
+	label: "Filter item",
+	referenceKey: "filter-item",
+	showDivider: false,
+	showMobileDivider: false,
+	children: {
+		text: {
+			uiType: "text-body",
+			children: "This is a filter item",
+		},
+	},
+};
+
+export const RevertOnClear = Template("filter-item-revert").bind({});
+RevertOnClear.args = {
+	label: "Filter item",
+	referenceKey: "filter-item",
+	collapsible: false,
+	clearBehavior: "revert",
+	children: {
+		fruits: {
+			uiType: "radio",
+			label: "Fruits",
+			options: [
+				{ label: "Apple", value: "Apple" },
+				{ label: "Berry", value: "Berry" },
+				{ label: "Cherry", value: "Cherry" },
+			],
+		},
+	},
+	defaultValues: { fruits: "Apple" },
+};
+RevertOnClear.argTypes = WithDefaultValues.argTypes;
+
+export const RetainOnClear = Template("filter-item-retain").bind({});
+RetainOnClear.args = {
+	label: "Filter item",
+	referenceKey: "filter-item",
+	collapsible: false,
+	clearBehavior: "retain",
+	children: {
+		fruits: {
+			uiType: "radio",
+			label: "Fruits",
+			options: [
+				{ label: "Apple", value: "Apple" },
+				{ label: "Berry", value: "Berry" },
+				{ label: "Cherry", value: "Cherry" },
+			],
+		},
+	},
+	defaultValues: { fruits: "Apple" },
+};
+RetainOnClear.argTypes = WithDefaultValues.argTypes;
 
 export const Overrides = OverrideStoryTemplate<IFilterSchema>("filter-item-overrides", false).bind({});
 Overrides.args = {
