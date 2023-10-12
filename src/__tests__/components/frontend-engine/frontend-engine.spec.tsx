@@ -598,6 +598,42 @@ describe("frontend-engine", () => {
 		expect(frontendEngine.container.querySelector("section")).not.toBeInTheDocument();
 	});
 
+	it("should clear validation rules of removed fields when schema is updated", async () => {
+		const submitFn = jest.fn();
+		const CustomFrontendEngine = () => {
+			const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
+			const handleClick = () =>
+				setSchema((state) => ({
+					...state,
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[FIELD_TWO_ID]: {
+									uiType: "text-field",
+									label: "New text field",
+								},
+								...getSubmitButtonProps(),
+							},
+						},
+					},
+				}));
+
+			return (
+				<>
+					<FrontendEngine data={schema} onSubmit={submitFn} />
+					<Button.Default onClick={handleClick}>Update schema</Button.Default>
+				</>
+			);
+		};
+
+		render(<CustomFrontendEngine />);
+		fireEvent.click(screen.getByRole("button", { name: "Update schema" }));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(submitFn).toBeCalled();
+	});
+
 	describe("setErrors", () => {
 		const handleClickDefault = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 			try {

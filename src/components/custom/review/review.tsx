@@ -14,7 +14,7 @@ export const Review = (props: IGenericCustomFieldProps<IReviewSchema>) => {
 		id,
 		schema: { label, description, items, topSection, bottomSection, ...otherSchema },
 	} = props;
-	const { setFieldValidationConfig } = useValidationConfig();
+	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
@@ -22,6 +22,9 @@ export const Review = (props: IGenericCustomFieldProps<IReviewSchema>) => {
 	useEffect(() => {
 		// set validation config so frontend engine's first onChange event can be fired
 		setFieldValidationConfig(id, Yup.mixed());
+		return () => {
+			removeFieldValidationConfig(id);
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
