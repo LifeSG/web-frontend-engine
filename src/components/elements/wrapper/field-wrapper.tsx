@@ -3,7 +3,7 @@ import isNumber from "lodash/isNumber";
 import isString from "lodash/isString";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { useFormSchema, useFormValues } from "../../../utils/hooks";
+import { useFormSchema, useFormValues, useValidationConfig } from "../../../utils/hooks";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 
 interface IProps {
@@ -19,6 +19,7 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 		formSchema: { defaultValues, restoreMode = "none" },
 	} = useFormSchema();
 	const { getField, setField, setRegisteredFields } = useFormValues();
+	const { removeFieldValidationConfig } = useValidationConfig();
 
 	useEffect(() => {
 		setValue(id, getField(id));
@@ -40,6 +41,7 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 				}
 			}
 			setRegisteredFields((prev) => prev.filter((fieldId) => fieldId !== id));
+			removeFieldValidationConfig(id);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
