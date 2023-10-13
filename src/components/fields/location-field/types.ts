@@ -1,11 +1,11 @@
-import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 import { IStaticMapProps } from "../../shared/static-map";
 import { ILocationInputProps } from "./location-input";
 import { ILocationPickerProps } from "./location-modal/location-picker/types";
 import { ILocationSearchProps } from "./location-modal/location-search/types";
 
 export interface ILocationFieldSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"location-field", V>,
+	extends IBaseFieldSchema<"location-field", V>,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<
 			ILocationSearchProps,

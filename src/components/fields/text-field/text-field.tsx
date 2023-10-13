@@ -2,9 +2,9 @@ import { Form } from "@lifesg/react-design-system/form";
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import React, { HTMLInputTypeAttribute, useEffect, useState } from "react";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
 import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./types";
 

@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { ISelectOption, ISelectSchema } from "./types";
 
 export const Select = (props: IGenericFieldProps<ISelectSchema>) => {

@@ -1,5 +1,6 @@
 import { CheckboxProps } from "@lifesg/react-design-system/checkbox";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 
 interface IOption {
 	label: string;
@@ -21,7 +22,7 @@ type TCustomOptions =
 			border?: boolean;
 	  };
 export interface ICheckboxGroupSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"checkbox", V>,
+	extends IBaseFieldSchema<"checkbox", V>,
 		TComponentOmitProps<CheckboxProps> {
 	options: IToggleOption[];
 	customOptions?: TCustomOptions;

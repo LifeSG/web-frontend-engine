@@ -2,9 +2,9 @@ import { LocalTime } from "@js-joda/core";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { ITimeFieldSchema } from "./types";
 
 export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {

@@ -1,5 +1,6 @@
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 
 type TCustomOptions = {
 	preventCopyAndPaste?: boolean | undefined;
@@ -7,19 +8,19 @@ type TCustomOptions = {
 };
 
 export interface ITextFieldSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"text-field", V>,
+	extends IBaseFieldSchema<"text-field", V>,
 		TComponentOmitProps<FormInputProps, "type" | "maxLength"> {
 	customOptions?: TCustomOptions | undefined;
 }
 
 export interface IEmailFieldSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"email-field", V>,
+	extends IBaseFieldSchema<"email-field", V>,
 		TComponentOmitProps<FormInputProps, "type" | "maxLength"> {
 	customOptions?: TCustomOptions | undefined;
 }
 
 export interface INumericFieldSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"numeric-field", V>,
+	extends IBaseFieldSchema<"numeric-field", V>,
 		TComponentOmitProps<FormInputProps, "type" | "max" | "min"> {
 	customOptions?: TCustomOptions | undefined;
 }

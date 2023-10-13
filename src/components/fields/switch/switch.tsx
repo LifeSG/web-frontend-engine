@@ -2,9 +2,9 @@ import { Form } from "@lifesg/react-design-system/form";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { FlexWrapper } from "./switch.styles";
 import { ISwitchSchema } from "./types";
 

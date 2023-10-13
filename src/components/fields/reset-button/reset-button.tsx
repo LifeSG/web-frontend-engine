@@ -3,8 +3,8 @@ import isArray from "lodash/isArray";
 import isNumber from "lodash/isNumber";
 import isString from "lodash/isString";
 import { useFormContext } from "react-hook-form";
+import { IGenericFieldProps } from "..";
 import { useFormSchema, useFormValues } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { IResetButtonSchema } from "./types";
 
 export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {

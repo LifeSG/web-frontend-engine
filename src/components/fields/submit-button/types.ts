@@ -1,8 +1,9 @@
 import { ButtonProps } from "@lifesg/react-design-system/button/types";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 
 export interface ISubmitButtonSchema
-	extends Omit<IFrontendEngineBaseFieldJsonSchema<"submit">, "validation">,
+	extends Omit<IBaseFieldSchema<"submit">, "validation">,
 		TComponentOmitProps<ButtonProps, "disabled"> {
 	disabled?: boolean | "invalid-form" | undefined;
 }

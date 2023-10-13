@@ -1,11 +1,11 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
-import { IUnitNumberFieldSchema } from "./types";
 import { ERROR_MESSAGES } from "../../shared";
+import { IUnitNumberFieldSchema } from "./types";
 
 export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema>) => {
 	// =============================================================================

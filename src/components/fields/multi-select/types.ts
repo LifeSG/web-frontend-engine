@@ -1,5 +1,6 @@
 import { InputMultiSelectProps } from "@lifesg/react-design-system/input-multi-select";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 
 export interface IMultiSelectOption {
 	label: string;
@@ -7,5 +8,5 @@ export interface IMultiSelectOption {
 }
 
 export interface IMultiSelectSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"multi-select", V>,
+	extends IBaseFieldSchema<"multi-select", V>,
 		TComponentOmitProps<InputMultiSelectProps<IMultiSelectOption, string>> {}

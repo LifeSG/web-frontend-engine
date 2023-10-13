@@ -15,4 +15,5 @@ export * from "./switch";
 export * from "./text-field";
 export * from "./textarea";
 export * from "./time-field";
+export * from "./types";
 export * from "./unit-number-field";

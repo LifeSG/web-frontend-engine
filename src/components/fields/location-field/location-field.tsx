@@ -1,9 +1,9 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks/use-validation-config";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
 import { StyledStaticMap } from "./location-field.styles";
 import { LocationHelper } from "./location-helper";
