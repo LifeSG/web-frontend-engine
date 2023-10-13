@@ -3,10 +3,10 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import { TestHelper } from "../../../../utils";
-import { IGenericFieldProps } from "../../../frontend-engine";
+import { IGenericCustomFieldProps } from "../../types";
 import { IFilterCheckboxSchema, IOption } from "./types";
 
-export const FilterCheckbox = (props: IGenericFieldProps<IFilterCheckboxSchema>) => {
+export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================

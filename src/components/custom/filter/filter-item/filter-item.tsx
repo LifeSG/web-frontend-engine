@@ -1,10 +1,10 @@
 import { Filter } from "@lifesg/react-design-system";
 import { TestHelper } from "../../../../utils";
 import { Wrapper } from "../../../elements/wrapper";
-import { IGenericFieldProps } from "../../../frontend-engine";
+import { IGenericCustomElementProps } from "../../types";
 import { IFilterItemSchema } from "./types";
 
-export const FilterItem = (props: IGenericFieldProps<IFilterItemSchema>) => {
+export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================

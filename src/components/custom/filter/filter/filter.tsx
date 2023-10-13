@@ -6,11 +6,12 @@ import isString from "lodash/isString";
 import { useFormContext } from "react-hook-form";
 import { ObjectHelper, TestHelper } from "../../../../utils";
 import { Wrapper } from "../../../elements/wrapper";
+import { IGenericCustomElementProps } from "../../types";
 import { IFilterCheckboxSchema } from "../filter-checkbox/types";
 import { IFilterItemSchema } from "../filter-item/types";
-import { IFilterProps, TClearBehavior } from "./types";
+import { IFilterSchema, TClearBehavior } from "./types";
 
-export const Filter = (props: IFilterProps) => {
+export const Filter = (props: IGenericCustomElementProps<IFilterSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================

@@ -1,8 +1,8 @@
-import { ICustomFieldJsonSchema } from "../../types";
+import { IBaseCustomFieldSchema } from "../../types";
 import { TClearBehavior } from "../filter/types";
 
 export interface IFilterCheckboxSchema<V = undefined>
-	extends Omit<ICustomFieldJsonSchema<"filter-checkbox", V>, "validation"> {
+	extends Omit<IBaseCustomFieldSchema<"filter-checkbox", V>, "validation"> {
 	label: string;
 	options: IOption[];
 	collapsible?: boolean | undefined;

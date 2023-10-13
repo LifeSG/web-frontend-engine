@@ -1,12 +1,12 @@
 import { UneditableSection } from "@lifesg/react-design-system/uneditable-section";
 import * as Yup from "yup";
 import { Wrapper } from "../../elements/wrapper";
-import { IGenericCustomFieldProps } from "../types";
+import { IGenericCustomElementProps } from "../types";
 import { IReviewSchema } from "./types";
 import { useValidationConfig } from "../../../utils/hooks";
 import { useEffect } from "react";
 
-export const Review = (props: IGenericCustomFieldProps<IReviewSchema>) => {
+export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
