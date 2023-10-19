@@ -59,7 +59,7 @@ export interface IBaseElementSchema<T> {
 /**
  * common props for all elements
  */
-export interface IGenericElementProps<T = TElementSchema> {
+export interface IGenericElementProps<T> {
 	id: string;
 	schema: T;
 }

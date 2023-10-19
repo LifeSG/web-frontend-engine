@@ -56,7 +56,7 @@ export interface IBaseCustomFieldSchema<T, V = undefined, U = undefined> extends
 /**
  * common props for all custom elements / fields
  */
-export interface IGenericCustomElementProps<T = TCustomComponentSchema> {
+export interface IGenericCustomElementProps<T> {
 	id: string;
 	schema: T;
 }
@@ -64,9 +64,7 @@ export interface IGenericCustomElementProps<T = TCustomComponentSchema> {
 /**
  * common props for all custom fields
  */
-export interface IGenericCustomFieldProps<T = IFilterCheckboxSchema>
-	extends Partial<ControllerFieldState>,
-		Partial<ControllerRenderProps> {
+export interface IGenericCustomFieldProps<T> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
 	id: string;
 	schema: T;
 }

@@ -94,9 +94,7 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 /**
  * common props for all fields
  */
-export interface IGenericFieldProps<T = TFieldSchema>
-	extends Partial<ControllerFieldState>,
-		Partial<ControllerRenderProps> {
+export interface IGenericFieldProps<T> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
 	id: string;
 	schema: T;
 }
