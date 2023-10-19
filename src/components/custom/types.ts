@@ -2,8 +2,10 @@
  * custom elements / fields are components that are defined by the `referenceKey` instead of `uiType` in the schema
  * these are typically components that are more opinionated and do not fit into the generic components
  */
-import type { IYupValidationRule, TFrontendEngineFieldSchema } from "../frontend-engine";
+import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
+import type { IYupValidationRule } from "../frontend-engine";
 import type { TRenderRules } from "../frontend-engine/yup";
+import { IFilterCheckboxSchema } from "./filter/filter-checkbox/types";
 import type { IFilterSchema } from "./filter/filter/types";
 import type { IReviewSchema } from "./review";
 
@@ -40,7 +42,7 @@ export interface ICustomElementJsonSchema<T> {
 /**
  * base schema for custom fields
  */
-export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> extends ICustomElementJsonSchema<T> {
+export interface IBaseCustomFieldSchema<T, V = undefined, U = undefined> extends ICustomElementJsonSchema<T> {
 	validation?: (V | U | IYupValidationRule)[];
 	/** render conditions
 	 * - need to fulfil at least 1 object in array (OR condition)
@@ -48,10 +50,21 @@ export interface ICustomFieldJsonSchema<T, V = undefined, U = undefined> extends
 	showIf?: TRenderRules[] | undefined;
 }
 
+// =============================================================================
+// CUSTOM ELEMENT / FIELD PROPS
+// =============================================================================
 /**
  * common props for all custom elements / fields
  */
-export interface IGenericCustomFieldProps<T = TFrontendEngineFieldSchema> {
+export interface IGenericCustomElementProps<T> {
+	id: string;
+	schema: T;
+}
+
+/**
+ * common props for all custom fields
+ */
+export interface IGenericCustomFieldProps<T> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
 	id: string;
 	schema: T;
 }

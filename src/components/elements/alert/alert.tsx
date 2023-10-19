@@ -1,10 +1,10 @@
 import { Alert as DSAlert } from "@lifesg/react-design-system/alert";
 import { TestHelper } from "../../../utils";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { Sanitize } from "../../shared";
+import { IGenericElementProps } from "../types";
 import { IAlertSchema } from "./types";
 
-export const Alert = (props: IGenericFieldProps<IAlertSchema>) => {
+export const Alert = (props: IGenericElementProps<IAlertSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================

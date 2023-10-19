@@ -9,10 +9,4 @@ export interface IFilterSchema extends ICustomElementJsonSchema<"filter"> {
 	clearButtonDisabled?: boolean | undefined;
 }
 
-export interface IFilterProps {
-	id: string | undefined;
-	schema: IFilterSchema | undefined;
-	warnings?: Record<string, string> | undefined;
-}
-
 export type TClearBehavior = "clear" | "revert" | "retain";

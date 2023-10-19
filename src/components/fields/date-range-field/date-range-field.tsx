@@ -5,9 +5,9 @@ import { Form } from "@lifesg/react-design-system/form";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
 import { TDateRangeFieldSchema, TDateRangeInputType } from "./types";
 

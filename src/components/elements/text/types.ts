@@ -1,5 +1,6 @@
 import { TextProps } from "@lifesg/react-design-system/text";
-import { IFrontendEngineElementJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseElementSchema } from "../types";
 
 export type TTextType =
 	| "text-d1"
@@ -15,8 +16,6 @@ export type TTextType =
 	| "text-bodysmall"
 	| "text-xsmall";
 
-export interface ITextSchema
-	extends IFrontendEngineElementJsonSchema<TTextType>,
-		TComponentOmitProps<TextProps, "children"> {
+export interface ITextSchema extends IBaseElementSchema<TTextType>, TComponentOmitProps<TextProps, "children"> {
 	children: string | string[] | Record<string, ITextSchema>;
 }

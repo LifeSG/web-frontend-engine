@@ -1,8 +1,8 @@
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { FileHelper, WindowHelper } from "../../../utils";
 import { useFieldEvent, usePrevious, useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";

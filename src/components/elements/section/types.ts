@@ -1,12 +1,9 @@
-import {
-	IFrontendEngineElementJsonSchema,
-	TComponentOmitProps,
-	TFrontendEngineFieldSchema,
-} from "../../frontend-engine";
+import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { IBaseElementSchema } from "../types";
 import { IWrapperSchema } from "../wrapper";
 
 export interface ISectionSchema<V = undefined>
-	extends IFrontendEngineElementJsonSchema<"section">,
+	extends IBaseElementSchema<"section">,
 		TComponentOmitProps<IWrapperSchema> {
 	children: Record<string, TFrontendEngineFieldSchema<V>>;
 }

@@ -1,12 +1,12 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { Toggle } from "@lifesg/react-design-system/toggle";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { FlexWrapper, Label, RadioContainer, StyledImageButton, StyledRadioButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 

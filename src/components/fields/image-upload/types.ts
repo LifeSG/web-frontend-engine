@@ -1,4 +1,4 @@
-import { IFrontendEngineBaseFieldJsonSchema } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
 
 export type TUploadMethod = "post" | "put" | "patch";
@@ -14,7 +14,7 @@ export interface IImageUploadValidationRule extends IYupValidationRule {
 }
 
 export interface IImageUploadSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"image-upload", V, IImageUploadValidationRule> {
+	extends IBaseFieldSchema<"image-upload", V, IImageUploadValidationRule> {
 	buttonLabel?: string | undefined;
 	className?: string | undefined;
 	description?: string | undefined;

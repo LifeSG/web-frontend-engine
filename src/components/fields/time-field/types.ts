@@ -1,8 +1,9 @@
 import { TimepickerProps } from "@lifesg/react-design-system/timepicker";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 
 export interface ITimeFieldSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"time-field", V>,
+	extends IBaseFieldSchema<"time-field", V>,
 		TComponentOmitProps<TimepickerProps> {
 	useCurrentTime?: boolean | undefined;
 	is24HourFormat?: boolean | undefined;

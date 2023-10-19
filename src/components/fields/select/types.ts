@@ -1,5 +1,6 @@
 import { InputSelectProps } from "@lifesg/react-design-system/input-select/types";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 
 export interface ISelectOption {
 	label: string;
@@ -7,5 +8,5 @@ export interface ISelectOption {
 }
 
 export interface ISelectSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"select", V>,
+	extends IBaseFieldSchema<"select", V>,
 		TComponentOmitProps<InputSelectProps<ISelectOption, string>> {}

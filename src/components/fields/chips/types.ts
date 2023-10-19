@@ -1,4 +1,5 @@
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
 
 export interface IChipOption {
@@ -8,7 +9,7 @@ export interface IChipOption {
 }
 
 export interface IChipsSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"chips", V>,
+	extends IBaseFieldSchema<"chips", V>,
 		TComponentOmitProps<React.ButtonHTMLAttributes<HTMLButtonElement>> {
 	options: IChipOption[];
 	textarea?: {

@@ -1,13 +1,13 @@
-import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Form } from "@lifesg/react-design-system/form";
+import { Toggle } from "@lifesg/react-design-system/toggle";
 import without from "lodash/without";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { ERROR_MESSAGES } from "../../shared";
 import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";

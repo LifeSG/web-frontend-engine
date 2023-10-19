@@ -1,4 +1,5 @@
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine/types";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 import { CountryData } from "./data";
 import { PhoneNumberInputProps } from "@lifesg/react-design-system";
 
@@ -36,5 +37,5 @@ export interface IParsedPhoneNumber {
 }
 
 export interface IContactFieldSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"contact-field", V, IContactFieldValidationRule>,
+	extends IBaseFieldSchema<"contact-field", V, IContactFieldValidationRule>,
 		TComponentOmitProps<IContactFieldProps> {}

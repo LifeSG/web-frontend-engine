@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { useWatch } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
+import { IGenericFieldProps } from "..";
 import { useValidationConfig, useValidationSchema } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine";
 import { ISubmitButtonSchema } from "./types";
 
 export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => {

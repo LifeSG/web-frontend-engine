@@ -1,8 +1,9 @@
 import { ButtonProps } from "@lifesg/react-design-system/button/types";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 
 export interface IResetButtonSchema
-	extends Omit<IFrontendEngineBaseFieldJsonSchema<"reset">, "validation">,
+	extends Omit<IBaseFieldSchema<"reset">, "validation">,
 		TComponentOmitProps<ButtonProps, "disabled"> {
 	disabled?: boolean | undefined;
 	ignoreDefaultValues?: boolean | undefined;

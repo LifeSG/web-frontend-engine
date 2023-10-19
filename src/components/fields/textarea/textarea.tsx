@@ -1,14 +1,14 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { kebabCase } from "lodash";
 import React, { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IGenericFieldProps } from "../../frontend-engine/types";
 import { Chip } from "../../shared";
+import { IGenericFieldProps } from "../types";
 import { ChipContainer, StyledTextarea, Wrapper } from "./textarea.styles";
 import { ITextareaSchema } from "./types";
-import { useFormContext } from "react-hook-form";
 
 export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// =============================================================================

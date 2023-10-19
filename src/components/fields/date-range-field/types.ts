@@ -1,5 +1,6 @@
 import { DateRangeInputProps } from "@lifesg/react-design-system/date-range-input";
-import { IFrontendEngineBaseFieldJsonSchema, TComponentOmitProps } from "../../frontend-engine/types";
+import { TComponentOmitProps } from "../../frontend-engine";
+import { IBaseFieldSchema } from "../types";
 
 export interface IDateRangeFieldValidationRule {
 	future?: boolean | undefined;
@@ -9,14 +10,14 @@ export interface IDateRangeFieldValidationRule {
 	excludedDates?: string[] | undefined;
 }
 interface WeekSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"date-range-field", V, undefined>,
+	extends IBaseFieldSchema<"date-range-field", V, undefined>,
 		TComponentOmitProps<DateRangeInputProps, "valueEnd"> {
 	variant: "week";
 	dateFormat?: string | undefined;
 }
 
 interface RangeSchema<V = undefined>
-	extends IFrontendEngineBaseFieldJsonSchema<"date-range-field", V, IDateRangeFieldValidationRule>,
+	extends IBaseFieldSchema<"date-range-field", V, IDateRangeFieldValidationRule>,
 		TComponentOmitProps<DateRangeInputProps, "valueEnd"> {
 	variant: "range";
 	dateFormat?: string | undefined;
