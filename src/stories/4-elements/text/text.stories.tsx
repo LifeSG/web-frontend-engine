@@ -257,6 +257,7 @@ InlineText.args = {
 export const ParagraphText = Template("text-paragraph").bind({});
 ParagraphText.args = {
 	uiType: "text-body",
+	maxLines: 2,
 	children: {
 		"text-paragraph-one": {
 			uiType: "text-body",
