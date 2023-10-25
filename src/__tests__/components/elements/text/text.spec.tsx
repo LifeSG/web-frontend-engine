@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { ITextSchema, TTextType } from "../../../../components/elements";
+import React from "react";
+import { ITextSchema, TTextType, Text } from "../../../../components/elements";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, TOverrideSchema } from "../../../common";
-
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "text-body";
@@ -22,6 +22,7 @@ const renderComponent = (
 					[COMPONENT_ID]: {
 						uiType: UI_TYPE,
 						children: "Textbody",
+						maxLines: 3,
 						...overrideField,
 					},
 				},
@@ -104,5 +105,50 @@ describe(UI_TYPE, () => {
 
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
 		expect(consoleSpy).not.toBeCalled();
+	});
+
+	it("should be able to render view more button", () => {
+		const childrenContent = ["apple", "berry", "cherry", "orange"];
+
+		// mock useState value
+		const useStateSpy = jest.spyOn(React, "useState");
+		useStateSpy.mockReturnValueOnce([false, jest.fn()]); // expanded
+		useStateSpy.mockReturnValueOnce([true, jest.fn()]); // showExpandButton
+
+		render(
+			<Text
+				id="test"
+				schema={{
+					uiType: "text-body",
+					children: childrenContent,
+					maxLines: 3,
+				}}
+			/>
+		);
+
+		const button = screen.queryByText("View more");
+		expect(button).toBeInTheDocument();
+	});
+
+	it("should be able to render view less button", () => {
+		const childrenContent = ["apple", "berry", "cherry", "orange"];
+		// mock useState value
+		const useStateSpy = jest.spyOn(React, "useState");
+		useStateSpy.mockReturnValueOnce([true, jest.fn()]); // expanded
+		useStateSpy.mockReturnValueOnce([true, jest.fn()]); // showExpandButton
+
+		render(
+			<Text
+				id="test"
+				schema={{
+					uiType: "text-body",
+					children: childrenContent,
+					maxLines: 3,
+				}}
+			/>
+		);
+
+		const button = screen.queryByText("View less");
+		expect(button).toBeInTheDocument();
 	});
 });
