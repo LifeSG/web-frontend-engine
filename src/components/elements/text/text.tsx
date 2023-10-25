@@ -26,20 +26,17 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
 	// EFFECTS / CALLBACKS
 	// =============================================================================
+	/**
+	 * control whether to render "View more" button and whether to expand / condense on click
+	 */
 	useEffect(() => {
-		// expanded: true, text expanded, and view less button display, false: text collaspible, and view more button display
 		setExpanded(!maxLines);
-		// by default, show the view more/less button if maxLines configured
 		setShowExpandButton(maxLines > 0);
 
 		if (!maxLines || !elementRef.current) return;
 
-		// calculate whether to show more after line-clamp is triggered
 		const clientHeight = elementRef.current.clientHeight;
 		const scrollHeight = elementRef.current.scrollHeight;
-
-		// Note: the calculated scrollHeight and clientHeight differs by 1 without any overflow
-		// setHideButton(!(scrollHeight - clientHeight > 1));
 		setShowExpandButton(scrollHeight - clientHeight > 1);
 	}, [children, maxLines]);
 
@@ -83,7 +80,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 			<Element
 				id={id}
 				ref={elementRef}
-				maxLines={maxLines > 0 && !expanded ? maxLines : undefined}
+				maxLines={!expanded ? maxLines : undefined}
 				data-testid={getTestId(id)}
 				{...otherSchema}
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
@@ -92,7 +89,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				<Sanitize id={id}>{renderText()}</Sanitize>
 			</Element>
 
-			{showExpandButton && maxLines > 0 && (
+			{showExpandButton && (
 				<Button.Small styleType="link" style={{ padding: "0" }} onClick={() => setExpanded(!expanded)}>
 					{expanded ? "View less" : "View more"}
 				</Button.Small>
