@@ -7,6 +7,7 @@ import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
 import { TEXT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
+import styled from "styled-components";
 
 export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
@@ -19,7 +20,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 
 	const elementRef = useRef(null);
 	const [expanded, setExpanded] = useState(false);
-	const [showExpandButton, setShowExpandButton] = useState(true);
+	const [showExpandButton, setShowExpandButton] = useState(false);
 
 	const Element = TEXT_MAPPING[uiType.toUpperCase()] || undefined;
 
@@ -53,6 +54,9 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 		return isArrayWithChild || isObjectWithChild;
 	};
 
+	const PlainButton = styled(Button.Small)`
+		padding: 0;
+	`;
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -90,9 +94,9 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 			</Element>
 
 			{showExpandButton && (
-				<Button.Small styleType="link" style={{ padding: "0" }} onClick={() => setExpanded(!expanded)}>
+				<PlainButton styleType="link" onClick={() => setExpanded(!expanded)}>
 					{expanded ? "View less" : "View more"}
-				</Button.Small>
+				</PlainButton>
 			)}
 		</>
 	);
