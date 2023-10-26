@@ -1,10 +1,13 @@
+import { Button } from "@lifesg/react-design-system/button";
 import isArray from "lodash/isArray";
 import isObject from "lodash/isObject";
+import { useEffect, useRef, useState } from "react";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
 import { TEXT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
+import styled from "styled-components";
 
 export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
@@ -12,10 +15,32 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
 	const {
 		id,
-		schema: { children, uiType, ...otherSchema },
+		schema: { children, uiType, maxLines, ...otherSchema },
 	} = props;
 
+	const elementRef = useRef(null);
+	const [expanded, setExpanded] = useState(false);
+	const [showExpandButton, setShowExpandButton] = useState(false);
+
 	const Element = TEXT_MAPPING[uiType.toUpperCase()] || undefined;
+
+	// =============================================================================
+	// EFFECTS / CALLBACKS
+	// =============================================================================
+	/**
+	 * control whether to render "View more" button and whether to expand / condense on click
+	 */
+	useEffect(() => {
+		setExpanded(!maxLines);
+		setShowExpandButton(maxLines > 0);
+
+		if (!maxLines || !elementRef.current) return;
+
+		const clientHeight = elementRef.current.clientHeight;
+		const scrollHeight = elementRef.current.scrollHeight;
+		setShowExpandButton(scrollHeight - clientHeight > 1);
+	}, [children, maxLines]);
+
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
@@ -52,14 +77,28 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	};
 
 	return (
-		<Element
-			id={id}
-			data-testid={getTestId(id)}
-			{...otherSchema}
-			// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
-			{...(hasNestedFields() && { as: "div" })}
-		>
-			<Sanitize id={id}>{renderText()}</Sanitize>
-		</Element>
+		<>
+			<Element
+				id={id}
+				ref={elementRef}
+				maxLines={!expanded ? maxLines : undefined}
+				data-testid={getTestId(id)}
+				{...otherSchema}
+				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
+				{...(hasNestedFields() && { as: "div" })}
+			>
+				<Sanitize id={id}>{renderText()}</Sanitize>
+			</Element>
+
+			{showExpandButton && (
+				<PlainButton styleType="link" onClick={() => setExpanded(!expanded)}>
+					{expanded ? "View less" : "View more"}
+				</PlainButton>
+			)}
+		</>
 	);
 };
+
+const PlainButton = styled(Button.Small)`
+	padding: 0;
+`;

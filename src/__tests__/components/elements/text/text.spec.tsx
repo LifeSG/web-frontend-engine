@@ -1,9 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ITextSchema, TTextType } from "../../../../components/elements";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, TOverrideSchema } from "../../../common";
-
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "text-body";
@@ -11,7 +10,8 @@ const COMPONENT_TEST_ID = TestHelper.generateId(COMPONENT_ID, "text");
 
 const renderComponent = (
 	overrideField?: Partial<Omit<ITextSchema, "label">> | undefined,
-	overrideSchema?: TOverrideSchema
+	overrideSchema?: TOverrideSchema,
+	maxLines?: number
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -22,6 +22,7 @@ const renderComponent = (
 					[COMPONENT_ID]: {
 						uiType: UI_TYPE,
 						children: "Textbody",
+						maxLines,
 						...overrideField,
 					},
 				},
@@ -29,6 +30,7 @@ const renderComponent = (
 		},
 		...overrideSchema,
 	};
+
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
@@ -104,5 +106,36 @@ describe(UI_TYPE, () => {
 
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
 		expect(consoleSpy).not.toBeCalled();
+	});
+
+	it("should be able to render view more button", async () => {
+		const childrenContent = ["apple", "berry", "cherry", "orange"];
+
+		Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, value: 400 });
+		Object.defineProperty(HTMLElement.prototype, "scrollHeight", { configurable: true, value: 500 });
+		renderComponent({ children: childrenContent, maxLines: 3 });
+
+		const viewMoreButton = screen.queryByText("View more");
+		expect(viewMoreButton).toBeInTheDocument();
+
+		Object.defineProperty(HTMLElement.prototype, "clientHeight", { value: 0 });
+		Object.defineProperty(HTMLElement.prototype, "scrollHeight", { value: 0 });
+	});
+
+	it("should be able to toggle view more and less button", async () => {
+		const childrenContent = ["apple", "berry", "cherry", "orange"];
+
+		Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, value: 400 });
+		Object.defineProperty(HTMLElement.prototype, "scrollHeight", { configurable: true, value: 500 });
+		renderComponent({ children: childrenContent, maxLines: 3 });
+
+		const viewMoreButton = screen.queryByText("View more");
+		expect(viewMoreButton).toBeInTheDocument();
+		await waitFor(() => fireEvent.click(viewMoreButton));
+		const viewLessButton = screen.queryByText("View less");
+		expect(viewLessButton).toBeInTheDocument();
+
+		Object.defineProperty(HTMLElement.prototype, "clientHeight", { value: 0 });
+		Object.defineProperty(HTMLElement.prototype, "scrollHeight", { value: 0 });
 	});
 });

@@ -287,3 +287,10 @@ SanitizedHTMLString.args = {
 	uiType: "text-body",
 	children: "<p>This component should not contain a script tag<script>console.log('hello world')</script></p>",
 };
+
+export const LongTextWithViewMoreButton = Template("text-array").bind({});
+LongTextWithViewMoreButton.args = {
+	uiType: "text-body",
+	children: ["This", "is", "a", "long", "text"],
+	maxLines: 3,
+};
