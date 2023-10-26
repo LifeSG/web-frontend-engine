@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { ITextSchema, TTextType, Text } from "../../../../components/elements";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -11,7 +11,8 @@ const COMPONENT_TEST_ID = TestHelper.generateId(COMPONENT_ID, "text");
 
 const renderComponent = (
 	overrideField?: Partial<Omit<ITextSchema, "label">> | undefined,
-	overrideSchema?: TOverrideSchema
+	overrideSchema?: TOverrideSchema,
+	maxLines?: number
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -22,7 +23,7 @@ const renderComponent = (
 					[COMPONENT_ID]: {
 						uiType: UI_TYPE,
 						children: "Textbody",
-						maxLines: 3,
+						maxLines,
 						...overrideField,
 					},
 				},
@@ -30,8 +31,22 @@ const renderComponent = (
 		},
 		...overrideSchema,
 	};
+
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
+
+// const clientHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientHeight");
+// const scrollHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollHeight");
+
+// beforeAll(() => {
+// 	Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, value: 400 });
+// 	Object.defineProperty(HTMLElement.prototype, "scrollHeight", { configurable: true, value: 500 });
+// });
+
+// afterAll(() => {
+// 	Object.defineProperty(HTMLElement.prototype, "clientHeight", clientHeight);
+// 	Object.defineProperty(HTMLElement.prototype, "scrollHeight", scrollHeight);
+// });
 
 describe(UI_TYPE, () => {
 	it("should be able to render the field", () => {
@@ -107,48 +122,34 @@ describe(UI_TYPE, () => {
 		expect(consoleSpy).not.toBeCalled();
 	});
 
-	it("should be able to render view more button", () => {
+	it("should be able to render view more button", async () => {
 		const childrenContent = ["apple", "berry", "cherry", "orange"];
 
-		// mock useState value
-		const useStateSpy = jest.spyOn(React, "useState");
-		useStateSpy.mockReturnValueOnce([false, jest.fn()]); // expanded
-		useStateSpy.mockReturnValueOnce([true, jest.fn()]); // showExpandButton
+		const clientHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientHeight");
+		const scrollHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollHeight");
 
-		render(
-			<Text
-				id="test"
-				schema={{
-					uiType: "text-body",
-					children: childrenContent,
-					maxLines: 3,
-				}}
-			/>
-		);
+		Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, value: 400 });
+		Object.defineProperty(HTMLElement.prototype, "scrollHeight", { configurable: true, value: 500 });
+		renderComponent({ children: childrenContent, maxLines: 3 });
 
-		const button = screen.queryByText("View more");
-		expect(button).toBeInTheDocument();
+		const viewMoreButton = screen.queryByText("View more");
+		expect(viewMoreButton).toBeInTheDocument();
 	});
 
-	it("should be able to render view less button", () => {
+	it("should be able to toggle view more and less button", async () => {
 		const childrenContent = ["apple", "berry", "cherry", "orange"];
-		// mock useState value
-		const useStateSpy = jest.spyOn(React, "useState");
-		useStateSpy.mockReturnValueOnce([true, jest.fn()]); // expanded
-		useStateSpy.mockReturnValueOnce([true, jest.fn()]); // showExpandButton
 
-		render(
-			<Text
-				id="test"
-				schema={{
-					uiType: "text-body",
-					children: childrenContent,
-					maxLines: 3,
-				}}
-			/>
-		);
+		const clientHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientHeight");
+		const scrollHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollHeight");
 
-		const button = screen.queryByText("View less");
-		expect(button).toBeInTheDocument();
+		Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, value: 400 });
+		Object.defineProperty(HTMLElement.prototype, "scrollHeight", { configurable: true, value: 500 });
+		renderComponent({ children: childrenContent, maxLines: 3 });
+
+		const viewMoreButton = screen.queryByText("View more");
+		expect(viewMoreButton).toBeInTheDocument();
+		await waitFor(() => fireEvent.click(viewMoreButton));
+		const viewLessButton = screen.queryByText("View less");
+		expect(viewLessButton).toBeInTheDocument();
 	});
 });
