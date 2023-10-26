@@ -54,9 +54,6 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 		return isArrayWithChild || isObjectWithChild;
 	};
 
-	const PlainButton = styled(Button.Small)`
-		padding: 0;
-	`;
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -101,3 +98,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 		</>
 	);
 };
+
+const PlainButton = styled(Button.Small)`
+	padding: 0;
+`;
