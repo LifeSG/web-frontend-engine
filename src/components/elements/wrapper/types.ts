@@ -1,3 +1,4 @@
+import { ColDivProps } from "@lifesg/react-design-system";
 import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
@@ -9,6 +10,7 @@ export interface IWrapperSchema extends TComponentOmitProps<React.HTMLAttributes
 	uiType: TWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema> | string;
+	colProps?: ColDivProps;
 }
 
 export interface IWrapperProps {

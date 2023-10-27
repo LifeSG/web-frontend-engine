@@ -16,6 +16,7 @@ import { ConditionalRenderer } from "./conditional-renderer";
 import { FieldWrapper } from "./field-wrapper";
 import { IWrapperProps } from "./types";
 import { DSAlert } from "./wrapper.styles";
+import { Layout } from "@lifesg/react-design-system";
 
 const fieldTypeKeys = Object.keys(EFieldType);
 const elementTypeKeys = Object.keys(EElementType);
@@ -26,6 +27,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	const { id, schema, children, warnings } = props;
 	const { showIf, uiType, children: schemaChildren, ...otherSchema } = schema || {};
+
 	const [components, setComponents] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
 	const {
@@ -112,6 +114,18 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 		const warning = warnings?.[childId];
 
+		if ("colProps" in childSchema) {
+			return (
+				<Layout.ColDiv
+					data-testid={TestHelper.generateId(childId, "grid_item")}
+					desktopCols={12}
+					{...childSchema.colProps}
+				>
+					<FieldWrapper id={childId} schema={childSchema} Field={Field} />
+					{warning && <DSAlert type="warning">{warning}</DSAlert>}
+				</Layout.ColDiv>
+			);
+		}
 		return (
 			<>
 				<FieldWrapper id={childId} schema={childSchema} Field={Field} />
