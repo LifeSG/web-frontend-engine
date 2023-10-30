@@ -1,16 +1,16 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { DefaultStoryTemplate } from "../../common";
 import { IGridSchema } from "../../../components/elements";
+import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
 
 const meta: Meta = {
-	title: "Element/GridLayout",
+	title: "Element/Grid",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
 					<Title>GridLayout</Title>
-					<Description>Displays widgets under grid layout</Description>
+					<Description>Renders components in grid layout</Description>
 					<Heading>Props</Heading>
 					<Description>
 						This component also inherits the
@@ -23,25 +23,31 @@ const meta: Meta = {
 		},
 	},
 	argTypes: {
-		columns: {
-			description: "Determines a grid item’s location or item’s size",
+		...CommonFieldStoryProps("grid", true),
+		children: {
+			type: {
+				name: "string",
+				required: true,
+			},
+			description: "The content of the grid component",
 			table: {
 				type: {
-					summary: `{desktop?: 1|2|...|12, tablet?:1|2|...|8, mobile?:1|2|3|4}`,
+					summary: "TFrontendEngineFieldSchema",
+				},
+			},
+			control: {
+				type: "object",
+			},
+		},
+		columns: {
+			description:
+				"Specifies the number of columns to be span across in desktop / tablet / mobile viewports. If an array is specified, the format is as such `[startCol, endCol]`.<br><br>Permitted values<br>Desktop: `1 - 12` and `1 - 13` if specifying a range.<br>Mobile: `1 - 4` and `1 - 5` if specifying a range.<br><br>Settings are applied by similar to how `@max-width` works: if `desktop` is not specified, `tablet` will be used for desktop and tablet, if `tablet` is also not specified, `mobile` will be used for all screen sizes.<br><br>If all column settings are not specified, element will span across a single column.",
+			table: {
+				type: {
+					summary: `{desktop?: number, tablet?: number, mobile?: number}`,
 				},
 			},
 			defaultValue: { desktop: 12 },
-			control: { type: "object" },
-		},
-		customOptions: {
-			description:
-				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li></ul>",
-			table: {
-				type: {
-					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean}`,
-				},
-			},
-			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false },
 			control: { type: "object" },
 		},
 	},
@@ -61,6 +67,16 @@ Default.args = {
 			uiType: "text-field",
 			label: "Block 2",
 			columns: { desktop: 8 },
+		},
+		block3: {
+			uiType: "text-field",
+			label: "Block 3",
+			columns: { desktop: 7 },
+		},
+		block4: {
+			uiType: "text-field",
+			label: "Block 4",
+			columns: { desktop: 5 },
 		},
 	},
 };

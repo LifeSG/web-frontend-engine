@@ -1,3 +1,4 @@
+import { IColumns } from "../frontend-engine";
 import { TRenderRules } from "../frontend-engine/yup";
 import type { IAlertSchema } from "./alert";
 import { IGridSchema } from "./grid";
@@ -53,6 +54,8 @@ export interface IBaseElementSchema<T> {
 	showIf?: TRenderRules[] | undefined;
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
+	/** set responsive columns */
+	columns?: IColumns | undefined;
 }
 // =============================================================================
 // ELEMENT PROPS

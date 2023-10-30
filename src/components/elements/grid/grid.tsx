@@ -5,14 +5,6 @@ import { IGenericCustomElementProps } from "../../custom";
 import { Wrapper } from "../wrapper";
 import { IGridSchema } from "./types";
 
-const GridContainer = styled(Layout.Container)`
-	padding: 0;
-	gap: 2rem;
-	&:not(:last-child) {
-		margin-bottom: 2rem;
-	}
-`;
-
 export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
@@ -33,3 +25,11 @@ export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 		</GridContainer>
 	);
 };
+
+const GridContainer = styled(Layout.Container)`
+	padding: 0;
+	gap: 2rem;
+	&:not(:last-child) {
+		margin-bottom: 2rem;
+	}
+`;

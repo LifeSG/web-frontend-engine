@@ -12,11 +12,11 @@ import * as FrontendEngineFields from "../../fields";
 import { EFieldType } from "../../fields";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
+import { ColWrapper } from "./col-wrapper";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { FieldWrapper } from "./field-wrapper";
 import { IWrapperProps } from "./types";
 import { DSAlert } from "./wrapper.styles";
-import { Layout } from "@lifesg/react-design-system";
 
 const fieldTypeKeys = Object.keys(EFieldType);
 const elementTypeKeys = Object.keys(EElementType);
@@ -114,26 +114,11 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 		const warning = warnings?.[childId];
 
-		if ("columns" in childSchema) {
-			const { desktop, tablet, mobile, ...rest } = childSchema.columns;
-			return (
-				<Layout.ColDiv
-					data-testid={TestHelper.generateId(childId, "grid_item")}
-					desktopCols={desktop ?? 12}
-					tabletCols={tablet}
-					mobileCols={mobile}
-					{...rest}
-				>
-					<FieldWrapper id={childId} schema={childSchema} Field={Field} />
-					{warning && <DSAlert type="warning">{warning}</DSAlert>}
-				</Layout.ColDiv>
-			);
-		}
 		return (
-			<>
+			<ColWrapper id={childId} childSchema={childSchema}>
 				<FieldWrapper id={childId} schema={childSchema} Field={Field} />
 				{warning && <DSAlert type="warning">{warning}</DSAlert>}
-			</>
+			</ColWrapper>
 		);
 	};
 
@@ -144,21 +129,12 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		} else if ("referenceKey" in childSchema) {
 			Element = FrontendEngineCustomComponents[ECustomElementType[childSchema.referenceKey?.toUpperCase()]];
 		}
-		if ("columns" in childSchema) {
-			const { desktop, tablet, mobile, ...rest } = childSchema.columns;
-			return (
-				<Layout.ColDiv
-					data-testid={TestHelper.generateId(childId, "grid_item")}
-					desktopCols={desktop ?? 12}
-					tabletCols={tablet}
-					mobileCols={mobile}
-					{...rest}
-				>
-					<Element schema={childSchema} id={childId} />
-				</Layout.ColDiv>
-			);
-		}
-		return <Element schema={childSchema} id={childId} />;
+
+		return (
+			<ColWrapper id={childId} childSchema={childSchema}>
+				<Element schema={childSchema} id={childId} />
+			</ColWrapper>
+		);
 	};
 
 	// =============================================================================

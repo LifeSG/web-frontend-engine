@@ -3,7 +3,7 @@ import { FrontendEngine, IFrontendEngineData } from "../../../../components/fron
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, getField } from "../../../common";
 
-const UITPYE = "grid-layout";
+const UI_TYPE = "grid-layout";
 const TEXTFIELD_LABEL = "Name";
 const TEXTFIELD_LABEL_2 = "Name_2";
 
@@ -36,8 +36,7 @@ const renderComponent = () => {
 	return render(<FrontendEngine data={json} />);
 };
 
-// TODO: Add more tests
-describe(UITPYE, () => {
+describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		delete window.ResizeObserver;

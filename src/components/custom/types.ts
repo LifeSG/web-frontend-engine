@@ -3,9 +3,8 @@
  * these are typically components that are more opinionated and do not fit into the generic components
  */
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
-import type { IYupValidationRule } from "../frontend-engine";
+import type { IColumns, IYupValidationRule } from "../frontend-engine";
 import type { TRenderRules } from "../frontend-engine/yup";
-import { IFilterCheckboxSchema } from "./filter/filter-checkbox/types";
 import type { IFilterSchema } from "./filter/filter/types";
 import type { IReviewSchema } from "./review";
 
@@ -37,6 +36,8 @@ export type TCustomComponentSchema = ICustomElementJsonSchema<string> | IFilterS
 export interface ICustomElementJsonSchema<T> {
 	referenceKey: T;
 	uiType?: never | undefined;
+	/** set responsive columns */
+	columns?: IColumns | undefined;
 }
 
 /**
@@ -48,6 +49,8 @@ export interface IBaseCustomFieldSchema<T, V = undefined, U = undefined> extends
 	 * - need to fulfil at least 1 object in array (OR condition)
 	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
 	showIf?: TRenderRules[] | undefined;
+	/** set responsive columns */
+	columns?: IColumns | undefined;
 }
 
 // =============================================================================

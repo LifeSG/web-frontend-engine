@@ -1,5 +1,5 @@
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
-import { ColDivProps } from "../elements/wrapper";
+import { IColumns } from "../frontend-engine";
 import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
 import { ICheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
@@ -87,7 +87,8 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 	validation?: (V | U | IYupValidationRule)[];
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
-	columns?: ColDivProps;
+	/** set responsive columns */
+	columns?: IColumns | undefined;
 }
 
 // =============================================================================
