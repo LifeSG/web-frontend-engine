@@ -3,8 +3,7 @@ import { FrontendEngine, IFrontendEngineData } from "../../../../components/fron
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, getField } from "../../../common";
 
-const SUBMIT_FN = jest.fn();
-const REFERENCE_KEY = "grid-layout";
+const UITPYE = "grid-layout";
 const TEXTFIELD_LABEL = "Name";
 const TEXTFIELD_LABEL_2 = "Name_2";
 
@@ -34,11 +33,11 @@ const renderComponent = () => {
 			},
 		},
 	};
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+	return render(<FrontendEngine data={json} />);
 };
 
 // TODO: Add more tests
-describe(REFERENCE_KEY, () => {
+describe(UITPYE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		delete window.ResizeObserver;
@@ -54,17 +53,10 @@ describe(REFERENCE_KEY, () => {
 		jest.restoreAllMocks();
 	});
 
-	it("should be able to render grid and child fields", () => {
+	it("should be able to render other fields as children", () => {
 		renderComponent();
-		expect(screen.getByTestId(TestHelper.generateId("group", "grid"))).toBeInTheDocument();
-		const field = getField("textbox", TEXTFIELD_LABEL);
-		expect(field).toBeInTheDocument();
-		expect(screen.getByTestId(TestHelper.generateId("box1", "text-field"))).toBeInTheDocument();
-		const field_1 = getField("textbox", TEXTFIELD_LABEL_2);
-		expect(field_1).toBeInTheDocument();
-		expect(screen.getByTestId(TestHelper.generateId("box2", "text-field"))).toBeInTheDocument();
-		const field_2 = getField("textbox", TEXTFIELD_LABEL_2);
-		expect(field_2).toBeInTheDocument();
+		expect(getField("textbox", TEXTFIELD_LABEL)).toBeInTheDocument();
+		expect(getField("textbox", TEXTFIELD_LABEL_2)).toBeInTheDocument();
 	});
 
 	it("Check style grid layout", () => {

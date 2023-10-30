@@ -1,7 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { IGridSchema } from "../../../components/fields";
 import { DefaultStoryTemplate } from "../../common";
+import { IGridSchema } from "../../../components/elements";
 
 const meta: Meta = {
 	title: "Element/GridLayout",
@@ -54,12 +54,12 @@ Default.args = {
 	children: {
 		block1: {
 			uiType: "text-field",
-			label: "block1",
+			label: "Block 1",
 			colProps: { desktopCols: 4 },
 		},
 		block2: {
 			uiType: "text-field",
-			label: "block2",
+			label: "Block 2",
 			colProps: { desktopCols: 8 },
 		},
 	},
@@ -71,17 +71,17 @@ DesktopLayout.args = {
 	children: {
 		block1: {
 			uiType: "text-field",
-			label: "block1",
+			label: "Block 1",
 			colProps: { desktopCols: 4 },
 		},
 		block2: {
 			uiType: "text-field",
-			label: "block2",
+			label: "Block 2",
 			colProps: { desktopCols: 8 },
 		},
 		block3: {
 			uiType: "text-field",
-			label: "block2",
+			label: "Block 3",
 			colProps: { desktopCols: 12 },
 		},
 	},
@@ -93,17 +93,17 @@ TabletLayout.args = {
 	children: {
 		block1: {
 			uiType: "text-field",
-			label: "block1",
+			label: "Block 1",
 			colProps: { desktopCols: 4, tabletCols: 4 },
 		},
 		block2: {
 			uiType: "text-field",
-			label: "block2",
+			label: "Block 2",
 			colProps: { desktopCols: 8, tabletCols: 4 },
 		},
 		block3: {
 			uiType: "text-field",
-			label: "block2",
+			label: "Block 3",
 			colProps: { desktopCols: 12, tabletCols: 8 },
 		},
 	},
@@ -115,17 +115,17 @@ MobileLayout.args = {
 	children: {
 		block1: {
 			uiType: "text-field",
-			label: "block1",
+			label: "Block 1",
 			colProps: { desktopCols: 4, tabletCols: 4, mobileCols: 4 },
 		},
 		block2: {
 			uiType: "text-field",
-			label: "block2",
+			label: "Block 2",
 			colProps: { desktopCols: 8, tabletCols: 4, mobileCols: 2 },
 		},
 		block3: {
 			uiType: "text-field",
-			label: "block2",
+			label: "Block 3",
 			colProps: { desktopCols: 12, tabletCols: 8, mobileCols: 2 },
 		},
 	},
@@ -136,18 +136,23 @@ CustomLayout.args = {
 	children: {
 		block1: {
 			uiType: "text-field",
-			label: "block1",
-			colProps: { desktopCols: [1, 5] },
+			label: "Block 1",
+			colProps: { desktopCols: [4, 8] },
 		},
 		block2: {
 			uiType: "text-field",
-			label: "block2",
-			colProps: { desktopCols: [3, 5] },
+			label: "Block 2",
+			colProps: { desktopCols: [2, 5] },
 		},
 		block3: {
 			uiType: "text-field",
-			label: "block2",
-			colProps: { desktopCols: [2, 4] },
+			label: "Block 3",
+			colProps: { desktopCols: [6, 8] },
+		},
+		block4: {
+			uiType: "text-field",
+			label: "Block 4",
+			colProps: { desktopCols: [1, 12] },
 		},
 	},
 };

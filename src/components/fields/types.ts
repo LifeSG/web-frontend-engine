@@ -18,7 +18,6 @@ import { ITimeFieldSchema } from "./time-field";
 import { IUnitNumberFieldSchema } from "./unit-number-field";
 import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
-import { IGridSchema } from "../elements/grid";
 import { ColDivProps } from "@lifesg/react-design-system";
 
 /**
@@ -47,7 +46,6 @@ export enum EFieldType {
 	"TEXT-FIELD" = "TextField",
 	"TIME-FIELD" = "TimeField",
 	"UNIT-NUMBER-FIELD" = "UnitNumberField",
-	GRID = "Grid",
 }
 
 /**
@@ -73,8 +71,7 @@ export type TFieldSchema<V = undefined> =
 	| ITextareaSchema<V>
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
-	| IUnitNumberFieldSchema<V>
-	| IGridSchema<V>;
+	| IUnitNumberFieldSchema<V>;
 
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IBaseFieldSchema<T, V = undefined, U = undefined> {

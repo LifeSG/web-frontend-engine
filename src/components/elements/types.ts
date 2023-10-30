@@ -1,5 +1,6 @@
 import { TRenderRules } from "../frontend-engine/yup";
 import type { IAlertSchema } from "./alert";
+import { IGridSchema } from "./grid";
 import type { ITextSchema } from "./text";
 import type { IWrapperSchema } from "./wrapper";
 
@@ -33,13 +34,13 @@ export enum EElementType {
 	H5 = "Wrapper",
 	H6 = "Wrapper",
 	P = "Wrapper",
+	GRID = "Grid",
 }
 
 /**
  * union type to represent all element schemas
  */
-export type TElementSchema = IAlertSchema | ITextSchema | IWrapperSchema;
-
+export type TElementSchema = IAlertSchema | ITextSchema | IWrapperSchema | IGridSchema;
 /**
  * common element schema for element schemas to extend from
  */
