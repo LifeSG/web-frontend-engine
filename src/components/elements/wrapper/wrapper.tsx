@@ -114,12 +114,15 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 		const warning = warnings?.[childId];
 
-		if ("colProps" in childSchema) {
+		if ("columns" in childSchema) {
+			const { desktop, tablet, mobile, ...rest } = childSchema.columns;
 			return (
 				<Layout.ColDiv
 					data-testid={TestHelper.generateId(childId, "grid_item")}
-					desktopCols={12}
-					{...childSchema.colProps}
+					desktopCols={desktop ?? 12}
+					tabletCols={tablet}
+					mobileCols={mobile}
+					{...rest}
 				>
 					<FieldWrapper id={childId} schema={childSchema} Field={Field} />
 					{warning && <DSAlert type="warning">{warning}</DSAlert>}
@@ -140,6 +143,20 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 			Element = FrontendEngineElements[EElementType[childSchema.uiType?.toUpperCase()]] || Wrapper;
 		} else if ("referenceKey" in childSchema) {
 			Element = FrontendEngineCustomComponents[ECustomElementType[childSchema.referenceKey?.toUpperCase()]];
+		}
+		if ("columns" in childSchema) {
+			const { desktop, tablet, mobile, ...rest } = childSchema.columns;
+			return (
+				<Layout.ColDiv
+					data-testid={TestHelper.generateId(childId, "grid_item")}
+					desktopCols={desktop ?? 12}
+					tabletCols={tablet}
+					mobileCols={mobile}
+					{...rest}
+				>
+					<Element schema={childSchema} id={childId} />
+				</Layout.ColDiv>
+			);
 		}
 		return <Element schema={childSchema} id={childId} />;
 	};

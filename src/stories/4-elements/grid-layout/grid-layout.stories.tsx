@@ -23,14 +23,14 @@ const meta: Meta = {
 		},
 	},
 	argTypes: {
-		colProps: {
+		columns: {
 			description: "Determines a grid item’s location or item’s size",
 			table: {
 				type: {
-					summary: `{desktopCols?: 1|2|...|12, tabletCols?:1|2|...|8, mobileCols?:1|2|3|4}`,
+					summary: `{desktop?: 1|2|...|12, tablet?:1|2|...|8, mobile?:1|2|3|4}`,
 				},
 			},
-			defaultValue: { desktopCols: 12 },
+			defaultValue: { desktop: 12 },
 			control: { type: "object" },
 		},
 		customOptions: {
@@ -55,81 +55,38 @@ Default.args = {
 		block1: {
 			uiType: "text-field",
 			label: "Block 1",
-			colProps: { desktopCols: 4 },
+			columns: { desktop: 4 },
 		},
 		block2: {
 			uiType: "text-field",
 			label: "Block 2",
-			colProps: { desktopCols: 8 },
+			columns: { desktop: 8 },
 		},
 	},
 };
 
-export const DesktopLayout = DefaultStoryTemplate<IGridSchema>("grid").bind({});
-DesktopLayout.args = {
+export const ResponsiveLayout = DefaultStoryTemplate<IGridSchema>("grid").bind({});
+ResponsiveLayout.args = {
 	uiType: "grid",
 	children: {
 		block1: {
 			uiType: "text-field",
 			label: "Block 1",
-			colProps: { desktopCols: 4 },
+			columns: { desktop: 4, tablet: 4, mobile: 4 },
 		},
 		block2: {
 			uiType: "text-field",
 			label: "Block 2",
-			colProps: { desktopCols: 8 },
+			columns: { desktop: 8, tablet: 4, mobile: 2 },
 		},
 		block3: {
 			uiType: "text-field",
 			label: "Block 3",
-			colProps: { desktopCols: 12 },
+			columns: { desktop: 12, tablet: 8, mobile: 2 },
 		},
 	},
 };
 
-export const TabletLayout = DefaultStoryTemplate<IGridSchema>("grid").bind({});
-TabletLayout.args = {
-	uiType: "grid",
-	children: {
-		block1: {
-			uiType: "text-field",
-			label: "Block 1",
-			colProps: { desktopCols: 4, tabletCols: 4 },
-		},
-		block2: {
-			uiType: "text-field",
-			label: "Block 2",
-			colProps: { desktopCols: 8, tabletCols: 4 },
-		},
-		block3: {
-			uiType: "text-field",
-			label: "Block 3",
-			colProps: { desktopCols: 12, tabletCols: 8 },
-		},
-	},
-};
-
-export const MobileLayout = DefaultStoryTemplate<IGridSchema>("grid").bind({});
-MobileLayout.args = {
-	uiType: "grid",
-	children: {
-		block1: {
-			uiType: "text-field",
-			label: "Block 1",
-			colProps: { desktopCols: 4, tabletCols: 4, mobileCols: 4 },
-		},
-		block2: {
-			uiType: "text-field",
-			label: "Block 2",
-			colProps: { desktopCols: 8, tabletCols: 4, mobileCols: 2 },
-		},
-		block3: {
-			uiType: "text-field",
-			label: "Block 3",
-			colProps: { desktopCols: 12, tabletCols: 8, mobileCols: 2 },
-		},
-	},
-};
 export const CustomLayout = DefaultStoryTemplate<IGridSchema>("grid").bind({});
 CustomLayout.args = {
 	uiType: "grid",
@@ -137,22 +94,22 @@ CustomLayout.args = {
 		block1: {
 			uiType: "text-field",
 			label: "Block 1",
-			colProps: { desktopCols: [4, 8] },
+			columns: { desktop: [4, 8] },
 		},
 		block2: {
 			uiType: "text-field",
 			label: "Block 2",
-			colProps: { desktopCols: [2, 5] },
+			columns: { desktop: [2, 5] },
 		},
 		block3: {
 			uiType: "text-field",
 			label: "Block 3",
-			colProps: { desktopCols: [6, 8] },
+			columns: { desktop: [6, 8] },
 		},
 		block4: {
 			uiType: "text-field",
 			label: "Block 4",
-			colProps: { desktopCols: [1, 12] },
+			columns: { desktop: [1, 12] },
 		},
 	},
 };
