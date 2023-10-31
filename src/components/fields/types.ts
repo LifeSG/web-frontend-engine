@@ -1,10 +1,13 @@
-import { ILocationFieldSchema } from "./location-field";
+import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
+import { IColumns } from "../frontend-engine";
+import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
 import { ICheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
 import { IContactFieldSchema } from "./contact-field";
 import { IDateFieldSchema } from "./date-field";
 import { TDateRangeFieldSchema } from "./date-range-field";
 import { IImageUploadSchema } from "./image-upload";
+import { ILocationFieldSchema } from "./location-field";
 import { IMultiSelectSchema } from "./multi-select";
 import { IRadioButtonGroupSchema } from "./radio-button";
 import { IRangeSelectSchema } from "./range-select";
@@ -16,8 +19,6 @@ import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./text
 import { ITextareaSchema } from "./textarea";
 import { ITimeFieldSchema } from "./time-field";
 import { IUnitNumberFieldSchema } from "./unit-number-field";
-import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
-import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 
 /**
  * field types
@@ -86,6 +87,8 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 	validation?: (V | U | IYupValidationRule)[];
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
+	/** set responsive columns */
+	columns?: IColumns | undefined;
 }
 
 // =============================================================================

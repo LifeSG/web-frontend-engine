@@ -1,6 +1,6 @@
 import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
-import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { IColumns, TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TRenderRules } from "../../frontend-engine/yup";
 
 export type TWrapperType = "div" | "span" | "header" | "footer" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
@@ -9,6 +9,8 @@ export interface IWrapperSchema extends TComponentOmitProps<React.HTMLAttributes
 	uiType: TWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema> | string;
+	/** set responsive columns */
+	columns?: IColumns | undefined;
 }
 
 export interface IWrapperProps {

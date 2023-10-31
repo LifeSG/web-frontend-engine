@@ -119,6 +119,44 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // contains all schema types except for sections schema
 export type TFrontendEngineFieldSchema<V = undefined> = TFieldSchema<V> | TCustomComponentSchema | TElementSchema;
 
+type MobileCol = 1 | 2 | 3 | 4;
+type MobileColRange = MobileCol | 5;
+type TabletCol = MobileCol | 5 | 6 | 7 | 8;
+type TabletColRange = TabletCol | 9;
+type DesktopCol = TabletCol | 9 | 10 | 11 | 12;
+type DesktopColRange = DesktopCol | 13;
+export interface IColumns extends React.HTMLAttributes<HTMLDivElement> {
+	"data-testid"?: string | undefined;
+	/**
+	 * Specifies the number of columns to be span across in mobile viewports.
+	 * If an array is specified, the format is as such [startCol, endCol].
+	 * If `tabletCols` or `desktopCols` are not specified, this
+	 * setting will be applied to tablet and desktop viewports.
+	 *
+	 * If all column props are not specified, the div will span across a single
+	 * column.
+	 */
+	mobile?: MobileCol | [MobileColRange, MobileColRange] | undefined;
+	/**
+	 * Specifies the number of columns to be span across in tablet viewports.
+	 * If an array is specified, the format is as such [startCol, endCol].
+	 * If `desktopCols` are not specified, this setting will be
+	 * applied to desktop viewports as well.
+	 *
+	 * If all column props are not specified, the div will span across a single
+	 * column.
+	 */
+	tablet?: TabletCol | [TabletColRange, TabletColRange] | undefined;
+	/**
+	 * Specifies the number of columns to be span across in desktop viewports.
+	 * If an array is specified, the format is as such [startCol, endCol].
+	 *
+	 * If all column props are not specified, the div will span across a single
+	 * column.
+	 */
+	desktop?: DesktopCol | [DesktopColRange, DesktopColRange] | undefined;
+}
+
 /**
  * JSON keys to omit from field schema when extending from other interfaces
  * - keys already defined in `IFrontendEngineBaseFieldJsonSchema` to prevent collision

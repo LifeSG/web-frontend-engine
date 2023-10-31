@@ -12,6 +12,7 @@ import * as FrontendEngineFields from "../../fields";
 import { EFieldType } from "../../fields";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { ERROR_MESSAGES } from "../../shared";
+import { ColWrapper } from "./col-wrapper";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { FieldWrapper } from "./field-wrapper";
 import { IWrapperProps } from "./types";
@@ -26,6 +27,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	const { id, schema, children, warnings } = props;
 	const { showIf, uiType, children: schemaChildren, ...otherSchema } = schema || {};
+
 	const [components, setComponents] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
 	const {
@@ -113,10 +115,10 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		const warning = warnings?.[childId];
 
 		return (
-			<>
+			<ColWrapper id={childId} childSchema={childSchema}>
 				<FieldWrapper id={childId} schema={childSchema} Field={Field} />
 				{warning && <DSAlert type="warning">{warning}</DSAlert>}
-			</>
+			</ColWrapper>
 		);
 	};
 
@@ -127,7 +129,12 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		} else if ("referenceKey" in childSchema) {
 			Element = FrontendEngineCustomComponents[ECustomElementType[childSchema.referenceKey?.toUpperCase()]];
 		}
-		return <Element schema={childSchema} id={childId} />;
+
+		return (
+			<ColWrapper id={childId} childSchema={childSchema}>
+				<Element schema={childSchema} id={childId} />
+			</ColWrapper>
+		);
 	};
 
 	// =============================================================================
