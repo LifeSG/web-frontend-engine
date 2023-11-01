@@ -23,10 +23,11 @@ const EXCLUDED_STORY_PROPS: ArgTypes = {
 	name: { table: { disable: true } },
 };
 
-export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false): ArgTypes => {
-	if (onlyFieldType) {
+export const CommonFieldStoryProps = (uiType: string, isElement = false): ArgTypes => {
+	if (isElement) {
 		return {
 			...EXCLUDED_STORY_PROPS,
+			...COLUMNS_ARG_TYPE,
 			uiType: {
 				description: `Use <code>${uiType}</code> to show this field`,
 				table: {
@@ -45,6 +46,7 @@ export const CommonFieldStoryProps = (uiType: string, onlyFieldType = false): Ar
 	}
 	return {
 		...EXCLUDED_STORY_PROPS,
+		...COLUMNS_ARG_TYPE,
 		uiType: {
 			description: `Use <code>${uiType}</code> to show this field`,
 			table: {
@@ -115,7 +117,22 @@ export const CommonCustomStoryProps = (referenceKey: string): ArgTypes => {
 				},
 			},
 		},
+		...COLUMNS_ARG_TYPE,
 	};
+};
+
+export const COLUMNS_ARG_TYPE: ArgTypes = {
+	columns: {
+		description:
+			"Specifies the number of columns to be span across in desktop / tablet / mobile viewports. If an array is specified, the format is as such `[startCol, endCol]`.<br><br>Permitted values<br>Desktop: `1 - 12` and `1 - 13` if specifying a range.<br>Mobile: `1 - 4` and `1 - 5` if specifying a range.<br><br>Settings are applied by similar to how `@max-width` works: if `desktop` is not specified, `tablet` will be used for desktop and tablet, if `tablet` is also not specified, `mobile` will be used for all screen sizes.<br><br>If all column settings are not specified, element will span across a single column.",
+		table: {
+			type: {
+				summary: `{desktop?: number, tablet?: number, mobile?: number}`,
+			},
+		},
+		defaultValue: { desktop: 12 },
+		control: { type: "object" },
+	},
 };
 
 export const OVERRIDES_ARG_TYPE: ArgTypes = {

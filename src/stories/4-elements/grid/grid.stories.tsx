@@ -39,17 +39,6 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
-		columns: {
-			description:
-				"Specifies the number of columns to be span across in desktop / tablet / mobile viewports. If an array is specified, the format is as such `[startCol, endCol]`.<br><br>Permitted values<br>Desktop: `1 - 12` and `1 - 13` if specifying a range.<br>Mobile: `1 - 4` and `1 - 5` if specifying a range.<br><br>Settings are applied by similar to how `@max-width` works: if `desktop` is not specified, `tablet` will be used for desktop and tablet, if `tablet` is also not specified, `mobile` will be used for all screen sizes.<br><br>If all column settings are not specified, element will span across a single column.",
-			table: {
-				type: {
-					summary: `{desktop?: number, tablet?: number, mobile?: number}`,
-				},
-			},
-			defaultValue: { desktop: 12 },
-			control: { type: "object" },
-		},
 	},
 };
 export default meta;
