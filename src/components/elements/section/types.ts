@@ -6,6 +6,7 @@ export interface ISectionSchema<V = undefined>
 	extends IBaseElementSchema<"section">,
 		TComponentOmitProps<IWrapperSchema> {
 	children: Record<string, TFrontendEngineFieldSchema<V>>;
+	layoutType?: "grid" | undefined;
 }
 
 export interface ISectionProps {

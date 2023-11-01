@@ -313,6 +313,48 @@ ExternalSubmit.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
+export const MultiColumn: StoryFn<IFrontendEngineProps> = () => {
+	return (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						layoutType: "grid",
+						children: {
+							name: {
+								label: "What is your name",
+								uiType: "text-field",
+								columns: { desktop: 6, mobile: 4 },
+								validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
+							},
+							email: {
+								label: "Email address",
+								uiType: "email-field",
+								columns: { desktop: 6, mobile: 4 },
+								validation: [{ required: true }],
+							},
+							sex: {
+								uiType: "select",
+								label: "Sex",
+								columns: { mobile: 4 },
+								options: [
+									{ label: "Male", value: "male" },
+									{ label: "Female", value: "female" },
+								],
+							},
+						},
+					},
+				},
+			}}
+		/>
+	);
+};
+MultiColumn.storyName = "Multi-Column";
+MultiColumn.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
 export const OverrideSchema: StoryFn<IFrontendEngineProps> = () => {
 	const [schema, setSchema] = useState<IFrontendEngineData>({
 		sections: {
