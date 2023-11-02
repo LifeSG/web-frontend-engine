@@ -9,7 +9,7 @@ const meta: Meta = {
 		docs: {
 			page: () => (
 				<>
-					<Title>GridLayout</Title>
+					<Title>Grid</Title>
 					<Description>Renders components in grid layout</Description>
 					<Heading>Props</Heading>
 					<Description>
