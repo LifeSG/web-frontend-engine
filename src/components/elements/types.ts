@@ -1,6 +1,7 @@
 import { IColumns } from "../frontend-engine";
 import { TRenderRules } from "../frontend-engine/yup";
 import type { IAlertSchema } from "./alert";
+import { IDividerSchema } from "./divider";
 import { IGridSchema } from "./grid";
 import type { ITextSchema } from "./text";
 import type { IWrapperSchema } from "./wrapper";
@@ -25,6 +26,7 @@ export enum EElementType {
 	"TEXT-BODYSMALL" = "Text",
 	"TEXT-XSMALL" = "Text",
 	DIV = "Wrapper",
+	DIVIDER = "Divider",
 	SPAN = "Wrapper",
 	HEADER = "Wrapper",
 	FOOTER = "Wrapper",
@@ -41,7 +43,7 @@ export enum EElementType {
 /**
  * union type to represent all element schemas
  */
-export type TElementSchema = IAlertSchema | ITextSchema | IWrapperSchema | IGridSchema;
+export type TElementSchema = IAlertSchema | IDividerSchema | ITextSchema | IWrapperSchema | IGridSchema;
 /**
  * common element schema for element schemas to extend from
  */
