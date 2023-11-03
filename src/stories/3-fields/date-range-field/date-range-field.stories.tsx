@@ -75,6 +75,7 @@ export const Default = DefaultStoryTemplate<TDateRangeFieldSchema>("date-default
 Default.args = {
 	uiType: "date-range-field",
 	label: "Date",
+	validation: [{ notPast: true, errorMessage: "No past dates" }],
 };
 
 export const DefaultValue = DefaultStoryTemplate<TDateRangeFieldSchema, InputRangeProp<string>>(
@@ -167,6 +168,20 @@ PastDateOnly.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	validation: [{ required: true }, { past: true, errorMessage: "Only past dates allowed" }],
+};
+
+export const NotFutureDate = DefaultStoryTemplate<TDateRangeFieldSchema>("date-not-future").bind({});
+NotFutureDate.args = {
+	uiType: "date-range-field",
+	label: "Date",
+	validation: [{ required: true }, { notFuture: true, errorMessage: "No future dates allowed" }],
+};
+
+export const NotPastDate = DefaultStoryTemplate<TDateRangeFieldSchema>("date-not-past").bind({});
+NotFutureDate.args = {
+	uiType: "date-range-field",
+	label: "Date",
+	validation: [{ required: true }, { notPast: true, errorMessage: "No past dates allowed" }],
 };
 
 export const MinDate = DefaultStoryTemplate<TDateRangeFieldSchema>("min-date").bind({});
