@@ -206,7 +206,7 @@ describe(UI_TYPE, () => {
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
-		it(`should show error message on submit if there is valididation for ${condition} dates and invalid default dates`, async () => {
+		it(`should show error message on submit if there is validation error for ${condition} dates and invalid default dates`, async () => {
 			renderComponent(
 				{ validation: [{ errorMessage: ERROR_MESSAGE, ...config }] },
 				{ defaultValues: { [COMPONENT_ID]: `${invalid[2]}-${invalid[1]}-${invalid[0]}` } }
