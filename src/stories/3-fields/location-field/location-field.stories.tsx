@@ -115,6 +115,14 @@ MustHavePostalCode.args = {
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 };
+export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>("location-field-disabled").bind({});
+Disabled.args = {
+	uiType: "location-field",
+	label: "Disabled ",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	disabled: true,
+};
 
 export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind({});
 WithCustomStyles.args = {

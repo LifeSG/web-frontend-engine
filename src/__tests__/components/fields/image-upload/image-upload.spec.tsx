@@ -732,7 +732,6 @@ describe("image-upload", () => {
 		it("should fire mount event on mount", async () => {
 			const handleMount = jest.fn();
 			await renderComponent({ eventType: "mount", eventListener: handleMount });
-
 			expect(handleMount).toBeCalled();
 		});
 
