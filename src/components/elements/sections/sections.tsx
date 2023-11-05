@@ -28,9 +28,18 @@ export const Sections = (props: ISectionsProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderSections = () => {
-		return Object.entries(overrideSchema(schema, overrides)).map(([id, section], i) => (
-			<Section key={`section-${i}`} id={id} sectionSchema={section} warnings={warnings} />
-		));
+		const overriddenSchema = overrideSchema(schema, overrides);
+		if (overriddenSchema) {
+			return Object.entries(overriddenSchema).map(([id, section], i) => (
+				<Section key={`section-${i}`} id={id} sectionSchema={section} warnings={warnings} />
+			));
+		} else {
+			return (
+				<>
+					Unable to render Frontend Engine schema, make sure schema is declared within <code>sections</code>.
+				</>
+			);
+		}
 	};
 
 	return <>{renderSections()}</>;
