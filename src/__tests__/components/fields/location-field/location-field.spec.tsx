@@ -20,6 +20,7 @@ import {
 	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
+	getField,
 	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
@@ -48,14 +49,21 @@ enum ELocationInputEvents {
 	"SET_CURRENT_LOCATION" = "set-current-location",
 	"GET_CURRENT_LOCATION" = "get-current-location",
 	"MOUNT" = "mount",
+	"SHOW_MODAL" = "show-location-modal",
+	"HIDE_MODAL" = "hide-location-modal",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
-	withEvents: boolean;
+	withEvents?: boolean;
+	eventType?: string;
+	eventListener?: (this: Element, ev: Event) => any;
 }
+
 const FrontendEngineWithEventListener = ({
 	withEvents,
 	locationDetails,
+	eventType,
+	eventListener,
 	...otherProps
 }: ICustomFrontendEngineProps) => {
 	const formRef = useRef<IFrontendEngineRef>();
@@ -91,19 +99,37 @@ const FrontendEngineWithEventListener = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(() => {
+		if (eventType && eventListener) {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(eventType, "field", eventListener);
+			return () => currentFormRef.removeFieldEventListener(eventType, "field", eventListener);
+		}
+	}, [eventListener, eventType]);
+
 	return <FrontendEngine {...otherProps} ref={formRef} />;
 };
 
 interface IRenderProps {
 	overrideField?: TOverrideField<ILocationFieldSchema>;
 	overrideSchema?: TOverrideSchema;
-	withEvents: boolean;
+	withEvents?: boolean;
 	locationDetails?: TSetCurrentLocationDetail;
 	validation?: IYupValidationRule[];
+	eventType?: string;
+	eventListener?: (this: Element, ev: Event) => any;
 }
 
 const renderComponent = (
-	{ overrideField, overrideSchema, locationDetails, withEvents, validation }: IRenderProps = { withEvents: false }
+	{
+		overrideField,
+		overrideSchema,
+		locationDetails,
+		withEvents,
+		validation,
+		eventType,
+		eventListener,
+	}: IRenderProps = { withEvents: false }
 ) => {
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -130,6 +156,8 @@ const renderComponent = (
 			onSubmit={SUBMIT_FN}
 			locationDetails={locationDetails}
 			withEvents={withEvents}
+			eventListener={eventListener}
+			eventType={eventType}
 		/>
 	);
 };
@@ -458,6 +486,30 @@ describe("location-input-group", () => {
 		// GetLocationError
 		// GetLocationTimeoutError
 		// PostalCodeError
+
+		//Modal Events
+		describe("Modal events", () => {
+			it("should fire show-location-modal event on showing location modal", async () => {
+				const handleShowReviewModal = jest.fn();
+				renderComponent({
+					eventType: ELocationInputEvents.SHOW_MODAL,
+					eventListener: handleShowReviewModal,
+				});
+				getLocationInput().focus();
+				expect(handleShowReviewModal).toBeCalled();
+			});
+
+			it("should fire hide-location-modal event on hiding location modal", async () => {
+				const handleHideReviewModal = jest.fn();
+				renderComponent({
+					eventType: "hide-location-modal",
+					eventListener: handleHideReviewModal,
+				});
+				getLocationInput().focus();
+				await waitFor(() => fireEvent.click(getField("button", "Cancel", false)));
+				expect(handleHideReviewModal).toBeCalled();
+			});
+		});
 	});
 
 	describe("functionality", () => {

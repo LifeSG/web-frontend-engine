@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
+import { useFieldEvent } from "../../../utils/hooks";
 import { useValidationConfig } from "../../../utils/hooks/use-validation-config";
 import { ERROR_MESSAGES } from "../../shared";
 import { StyledStaticMap } from "./location-field.styles";
@@ -31,6 +32,8 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			mustHavePostalCode,
 			locationModalStyles,
 			validation,
+			disabled,
+			readOnly,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -40,7 +43,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationConfig();
-
+	const { dispatchFieldEvent } = useFieldEvent();
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -80,6 +83,19 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		setValue(id, updatedValues, { shouldDirty });
 	};
 
+	const handleFocus = (e?: React.FocusEvent<HTMLInputElement, Element>) => {
+		if (readOnly || disabled) {
+			return;
+		}
+		setShowLocationModal(true);
+		dispatchFieldEvent("show-location-modal", id);
+		e?.currentTarget.blur();
+	};
+
+	const handleClose = () => {
+		setShowLocationModal(false);
+		dispatchFieldEvent("hide-location-modal", id);
+	};
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -91,12 +107,11 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 				className={className}
 				locationInputPlaceholder={locationInputPlaceholder}
 				onChange={(e) => e.currentTarget.blur()}
-				onFocus={(e) => {
-					setShowLocationModal(true);
-					e.currentTarget.blur();
-				}}
+				onFocus={handleFocus}
 				value={formValue?.address || ""}
 				errorMessage={error?.message}
+				disabled={disabled}
+				readOnly={readOnly}
 			/>
 			{!!formValue?.lat && !!formValue?.lng && (
 				<StyledStaticMap
@@ -105,7 +120,8 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					lat={formValue.lat}
 					lng={formValue.lng}
 					staticMapPinColor={staticMapPinColor}
-					onClick={() => setShowLocationModal(true)}
+					onClick={handleFocus}
+					disabled={true}
 				/>
 			)}
 			<Suspense fallback={null}>
@@ -114,7 +130,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						id={id}
 						className={className}
 						showLocationModal={showLocationModal}
-						onClose={() => setShowLocationModal(false)}
+						onClose={handleClose}
 						formValues={formValue}
 						onConfirm={updateFormValues}
 						updateFormValues={updateFormValues}

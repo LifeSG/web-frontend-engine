@@ -15,6 +15,7 @@ export interface IStaticMapProps {
 	staticMapPinColor?: IColor | undefined;
 	className?: string | undefined;
 	onClick?: () => void | undefined;
+	disabled?: boolean | undefined;
 }
 
 export const StaticMap = ({
@@ -25,6 +26,7 @@ export const StaticMap = ({
 	staticMapPinColor = { r: 28, g: 118, b: 213 },
 	className,
 	onClick,
+	disabled,
 }: IStaticMapProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -80,6 +82,7 @@ export const StaticMap = ({
 			data-testid={TestHelper.generateId(id, "static-map")}
 			className={className}
 			onClick={onClick}
+			aria-disabled={disabled}
 		>
 			<StaticMapElement
 				alt={address || "Location Map"}

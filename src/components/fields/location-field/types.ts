@@ -14,7 +14,7 @@ export interface ILocationFieldSchema<V = undefined>
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
 		>,
-		Pick<ILocationInputProps, "locationInputPlaceholder">,
+		Pick<ILocationInputProps, "locationInputPlaceholder" | "disabled" | "readOnly">,
 		Pick<IStaticMapProps, "staticMapPinColor"> {
 	className?: string;
 	locationModalStyles?: string | undefined;

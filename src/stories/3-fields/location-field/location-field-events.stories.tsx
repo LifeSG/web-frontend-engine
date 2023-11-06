@@ -41,6 +41,39 @@ const meta: Meta = {
 export default meta;
 
 /* eslint-disable react-hooks/rules-of-hooks */
+const Template = (eventName: string) =>
+	((args) => {
+		const id = `location-field-${eventName}`;
+		const formRef = useRef<IFrontendEngineRef>();
+		const handleEvent = (e: unknown) => action(eventName)(e);
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
+			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				}}
+			/>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+/* eslint-enable react-hooks/rules-of-hooks */
+
+/* eslint-disable react-hooks/rules-of-hooks */
 const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 	((args) => {
 		const id = "location-field-get-current-location";
@@ -82,15 +115,16 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 	}) as StoryFn<ILocationFieldSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const Geolocation = GeolocationTemplate({
-	payload: {
-		lat: 1.29994179707526,
-		lng: 103.789404349716,
-	},
-}).bind({});
-Geolocation.args = {
+export const ShowModal = Template("show-location-modal").bind({});
+ShowModal.args = {
 	uiType: "location-field",
-	label: "Geolocation",
+	label: "Show Modal",
+};
+
+export const HideModal = Template("hide-location-modal").bind({});
+HideModal.args = {
+	uiType: "location-field",
+	label: "Hide Modal",
 };
 
 export const GeolocationWithErrors = GeolocationTemplate({
