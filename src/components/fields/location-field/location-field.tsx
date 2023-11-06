@@ -121,7 +121,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					lng={formValue.lng}
 					staticMapPinColor={staticMapPinColor}
 					onClick={handleFocus}
-					disabled={true}
+					disabled={disabled}
 				/>
 			)}
 			<Suspense fallback={null}>
