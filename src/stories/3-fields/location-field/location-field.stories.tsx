@@ -26,6 +26,20 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonFieldStoryProps("location-field"),
+		disabled: {
+			description:
+				"Specifies if the location field is interactive and editable. If true, the field will be rendered in a grey box with reduced visual contrast in text colour.",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;

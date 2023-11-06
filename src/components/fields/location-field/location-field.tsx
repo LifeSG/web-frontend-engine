@@ -83,17 +83,16 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		setValue(id, updatedValues, { shouldDirty });
 	};
 
-	const onFocus = (e?: React.FocusEvent<HTMLInputElement, Element>) => {
+	const handleFocus = (e?: React.FocusEvent<HTMLInputElement, Element>) => {
 		if (readOnly || disabled) {
 			return;
 		}
 		setShowLocationModal(true);
 		dispatchFieldEvent("show-location-modal", id);
-		if (e) {
-			e.currentTarget.blur();
-		}
+		e?.currentTarget.blur();
 	};
-	const onHideModal = () => {
+
+	const handleClose = () => {
 		setShowLocationModal(false);
 		dispatchFieldEvent("hide-location-modal", id);
 	};
@@ -108,7 +107,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 				className={className}
 				locationInputPlaceholder={locationInputPlaceholder}
 				onChange={(e) => e.currentTarget.blur()}
-				onFocus={onFocus}
+				onFocus={handleFocus}
 				value={formValue?.address || ""}
 				errorMessage={error?.message}
 				disabled={disabled}
@@ -121,7 +120,8 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					lat={formValue.lat}
 					lng={formValue.lng}
 					staticMapPinColor={staticMapPinColor}
-					onClick={onFocus}
+					onClick={handleFocus}
+					disabled={true}
 				/>
 			)}
 			<Suspense fallback={null}>
@@ -130,7 +130,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						id={id}
 						className={className}
 						showLocationModal={showLocationModal}
-						onClose={onHideModal}
+						onClose={handleClose}
 						formValues={formValue}
 						onConfirm={updateFormValues}
 						updateFormValues={updateFormValues}
