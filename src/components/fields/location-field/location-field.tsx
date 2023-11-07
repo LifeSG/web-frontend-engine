@@ -5,8 +5,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useFieldEvent } from "../../../utils/hooks";
 import { useValidationConfig } from "../../../utils/hooks/use-validation-config";
-import { ERROR_MESSAGES } from "../../shared";
-import { StyledStaticMap } from "./location-field.styles";
+import { ERROR_MESSAGES, StaticMap } from "../../shared";
 import { LocationHelper } from "./location-helper";
 import { LocationInput } from "./location-input/location-input";
 import { ILocationFieldSchema, ILocationFieldValues } from "./types";
@@ -114,7 +113,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 				readOnly={readOnly}
 			/>
 			{!!formValue?.lat && !!formValue?.lng && (
-				<StyledStaticMap
+				<StaticMap
 					id={id}
 					className={`${className}-static-map`}
 					lat={formValue.lat}
