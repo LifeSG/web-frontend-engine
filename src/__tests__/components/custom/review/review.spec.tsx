@@ -57,8 +57,6 @@ const renderComponent = (options: IRenderAndPerformActionsOptions) => {
 				children: {
 					[COMPONENT_ID]: {
 						referenceKey: REFERENCE_KEY,
-						label: LABEL,
-						description: DESCRIPTION,
 						items: ITEMS,
 						...overrideField,
 					},
@@ -80,7 +78,7 @@ describe(REFERENCE_KEY, () => {
 	});
 
 	it("should be able to render the field", () => {
-		renderComponent({});
+		renderComponent({ overrideField: { label: LABEL, description: DESCRIPTION } });
 
 		expect(screen.getByText(LABEL)).toBeInTheDocument();
 		expect(screen.getByText(DESCRIPTION)).toBeInTheDocument();
@@ -91,6 +89,8 @@ describe(REFERENCE_KEY, () => {
 	it("should be able to render the topSection and bottomSection", () => {
 		renderComponent({
 			overrideField: {
+				label: LABEL,
+				description: DESCRIPTION,
 				topSection: {
 					alertTop: {
 						uiType: "alert",

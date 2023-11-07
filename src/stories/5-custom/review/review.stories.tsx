@@ -112,7 +112,6 @@ export const AccordionVariant = DefaultStoryTemplate<IReviewSchema>("review-defa
 AccordionVariant.args = {
 	referenceKey: "review",
 	title: "Your personal information",
-	description: "Retrieved on 27 Jun 2023",
 	items: SAMPLE_ITEMS,
 	variant: "accodion",
 };
