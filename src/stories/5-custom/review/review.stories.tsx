@@ -106,6 +106,15 @@ Default.args = {
 	label: "Your personal information",
 	description: "Retrieved on 27 Jun 2023",
 	items: SAMPLE_ITEMS,
+	variant: "default",
+};
+export const AccordionVariant = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
+AccordionVariant.args = {
+	referenceKey: "review",
+	title: "Your personal information",
+	description: "Retrieved on 27 Jun 2023",
+	items: SAMPLE_ITEMS,
+	variant: "accodion",
 };
 
 export const CustomTopSection = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
