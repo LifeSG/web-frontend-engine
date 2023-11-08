@@ -1,4 +1,5 @@
-import { BoxContainer, Button } from "@lifesg/react-design-system";
+import { BoxContainer } from "@lifesg/react-design-system/box-container";
+import { Button } from "@lifesg/react-design-system/button";
 import { UneditableSection } from "@lifesg/react-design-system/uneditable-section";
 import { useEffect } from "react";
 import styled from "styled-components";
@@ -6,12 +7,12 @@ import * as Yup from "yup";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { IGenericCustomElementProps } from "../types";
-import { IReviewSchema, IReviewSchemaDefault } from "./types";
+import { IReviewSchema, IReviewSchemaAccordion, IReviewSchemaDefault } from "./types";
 
 const UneditableSectionCustom = styled(UneditableSection)`
 	background-color: transparent;
-	padding-left: 2rem !important;
-	padding-right: 2rem !important;
+	padding-left: 2rem;
+	padding-right: 2rem;
 `;
 export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 	// =============================================================================
@@ -48,15 +49,12 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 	// =========================================================================
 	// RENDER FUNCTIONS
 	// =========================================================================
-	if (schema.variant === "accordion") {
-		const { items, button, label, expanded, collapsible, ...otherSchema } = schema;
+	const renderAccordion = (schema: IReviewSchemaAccordion) => {
+		const { items, button, label, ...otherSchema } = schema;
 		return (
 			<BoxContainer
-				id={id}
 				data-testid={id}
 				title={label}
-				expanded={expanded}
-				collapsible={collapsible}
 				callToActionComponent={
 					<Button.Default
 						styleType="light"
@@ -68,23 +66,27 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 						{button?.label ?? "Edit"}
 					</Button.Default>
 				}
+				{...otherSchema}
 			>
-				<UneditableSectionCustom {...otherSchema} id={id} items={items} />
+				<UneditableSectionCustom id={id} items={items} />
 			</BoxContainer>
 		);
-	}
+	};
 
-	const { label, description, items, topSection, bottomSection, ...otherSchema } = schema;
+	const renderDefault = (schema: IReviewSchemaDefault) => {
+		const { label, description, items, topSection, bottomSection, ...otherSchema } = schema;
+		return (
+			<UneditableSection
+				{...otherSchema}
+				id={id}
+				title={label}
+				description={description}
+				items={items}
+				topSection={generateSection(topSection)}
+				bottomSection={generateSection(bottomSection)}
+			/>
+		);
+	};
 
-	return (
-		<UneditableSection
-			{...otherSchema}
-			id={id}
-			title={label}
-			description={description}
-			items={items}
-			topSection={generateSection(topSection)}
-			bottomSection={generateSection(bottomSection)}
-		/>
-	);
+	return schema.variant === "accordion" ? renderAccordion(schema) : renderDefault(schema);
 };
