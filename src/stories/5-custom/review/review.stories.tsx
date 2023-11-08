@@ -111,9 +111,9 @@ Default.args = {
 export const AccordionVariant = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
 AccordionVariant.args = {
 	referenceKey: "review",
-	title: "Your personal information",
+	label: "Your personal information",
 	items: SAMPLE_ITEMS,
-	variant: "accodion",
+	variant: "accordion",
 };
 
 export const CustomTopSection = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});

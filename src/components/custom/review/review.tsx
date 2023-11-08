@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { IGenericCustomElementProps } from "../types";
-import { IReviewSchema } from "./types";
+import { IReviewSchema, IReviewSchemaDefault } from "./types";
 
 const UneditableSectionCustom = styled(UneditableSection)`
 	background-color: transparent;
@@ -37,21 +37,24 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const generateSection = (sectionSchema: IReviewSchema["topSection"] | IReviewSchema["bottomSection"]) => {
+	const generateSection = (
+		sectionSchema: IReviewSchemaDefault["topSection"] | IReviewSchemaDefault["bottomSection"]
+	) => {
 		if (!sectionSchema) return undefined;
 
 		return <Wrapper>{sectionSchema}</Wrapper>;
 	};
+
 	// =========================================================================
 	// RENDER FUNCTIONS
 	// =========================================================================
-	if (schema.variant === "accodion") {
-		const { items, topSection, bottomSection, button, title, expanded, collapsible, ...otherSchema } = schema;
+	if (schema.variant === "accordion") {
+		const { items, button, label, expanded, collapsible, ...otherSchema } = schema;
 		return (
 			<BoxContainer
 				id={id}
 				data-testid={id}
-				title={title}
+				title={label}
 				expanded={expanded}
 				collapsible={collapsible}
 				callToActionComponent={
@@ -66,13 +69,7 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 					</Button.Default>
 				}
 			>
-				<UneditableSectionCustom
-					{...otherSchema}
-					id={id}
-					items={items}
-					topSection={generateSection(topSection)}
-					bottomSection={generateSection(bottomSection)}
-				/>
+				<UneditableSectionCustom {...otherSchema} id={id} items={items} />
 			</BoxContainer>
 		);
 	}

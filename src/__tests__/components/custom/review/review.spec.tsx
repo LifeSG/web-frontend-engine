@@ -118,7 +118,7 @@ describe(REFERENCE_KEY, () => {
 			renderComponent({
 				eventType: "button-click",
 				eventListener: testFn,
-				overrideField: { variant: "accodion" },
+				overrideField: { variant: "accordion", label: "Label" },
 			});
 
 			await waitFor(() => fireEvent.click(getField("button", "Edit", false)));

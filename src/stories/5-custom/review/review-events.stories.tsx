@@ -88,16 +88,16 @@ const Template = (eventName: string) =>
 export const Mount = Template("mount").bind({});
 Mount.args = {
 	referenceKey: "review",
-	variant: "accodion",
-	title: "Your personal information",
+	variant: "accordion",
+	label: "Your personal information",
 	button: { label: "Edit" },
 	items: SAMPLE_ITEMS,
 };
 export const ButtonClick = Template("button-click").bind({});
 ButtonClick.args = {
 	referenceKey: "review",
-	variant: "accodion",
-	title: "Your personal information",
+	variant: "accordion",
+	label: "Your personal information",
 	button: { label: "Edit" },
 	items: SAMPLE_ITEMS,
 };
