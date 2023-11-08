@@ -6,6 +6,7 @@ export * from "./date-range-field";
 export * from "./image-upload";
 export * from "./location-field";
 export * from "./multi-select";
+export * from "./nested-multi-select";
 export * from "./radio-button";
 export * from "./range-select";
 export * from "./reset-button";

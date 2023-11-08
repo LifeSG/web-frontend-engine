@@ -9,6 +9,7 @@ import { TDateRangeFieldSchema } from "./date-range-field";
 import { IImageUploadSchema } from "./image-upload";
 import { ILocationFieldSchema } from "./location-field";
 import { IMultiSelectSchema } from "./multi-select";
+import { INestedMultiSelectSchema } from "./nested-multi-select";
 import { IRadioButtonGroupSchema } from "./radio-button";
 import { IRangeSelectSchema } from "./range-select";
 import { IResetButtonSchema } from "./reset-button";
@@ -35,6 +36,7 @@ export enum EFieldType {
 	"IMAGE-UPLOAD" = "ImageUpload",
 	"LOCATION-FIELD" = "LocationField",
 	"MULTI-SELECT" = "MultiSelect",
+	"NESTED-MULTI-SELECT" = "NestedMultiSelect",
 	"RANGE-SELECT" = "RangeSelect",
 	"NUMERIC-FIELD" = "TextField",
 	RADIO = "RadioButtonGroup",
@@ -62,6 +64,7 @@ export type TFieldSchema<V = undefined> =
 	| ILocationFieldSchema<V>
 	| IMultiSelectSchema<V>
 	| IRangeSelectSchema
+	| INestedMultiSelectSchema<V>
 	| INumericFieldSchema<V>
 	| IRadioButtonGroupSchema<V>
 	| IResetButtonSchema
