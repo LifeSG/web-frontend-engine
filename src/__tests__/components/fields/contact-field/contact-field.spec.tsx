@@ -164,6 +164,15 @@ describe(UI_TYPE, () => {
 		});
 	});
 
+	it("should not apply phone number validation if no validation rule is provided", async () => {
+		const contactNumber = "1234";
+		renderComponent();
+		fireEvent.change(getContactField(), { target: { value: contactNumber } });
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` }));
+	});
+
 	describe("it should be able to verify Singapore numbers", () => {
 		it("+65 98123456 should be a valid number", async () => {
 			const contactNumber = "98123456";

@@ -2,20 +2,14 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
-	stories: ["../src/stories/**/*.stories.@(ts|tsx|mdx)"],
+	stories: ["../src/stories/**/*.stories.@(ts|tsx)", "../src/stories/**/*.mdx"],
 	addons: [
 		"@storybook/addon-links",
 		"@storybook/addon-essentials",
 		"@storybook/addon-interactions",
 		"@storybook/addon-a11y",
 	],
-	typescript: {
-		reactDocgen: "react-docgen-typescript",
-	},
-	framework: {
-		name: "@storybook/react-webpack5",
-		options: {},
-	},
+	framework: "@storybook/react-webpack5",
 	docs: {
 		autodocs: true,
 		defaultName: "Docs",

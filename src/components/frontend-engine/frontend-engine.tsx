@@ -23,21 +23,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { data, className = null, onChange, onSubmit, onSubmitError } = props;
 	const {
-		data: {
-			className: dataClassName = null,
-			defaultValues,
-			sections,
-			id,
-			stripUnknown,
-			revalidationMode = "onChange",
-			validationMode = "onTouched",
-		},
-		className = null,
-		onChange,
-		onSubmit,
-		onSubmitError,
-	} = props;
+		className: dataClassName = null,
+		defaultValues,
+		sections,
+		id,
+		stripUnknown,
+		revalidationMode = "onChange",
+		validationMode = "onTouched",
+	} = data || {};
 
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 	const { warnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
@@ -203,14 +198,22 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [defaultValues]);
 
 	useDeepCompareEffect(() => {
-		setFormSchema(props.data);
-	}, [props.data]);
+		setFormSchema(data);
+	}, [data || {}]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const formId = id ? `frontend-engine-${id}` : "frontend-engine";
 	const formClassNames = [className, dataClassName].join(" ").trim();
+
+	if (!data) {
+		return (
+			<>
+				Missing <code>data</code> prop, unable to render Frontend Engine.
+			</>
+		);
+	}
 
 	return (
 		<FormProvider {...formMethods}>
