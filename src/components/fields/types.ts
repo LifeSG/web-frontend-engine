@@ -19,6 +19,7 @@ import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./text
 import { ITextareaSchema } from "./textarea";
 import { ITimeFieldSchema } from "./time-field";
 import { IUnitNumberFieldSchema } from "./unit-number-field";
+import { IButtonSchema } from "./button";
 
 /**
  * field types
@@ -41,6 +42,7 @@ export enum EFieldType {
 	RESET = "ResetButton",
 	SELECT = "Select",
 	SUBMIT = "SubmitButton",
+	BUTTON = "ButtonField",
 	SWITCH = "Switch",
 	TEXTAREA = "Textarea",
 	"TEXT-FIELD" = "TextField",
@@ -66,6 +68,7 @@ export type TFieldSchema<V = undefined> =
 	| IRadioButtonGroupSchema<V>
 	| IResetButtonSchema
 	| ISelectSchema<V>
+	| IButtonSchema
 	| ISubmitButtonSchema
 	| ISwitchSchema<V>
 	| ITextareaSchema<V>

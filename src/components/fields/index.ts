@@ -11,6 +11,7 @@ export * from "./range-select";
 export * from "./reset-button";
 export * from "./select";
 export * from "./submit-button";
+export * from "./button";
 export * from "./switch";
 export * from "./text-field";
 export * from "./textarea";
