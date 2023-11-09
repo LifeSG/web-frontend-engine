@@ -89,6 +89,30 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					return !!localDateFrom?.isBefore(LocalDate.now()) && !!localDateTo?.isBefore(LocalDate.now());
 				})
 				.test(
+					"not-future",
+					notFutureRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_FUTURE,
+					(value) => {
+						if (variant === "week") return true;
+						if (!isValidDate(value.from) || !isValidDate(value.to) || !notFutureRule?.["notFuture"])
+							return true;
+						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
+						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
+						return !localDateFrom?.isAfter(LocalDate.now()) && !localDateTo?.isAfter(LocalDate.now());
+					}
+				)
+				.test(
+					"not-past",
+					notPastRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_PAST,
+					(value) => {
+						if (variant === "week") return true;
+						if (!isValidDate(value.from) || !isValidDate(value.to) || !notPastRule?.["notPast"])
+							return true;
+						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
+						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
+						return !localDateFrom?.isBefore(LocalDate.now()) && !localDateTo?.isBefore(LocalDate.now());
+					}
+				)
+				.test(
 					"min-date",
 					minDateRule?.["errorMessage"] ||
 						ERROR_MESSAGES.DATE_RANGE.MIN_DATE(

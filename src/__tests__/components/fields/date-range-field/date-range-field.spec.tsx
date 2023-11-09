@@ -159,6 +159,8 @@ describe(uiType, () => {
 		condition           | config                               | invalid                                                     | valid
 		${"future"}         | ${{ future: true }}                  | ${{ from: ["01", "01", "2021"], to: ["01", "01", "2022"] }} | ${{ from: ["01", "January", "2023"], to: ["01", "February", "2024"] }}
 		${"past"}           | ${{ past: true }}                    | ${{ from: ["01", "01", "2022"], to: ["01", "02", "2022"] }} | ${{ from: ["01", "January", "2020"], to: ["01", "February", "2021"] }}
+		${"non-future"}     | ${{ notFuture: true }}               | ${{ from: ["02", "01", "2022"], to: ["01", "02", "2022"] }} | ${{ from: ["01", "January", "2021"], to: ["01", "January", "2022"] }}
+		${"non-past"}       | ${{ notPast: true }}                 | ${{ from: ["01", "01", "2021"], to: ["01", "02", "2021"] }} | ${{ from: ["01", "January", "2022"], to: ["01", "February", "2022"] }}
 		${"min-date"}       | ${{ minDate: "2022-01-02" }}         | ${{ from: ["01", "01", "2021"], to: ["01", "02", "2021"] }} | ${{ from: ["01", "January", "2023"], to: ["01", "February", "2024"] }}
 		${"max-date"}       | ${{ maxDate: "2022-01-02" }}         | ${{ from: ["01", "01", "2023"], to: ["01", "02", "2024"] }} | ${{ from: ["01", "January", "2020"], to: ["01", "February", "2021"] }}
 		${"excluded-dates"} | ${{ excludedDates: ["2022-01-02"] }} | ${{ from: ["02", "01", "2022"], to: ["01", "02", "2022"] }} | ${{ from: ["01", "January", "2022"], to: ["01", "February", "2022"] }}
@@ -189,7 +191,7 @@ describe(uiType, () => {
 			);
 		});
 
-		it(`should show error message on submit if there is valididation for ${condition} dates and invalid default dates`, async () => {
+		it(`should show error message on submit if there is validation error for ${condition} dates and invalid default dates`, async () => {
 			renderComponent(
 				{ variant, validation: [{ errorMessage: ERROR_MESSAGE, ...config }] },
 				{
@@ -207,7 +209,7 @@ describe(uiType, () => {
 			expect(getErrorMessage()).toBeInTheDocument();
 		});
 
-		it(`should not show error messages if week variant on submit if there is valididation for ${condition} dates and invalid default dates`, async () => {
+		it(`should not show error messages if week variant on submit if there is validation error for ${condition} dates and invalid default dates`, async () => {
 			renderComponent(
 				{ validation: [{ errorMessage: ERROR_MESSAGE, ...config }], variant: "week" },
 				{

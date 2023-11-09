@@ -25,6 +25,8 @@ export const ERROR_MESSAGES = {
 	DATE_RANGE: {
 		MUST_BE_FUTURE: "Dates must be in the future.",
 		MUST_BE_PAST: "Dates must be in the past.",
+		CANNOT_BE_FUTURE: "Dates cannot be in the future.",
+		CANNOT_BE_PAST: "Dates cannot be in the past.",
 		MIN_DATE: (date: string) => `Dates cannot be earlier than ${date}`,
 		MAX_DATE: (date: string) => `Dates cannot be later than ${date}`,
 		DISABLED_DATES: "Date range should not include disabled dates.",
