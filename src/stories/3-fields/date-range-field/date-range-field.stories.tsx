@@ -178,7 +178,7 @@ NotFutureDate.args = {
 };
 
 export const NotPastDate = DefaultStoryTemplate<TDateRangeFieldSchema>("date-not-past").bind({});
-NotFutureDate.args = {
+NotPastDate.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	validation: [{ required: true }, { notPast: true, errorMessage: "No past dates allowed" }],
