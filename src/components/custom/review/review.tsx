@@ -53,7 +53,6 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 		const { items, button, label, ...otherSchema } = schema;
 		return (
 			<BoxContainer
-				data-testid={id}
 				title={label}
 				callToActionComponent={
 					<Button.Default

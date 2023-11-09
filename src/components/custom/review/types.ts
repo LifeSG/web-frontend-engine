@@ -1,4 +1,4 @@
-import { BoxContainerProps } from "@lifesg/react-design-system";
+import { BoxContainerProps } from "@lifesg/react-design-system/box-container";
 import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section/types";
 import type { IAlertSchema, ITextSchema } from "../../elements";
 import type { IWrapperSchema } from "../../elements/wrapper";
