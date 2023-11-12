@@ -6,13 +6,13 @@ import type { ICustomElementJsonSchema } from "../types";
 
 type TReviewSectionChildren = IAlertSchema | ITextSchema | IWrapperSchema;
 
-export type IReviewSchema = IReviewSchemaAccordion | IReviewSchemaDefault;
+export type IReviewSchema = IReviewSchemaAccordion | IReviewSchemaBox;
 export interface IReviewBase extends ICustomElementJsonSchema<"review"> {
 	items: UneditableSectionItemProps[];
 }
-export interface IReviewSchemaDefault extends IReviewBase {
+export interface IReviewSchemaBox extends IReviewBase {
 	label?: string | undefined;
-	variant?: "default" | undefined;
+	variant?: "box" | undefined;
 	description?: string | undefined;
 	topSection?: Record<string, TReviewSectionChildren> | undefined;
 	bottomSection?: Record<string, TReviewSectionChildren> | undefined;

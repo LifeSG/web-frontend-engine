@@ -38,9 +38,7 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const generateSection = (
-		sectionSchema: IReviewSchemaDefault["topSection"] | IReviewSchemaDefault["bottomSection"]
-	) => {
+	const generateSection = (sectionSchema: IReviewSchemaBox["topSection"] | IReviewSchemaBox["bottomSection"]) => {
 		if (!sectionSchema) return undefined;
 
 		return <Wrapper>{sectionSchema}</Wrapper>;
@@ -72,7 +70,7 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 		);
 	};
 
-	const renderDefault = (schema: IReviewSchemaDefault) => {
+	const renderBox = (schema: IReviewSchemaBox) => {
 		const { label, description, items, topSection, bottomSection, ...otherSchema } = schema;
 		return (
 			<UneditableSection
@@ -87,5 +85,5 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 		);
 	};
 
-	return schema.variant === "accordion" ? renderAccordion(schema) : renderDefault(schema);
+	return schema.variant === "accordion" ? renderAccordion(schema) : renderBox(schema);
 };
