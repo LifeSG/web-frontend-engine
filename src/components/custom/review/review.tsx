@@ -1,14 +1,14 @@
 import { BoxContainer } from "@lifesg/react-design-system/box-container";
 import { Button } from "@lifesg/react-design-system/button";
 import { Layout } from "@lifesg/react-design-system/layout";
-import { Text } from "@lifesg/react-design-system/text";
-import { UneditableSection, UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
+import { UneditableSection } from "@lifesg/react-design-system/uneditable-section";
 import { useEffect } from "react";
+import styled from "styled-components";
 import * as Yup from "yup";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { IGenericCustomElementProps } from "../types";
-import { AccordionLabel, AccordionLayout } from "./review.styles";
+import { AccordionItem } from "./accordion-item";
 import { IReviewSchema, IReviewSchemaAccordion, IReviewSchemaBox } from "./types";
 
 export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
@@ -57,22 +57,12 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 				expanded={expanded}
 				{...otherSchema}
 			>
-				<AccordionLayout type="grid">{items.map(renderAccordionItem)}</AccordionLayout>
+				<AccordionLayout type="grid">
+					{items.map((item, i) => (
+						<AccordionItem {...item} key={i} />
+					))}
+				</AccordionLayout>
 			</BoxContainer>
-		);
-	};
-
-	const renderAccordionItem = ({ label, value, displayWidth }: UneditableSectionItemProps, counter: number) => {
-		return (
-			<Layout.ColDiv
-				desktopCols={displayWidth === "full" ? 12 : 6}
-				tabletCols={displayWidth === "full" ? 8 : 4}
-				mobileCols={4}
-				key={counter}
-			>
-				<AccordionLabel>{label}</AccordionLabel>
-				<Text.Body>{value}</Text.Body>
-			</Layout.ColDiv>
 		);
 	};
 
@@ -93,3 +83,8 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 
 	return schema.variant === "accordion" ? renderAccordion(schema) : renderBox(schema);
 };
+
+const AccordionLayout = styled(Layout.Container)`
+	padding: 2rem;
+	row-gap: 2rem;
+`;
