@@ -1,19 +1,16 @@
 import { BoxContainer } from "@lifesg/react-design-system/box-container";
 import { Button } from "@lifesg/react-design-system/button";
-import { UneditableSection } from "@lifesg/react-design-system/uneditable-section";
+import { Layout } from "@lifesg/react-design-system/layout";
+import { Text } from "@lifesg/react-design-system/text";
+import { UneditableSection, UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 import { useEffect } from "react";
-import styled from "styled-components";
 import * as Yup from "yup";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { IGenericCustomElementProps } from "../types";
-import { IReviewSchema, IReviewSchemaAccordion, IReviewSchemaDefault } from "./types";
+import { AccordionLabel, AccordionLayout } from "./review.styles";
+import { IReviewSchema, IReviewSchemaAccordion, IReviewSchemaBox } from "./types";
 
-const UneditableSectionCustom = styled(UneditableSection)`
-	background-color: transparent;
-	padding-left: 2rem;
-	padding-right: 2rem;
-`;
 export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
@@ -48,25 +45,34 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 	// RENDER FUNCTIONS
 	// =========================================================================
 	const renderAccordion = (schema: IReviewSchemaAccordion) => {
-		const { items, button, label, ...otherSchema } = schema;
+		const { items, button, expanded = true, label, ...otherSchema } = schema;
 		return (
 			<BoxContainer
 				title={label}
 				callToActionComponent={
-					<Button.Default
-						styleType="light"
-						type="button"
-						onClick={() => {
-							dispatchFieldEvent("button-click", id);
-						}}
-					>
+					<Button.Default styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
 						{button?.label ?? "Edit"}
 					</Button.Default>
 				}
+				expanded={expanded}
 				{...otherSchema}
 			>
-				<UneditableSectionCustom id={id} items={items} />
+				<AccordionLayout type="grid">{items.map(renderAccordionItem)}</AccordionLayout>
 			</BoxContainer>
+		);
+	};
+
+	const renderAccordionItem = ({ label, value, displayWidth }: UneditableSectionItemProps, counter: number) => {
+		return (
+			<Layout.ColDiv
+				desktopCols={displayWidth === "full" ? 12 : 6}
+				tabletCols={displayWidth === "full" ? 8 : 4}
+				mobileCols={4}
+				key={counter}
+			>
+				<AccordionLabel>{label}</AccordionLabel>
+				<Text.Body>{value}</Text.Body>
+			</Layout.ColDiv>
 		);
 	};
 
