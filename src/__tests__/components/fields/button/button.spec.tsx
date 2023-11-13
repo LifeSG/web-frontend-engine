@@ -55,10 +55,40 @@ const renderComponent = (props: Props) => {
 describe("button", () => {
 	describe("events", () => {
 		it("should fire onclick event", async () => {
-			const handleMount = jest.fn();
-			renderComponent({ eventType: "onclick", eventListener: handleMount });
+			const handleClick = jest.fn();
+			renderComponent({ eventType: "click", eventListener: handleClick });
 			fireEvent.click(getField("button", "Button", false));
-			expect(handleMount).toBeCalled();
+			expect(handleClick).toBeCalled();
+		});
+		it("start icon should render before label", async () => {
+			const handleClick = jest.fn();
+			renderComponent({
+				eventType: "onclick",
+				eventListener: handleClick,
+				overrideButton: { startIcon: "AlbumFillIcon" },
+			});
+			const span = document.querySelector("span");
+			const startIcon = document.querySelector(".start-icon");
+			expect(span.childNodes.length).toEqual(2);
+			expect(startIcon).toEqual(span.firstChild);
+		});
+		it("start icon should render before label", async () => {
+			renderComponent({
+				overrideButton: { startIcon: "AlbumFillIcon" },
+			});
+			const span = document.querySelector("span");
+			const startIcon = document.querySelector(".start-icon");
+			expect(span.childNodes.length).toEqual(2);
+			expect(startIcon).toEqual(span.firstChild);
+		});
+		it("end icon should render after label", async () => {
+			renderComponent({
+				overrideButton: { endIcon: "AlbumFillIcon" },
+			});
+			const span = document.querySelector("span");
+			const endIcon = document.querySelector(".end-icon");
+			expect(span.childNodes.length).toEqual(2);
+			expect(endIcon).toEqual(span.lastChild);
 		});
 	});
 });

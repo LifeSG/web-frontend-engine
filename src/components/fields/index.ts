@@ -1,3 +1,4 @@
+export * from "./button";
 export * from "./checkbox-group";
 export * from "./chips";
 export * from "./contact-field";
@@ -11,7 +12,6 @@ export * from "./range-select";
 export * from "./reset-button";
 export * from "./select";
 export * from "./submit-button";
-export * from "./button";
 export * from "./switch";
 export * from "./text-field";
 export * from "./textarea";

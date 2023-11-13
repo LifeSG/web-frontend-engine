@@ -10,7 +10,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Button</Title>
-					<Description>The primary call to action component</Description>
+					<Description>A clickable component that fires a click event when activated.</Description>
 					<Heading>Props</Heading>
 					<Description>
 						This component also inherits the
@@ -25,6 +25,19 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonFieldStoryProps("button"),
+		disabled: {
+			description: "Specifies if the button is interactable",
+			table: {
+				type: {
+					summary: "boolean | invalid-form",
+				},
+				defaultValue: { summary: false },
+			},
+			options: [true, false, "invalid-form"],
+			control: {
+				type: "select",
+			},
+		},
 		styleType: {
 			description: "The style type of the button",
 			table: {
@@ -39,8 +52,12 @@ const meta: Meta = {
 		},
 		startIcon: {
 			description:
-				"Add <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page'>Icon</a> to the start of button",
-
+				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a> before the button label",
+			table: {
+				type: {
+					summary: "Refer to React Icons",
+				},
+			},
 			control: {
 				type: "select",
 			},
@@ -48,7 +65,12 @@ const meta: Meta = {
 		},
 		endIcon: {
 			description:
-				"Add <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page'>Icon</a> to the end of button",
+				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a> after the button label",
+			table: {
+				type: {
+					summary: "Refer to React Icons",
+				},
+			},
 			control: {
 				type: "select",
 			},

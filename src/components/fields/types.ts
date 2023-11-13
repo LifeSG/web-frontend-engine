@@ -1,6 +1,7 @@
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IColumns } from "../frontend-engine";
 import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
+import { IButtonSchema } from "./button";
 import { ICheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
 import { IContactFieldSchema } from "./contact-field";
@@ -19,7 +20,6 @@ import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./text
 import { ITextareaSchema } from "./textarea";
 import { ITimeFieldSchema } from "./time-field";
 import { IUnitNumberFieldSchema } from "./unit-number-field";
-import { IButtonSchema } from "./button";
 
 /**
  * field types
@@ -27,6 +27,7 @@ import { IButtonSchema } from "./button";
  * - comes with validation config
  */
 export enum EFieldType {
+	BUTTON = "ButtonField",
 	CHECKBOX = "CheckboxGroup",
 	CHIPS = "Chips",
 	"CONTACT-FIELD" = "ContactField",
@@ -42,7 +43,6 @@ export enum EFieldType {
 	RESET = "ResetButton",
 	SELECT = "Select",
 	SUBMIT = "SubmitButton",
-	BUTTON = "ButtonField",
 	SWITCH = "Switch",
 	TEXTAREA = "Textarea",
 	"TEXT-FIELD" = "TextField",
@@ -54,6 +54,7 @@ export enum EFieldType {
  * union type to represent all field schemas
  */
 export type TFieldSchema<V = undefined> =
+	| IButtonSchema
 	| ICheckboxGroupSchema<V>
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
@@ -68,7 +69,6 @@ export type TFieldSchema<V = undefined> =
 	| IRadioButtonGroupSchema<V>
 	| IResetButtonSchema
 	| ISelectSchema<V>
-	| IButtonSchema
 	| ISubmitButtonSchema
 	| ISwitchSchema<V>
 	| ITextareaSchema<V>

@@ -5,14 +5,6 @@ import { IGenericFieldProps } from "..";
 import { IButtonSchema } from "./types";
 import { useFieldEvent } from "../../../utils/hooks";
 
-const ButtonCutoms = styled(Button.Default)`
-	span:first-child {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-`;
-
 export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
@@ -26,7 +18,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	const renderStartIcon = () => {
 		if (startIcon) {
 			const Element = Icons[startIcon];
-			return <Element />;
+			return <Element className="start-icon" />;
 		}
 		return null;
 	};
@@ -34,7 +26,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	const renderEndIcon = () => {
 		if (endIcon) {
 			const Element = Icons[endIcon];
-			return <Element />;
+			return <Element className="end-icon" />;
 		}
 		return null;
 	};
@@ -42,18 +34,26 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<ButtonCutoms
+		<CustomButton
 			type="button"
 			{...otherSchema}
 			{...otherProps}
 			data-testid={id}
 			onClick={(e) => {
-				dispatchFieldEvent("onclick", id, e);
+				dispatchFieldEvent("click", id, e);
 			}}
 		>
 			{renderStartIcon()}
 			{label}
 			{renderEndIcon()}
-		</ButtonCutoms>
+		</CustomButton>
 	);
 };
+
+const CustomButton = styled(Button.Default)`
+	> span {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+`;
