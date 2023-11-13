@@ -2,14 +2,19 @@ import { Layout } from "@lifesg/react-design-system/layout";
 import { IReviewSchemaAccordionItem } from "../types";
 import { AccordionLabel, AccordionValue, Eye, EyeSlash } from "./accordion-item.styles";
 import { useState } from "react";
+import { TestHelper } from "../../../../utils";
+
+interface IProps extends IReviewSchemaAccordionItem {
+	id: string;
+}
 
 const MASK_REPLACEMENT = "•";
 
-export const AccordionItem = (props: IReviewSchemaAccordionItem) => {
+export const AccordionItem = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { label, value, displayWidth, mask } = props;
+	const { id, label, value, displayWidth, mask } = props;
 	const [masked, toggleMask] = useState(true);
 
 	// =============================================================================
@@ -31,7 +36,10 @@ export const AccordionItem = (props: IReviewSchemaAccordionItem) => {
 		return (
 			<>
 				<div>{maskedValue}</div>
-				<Icon onClick={() => toggleMask(!masked)} />
+				<Icon
+					onClick={() => toggleMask(!masked)}
+					data-testid={TestHelper.generateId(id, masked ? "eye" : "eye-slash")}
+				/>
 			</>
 		);
 	};

@@ -59,7 +59,7 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 			>
 				<AccordionLayout type="grid">
 					{items.map((item, i) => (
-						<AccordionItem {...item} key={i} />
+						<AccordionItem id={id} {...item} key={i} />
 					))}
 				</AccordionLayout>
 			</BoxContainer>

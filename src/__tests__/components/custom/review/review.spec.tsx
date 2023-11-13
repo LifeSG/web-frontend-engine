@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useEffect, useRef } from "react";
 import { IReviewSchema } from "../../../../components/custom";
 import {
@@ -57,6 +57,7 @@ const renderComponent = (options: IRenderAndPerformActionsOptions) => {
 				children: {
 					[COMPONENT_ID]: {
 						referenceKey: REFERENCE_KEY,
+						label: LABEL,
 						items: ITEMS,
 						...overrideField,
 					},
@@ -77,52 +78,114 @@ describe(REFERENCE_KEY, () => {
 		}));
 	});
 
-	it("should be able to render the field", () => {
-		renderComponent({ overrideField: { label: LABEL, description: DESCRIPTION } });
+	describe("box variant", () => {
+		it("should be able to render the field", () => {
+			renderComponent({ overrideField: { variant: "box", description: DESCRIPTION } });
 
-		expect(screen.getByText(LABEL)).toBeInTheDocument();
-		expect(screen.getByText(DESCRIPTION)).toBeInTheDocument();
-		expect(screen.getByText(ITEMS[0].label)).toBeInTheDocument();
-		expect(screen.getByText(ITEMS[1].value)).toBeInTheDocument();
-	});
-
-	it("should be able to render the topSection and bottomSection", () => {
-		renderComponent({
-			overrideField: {
-				label: LABEL,
-				description: DESCRIPTION,
-				topSection: {
-					alertTop: {
-						uiType: "alert",
-						type: "warning",
-						children: ALERT_TOP,
-					},
-				},
-				bottomSection: {
-					alertBottom: {
-						uiType: "alert",
-						type: "warning",
-						children: ALERT_BOTTOM,
-					},
-				},
-			},
+			expect(screen.getByText(LABEL)).toBeInTheDocument();
+			expect(screen.getByText(DESCRIPTION)).toBeInTheDocument();
+			expect(screen.getByText(ITEMS[0].label)).toBeInTheDocument();
+			expect(screen.getByText(ITEMS[1].value)).toBeInTheDocument();
 		});
 
-		expect(screen.getByText(ALERT_TOP)).toBeInTheDocument();
-		expect(screen.getByText(ALERT_BOTTOM)).toBeInTheDocument();
-	});
-
-	describe("events", () => {
-		it("button-click", async () => {
-			const testFn = jest.fn();
+		it("should be able to render the topSection and bottomSection", () => {
 			renderComponent({
-				eventType: "button-click",
-				eventListener: testFn,
-				overrideField: { variant: "accordion", label: "Label" },
+				overrideField: {
+					variant: "box",
+					description: DESCRIPTION,
+					topSection: {
+						alertTop: {
+							uiType: "alert",
+							type: "warning",
+							children: ALERT_TOP,
+						},
+					},
+					bottomSection: {
+						alertBottom: {
+							uiType: "alert",
+							type: "warning",
+							children: ALERT_BOTTOM,
+						},
+					},
+				},
 			});
 
-			await waitFor(() => fireEvent.click(getField("button", "Edit", false)));
-			expect(testFn).toBeCalled();
+			expect(screen.getByText(ALERT_TOP)).toBeInTheDocument();
+			expect(screen.getByText(ALERT_BOTTOM)).toBeInTheDocument();
+		});
+	});
+
+	describe("accordion variant", () => {
+		it("should be able to render the field", () => {
+			renderComponent({ overrideField: { variant: "accordion" } });
+
+			expect(screen.getByText(LABEL)).toBeInTheDocument();
+			expect(getField("button", "Edit")).toBeInTheDocument();
+			expect(screen.getByText(ITEMS[0].label)).toBeInTheDocument();
+			expect(screen.getByText(ITEMS[1].value)).toBeInTheDocument();
+		});
+
+		it("should render eye icon and be able to mask / unmask uinfin if mask = uinfin", async () => {
+			renderComponent({
+				overrideField: { variant: "accordion", items: [{ label: "NRIC", value: "S1234567D", mask: "uinfin" }] },
+			});
+
+			expect(screen.getByText("S••••567D")).toBeInTheDocument();
+			expect(screen.getByTestId(`${COMPONENT_ID}__eye`)).toBeInTheDocument();
+
+			act(() => {
+				fireEvent.click(screen.getByTestId(`${COMPONENT_ID}__eye`));
+			});
+
+			expect(screen.getByText("S1234567D")).toBeInTheDocument();
+		});
+
+		it("should render eye icon and be able to mask / unmask entire value if mask = whole", async () => {
+			const value = "John Doe";
+			renderComponent({
+				overrideField: { variant: "accordion", items: [{ label: "Name", value, mask: "whole" }] },
+			});
+
+			expect(screen.getByText("•".repeat(value.length))).toBeInTheDocument();
+			expect(screen.getByTestId(`${COMPONENT_ID}__eye`)).toBeInTheDocument();
+
+			act(() => {
+				fireEvent.click(screen.getByTestId(`${COMPONENT_ID}__eye`));
+			});
+
+			expect(screen.getByText("John Doe")).toBeInTheDocument();
+		});
+
+		it("should be able to customise button label", () => {
+			const buttonLabel = "Modify";
+			renderComponent({ overrideField: { variant: "accordion", button: { label: buttonLabel } } });
+
+			expect(getField("button", buttonLabel)).toBeInTheDocument();
+		});
+
+		describe("events", () => {
+			it("should fire mount event on mount", () => {
+				const testFn = jest.fn();
+				renderComponent({
+					eventType: "mount",
+					eventListener: testFn,
+					overrideField: { variant: "accordion" },
+				});
+
+				expect(testFn).toHaveBeenCalled();
+			});
+
+			it("should fire edit event on clicking edit button", async () => {
+				const testFn = jest.fn();
+				renderComponent({
+					eventType: "edit",
+					eventListener: testFn,
+					overrideField: { variant: "accordion" },
+				});
+
+				await waitFor(() => fireEvent.click(getField("button", "Edit")));
+				expect(testFn).toHaveBeenCalled();
+			});
 		});
 	});
 });
