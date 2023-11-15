@@ -4,13 +4,14 @@ import { IBaseFieldSchema } from "../types";
 import { InputNestedSelectProps } from "@lifesg/react-design-system";
 
 export interface INestedMultiSelectOption {
-	label: string;
-	value: {
-		id: number;
-		name: string;
-	};
+	// label: string;
+	// value: string;
+	id: number;
+	name: string;
 }
 
 export interface INestedMultiSelectSchema<V = undefined>
 	extends IBaseFieldSchema<"nested-multi-select", V>,
-		TComponentOmitProps<InputNestedMultiSelectProps<INestedMultiSelectOption, string, string>> {}
+		TComponentOmitProps<
+			InputNestedMultiSelectProps<INestedMultiSelectOption, INestedMultiSelectOption, INestedMultiSelectOption>
+		> {}

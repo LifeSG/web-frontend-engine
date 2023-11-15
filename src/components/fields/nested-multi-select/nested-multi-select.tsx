@@ -26,6 +26,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const { setFieldValidationConfig } = useValidationConfig();
+	const [selectedKeyPaths, setSelectedKeyPaths] = useState<string[][]>();
 
 	// =============================================================================
 	// EFFECTS
@@ -68,9 +69,11 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (options: ISelectOption[]): void => {
-		const parsedValues = options.map((option) => option.value);
+	const handleChange = (keyPaths: string[][], values: INestedMultiSelectOption[]): void => {
+		const parsedValues = values.map((option) => option);
 		onChange({ target: { value: parsedValues } });
+		const newKeyPath = keyPaths ? keyPaths : [];
+		setSelectedKeyPaths(newKeyPath);
 	};
 
 	// =============================================================================
@@ -82,8 +85,11 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 			{...otherProps}
 			id={id}
 			data-testid={TestHelper.generateId(id)}
-			label="This is the nested select field"
+			label="This is the nested multi select field"
 			options={options}
+			onSelectOptions={handleChange}
+			selectedKeyPaths={selectedKeyPaths}
+			errorMessage={error?.message}
 		/>
 	);
 };

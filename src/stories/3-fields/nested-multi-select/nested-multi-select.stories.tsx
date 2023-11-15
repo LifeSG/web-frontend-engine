@@ -71,7 +71,7 @@ const meta: Meta = {
 };
 export default meta;
 
-const hardcodedOptions = [
+export const options = [
 	{
 		label: "Category 1",
 		value: { id: 999, name: "category 1" },
@@ -248,9 +248,138 @@ const hardcodedOptions = [
 	},
 ];
 
+export const hardcodedOptions = [
+	{
+		label: "Category 1",
+		value: "category 1",
+		key: "999",
+		subItems: [
+			{
+				label: "Sub Category A",
+				value: "sub category a",
+				key: "820",
+				subItems: [
+					{
+						label: "Option 1",
+						value: "option-1",
+						key: "10001",
+					},
+					{
+						label: "Option 2",
+						value: "option-2",
+						key: "10002",
+					},
+					{
+						label: "Option 3",
+						value: "option-3",
+						key: "10003",
+					},
+				],
+			},
+			{
+				label: "Sub Category B",
+				value: "sub category b",
+				key: "821",
+				subItems: [
+					{
+						label: "Option ",
+						value: "sub option 2",
+						key: "103",
+					},
+				],
+			},
+			{
+				label: "Sub Category C",
+				value: "sub category c",
+				key: "822",
+				subItems: [
+					{
+						label: "Honey",
+						value: "honey",
+						key: "104",
+					},
+					{
+						label: "Nuts",
+						value: "nuts",
+						key: "105",
+					},
+					{
+						label: "Butter",
+						value: "butter",
+						key: "106",
+					},
+				],
+			},
+			{
+				label: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sollicitudin dolor ut est rutrum vulputate. Maecenas lacinia viverra metus",
+				value: "long sub category a",
+				key: "510",
+				subItems: [
+					{
+						label: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tempor varius elit nec iaculis. Sed sed mauris iaculis, pretium dui vel, lacinia est.",
+						value: "long item a",
+						key: "23",
+					},
+				],
+			},
+		],
+	},
+	{
+		label: "Hive",
+		value: "hive",
+		key: "32",
+		subItems: [
+			{
+				label: "Level 8",
+				value: "level 8",
+				key: "100",
+			},
+			{
+				label: "Level 9",
+				value: "level 9",
+				key: "101",
+				subItems: [
+					{
+						label: "Tutu kueh",
+						value: "tutu kueh",
+						key: "900",
+					},
+					{
+						label: "Lychee",
+						value: "lychee",
+						key: "901",
+					},
+					{
+						label: "Mao Shan Wang",
+						value: "mao shan wang",
+						key: "902",
+					},
+				],
+			},
+			{
+				label: "Base",
+				value: "earth",
+				key: "102",
+				subItems: [
+					{
+						label: "Uranus",
+						value: "uranus",
+						key: "903",
+					},
+					{
+						label: "Neptune",
+						value: "neptune",
+						key: "904",
+					},
+				],
+			},
+		],
+	},
+];
+
 export const Default = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-default").bind({});
 Default.args = {
 	uiType: "nested-multi-select",
 	label: "Fruits",
-	// options: hardcodedOptions,
+	options: options,
 };
