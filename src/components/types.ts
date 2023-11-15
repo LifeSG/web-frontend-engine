@@ -1,3 +1,6 @@
+export { ECustomElementType, ECustomFieldType } from "./custom";
+export { EElementType } from "./elements";
+export { EFieldType } from "./fields";
 export type {
 	IFrontendEngineData,
 	IFrontendEngineProps,
