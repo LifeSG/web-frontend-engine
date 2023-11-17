@@ -5,15 +5,14 @@ import { CommonCustomStoryProps, DefaultStoryTemplate } from "../../common";
 import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 
 const meta: Meta = {
-	title: "Custom/Review",
+	title: "Custom/Review/Box",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>Review</Title>
+					<Title>Review (Box Variant)</Title>
 					<Description>
-						Displays data fields and information that cannot be edited, this is typically used for review
-						purposes.
+						Displays data fields and information in a box, this is typically used for review purposes.
 					</Description>
 					<Heading>Props</Heading>
 					<ArgsTable story={PRIMARY_STORY} />
@@ -24,6 +23,19 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonCustomStoryProps("review"),
+		variant: {
+			description: "Use `box` to show this field",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			type: { name: "string" },
+			options: ["box"],
+			control: {
+				type: "select",
+			},
+		},
 		label: {
 			description: "A name of the purpose of the element",
 			table: {
@@ -106,14 +118,7 @@ Default.args = {
 	label: "Your personal information",
 	description: "Retrieved on 27 Jun 2023",
 	items: SAMPLE_ITEMS,
-	variant: "default",
-};
-export const AccordionVariant = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
-AccordionVariant.args = {
-	referenceKey: "review",
-	label: "Your personal information",
-	items: SAMPLE_ITEMS,
-	variant: "accordion",
+	variant: "box",
 };
 
 export const CustomTopSection = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
