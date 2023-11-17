@@ -1,0 +1,2 @@
+import { ILocationSearchProps } from "./types";
+export declare const LocationSearch: ({ id, className, formValues, gettingCurrentLocation, showLocationModal, mustHavePostalCode, panelInputMode, selectedAddressInfo, mapPickedLatLng, reverseGeoCodeEndpoint, convertLatLngToXYEndpoint, addressFieldPlaceholder, gettingCurrentLocationFetchMessage, locationListTitle, handleApiErrors, onGetLocationCallback, onChangeSelectedAddressInfo, onCancel, onConfirm, setSinglePanelMode, updateFormValues, }: ILocationSearchProps) => import("react/jsx-runtime").JSX.Element;
