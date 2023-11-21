@@ -1,8 +1,12 @@
 import * as Icons from "@lifesg/react-icons";
+import { action } from "@storybook/addon-actions";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
+import { useEffect, useRef } from "react";
+import { IFrontendEngineRef } from "../../../components";
 import { IButtonSchema } from "../../../components/fields/button";
 import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE } from "../../common";
+
 const meta: Meta = {
 	title: "Field/Button",
 	parameters: {
@@ -10,7 +14,10 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Button</Title>
-					<Description>A clickable component that fires a click event when activated.</Description>
+					<Description>
+						A clickable component that fires a click event when activated. This component does not trigger a
+						form submission.
+					</Description>
 					<Heading>Props</Heading>
 					<Description>
 						This component also inherits the
@@ -25,17 +32,17 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonFieldStoryProps("button"),
+		validation: { table: { disable: true } },
 		disabled: {
 			description: "Specifies if the button is interactable",
 			table: {
 				type: {
-					summary: "boolean | invalid-form",
+					summary: "boolean",
 				},
 				defaultValue: { summary: false },
 			},
-			options: [true, false, "invalid-form"],
 			control: {
-				type: "select",
+				type: "boolean",
 			},
 		},
 		styleType: {
@@ -80,24 +87,39 @@ const meta: Meta = {
 };
 export default meta;
 
-const Template = (id: string) =>
-	((args) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
+/* eslint-disable react-hooks/rules-of-hooks */
+const Template = (id: string, eventName?: string | undefined) =>
+	((args) => {
+		const formRef = useRef<IFrontendEngineRef>();
+		const handleEvent = (e: unknown) => action(eventName)(e);
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
+			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+
+		return (
+			<FrontendEngine
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+							},
 						},
 					},
-				},
-				overrides: {
-					[id]: args.overrides,
-				},
-			}}
-		/>
-	)) as StoryFn<IButtonSchema & { overrides?: Record<string, unknown> | undefined }>;
+					overrides: {
+						[id]: args.overrides,
+					},
+				}}
+				ref={formRef}
+			/>
+		);
+	}) as StoryFn<IButtonSchema & { overrides?: Record<string, unknown> | undefined }>;
+/* eslint-enable react-hooks/rules-of-hooks */
 
 export const Default = Template("button-default").bind({});
 Default.args = {
@@ -125,18 +147,24 @@ Overrides.args = {
 	label: "Overrides",
 	overrides: { label: "Overridden" },
 };
+Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
-export const StartIcon = Template("button-startIcon").bind({});
+export const StartIcon = Template("button-start-icon").bind({});
 StartIcon.args = {
 	uiType: "button",
 	label: "Button",
 	startIcon: "AlbumFillIcon",
 };
-export const EndIcon = Template("button-endIcon").bind({});
+
+export const EndIcon = Template("button-end-icon").bind({});
 EndIcon.args = {
 	uiType: "button",
 	label: "Button",
-	styleType: "light",
 	endIcon: "AlbumFillIcon",
 };
-Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const ClickEvent = Template("button-click-event", "click").bind({});
+ClickEvent.args = {
+	uiType: "button",
+	label: "Button",
+};
