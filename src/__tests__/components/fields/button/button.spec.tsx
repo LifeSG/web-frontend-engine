@@ -1,19 +1,21 @@
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IButtonSchema } from "../../../../components/fields";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
 import { FRONTEND_ENGINE_ID, getField } from "../../../common";
 
+const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
+const COMPONENT_LABEL = "Button";
 
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
-	eventType?: string;
-	eventListener?: (this: Element, ev: Event) => any;
+	eventType?: string | undefined;
+	eventListener?: ((this: Element, ev: Event) => void) | undefined;
 }
 
 const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
-	const { eventType, eventListener, ...otherProps } = props;
+	const { eventType, eventListener, ...otherProps } = props || {};
 	const formRef = useRef<IFrontendEngineRef>();
 	useEffect(() => {
 		if (eventType && eventListener) {
@@ -23,16 +25,15 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 		}
 	}, [eventListener, eventType]);
 
-	return <FrontendEngine {...otherProps} ref={formRef} />;
+	return <FrontendEngine {...otherProps} ref={formRef} onSubmit={SUBMIT_FN} />;
 };
 interface Props {
 	overrideButton?: Partial<IButtonSchema> | undefined;
-	defaultValues?: Record<string, any>;
-	eventType?: string;
-	eventListener?: (this: Element, ev: Event) => any;
+	eventType?: string | undefined;
+	eventListener?: ((this: Element, ev: Event) => void) | undefined;
 }
-const renderComponent = (props: Props) => {
-	const { defaultValues, eventListener, eventType, overrideButton: overrideSubmit } = props;
+const renderComponent = (props?: Props) => {
+	const { eventListener, eventType, overrideButton } = props || {};
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		sections: {
@@ -40,55 +41,50 @@ const renderComponent = (props: Props) => {
 				uiType: "section",
 				children: {
 					[COMPONENT_ID]: {
-						label: "Button",
+						label: COMPONENT_LABEL,
 						uiType: "button",
-						...overrideSubmit,
+						...overrideButton,
 					},
 				},
 			},
 		},
-		defaultValues,
 	};
 	return render(<FrontendEngineWithEventListener data={json} eventType={eventType} eventListener={eventListener} />);
 };
 
 describe("button", () => {
+	it("should not submit the form on click", () => {
+		renderComponent();
+		fireEvent.click(getField("button", COMPONENT_LABEL));
+
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
+	});
+
+	it("should render startIcon before button label", async () => {
+		renderComponent({ overrideButton: { startIcon: "AlbumFillIcon" } });
+		const label = screen.getByText(COMPONENT_LABEL);
+		const startIcon = document.querySelector("svg");
+
+		expect(label.childNodes.length).toEqual(2);
+		expect(startIcon).toEqual(label.firstChild);
+	});
+
+	it("should render endIcon after button label", async () => {
+		renderComponent({ overrideButton: { endIcon: "AlbumFillIcon" } });
+		const label = screen.getByText(COMPONENT_LABEL);
+		const endIcon = document.querySelector("svg");
+
+		expect(label.childNodes.length).toEqual(2);
+		expect(endIcon).toEqual(label.lastChild);
+	});
+
 	describe("events", () => {
-		it("should fire onclick event", async () => {
+		it("should fire click event", async () => {
 			const handleClick = jest.fn();
 			renderComponent({ eventType: "click", eventListener: handleClick });
-			fireEvent.click(getField("button", "Button", false));
-			expect(handleClick).toBeCalled();
-		});
-		it("start icon should render before label", async () => {
-			const handleClick = jest.fn();
-			renderComponent({
-				eventType: "onclick",
-				eventListener: handleClick,
-				overrideButton: { startIcon: "AlbumFillIcon" },
-			});
-			const span = document.querySelector("span");
-			const startIcon = document.querySelector(".start-icon");
-			expect(span.childNodes.length).toEqual(2);
-			expect(startIcon).toEqual(span.firstChild);
-		});
-		it("start icon should render before label", async () => {
-			renderComponent({
-				overrideButton: { startIcon: "AlbumFillIcon" },
-			});
-			const span = document.querySelector("span");
-			const startIcon = document.querySelector(".start-icon");
-			expect(span.childNodes.length).toEqual(2);
-			expect(startIcon).toEqual(span.firstChild);
-		});
-		it("end icon should render after label", async () => {
-			renderComponent({
-				overrideButton: { endIcon: "AlbumFillIcon" },
-			});
-			const span = document.querySelector("span");
-			const endIcon = document.querySelector(".end-icon");
-			expect(span.childNodes.length).toEqual(2);
-			expect(endIcon).toEqual(span.lastChild);
+			fireEvent.click(getField("button", COMPONENT_LABEL));
+
+			expect(handleClick).toHaveBeenCalled();
 		});
 	});
 });
