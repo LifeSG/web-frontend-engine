@@ -120,6 +120,25 @@ export const CommonCustomStoryProps = (referenceKey: string): ArgTypes => {
 		...COLUMNS_ARG_TYPE,
 	};
 };
+export const CommonCustomStoryWithoutLabelProps = (referenceKey: string): ArgTypes => {
+	return {
+		referenceKey: {
+			description: `Use <code>${referenceKey}</code> to show this field`,
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			type: { name: "string", required: true },
+			options: [referenceKey],
+			control: {
+				type: "select",
+			},
+			defaultValue: referenceKey,
+		},
+		...COLUMNS_ARG_TYPE,
+	};
+};
 
 export const COLUMNS_ARG_TYPE: ArgTypes = {
 	columns: {
