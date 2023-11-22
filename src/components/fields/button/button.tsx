@@ -10,42 +10,39 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, uiType, startIcon, endIcon, ...otherSchema },
+		schema: {
+			label,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			uiType,
+			startIcon,
+			endIcon,
+			...otherSchema
+		},
 		id,
 		...otherProps
 	} = props;
 	const { dispatchFieldEvent } = useFieldEvent();
-	const renderStartIcon = () => {
-		if (startIcon) {
-			const Element = Icons[startIcon];
-			return <Element className="start-icon" />;
-		}
-		return null;
-	};
 
-	const renderEndIcon = () => {
-		if (endIcon) {
-			const Element = Icons[endIcon];
-			return <Element className="end-icon" />;
-		}
-		return null;
-	};
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const renderIcon = (icon?: IButtonSchema["startIcon"] | IButtonSchema["endIcon"] | undefined) => {
+		if (!icon) return null;
+		const Element = Icons[icon];
+
+		return <Element />;
+	};
+
 	return (
 		<CustomButton
 			type="button"
 			{...otherSchema}
 			{...otherProps}
-			data-testid={id}
-			onClick={(e) => {
-				dispatchFieldEvent("click", id, e);
-			}}
+			onClick={(e) => dispatchFieldEvent("click", id, e)}
 		>
-			{renderStartIcon()}
+			{renderIcon(startIcon)}
 			{label}
-			{renderEndIcon()}
+			{renderIcon(endIcon)}
 		</CustomButton>
 	);
 };
