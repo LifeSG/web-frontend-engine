@@ -15,11 +15,18 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, ...otherSchema },
-		id,
-		value,
-		onChange,
 		error,
+		formattedLabel,
+		id,
+		onChange,
+		schema: {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			label,
+			options,
+			validation,
+			...otherSchema
+		},
+		value,
 		...otherProps
 	} = props;
 
@@ -82,7 +89,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 			{...otherProps}
 			id={id}
 			data-testid={TestHelper.generateId(id)}
-			label={label}
+			label={formattedLabel}
 			options={options}
 			onSelectOptions={handleChange}
 			selectedOptions={getSelectOptions()}

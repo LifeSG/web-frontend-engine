@@ -16,12 +16,22 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, defaultCountry, disabled, enableSearch, validation, placeholder, ...otherSchema },
+		formattedLabel,
+		error,
 		id,
 		name,
 		onChange,
+		schema: {
+			defaultCountry,
+			disabled,
+			enableSearch,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			label,
+			placeholder,
+			validation,
+			...otherSchema
+		},
 		value,
-		error,
 		...otherProps
 	} = props;
 
@@ -203,7 +213,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			errorMessage={error?.message}
 			fixedCountry={fixedCountry}
 			id={id}
-			label={label}
+			label={formattedLabel}
 			name={name}
 			placeholder={getPlaceholderText()}
 			value={formatDisplayValue()}

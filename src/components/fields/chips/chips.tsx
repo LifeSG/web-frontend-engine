@@ -17,11 +17,20 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, validation, disabled, textarea, ...otherSchema },
-		id,
-		value,
-		onChange,
 		error,
+		formattedLabel,
+		id,
+		onChange,
+		schema: {
+			disabled,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			label,
+			options,
+			textarea,
+			validation,
+			...otherSchema
+		},
+		value,
 		...otherProps
 	} = props;
 
@@ -39,6 +48,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			// at the start, the textarea's default value has to be manually cleared from the form state
 			unregister(getTextareaId());
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -76,12 +86,13 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	}, [options]);
 
 	useEffect(() => {
-		if (value?.includes(textarea?.label)) {
+		if (value?.includes(getTextareaLabel())) {
 			toggleTextarea(true);
 		} else {
 			toggleTextarea();
 		}
 		setStateValue(value || []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
 	// =============================================================================
@@ -93,6 +104,10 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	const getTextareaId = () => {
 		return `${id}-textarea`;
+	};
+
+	const getTextareaLabel = () => {
+		return typeof textarea?.label === "string" ? textarea?.label : textarea?.label?.mainLabel;
 	};
 
 	const toggleTextarea = (show = false) => {
@@ -147,10 +162,11 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	const renderTextareaChip = (): JSX.Element => {
-		const textareaLabel = textarea?.label;
-		if (!textarea && !textareaLabel) {
+		if (!textarea?.label) {
 			return;
 		}
+
+		const textareaLabel = getTextareaLabel();
 		return (
 			<Chip
 				{...otherSchema}
@@ -163,15 +179,13 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	const renderTextarea = (): JSX.Element => {
-		const textareaLabel = textarea?.label;
-		if (!textarea && !textareaLabel) {
+		if (!textarea?.label) {
 			return <></>;
 		}
 
 		const textareaId = getTextareaId();
 		const schema: ITextareaSchema = {
 			uiType: "textarea",
-			label,
 			className: otherSchema.className ? `${otherSchema.className}-textarea` : undefined,
 			...textarea,
 		};
@@ -179,7 +193,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	return (
-		<Form.CustomField label={label} errorMessage={error?.message} {...otherProps}>
+		<Form.CustomField label={formattedLabel} errorMessage={error?.message} {...otherProps}>
 			<ChipContainer data-testid={TestHelper.generateId(id, "chips")} $showTextarea={showTextarea}>
 				{renderChips()}
 				{renderTextareaChip()}

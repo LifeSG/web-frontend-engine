@@ -1,5 +1,5 @@
 import { TComponentOmitProps } from "../../frontend-engine";
-import { IBaseFieldSchema } from "../types";
+import { IBaseFieldSchema, IComplexLabel } from "../types";
 import { IYupValidationRule } from "../../frontend-engine/yup/types";
 
 export interface IChipOption {
@@ -13,7 +13,7 @@ export interface IChipsSchema<V = undefined>
 		TComponentOmitProps<React.ButtonHTMLAttributes<HTMLButtonElement>> {
 	options: IChipOption[];
 	textarea?: {
-		label: string;
+		label: string | IComplexLabel;
 		validation?: (V | IYupValidationRule)[];
 		resizable?: boolean;
 		rows?: number;

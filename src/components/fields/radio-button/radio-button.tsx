@@ -15,11 +15,21 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, disabled, validation, customOptions, className, ...otherSchema },
-		id,
-		value,
 		error,
+		formattedLabel,
+		id,
 		onChange,
+		schema: {
+			className,
+			customOptions,
+			disabled,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			label,
+			options,
+			validation,
+			...otherSchema
+		},
+		value,
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -172,7 +182,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	};
 
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
+		<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
 			{renderOptions()}
 		</Form.CustomField>
 	);

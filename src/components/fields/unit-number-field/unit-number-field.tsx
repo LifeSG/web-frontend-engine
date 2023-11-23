@@ -12,11 +12,17 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, ...otherSchema },
-		id,
-		value,
+		formattedLabel,
 		error,
+		id,
 		onChange,
+		schema: {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			label,
+			validation,
+			...otherSchema
+		},
+		value,
 		...otherProps
 	} = props;
 
@@ -59,7 +65,7 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 			{...otherProps}
 			id={id}
 			data-testid={TestHelper.generateId(id, "unit-number")}
-			label={label}
+			label={formattedLabel}
 			value={stateValue}
 			onChange={handleChange}
 			errorMessage={error?.message}

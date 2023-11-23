@@ -12,11 +12,20 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, placeholder, is24HourFormat, useCurrentTime, ...otherSchema },
-		id,
-		value,
 		error,
+		formattedLabel,
+		id,
 		onChange,
+		schema: {
+			is24HourFormat,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			label,
+			placeholder,
+			useCurrentTime,
+			validation,
+			...otherSchema
+		},
+		value,
 		...otherProps
 	} = props;
 
@@ -68,7 +77,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 			{...otherProps}
 			id={id}
 			data-testid={TestHelper.generateId(id, "time")}
-			label={label}
+			label={formattedLabel}
 			errorMessage={error?.message}
 			value={stateValue}
 			placeholder={placeholder}

@@ -21,12 +21,20 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, validation, ...otherSchema },
+		error,
+		formattedLabel,
 		id,
 		isDirty,
 		onChange,
+		schema: {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			label,
+			useCurrentDate,
+			dateFormat = DEFAULT_DATE_FORMAT,
+			validation,
+			...otherSchema
+		},
 		value,
-		error,
 		...otherProps
 	} = props;
 	const { setValue } = useFormContext();
@@ -216,7 +224,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 			{...derivedProps}
 			id={id}
 			data-testid={TestHelper.generateId(id, "date")}
-			label={label}
+			label={formattedLabel}
 			errorMessage={error?.message}
 			onChange={handleChange}
 			value={stateValue}
