@@ -137,7 +137,9 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 
 						return (
 							<StyledImageButton
-								{...otherSchema}
+								// temp any fix until proper typing is created
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+								{...(otherSchema as any)}
 								type="button"
 								key={index}
 								id={radioButtonId}
