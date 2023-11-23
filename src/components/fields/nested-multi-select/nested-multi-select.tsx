@@ -1,5 +1,6 @@
+import { L1OptionProps } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
@@ -7,8 +8,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
-import { ISelectOption } from "../select/types";
-import { INestedMultiSelectOption, INestedMultiSelectSchema } from "./types";
+import { IBaseOption, IL1Option, IL2Option, INestedMultiSelectSchema } from "./types";
 
 export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSchema>) => {
 	// =============================================================================
@@ -23,8 +23,8 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		...otherProps
 	} = props;
 
+	const optionsWithKeys = useRef<L1OptionProps<string, string, string>[]>();
 	const { setValue } = useFormContext();
-	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const [selectedKeyPaths, setSelectedKeyPaths] = useState<string[][]>();
 
@@ -58,18 +58,29 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	}, [options]);
 
 	useEffect(() => {
-		setStateValue(value || []);
-	}, [value]);
+		const mapOptions = (options: IL1Option[] | IL2Option[] | IBaseOption[], layer: number) => {
+			return options.map((option: IL1Option | IL2Option | IBaseOption, index: number) => {
+				const key = generateOptionKey(option, layer, index);
+				const typedOption = option as IL1Option | IL2Option;
+				const subItems = typedOption.subItems ? mapOptions(typedOption.subItems, layer + 1) : null;
+				return { ...option, ...(subItems && { subItems }), key };
+			});
+		};
+
+		optionsWithKeys.current = mapOptions(options, 1);
+	}, [options]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	// const getSelectOptions = (): INestedMultiSelectOption[] => options.filter((option) => stateValue.includes(option.value));
+	const generateOptionKey = (option: IBaseOption, layer: number, position: number): string => {
+		return `${layer}-${position}-${option.value}`;
+	};
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChange = (keyPaths: string[][], values: INestedMultiSelectOption[]): void => {
+	const handleChange = (keyPaths: string[][], values: string[]): void => {
 		const parsedValues = values.map((option) => option);
 		onChange({ target: { value: parsedValues } });
 		const newKeyPath = keyPaths ? keyPaths : [];
@@ -85,8 +96,8 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 			{...otherProps}
 			id={id}
 			data-testid={TestHelper.generateId(id)}
-			label="This is the nested multi select field"
-			options={options}
+			label={label}
+			options={optionsWithKeys.current}
 			onSelectOptions={handleChange}
 			selectedKeyPaths={selectedKeyPaths}
 			errorMessage={error?.message}
