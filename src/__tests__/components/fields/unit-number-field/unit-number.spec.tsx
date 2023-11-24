@@ -90,6 +90,21 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
+	it("should be able to render sub label and hint", () => {
+		renderComponent({
+			label: {
+				mainLabel: "Main label",
+				subLabel: "Sub label",
+				hint: { content: "Hint" },
+			},
+		});
+		fireEvent.click(screen.getByLabelText("popover-button"));
+
+		expect(screen.getByText("Main label")).toBeInTheDocument();
+		expect(screen.getByText("Sub label")).toBeInTheDocument();
+		expect(screen.getByText("Hint")).toBeVisible();
+	});
+
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
