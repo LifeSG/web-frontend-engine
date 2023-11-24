@@ -64,6 +64,13 @@ const meta: Meta = {
 			},
 			defaultValue: true,
 		},
+		initialExpanded: {
+			description: "Specifies the initial expand state for the uncontrolled component",
+			control: {
+				type: "boolean",
+			},
+			defaultValue: false,
+		},
 	},
 };
 export default meta;
@@ -145,6 +152,20 @@ Expanded.args = {
 		text: {
 			uiType: "text-body",
 			children: "This is expanded by default",
+		},
+	},
+};
+
+export const InitialExpanded = Template("filter-item-initial-expanded").bind({});
+InitialExpanded.args = {
+	label: "Filter item",
+	referenceKey: "filter-item",
+	collapsible: true,
+	initialExpanded: true,
+	children: {
+		text: {
+			uiType: "text-body",
+			children: "This is expanded by default on page load",
 		},
 	},
 };

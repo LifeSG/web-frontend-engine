@@ -90,6 +90,13 @@ const meta: Meta = {
 			type: { name: "object", value: {} },
 			defaultValue: [],
 		},
+		initialExpanded: {
+			description: "Specifies the initial expand state for the uncontrolled component",
+			control: {
+				type: "boolean",
+			},
+			defaultValue: false,
+		},
 	},
 };
 export default meta;
@@ -176,6 +183,18 @@ Expanded.args = {
 	label: "Filter checkbox",
 	referenceKey: "filter-checkbox",
 	collapsible: false,
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+};
+
+export const InitialExpanded = Template("filter-checkbox-initial-expanded").bind({});
+InitialExpanded.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: true,
+	initialExpanded: true,
 	options: [
 		{ label: "Red", value: "red" },
 		{ label: "Blue", value: "blue" },
