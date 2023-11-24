@@ -10,7 +10,14 @@ export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>)
 	// =============================================================================
 	const {
 		id,
-		schema: { children, label, collapsible = true, showDivider = true, showMobileDivider = true },
+		schema: {
+			children,
+			label,
+			collapsible = true,
+			showDivider = true,
+			showMobileDivider = true,
+			initialExpanded = false,
+		},
 	} = props;
 
 	// =============================================================================
@@ -22,6 +29,7 @@ export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>)
 			title={label}
 			collapsible={collapsible}
 			showDivider={showDivider}
+			initialExpanded={initialExpanded}
 			showMobileDivider={showMobileDivider}
 		>
 			<Wrapper>{children}</Wrapper>
