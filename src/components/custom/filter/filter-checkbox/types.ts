@@ -9,6 +9,7 @@ export interface IFilterCheckboxSchema<V = undefined>
 	showDivider?: boolean | undefined;
 	showMobileDivider?: boolean | undefined;
 	clearBehavior?: TClearBehavior | undefined;
+	initialExpanded?: boolean | undefined;
 }
 
 export interface IOption {
