@@ -86,6 +86,21 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "radio",
+	label: {
+		mainLabel: "Fruits",
+		subLabel: "Please pick",
+		hint: { content: "These are all fruits" },
+	},
+	options: [
+		{ value: "Apple", label: "Apple" },
+		{ value: "Berry", label: "Berry" },
+		{ value: "Cherry", label: "Cherry" },
+	],
+};
+
 export const DisabledOptions = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "radio",

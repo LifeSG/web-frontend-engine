@@ -104,6 +104,21 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "multi-select",
+	label: {
+		mainLabel: "Fruits",
+		subLabel: "Please pick",
+		hint: { content: "These are all fruits" },
+	},
+	options: [
+		{ value: "Apple", label: "Apple" },
+		{ value: "Berry", label: "Berry" },
+		{ value: "Cherry", label: "Cherry" },
+	],
+};
+
 export const Disabled = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-disabled").bind({});
 Disabled.args = {
 	uiType: "multi-select",

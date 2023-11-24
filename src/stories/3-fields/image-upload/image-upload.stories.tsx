@@ -30,6 +30,14 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonFieldStoryProps("image-upload"),
+		label: {
+			description: "A name/description of the purpose of the form element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
 		buttonLabel: {
 			type: { name: "string", required: false },
 			description: "Text for upload button",

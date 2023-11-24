@@ -90,6 +90,16 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<ITextFieldSchema>("text-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "text-field",
+	label: {
+		mainLabel: "Textfield",
+		subLabel: "Enter a value",
+		hint: { content: "You can key in anything" },
+	},
+};
+
 export const Disabled = DefaultStoryTemplate<ITextFieldSchema>("text-disabled").bind({});
 Disabled.args = {
 	label: "Textfield",

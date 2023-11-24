@@ -26,6 +26,14 @@ const meta: Meta = {
 	argTypes: {
 		...CommonFieldStoryProps("reset"),
 		validation: { table: { disable: true } },
+		label: {
+			description: "A name/description of the purpose of the form element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
 		styleType: {
 			description: "The style type of the button",
 			table: {

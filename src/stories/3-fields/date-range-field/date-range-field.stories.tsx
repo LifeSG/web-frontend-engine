@@ -98,6 +98,16 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<TDateRangeFieldSchema>("date-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "date-range-field",
+	label: {
+		mainLabel: "Date",
+		subLabel: "Please pick a date range",
+		hint: { content: "You can pick from the calendar" },
+	},
+};
+
 export const DateFormat = DefaultStoryTemplate<TDateRangeFieldSchema>("date-format").bind({});
 DateFormat.args = {
 	uiType: "date-range-field",

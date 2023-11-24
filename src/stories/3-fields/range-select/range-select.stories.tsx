@@ -126,6 +126,26 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<IRangeSelectSchema>("radio-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "range-select",
+	label: {
+		mainLabel: "Directions",
+		subLabel: "Please pick",
+		hint: { content: "Pick a direction" },
+	},
+	options: {
+		from: [
+			{ label: "North", value: "North" },
+			{ label: "East", value: "East" },
+		],
+		to: [
+			{ label: "South", value: "South" },
+			{ label: "West", value: "West" },
+		],
+	},
+};
+
 export const Disabled = DefaultStoryTemplate<IRangeSelectSchema>("range-select-disabled").bind({});
 Disabled.args = {
 	uiType: "range-select",

@@ -126,6 +126,24 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = Template("radio-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "radio",
+	label: {
+		mainLabel: "Fruits",
+		subLabel: "Please pick",
+		hint: { content: "These are all fruits" },
+	},
+	customOptions: {
+		styleType: "image-button",
+	},
+	options: [
+		{ label: "Apple", value: "Apple", imgSrc: "https://cdn-icons-png.flaticon.com/512/415/415733.png" },
+		{ label: "Berry", value: "Berry", imgSrc: "https://cdn-icons-png.flaticon.com/128/2105/2105891.png" },
+		{ label: "Cherry", value: "Cherry", imgSrc: "https://cdn-icons-png.flaticon.com/128/7254/7254245.png" },
+	],
+};
+
 export const DisabledOptions = Template("radio-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "radio",

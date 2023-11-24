@@ -108,6 +108,21 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<IChipsSchema>("chips-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "chips",
+	label: {
+		mainLabel: "Fruits",
+		subLabel: "Please pick",
+		hint: { content: "These are all fruits" },
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
 export const DefaultTextareaValue: StoryFn<IChipsSchema> = (args) => (
 	<FrontendEngine
 		data={{
@@ -189,6 +204,24 @@ WithTextarea.args = {
 		{ label: "Cherry", value: "Cherry" },
 	],
 	textarea: { label: "Durian" },
+};
+
+export const WithTextareaSubLabelAndHint = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea-labels").bind({});
+WithTextareaSubLabelAndHint.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	textarea: {
+		label: {
+			mainLabel: "Other Fruits",
+			subLabel: "Specify other fruits",
+			hint: { content: "Enter fruits only" },
+		},
+	},
 };
 
 export const WithTextareaValidation = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea-validation").bind({});
