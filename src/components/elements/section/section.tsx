@@ -1,7 +1,7 @@
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Wrapper } from "../wrapper";
+import { Contained, GridWrapper } from "./section.styles";
 import { ISectionProps } from "./types";
-import styled from "styled-components";
 
 export const Section = (props: ISectionProps) => {
 	// =============================================================================
@@ -15,21 +15,30 @@ export const Section = (props: ISectionProps) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	if (layoutType === "grid") {
-		return (
-			<GridContainer type="grid">
+	const renderInGrid = () => (
+		<Layout.Section>
+			<GridWrapper type="grid">
 				<Wrapper {...otherProps}>{children}</Wrapper>
-			</GridContainer>
-		);
-	}
+			</GridWrapper>
+		</Layout.Section>
+	);
 
-	return <Wrapper {...otherProps}>{children}</Wrapper>;
+	const renderContained = () => (
+		<Layout.Content>
+			<Contained>
+				<Wrapper {...otherProps}>{children}</Wrapper>
+			</Contained>
+		</Layout.Content>
+	);
+
+	const renderDefault = () => <Wrapper {...otherProps}>{children}</Wrapper>;
+
+	switch (layoutType) {
+		case "grid":
+			return renderInGrid();
+		case "contain":
+			return renderContained();
+		default:
+			return renderDefault();
+	}
 };
-
-const GridContainer = styled(Layout.Container)`
-	padding: 0;
-	gap: 2rem;
-	&:not(:last-child) {
-		margin-bottom: 2rem;
-	}
-`;
