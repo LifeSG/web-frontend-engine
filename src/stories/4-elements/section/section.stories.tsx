@@ -21,7 +21,7 @@ const meta: Meta = {
 		},
 	},
 	argTypes: {
-		...CommonFieldStoryProps("alert", true),
+		...CommonFieldStoryProps("section", true),
 		children: {
 			description: "Elements that are the descendant of this component",
 			table: {
