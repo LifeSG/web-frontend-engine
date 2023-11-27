@@ -64,6 +64,13 @@ const meta: Meta = {
 			},
 			defaultValue: true,
 		},
+		expanded: {
+			description: "Specifies if the contents are collapsed or expanded",
+			control: {
+				type: "boolean",
+			},
+			defaultValue: false,
+		},
 	},
 };
 export default meta;
@@ -136,8 +143,8 @@ WithDefaultValues.argTypes = {
 	},
 };
 
-export const Expanded = Template("filter-item-expanded").bind({});
-Expanded.args = {
+export const Collapsible = Template("filter-item-expanded").bind({});
+Collapsible.args = {
 	label: "Filter item",
 	referenceKey: "filter-item",
 	collapsible: false,
@@ -145,6 +152,20 @@ Expanded.args = {
 		text: {
 			uiType: "text-body",
 			children: "This is expanded by default",
+		},
+	},
+};
+
+export const Expanded = Template("filter-item-initial-expanded").bind({});
+Expanded.args = {
+	label: "Filter item",
+	referenceKey: "filter-item",
+	collapsible: true,
+	expanded: true,
+	children: {
+		text: {
+			uiType: "text-body",
+			children: "This is expanded by default on page load",
 		},
 	},
 };
@@ -214,6 +235,7 @@ Overrides.args = {
 			referenceKey: "filter-item",
 			collapsible: true,
 			showDivider: true,
+			expanded: true,
 			children: {
 				text: {
 					uiType: "text-body",
@@ -226,6 +248,7 @@ Overrides.args = {
 		children: {
 			filterItem1: {
 				label: "Overridden item",
+				expanded: false,
 				children: {
 					text: {
 						children: "This is an overridden collapsible item",

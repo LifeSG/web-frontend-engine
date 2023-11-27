@@ -127,4 +127,49 @@ describe(REFERENCE_KEY, () => {
 			expect(getTextfield()).toHaveValue(expectedValue);
 		});
 	});
+
+	describe("expanded (controlled component)", () => {
+		it("should be expanded when expanded is true", () => {
+			renderComponent(undefined, {
+				expanded: true,
+			});
+			//This is checking for the chevron
+			expect(screen.getByLabelText("Collapse")).toBeVisible();
+		});
+		it("should be expanded when override expanded is true", () => {
+			renderComponent(undefined, undefined, {
+				overrides: {
+					filterItem1: {
+						expanded: true,
+					},
+				},
+			});
+			//This is checking for the chevron
+			expect(screen.getByLabelText("Collapse")).toBeVisible();
+		});
+
+		it("should be collapsed when expanded is false", () => {
+			renderComponent();
+			//This is checking for the chevron
+			expect(screen.getByLabelText("Expand")).toBeVisible();
+		});
+
+		it("should be collapsed when override expanded is false", () => {
+			renderComponent(
+				undefined,
+				{
+					expanded: true,
+				},
+				{
+					overrides: {
+						filterItem1: {
+							expanded: false,
+						},
+					},
+				}
+			);
+			//This is checking for the chevron
+			expect(screen.getByLabelText("Expand")).toBeVisible();
+		});
+	});
 });

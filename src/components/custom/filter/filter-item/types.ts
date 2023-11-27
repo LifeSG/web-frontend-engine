@@ -9,4 +9,5 @@ export interface IFilterItemSchema<V = undefined> extends ICustomElementJsonSche
 	showDivider?: boolean | undefined;
 	showMobileDivider?: boolean | undefined;
 	clearBehavior?: TClearBehavior | undefined;
+	expanded?: boolean | undefined;
 }

@@ -1,5 +1,5 @@
 import { Filter } from "@lifesg/react-design-system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import { TestHelper } from "../../../../utils";
@@ -11,7 +11,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, ...otherSchema },
+		schema: { label, options, expanded, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -19,6 +19,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 
 	const { setValue } = useFormContext();
 	const [selectedOptions, setSelectedOptions] = useState<IOption[]>(); // Current selected value state
+	const [expandedState, setExpandedState] = useState(expanded);
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -29,6 +30,10 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 		setSelectedOptions(selectedOpts);
 		setValue(id, updatedValues);
 	}, [options, value]);
+
+	useEffect(() => {
+		setExpandedState(expanded);
+	}, [expanded]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -48,6 +53,8 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 			title={label}
 			selectedOptions={selectedOptions}
 			options={options}
+			expanded={expandedState}
+			onExpandChange={setExpandedState}
 			onSelect={handleChange}
 		></Filter.Checkbox>
 	);
