@@ -90,8 +90,8 @@ const meta: Meta = {
 			type: { name: "object", value: {} },
 			defaultValue: [],
 		},
-		initialExpanded: {
-			description: "Specifies the initial expand state for the uncontrolled component",
+		expanded: {
+			description: "Specifies if the contents are collapsed or expanded",
 			control: {
 				type: "boolean",
 			},
@@ -178,8 +178,8 @@ WithDefaultValues.argTypes = {
 	},
 };
 
-export const Expanded = Template("filter-checkbox-collapsible").bind({});
-Expanded.args = {
+export const Collapsible = Template("filter-checkbox-collapsible").bind({});
+Collapsible.args = {
 	label: "Filter checkbox",
 	referenceKey: "filter-checkbox",
 	collapsible: false,
@@ -189,12 +189,12 @@ Expanded.args = {
 	],
 };
 
-export const InitialExpanded = Template("filter-checkbox-initial-expanded").bind({});
-InitialExpanded.args = {
+export const Expanded = Template("filter-checkbox-initial-expanded").bind({});
+Expanded.args = {
 	label: "Filter checkbox",
 	referenceKey: "filter-checkbox",
 	collapsible: true,
-	initialExpanded: true,
+	expanded: true,
 	options: [
 		{ label: "Red", value: "red" },
 		{ label: "Blue", value: "blue" },

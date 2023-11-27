@@ -64,8 +64,8 @@ const meta: Meta = {
 			},
 			defaultValue: true,
 		},
-		initialExpanded: {
-			description: "Specifies the initial expand state for the uncontrolled component",
+		expanded: {
+			description: "Specifies if the contents are collapsed or expanded",
 			control: {
 				type: "boolean",
 			},
@@ -143,8 +143,8 @@ WithDefaultValues.argTypes = {
 	},
 };
 
-export const Expanded = Template("filter-item-expanded").bind({});
-Expanded.args = {
+export const Collapsible = Template("filter-item-expanded").bind({});
+Collapsible.args = {
 	label: "Filter item",
 	referenceKey: "filter-item",
 	collapsible: false,
@@ -156,12 +156,12 @@ Expanded.args = {
 	},
 };
 
-export const InitialExpanded = Template("filter-item-initial-expanded").bind({});
-InitialExpanded.args = {
+export const Expanded = Template("filter-item-initial-expanded").bind({});
+Expanded.args = {
 	label: "Filter item",
 	referenceKey: "filter-item",
 	collapsible: true,
-	initialExpanded: true,
+	expanded: true,
 	children: {
 		text: {
 			uiType: "text-body",
