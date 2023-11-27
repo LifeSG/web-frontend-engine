@@ -248,7 +248,6 @@ Overrides.args = {
 		filterCheckbox: {
 			label: "Checkboxes",
 			referenceKey: "filter-checkbox",
-			collapsible: false,
 			options: [
 				{ label: "Red", value: "red" },
 				{ label: "Blue", value: "blue" },
@@ -261,6 +260,8 @@ Overrides.args = {
 				label: "Overridden",
 				referenceKey: "filter-checkbox",
 				options: [{ label: "New option", value: "new" }],
+				collapsible: true,
+				expanded: true,
 			},
 		},
 	},

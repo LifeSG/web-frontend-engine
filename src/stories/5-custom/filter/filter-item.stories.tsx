@@ -235,6 +235,7 @@ Overrides.args = {
 			referenceKey: "filter-item",
 			collapsible: true,
 			showDivider: true,
+			expanded: true,
 			children: {
 				text: {
 					uiType: "text-body",
@@ -247,6 +248,7 @@ Overrides.args = {
 		children: {
 			filterItem1: {
 				label: "Overridden item",
+				expanded: false,
 				children: {
 					text: {
 						children: "This is an overridden collapsible item",
