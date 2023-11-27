@@ -3,6 +3,7 @@ import { TestHelper } from "../../../../utils";
 import { Wrapper } from "../../../elements/wrapper";
 import { IGenericCustomElementProps } from "../../types";
 import { IFilterItemSchema } from "./types";
+import { useEffect, useState } from "react";
 
 export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>) => {
 	// =============================================================================
@@ -12,6 +13,15 @@ export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>)
 		id,
 		schema: { children, label, collapsible = true, showDivider = true, showMobileDivider = true, expanded = false },
 	} = props;
+
+	const [expandedState, setExpandedState] = useState(expanded);
+
+	// =========================================================================
+	// EFFECTS
+	// =========================================================================
+	useEffect(() => {
+		setExpandedState(expanded);
+	}, [expanded]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
@@ -23,7 +33,8 @@ export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>)
 			collapsible={collapsible}
 			showDivider={showDivider}
 			showMobileDivider={showMobileDivider}
-			expanded={expanded}
+			expanded={expandedState}
+			onExpandChange={setExpandedState}
 		>
 			<Wrapper>{children}</Wrapper>
 		</Filter.Item>
