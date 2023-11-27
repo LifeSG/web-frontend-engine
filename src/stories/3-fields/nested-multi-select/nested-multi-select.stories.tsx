@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IL1Option, INestedMultiSelectSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+} from "../../common";
 
 const meta: Meta = {
 	title: "Field/NestedMultiSelect",
@@ -64,60 +70,50 @@ const meta: Meta = {
 };
 export default meta;
 
-export const options: IL1Option[] = [
+const options: IL1Option[] = [
 	{
-		label: "Category 1",
-		value: "category 1",
+		label: "Fruits",
+		value: "fruits",
 		subItems: [
 			{
-				label: "Sub Category A",
-				value: "sub category a",
+				label: "Berries",
+				value: "berries",
 				subItems: [
 					{
-						label: "Option 1",
-						value: "option-1",
+						label: "Blueberry",
+						value: "blueberry",
 					},
 					{
-						label: "Option 2",
-						value: "option-2",
+						label: "Raspberry",
+						value: "raspberry",
 					},
 					{
-						label: "Option 3",
-						value: "option-3",
+						label: "Banana",
+						value: "banana",
 					},
 				],
 			},
 			{
-				label: "Sub Category B",
-				value: "sub category b",
+				label: "Melons",
+				value: "melons",
 				subItems: [
 					{
-						label: "Option ",
-						value: "sub option 2",
+						label: "Watermelon",
+						value: "watermelon",
+					},
+					{
+						label: "Honeydew",
+						value: "honeydew",
+					},
+					{
+						label: "Wintermelon",
+						value: "wintermelon",
 					},
 				],
 			},
 			{
-				label: "Sub Category C",
-				value: "sub category c",
-				subItems: [
-					{
-						label: "Honey",
-						value: "honey",
-					},
-					{
-						label: "Nuts",
-						value: "nuts",
-					},
-					{
-						label: "Butter",
-						value: "butter",
-					},
-				],
-			},
-			{
-				label: "Option with no subcategory",
-				value: "Option with no subcategory",
+				label: "Durian",
+				value: "durian",
 			},
 		],
 	},
@@ -127,6 +123,103 @@ export const Default = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-mu
 Default.args = {
 	uiType: "nested-multi-select",
 	label: "Fruits",
-	enableSearch: true,
 	options: options,
 };
+
+export const DefaultValue = DefaultStoryTemplate<INestedMultiSelectSchema, string[]>(
+	"nested-multi-select-default-value"
+).bind({});
+DefaultValue.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	defaultValues: ["blueberry", "durian"],
+};
+
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string[]",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
+};
+
+export const Disabled = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-disabled").bind({});
+Disabled.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	disabled: true,
+};
+
+export const CustomWidth = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-custom-width").bind({});
+CustomWidth.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	listStyleWidth: "22rem",
+};
+
+export const Placeholder = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-placeholder").bind({});
+Placeholder.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	placeholder: "Select your fruit",
+};
+
+export const WithValidation = DefaultStoryTemplate<INestedMultiSelectSchema>(
+	"nested-multi-select-with-validation"
+).bind({});
+WithValidation.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	validation: [{ required: true }],
+};
+
+export const Reset = ResetStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-reset").bind({});
+Reset.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	validation: [{ required: true }],
+};
+
+export const ResetWithDefaultValues = ResetStoryTemplate<INestedMultiSelectSchema, string[]>(
+	"nested-multi-select-reset-default-value"
+).bind({});
+ResetWithDefaultValues.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	defaultValues: ["blueberry", "durian"],
+};
+
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "string[]",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
+};
+
+export const Overrides = OverrideStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-overrides").bind({});
+Overrides.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	overrides: {
+		label: "Overridden",
+		options: [{ label: "New field", value: "new" }],
+	},
+};
+Overrides.argTypes = OVERRIDES_ARG_TYPE;
