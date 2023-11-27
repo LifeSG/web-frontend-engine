@@ -1,6 +1,7 @@
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IColumns } from "../frontend-engine";
 import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
+import { IButtonSchema } from "./button";
 import { ICheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
 import { IContactFieldSchema } from "./contact-field";
@@ -26,6 +27,7 @@ import { IUnitNumberFieldSchema } from "./unit-number-field";
  * - comes with validation config
  */
 export enum EFieldType {
+	BUTTON = "ButtonField",
 	CHECKBOX = "CheckboxGroup",
 	CHIPS = "Chips",
 	"CONTACT-FIELD" = "ContactField",
@@ -52,6 +54,7 @@ export enum EFieldType {
  * union type to represent all field schemas
  */
 export type TFieldSchema<V = undefined> =
+	| IButtonSchema
 	| ICheckboxGroupSchema<V>
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
