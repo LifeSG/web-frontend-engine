@@ -35,6 +35,7 @@ const renderComponent = (overrideField?: TOverrideField<IFilterCheckboxSchema>, 
 									{ label: "Apple", value: "Apple" },
 									{ label: "Berry", value: "Berry" },
 								],
+								collapsible: true,
 								...overrideField,
 							},
 							...getSubmitButtonProps(),
@@ -45,6 +46,7 @@ const renderComponent = (overrideField?: TOverrideField<IFilterCheckboxSchema>, 
 		},
 		...overrideSchema,
 	};
+
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
@@ -207,6 +209,61 @@ describe(REFERENCE_KEY, () => {
 			fireEvent.click(screen.getByRole("button", { name: "Clear" }));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValue }));
+		});
+	});
+
+	describe("expanded (controlled component)", () => {
+		it("should be expanded when override expanded is true", () => {
+			renderComponent(undefined, {
+				overrides: {
+					filterItem1: {
+						children: {
+							[COMPONENT_ID]: {
+								label: "Overriden filter check",
+								expanded: true,
+							},
+						},
+					},
+				},
+			});
+			//This is checking for the chevron
+			expect(screen.getByLabelText("Collapse")).toBeVisible();
+		});
+
+		it("should be expanded when expanded is true", () => {
+			renderComponent({
+				expanded: true,
+			});
+			//This is checking for the chevron
+			expect(screen.getByLabelText("Collapse")).toBeVisible();
+		});
+
+		it("should be collapsed when override expanded is false", () => {
+			renderComponent(
+				{
+					expanded: true,
+				},
+				{
+					overrides: {
+						filterItem1: {
+							children: {
+								[COMPONENT_ID]: {
+									label: "Overriden filter check",
+									expanded: false,
+								},
+							},
+						},
+					},
+				}
+			);
+			//This is checking for the chevron
+			expect(screen.getByLabelText("Expand")).toBeVisible();
+		});
+
+		it("should be collapsed when expanded is false", () => {
+			renderComponent();
+			//This is checking for the chevron
+			expect(screen.getByLabelText("Expand")).toBeVisible();
 		});
 	});
 });
