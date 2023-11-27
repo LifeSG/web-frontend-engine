@@ -1,6 +1,6 @@
-import { L1OptionProps } from "@lifesg/react-design-system";
+import { L1OptionProps, L2OptionProps, L3OptionProps } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
@@ -23,6 +23,12 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		...otherProps
 	} = props;
 
+	type TNestedOptionKeyProps =
+		| L1OptionProps<string, string, string>
+		| L2OptionProps<string, string>
+		| L3OptionProps<string>;
+	type TNestedOptionProps = IL1Option | IL2Option | IBaseOption;
+
 	const optionsWithKeys = useRef<L1OptionProps<string, string, string>[]>();
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -31,6 +37,32 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+
+	const getSelectedKeyPaths = useCallback((): string[][] => {
+		const getPath = (options: TNestedOptionKeyProps[], selectedValue: string, path: string[] = []) => {
+			for (const option of options) {
+				if (option.subItems) {
+					const subOptionPath = getPath(option.subItems, selectedValue, [...path, option.key]);
+					if (subOptionPath.length > 0) {
+						return subOptionPath;
+					}
+				} else if (option.value === selectedValue) {
+					return [...path, option.key];
+				}
+			}
+			return [];
+		};
+
+		const paths = [];
+		value?.forEach((val: string) => {
+			const path = getPath(optionsWithKeys.current, val);
+			if (path.length) {
+				paths.push(path);
+			}
+		});
+		return paths;
+	}, [value]);
+
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 
@@ -53,22 +85,38 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	}, [validation]);
 
 	useDeepCompareEffect(() => {
-		const updatedValues = value?.filter((v) => options.find((option) => option.value === v));
+		const findValueInOptions = (options: TNestedOptionProps[], value: string): TNestedOptionProps => {
+			for (const option of options) {
+				const typedOption = option as IL1Option | IL2Option;
+				if (typedOption.subItems) {
+					const subItem = findValueInOptions(typedOption.subItems, value);
+					if (subItem) {
+						return subItem;
+					}
+				} else if (option.value === value) {
+					return option;
+				}
+			}
+			return null;
+		};
+
+		const updatedValues = value?.filter((v) => findValueInOptions(options, v) !== null);
 		setValue(id, updatedValues);
 	}, [options]);
 
 	useEffect(() => {
-		const mapOptions = (options: IL1Option[] | IL2Option[] | IBaseOption[], layer: number) => {
-			return options.map((option: IL1Option | IL2Option | IBaseOption, index: number) => {
+		const mapOptions = (options: TNestedOptionProps[], layer = 1) => {
+			return options.map((option: TNestedOptionProps, index: number) => {
 				const key = generateOptionKey(option, layer, index);
 				const typedOption = option as IL1Option | IL2Option;
 				const subItems = typedOption.subItems ? mapOptions(typedOption.subItems, layer + 1) : null;
 				return { ...option, ...(subItems && { subItems }), key };
 			});
 		};
-
-		optionsWithKeys.current = mapOptions(options, 1);
-	}, [options]);
+		optionsWithKeys.current = mapOptions(options);
+		const selectedPaths = getSelectedKeyPaths();
+		setSelectedKeyPaths(selectedPaths);
+	}, [getSelectedKeyPaths, options]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
