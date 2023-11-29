@@ -4,6 +4,7 @@ import { IL1Option, INestedMultiSelectSchema } from "../../../components/fields"
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
+	FrontendEngine,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
@@ -117,6 +118,24 @@ const options: IL1Option[] = [
 			},
 		],
 	},
+	{
+		label: "Vegetables",
+		value: "vegetables",
+		subItems: [
+			{
+				label: "Cabbage",
+				value: "cabbage",
+			},
+			{
+				label: "Spinach",
+				value: "spinach",
+			},
+			{
+				label: "Broccoli",
+				value: "broccoli",
+			},
+		],
+	},
 ];
 
 export const Default = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-default").bind({});
@@ -223,3 +242,40 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const SpecifyingMode = (args: INestedMultiSelectSchema) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						expanded: {
+							...args,
+							label: "With all (sub)categories expanded",
+							mode: "expand",
+						},
+						collapsed: {
+							...args,
+							label: "With all (sub)categories collapsed",
+							mode: "collapse",
+						},
+					},
+				},
+			},
+		}}
+	/>
+);
+
+SpecifyingMode.args = {
+	uiType: "nested-multi-select",
+	options: options,
+};
+
+export const WithSearch = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-with-search").bind({});
+WithSearch.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
+	enableSearch: true,
+};
