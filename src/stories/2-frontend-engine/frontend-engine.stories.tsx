@@ -318,30 +318,6 @@ export const MultiColumn: StoryFn<IFrontendEngineProps> = () => {
 		<FrontendEngine
 			data={{
 				sections: {
-					// sectionContained: {
-					// 	uiType: "section",
-					// 	layoutType: "contain",
-					// 	children: {
-					// 		name: {
-					// 			label: "What is your name 2",
-					// 			uiType: "text-field",
-					// 			validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
-					// 		},
-					// 		email: {
-					// 			label: "Email address",
-					// 			uiType: "email-field",
-					// 			validation: [{ required: true }],
-					// 		},
-					// 		sex: {
-					// 			uiType: "select",
-					// 			label: "Sex",
-					// 			options: [
-					// 				{ label: "Male", value: "male" },
-					// 				{ label: "Female", value: "female" },
-					// 			],
-					// 		},
-					// 	},
-					// },
 					section: {
 						uiType: "section",
 						layoutType: "grid",
