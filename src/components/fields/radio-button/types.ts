@@ -22,6 +22,7 @@ type TCustomOptions =
 			styleType: "image-button";
 	  };
 
+// TODO: discriminating union to differentiate extended props between different styleType
 export interface IRadioButtonGroupSchema<V = undefined>
 	extends IBaseFieldSchema<"radio", V>,
 		TComponentOmitProps<RadioButtonProps> {

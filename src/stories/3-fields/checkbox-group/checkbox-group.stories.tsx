@@ -100,6 +100,21 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "checkbox",
+	label: {
+		mainLabel: "Fruits",
+		subLabel: "Please pick",
+		hint: { content: "These are all fruits" },
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
 export const DisabledOptions = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "checkbox",

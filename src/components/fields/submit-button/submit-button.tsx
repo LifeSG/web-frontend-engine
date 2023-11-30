@@ -12,8 +12,8 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, disabled, ...otherSchema },
 		id,
+		schema: { disabled, label, ...otherSchema },
 		...otherProps
 	} = props;
 	const { setFieldValidationConfig } = useValidationConfig();

@@ -12,8 +12,8 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, disabled, ignoreDefaultValues, ...otherSchema },
 		id,
+		schema: { disabled, ignoreDefaultValues, label, ...otherSchema },
 		...otherProps
 	} = props;
 

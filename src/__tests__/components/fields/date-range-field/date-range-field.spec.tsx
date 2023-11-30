@@ -22,7 +22,7 @@ const label = "Date";
 const uiType = "date-range-field";
 const variant = "range";
 const renderComponent = (
-	overrideField?: TDistributiveOmit<TDateRangeFieldSchema, "uiType" | "label">,
+	overrideField?: Partial<TDistributiveOmit<TDateRangeFieldSchema, "uiType">>,
 	overrideSchema?: TOverrideSchema
 ) => {
 	const json: IFrontendEngineData = {
@@ -34,6 +34,7 @@ const renderComponent = (
 					[COMPONENT_ID]: {
 						uiType,
 						label,
+						variant,
 						...overrideField,
 					},
 					...getSubmitButtonProps(),
@@ -94,6 +95,21 @@ describe(uiType, () => {
 		expect(getMonthInput(TDateRangeInputType.START)).toHaveAttribute("value", defaultMonth);
 		expect(getYearInput(TDateRangeInputType.START)).toHaveAttribute("value", defaultYear);
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from, to } }));
+	});
+
+	it("should be able to render sub label and hint", () => {
+		renderComponent({
+			label: {
+				mainLabel: "Main label",
+				subLabel: "Sub label",
+				hint: { content: "Hint" },
+			},
+		});
+		fireEvent.click(screen.getByLabelText("popover-button"));
+
+		expect(screen.getByText("Main label")).toBeInTheDocument();
+		expect(screen.getByText("Sub label")).toBeInTheDocument();
+		expect(screen.getByText("Hint")).toBeVisible();
 	});
 
 	describe("dateFormat", () => {

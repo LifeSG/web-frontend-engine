@@ -78,6 +78,16 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<ISwitchSchema>("switch-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "switch",
+	label: {
+		mainLabel: "Switch",
+		subLabel: "Pick one",
+		hint: { content: "Will return true or false" },
+	},
+};
+
 export const Disabled = DefaultStoryTemplate<ISwitchSchema>("switch-disabled").bind({});
 Disabled.args = {
 	uiType: "switch",

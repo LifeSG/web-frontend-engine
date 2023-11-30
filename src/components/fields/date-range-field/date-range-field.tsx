@@ -21,12 +21,13 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { label, dateFormat = DEFAULT_DATE_FORMAT, validation, variant, ...otherSchema },
+		error,
+		formattedLabel,
 		id,
 		isDirty,
 		onChange,
+		schema: { dateFormat = DEFAULT_DATE_FORMAT, label: _label, validation, variant, ...otherSchema },
 		value = { from: undefined, to: undefined },
-		error,
 		...otherProps
 	} = props;
 	const [stateValue, setStateValue] = useState<string>(value.from || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
@@ -273,7 +274,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 			{...derivedProps}
 			id={id}
 			data-testid={TestHelper.generateId(id, "date")}
-			label={label}
+			label={formattedLabel}
 			errorMessage={error?.message}
 			onChange={handleChange}
 			value={stateValue}

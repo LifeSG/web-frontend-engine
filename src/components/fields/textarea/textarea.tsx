@@ -15,12 +15,13 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		schema: { className, chipTexts, chipPosition, rows = 1, resizable, label, validation, ...otherSchema },
+		error,
+		formattedLabel,
 		id,
 		name,
 		onChange,
+		schema: { className, chipTexts, chipPosition, rows = 1, resizable, label: _label, validation, ...otherSchema },
 		value,
-		error,
 		...otherProps
 	} = props;
 	const { setValue } = useFormContext();
@@ -95,7 +96,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	return (
-		<Form.CustomField label={label} id={id} errorMessage={error?.message}>
+		<Form.CustomField label={formattedLabel} id={id} errorMessage={error?.message}>
 			<Wrapper chipPosition={chipPosition}>
 				{renderChips()}
 				<StyledTextarea

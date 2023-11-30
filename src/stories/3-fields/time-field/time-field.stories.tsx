@@ -107,6 +107,16 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<ITimeFieldSchema>("time-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "time-field",
+	label: {
+		mainLabel: "Time",
+		subLabel: "Pick a time",
+		hint: { content: "Select a time" },
+	},
+};
+
 export const UseCurrentTime = DefaultStoryTemplate<ITimeFieldSchema>("time-use-current-time").bind({});
 UseCurrentTime.args = {
 	label: "Time",

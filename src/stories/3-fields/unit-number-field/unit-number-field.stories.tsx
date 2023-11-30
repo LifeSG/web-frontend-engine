@@ -81,6 +81,16 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "unit-number-field",
+	label: {
+		mainLabel: "Unit Number",
+		subLabel: "Enter a value",
+		hint: { content: "Accepts numbers and alphabets" },
+	},
+};
+
 export const Placeholder = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-placeholder").bind({});
 Placeholder.args = {
 	label: "Unit number with placeholder",

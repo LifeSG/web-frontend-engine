@@ -15,11 +15,12 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, ...otherSchema },
-		id,
-		value = { from: undefined, to: undefined },
 		error,
+		formattedLabel,
+		id,
 		onChange,
+		schema: { label: _label, options, validation, ...otherSchema },
+		value = { from: undefined, to: undefined },
 		...otherProps
 	} = props;
 
@@ -106,7 +107,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 			id={id}
 			onHideOptions={handleBlur}
 			data-testid={TestHelper.generateId(id)}
-			label={label}
+			label={formattedLabel}
 			options={options}
 			onSelectOption={handleChange}
 			selectedOptions={getSelectedOptions()}

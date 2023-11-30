@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { useState } from "react";
@@ -135,6 +135,21 @@ describe(UI_TYPE, () => {
 		);
 	});
 
+	it("should be able to render sub label and hint", () => {
+		renderComponent({
+			label: {
+				mainLabel: "Main label",
+				subLabel: "Sub label",
+				hint: { content: "Hint" },
+			},
+		});
+		fireEvent.click(screen.getByLabelText("popover-button"));
+
+		expect(screen.getByText("Main label")).toBeInTheDocument();
+		expect(screen.getByText("Sub label")).toBeInTheDocument();
+		expect(screen.getByText("Hint")).toBeVisible();
+	});
+
 	it("should be able to support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
@@ -247,6 +262,24 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getTextareaChip()));
 
 			expect(getTextarea()).toHaveAttribute("rows", "1");
+		});
+
+		it("should be able to render sub label and hint", () => {
+			renderComponent({
+				textarea: {
+					label: {
+						mainLabel: TEXT_AREA_LABEL,
+						subLabel: "Sub label",
+						hint: { content: "Hint" },
+					},
+				},
+			});
+			fireEvent.click(getTextareaChip());
+			fireEvent.click(screen.getByLabelText("popover-button"));
+
+			expect(screen.getAllByText(TEXT_AREA_LABEL)).toHaveLength(2);
+			expect(screen.getByText("Sub label")).toBeInTheDocument();
+			expect(screen.getByText("Hint")).toBeVisible();
 		});
 	});
 

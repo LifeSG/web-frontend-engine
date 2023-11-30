@@ -6,4 +6,5 @@ export interface ISubmitButtonSchema
 	extends Omit<IBaseFieldSchema<"submit">, "validation">,
 		TComponentOmitProps<ButtonProps, "disabled"> {
 	disabled?: boolean | "invalid-form" | undefined;
+	label: string;
 }

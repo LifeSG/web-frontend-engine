@@ -1,3 +1,4 @@
+import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IColumns } from "../frontend-engine";
 import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
@@ -81,7 +82,7 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 	/** defines what kind of component to be rendered */
 	uiType: T;
 	/** caption for the field */
-	label: string;
+	label: string | IComplexLabel;
 	/** render conditions
 	 * - need to fulfil at least 1 object in array (OR condition)
 	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
@@ -94,6 +95,18 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 	columns?: IColumns | undefined;
 }
 
+/**
+ * for displaying sub label and popover
+ */
+export interface IComplexLabel {
+	mainLabel: string;
+	subLabel?: string | undefined;
+	hint?: IComplexLabelHint | undefined;
+}
+
+interface IComplexLabelHint {
+	content: string;
+}
 // =============================================================================
 // FIELD PROPS
 // =============================================================================
@@ -102,5 +115,6 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
  */
 export interface IGenericFieldProps<T> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
 	id: string;
+	formattedLabel?: string | FormLabelProps | undefined;
 	schema: T;
 }

@@ -17,11 +17,12 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, validation, disabled, customOptions, ...otherSchema },
-		id,
-		value,
+		formattedLabel,
 		error,
+		id,
 		onChange,
+		schema: { customOptions, disabled, label: _label, options, validation, ...otherSchema },
+		value,
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -156,7 +157,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	};
 
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
+		<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
 			{customOptions?.styleType === "toggle" ? renderToggles() : renderCheckboxes()}
 		</Form.CustomField>
 	);
