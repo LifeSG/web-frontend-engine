@@ -18,15 +18,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		id,
 		onChange,
 		value,
-		schema: {
-			customOptions,
-			inputMode,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			uiType,
-			validation,
-			...otherSchema
-		},
+		schema: { customOptions, inputMode, label: _label, uiType, validation, ...otherSchema },
 		...otherProps
 	} = props;
 

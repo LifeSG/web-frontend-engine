@@ -19,13 +19,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 		formattedLabel,
 		id,
 		onChange,
-		schema: {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			options,
-			validation,
-			...otherSchema
-		},
+		schema: { label: _label, options, validation, ...otherSchema },
 		value = { from: undefined, to: undefined },
 		...otherProps
 	} = props;

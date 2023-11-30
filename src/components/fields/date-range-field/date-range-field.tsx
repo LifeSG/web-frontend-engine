@@ -26,14 +26,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		id,
 		isDirty,
 		onChange,
-		schema: {
-			dateFormat = DEFAULT_DATE_FORMAT,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			validation,
-			variant,
-			...otherSchema
-		},
+		schema: { dateFormat = DEFAULT_DATE_FORMAT, label: _label, validation, variant, ...otherSchema },
 		value = { from: undefined, to: undefined },
 		...otherProps
 	} = props;

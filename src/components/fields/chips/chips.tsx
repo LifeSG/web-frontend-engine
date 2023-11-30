@@ -21,15 +21,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		formattedLabel,
 		id,
 		onChange,
-		schema: {
-			disabled,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			options,
-			textarea,
-			validation,
-			...otherSchema
-		},
+		schema: { disabled, label: _label, options, textarea, validation, ...otherSchema },
 		value,
 		...otherProps
 	} = props;

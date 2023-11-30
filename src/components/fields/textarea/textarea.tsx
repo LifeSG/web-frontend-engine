@@ -20,17 +20,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		id,
 		name,
 		onChange,
-		schema: {
-			className,
-			chipTexts,
-			chipPosition,
-			rows = 1,
-			resizable,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			validation,
-			...otherSchema
-		},
+		schema: { className, chipTexts, chipPosition, rows = 1, resizable, label: _label, validation, ...otherSchema },
 		value,
 		...otherProps
 	} = props;

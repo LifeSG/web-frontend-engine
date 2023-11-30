@@ -19,16 +19,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 		formattedLabel,
 		id,
 		onChange,
-		schema: {
-			className,
-			customOptions,
-			disabled,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			options,
-			validation,
-			...otherSchema
-		},
+		schema: { className, customOptions, disabled, label: _label, options, validation, ...otherSchema },
 		value,
 	} = props;
 

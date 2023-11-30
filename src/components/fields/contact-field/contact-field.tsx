@@ -21,16 +21,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		id,
 		name,
 		onChange,
-		schema: {
-			defaultCountry,
-			disabled,
-			enableSearch,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			placeholder,
-			validation,
-			...otherSchema
-		},
+		schema: { defaultCountry, disabled, enableSearch, label: _label, placeholder, validation, ...otherSchema },
 		value,
 		...otherProps
 	} = props;

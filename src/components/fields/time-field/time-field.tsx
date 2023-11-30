@@ -16,15 +16,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 		formattedLabel,
 		id,
 		onChange,
-		schema: {
-			is24HourFormat,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			placeholder,
-			useCurrentTime,
-			validation,
-			...otherSchema
-		},
+		schema: { is24HourFormat, label: _label, placeholder, useCurrentTime, validation, ...otherSchema },
 		value,
 		...otherProps
 	} = props;

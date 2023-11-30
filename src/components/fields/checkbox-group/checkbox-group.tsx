@@ -21,15 +21,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 		error,
 		id,
 		onChange,
-		schema: {
-			customOptions,
-			disabled,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			options,
-			validation,
-			...otherSchema
-		},
+		schema: { customOptions, disabled, label: _label, options, validation, ...otherSchema },
 		value,
 	} = props;
 

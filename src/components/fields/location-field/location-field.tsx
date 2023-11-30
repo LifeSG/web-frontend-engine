@@ -26,8 +26,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			disabled,
 			gettingCurrentLocationFetchMessage,
 			interactiveMapPinIconUrl,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
+			label: _label,
 			locationInputPlaceholder,
 			locationModalStyles,
 			mapPanZoom,

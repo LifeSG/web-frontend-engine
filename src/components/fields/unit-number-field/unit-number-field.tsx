@@ -16,12 +16,7 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 		error,
 		id,
 		onChange,
-		schema: {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			validation,
-			...otherSchema
-		},
+		schema: { label: _label, validation, ...otherSchema },
 		value,
 		...otherProps
 	} = props;

@@ -26,14 +26,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		id,
 		isDirty,
 		onChange,
-		schema: {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			label,
-			useCurrentDate,
-			dateFormat = DEFAULT_DATE_FORMAT,
-			validation,
-			...otherSchema
-		},
+		schema: { label: _label, useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, validation, ...otherSchema },
 		value,
 		...otherProps
 	} = props;
