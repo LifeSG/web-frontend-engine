@@ -90,6 +90,16 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<IEmailFieldSchema>("email-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "email-field",
+	label: {
+		mainLabel: "Email",
+		subLabel: "Enter your correspondence email",
+		hint: { content: "It must be an email you use" },
+	},
+};
+
 export const Disabled = DefaultStoryTemplate<IEmailFieldSchema>("email-disabled").bind({});
 Disabled.args = {
 	label: "Email",

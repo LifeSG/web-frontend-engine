@@ -61,10 +61,11 @@ export const CommonFieldStoryProps = (uiType: string, isElement = false): ArgTyp
 			},
 		},
 		label: {
-			description: "A name/description of the purpose of the form element",
+			description:
+				"<div>A name/description of the purpose of the form element which may include an optional sub-label and popover feature.<br>If string is provided, the entire label will be rendered.<br>If object is provided:<ul><li>mainLabel: Primary text to display.</li><li>subLabel: Secondary text to display below the mainLabel.</li><li>hint.content: Displays an info icon and brings up the content as a popover on click.</li></ul></div>",
 			table: {
 				type: {
-					summary: "string",
+					summary: "string | { mainLabel: string, subLabel?: string, hint?: { content: string } }",
 				},
 			},
 		},
@@ -116,6 +117,25 @@ export const CommonCustomStoryProps = (referenceKey: string): ArgTypes => {
 					summary: "string",
 				},
 			},
+		},
+		...COLUMNS_ARG_TYPE,
+	};
+};
+export const CommonCustomStoryWithoutLabelProps = (referenceKey: string): ArgTypes => {
+	return {
+		referenceKey: {
+			description: `Use <code>${referenceKey}</code> to show this field`,
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			type: { name: "string", required: true },
+			options: [referenceKey],
+			control: {
+				type: "select",
+			},
+			defaultValue: referenceKey,
 		},
 		...COLUMNS_ARG_TYPE,
 	};

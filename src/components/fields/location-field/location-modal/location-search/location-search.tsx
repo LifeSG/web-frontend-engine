@@ -497,14 +497,17 @@ export const LocationSearch = ({
 
 		setQueryString(nearestLocation.address);
 
-		const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, addressLat, addressLng);
-		onChangeSelectedAddressInfo({
+		const locationFieldValue = {
 			...nearestLocation,
 			lat: addressLat,
 			lng: addressLng,
-			x: X,
-			y: Y,
-		});
+		};
+		if (convertLatLngToXYEndpoint) {
+			const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, addressLat, addressLng);
+			locationFieldValue.x = X;
+			locationFieldValue.y = Y;
+		}
+		onChangeSelectedAddressInfo(locationFieldValue);
 
 		setSelectedIndex(nearestLocationIndex);
 	};

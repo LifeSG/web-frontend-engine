@@ -521,6 +521,23 @@ describe("location-input-group", () => {
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 			});
 
+			it("should be able to render sub label and hint", () => {
+				renderComponent({
+					overrideField: {
+						label: {
+							mainLabel: "Main label",
+							subLabel: "Sub label",
+							hint: { content: "Hint" },
+						},
+					},
+				});
+				fireEvent.click(screen.getByLabelText("popover-button"));
+
+				expect(screen.getByText("Main label")).toBeInTheDocument();
+				expect(screen.getByText("Sub label")).toBeInTheDocument();
+				expect(screen.getByText("Hint")).toBeVisible();
+			});
+
 			// test functionality
 			describe("when there are default values", () => {
 				describe("when only address", () => {

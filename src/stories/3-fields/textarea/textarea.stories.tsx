@@ -104,6 +104,16 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<ITextareaSchema>("textarea-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "textarea",
+	label: {
+		mainLabel: "Textarea",
+		subLabel: "Enter a value",
+		hint: { content: "You can key in anything" },
+	},
+};
+
 export const AllowResize = DefaultStoryTemplate<ITextareaSchema>("textarea-allow-resize").bind({});
 AllowResize.args = {
 	uiType: "textarea",

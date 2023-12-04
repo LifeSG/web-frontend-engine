@@ -13,11 +13,12 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, ...otherSchema },
-		id,
-		value,
 		error,
+		formattedLabel,
+		id,
 		onChange,
+		schema: { label: _label, options, validation, ...otherSchema },
+		value,
 		...otherProps
 	} = props;
 
@@ -64,7 +65,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 			{...otherProps}
 			id={id}
 			data-testid={TestHelper.generateId(id, "select")}
-			label={label}
+			label={formattedLabel}
 			errorMessage={error?.message}
 			options={options}
 			onSelectOption={handleChange}

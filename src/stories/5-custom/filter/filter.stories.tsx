@@ -127,6 +127,7 @@ Overrides.args = {
 		filterItem1: {
 			label: "Search",
 			referenceKey: "filter-item",
+			collapsible: true,
 			children: {
 				name: {
 					label: "",
@@ -139,6 +140,11 @@ Overrides.args = {
 	overrides: {
 		label: "Overridden",
 		toggleFilterButtonLabel: "Overridden",
+		children: {
+			filterItem1: {
+				expanded: true,
+			},
+		},
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;

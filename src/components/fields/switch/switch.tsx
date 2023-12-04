@@ -13,11 +13,12 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, disabled, validation, customOptions, className, ...otherSchema },
-		id,
-		value,
 		error,
+		formattedLabel,
+		id,
 		onChange,
+		schema: { className, customOptions, disabled, label, validation, ...otherSchema },
+		value,
 	} = props;
 
 	const [stateValue, setStateValue] = useState<boolean>(value || undefined);
@@ -57,8 +58,12 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	// RENDER FUNCTIONS
 	// =========================================================================
 	return (
-		<Form.CustomField id={id} label={label} errorMessage={error?.message}>
-			<FlexWrapper className={className} role="radiogroup" aria-label={label}>
+		<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
+			<FlexWrapper
+				className={className}
+				role="radiogroup"
+				aria-label={typeof label === "string" ? label : label.mainLabel}
+			>
 				<Toggle
 					{...otherSchema}
 					type="yes"

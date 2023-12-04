@@ -130,6 +130,16 @@ DefaultForeignNumber.argTypes = {
 	},
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<IContactFieldSchema>("contact-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "contact-field",
+	label: {
+		mainLabel: "Fruits",
+		subLabel: "Please pick",
+		hint: { content: "These are all fruits" },
+	},
+};
+
 export const Disabled = DefaultStoryTemplate<IContactFieldSchema>("contact-disabled").bind({});
 Disabled.args = {
 	uiType: "contact-field",

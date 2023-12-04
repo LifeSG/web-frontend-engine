@@ -52,6 +52,16 @@ Default.args = {
 	convertLatLngToXYEndpoint,
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<ILocationFieldSchema>("location-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "location-field",
+	label: {
+		mainLabel: "Location",
+		subLabel: "Add a location",
+		hint: { content: "It needs to be in Singapore" },
+	},
+};
+
 export const InitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
 	"location-field-initial-address"
 ).bind({});

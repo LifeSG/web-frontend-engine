@@ -97,6 +97,16 @@ Disabled.args = {
 	disabled: true,
 };
 
+export const WithSubLabelAndHint = DefaultStoryTemplate<INumericFieldSchema>("numeric-sub-label-hint").bind({});
+WithSubLabelAndHint.args = {
+	uiType: "numeric-field",
+	label: {
+		mainLabel: "Number",
+		subLabel: "Enter a number",
+		hint: { content: "Only numbers please" },
+	},
+};
+
 export const MaxLength = DefaultStoryTemplate<INumericFieldSchema>("numeric-maxlength").bind({});
 MaxLength.args = {
 	label: "Number",

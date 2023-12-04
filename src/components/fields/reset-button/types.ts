@@ -7,4 +7,5 @@ export interface IResetButtonSchema
 		TComponentOmitProps<ButtonProps, "disabled"> {
 	disabled?: boolean | undefined;
 	ignoreDefaultValues?: boolean | undefined;
+	label: string;
 }

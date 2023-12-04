@@ -17,26 +17,27 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
+		error,
+		formattedLabel,
 		id,
 		schema: {
-			label,
 			className = "location",
-			locationInputPlaceholder,
-			staticMapPinColor,
-			mapPanZoom,
-			interactiveMapPinIconUrl,
-			reverseGeoCodeEndpoint,
 			convertLatLngToXYEndpoint,
-			gettingCurrentLocationFetchMessage,
-			mustHavePostalCode,
-			locationModalStyles,
-			validation,
 			disabled,
+			gettingCurrentLocationFetchMessage,
+			interactiveMapPinIconUrl,
+			label: _label,
+			locationInputPlaceholder,
+			locationModalStyles,
+			mapPanZoom,
+			mustHavePostalCode,
 			readOnly,
+			reverseGeoCodeEndpoint,
+			staticMapPinColor,
+			validation,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
-		error,
 	} = props;
 
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
@@ -102,7 +103,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		<div id={id} data-testid={TestHelper.generateId(id)} className={className}>
 			<LocationInput
 				id={id}
-				label={label}
+				label={formattedLabel}
 				className={className}
 				locationInputPlaceholder={locationInputPlaceholder}
 				onChange={(e) => e.currentTarget.blur()}
