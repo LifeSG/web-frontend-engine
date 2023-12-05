@@ -15,8 +15,8 @@ export interface IL1Option extends IBaseOption {
 
 export type NestedMultiSelectProps = Pick<
 	InputNestedMultiSelectProps<string, string, string>,
-	| "enableSearch"
 	| "disabled"
+	| "enableSearch"
 	| "hideNoResultsDisplay"
 	| "listStyleWidth"
 	| "mode"

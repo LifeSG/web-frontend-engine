@@ -42,6 +42,41 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		enableSearch: {
+			description: "When specified, it will allow a text base search for the items in the list",
+			table: {
+				type: {
+					summary: ["boolean"],
+				},
+			},
+			defaultValue: { summary: "false" },
+		},
+		hideNoResultsDisplay: {
+			description: "If specified, the default no results display will not be rendered",
+			table: {
+				type: {
+					summary: ["boolean"],
+				},
+			},
+			defaultValue: { summary: "false" },
+		},
+		listStyleWidth: {
+			description: "Style option: The width of the options. You can specify e.g. 100% or 12rem",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
+		mode: {
+			description: "Determines if items are expanded or collapsed when the dropdown is opened",
+			table: {
+				type: {
+					summary: [`"default"`, `"expand"`, `"collapse"`],
+				},
+			},
+			defaultValue: { summary: "default" },
+		},
 		options: {
 			description: "A list of options that a user can choose from",
 			table: {
@@ -51,6 +86,16 @@ const meta: Meta = {
 			},
 			type: { name: "object", value: {} },
 		},
+		optionTruncationType: {
+			description:
+				"Specifies the trunction type of the options display. Truncated text will be replaced with ellipsis",
+			table: {
+				type: {
+					summary: [`"end"`, `"middle"`],
+				},
+			},
+			defaultValue: { summary: `"end"` },
+		},
 		placeholder: {
 			description: "Specifies the placeholder text",
 			table: {
@@ -59,8 +104,8 @@ const meta: Meta = {
 				},
 			},
 		},
-		listStyleWidth: {
-			description: "Style option: The width of the options. You can specify e.g. 100% or 12rem",
+		searchPlaceholder: {
+			description: "The placeholder for the search field",
 			table: {
 				type: {
 					summary: "string",
