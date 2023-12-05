@@ -8,4 +8,5 @@ export interface IButtonSchema
 	startIcon?: keyof typeof Icons | undefined;
 	endIcon?: keyof typeof Icons | undefined;
 	"data-testid"?: string | undefined;
+	label: string;
 }
