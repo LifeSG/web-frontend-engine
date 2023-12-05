@@ -16,6 +16,7 @@ YupHelper.addCondition("mixed", "empty", (value) => isEmptyValue(value));
 YupHelper.addCondition("mixed", "equals", (value, match) => !isEmptyValue(value) && isEqual(value, match));
 YupHelper.addCondition("mixed", "notEquals", (value, match) => !isEmptyValue(value) && !isEqual(value, match));
 YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
+	if (!values?.length) return true;
 	if (!Array.isArray(matches)) {
 		return values.includes(matches);
 	} else {
@@ -23,6 +24,7 @@ YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown
 	}
 });
 YupHelper.addCondition("array", "excludes", (values: unknown[], matches: unknown | unknown[]) => {
+	if (!values?.length) return true;
 	if (!Array.isArray(matches)) {
 		return !values.includes(matches);
 	} else {
