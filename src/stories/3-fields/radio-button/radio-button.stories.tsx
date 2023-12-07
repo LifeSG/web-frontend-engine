@@ -124,6 +124,17 @@ Disabled.args = {
 	disabled: true,
 };
 
+export const FormattedOptions = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-formatted-options").bind({});
+FormattedOptions.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	options: [
+		{ label: "<a href='#'>Apple with a link</a>", value: "Apple" },
+		{ label: "<strong>Bolded Berry</strong>", value: "Berry" },
+		{ label: "<em>Italicised Cherry</em>", value: "Cherry" },
+	],
+};
+
 export const WithValidation = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation").bind({});
 WithValidation.args = {
 	uiType: "radio",

@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Sanitize } from "../../shared";
 import { FlexWrapper, Label, RadioContainer, StyledImageButton, StyledRadioButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
@@ -86,7 +87,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							onChange={() => handleChangeOrClick(option.value)}
 						/>
 						<Label as="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
-							{option.label}
+							<Sanitize>{option.label}</Sanitize>
 						</Label>
 					</RadioContainer>
 				);

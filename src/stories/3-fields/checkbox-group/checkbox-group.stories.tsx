@@ -138,6 +138,17 @@ Disabled.args = {
 	disabled: true,
 };
 
+export const FormattedOptions = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-formatted-options").bind({});
+FormattedOptions.args = {
+	uiType: "checkbox",
+	label: "Fruits",
+	options: [
+		{ label: "<a href='#'>Apple with a link</a>", value: "Apple" },
+		{ label: "<strong>Bolded Berry</strong>", value: "Berry" },
+		{ label: "<em>Italicised Cherry</em>", value: "Cherry" },
+	],
+};
+
 export const CustomSize = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-custom-size").bind({});
 CustomSize.args = {
 	uiType: "checkbox",
