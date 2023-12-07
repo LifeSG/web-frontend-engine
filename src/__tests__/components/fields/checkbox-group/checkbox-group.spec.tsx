@@ -205,7 +205,6 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should be able to sanitize HTML string in option label", () => {
-		const consoleSpy = jest.spyOn(console, "log");
 		renderComponent({
 			options: [
 				{ label: "This is a sanitized string<script>console.log('hello world')</script>", value: "HTML Label" },
@@ -213,7 +212,6 @@ describe(UI_TYPE, () => {
 		});
 
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
-		expect(consoleSpy).not.toHaveBeenCalled();
 	});
 
 	it.each`

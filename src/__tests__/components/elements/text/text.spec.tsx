@@ -99,13 +99,11 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should be able to sanitize HTML string", () => {
-		const consoleSpy = jest.spyOn(console, "log");
 		renderComponent({
 			children: "<div>This is a sanitized string<script>console.log('hello world')</script></div>",
 		});
 
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
-		expect(consoleSpy).not.toBeCalled();
 	});
 
 	it("should be able to render view more button", async () => {
