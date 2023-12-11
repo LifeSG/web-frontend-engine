@@ -55,9 +55,11 @@ describe(UI_TYPE, () => {
 
 	it("should be able to sanitize HTML string", () => {
 		renderComponent({
+			className: "alert-element",
 			children: "<div>This is a sanitized string<script>console.log('hello world')</script></div>",
 		});
 
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
+		expect(document.querySelector(".alert-element").innerHTML.includes("script")).toBe(false);
 	});
 });

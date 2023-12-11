@@ -206,12 +206,14 @@ describe(UI_TYPE, () => {
 
 	it("should be able to sanitize HTML string in option label", () => {
 		renderComponent({
+			className: "checkbox-field",
 			options: [
 				{ label: "This is a sanitized string<script>console.log('hello world')</script>", value: "HTML Label" },
 			],
 		});
 
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
+		expect(document.querySelector(".checkbox-field").innerHTML.includes("script")).toBe(false);
 	});
 
 	it.each`

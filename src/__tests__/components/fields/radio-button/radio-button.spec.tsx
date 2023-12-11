@@ -166,12 +166,14 @@ describe(UI_TYPE, () => {
 
 	it("should be able to sanitize HTML string in option label", () => {
 		renderComponent({
+			className: "radio-field",
 			options: [
 				{ label: "This is a sanitized string<script>console.log('hello world')</script>", value: "HTML Label" },
 			],
 		});
 
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
+		expect(document.querySelector(".radio-field").innerHTML.includes("script")).toBe(false);
 	});
 
 	describe("update options through schema", () => {
