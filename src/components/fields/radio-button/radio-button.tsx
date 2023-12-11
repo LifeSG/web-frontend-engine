@@ -10,6 +10,7 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { Sanitize } from "../../shared";
 import { FlexWrapper, Label, RadioContainer, StyledImageButton, StyledRadioButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
+import sanitize from "sanitize-html";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
 	// =============================================================================
@@ -81,7 +82,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
-							name={option.label}
+							name={sanitize(option.label)}
 							value={option.value}
 							checked={isRadioButtonChecked(option.value)}
 							onChange={() => handleChangeOrClick(option.value)}

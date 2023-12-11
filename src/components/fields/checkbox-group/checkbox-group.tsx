@@ -11,6 +11,7 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
 import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";
+import sanitize from "sanitize-html";
 
 export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
 	// =============================================================================
@@ -107,7 +108,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={checkboxId}
 							disabled={disabled ?? option.disabled}
-							name={option.label}
+							name={sanitize(option.label)}
 							value={option.value}
 							checked={isCheckboxChecked(option.value)}
 							onChange={() => handleChange(option.value)}
