@@ -98,10 +98,10 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 		if (isEmpty(children) || !isObject(children)) {
 			return childIdList;
 		}
-		Object.keys(children).forEach((id) => {
+		Object.entries(children).forEach(([id, child]) => {
 			childIdList.push(id);
-			if (children["children"]) {
-				childIdList.push(...listAllChildIds(children["children"]));
+			if (child["children"]) {
+				childIdList.push(...listAllChildIds(child["children"]));
 			}
 		});
 
