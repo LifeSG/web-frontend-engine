@@ -299,13 +299,18 @@ describe("conditional-renderer", () => {
 				uiType: "div",
 				showIf: [{ [FIELD_ONE_ID]: [{ filled: true }, { min: 5 }] }],
 				children: {
-					[FIELD_TWO_ID]: {
-						label: FIELD_TWO_LABEL,
-						uiType,
-						validation: [
-							{ required: true, errorMessage: ERROR_MESSAGE },
-							{ min: 5, errorMessage: ERROR_MESSAGE },
-						],
+					nested: {
+						uiType: "div",
+						children: {
+							[FIELD_TWO_ID]: {
+								label: FIELD_TWO_LABEL,
+								uiType,
+								validation: [
+									{ required: true, errorMessage: ERROR_MESSAGE },
+									{ min: 5, errorMessage: ERROR_MESSAGE },
+								],
+							},
+						},
 					},
 				},
 			},
@@ -319,7 +324,9 @@ describe("conditional-renderer", () => {
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		expect(SUBMIT_FN).not.toBeCalled();
 
+		fireEvent.change(getFieldTwo(), { target: { value: "" } });
 		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalled();
 	});

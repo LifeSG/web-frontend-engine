@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES, Sanitize } from "../../shared";
 import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";
 
@@ -113,7 +113,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 							onChange={() => handleChange(option.value)}
 						/>
 						<Label as="label" htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
-							{option.label}
+							<Sanitize>{option.label}</Sanitize>
 						</Label>
 					</CheckboxContainer>
 				);

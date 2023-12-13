@@ -195,6 +195,27 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
+	it("should be able to render HTML string in option label", () => {
+		renderComponent({
+			options: [{ label: "<strong>HTML Label</strong>", value: "HTML Label" }],
+		});
+
+		expect(screen.getByText("HTML Label")).toBeInTheDocument();
+		expect(screen.getByText("HTML Label").nodeName).toBe("STRONG");
+	});
+
+	it("should be able to sanitize HTML string in option label", () => {
+		const consoleSpy = jest.spyOn(console, "log");
+		renderComponent({
+			options: [
+				{ label: "This is a sanitized string<script>console.log('hello world')</script>", value: "HTML Label" },
+			],
+		});
+
+		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
+		expect(consoleSpy).not.toHaveBeenCalled();
+	});
+
 	it.each`
 		displaySize  | expected
 		${"small"}   | ${"1.5rem"}
