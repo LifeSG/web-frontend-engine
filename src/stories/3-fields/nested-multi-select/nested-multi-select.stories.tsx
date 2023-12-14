@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { IL1Option, INestedMultiSelectSchema } from "../../../components/fields";
+import { IL1Value, INestedMultiSelectSchema, TL1OptionProps } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
@@ -116,68 +116,87 @@ const meta: Meta = {
 };
 export default meta;
 
-const options: IL1Option[] = [
+const options: TL1OptionProps[] = [
 	{
 		label: "Fruits",
 		value: "fruits",
+		key: "fruits-key",
 		subItems: [
 			{
 				label: "Berries",
 				value: "berries",
+				key: "berries-key",
 				subItems: [
 					{
 						label: "Blueberry",
 						value: "blueberry",
+						key: "blueberry-key",
 					},
 					{
 						label: "Raspberry",
 						value: "raspberry",
+						key: "raspberry-key",
 					},
 					{
 						label: "Banana",
 						value: "banana",
+						key: "banana-key",
 					},
 				],
 			},
 			{
 				label: "Melons",
 				value: "melons",
+				key: "melons-key",
 				subItems: [
 					{
 						label: "Watermelon",
 						value: "watermelon",
+						key: "watermelon-key",
 					},
 					{
 						label: "Honeydew",
 						value: "honeydew",
+						key: "honeydew-key",
 					},
 					{
 						label: "Wintermelon",
 						value: "wintermelon",
+						key: "wintermelon-key",
+					},
+					{
+						label: "Blueberry",
+						value: "blueberry",
+						key: "blueberry-key",
 					},
 				],
 			},
 			{
 				label: "Durian",
 				value: "durian",
+				key: "durian-key",
 			},
 		],
 	},
 	{
 		label: "Vegetables",
 		value: "vegetables",
+		key: "vegetable-key",
 		subItems: [
 			{
 				label: "Cabbage",
 				value: "cabbage",
+				key: "cabbage-key",
 			},
 			{
 				label: "Spinach",
 				value: "spinach",
+				key: "spinach-key",
 			},
 			{
 				label: "Broccoli",
 				value: "broccoli",
+				key: "broccoli-key",
 			},
 		],
 	},
@@ -190,14 +209,23 @@ Default.args = {
 	options: options,
 };
 
-export const DefaultValue = DefaultStoryTemplate<INestedMultiSelectSchema, string[]>(
+export const DefaultValue = DefaultStoryTemplate<INestedMultiSelectSchema, IL1Value>(
 	"nested-multi-select-default-value"
 ).bind({});
 DefaultValue.args = {
 	uiType: "nested-multi-select",
 	label: "Fruits",
 	options: options,
-	defaultValues: ["blueberry", "durian"],
+	defaultValues: {
+		"fruits-key": {
+			"berries-key": {
+				"blueberry-key": "blueberry",
+			},
+			"melons-key": {
+				"watermelon-key": "watermelon",
+			},
+		},
+	},
 };
 
 DefaultValue.argTypes = {
@@ -254,14 +282,23 @@ Reset.args = {
 	validation: [{ required: true }],
 };
 
-export const ResetWithDefaultValues = ResetStoryTemplate<INestedMultiSelectSchema, string[]>(
+export const ResetWithDefaultValues = ResetStoryTemplate<INestedMultiSelectSchema, IL1Value>(
 	"nested-multi-select-reset-default-value"
 ).bind({});
 ResetWithDefaultValues.args = {
 	uiType: "nested-multi-select",
 	label: "Fruits",
 	options: options,
-	defaultValues: ["blueberry", "durian"],
+	defaultValues: {
+		"fruits-key": {
+			"berries-key": {
+				"blueberry-key": "blueberry",
+			},
+			"melons-key": {
+				"watermelon-key": "watermelon",
+			},
+		},
+	},
 };
 
 ResetWithDefaultValues.argTypes = {

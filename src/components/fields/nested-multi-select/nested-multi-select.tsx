@@ -1,6 +1,5 @@
-import { L1OptionProps, L2OptionProps, L3OptionProps } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
@@ -8,7 +7,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
-import { IBaseOption, IL1Option, IL2Option, INestedMultiSelectSchema } from "./types";
+import { IL1Value, IL2Value, IL3Value, INestedMultiSelectSchema, TL1OptionProps } from "./types";
 
 export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSchema>) => {
 	// =============================================================================
@@ -23,45 +22,36 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		...otherProps
 	} = props;
 
-	type TNestedOptionKeyProps =
-		| L1OptionProps<string, string, string>
-		| L2OptionProps<string, string>
-		| L3OptionProps<string>;
-	type TNestedOptionProps = IL1Option | IL2Option | IBaseOption;
-
-	const optionsWithKeys = useRef<L1OptionProps<string, string, string>[]>();
+	type TNestedValues = IL1Value | IL2Value | IL3Value;
+	type TStateValues = { keyPaths: string[][]; values: string[] };
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationConfig();
-	const [selectedKeyPaths, setSelectedKeyPaths] = useState<string[][]>();
+	const [stateValue, setStateValue] = useState<TNestedValues>(value);
 
 	// =============================================================================
-	// EFFECTS
+	// EFFECTS / CALLBACKS
 	// =============================================================================
 
-	const getSelectedKeyPaths = useCallback((): string[][] => {
-		const getPath = (options: TNestedOptionKeyProps[], selectedValue: string, path: string[] = []) => {
-			for (const option of options) {
-				if (option.subItems) {
-					const subOptionPath = getPath(option.subItems, selectedValue, [...path, option.key]);
-					if (subOptionPath.length > 0) {
-						return subOptionPath;
-					}
-				} else if (option.value === selectedValue) {
-					return [...path, option.key];
+	const getKeyPaths = useCallback((): string[][] => {
+		const keyPaths: string[][] = [];
+
+		const traverseNestedValue = (currentValue: TNestedValues, currentPath: string[]) => {
+			for (const key in currentValue) {
+				const newPath = [...currentPath, key];
+				const value = currentValue[key];
+
+				if (typeof value === "string") {
+					keyPaths.push(newPath);
+				} else {
+					traverseNestedValue(value, newPath);
 				}
 			}
-			return [];
 		};
 
-		const paths = [];
-		value?.forEach((val: string) => {
-			const path = getPath(optionsWithKeys.current, val);
-			if (path.length) {
-				paths.push(path);
-			}
-		});
-		return paths;
-	}, [value]);
+		traverseNestedValue(stateValue, []);
+
+		return keyPaths;
+	}, [stateValue]);
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
@@ -85,54 +75,57 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	}, [validation]);
 
 	useDeepCompareEffect(() => {
-		const findValueInOptions = (options: TNestedOptionProps[], value: string): TNestedOptionProps => {
+		const findValueInOptions = (options: TL1OptionProps[], nested: TNestedValues): TNestedValues | string => {
+			const result: TNestedValues = {};
+
 			for (const option of options) {
-				const typedOption = option as IL1Option | IL2Option;
-				if (typedOption.subItems) {
-					const subItem = findValueInOptions(typedOption.subItems, value);
-					if (subItem) {
-						return subItem;
-					}
-				} else if (option.value === value) {
-					return option;
+				const { key, subItems } = option;
+				const nestedValue = nested[key];
+
+				if (nestedValue) {
+					result[key] =
+						typeof nestedValue === "string"
+							? nestedValue
+							: (findValueInOptions(subItems || [], nestedValue) as string);
 				}
 			}
-			return null;
+
+			return result;
 		};
 
-		const updatedValues = value?.filter((v) => findValueInOptions(options, v) !== null);
+		const updatedValues = value ? findValueInOptions(options, value) : value;
 		setValue(id, updatedValues);
 	}, [options]);
 
 	useEffect(() => {
-		const mapOptions = (options: TNestedOptionProps[], layer = 1) => {
-			return options.map((option: TNestedOptionProps, index: number) => {
-				const key = generateOptionKey(option, layer, index);
-				const typedOption = option as IL1Option | IL2Option;
-				const subItems = typedOption.subItems ? mapOptions(typedOption.subItems, layer + 1) : null;
-				return { ...option, ...(subItems && { subItems }), key };
-			});
-		};
-		optionsWithKeys.current = mapOptions(options);
-		const selectedPaths = getSelectedKeyPaths();
-		setSelectedKeyPaths(selectedPaths);
-	}, [getSelectedKeyPaths, options]);
+		setStateValue(value);
+	}, [value]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const generateOptionKey = (option: IBaseOption, layer: number, position: number): string => {
-		return `${layer}-${position}-${option.value}`;
+
+	const parseOutputValue = ({ keyPaths, values }: TStateValues): TNestedValues => {
+		const result: TNestedValues = {};
+		keyPaths.forEach((paths, pathsIndex) => {
+			paths.reduce((currentValue, key, index) => {
+				if (index === paths.length - 1) {
+					currentValue[key] = values[pathsIndex];
+				} else if (!currentValue[key]) {
+					currentValue[key] = {};
+				}
+				return currentValue[key] as TNestedValues;
+			}, result);
+		});
+		return result;
 	};
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (keyPaths: string[][], values: string[]): void => {
-		const parsedValues = values.map((option) => option);
+		const parsedValues = parseOutputValue({ keyPaths, values });
 		onChange({ target: { value: parsedValues } });
-		const newKeyPath = keyPaths ? keyPaths : [];
-		setSelectedKeyPaths(newKeyPath);
 	};
 
 	// =============================================================================
@@ -145,9 +138,9 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 			id={id}
 			data-testid={TestHelper.generateId(id)}
 			label={label}
-			options={optionsWithKeys.current}
+			options={options}
 			onSelectOptions={handleChange}
-			selectedKeyPaths={selectedKeyPaths}
+			selectedKeyPaths={getKeyPaths()}
 			errorMessage={error?.message}
 		/>
 	);
