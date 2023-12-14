@@ -7,23 +7,22 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
-import { IL1Value, IL2Value, IL3Value, INestedMultiSelectSchema, TL1OptionProps } from "./types";
+import { INestedMultiSelectSchema, TL1OptionProps, TNestedValues } from "./types";
 
 export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, validation, options, ...otherSchema },
+		schema: { label: _label, validation, options, ...otherSchema },
 		id,
 		value,
+		formattedLabel,
 		onChange,
 		error,
 		...otherProps
 	} = props;
 
-	type TNestedValues = IL1Value | IL2Value | IL3Value;
-	type TStateValues = { keyPaths: string[][]; values: string[] };
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationConfig();
 	const [stateValue, setStateValue] = useState<TNestedValues>(value);
@@ -105,7 +104,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	// HELPER FUNCTIONS
 	// =============================================================================
 
-	const parseOutputValue = ({ keyPaths, values }: TStateValues): TNestedValues => {
+	const parseOutputValue = (keyPaths: string[][], values: string[]): TNestedValues => {
 		const result: TNestedValues = {};
 		keyPaths.forEach((paths, pathsIndex) => {
 			paths.reduce((currentValue, key, index) => {
@@ -124,7 +123,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (keyPaths: string[][], values: string[]): void => {
-		const parsedValues = parseOutputValue({ keyPaths, values });
+		const parsedValues = parseOutputValue(keyPaths, values);
 		onChange({ target: { value: parsedValues } });
 	};
 
@@ -137,7 +136,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 			{...otherProps}
 			id={id}
 			data-testid={TestHelper.generateId(id)}
-			label={label}
+			label={formattedLabel}
 			options={options}
 			onSelectOptions={handleChange}
 			selectedKeyPaths={getKeyPaths()}

@@ -12,7 +12,7 @@ export interface IBaseOption {
 export type TL1OptionProps = L1OptionProps<string, string, string>;
 export type TL2OptionProps = L2OptionProps<string, string>;
 export type TL3OptionProps = L3OptionProps<string>;
-
+export type TNestedValues = IL1Value | IL2Value | IL3Value;
 export interface IL1Value {
 	[key: string]: IL2Value | string;
 }
