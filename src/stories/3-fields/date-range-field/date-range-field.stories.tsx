@@ -48,15 +48,23 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		numberOfDays: {
+			description:
+				"specifies the number of days to be selected when <code>fixed-range</code> is selected. the default value is 7 days",
+			defaultValue: { summary: 7 },
+			control: {
+				type: "number",
+			},
+		},
 		variant: {
 			description:
-				"When the <code>week</code> is specified, the component is a week selection. WARNING: This disables `future`, `past`, `minDate`, `maxDate` and `excludedDates` validation rules",
+				"When the <code>week</code> is specified, the component is a week selection. When the  <code>fixed-range</code> is specified, the component selects 7 days from selected day by default.  WARNING: both <code>week</code> and <code>fixed-range</code> disable `future`, `past`, `minDate`, `maxDate` and `excludedDates` validation rules",
 			table: {
 				type: {
-					summary: "range | week",
+					summary: "range | week | fixed-range",
 				},
 			},
-			options: ["range", "week"],
+			options: ["range", "week", "fixed-range"],
 			control: {
 				type: "select",
 			},
@@ -238,5 +246,12 @@ WeekRange.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	variant: "week",
+	validation: [{ required: true }],
+};
+export const FixedRange = DefaultStoryTemplate<TDateRangeFieldSchema>("fixed-range").bind({});
+FixedRange.args = {
+	uiType: "date-range-field",
+	label: "Date",
+	variant: "fixed-range",
 	validation: [{ required: true }],
 };

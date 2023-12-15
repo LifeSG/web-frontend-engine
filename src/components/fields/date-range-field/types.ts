@@ -24,8 +24,14 @@ interface RangeSchema<V = undefined>
 	variant: "range";
 	dateFormat?: string | undefined;
 }
+interface FixedRangeSchema<V = undefined>
+	extends IBaseFieldSchema<"date-range-field", V, undefined>,
+		TComponentOmitProps<DateRangeInputProps, "valueEnd"> {
+	variant: "fixed-range";
+	dateFormat?: string | undefined;
+}
 
-export type TDateRangeFieldSchema<V = undefined> = RangeSchema<V> | WeekSchema<V>;
+export type TDateRangeFieldSchema<V = undefined> = RangeSchema<V> | WeekSchema<V> | FixedRangeSchema<V>;
 
 export enum TDateRangeInputType {
 	START = "start",
