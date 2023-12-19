@@ -233,7 +233,7 @@ DefaultValue.argTypes = {
 		description: "Default value for the field, this is declared outside `sections`",
 		table: {
 			type: {
-				summary: "string[]",
+				summary: "{ [key: string]: { [key:string]: {[key:string : string] } |string } | string; }",
 			},
 		},
 		type: { name: "object", value: {} },
@@ -320,7 +320,7 @@ Overrides.args = {
 	options: options,
 	overrides: {
 		label: "Overridden",
-		options: [{ label: "New field", value: "new" }],
+		options: [{ label: "New field", value: "new", key: "new-key" }],
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;

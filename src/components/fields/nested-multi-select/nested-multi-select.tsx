@@ -48,7 +48,6 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		};
 
 		traverseNestedValue(stateValue, []);
-
 		return keyPaths;
 	}, [stateValue]);
 

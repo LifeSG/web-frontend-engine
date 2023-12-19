@@ -3,12 +3,6 @@ import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 import { L1OptionProps, L2OptionProps, L3OptionProps } from "@lifesg/react-design-system";
 
-export interface IBaseOption {
-	value: string;
-	label: string;
-	key: string;
-}
-
 export type TL1OptionProps = L1OptionProps<string, string, string>;
 export type TL2OptionProps = L2OptionProps<string, string>;
 export type TL3OptionProps = L3OptionProps<string>;
