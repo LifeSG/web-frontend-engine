@@ -57,17 +57,14 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 
 		setFieldValidationConfig(
 			id,
-			Yup.array()
-				.of(Yup.string())
-				.test(
-					"is-empty-array",
-					isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTION,
-					(value) => {
-						if (!value || !isRequiredRule?.required) return true;
-
-						return value.length > 0;
-					}
-				),
+			Yup.object().test(
+				"is-required",
+				isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.FIELD_REQUIRED,
+				(value) => {
+					if (!isRequiredRule?.required) return true;
+					return !!value;
+				}
+			),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
