@@ -253,5 +253,5 @@ FixedRange.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	variant: "fixed-range",
-	validation: [{ required: true }],
+	validation: [{ required: true }, { numberOfDays: 7 }],
 };

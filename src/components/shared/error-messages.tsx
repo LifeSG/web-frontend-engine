@@ -32,6 +32,7 @@ export const ERROR_MESSAGES = {
 		DISABLED_DATES: "Date range should not include disabled dates.",
 		INVALID: "Invalid dates",
 		REQUIRED: "Both dates are required",
+		MUST_BE_WITHIN_NUMBER_OF_DAYS: (numberOfDays: number) => `Selection should have ${numberOfDays} days`,
 	},
 	EMAIL: {
 		INVALID: "Invalid email address",

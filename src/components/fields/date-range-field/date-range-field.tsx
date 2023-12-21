@@ -34,6 +34,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	const [stateValueEnd, setStateValueEnd] = useState<string>(value.to || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [derivedProps, setDerivedProps] = useState<DateInputProps>();
 	const { setFieldValidationConfig } = useValidationConfig();
+	const [noOfDays, setNoOfDays] = useState<number>(undefined);
 
 	// =============================================================================
 	// EFFECTS
@@ -47,10 +48,12 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 		const excludedDatesRule = validation?.find((rule) => "excludedDates" in rule);
+		const noOfDaysRule = validation?.find((rule) => "numberOfDays" in rule);
 
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
 
+		setNoOfDays(noOfDaysRule?.["numberOfDays"]);
 		setFieldValidationConfig(
 			id,
 			Yup.object()
@@ -75,6 +78,25 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						!!DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date")
 					);
 				})
+				.test(
+					"numberOfDays",
+					noOfDaysRule?.["errorMessage"] ||
+						ERROR_MESSAGES.DATE_RANGE.MUST_BE_WITHIN_NUMBER_OF_DAYS(noOfDaysRule["numberOfDays"]),
+					(value) => {
+						if (variant === "week") return true;
+						if (!isValidDate(value.from) || !isValidDate(value.to)) return true;
+						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
+						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
+						try {
+							const a = localDateFrom.plusDays(noOfDaysRule["numberOfDays"]);
+							console.log("c bool:: ", a);
+							console.log(localDateTo.equals(a));
+							return localDateTo.equals(a);
+						} catch {
+							return false;
+						}
+					}
+				)
 				.test("future", futureRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE, (value) => {
 					if (variant === "week") return true;
 					if (!isValidDate(value.from) || !isValidDate(value.to) || !futureRule?.["future"]) return true;
@@ -280,6 +302,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 			value={stateValue}
 			valueEnd={stateValueEnd}
 			variant={variant}
+			numberOfDays={noOfDays}
 		/>
 	);
 };
