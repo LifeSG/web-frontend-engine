@@ -79,19 +79,17 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					);
 				})
 				.test(
-					"numberOfDays",
+					"number-of-days",
 					noOfDaysRule?.["errorMessage"] ||
-						ERROR_MESSAGES.DATE_RANGE.MUST_BE_WITHIN_NUMBER_OF_DAYS(noOfDaysRule["numberOfDays"]),
+						ERROR_MESSAGES.DATE_RANGE.MUST_BE_WITHIN_NUMBER_OF_DAYS(noOfDaysRule?.["numberOfDays"]),
 					(value) => {
 						if (variant === "week") return true;
-						if (!isValidDate(value.from) || !isValidDate(value.to)) return true;
+						if (!isValidDate(value.from) || !isValidDate(value.to) || !noOfDaysRule?.["numberOfDays"])
+							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 						try {
-							const a = localDateFrom.plusDays(noOfDaysRule["numberOfDays"]);
-							console.log("c bool:: ", a);
-							console.log(localDateTo.equals(a));
-							return localDateTo.equals(a);
+							return localDateTo.equals(localDateFrom.plusDays(noOfDaysRule?.["numberOfDays"]));
 						} catch {
 							return false;
 						}

@@ -157,9 +157,9 @@ describe(uiType, () => {
 		});
 	});
 
-	it.each(["week", "range"])(
+	it.each(["week", "range", "fixed-range"])(
 		"should support validation schema 'required' for %s variant",
-		async (variantVal: "week" | "range") => {
+		async (variantVal: "week" | "range" | "fixed-range") => {
 			renderComponent({
 				variant: variantVal,
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
