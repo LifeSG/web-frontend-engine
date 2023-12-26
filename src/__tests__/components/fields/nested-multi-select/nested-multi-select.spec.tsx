@@ -312,7 +312,7 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	fdescribe("update options through schema", () => {
+	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                             | selected      | expectedValueBeforeUpdate                       | expectedValueAfterUpdate
 			${"should retain the field values of options that are not removed on schema update"} | ${["A", "D"]} | ${{ appleKey: "Apple", durianKey: "Durian" }}   | ${{ appleKey: "Apple" }}
@@ -424,7 +424,7 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	fdescribe("update options through overrides", () => {
+	describe("update options through overrides", () => {
 		it.each`
 			scenario                                                                          | selected      | expectedValueBeforeUpdate                       | expectedValueAfterUpdate
 			${"should retain the field values of options that are not removed on overriding"} | ${["A", "D"]} | ${{ appleKey: "Apple", durianKey: "Durian" }}   | ${{ appleKey: "Apple" }}
