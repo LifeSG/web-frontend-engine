@@ -26,12 +26,13 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationConfig();
 	const [stateValue, setStateValue] = useState<TNestedValues>(value);
+	const [keyPaths, setStateKeyPaths] = useState<string[][]>([]);
 
 	// =============================================================================
 	// EFFECTS / CALLBACKS
 	// =============================================================================
 
-	const getKeyPaths = useCallback((): string[][] => {
+	const getKeyPaths = useCallback((nestedValues: TNestedValues): string[][] => {
 		const keyPaths: string[][] = [];
 
 		const traverseNestedValue = (currentValue: TNestedValues, currentPath: string[]) => {
@@ -47,9 +48,9 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 			}
 		};
 
-		traverseNestedValue(stateValue, []);
+		traverseNestedValue(nestedValues, []);
 		return keyPaths;
-	}, [stateValue]);
+	}, []);
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
@@ -58,10 +59,10 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 			id,
 			Yup.object().test(
 				"is-required",
-				isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.FIELD_REQUIRED,
+				isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTION,
 				(value) => {
 					if (!isRequiredRule?.required) return true;
-					return !!value;
+					return !!value && !!Object.keys(value).length;
 				}
 			),
 			validation
@@ -94,7 +95,9 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 
 	useEffect(() => {
 		setStateValue(value);
-	}, [value]);
+		const keyPaths = getKeyPaths(value);
+		setStateKeyPaths(keyPaths);
+	}, [getKeyPaths, stateValue, value]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -135,7 +138,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 			label={formattedLabel}
 			options={options}
 			onSelectOptions={handleChange}
-			selectedKeyPaths={getKeyPaths()}
+			selectedKeyPaths={keyPaths}
 			errorMessage={error?.message}
 		/>
 	);

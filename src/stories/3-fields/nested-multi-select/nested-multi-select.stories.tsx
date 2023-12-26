@@ -72,16 +72,20 @@ const meta: Meta = {
 			description: "Determines if items are expanded or collapsed when the dropdown is opened",
 			table: {
 				type: {
-					summary: [`"default"`, `"expand"`, `"collapse"`],
+					summary: `"default" | "expand" | "collapse"`,
+					control: {
+						type: "select",
+					},
 				},
 			},
 			defaultValue: { summary: "default" },
 		},
 		options: {
-			description: "A list of options that a user can choose from",
+			description:
+				"Specifies options that a user can choose from. Each option is in the form of `{ label: string, value: string, key: string }`, with optional `subItems`. Supports up to three levels of nesting.",
 			table: {
 				type: {
-					summary: "{ label: string, value: string }[]",
+					summary: "TL1OptionProps",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -233,7 +237,7 @@ DefaultValue.argTypes = {
 		description: "Default value for the field, this is declared outside `sections`",
 		table: {
 			type: {
-				summary: "{ [key: string]: { [key:string]: {[key:string : string] } |string } | string; }",
+				summary: "TNestedValues",
 			},
 		},
 		type: { name: "object", value: {} },
