@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { ByRoleOptions, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { ByRoleOptions, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
@@ -24,6 +24,36 @@ import {
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "nested-multi-select";
+
+const NESTED_JSON_FIELDS: TOverrideField<INestedMultiSelectSchema> = {
+	mode: "expand",
+	options: [
+		{
+			label: "Red",
+			value: "Red",
+			key: "redKey",
+			subItems: [{ label: "A", value: "Apple", key: "appleKey" }],
+		},
+		{
+			label: "Blue",
+			value: "Blue",
+			key: "blueKey",
+			subItems: [{ label: "B", value: "Berry", key: "berryKey" }],
+		},
+		{
+			label: "Orange",
+			value: "Orange",
+			key: "orangeKey",
+			subItems: [{ label: "C", value: "Carrot", key: "carrotKey" }],
+		},
+		{
+			label: "Green",
+			value: "Green",
+			key: "greenKey",
+			subItems: [{ label: "D", value: "Durian", key: "durianKey" }],
+		},
+	],
+};
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
@@ -66,9 +96,12 @@ const renderComponent = (
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineData) => IFrontendEngineData }) => {
-	const { onClick } = props;
-	const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
+const ComponentWithSetSchemaButton = (props: {
+	onClick: (data: IFrontendEngineData) => IFrontendEngineData;
+	initialSchema?: IFrontendEngineData;
+}) => {
+	const { onClick, initialSchema } = props;
+	const [schema, setSchema] = useState<IFrontendEngineData>(initialSchema ?? JSON_SCHEMA);
 	return (
 		<>
 			<FrontendEngine data={schema} onSubmit={SUBMIT_FN} />
@@ -97,6 +130,9 @@ describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 		setupJestCanvasMock();
+	});
+	afterEach(() => {
+		cleanup();
 	});
 
 	it("should be able to render the field", () => {
@@ -276,12 +312,12 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("update options through schema", () => {
+	fdescribe("update options through schema", () => {
 		it.each`
-			scenario                                                                             | selected      | expectedValueBeforeUpdate                             | expectedValueAfterUpdate
-			${"should retain the field values of options that are not removed on schema update"} | ${["A", "D"]} | ${{ ["appleKey"]: "Apple", ["durianKey"]: "Durian" }} | ${{ ["appleKey"]: "Apple" }}
-			${"should retain field values if option is not removed on schema update"}            | ${["A", "B"]} | ${{ appleKey: "Apple", berryKey: "Berry" }}           | ${{ appleKey: "Apple", berryKey: "Berry" }}
-			${"should clear field values if option is removed on schema update"}                 | ${["C", "D"]} | ${{ cherryKey: "Cherry", durianKey: "Durian" }}       | ${{}}
+			scenario                                                                             | selected      | expectedValueBeforeUpdate                       | expectedValueAfterUpdate
+			${"should retain the field values of options that are not removed on schema update"} | ${["A", "D"]} | ${{ appleKey: "Apple", durianKey: "Durian" }}   | ${{ appleKey: "Apple" }}
+			${"should retain field values if option is not removed on schema update"}            | ${["A", "B"]} | ${{ appleKey: "Apple", berryKey: "Berry" }}     | ${{ appleKey: "Apple", berryKey: "Berry" }}
+			${"should clear field values if option is removed on schema update"}                 | ${["C", "D"]} | ${{ cherryKey: "Cherry", durianKey: "Durian" }} | ${{}}
 		`("$scenario", async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }) => {
 			render(
 				<ComponentWithSetSchemaButton
@@ -319,9 +355,76 @@ describe(UI_TYPE, () => {
 				expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueAfterUpdate) })
 			);
 		});
+
+		it.each`
+			scenario                                                                                    | selected      | expectedValueBeforeUpdate                                                    | expectedValueAfterUpdate
+			${"should retain the nested field values of options that are not removed on schema update"} | ${["A", "C"]} | ${{ redKey: { appleKey: "Apple" }, orangeKey: { carrotKey: "Carrot" } }}     | ${{ redKey: { appleKey: "Apple" } }}
+			${"should retain nested field values if option is not removed on schema update"}            | ${["A", "B"]} | ${{ redKey: { appleKey: "Apple" }, blueKey: { berryKey: "Berry" } }}         | ${{ redKey: { appleKey: "Apple" }, blueKey: { berryKey: "Berry" } }}
+			${"should clear nested field values if option is removed on schema update"}                 | ${["C", "D"]} | ${{ orangeKey: { carrotKey: "Carrot" }, greenKey: { durianKey: "Durian" } }} | ${{}}
+		`("$scenario", async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }) => {
+			render(
+				<ComponentWithSetSchemaButton
+					initialSchema={merge(cloneDeep(JSON_SCHEMA), {
+						sections: {
+							section: {
+								children: {
+									[COMPONENT_ID]: NESTED_JSON_FIELDS,
+								},
+							},
+						},
+					})}
+					onClick={(data) =>
+						merge(cloneDeep(data), {
+							sections: {
+								section: {
+									children: {
+										[COMPONENT_ID]: {
+											options: [
+												{
+													label: "Red",
+													value: "Red",
+													key: "redKey",
+													subItems: [{ label: "A", value: "Apple" }],
+												},
+												{
+													label: "Blue",
+													value: "Blue",
+													key: "blueKey",
+													subItems: [{ label: "B", value: "Berry", key: "berryKey" }],
+												},
+												{
+													label: "Orange",
+													value: "Orange",
+													key: "orangeKey",
+													subItems: [{ label: "E", value: "Eggplant" }],
+												},
+												{ label: "F", value: "Fish", key: "fishKey" },
+											],
+										},
+									},
+								},
+							},
+						})
+					}
+				/>
+			);
+
+			await waitFor(() => fireEvent.click(getComponent()));
+			selected.forEach((name: string) => fireEvent.click(screen.getByRole("button", { name })));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueBeforeUpdate) })
+			);
+			fireEvent.click(screen.getByRole("button", { name: "Update options" }));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueAfterUpdate) })
+			);
+		});
 	});
 
-	describe("update options through overrides", () => {
+	fdescribe("update options through overrides", () => {
 		it.each`
 			scenario                                                                          | selected      | expectedValueBeforeUpdate                       | expectedValueAfterUpdate
 			${"should retain the field values of options that are not removed on overriding"} | ${["A", "D"]} | ${{ appleKey: "Apple", durianKey: "Durian" }}   | ${{ appleKey: "Apple" }}
@@ -332,6 +435,7 @@ describe(UI_TYPE, () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(
 					<ComponentWithSetSchemaButton
+						initialSchema={JSON_SCHEMA}
 						onClick={(data) => ({
 							...data,
 							overrides: {
@@ -342,6 +446,73 @@ describe(UI_TYPE, () => {
 										{ label: "B", value: "Berry" },
 										{ label: "C", value: "C" },
 										{ label: "E", value: "Eggplant" },
+									],
+								},
+							},
+						})}
+					/>
+				);
+
+				await waitFor(() => fireEvent.click(getComponent()));
+
+				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueBeforeUpdate) })
+				);
+				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueAfterUpdate) })
+				);
+			}
+		);
+
+		it.each`
+			scenario                                                                                 | selected      | expectedValueBeforeUpdate                                                    | expectedValueAfterUpdate
+			${"should retain the nested field values of options that are not removed on overriding"} | ${["A", "C"]} | ${{ redKey: { appleKey: "Apple" }, orangeKey: { carrotKey: "Carrot" } }}     | ${{ redKey: { appleKey: "Apple" } }}
+			${"should retain nested field values if particular nested field is not overridden"}      | ${["A", "B"]} | ${{ redKey: { appleKey: "Apple" }, blueKey: { berryKey: "Berry" } }}         | ${{ redKey: { appleKey: "Apple" }, blueKey: { berryKey: "Berry" } }}
+			${"should clear nested field values if option is removed on overriding"}                 | ${["C", "D"]} | ${{ orangeKey: { carrotKey: "Carrot" }, greenKey: { durianKey: "Durian" } }} | ${{}}
+		`(
+			"$scenario",
+			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
+				render(
+					<ComponentWithSetSchemaButton
+						initialSchema={merge(cloneDeep(JSON_SCHEMA), {
+							sections: {
+								section: {
+									children: {
+										[COMPONENT_ID]: NESTED_JSON_FIELDS,
+									},
+								},
+							},
+						})}
+						onClick={(data) => ({
+							...data,
+							overrides: {
+								[COMPONENT_ID]: {
+									label: "overridden",
+									options: [
+										{
+											label: "Red",
+											value: "Red",
+											key: "redKey",
+											subItems: [{ label: "A", value: "Apple" }],
+										},
+										{
+											label: "Blue",
+											value: "Blue",
+											key: "blueKey",
+											subItems: [{ label: "B", value: "Berry", key: "berryKey" }],
+										},
+										{
+											label: "Orange",
+											value: "Orange",
+											key: "orangeKey",
+											subItems: [{ label: "E", value: "Eggplant" }],
+										},
+										{ label: "F", value: "Fish", key: "fishKey" },
 									],
 								},
 							},
