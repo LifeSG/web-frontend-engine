@@ -1,6 +1,6 @@
 import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
-import { DateInputProps } from "@lifesg/react-design-system/date-input";
+import { DateRangeInputProps } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
@@ -32,9 +32,8 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	} = props;
 	const [stateValue, setStateValue] = useState<string>(value.from || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [stateValueEnd, setStateValueEnd] = useState<string>(value.to || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
-	const [derivedProps, setDerivedProps] = useState<DateInputProps>();
+	const [derivedProps, setDerivedProps] = useState<DateRangeInputProps>();
 	const { setFieldValidationConfig } = useValidationConfig();
-	const [noOfDays, setNoOfDays] = useState<number>(undefined);
 
 	// =============================================================================
 	// EFFECTS
@@ -53,7 +52,6 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
 
-		setNoOfDays(noOfDaysRule?.["numberOfDays"]);
 		setFieldValidationConfig(
 			id,
 			Yup.object()
@@ -81,18 +79,14 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				.test(
 					"number-of-days",
 					noOfDaysRule?.["errorMessage"] ||
-						ERROR_MESSAGES.DATE_RANGE.MUST_BE_WITHIN_NUMBER_OF_DAYS(noOfDaysRule?.["numberOfDays"]),
+						ERROR_MESSAGES.DATE_RANGE.MUST_HAVE_NUMBER_OF_DAYS(noOfDaysRule?.["numberOfDays"]),
 					(value) => {
 						if (variant === "week") return true;
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !noOfDaysRule?.["numberOfDays"])
 							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						try {
-							return localDateTo.equals(localDateFrom.plusDays(noOfDaysRule?.["numberOfDays"]));
-						} catch {
-							return false;
-						}
+						return localDateTo.equals(localDateFrom.plusDays(noOfDaysRule?.["numberOfDays"] - 1));
 					}
 				)
 				.test("future", futureRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE, (value) => {
@@ -198,12 +192,14 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 			notFutureRule?.["notFuture"] && LocalDate.now(),
 		]);
 		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
-		if (minDateProp || maxDateProp || disabledDatesProps) {
+		const noOfDaysProp = noOfDaysRule?.["numberOfDays"];
+		if (minDateProp || maxDateProp || disabledDatesProps || noOfDaysProp) {
 			setDerivedProps((props) => ({
 				...props,
 				minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
 				maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
 				disabledDates: disabledDatesProps,
+				noOfDays: noOfDaysProp,
 			}));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -300,7 +296,6 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 			value={stateValue}
 			valueEnd={stateValueEnd}
 			variant={variant}
-			numberOfDays={noOfDays}
 		/>
 	);
 };
