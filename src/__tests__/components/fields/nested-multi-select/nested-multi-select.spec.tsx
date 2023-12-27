@@ -151,7 +151,7 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(getComponent()));
 		expect(getCheckboxA().querySelector("div[aria-checked=true]")).toBeInTheDocument();
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -192,7 +192,7 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(berry));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toHaveBeenCalledWith(
+		expect(SUBMIT_FN).toHaveBeenLastCalledWith(
 			expect.objectContaining({
 				[COMPONENT_ID]: {
 					appleKey: "Apple",
@@ -203,11 +203,11 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(apple));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: { berryKey: "Berry" } }));
+		expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: { berryKey: "Berry" } }));
 
 		await waitFor(() => fireEvent.click(berry));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: {} }));
+		expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: {} }));
 	});
 
 	it("should be able to toggle all the checkboxes at once", async () => {
@@ -218,7 +218,7 @@ describe(UI_TYPE, () => {
 
 		fireEvent.click(selectAllButton);
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toHaveBeenCalledWith(
+		expect(SUBMIT_FN).toHaveBeenLastCalledWith(
 			expect.objectContaining({
 				[COMPONENT_ID]: {
 					appleKey: "Apple",
@@ -231,7 +231,7 @@ describe(UI_TYPE, () => {
 
 		fireEvent.click(selectAllButton);
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: {} }));
+		expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: {} }));
 	});
 
 	describe("mode", () => {
@@ -330,8 +330,8 @@ describe(UI_TYPE, () => {
 											options: [
 												{ label: "A", value: "Apple" },
 												{ label: "B", value: "Berry" },
-												{ label: "C", value: "C" },
-												{ label: "E", value: "Eggplant" },
+												{ label: "C", value: "C", key: "cKey" },
+												{ label: "E", value: "Eggplant", key: "eggplantKey" },
 											],
 										},
 									},
@@ -345,14 +345,14 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getComponent()));
 			selected.forEach((name: string) => fireEvent.click(screen.getByRole("button", { name })));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toHaveBeenCalledWith(
-				expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueBeforeUpdate) })
+			expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 			);
 			fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toHaveBeenCalledWith(
-				expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueAfterUpdate) })
+			expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
 			);
 		});
 
@@ -396,7 +396,7 @@ describe(UI_TYPE, () => {
 													label: "Orange",
 													value: "Orange",
 													key: "orangeKey",
-													subItems: [{ label: "E", value: "Eggplant" }],
+													subItems: [{ label: "E", value: "Eggplant", key: "eggplantKey" }],
 												},
 												{ label: "F", value: "Fish", key: "fishKey" },
 											],
@@ -412,14 +412,14 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getComponent()));
 			selected.forEach((name: string) => fireEvent.click(screen.getByRole("button", { name })));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toHaveBeenCalledWith(
-				expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueBeforeUpdate) })
+			expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 			);
 			fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toHaveBeenCalledWith(
-				expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueAfterUpdate) })
+			expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
 			);
 		});
 	});
@@ -444,8 +444,8 @@ describe(UI_TYPE, () => {
 									options: [
 										{ label: "A", value: "Apple" },
 										{ label: "B", value: "Berry" },
-										{ label: "C", value: "C" },
-										{ label: "E", value: "Eggplant" },
+										{ label: "C", value: "C", key: "cKey" },
+										{ label: "E", value: "Eggplant", key: "eggplantKey" },
 									],
 								},
 							},
@@ -457,14 +457,14 @@ describe(UI_TYPE, () => {
 
 				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toHaveBeenCalledWith(
-					expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueBeforeUpdate) })
+				expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toHaveBeenCalledWith(
-					expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueAfterUpdate) })
+				expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
 				);
 			}
 		);
@@ -510,7 +510,7 @@ describe(UI_TYPE, () => {
 											label: "Orange",
 											value: "Orange",
 											key: "orangeKey",
-											subItems: [{ label: "E", value: "Eggplant" }],
+											subItems: [{ label: "E", value: "Eggplant", key: "eggplantKey" }],
 										},
 										{ label: "F", value: "Fish", key: "fishKey" },
 									],
@@ -524,14 +524,14 @@ describe(UI_TYPE, () => {
 
 				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toHaveBeenCalledWith(
-					expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueBeforeUpdate) })
+				expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toHaveBeenCalledWith(
-					expect.objectContaining({ [COMPONENT_ID]: expect.objectContaining(expectedValueAfterUpdate) })
+				expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
 				);
 			}
 		);
@@ -553,7 +553,7 @@ describe(UI_TYPE, () => {
 			expect(screen.getByText("Select")).toBeInTheDocument();
 			expect(apple.querySelector("div[aria-checked=false]")).toBeInTheDocument();
 			expect(berry.querySelector("div[aria-checked=false]")).toBeInTheDocument();
-			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -575,7 +575,7 @@ describe(UI_TYPE, () => {
 			expect(apple.querySelector("div[aria-checked=true]")).toBeInTheDocument();
 			expect(berry.querySelector("div[aria-checked=true]")).toBeInTheDocument();
 			expect(cherry.querySelector("div[aria-checked=false]")).toBeInTheDocument();
-			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+			expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
 

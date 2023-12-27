@@ -79,10 +79,16 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 				const nestedValue = nested[key];
 
 				if (nestedValue) {
-					result[key] =
+					const optionTree =
 						typeof nestedValue === "string"
 							? nestedValue
 							: (findValueInOptions(subItems || [], nestedValue) as string);
+
+					if (Object.keys(optionTree).length) {
+						result[key] = optionTree;
+					} else {
+						delete result[key];
+					}
 				}
 			}
 
