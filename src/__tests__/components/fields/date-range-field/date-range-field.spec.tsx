@@ -273,6 +273,69 @@ describe(uiType, () => {
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
 	});
+	describe("number-of-days validation", () => {
+		const condition = "number-of-days";
+		const config = { numberOfDays: 7 };
+		const invalid = { from: ["02", "01", "2022"], to: ["04", "02", "2022"] };
+		const valid = { from: ["01", "January", "2022"], to: ["06", "January", "2022"] };
+
+		beforeEach(() => {
+			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
+		});
+
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		it(`should show error message on submit if there is validation error for ${condition} dates and invalid default dates`, async () => {
+			renderComponent(
+				{ variant, validation: [{ errorMessage: ERROR_MESSAGE, ...config }] },
+				{
+					defaultValues: {
+						[COMPONENT_ID]: {
+							from: `${invalid.from[2]}-${invalid.from[1]}-${invalid.from[0]}`,
+							to: `${invalid.to[2]}-${invalid.to[1]}-${invalid.to[0]}`,
+						},
+					},
+				}
+			);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).not.toBeCalled();
+			expect(getErrorMessage()).toBeInTheDocument();
+		});
+
+		it(`should not show error messages if week variant on submit if there is validation error for ${condition} dates and invalid default dates`, async () => {
+			renderComponent(
+				{ validation: [{ errorMessage: ERROR_MESSAGE, ...config }], variant: "week" },
+				{
+					defaultValues: {
+						[COMPONENT_ID]: {
+							from: `${invalid.from[2]}-${invalid.from[1]}-${invalid.from[0]}`,
+							to: `${invalid.to[2]}-${invalid.to[1]}-${invalid.to[0]}`,
+						},
+					},
+				}
+			);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toBeCalled();
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+
+		it(`should be able to validate for ${condition} dates for a different date format`, async () => {
+			renderComponent({ variant, dateFormat: "d MMMM uuuu", validation: [{ ...config }] });
+
+			fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: valid.from[0] } });
+			fireEvent.change(getMonthInput(TDateRangeInputType.START), { target: { value: valid.from[1] } });
+			fireEvent.change(getYearInput(TDateRangeInputType.START), { target: { value: valid.from[2] } });
+			fireEvent.click(getField("button", "Done"));
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+	});
 
 	describe("reset", () => {
 		it("should clear selection on reset", async () => {
