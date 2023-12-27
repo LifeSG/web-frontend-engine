@@ -49,8 +49,7 @@ const meta: Meta = {
 			},
 		},
 		numberOfDays: {
-			description:
-				"specifies the number of days to be selected when <code>fixed-range</code> is selected. the default value is 7 days",
+			description: "Specifies the number of days to be selected when <code>fixed-range</code> is specified",
 			defaultValue: { summary: 7 },
 			control: {
 				type: "number",
@@ -58,7 +57,7 @@ const meta: Meta = {
 		},
 		variant: {
 			description:
-				"When the <code>week</code> is specified, the component is a week selection. When the  <code>fixed-range</code> is specified, the component selects 7 days from selected day by default.  WARNING: both <code>week</code> and <code>fixed-range</code> disable `future`, `past`, `minDate`, `maxDate` and `excludedDates` validation rules",
+				"When the <code>week</code> is specified, the component is a week selection. WARNING: this disables `future`, `past`, `minDate`, `maxDate` and `excludedDates` validation rules.<br /><br />When the <code>fixed-range</code> is specified, the component selects 7 days from selected day by default",
 			table: {
 				type: {
 					summary: "range | week | fixed-range",
