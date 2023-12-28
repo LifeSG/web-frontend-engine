@@ -41,13 +41,18 @@ const meta: Meta = {
 			control: {
 				type: "boolean",
 			},
+			defaultValue: { summary: false },
 		},
 		enableSearch: {
 			description: "When specified, it will allow a text base search for the items in the list",
 			table: {
 				type: {
-					summary: ["boolean"],
+					summary: "boolean",
 				},
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
 			},
 			defaultValue: { summary: "false" },
 		},
@@ -58,6 +63,10 @@ const meta: Meta = {
 					summary: ["boolean"],
 				},
 			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
 			defaultValue: { summary: "false" },
 		},
 		listStyleWidth: {
@@ -67,16 +76,20 @@ const meta: Meta = {
 					summary: "string",
 				},
 			},
+			control: {
+				type: "text",
+			},
 		},
 		mode: {
 			description: "Determines if items are expanded or collapsed when the dropdown is opened",
 			table: {
 				type: {
 					summary: `"default" | "expand" | "collapse"`,
-					control: {
-						type: "select",
-					},
 				},
+			},
+			options: ["default", "expand", "collapse"],
+			control: {
+				type: "select",
 			},
 			defaultValue: { summary: "default" },
 		},
@@ -95,10 +108,13 @@ const meta: Meta = {
 				"Specifies the trunction type of the options display. Truncated text will be replaced with ellipsis",
 			table: {
 				type: {
-					summary: [`"end"`, `"middle"`],
+					summary: `"end" | "middle"`,
 				},
 			},
-			defaultValue: { summary: `"end"` },
+			options: ["end", "middle"],
+			control: {
+				type: "select",
+			},
 		},
 		placeholder: {
 			description: "Specifies the placeholder text",
@@ -107,6 +123,9 @@ const meta: Meta = {
 					summary: "string",
 				},
 			},
+			control: {
+				type: "text",
+			},
 		},
 		searchPlaceholder: {
 			description: "The placeholder for the search field",
@@ -114,6 +133,9 @@ const meta: Meta = {
 				type: {
 					summary: "string",
 				},
+			},
+			control: {
+				type: "text",
 			},
 		},
 	},
