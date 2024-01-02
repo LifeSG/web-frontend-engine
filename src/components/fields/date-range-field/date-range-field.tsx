@@ -199,7 +199,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
 				maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
 				disabledDates: disabledDatesProps,
-				numberOfDays: noOfDaysProp,
+				noOfDays: noOfDaysProp,
 			}));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps

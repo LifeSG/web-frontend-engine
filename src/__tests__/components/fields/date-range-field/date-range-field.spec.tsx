@@ -275,7 +275,7 @@ describe(uiType, () => {
 	});
 	describe("number-of-days validation", () => {
 		const condition = "number-of-days";
-		const config = { numberOfDays: 10 };
+		const config = { numberOfDays: 7 };
 		const invalid = { from: ["02", "01", "2022"], to: ["04", "02", "2022"] };
 		const valid = { from: ["01", "January", "2022"], to: ["06", "January", "2022"] };
 
