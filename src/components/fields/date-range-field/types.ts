@@ -10,6 +10,7 @@ export interface IDateRangeFieldValidationRule {
 	minDate?: string | undefined;
 	maxDate?: string | undefined;
 	excludedDates?: string[] | undefined;
+	numberOfDays?: number | undefined;
 }
 interface WeekSchema<V = undefined>
 	extends IBaseFieldSchema<"date-range-field", V, undefined>,
@@ -24,8 +25,14 @@ interface RangeSchema<V = undefined>
 	variant: "range";
 	dateFormat?: string | undefined;
 }
+interface FixedRangeSchema<V = undefined>
+	extends IBaseFieldSchema<"date-range-field", V, IDateRangeFieldValidationRule>,
+		TComponentOmitProps<DateRangeInputProps, "valueEnd"> {
+	variant: "fixed-range";
+	dateFormat?: string | undefined;
+}
 
-export type TDateRangeFieldSchema<V = undefined> = RangeSchema<V> | WeekSchema<V>;
+export type TDateRangeFieldSchema<V = undefined> = RangeSchema<V> | WeekSchema<V> | FixedRangeSchema<V>;
 
 export enum TDateRangeInputType {
 	START = "start",
