@@ -35,7 +35,7 @@ export const AccordionItem = (props: IProps) => {
 		}
 		return (
 			<>
-				<div>{maskedValue}</div>
+				<span>{maskedValue}</span>
 				<Icon
 					onClick={() => toggleMask(!masked)}
 					data-testid={TestHelper.generateId(id, masked ? "eye" : "eye-slash")}
