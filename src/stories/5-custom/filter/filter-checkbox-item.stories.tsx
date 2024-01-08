@@ -91,7 +91,8 @@ const meta: Meta = {
 			defaultValue: [],
 		},
 		expanded: {
-			description: "Specifies if the contents are collapsed or expanded",
+			description:
+				"Specifies if the contents are collapsed or expanded in desktop. This is not applicable in mobile.",
 			control: {
 				type: "boolean",
 			},
