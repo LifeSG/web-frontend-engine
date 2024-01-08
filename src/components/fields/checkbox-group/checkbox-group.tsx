@@ -11,7 +11,6 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
 import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";
-import sanitize from "sanitize-html";
 
 export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
 	// =============================================================================

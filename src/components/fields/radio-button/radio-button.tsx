@@ -10,7 +10,6 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { Sanitize } from "../../shared";
 import { FlexWrapper, Label, RadioContainer, StyledImageButton, StyledRadioButton } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
-import sanitize from "sanitize-html";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
 	// =============================================================================
