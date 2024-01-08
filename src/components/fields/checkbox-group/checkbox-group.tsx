@@ -108,7 +108,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={checkboxId}
 							disabled={disabled ?? option.disabled}
-							name={sanitize(option.label)}
+							name={checkboxId}
 							value={option.value}
 							checked={isCheckboxChecked(option.value)}
 							onChange={() => handleChange(option.value)}
@@ -137,7 +137,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 								data-testid={TestHelper.generateId(id, "toggle")}
 								id={checkboxId}
 								disabled={disabled ?? option.disabled}
-								name={option.label}
+								name={checkboxId}
 								indicator={customOptions.styleType === "toggle" && customOptions?.indicator}
 								styleType={
 									customOptions.styleType === "toggle" && customOptions?.border === false
