@@ -65,7 +65,8 @@ const meta: Meta = {
 			defaultValue: true,
 		},
 		expanded: {
-			description: "Specifies if the contents are collapsed or expanded",
+			description:
+				"Specifies if the contents are collapsed or expanded in desktop. This is not applicable in mobile.",
 			control: {
 				type: "boolean",
 			},
@@ -165,7 +166,7 @@ Expanded.args = {
 	children: {
 		text: {
 			uiType: "text-body",
-			children: "This is expanded by default on page load",
+			children: "This is expanded by default in desktop on page load",
 		},
 	},
 };
