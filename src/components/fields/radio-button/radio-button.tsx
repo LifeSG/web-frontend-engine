@@ -81,7 +81,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
-							name={option.label}
+							name={radioButtonId}
 							value={option.value}
 							checked={isRadioButtonChecked(option.value)}
 							onChange={() => handleChangeOrClick(option.value)}
@@ -110,7 +110,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								id={radioButtonId}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
-								name={option.label}
+								name={radioButtonId}
 								indicator={customOptions.styleType === "toggle" && customOptions?.indicator}
 								styleType={
 									customOptions.styleType === "toggle" && customOptions?.border === false
@@ -147,7 +147,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								id={radioButtonId}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
-								name={option.label}
+								name={radioButtonId}
 								selected={isRadioButtonChecked(option.value)}
 								onClick={() => handleChangeOrClick(option.value)}
 								imgSrc={option.imgSrc}
