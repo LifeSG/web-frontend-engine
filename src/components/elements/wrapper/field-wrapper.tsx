@@ -1,4 +1,5 @@
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
+import { TextStyleHelper } from "@lifesg/react-design-system/text";
 import isArray from "lodash/isArray";
 import isNumber from "lodash/isNumber";
 import isString from "lodash/isString";
@@ -11,9 +12,11 @@ import {
 	FieldValues,
 	useFormContext,
 } from "react-hook-form";
+import styled from "styled-components";
 import { useFormSchema, useFormValues, useValidationConfig } from "../../../utils/hooks";
 import { IComplexLabel } from "../../fields";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
+import { Sanitize } from "../../shared";
 
 interface IProps {
 	id: string;
@@ -65,20 +68,25 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 	// =========================================================================
 	// HELPER FUNCTIONS
 	// =========================================================================
-	const constructFormattedLabel = (id: string, schema: TFrontendEngineFieldSchema): string | FormLabelProps => {
+	const constructFormattedLabel = (
+		id: string,
+		schema: TFrontendEngineFieldSchema
+	): React.ReactNode | FormLabelProps => {
 		const label: string | IComplexLabel = schema["label"];
 		if (typeof label === "string") {
-			return label;
-		} else if (typeof label === "object" && label.mainLabel) {
 			return {
-				children: label.mainLabel,
-				subtitle: label.subLabel,
+				children: <Sanitize>{label}</Sanitize>,
+			};
+		} else if (!!label && typeof label === "object" && label.mainLabel) {
+			return {
+				children: <Sanitize>{label.mainLabel}</Sanitize>,
+				subtitle: <StyledSanitize>{label.subLabel}</StyledSanitize>,
 				// acccept tooltip type when it's ready
 				addon: label.hint?.content
 					? /* eslint-disable indent */
 					  {
 							type: "popover",
-							content: label.hint?.content,
+							content: <StyledSanitize>{label.hint?.content}</StyledSanitize>,
 							"data-testid": schema["data-testid"] || id,
 					  }
 					: /* eslint-enable indent */
@@ -109,3 +117,8 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 
 	return <Controller control={control} name={id} shouldUnregister={true} render={renderField} />;
 };
+
+const StyledSanitize = styled(Sanitize)`
+	display: block;
+	${TextStyleHelper.getFontFamily("BodySmall")};
+`;
