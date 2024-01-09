@@ -81,13 +81,15 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<IUnitNumberFieldSchema>("unit-number-label-customisation").bind(
+	{}
+);
+LabelCustomisation.args = {
 	uiType: "unit-number-field",
 	label: {
-		mainLabel: "Unit Number",
-		subLabel: "Enter a value",
-		hint: { content: "Accepts numbers and alphabets" },
+		mainLabel: "Unit Number <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 

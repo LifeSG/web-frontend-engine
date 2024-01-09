@@ -101,6 +101,21 @@ DefaultValue.argTypes = {
 	},
 };
 
+export const LabelCustomisation = DefaultStoryTemplate<ISelectSchema>("select-label-customisation").bind({});
+LabelCustomisation.args = {
+	uiType: "select",
+	label: {
+		mainLabel: "Fruits <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
+	},
+	options: [
+		{ value: "Apple", label: "Apple" },
+		{ value: "Berry", label: "Berry" },
+		{ value: "Cherry", label: "Cherry" },
+	],
+};
+
 export const Disabled = DefaultStoryTemplate<ISelectSchema>("select-disabled").bind({});
 Disabled.args = {
 	uiType: "select",

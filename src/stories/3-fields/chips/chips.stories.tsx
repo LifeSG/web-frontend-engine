@@ -108,13 +108,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<IChipsSchema>("chips-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<IChipsSchema>("chips-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "chips",
 	label: {
-		mainLabel: "Fruits",
-		subLabel: "Please pick",
-		hint: { content: "These are all fruits" },
+		mainLabel: "Fruits <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 	options: [
 		{ label: "Apple", value: "Apple" },
@@ -206,8 +206,10 @@ WithTextarea.args = {
 	textarea: { label: "Durian" },
 };
 
-export const WithTextareaSubLabelAndHint = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea-labels").bind({});
-WithTextareaSubLabelAndHint.args = {
+export const WithTextareaLabelCustomisation = DefaultStoryTemplate<IChipsSchema>(
+	"chips-with-textarea-label-customisation"
+).bind({});
+WithTextareaLabelCustomisation.args = {
 	uiType: "chips",
 	label: "Fruits",
 	options: [
@@ -218,8 +220,8 @@ WithTextareaSubLabelAndHint.args = {
 	textarea: {
 		label: {
 			mainLabel: "Other Fruits",
-			subLabel: "Specify other fruits",
-			hint: { content: "Enter fruits only" },
+			subLabel: "Some helpful <strong>instructions</strong>",
+			hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 		},
 	},
 };

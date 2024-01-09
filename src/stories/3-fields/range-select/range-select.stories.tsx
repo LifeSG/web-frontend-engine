@@ -126,13 +126,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<IRangeSelectSchema>("radio-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<IRangeSelectSchema>("radio-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "range-select",
 	label: {
-		mainLabel: "Directions",
-		subLabel: "Please pick",
-		hint: { content: "Pick a direction" },
+		mainLabel: "Directions <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 	options: {
 		from: [

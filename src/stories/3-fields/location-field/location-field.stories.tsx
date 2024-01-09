@@ -52,13 +52,13 @@ Default.args = {
 	convertLatLngToXYEndpoint,
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<ILocationFieldSchema>("location-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<ILocationFieldSchema>("location-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "location-field",
 	label: {
-		mainLabel: "Location",
-		subLabel: "Add a location",
-		hint: { content: "It needs to be in Singapore" },
+		mainLabel: "Location <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 

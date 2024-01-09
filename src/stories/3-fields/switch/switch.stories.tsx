@@ -78,13 +78,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<ISwitchSchema>("switch-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<ISwitchSchema>("switch-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "switch",
 	label: {
-		mainLabel: "Switch",
-		subLabel: "Pick one",
-		hint: { content: "Will return true or false" },
+		mainLabel: "Switch <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 

@@ -130,13 +130,13 @@ DefaultForeignNumber.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<IContactFieldSchema>("contact-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<IContactFieldSchema>("contact-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "contact-field",
 	label: {
-		mainLabel: "Fruits",
-		subLabel: "Please pick",
-		hint: { content: "These are all fruits" },
+		mainLabel: "Contact Number <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 

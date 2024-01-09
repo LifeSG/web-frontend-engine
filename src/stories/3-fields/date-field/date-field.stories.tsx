@@ -103,13 +103,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<IDateFieldSchema>("date-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<IDateFieldSchema>("date-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "date-field",
 	label: {
-		mainLabel: "Date",
-		subLabel: "Please pick a date",
-		hint: { content: "You can pick a date from the calendar" },
+		mainLabel: "Date <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 

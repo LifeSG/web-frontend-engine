@@ -97,13 +97,13 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<INumericFieldSchema>("numeric-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<INumericFieldSchema>("numeric-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "numeric-field",
 	label: {
-		mainLabel: "Number",
-		subLabel: "Enter a number",
-		hint: { content: "Only numbers please" },
+		mainLabel: "Number <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 

@@ -107,13 +107,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<ITimeFieldSchema>("time-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<ITimeFieldSchema>("time-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "time-field",
 	label: {
-		mainLabel: "Time",
-		subLabel: "Pick a time",
-		hint: { content: "Select a time" },
+		mainLabel: "Time <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 
