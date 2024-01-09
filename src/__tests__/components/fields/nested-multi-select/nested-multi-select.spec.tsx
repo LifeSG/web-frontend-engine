@@ -20,6 +20,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
+import { labelTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -651,4 +652,6 @@ describe(UI_TYPE, () => {
 			expect(formIsDirty).toBe(false);
 		});
 	});
+
+	labelTestSuite(renderComponent);
 });
