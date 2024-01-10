@@ -31,7 +31,7 @@ export type TL3OptionProps = IBaseOptionPropsWithValues;
 
 export type TNestedValues = IL1Value | IL2Value | IL3Value;
 
-export type NestedMultiSelectProps = Pick<
+export type TNestedMultiSelectProps = Pick<
 	InputNestedMultiSelectProps<string, string, string>,
 	| "disabled"
 	| "enableSearch"
@@ -47,6 +47,6 @@ export type NestedMultiSelectProps = Pick<
 export interface INestedMultiSelectSchema<V = undefined>
 	extends IBaseFieldSchema<"nested-multi-select", V>,
 		React.HTMLAttributes<HTMLElement>,
-		TComponentOmitProps<NestedMultiSelectProps> {
+		TComponentOmitProps<TNestedMultiSelectProps> {
 	options: TL1OptionProps[];
 }
