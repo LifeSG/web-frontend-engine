@@ -30,25 +30,21 @@ const NESTED_JSON_FIELDS: TOverrideField<INestedMultiSelectSchema> = {
 	options: [
 		{
 			label: "Red",
-			value: "Red",
 			key: "redKey",
 			subItems: [{ label: "A", value: "Apple", key: "appleKey" }],
 		},
 		{
 			label: "Blue",
-			value: "Blue",
 			key: "blueKey",
 			subItems: [{ label: "B", value: "Berry", key: "berryKey" }],
 		},
 		{
 			label: "Orange",
-			value: "Orange",
 			key: "orangeKey",
 			subItems: [{ label: "C", value: "Carrot", key: "carrotKey" }],
 		},
 		{
 			label: "Green",
-			value: "Green",
 			key: "greenKey",
 			subItems: [{ label: "D", value: "Durian", key: "durianKey" }],
 		},
@@ -246,7 +242,6 @@ describe(UI_TYPE, () => {
 				options: [
 					{
 						label: "Parent",
-						value: "parent",
 						key: "parentKey",
 						subItems: [
 							{ label: "A", value: "Apple", key: "appleKey" },
@@ -284,7 +279,6 @@ describe(UI_TYPE, () => {
 				options: [
 					{
 						label: "Parent",
-						value: "parent",
 						key: "parentKey",
 						subItems: [
 							{ label: "App", value: "Apple", key: "appKey" },

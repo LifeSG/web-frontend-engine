@@ -1,3 +1,4 @@
+import { L1OptionProps } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -142,7 +143,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 			id={id}
 			data-testid={TestHelper.generateId(id)}
 			label={formattedLabel}
-			options={options}
+			options={options as L1OptionProps<string, string, string>[]}
 			onSelectOptions={handleChange}
 			selectedKeyPaths={keyPaths}
 			errorMessage={error?.message}
