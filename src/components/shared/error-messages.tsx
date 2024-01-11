@@ -41,6 +41,9 @@ export const ERROR_MESSAGES = {
 		INVALID: "Invalid input",
 		UNSUPPORTED: "This component is not supported by the engine",
 	},
+	SLIDER: {
+		MUST_BE_INCREMENTAL: "Input must be incremental",
+	},
 	UPLOAD: (unit = "file", unitPlural = `${unit}s`) => ({
 		REQUIRED: `Upload at least 1 ${unit}`,
 		MAX_FILES: (max: number) =>
