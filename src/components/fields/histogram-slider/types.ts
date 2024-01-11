@@ -4,6 +4,11 @@ import { IBaseFieldSchema } from "../types";
 
 type TCustomOptions = Pick<HistogramSliderProps, "showRangeLabels" | "rangeLabelPrefix" | "rangeLabelSuffix">;
 
+export interface IHistogramSliderValue {
+	from: number | undefined;
+	to: number | undefined;
+}
+
 export interface IHistogramSliderSchema<V = undefined>
 	extends IBaseFieldSchema<"histogram-slider", V>,
 		TComponentOmitProps<
