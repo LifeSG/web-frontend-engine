@@ -67,7 +67,8 @@ export const ImageManager = (props: IProps) => {
 							});
 						break;
 					case EImageStatus.NONE:
-						FileHelper.getMimeType(image.file).then((mimeType) => {
+						FileHelper.getType(image.file).then((fileType) => {
+							const mimeType = fileType.mime;
 							if (mimeType && accepts.map(FileHelper.fileExtensionToMimeType).includes(mimeType)) {
 								setImages((prev) => {
 									const updatedImages = [...prev];

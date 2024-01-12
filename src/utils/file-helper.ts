@@ -84,11 +84,11 @@ export namespace FileHelper {
 	};
 
 	/**
-	 * reliably derive mime type by checking magic number of the buffer
+	 * reliably derive file type by checking magic number of the buffer
 	 */
-	export const getMimeType = async (blob: Blob | File) => {
+	export const getType = async (blob: Blob | File) => {
 		const result = await fromBlob(blob);
-		return result?.mime;
+		return result;
 	};
 
 	/**

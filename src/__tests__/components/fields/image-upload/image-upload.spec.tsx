@@ -72,7 +72,7 @@ interface IRenderAndPerformActionsOptions {
  */
 const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) => {
 	jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
-	jest.spyOn(FileHelper, "getMimeType").mockResolvedValue("image/jpeg");
+	jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 
 	const {
 		overrideField,
@@ -181,7 +181,7 @@ describe("image-upload", () => {
 
 	it("should support default value", async () => {
 		jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
-		jest.spyOn(FileHelper, "getMimeType").mockResolvedValue("image/jpeg");
+		jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 
 		await renderComponent({
 			overrideSchema: {
@@ -226,7 +226,7 @@ describe("image-upload", () => {
 		});
 
 		it("should be able to validate by file type", async () => {
-			jest.spyOn(FileHelper, "getMimeType").mockResolvedValueOnce("image/png");
+			jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "png", mime: "image/png" });
 			await renderComponent({
 				files: [FILE_1],
 				overrideField: { validation: [{ fileType: ["jpg"], errorMessage: ERROR_MESSAGE }] },
@@ -322,8 +322,8 @@ describe("image-upload", () => {
 
 		describe("when uploading wrong format", () => {
 			beforeEach(async () => {
-				jest.spyOn(FileHelper, "getMimeType").mockResolvedValueOnce("image/jpeg");
-				jest.spyOn(FileHelper, "getMimeType").mockResolvedValueOnce("image/png");
+				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "jpg", mime: "image/jpeg" });
+				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "png", mime: "image/png" });
 				await renderComponent({
 					files: [FILE_1, FILE_2],
 					overrideField: {
@@ -529,7 +529,7 @@ describe("image-upload", () => {
 
 		describe("when uploading wrong format", () => {
 			it("should show error thumbnail, message and disable submit button", async () => {
-				jest.spyOn(FileHelper, "getMimeType").mockResolvedValueOnce("image/jpeg");
+				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "jpg", mime: "image/jpeg" });
 				await renderComponent({
 					files: [FILE_1],
 					overrideField: {
@@ -539,7 +539,7 @@ describe("image-upload", () => {
 					reviewImage: true,
 				});
 
-				jest.spyOn(FileHelper, "getMimeType").mockResolvedValue("image/png");
+				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "png", mime: "image/png" });
 				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
 
 				expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
@@ -550,7 +550,7 @@ describe("image-upload", () => {
 
 		describe("when there is a generic error", () => {
 			it("should show an error message and disable submit button", async () => {
-				jest.spyOn(FileHelper, "getMimeType").mockResolvedValueOnce("image/jpeg");
+				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "jpg", mime: "image/jpeg" });
 				await renderComponent({
 					files: [FILE_1],
 					overrideField: {
@@ -846,7 +846,7 @@ describe("image-upload", () => {
 
 		it("should revert to default value on reset", async () => {
 			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
-			jest.spyOn(FileHelper, "getMimeType").mockResolvedValue("image/jpeg");
+			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 
 			await renderComponent({
 				files: [FILE_2],
@@ -910,7 +910,7 @@ describe("image-upload", () => {
 			formIsDirty = undefined;
 			jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
 			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
-			jest.spyOn(FileHelper, "getMimeType").mockResolvedValue("image/jpeg");
+			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 		});
 
 		it("should mount without setting field state as dirty", () => {
