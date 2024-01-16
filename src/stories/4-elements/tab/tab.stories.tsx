@@ -87,7 +87,7 @@ const Template = (id: string) =>
 				defaultValues,
 			}}
 		/>
-	)) as StoryFn<ITabSchema & { defaultValues?: Record<string, string> | undefined }>;
+	)) as StoryFn<ITabSchema & { defaultValues?: Record<string, unknown> | undefined }>;
 
 export const Default = Template("tab-default").bind({});
 Default.args = {
@@ -145,7 +145,6 @@ WithDefaultValues.args = {
 						apple: {
 							uiType: "text-field",
 							label: "Favourite apple",
-							validation: [{ required: true }],
 						},
 					},
 				},
@@ -160,9 +159,13 @@ WithDefaultValues.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						berry: {
-							uiType: "text-field",
+							uiType: "chips",
 							label: "Favourite berry",
-							validation: [{ required: true }],
+							options: [
+								{ label: "Strawberry", value: "Strawberry" },
+								{ label: "Blueberry", value: "Blueberry" },
+							],
+							textarea: { label: "Others" },
 						},
 					},
 				},
@@ -171,7 +174,8 @@ WithDefaultValues.args = {
 	},
 	defaultValues: {
 		apple: "Fuji",
-		berry: "Raspberry",
+		berry: ["Strawberry", "Others"],
+		"berry-textarea": "Raspberry",
 	},
 };
 
