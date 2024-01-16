@@ -4,6 +4,7 @@ export * from "./chips";
 export * from "./contact-field";
 export * from "./date-field";
 export * from "./date-range-field";
+export * from "./file-upload";
 export * from "./histogram-slider";
 export * from "./image-upload";
 export * from "./location-field";

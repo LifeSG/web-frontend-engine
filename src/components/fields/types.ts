@@ -8,6 +8,7 @@ import { IChipsSchema } from "./chips";
 import { IContactFieldSchema } from "./contact-field";
 import { IDateFieldSchema } from "./date-field";
 import { TDateRangeFieldSchema } from "./date-range-field";
+import { IFileUploadSchema } from "./file-upload";
 import { IHistogramSliderSchema } from "./histogram-slider";
 import { IImageUploadSchema } from "./image-upload";
 import { ILocationFieldSchema } from "./location-field";
@@ -38,6 +39,7 @@ export enum EFieldType {
 	"DATE-FIELD" = "DateField",
 	"DATE-RANGE-FIELD" = "DateRangeField",
 	"EMAIL-FIELD" = "TextField",
+	"FILE-UPLOAD" = "FileUpload",
 	"HISTOGRAM-SLIDER" = "HistogramSlider",
 	"IMAGE-UPLOAD" = "ImageUpload",
 	"LOCATION-FIELD" = "LocationField",
@@ -68,6 +70,7 @@ export type TFieldSchema<V = undefined> =
 	| IDateFieldSchema<V>
 	| TDateRangeFieldSchema<V>
 	| IEmailFieldSchema<V>
+	| IFileUploadSchema<V>
 	| IHistogramSliderSchema<V>
 	| IImageUploadSchema<V>
 	| ILocationFieldSchema<V>
