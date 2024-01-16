@@ -145,12 +145,10 @@ export default meta;
 const options: TL1OptionProps[] = [
 	{
 		label: "Fruits",
-		value: "fruits",
 		key: "fruits-key",
 		subItems: [
 			{
 				label: "Berries",
-				value: "berries",
 				key: "berries-key",
 				subItems: [
 					{
@@ -172,7 +170,6 @@ const options: TL1OptionProps[] = [
 			},
 			{
 				label: "Melons",
-				value: "melons",
 				key: "melons-key",
 				subItems: [
 					{
@@ -206,7 +203,6 @@ const options: TL1OptionProps[] = [
 	},
 	{
 		label: "Vegetables",
-		value: "vegetables",
 		key: "vegetable-key",
 		subItems: [
 			{

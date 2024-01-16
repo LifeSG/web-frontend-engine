@@ -87,7 +87,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}
 			>
-				<Sanitize id={id}>{renderText()}</Sanitize>
+				<Sanitize sanitizeOptions={{ allowedAttributes: false }}>{renderText()}</Sanitize>
 			</Element>
 
 			{showExpandButton && (
