@@ -47,20 +47,54 @@ export namespace ImageHelper {
 		});
 	};
 
+	interface IBaseResampleOptions {
+		quality?: number;
+		type?: string;
+	}
+	interface IResampleOptionsWithScale extends IBaseResampleOptions {
+		scale: number;
+		crop?: never | undefined;
+		width?: never | undefined;
+		height?: never | undefined;
+	}
+	interface IResampleOptionsWithDimensions extends IBaseResampleOptions {
+		scale?: never | undefined;
+		width: number;
+		height: number;
+		crop?: boolean | undefined;
+	}
 	/**
 	 * resamples image by rendering it on canvas
 	 */
 	export const resampleImage = async (
 		image: HTMLImageElement,
-		options: { scale: number; quality?: number; type?: string }
+		options: IResampleOptionsWithScale | IResampleOptionsWithDimensions
 	): Promise<Blob> => {
-		const { scale, quality = 1, type = "image/jpeg" } = options;
+		const { crop, scale, width, height, quality = 1, type = "image/jpeg" } = options;
 		const cvs = document.createElement("canvas");
 		const ctx = cvs.getContext("2d");
 
-		cvs.width = image.width * scale;
-		cvs.height = image.height * scale;
-		ctx.drawImage(image, 0, 0, cvs.width, cvs.height);
+		if (scale) {
+			cvs.width = image.width * scale;
+			cvs.height = image.height * scale;
+			ctx.drawImage(image, 0, 0, cvs.width, cvs.height);
+		} else if (width && height) {
+			cvs.width = width;
+			cvs.height = height;
+
+			let sw = (image.height / height) * width;
+			let sh = image.height;
+			let sx = (image.width - sw) / 2;
+			let sy = 0;
+			if ((crop && image.height > image.width) || (!crop && image.height < image.width)) {
+				sw = image.width;
+				sh = (image.width / width) * height;
+				sx = 0;
+				sy = (image.height - sh) / 2;
+			}
+
+			ctx.drawImage(image, sx, sy, sw, sh, 0, 0, width, height);
+		}
 
 		return new Promise((resolve) => cvs.toBlob((blob) => resolve(blob), type, quality));
 	};
