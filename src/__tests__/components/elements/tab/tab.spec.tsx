@@ -90,14 +90,14 @@ describe("Tab", () => {
 	});
 
 	it("should display the current active tab", () => {
-		renderComponent({ currentActive: 1 });
+		renderComponent({ currentActiveTabId: "tabItem2" });
 
 		expect(screen.queryByText("Tab Body 1")).not.toBeInTheDocument();
 		expect(screen.queryByText("Tab Body 2")).toBeInTheDocument();
 	});
 
 	it("should switch to the selected tab", () => {
-		renderComponent({ currentActive: 1 });
+		renderComponent({ currentActiveTabId: "tabItem2" });
 
 		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 1" }));
 

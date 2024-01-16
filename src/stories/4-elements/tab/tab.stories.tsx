@@ -35,10 +35,12 @@ const meta: Meta = {
 			},
 			type: { name: "object", value: {}, required: true },
 		},
-		currentActive: {
-			description: "Specifies the current active tab",
-			type: { name: "number" },
-			defaultValue: { summary: 0 },
+		currentActiveTabId: {
+			description: "Specifies the id of the current active tab",
+			table: {
+				type: { summary: "string" },
+			},
+			type: { name: "string" },
 		},
 		tabItemUiType: {
 			table: {
@@ -66,6 +68,17 @@ const meta: Meta = {
 			name: "title",
 			description: "Specifies the title of the tab item",
 			type: { name: "string", required: true },
+		},
+		tabItemChildren: {
+			table: {
+				category: "Tab-Item",
+				type: {
+					summary: "Record<string, TFrontendEngineFieldSchema>",
+				},
+			},
+			name: "children",
+			description: "The content of the tab item",
+			type: { name: "object", value: {}, required: true },
 		},
 	},
 };
@@ -182,9 +195,9 @@ WithDefaultValues.args = {
 export const ActiveTab = Template("tab-active-tab").bind({});
 ActiveTab.args = {
 	uiType: "tab",
-	currentActive: 1,
+	currentActiveTabId: "bananaTab",
 	children: {
-		tabItem1: {
+		appleTab: {
 			title: "Section A",
 			uiType: "tab-item",
 			children: {
@@ -194,13 +207,13 @@ ActiveTab.args = {
 					children: {
 						text1: {
 							uiType: "text-body",
-							children: "Apples are delicious",
+							children: "<p>Apples are delicious</p>",
 						},
 					},
 				},
 			},
 		},
-		tabItem2: {
+		bananaTab: {
 			title: "Section B",
 			uiType: "tab-item",
 			children: {
@@ -216,7 +229,7 @@ ActiveTab.args = {
 				},
 			},
 		},
-		tabItem3: {
+		cherryTab: {
 			title: "Section C",
 			uiType: "tab-item",
 			children: {
@@ -238,7 +251,7 @@ ActiveTab.args = {
 export const Overrides = OverrideStoryTemplate<ITabSchema>("tab-overrides", false).bind({});
 Overrides.args = {
 	uiType: "tab",
-	currentActive: 0,
+	currentActiveTabId: "tabItem1",
 	children: {
 		tabItem1: {
 			title: "Tab item",
@@ -258,7 +271,7 @@ Overrides.args = {
 		},
 	},
 	overrides: {
-		currentActive: 1,
+		currentActiveTabId: "tabItem2",
 		children: {
 			tabItem1: {
 				title: "Overridden item 1",

@@ -16,9 +16,9 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	// =========================================================================
 	const {
 		id,
-		schema: { currentActive, children },
+		schema: { currentActiveTabId, children },
 	} = props;
-	const [currentTab, setCurrentTab] = useState(currentActive ?? 0);
+	const [currentTabIndex, setCurrentTabIndex] = useState(getCurrentTabIndex());
 	const { removeFieldValidationConfig } = useValidationConfig();
 	const { unregister } = useFormContext();
 
@@ -26,12 +26,13 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	// EFFECTS
 	// =========================================================================
 	useEffect(() => {
-		setCurrentTab(currentActive);
-	}, [currentActive]);
+		setCurrentTabIndex(getCurrentTabIndex());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentActiveTabId]);
 
 	useEffect(() => {
 		Object.values(children).forEach((childSchema, index) => {
-			if (index === currentActive) {
+			if (index === currentTabIndex) {
 				return;
 			}
 			const idsToDelete = listAllChildIds(childSchema);
@@ -41,18 +42,23 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 			});
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentActive, children]);
+	}, [currentTabIndex, children]);
 
 	// =========================================================================
 	// EVENT HANDLERS
 	// =========================================================================
 	const handleTabClick = (_title: string, index: number) => {
-		setCurrentTab(index);
+		setCurrentTabIndex(index);
 	};
 
 	// =========================================================================
 	// HELPER FUNCTIONS
 	// =========================================================================
+	function getCurrentTabIndex() {
+		const index = Object.keys(children).findIndex((childId) => childId === currentActiveTabId);
+		return index < 0 ? 0 : index;
+	}
+
 	const listAllChildIds = (schema: TFrontendEngineFieldSchema) => {
 		const children: Record<string, TFrontendEngineFieldSchema> = schema["children"];
 		const childIdList: string[] = [];
@@ -85,7 +91,7 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 		<DSTab
 			id={id}
 			data-testid={TestHelper.generateId(id, "tab")}
-			currentActive={currentTab}
+			currentActive={currentTabIndex}
 			onTabClick={handleTabClick}
 		>
 			{Object.entries(children).map(([childId, childSchema]) => {

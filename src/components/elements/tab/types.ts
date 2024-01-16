@@ -4,7 +4,7 @@ import { IWrapperSchema } from "../wrapper";
 
 export interface ITabSchema extends IBaseElementSchema<"tab">, TComponentOmitProps<IWrapperSchema> {
 	children: Record<string, ITabItemSchema>;
-	currentActive?: number | undefined;
+	currentActiveTabId?: string | undefined;
 }
 
 export interface ITabItemSchema extends IBaseElementSchema<"tab-item">, TComponentOmitProps<IWrapperSchema> {
