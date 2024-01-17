@@ -1,10 +1,9 @@
 import isEmpty from "lodash/isEmpty";
 import React, { Fragment, ReactNode, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import useDeepCompareEffect from "use-deep-compare-effect";
 import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
-import { useFormSchema } from "../../../utils/hooks";
+import { useFormSchema, useIsomorphicDeepLayoutEffect } from "../../../utils/hooks";
 import * as FrontendEngineCustomComponents from "../../custom";
 import { ECustomElementType, ECustomFieldType } from "../../custom";
 import { EElementType } from "../../elements";
@@ -44,7 +43,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	 * - render strings directly
 	 * - otherwise show field not supported error
 	 */
-	useDeepCompareEffect(() => {
+	useIsomorphicDeepLayoutEffect(() => {
 		const wrapperChildren = overrideSchema(schemaChildren || children, overrides);
 		if (typeof wrapperChildren === "object") {
 			const renderComponents: JSX.Element[] = [];
