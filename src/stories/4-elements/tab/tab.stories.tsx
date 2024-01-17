@@ -52,11 +52,7 @@ const meta: Meta = {
 			name: "uiType",
 			description: "Use <code>tab-item</code> to show this field",
 			type: { name: "string", required: true },
-			options: ["tab-item"],
-			control: {
-				type: "select",
-			},
-			defaultValue: "tab-item",
+			control: { disable: true },
 		},
 		tabItemTitle: {
 			table: {
@@ -68,6 +64,7 @@ const meta: Meta = {
 			name: "title",
 			description: "Specifies the title of the tab item",
 			type: { name: "string", required: true },
+			control: { disable: true },
 		},
 		tabItemChildren: {
 			table: {
@@ -79,6 +76,7 @@ const meta: Meta = {
 			name: "children",
 			description: "The content of the tab item",
 			type: { name: "object", value: {}, required: true },
+			control: { disable: true },
 		},
 	},
 };
