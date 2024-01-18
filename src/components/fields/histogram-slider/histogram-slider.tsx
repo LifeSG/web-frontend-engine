@@ -1,6 +1,7 @@
 import { Form } from "@lifesg/react-design-system/form";
 import isNil from "lodash/isNil";
 import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
@@ -21,6 +22,7 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 		value,
 		...otherProps
 	} = props;
+	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>(undefined);
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -28,11 +30,17 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		if (isNil(value?.from) || isNil(value?.to)) {
-			setStateValue(undefined);
+		// prepopulate with full range selected if range is not selected
+		if (!value) {
+			const min = Math.min(...bins.map((bin) => bin.minValue));
+			const max = Math.max(...bins.map((bin) => bin.minValue)) + interval;
+
+			setValue(id, { from: min, to: max }, { shouldDirty: false });
+			setStateValue([min, max]);
 		} else {
 			setStateValue([value.from, value.to]);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
 	useEffect(() => {
