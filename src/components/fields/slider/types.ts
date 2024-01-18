@@ -10,8 +10,6 @@ type TCustomOptions = Pick<InputSliderProps, "showSliderLabels" | "sliderLabelPr
 
 export interface ISliderSchema<V = undefined>
 	extends IBaseFieldSchema<"slider", V, ISliderValidationRule>,
-		TComponentOmitProps<
-			Pick<InputSliderProps, "className" | "id" | "data-testid" | "disabled" | "readOnly" | "ariaLabel">
-		> {
+		TComponentOmitProps<Pick<InputSliderProps, "className" | "disabled" | "readOnly" | "ariaLabel">> {
 	customOptions?: TCustomOptions | undefined;
 }
