@@ -18,9 +18,8 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 		formattedLabel,
 		id,
 		onChange,
-		schema: { label: _label, bins, interval, validation, customOptions, ...otherSchema },
+		schema: { label: _label, bins, interval, validation, disabled, readOnly, className, customOptions },
 		value,
-		...otherProps
 	} = props;
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>(undefined);
@@ -93,8 +92,6 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 	// =============================================================================
 	return (
 		<Form.HistogramSlider
-			{...otherSchema}
-			{...otherProps}
 			{...customOptions}
 			id={id}
 			data-testid={TestHelper.generateId(id, "histogram-slider")}
@@ -104,6 +101,9 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 			value={stateValue}
 			bins={bins}
 			interval={interval}
+			disabled={disabled}
+			readOnly={readOnly}
+			className={className}
 		/>
 	);
 };
