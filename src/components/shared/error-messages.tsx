@@ -78,6 +78,9 @@ export const ERROR_MESSAGES = {
 			},
 		},
 	}),
+	SLIDER: {
+		MUST_BE_INCREMENTAL: "Input must be incremental",
+	},
 	UNIT_NUMBER: {
 		INVALID: "Invalid unit number",
 	},

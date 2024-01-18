@@ -16,6 +16,7 @@ import { IRadioButtonGroupSchema } from "./radio-button";
 import { IRangeSelectSchema } from "./range-select";
 import { IResetButtonSchema } from "./reset-button";
 import { ISelectSchema } from "./select";
+import { ISliderSchema } from "./slider";
 import { ISubmitButtonSchema } from "./submit-button";
 import { ISwitchSchema } from "./switch";
 import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./text-field";
@@ -45,6 +46,7 @@ export enum EFieldType {
 	RADIO = "RadioButtonGroup",
 	RESET = "ResetButton",
 	SELECT = "Select",
+	SLIDER = "Slider",
 	SUBMIT = "SubmitButton",
 	SWITCH = "Switch",
 	TEXTAREA = "Textarea",
@@ -73,6 +75,7 @@ export type TFieldSchema<V = undefined> =
 	| IRadioButtonGroupSchema<V>
 	| IResetButtonSchema
 	| ISelectSchema<V>
+	| ISliderSchema<V>
 	| ISubmitButtonSchema
 	| ISwitchSchema<V>
 	| ITextareaSchema<V>
