@@ -83,7 +83,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				const radioButtonId = formatId(index);
 
 				return (
-					<RadioContainer key={index}>
+					<RadioContainer className={className ? `${className}-radio-container` : undefined} key={index}>
 						<StyledRadioButton
 							{...otherSchema}
 							className={className}
@@ -108,7 +108,10 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		return (
 			options.length > 0 &&
 			customOptions.styleType === "toggle" && (
-				<FlexToggleWrapper className={className} $layoutType={customOptions?.layoutType ?? "horizontal"}>
+				<FlexToggleWrapper
+					className={className ? `${className} ${className}-radio-container` : undefined}
+					$layoutType={customOptions?.layoutType ?? "horizontal"}
+				>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -118,6 +121,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								key={index}
 								type="radio"
 								id={radioButtonId}
+								className={className ? `${className}-radio` : undefined}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								name={radioButtonId}
@@ -146,7 +150,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const renderImageButtons = () => {
 		return (
 			options.length > 0 && (
-				<FlexImageWrapper className={className}>
+				<FlexImageWrapper className={className ? `${className} ${className}-radio-container` : undefined}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -158,6 +162,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								type="button"
 								key={index}
 								id={radioButtonId}
+								className={className ? `${className}-radio` : undefined}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								name={radioButtonId}
