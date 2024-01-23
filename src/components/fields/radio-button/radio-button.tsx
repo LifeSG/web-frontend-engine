@@ -74,7 +74,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 				const radioButtonId = formatId(index);
 
 				return (
-					<RadioContainer key={index}>
+					<RadioContainer className={`${className}-radio-container`} key={index}>
 						<StyledRadioButton
 							{...otherSchema}
 							className={className}
