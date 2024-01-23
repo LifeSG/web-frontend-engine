@@ -7,7 +7,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { usePrevious, useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
-import { getCountryFromPrefix, getInternationalCallingCodeMap, getPrefixFromCountry } from "./data";
+import { getCountryFromPrefix, getCountryMap, getPrefixFromCountry } from "./data";
 import { IContactFieldSchema, ISelectedCountry, TCallingCodeMap, TCountry, TSingaporeNumberRule } from "./types";
 import { PhoneHelper } from "./utils";
 
@@ -30,7 +30,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const prevDefaultCountry = usePrevious(defaultCountry);
 	const [countryValue, setCountryValue] = useState<TCountry>(defaultCountry);
-	const [internationalCodeMap] = useState<TCallingCodeMap>(getInternationalCallingCodeMap());
+	const [internationalCodeMap] = useState<TCallingCodeMap>(getCountryMap());
 	const [selectedCountry, setSelectedCountry] = useState<ISelectedCountry>();
 	const [singaporeRule, setSingaporeRule] = useState<TSingaporeNumberRule>();
 	const [fixedCountry, setFixedCountry] = useState<boolean>(undefined);
