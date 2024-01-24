@@ -1,3 +1,4 @@
+import { Color } from "@lifesg/react-design-system/color";
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { TextStyleHelper } from "@lifesg/react-design-system/text";
 import isArray from "lodash/isArray";
@@ -80,13 +81,13 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 		} else if (!!label && typeof label === "object" && label.mainLabel) {
 			return {
 				children: <Sanitize>{label.mainLabel}</Sanitize>,
-				subtitle: <StyledSanitize>{label.subLabel}</StyledSanitize>,
+				subtitle: <StyledSublabel className="sub-label">{label.subLabel}</StyledSublabel>,
 				// acccept tooltip type when it's ready
 				addon: label.hint?.content
 					? /* eslint-disable indent */
 					  {
 							type: "popover",
-							content: <StyledSanitize>{label.hint?.content}</StyledSanitize>,
+							content: <StyledHint className="label-hint">{label.hint?.content}</StyledHint>,
 							"data-testid": schema["data-testid"] || id,
 					  }
 					: /* eslint-enable indent */
@@ -118,7 +119,16 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 	return <Controller control={control} name={id} shouldUnregister={true} render={renderField} />;
 };
 
-const StyledSanitize = styled(Sanitize)`
-	display: block;
-	${TextStyleHelper.getFontFamily("BodySmall")};
+const StyledSublabel = styled(Sanitize)`
+	&.sub-label {
+		display: block;
+		${TextStyleHelper.getFontFamily("BodySmall", 400)};
+	}
+`;
+
+const StyledHint = styled(Sanitize)`
+	&.label-hint {
+		color: ${Color.Neutral[1]};
+		${TextStyleHelper.getFontFamily("BodySmall", 400)};
+	}
 `;
