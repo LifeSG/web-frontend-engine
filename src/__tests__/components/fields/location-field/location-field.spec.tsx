@@ -34,6 +34,7 @@ import {
 	mockReverseGeoCodeResponse,
 	mockStaticMapDataUri,
 } from "./mock-values";
+import { labelTestSuite } from "../../../common/tests";
 jest.mock("../../../../services/onemap/onemap-service.ts");
 
 const io = mockIntersectionObserver();
@@ -521,55 +522,8 @@ describe("location-input-group", () => {
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 			});
 
-			describe("labels", () => {
-				it("should be able to render sub label and hint", () => {
-					renderComponent({
-						overrideField: {
-							label: {
-								mainLabel: "Main label",
-								subLabel: "Sub label",
-								hint: { content: "Hint" },
-							},
-						},
-					});
-					fireEvent.click(screen.getByLabelText("popover-button"));
-
-					expect(screen.getByText("Main label")).toBeInTheDocument();
-					expect(screen.getByText("Sub label")).toBeInTheDocument();
-					expect(screen.getByText("Hint")).toBeVisible();
-				});
-
-				it("should be able to render HTML string in label, sub label and hint", () => {
-					renderComponent({
-						overrideField: {
-							label: {
-								mainLabel: "<strong>Main label</strong>",
-								subLabel: "<strong>Sub label</strong>",
-								hint: { content: "<strong>Hint</strong>" },
-							},
-						},
-					});
-					fireEvent.click(screen.getByLabelText("popover-button"));
-
-					expect(screen.getByText("Main label").nodeName).toBe("STRONG");
-					expect(screen.getByText("Sub label").nodeName).toBe("STRONG");
-					expect(screen.getByText("Hint").nodeName).toBe("STRONG");
-				});
-
-				it("should be able to sanitise HTML string in label, sub label and hint", () => {
-					renderComponent({
-						overrideField: {
-							label: {
-								mainLabel: "Main label<script>console.log('hello world')</script>",
-								subLabel: "Sub label<script>console.log('hello world')</script>",
-								hint: { content: "Hint<script>console.log('hello world')</script>" },
-							},
-						},
-					});
-					fireEvent.click(screen.getByLabelText("popover-button"));
-
-					expect(document.querySelector("form").innerHTML.includes("script")).toBe(false);
-				});
+			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => {
+				renderComponent({ overrideField });
 			});
 
 			// test functionality
