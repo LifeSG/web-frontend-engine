@@ -1,5 +1,7 @@
+import intersection from "lodash/intersection";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
+import { ERROR_MESSAGES } from "../../shared";
 import {
 	IYupConditionalValidationRule,
 	IYupRenderRule,
@@ -9,7 +11,6 @@ import {
 	TYupSchemaType,
 	YUP_CONDITIONS,
 } from "./types";
-import { ERROR_MESSAGES } from "../../shared";
 
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 
@@ -72,8 +73,8 @@ export namespace YupHelper {
 	): Yup.AnySchema => {
 		const validationRules = fieldValidationConfig.filter(
 			(config) =>
-				YUP_CONDITIONS.includes(Object.keys(config)[0] as TYupCondition) ||
-				customYupConditions.includes(Object.keys(config)[0] as TYupCondition)
+				intersection(YUP_CONDITIONS, Object.keys(config)).length > 0 ||
+				intersection(customYupConditions, Object.keys(config)).length > 0
 		);
 		return mapRules(yupSchemaField, validationRules);
 	};
