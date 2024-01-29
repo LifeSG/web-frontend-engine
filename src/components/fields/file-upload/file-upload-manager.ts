@@ -1,3 +1,4 @@
+import isEqual from "lodash/isEqual";
 import { useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../utils";
@@ -60,27 +61,25 @@ export const FileUploadManager = (props: IProps) => {
 			const notPrefilledFiles = uploadedFiles.filter(({ addedFrom }) => addedFrom !== "schema");
 			const gotDeleteFiles = files.filter(({ status }) => status === EFileStatus.TO_DELETE).length > 0;
 
-			/**
-			 * should dirty if
-			 * - it is dirty in the first place
-			 * - there are non-prefilled files
-			 * - user deleted file (differentiated from reset)
-			 */
-			const shouldDirty = notPrefilledFiles.length > 0 || gotDeleteFiles;
-
-			setValue(
-				id,
-				uploadedFiles.map(({ dataURL, fileItem, fileUrl, uploadResponse }) => ({
-					...(upload.type === "base64" ? { dataURL } : {}),
-					fileId: fileItem.id,
-					fileName: fileItem.name,
-					fileUrl,
-					uploadResponse,
-				})),
-				{ shouldDirty }
-			);
+			const newValue = uploadedFiles.map(({ dataURL, fileItem, fileUrl, uploadResponse }) => ({
+				...(upload.type === "base64" ? { dataURL } : {}),
+				fileId: fileItem.id,
+				fileName: fileItem.name,
+				fileUrl,
+				uploadResponse,
+			}));
+			if (!isEqual(value, newValue)) {
+				/**
+				 * should dirty if
+				 * - it is dirty in the first place
+				 * - there are non-prefilled files
+				 * - user deleted file (differentiated from reset)
+				 */
+				const shouldDirty = notPrefilledFiles.length > 0 || gotDeleteFiles;
+				setValue(id, newValue, { shouldDirty });
+			}
 		}, // eslint-disable-next-line react-hooks/exhaustive-deps
-		[files.map(({ fileItem, status }) => `${fileItem?.id}-${status}`).join(",")]
+		[files.map(({ fileItem, status }) => `${fileItem?.id}-${status}`).join(","), value]
 	);
 
 	// for reset
