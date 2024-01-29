@@ -86,8 +86,18 @@ export namespace FileHelper {
 	/**
 	 * reliably derive file type by checking magic number of the buffer
 	 */
-	export const getType = async (blob: Blob | File) => {
-		const result = await fromBlob(blob);
+	export const getType = async (file: Blob | File) => {
+		const result = await fromBlob(file);
+
+		// default to what is provided by the file as it is not possible to determine file type for text-based file formats
+		if (!result && file.type.startsWith("text")) {
+			const fileName = (file as File).name || ".txt";
+			return {
+				mime: file.type,
+				ext: fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length),
+			};
+		}
+
 		return result;
 	};
 
