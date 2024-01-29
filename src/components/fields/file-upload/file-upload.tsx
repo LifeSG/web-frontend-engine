@@ -128,7 +128,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 					rawFile: {
 						name: fileName,
 					} as File,
-					slot: i,
+					slot: null,
 					status: EFileStatus.INJECTED,
 				});
 			});
@@ -145,7 +145,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 			rawFiles.map((rawFile) => ({
 				addedFrom: "input" as const,
 				rawFile,
-				slot: FileUploadHelper.findAvailableSlot(files),
+				slot: null,
 				status: EFileStatus.NONE,
 			})),
 			files
@@ -175,7 +175,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		const fileCount = updatedFiles.length;
 		newFiles.forEach((newFile, i) => {
 			if (!maxFilesRuleRef.current.max || fileCount + i < maxFilesRuleRef.current.max) {
-				updatedFiles.push(newFile);
+				updatedFiles.push({ ...newFile, slot: FileUploadHelper.findAvailableSlot(updatedFiles) });
 				clearErrors(id);
 			} else {
 				setError(id, {
