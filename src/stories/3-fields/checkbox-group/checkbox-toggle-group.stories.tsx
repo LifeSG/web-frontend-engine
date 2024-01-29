@@ -103,13 +103,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "checkbox",
 	label: {
-		mainLabel: "Fruits",
-		subLabel: "Please pick",
-		hint: { content: "These are all fruits" },
+		mainLabel: "Fruits <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 	customOptions: {
 		styleType: "toggle",

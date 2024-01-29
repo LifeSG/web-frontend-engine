@@ -250,6 +250,19 @@ DefaultValue.args = {
 	},
 };
 
+export const LabelCustomisation = DefaultStoryTemplate<INestedMultiSelectSchema, IL1Value>(
+	"nested-multi-select-label-customisation"
+).bind({});
+LabelCustomisation.args = {
+	uiType: "nested-multi-select",
+	label: {
+		mainLabel: "Fruits <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
+	},
+	options: options,
+};
+
 DefaultValue.argTypes = {
 	defaultValues: {
 		description: "Default value for the field, this is declared outside `sections`",

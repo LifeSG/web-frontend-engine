@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
+import { labelTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -263,24 +264,6 @@ describe(UI_TYPE, () => {
 
 			expect(getTextarea()).toHaveAttribute("rows", "1");
 		});
-
-		it("should be able to render sub label and hint", () => {
-			renderComponent({
-				textarea: {
-					label: {
-						mainLabel: TEXT_AREA_LABEL,
-						subLabel: "Sub label",
-						hint: { content: "Hint" },
-					},
-				},
-			});
-			fireEvent.click(getTextareaChip());
-			fireEvent.click(screen.getByLabelText("popover-button"));
-
-			expect(screen.getAllByText(TEXT_AREA_LABEL)).toHaveLength(2);
-			expect(screen.getByText("Sub label")).toBeInTheDocument();
-			expect(screen.getByText("Hint")).toBeVisible();
-		});
 	});
 
 	describe("update options through schema", () => {
@@ -485,4 +468,6 @@ describe(UI_TYPE, () => {
 			expect(formIsDirty).toBe(false);
 		});
 	});
+
+	labelTestSuite(renderComponent);
 });

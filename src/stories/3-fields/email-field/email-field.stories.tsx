@@ -90,13 +90,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<IEmailFieldSchema>("email-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<IEmailFieldSchema>("email-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "email-field",
 	label: {
-		mainLabel: "Email",
-		subLabel: "Enter your correspondence email",
-		hint: { content: "It must be an email you use" },
+		mainLabel: "Email <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 

@@ -34,6 +34,7 @@ import {
 	mockReverseGeoCodeResponse,
 	mockStaticMapDataUri,
 } from "./mock-values";
+import { labelTestSuite } from "../../../common/tests";
 jest.mock("../../../../services/onemap/onemap-service.ts");
 
 const io = mockIntersectionObserver();
@@ -521,21 +522,8 @@ describe("location-input-group", () => {
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 			});
 
-			it("should be able to render sub label and hint", () => {
-				renderComponent({
-					overrideField: {
-						label: {
-							mainLabel: "Main label",
-							subLabel: "Sub label",
-							hint: { content: "Hint" },
-						},
-					},
-				});
-				fireEvent.click(screen.getByLabelText("popover-button"));
-
-				expect(screen.getByText("Main label")).toBeInTheDocument();
-				expect(screen.getByText("Sub label")).toBeInTheDocument();
-				expect(screen.getByText("Hint")).toBeVisible();
+			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => {
+				renderComponent({ overrideField });
 			});
 
 			// test functionality

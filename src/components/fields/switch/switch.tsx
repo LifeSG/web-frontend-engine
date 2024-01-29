@@ -1,6 +1,7 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { useEffect, useState } from "react";
+import sanitize from "sanitize-html";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
@@ -62,7 +63,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 			<FlexWrapper
 				className={className}
 				role="radiogroup"
-				aria-label={typeof label === "string" ? label : label.mainLabel}
+				aria-label={typeof label === "string" ? label : sanitize(label.mainLabel, { allowedTags: [] })}
 			>
 				<Toggle
 					{...otherSchema}

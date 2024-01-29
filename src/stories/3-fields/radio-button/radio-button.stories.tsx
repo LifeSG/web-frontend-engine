@@ -86,13 +86,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "radio",
 	label: {
-		mainLabel: "Fruits",
-		subLabel: "Please pick",
-		hint: { content: "These are all fruits" },
+		mainLabel: "Fruits <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 	options: [
 		{ value: "Apple", label: "Apple" },

@@ -3,8 +3,9 @@ import sanitize, { IOptions } from "sanitize-html";
 import { TestHelper } from "../../../utils";
 
 interface IProps {
-	id?: string;
 	children: string | React.ReactNode;
+	className?: string | undefined;
+	id?: string | undefined;
 	sanitizeOptions?: IOptions;
 }
 
@@ -12,7 +13,7 @@ export const Sanitize = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { id, children, sanitizeOptions } = props;
+	const { children, className, id, sanitizeOptions } = props;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -38,5 +39,12 @@ export const Sanitize = (props: IProps) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	return <span id={formatId()} data-testid={formatId()} dangerouslySetInnerHTML={{ __html: getSanitizedHtml() }} />;
+	return (
+		<span
+			id={formatId()}
+			className={className}
+			data-testid={formatId()}
+			dangerouslySetInnerHTML={{ __html: getSanitizedHtml() }}
+		/>
+	);
 };

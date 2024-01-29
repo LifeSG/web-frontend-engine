@@ -90,13 +90,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<ITextFieldSchema>("text-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<ITextFieldSchema>("text-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "text-field",
 	label: {
-		mainLabel: "Textfield",
-		subLabel: "Enter a value",
-		hint: { content: "You can key in anything" },
+		mainLabel: "Textfield <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 

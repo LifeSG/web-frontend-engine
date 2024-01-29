@@ -105,13 +105,13 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const WithSubLabelAndHint = DefaultStoryTemplate<TDateRangeFieldSchema>("date-sub-label-hint").bind({});
-WithSubLabelAndHint.args = {
+export const LabelCustomisation = DefaultStoryTemplate<TDateRangeFieldSchema>("date-label-customisation").bind({});
+LabelCustomisation.args = {
 	uiType: "date-range-field",
 	label: {
-		mainLabel: "Date",
-		subLabel: "Please pick a date range",
-		hint: { content: "You can pick from the calendar" },
+		mainLabel: "Date <strong>with bold text</strong>",
+		subLabel: "Some helpful <strong>instructions</strong>",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
 	},
 };
 
