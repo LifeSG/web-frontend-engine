@@ -4,7 +4,7 @@ import { TextStyleHelper } from "@lifesg/react-design-system/text";
 import isArray from "lodash/isArray";
 import isNumber from "lodash/isNumber";
 import isString from "lodash/isString";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
 	Controller,
 	ControllerFieldState,
@@ -37,16 +37,21 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 	} = useFormSchema();
 	const { getField, setField, setRegisteredFields } = useFormValues();
 	const { removeFieldValidationConfig } = useValidationConfig();
+	const restoreModeRef = useRef(restoreMode);
 
 	// =========================================================================
 	// EFFECTS
 	// =========================================================================
 	useEffect(() => {
+		restoreModeRef.current = restoreMode;
+	}, [restoreMode]);
+
+	useEffect(() => {
 		setValue(id, getField(id));
 		setRegisteredFields((prev) => [...prev, id]);
 
 		return () => {
-			switch (restoreMode) {
+			switch (restoreModeRef.current) {
 				case "default-value":
 					setField(id, defaultValues?.[id]);
 					break;
