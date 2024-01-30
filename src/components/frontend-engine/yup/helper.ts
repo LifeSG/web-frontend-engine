@@ -16,6 +16,12 @@ interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 export namespace YupHelper {
 	const customYupConditions: string[] = [];
 
+	// Yup's escape hatch for cycling dependency error
+	// this happens when 2 fields have conditional validation that rely on each other
+	// typically used to ensure user fill in one of many fields
+	// https://github.com/jquense/yup/issues/176#issuecomment-367352042
+	const whenPairIds: [string, string][] = [];
+
 	/**
 	 * Constructs the entire Yup schema for frontend engine to use
 	 * @param yupSchemaConfig JSON representation of the eventual Yup schema
@@ -29,7 +35,7 @@ export namespace YupHelper {
 			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
 		});
 
-		return Yup.object().shape(yupSchema);
+		return Yup.object().shape(yupSchema, whenPairIds);
 	};
 
 	/**
@@ -52,6 +58,7 @@ export namespace YupHelper {
 								...parsedRule.when[whenFieldId],
 								yupSchema: parsedFieldConfigs[whenFieldId].schema,
 							};
+							whenPairIds.push([id, whenFieldId]);
 						});
 						return parsedRule;
 					}) || [];
