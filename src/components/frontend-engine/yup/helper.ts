@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import {
+	IFieldYupConfig,
 	IYupConditionalValidationRule,
 	IYupRenderRule,
 	IYupValidationRule,
@@ -16,12 +17,6 @@ interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 export namespace YupHelper {
 	const customYupConditions: string[] = [];
 
-	// Yup's escape hatch for cycling dependency error
-	// this happens when 2 fields have conditional validation that rely on each other
-	// typically used to ensure user fill in one of many fields
-	// https://github.com/jquense/yup/issues/176#issuecomment-367352042
-	const whenPairIds: [string, string][] = [];
-
 	/**
 	 * Constructs the entire Yup schema for frontend engine to use
 	 * @param yupSchemaConfig JSON representation of the eventual Yup schema
@@ -29,7 +24,7 @@ export namespace YupHelper {
 	 */
 	export const buildSchema = (yupSchemaConfig: TFormYupConfig): Yup.ObjectSchema<ObjectShape> => {
 		const yupSchema: ObjectShape = {};
-		const parsedYupSchemaConfig = parseWhenKeys(yupSchemaConfig);
+		const [parsedYupSchemaConfig, whenPairIds] = parseWhenKeys(yupSchemaConfig);
 		Object.keys(parsedYupSchemaConfig).forEach((id) => {
 			const { schema, validationRules: fieldValidationConfig } = yupSchemaConfig[id];
 			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
@@ -44,7 +39,13 @@ export namespace YupHelper {
 	 * @param fieldConfigs config containing the yup schema and validation config on each field
 	 * @returns parsed field config
 	 */
-	const parseWhenKeys = (yupSchemaConfig: TFormYupConfig) => {
+	const parseWhenKeys = (yupSchemaConfig: TFormYupConfig): [Record<string, IFieldYupConfig>, [string, string][]] => {
+		// Yup's escape hatch for cycling dependency error
+		// this happens when 2 fields have conditional validation that rely on each other
+		// typically used to ensure user fill in one of many fields
+		// https://github.com/jquense/yup/issues/176#issuecomment-367352042
+		const whenPairIds: [string, string][] = [];
+
 		const parsedFieldConfigs = { ...yupSchemaConfig };
 		Object.entries(parsedFieldConfigs).forEach(([id, { validationRules }]) => {
 			const notWhenRules = validationRules?.filter((rule) => !("when" in rule)) || [];
@@ -64,7 +65,7 @@ export namespace YupHelper {
 					}) || [];
 			parsedFieldConfigs[id].validationRules = [...notWhenRules, ...whenRules];
 		});
-		return parsedFieldConfigs;
+		return [parsedFieldConfigs, whenPairIds];
 	};
 
 	/**
