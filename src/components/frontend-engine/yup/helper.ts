@@ -57,7 +57,7 @@ export namespace YupHelper {
 						Object.keys(parsedRule.when).forEach((whenFieldId) => {
 							parsedRule.when[whenFieldId] = {
 								...parsedRule.when[whenFieldId],
-								yupSchema: parsedFieldConfigs[whenFieldId].schema,
+								yupSchema: parsedFieldConfigs[whenFieldId]?.schema,
 							};
 							whenPairIds.push([id, whenFieldId]);
 						});
@@ -176,7 +176,7 @@ export namespace YupHelper {
 							if (Array.isArray(isRule) && (isRule as unknown[]).every((r) => typeof r === "object")) {
 								yupSchema = yupSchema.when(fieldId, (value: unknown) => {
 									const localYupSchema = mapRules(
-										rule.when[fieldId].yupSchema.clone(),
+										rule.when[fieldId].yupSchema?.clone(),
 										isRule as IYupConditionalValidationRule[]
 									);
 									let fulfilled = false;
