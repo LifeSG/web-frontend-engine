@@ -47,6 +47,43 @@ describe("YupHelper", () => {
 			expect(error.inner[0].message).toBe(ERROR_MESSAGE);
 			expect(error.inner[1].message).toBe(ERROR_MESSAGE_3);
 		});
+
+		it("should be able to create a schema without cyclic dependency", () => {
+			const schema = YupHelper.buildSchema({
+				field1: {
+					schema: Yup.string(),
+					validationRules: [
+						{
+							when: {
+								field2: {
+									is: [{ empty: true }],
+									then: [{ required: true, errorMessage: ERROR_MESSAGE }],
+								},
+							},
+						},
+					],
+				},
+				field2: {
+					schema: Yup.string(),
+					validationRules: [
+						{
+							when: {
+								field1: {
+									is: [{ empty: true }],
+									then: [{ required: true, errorMessage: ERROR_MESSAGE_2 }],
+								},
+							},
+						},
+					],
+				},
+			});
+
+			const error = TestHelper.getError(() => schema.validateSync(undefined, { abortEarly: false }));
+			expect(error.inner).toHaveLength(2);
+			expect(error.inner[0].message).toBe(ERROR_MESSAGE);
+			expect(error.inner[1].message).toBe(ERROR_MESSAGE_2);
+			expect(() => schema.validateSync({ field1: "hello" })).not.toThrow();
+		});
 	});
 
 	describe("buildFieldSchema", () => {
