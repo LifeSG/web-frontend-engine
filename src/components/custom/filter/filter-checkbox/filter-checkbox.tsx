@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import { TestHelper } from "../../../../utils";
+import { Sanitize } from "../../../shared";
 import { IGenericCustomFieldProps } from "../../types";
 import { IFilterCheckboxSchema, IOption } from "./types";
 
@@ -56,6 +57,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 			expanded={expandedState}
 			onExpandChange={setExpandedState}
 			onSelect={handleChange}
+			labelExtractor={(item) => <Sanitize sanitizeOptions={{ allowedAttributes: false }}>{item.label}</Sanitize>}
 		></Filter.Checkbox>
 	);
 };
