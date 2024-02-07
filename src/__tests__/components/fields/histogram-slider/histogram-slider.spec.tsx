@@ -18,6 +18,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
+import { labelTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -105,21 +106,6 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
-	});
-
-	it("should be able to render sub label and hint", () => {
-		renderComponent({
-			label: {
-				mainLabel: "Main label",
-				subLabel: "Sub label",
-				hint: { content: "Hint" },
-			},
-		});
-		fireEvent.click(screen.getByLabelText("popover-button"));
-
-		expect(screen.getByText("Main label")).toBeInTheDocument();
-		expect(screen.getByText("Sub label")).toBeInTheDocument();
-		expect(screen.getByText("Hint")).toBeVisible();
 	});
 
 	it.each`
@@ -244,4 +230,6 @@ describe(UI_TYPE, () => {
 			expect(formIsDirty).toBe(false);
 		});
 	});
+
+	labelTestSuite(renderComponent);
 });

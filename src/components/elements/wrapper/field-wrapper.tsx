@@ -93,7 +93,7 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 					  {
 							type: "popover",
 							content: <StyledHint className="label-hint">{label.hint?.content}</StyledHint>,
-							"data-testid": schema["data-testid"] || id,
+							"data-testid": (schema["data-testid"] || id) + "-popover",
 					  }
 					: /* eslint-enable indent */
 					  undefined,
