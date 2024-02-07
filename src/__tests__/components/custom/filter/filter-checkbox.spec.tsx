@@ -58,10 +58,7 @@ const getCheckboxes = (): HTMLElement[] => {
 };
 
 const getCheckboxByVal = (val: string) => {
-	return screen
-		.getAllByText(val)
-		.find((el) => el.getAttribute("data-testid") !== "toggle-label")
-		?.querySelector("input");
+	return screen.getByText(val).closest("label").querySelector("input");
 };
 
 describe(REFERENCE_KEY, () => {
