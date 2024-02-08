@@ -1,4 +1,6 @@
+import { Color } from "@lifesg/react-design-system/color";
 import { FormLabelAddonProps } from "@lifesg/react-design-system/form/types";
+import styled from "styled-components";
 import { Sanitize } from "../../shared";
 import { IFilterItemLabel } from "./types";
 
@@ -18,7 +20,7 @@ export namespace FilterHelper {
 					? /* eslint-disable indent */
 					  {
 							type: "popover",
-							content: <Sanitize>{label.hint?.content}</Sanitize>,
+							content: <StyledHint className="label-hint">{label.hint?.content}</StyledHint>,
 							"data-testid": id + "-popover",
 					  }
 					: /* eslint-enable indent */
@@ -27,3 +29,9 @@ export namespace FilterHelper {
 		}
 	};
 }
+
+const StyledHint = styled(Sanitize)`
+	&.label-hint {
+		color: ${Color.Neutral[1]};
+	}
+`;
