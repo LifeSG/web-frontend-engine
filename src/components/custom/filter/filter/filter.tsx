@@ -1,4 +1,4 @@
-import { Filter as FilterComponent } from "@lifesg/react-design-system";
+import { Filter as FilterComponent } from "@lifesg/react-design-system/filter";
 import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
 import isNumber from "lodash/isNumber";

@@ -214,6 +214,22 @@ HideDivider.args = {
 	],
 };
 
+export const FormattedOptions = Template("filter-checkbox-formatted-options").bind({});
+FormattedOptions.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	options: [
+		{
+			label: `<span style="display: flex; gap: 0.5rem; align-items: center;"><span style="display: block; background: red; height: 0.75rem; width: 0.75rem; border-radius: 50%;"></span>Red</span>`,
+			value: "red",
+		},
+		{
+			label: `<span style="display: flex; gap: 0.5rem; align-items: center;"><span style="display: block; background: blue; height: 0.75rem; width: 0.75rem; border-radius: 50%;"></span>Blue</span>`,
+			value: "blue",
+		},
+	],
+};
+
 export const RevertOnClear = Template("filter-checkbox-revert").bind({});
 RevertOnClear.args = {
 	label: "Filter checkbox",

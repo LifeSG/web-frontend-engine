@@ -10,7 +10,7 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 					hint: { content: "Hint" },
 				},
 			});
-			fireEvent.click(screen.getByLabelText("popover-button"));
+			fireEvent.click(screen.getByTestId("field-popover"));
 
 			expect(screen.getByText("Main label")).toBeInTheDocument();
 			expect(screen.getByText("Sub label")).toBeInTheDocument();
@@ -25,7 +25,7 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 					hint: { content: "<strong>Hint</strong>" },
 				},
 			});
-			fireEvent.click(screen.getByLabelText("popover-button"));
+			fireEvent.click(screen.getByTestId("field-popover"));
 
 			expect(screen.getByText("Main label").nodeName).toBe("STRONG");
 			expect(screen.getByText("Sub label").nodeName).toBe("STRONG");
@@ -40,7 +40,7 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 					hint: { content: "Hint<script>console.log('hello world')</script>" },
 				},
 			});
-			fireEvent.click(screen.getByLabelText("popover-button"));
+			fireEvent.click(screen.getByTestId("field-popover"));
 
 			expect(document.querySelector("form").innerHTML.includes("script")).toBe(false);
 		});

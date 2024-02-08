@@ -1,4 +1,4 @@
-import { Filter } from "@lifesg/react-design-system";
+import { Filter } from "@lifesg/react-design-system/filter";
 import { TestHelper } from "../../../../utils";
 import { Wrapper } from "../../../elements/wrapper";
 import { IGenericCustomElementProps } from "../../types";
