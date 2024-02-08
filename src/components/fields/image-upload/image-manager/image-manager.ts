@@ -30,7 +30,7 @@ export const ImageManager = (props: IProps) => {
 	const previousImages = usePrevious(images);
 	const [managerErrorCount, setManagerErrorCount] = useState(0);
 	const previousValue = usePrevious(value);
-	const { setValue, getFieldState } = useFormContext();
+	const { setValue } = useFormContext();
 	const sessionId = useRef<string>();
 
 	// =============================================================================
@@ -223,7 +223,10 @@ export const ImageManager = (props: IProps) => {
 
 	const compressImage = async (index: number, imageToCompress: IImage) => {
 		try {
-			const dataURL = await FileHelper.fileToDataUrl(imageToCompress.file);
+			const dataURL = await ImageHelper.convertBlob(
+				imageToCompress.file,
+				FileHelper.fileExtensionToMimeType(outputType)
+			);
 			const image = await ImageHelper.dataUrlToImage(dataURL);
 			const origDim = { w: image.naturalWidth, h: image.naturalHeight };
 			const scale = getScale(origDim.w, origDim.h);
