@@ -5,6 +5,7 @@ import useDeepCompareEffect from "use-deep-compare-effect";
 import { TestHelper } from "../../../../utils";
 import { Sanitize } from "../../../shared";
 import { IGenericCustomFieldProps } from "../../types";
+import { FilterHelper } from "../filter-helper";
 import { IFilterCheckboxSchema, IOption } from "./types";
 
 export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSchema>) => {
@@ -21,6 +22,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	const { setValue } = useFormContext();
 	const [selectedOptions, setSelectedOptions] = useState<IOption[]>(); // Current selected value state
 	const [expandedState, setExpandedState] = useState(expanded);
+	const { title, addon } = FilterHelper.constructFormattedLabel(label, id);
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -51,7 +53,8 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 			id={id}
 			{...otherSchema}
 			data-testid={TestHelper.generateId(id, "filter-checkbox")}
-			title={label}
+			title={title}
+			addon={addon}
 			selectedOptions={selectedOptions}
 			options={options}
 			expanded={expandedState}

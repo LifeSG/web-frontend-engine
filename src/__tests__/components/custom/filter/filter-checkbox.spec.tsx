@@ -95,6 +95,19 @@ describe(REFERENCE_KEY, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
+	it("should be able to render hint", () => {
+		renderComponent({
+			label: {
+				mainLabel: "Main label",
+				hint: { content: "Hint" },
+			},
+		});
+		fireEvent.click(screen.getByTestId("field-popover"));
+
+		expect(screen.getByText("Main label")).toBeInTheDocument();
+		expect(screen.getByText("Hint")).toBeVisible();
+	});
+
 	it("should be able to toggle the checkboxes", async () => {
 		renderComponent();
 		const checkboxes = getCheckboxes();

@@ -1,9 +1,10 @@
 import { TFrontendEngineFieldSchema } from "../../../frontend-engine";
 import { ICustomElementJsonSchema } from "../../types";
 import { TClearBehavior } from "../filter/types";
+import { IFilterItemLabel } from "../types";
 
 export interface IFilterItemSchema<V = undefined> extends ICustomElementJsonSchema<"filter-item"> {
-	label: string;
+	label: string | IFilterItemLabel;
 	children: Record<string, TFrontendEngineFieldSchema<V>>;
 	collapsible?: boolean | undefined;
 	showDivider?: boolean | undefined;

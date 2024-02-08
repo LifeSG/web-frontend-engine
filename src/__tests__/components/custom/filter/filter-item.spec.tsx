@@ -101,6 +101,19 @@ describe(REFERENCE_KEY, () => {
 		expect(getTextfield()).toBeDisabled();
 	});
 
+	it("should be able to render hint", () => {
+		renderComponent({
+			label: {
+				mainLabel: "Main label",
+				hint: { content: "Hint" },
+			},
+		});
+		fireEvent.click(screen.getByTestId("field-popover"));
+
+		expect(screen.getByText("Main label")).toBeInTheDocument();
+		expect(screen.getByText("Hint")).toBeVisible();
+	});
+
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 

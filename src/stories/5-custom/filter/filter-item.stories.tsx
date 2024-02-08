@@ -144,6 +144,21 @@ WithDefaultValues.argTypes = {
 	},
 };
 
+export const LabelCustomisation = Template("filter-item-label-customisation").bind({});
+LabelCustomisation.args = {
+	label: {
+		mainLabel: "Filter item",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
+	},
+	referenceKey: "filter-item",
+	children: {
+		text: {
+			uiType: "text-body",
+			children: "This is a filter item",
+		},
+	},
+};
+
 export const Collapsible = Template("filter-item-expanded").bind({});
 Collapsible.args = {
 	label: "Filter item",

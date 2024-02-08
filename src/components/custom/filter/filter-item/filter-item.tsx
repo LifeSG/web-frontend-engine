@@ -1,9 +1,10 @@
 import { Filter } from "@lifesg/react-design-system/filter";
+import { useEffect, useState } from "react";
 import { TestHelper } from "../../../../utils";
 import { Wrapper } from "../../../elements/wrapper";
 import { IGenericCustomElementProps } from "../../types";
+import { FilterHelper } from "../filter-helper";
 import { IFilterItemSchema } from "./types";
-import { useEffect, useState } from "react";
 
 export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>) => {
 	// =============================================================================
@@ -15,6 +16,7 @@ export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>)
 	} = props;
 
 	const [expandedState, setExpandedState] = useState(expanded);
+	const { title, addon } = FilterHelper.constructFormattedLabel(label, id);
 
 	// =========================================================================
 	// EFFECTS
@@ -29,7 +31,8 @@ export const FilterItem = (props: IGenericCustomElementProps<IFilterItemSchema>)
 	return (
 		<Filter.Item
 			data-testid={TestHelper.generateId(id, "filter-item")}
-			title={label}
+			title={title}
+			addon={addon}
 			collapsible={collapsible}
 			showDivider={showDivider}
 			showMobileDivider={showMobileDivider}
