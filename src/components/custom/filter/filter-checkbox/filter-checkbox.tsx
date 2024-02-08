@@ -1,4 +1,4 @@
-import { Filter } from "@lifesg/react-design-system";
+import { Filter } from "@lifesg/react-design-system/filter";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
