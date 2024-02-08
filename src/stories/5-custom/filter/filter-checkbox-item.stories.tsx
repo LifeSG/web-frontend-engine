@@ -179,6 +179,19 @@ WithDefaultValues.argTypes = {
 	},
 };
 
+export const LabelCustomisation = Template("filter-checkbox-label-customisation").bind({});
+LabelCustomisation.args = {
+	label: {
+		mainLabel: "Filter item",
+		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
+	},
+	referenceKey: "filter-checkbox",
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+};
+
 export const Collapsible = Template("filter-checkbox-collapsible").bind({});
 Collapsible.args = {
 	label: "Filter checkbox",
