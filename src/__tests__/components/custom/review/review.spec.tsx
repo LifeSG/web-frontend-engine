@@ -163,6 +163,12 @@ describe(REFERENCE_KEY, () => {
 			expect(getField("button", buttonLabel)).toBeInTheDocument();
 		});
 
+		it("should be able to hide button", () => {
+			renderComponent({ overrideField: { variant: "accordion", button: false } });
+
+			expect(getField("button", "Edit", true)).not.toBeInTheDocument();
+		});
+
 		describe("events", () => {
 			it("should fire mount event on mount", () => {
 				const testFn = jest.fn();

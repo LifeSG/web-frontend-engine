@@ -50,9 +50,11 @@ export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
 			<BoxContainer
 				title={label}
 				callToActionComponent={
-					<Button.Default styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
-						{button?.label ?? "Edit"}
-					</Button.Default>
+					button === false ? undefined : (
+						<Button.Default styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
+							{button?.label ?? "Edit"}
+						</Button.Default>
+					)
 				}
 				expanded={expanded}
 				{...otherSchema}

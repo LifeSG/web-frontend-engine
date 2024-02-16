@@ -27,7 +27,7 @@ export interface IReviewSchemaAccordion
 		Omit<BoxContainerProps, "children" | "title" | "callToActionComponent" | "subComponentTestIds"> {
 	label: string;
 	variant: "accordion";
-	button?: IButtonAccordion | undefined;
+	button?: false | IButtonAccordion | undefined;
 	items: IReviewSchemaAccordionItem[];
 }
 export interface IButtonAccordion {
