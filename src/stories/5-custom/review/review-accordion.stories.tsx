@@ -214,6 +214,15 @@ ButtonLabel.args = {
 	button: { label: "Modify" },
 };
 
+export const ButtonHidden = DefaultStoryTemplate<IReviewSchema>("review-button-hidden").bind({});
+ButtonHidden.args = {
+	referenceKey: "review",
+	variant: "accordion",
+	label: "Your personal information",
+	items: SAMPLE_ITEMS,
+	button: false,
+};
+
 export const MountEvent = EventTemplate("mount").bind({});
 MountEvent.args = {
 	referenceKey: "review",
