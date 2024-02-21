@@ -40,6 +40,18 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		locationListTitle: {
+			description: "Specifies the search results list title.",
+			table: {
+				type: {
+					summary: "string",
+				},
+				defaultValue: { summary: "Select location" },
+			},
+			control: {
+				type: "text",
+			},
+		},
 	},
 };
 export default meta;
