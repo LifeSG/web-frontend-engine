@@ -1415,4 +1415,56 @@ describe("location-input-group", () => {
 			expect(formIsDirty).toBe(false);
 		});
 	});
+
+	describe("search results list title", () => {
+		beforeEach(async () => {
+			fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+				onSuccess(mock1PageFetchAddressResponse);
+			});
+			fetchSingleLocationByLatLngSpy.mockImplementation(
+				(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
+					handleResult(fetchSingleLocationByLatLngSingleReponse);
+				}
+			);
+		});
+
+		it("show default location list title", () => {
+			renderComponent({
+				withEvents: false,
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: {
+							lat: 1.29994179707526,
+							lng: 103.789404349716,
+						},
+					},
+				},
+				overrideField: {
+					reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+				},
+			});
+			const locationListTitle = screen.getByText("Select location");
+			expect(locationListTitle).toBeInTheDocument();
+		});
+
+		it("show updated location list title", () => {
+			renderComponent({
+				withEvents: false,
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: {
+							lat: 1.29994179707526,
+							lng: 103.789404349716,
+						},
+					},
+				},
+				overrideField: {
+					reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+					locationListTitle: "Nearest car parks",
+				},
+			});
+			const locationListTitle = screen.getByText("Nearest car parks");
+			expect(locationListTitle).toBeInTheDocument();
+		});
+	});
 });
