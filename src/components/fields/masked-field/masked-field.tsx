@@ -9,9 +9,9 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { IMaskedFieldSchema } from "./types";
 
 export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
-	// ================================================
+	// =============================================================================
 	// CONST, STATE, REFS
-	// ================================================
+	// =============================================================================
 	const {
 		error,
 		formattedLabel,
