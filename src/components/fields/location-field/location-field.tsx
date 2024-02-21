@@ -35,6 +35,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			reverseGeoCodeEndpoint,
 			staticMapPinColor,
 			validation,
+			locationListTitle,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -141,6 +142,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 						mustHavePostalCode={mustHavePostalCode}
 						locationModalStyles={locationModalStyles}
+						locationListTitle={locationListTitle}
 					/>
 				)}
 			</Suspense>
