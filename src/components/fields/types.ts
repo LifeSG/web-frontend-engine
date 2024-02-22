@@ -12,6 +12,7 @@ import { IFileUploadSchema } from "./file-upload";
 import { IHistogramSliderSchema } from "./histogram-slider";
 import { IImageUploadSchema } from "./image-upload";
 import { ILocationFieldSchema } from "./location-field";
+import { IMaskedFieldSchema } from "./masked-field";
 import { IMultiSelectSchema } from "./multi-select";
 import { INestedMultiSelectSchema } from "./nested-multi-select";
 import { IRadioButtonGroupSchema } from "./radio-button";
@@ -43,6 +44,7 @@ export enum EFieldType {
 	"HISTOGRAM-SLIDER" = "HistogramSlider",
 	"IMAGE-UPLOAD" = "ImageUpload",
 	"LOCATION-FIELD" = "LocationField",
+	"MASKED-FIELD" = "MaskedField",
 	"MULTI-SELECT" = "MultiSelect",
 	"NESTED-MULTI-SELECT" = "NestedMultiSelect",
 	"RANGE-SELECT" = "RangeSelect",
@@ -74,6 +76,7 @@ export type TFieldSchema<V = undefined> =
 	| IHistogramSliderSchema<V>
 	| IImageUploadSchema<V>
 	| ILocationFieldSchema<V>
+	| IMaskedFieldSchema<V>
 	| IMultiSelectSchema<V>
 	| IRangeSelectSchema
 	| INestedMultiSelectSchema<V>
