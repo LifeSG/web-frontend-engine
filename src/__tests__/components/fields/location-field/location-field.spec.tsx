@@ -1144,6 +1144,16 @@ describe("location-input-group", () => {
 						it.todo("should show both static map and input value and dismiss location modal");
 					});
 				});
+
+				describe("when a banner text is provided", () => {
+					it("should render the banner text", async () => {
+						const mapBannerText = "This is some sample banner text";
+
+						renderComponent({ overrideField: { mapBannerText } });
+
+						expect(screen.getByText(mapBannerText)).toBeInTheDocument();
+					});
+				});
 			});
 
 			describe("when internet connectivity errors occurs", () => {

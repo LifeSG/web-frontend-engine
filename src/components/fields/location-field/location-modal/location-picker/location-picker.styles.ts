@@ -1,4 +1,6 @@
+import { Card } from "@lifesg/react-design-system";
 import { Color } from "@lifesg/react-design-system/color";
+import { MediaQuery } from "@lifesg/react-design-system/media";
 import styled from "styled-components";
 
 export const LocationPickerWrapper = styled.div`
@@ -80,4 +82,19 @@ export const ButtonLocation = styled.button`
 export const ButtonLocationImage = styled.img`
 	width: 1.5rem;
 	height: 1.5rem;
+`;
+
+export const BannerWrapper = styled.div`
+	position: absolute;
+	z-index: 1000;
+	width: 100%;
+	padding: 2rem 1.5rem;
+
+	${MediaQuery.MaxWidth.tablet} {
+		padding: 1rem 1.25rem;
+	}
+`;
+
+export const Banner = styled(Card)`
+	padding: 0.5rem 1rem;
 `;

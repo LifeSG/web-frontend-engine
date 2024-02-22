@@ -42,6 +42,7 @@ const LocationModal = ({
 	onClose,
 	onConfirm,
 	updateFormValues,
+	mapBannerText,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -409,6 +410,7 @@ const LocationModal = ({
 								onMapCenterChange={handleMapClick}
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapPanZoom={mapPanZoom}
+								mapBannerText={mapBannerText}
 							/>
 						</>
 					) : (
