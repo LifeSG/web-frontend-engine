@@ -1154,6 +1154,16 @@ describe("location-input-group", () => {
 						expect(screen.getByText(mapBannerText)).toBeInTheDocument();
 					});
 				});
+
+				describe("when a banner text is not provided", () => {
+					it("should not render any banner text", async () => {
+						renderComponent();
+
+						expect(
+							screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "location-banner"))
+						).not.toBeInTheDocument();
+					});
+				});
 			});
 
 			describe("when internet connectivity errors occurs", () => {

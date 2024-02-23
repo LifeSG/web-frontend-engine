@@ -158,7 +158,7 @@ export const LocationPicker = ({
 			data-testid={TestHelper.generateId(id, "location-picker", panelInputMode === "search" ? "hide" : "show")}
 		>
 			{mapBannerText && (
-				<BannerWrapper>
+				<BannerWrapper data-testid={TestHelper.generateId(id, "location-banner")}>
 					<Banner>
 						<Text.XSmall>{mapBannerText}</Text.XSmall>
 					</Banner>
