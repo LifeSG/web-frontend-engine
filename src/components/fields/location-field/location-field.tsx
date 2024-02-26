@@ -28,6 +28,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			interactiveMapPinIconUrl,
 			label: _label,
 			locationInputPlaceholder,
+			locationListTitle,
 			locationModalStyles,
 			mapPanZoom,
 			mustHavePostalCode,
@@ -35,7 +36,6 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			reverseGeoCodeEndpoint,
 			staticMapPinColor,
 			validation,
-			locationListTitle,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
