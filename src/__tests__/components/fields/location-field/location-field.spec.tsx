@@ -1144,6 +1144,24 @@ describe("location-input-group", () => {
 						it.todo("should show both static map and input value and dismiss location modal");
 					});
 				});
+
+				describe("when using the map banner", () => {
+					it("should render a banner if banner text is specified", async () => {
+						const mapBannerText = "This is some sample banner text";
+
+						renderComponent({ overrideField: { mapBannerText } });
+
+						expect(screen.getByText(mapBannerText)).toBeInTheDocument();
+					});
+
+					it("should not render a banner if banner text is undefined", async () => {
+						renderComponent();
+
+						expect(
+							screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "location-banner"))
+						).not.toBeInTheDocument();
+					});
+				});
 			});
 
 			describe("when internet connectivity errors occurs", () => {

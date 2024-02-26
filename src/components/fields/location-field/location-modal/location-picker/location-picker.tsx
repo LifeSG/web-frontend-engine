@@ -1,4 +1,5 @@
 import { MediaWidths } from "@lifesg/react-design-system";
+import { Text } from "@lifesg/react-design-system/text";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
@@ -6,7 +7,14 @@ import { TestHelper } from "../../../../../utils";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
 import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE, LOCATION_PIN_BLUE } from "./location-picker.data";
-import { ButtonLocation, ButtonLocationImage, LeafletWrapper, LocationPickerWrapper } from "./location-picker.styles";
+import {
+	Banner,
+	BannerWrapper,
+	ButtonLocation,
+	ButtonLocationImage,
+	LeafletWrapper,
+	LocationPickerWrapper,
+} from "./location-picker.styles";
 import { ILocationPickerProps } from "./types";
 import { LocationHelper } from "../../location-helper";
 
@@ -26,6 +34,7 @@ export const LocationPicker = ({
 	locationAvailable,
 	gettingCurrentLocation,
 	onMapCenterChange,
+	mapBannerText,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -148,6 +157,13 @@ export const LocationPicker = ({
 			id={TestHelper.generateId(id, "location-picker")}
 			data-testid={TestHelper.generateId(id, "location-picker", panelInputMode === "search" ? "hide" : "show")}
 		>
+			{mapBannerText && (
+				<BannerWrapper data-testid={TestHelper.generateId(id, "location-banner")}>
+					<Banner>
+						<Text.XSmall>{mapBannerText}</Text.XSmall>
+					</Banner>
+				</BannerWrapper>
+			)}
 			<LeafletWrapper ref={leafletWrapperRef} />
 			<ButtonLocation
 				onClick={() => {
