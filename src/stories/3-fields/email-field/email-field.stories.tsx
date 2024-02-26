@@ -54,10 +54,10 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description:
-				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li></ul>",
+				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li><li>`uppercase` prop accept `boolean` and also can be `undefined`. If value is true then it will convert any user input to uppercase.</li></ul>",
 			table: {
 				type: {
-					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean}`,
+					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean, uppercase?: boolean}`,
 				},
 			},
 			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false },
@@ -152,6 +152,16 @@ PreventDragAndDrop.args = {
 		preventDragAndDrop: true,
 	},
 };
+
+export const Uppercase = DefaultStoryTemplate<IEmailFieldSchema>("text-uppercase").bind({});
+Uppercase.args = {
+	label: "Textfield",
+	uiType: "email-field",
+	customOptions: {
+		uppercase: true,
+	},
+};
+
 export const Reset = ResetStoryTemplate<IEmailFieldSchema>("email-reset").bind({});
 Reset.args = {
 	uiType: "email-field",

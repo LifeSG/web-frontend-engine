@@ -5,6 +5,7 @@ import { IBaseFieldSchema } from "../types";
 type TCustomOptions = {
 	preventCopyAndPaste?: boolean | undefined;
 	preventDragAndDrop?: boolean | undefined;
+	uppercase?: boolean | undefined;
 };
 
 export interface ITextFieldSchema<V = undefined>

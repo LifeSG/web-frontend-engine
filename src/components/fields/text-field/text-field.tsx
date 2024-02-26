@@ -98,6 +98,11 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		if (uiType === "numeric-field" && !event.target.value) {
 			onChange({ target: { value: undefined } });
 		} else {
+			const inputValue = event.target.value;
+			event.target.value =
+				customOptions?.uppercase && inputValue !== inputValue.toUpperCase()
+					? inputValue.toUpperCase()
+					: inputValue;
 			onChange(event);
 		}
 

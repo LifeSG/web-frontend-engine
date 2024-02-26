@@ -54,13 +54,13 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description:
-				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li></ul>",
+				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li><li>`uppercase` prop accept `boolean` and also can be `undefined`. If value is true then it will convert any user input to uppercase.</li></ul>",
 			table: {
 				type: {
-					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean}`,
+					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean, uppercase?: boolean}`,
 				},
 			},
-			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false },
+			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false, uppercase: true },
 			control: { type: "object" },
 		},
 	},
@@ -143,6 +143,15 @@ PreventDragAndDrop.args = {
 	uiType: "text-field",
 	customOptions: {
 		preventDragAndDrop: true,
+	},
+};
+
+export const Uppercase = DefaultStoryTemplate<ITextFieldSchema>("text-uppercase").bind({});
+Uppercase.args = {
+	label: "Textfield",
+	uiType: "text-field",
+	customOptions: {
+		uppercase: true,
 	},
 };
 
