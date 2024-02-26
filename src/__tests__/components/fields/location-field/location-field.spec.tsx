@@ -1428,7 +1428,7 @@ describe("location-input-group", () => {
 			);
 		});
 
-		it("show default location list title", () => {
+		it("should show default location list title if locationListTitle is not provided", async () => {
 			renderComponent({
 				withEvents: false,
 				overrideSchema: {
@@ -1443,11 +1443,13 @@ describe("location-input-group", () => {
 					reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
 				},
 			});
-			const locationListTitle = screen.getByText("Select location");
-			expect(locationListTitle).toBeInTheDocument();
+			await waitFor(() => {
+				const locationListTitle = screen.getByText("Select location");
+				expect(locationListTitle).toBeInTheDocument();
+			});
 		});
 
-		it("show updated location list title", () => {
+		it("should show location list title according to locationListTitle", async () => {
 			renderComponent({
 				withEvents: false,
 				overrideSchema: {
@@ -1463,8 +1465,10 @@ describe("location-input-group", () => {
 					locationListTitle: "Nearest car parks",
 				},
 			});
-			const locationListTitle = screen.getByText("Nearest car parks");
-			expect(locationListTitle).toBeInTheDocument();
+			await waitFor(() => {
+				const locationListTitle = screen.getByText("Nearest car parks");
+				expect(locationListTitle).toBeInTheDocument();
+			});
 		});
 	});
 });
