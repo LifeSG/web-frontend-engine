@@ -37,12 +37,12 @@ const LocationModal = ({
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 	gettingCurrentLocationFetchMessage,
+	mapBannerText,
 	mustHavePostalCode,
 	locationModalStyles,
 	onClose,
 	onConfirm,
 	updateFormValues,
-	mapBannerText,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS

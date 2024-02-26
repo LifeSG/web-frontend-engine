@@ -49,7 +49,7 @@ const meta: Meta = {
 			},
 			type: { name: "string", required: false },
 			control: {
-				type: "string",
+				type: "text",
 			},
 		},
 	},
@@ -165,7 +165,7 @@ export const BannerCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
 ).bind({});
 BannerCustomisation.args = {
 	uiType: "location-field",
-	label: "BannerCustomisation",
+	label: "Banner Customisation",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 	mapBannerText: "This is some banner text",

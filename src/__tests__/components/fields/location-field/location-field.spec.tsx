@@ -1145,18 +1145,16 @@ describe("location-input-group", () => {
 					});
 				});
 
-				describe("when a banner text is provided", () => {
-					it("should render the banner text", async () => {
+				describe("when using the map banner", () => {
+					it("should render a banner if banner text is specified", async () => {
 						const mapBannerText = "This is some sample banner text";
 
 						renderComponent({ overrideField: { mapBannerText } });
 
 						expect(screen.getByText(mapBannerText)).toBeInTheDocument();
 					});
-				});
 
-				describe("when a banner text is not provided", () => {
-					it("should not render any banner text", async () => {
+					it("should not render a banner if banner text is undefined", async () => {
 						renderComponent();
 
 						expect(
