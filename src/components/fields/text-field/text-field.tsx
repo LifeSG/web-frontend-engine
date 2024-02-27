@@ -1,12 +1,12 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
-import React, { HTMLInputTypeAttribute, useEffect, useState, useRef, useLayoutEffect } from "react";
+import React, { HTMLInputTypeAttribute, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
-import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./types";
+import { ETextTransform, IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./types";
 
 export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFieldSchema | INumericFieldSchema>) => {
 	// ================================================
@@ -21,7 +21,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		schema: { customOptions, inputMode, label: _label, uiType, validation, ...otherSchema },
 		...otherProps
 	} = props;
-	const isText = !["email-field", "numeric-field"].includes(uiType);
+	const isText = "text-field" === uiType;
 
 	const [stateValue, setStateValue] = useState<string | number>(value || "");
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
@@ -109,15 +109,17 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
 		if (uiType === "numeric-field" && !event.target.value) {
 			onChange({ target: { value: undefined } });
-		} else {
+		} else if (uiType === "text-field") {
 			const inputted = event.target.value;
-			const doUpperCase = isText && customOptions?.uppercase && inputted !== inputted.toUpperCase();
+			const doUpperCase = isText && customOptions?.textTransform === ETextTransform.UPPERCASE;
 
 			caret.current = event.target.selectionEnd; // must save current caret position before mutating event.target
 			if (doUpperCase) {
 				event.target.value = inputted.toUpperCase();
 			}
 
+			onChange(event);
+		} else {
 			onChange(event);
 		}
 
