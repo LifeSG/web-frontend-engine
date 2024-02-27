@@ -54,13 +54,13 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description:
-				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li><li>`uppercase` prop accept `boolean` and also can be `undefined`. If value is true then it will convert any user input to uppercase.</li></ul>",
+				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li><li>`textTransform` prop accept `uppercase` and also can be `undefined`. If value is set to `uppercase` then it will convert any user input to uppercase.</li></ul>",
 			table: {
 				type: {
-					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean, uppercase?: boolean}`,
+					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean, textTransform?: "uppercase"}`,
 				},
 			},
-			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false, uppercase: true },
+			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false },
 			control: { type: "object" },
 		},
 	},
