@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields/location-field/types";
+import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import { CommonFieldStoryProps, DefaultStoryTemplate, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
 const reverseGeoCodeEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code";
@@ -40,7 +40,19 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
-		locationListTitle: {
+		mapBannerText: {
+			description: "Specifies the banner text to be displayed. If not specified, no banner will be displayed.",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			type: { name: "string", required: false },
+			control: {
+				type: "text",
+			},
+		},
+    locationListTitle: {
 			description: "Specifies the search results list title.",
 			table: {
 				type: {
@@ -159,6 +171,17 @@ Disabled.args = {
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 	disabled: true,
+};
+
+export const BannerCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-banner-customisation"
+).bind({});
+BannerCustomisation.args = {
+	uiType: "location-field",
+	label: "Banner Customisation",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	mapBannerText: "This is some banner text",
 };
 
 export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind({});

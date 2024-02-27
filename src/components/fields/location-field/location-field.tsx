@@ -3,11 +3,10 @@ import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
-import { useFieldEvent } from "../../../utils/hooks";
-import { useValidationConfig } from "../../../utils/hooks/use-validation-config";
+import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, StaticMap } from "../../shared";
 import { LocationHelper } from "./location-helper";
-import { LocationInput } from "./location-input/location-input";
+import { LocationInput } from "./location-input";
 import { ILocationFieldSchema, ILocationFieldValues } from "./types";
 
 const LocationModal = lazy(() => import("./location-modal/location-modal"));
@@ -30,6 +29,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			locationInputPlaceholder,
 			locationListTitle,
 			locationModalStyles,
+			mapBannerText,
 			mapPanZoom,
 			mustHavePostalCode,
 			readOnly,
@@ -143,6 +143,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						mustHavePostalCode={mustHavePostalCode}
 						locationModalStyles={locationModalStyles}
 						locationListTitle={locationListTitle}
+						mapBannerText={mapBannerText}
 					/>
 				)}
 			</Suspense>

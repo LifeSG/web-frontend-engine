@@ -20,4 +20,5 @@ export interface ILocationModalProps
 	onConfirm: (values: ILocationFieldValues) => void;
 	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 	locationListTitle?: string | undefined;
+	mapBannerText?: string | undefined;
 }

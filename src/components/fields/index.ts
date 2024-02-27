@@ -8,6 +8,7 @@ export * from "./file-upload";
 export * from "./histogram-slider";
 export * from "./image-upload";
 export * from "./location-field";
+export * from "./masked-field";
 export * from "./multi-select";
 export * from "./nested-multi-select";
 export * from "./radio-button";

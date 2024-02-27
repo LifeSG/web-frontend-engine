@@ -1,5 +1,5 @@
 import { IBaseFieldSchema } from "../types";
-import { IStaticMapProps } from "../../shared/static-map";
+import { IStaticMapProps } from "../../shared";
 import { ILocationInputProps } from "./location-input";
 import { ILocationPickerProps } from "./location-modal/location-picker/types";
 import { ILocationSearchProps } from "./location-modal/location-search/types";
@@ -19,6 +19,7 @@ export interface ILocationFieldSchema<V = undefined>
 	className?: string;
 	locationModalStyles?: string | undefined;
 	locationListTitle?: string | undefined;
+	mapBannerText?: string | undefined;
 }
 
 export type TSinglePanelInputMode = "search" | "map";

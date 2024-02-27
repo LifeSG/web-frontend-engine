@@ -37,6 +37,7 @@ const LocationModal = ({
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 	gettingCurrentLocationFetchMessage,
+	mapBannerText,
 	mustHavePostalCode,
 	locationModalStyles,
 	onClose,
@@ -411,6 +412,7 @@ const LocationModal = ({
 								onMapCenterChange={handleMapClick}
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapPanZoom={mapPanZoom}
+								mapBannerText={mapBannerText}
 							/>
 						</>
 					) : (
