@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
-import React, { HTMLInputTypeAttribute, useEffect, useState } from "react";
+import React, { HTMLInputTypeAttribute, useEffect, useState, useRef, useLayoutEffect } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
@@ -25,6 +25,9 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	const [stateValue, setStateValue] = useState<string | number>(value || "");
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
 	const { setFieldValidationConfig } = useValidationConfig();
+
+	const ref = useRef<HTMLInputElement>(null);
+	const caret = useRef<number>(0);
 
 	// ================================================
 	// EFFECTS
@@ -91,6 +94,13 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
+	useLayoutEffect(() => {
+		if (ref.current.selectionEnd !== caret.current) {
+			ref.current.setSelectionRange(caret.current, caret.current); // not available for 'email' & 'number' input types
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [stateValue]);
+
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
@@ -98,11 +108,16 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		if (uiType === "numeric-field" && !event.target.value) {
 			onChange({ target: { value: undefined } });
 		} else {
-			const inputValue = event.target.value;
-			event.target.value =
-				customOptions?.uppercase && inputValue !== inputValue.toUpperCase()
-					? inputValue.toUpperCase()
-					: inputValue;
+			const inputted = event.target.value;
+			const isText = ref.current.type === "text";
+			const doUpperCase = customOptions?.uppercase && inputted !== inputted.toUpperCase(); // && isText
+
+			caret.current = event.target.selectionEnd; // save current caret position before mutating event.target
+
+			if (doUpperCase) {
+				event.target.value = inputted.toUpperCase();
+			}
+
 			onChange(event);
 		}
 
@@ -149,6 +164,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			{...derivedAttributes}
 			id={id}
 			data-testid={TestHelper.generateId(id, uiType)}
+			ref={ref}
 			type={formatInputType()}
 			label={formattedLabel}
 			onPaste={(e) => (customOptions?.preventCopyAndPaste ? e.preventDefault() : null)}
