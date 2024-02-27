@@ -21,6 +21,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		schema: { customOptions, inputMode, label: _label, uiType, validation, ...otherSchema },
 		...otherProps
 	} = props;
+	const isText = !["email-field", "numeric-field"].includes(uiType);
 
 	const [stateValue, setStateValue] = useState<string | number>(value || "");
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
@@ -95,8 +96,9 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	}, [value]);
 
 	useLayoutEffect(() => {
-		if (ref.current.selectionEnd !== caret.current) {
-			ref.current.setSelectionRange(caret.current, caret.current); // not available for 'email' & 'number' input types
+		if (isText && ref.current.selectionEnd !== caret.current) {
+			// keep caret in place after uppercase, not available for 'email' & 'number' HTML input types
+			ref.current.setSelectionRange(caret.current, caret.current);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [stateValue]);
@@ -109,11 +111,9 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			onChange({ target: { value: undefined } });
 		} else {
 			const inputted = event.target.value;
-			const isText = ref.current.type === "text";
-			const doUpperCase = customOptions?.uppercase && inputted !== inputted.toUpperCase(); // && isText
+			const doUpperCase = isText && customOptions?.uppercase && inputted !== inputted.toUpperCase();
 
-			caret.current = event.target.selectionEnd; // save current caret position before mutating event.target
-
+			caret.current = event.target.selectionEnd; // must save current caret position before mutating event.target
 			if (doUpperCase) {
 				event.target.value = inputted.toUpperCase();
 			}
