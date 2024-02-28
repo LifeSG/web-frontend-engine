@@ -9,7 +9,7 @@ export enum ETextTransform {
 type TCustomOptions = {
 	preventCopyAndPaste?: boolean | undefined;
 	preventDragAndDrop?: boolean | undefined;
-	textTransform?: ETextTransform | undefined;
+	textTransform?: "uppercase" | undefined;
 };
 
 type TCustomOptionsText = TCustomOptions & {
