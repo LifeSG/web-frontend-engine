@@ -13,6 +13,8 @@ export interface ILocationFieldSchema<V = undefined>
 			| "convertLatLngToXYEndpoint"
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
+			| "hasExplicitEdit"
+			| "onEditPrompt"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder" | "disabled" | "readOnly">,
 		Pick<IStaticMapProps, "staticMapPinColor"> {
@@ -23,6 +25,7 @@ export interface ILocationFieldSchema<V = undefined>
 }
 
 export type TSinglePanelInputMode = "search" | "map";
+export type TExplicitEditMode = "show" | "explicit";
 
 // search and map will implicitly mean single panel can only show one view at a time: search or map
 // double means both search and map will be seen
@@ -58,6 +61,11 @@ export interface IResultsMetaData {
 export interface IDisplayResultListParams extends IResultsMetaData {
 	queryString?: string | undefined;
 	boldResults?: boolean | undefined;
+}
+
+export interface IEditPrompt {
+	onEdit?: () => void;
+	onClose?: () => void;
 }
 
 export type TErrorType = {
