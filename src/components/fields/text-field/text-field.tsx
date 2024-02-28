@@ -1,12 +1,12 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
-import React, { HTMLInputTypeAttribute, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { HTMLInputTypeAttribute, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
-import { ETextTransform, IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./types";
+import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema, TCustomOptionsText } from "./types";
 
 export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFieldSchema | INumericFieldSchema>) => {
 	// ================================================
@@ -95,13 +95,19 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (isText && ref.current.selectionEnd !== caret.current) {
 			// keep caret in place after uppercase, not available for 'email' & 'number' HTML input types
 			ref.current.setSelectionRange(caret.current, caret.current);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [stateValue]);
+
+	useEffect(() => {
+		if (isText && stateValue && (customOptions as TCustomOptionsText)?.textTransform === "uppercase") {
+			setStateValue((previous) => (previous ? ("" + previous).toUpperCase() : ""));
+		}
+	}, [(customOptions as TCustomOptionsText)?.textTransform]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -111,7 +117,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			onChange({ target: { value: undefined } });
 		} else if (uiType === "text-field") {
 			const inputted = event.target.value;
-			const doUpperCase = isText && customOptions?.textTransform === ETextTransform.UPPERCASE;
+			const doUpperCase = isText && (customOptions as TCustomOptionsText)?.textTransform === "uppercase";
 
 			caret.current = event.target.selectionEnd; // must save current caret position before mutating event.target
 			if (doUpperCase) {

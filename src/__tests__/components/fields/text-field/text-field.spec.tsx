@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
-import { ETextTransform, ITextFieldSchema } from "../../../../components/fields";
+import { ITextFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
@@ -171,7 +171,7 @@ describe(UI_TYPE, () => {
 	it("should return string in uppercase if uppercase is true", () => {
 		renderComponent({
 			customOptions: {
-				textTransform: ETextTransform.UPPERCASE,
+				textTransform: "uppercase",
 			},
 		});
 

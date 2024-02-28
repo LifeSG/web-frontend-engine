@@ -2,18 +2,13 @@ import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
-export enum ETextTransform {
-	UPPERCASE = "uppercase",
-}
-
 type TCustomOptions = {
 	preventCopyAndPaste?: boolean | undefined;
 	preventDragAndDrop?: boolean | undefined;
-	textTransform?: "uppercase" | undefined;
 };
 
-type TCustomOptionsText = TCustomOptions & {
-	textTransform?: ETextTransform | undefined;
+export type TCustomOptionsText = TCustomOptions & {
+	textTransform?: "uppercase" | undefined;
 };
 
 export interface ITextFieldSchema<V = undefined>

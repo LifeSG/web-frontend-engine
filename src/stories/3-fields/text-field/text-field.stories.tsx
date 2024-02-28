@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { ETextTransform, ITextFieldSchema } from "../../../components/fields";
+import { ITextFieldSchema } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
@@ -151,7 +151,7 @@ Uppercase.args = {
 	label: "Textfield",
 	uiType: "text-field",
 	customOptions: {
-		textTransform: ETextTransform.UPPERCASE,
+		textTransform: "uppercase",
 	},
 };
 
