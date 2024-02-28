@@ -52,6 +52,18 @@ const meta: Meta = {
 				type: "text",
 			},
 		},
+    locationListTitle: {
+			description: "Specifies the search results list title.",
+			table: {
+				type: {
+					summary: "string",
+				},
+				defaultValue: { summary: "Select location" },
+			},
+			control: {
+				type: "text",
+			},
+		},
 	},
 };
 export default meta;
@@ -151,6 +163,7 @@ MustHavePostalCode.args = {
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 };
+
 export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>("location-field-disabled").bind({});
 Disabled.args = {
 	uiType: "location-field",
@@ -191,3 +204,14 @@ Overrides.args = {
 	convertLatLngToXYEndpoint,
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const LocationListTitle = DefaultStoryTemplate<ILocationFieldSchema>("location-field-location-list-title").bind(
+	{}
+);
+LocationListTitle.args = {
+	uiType: "location-field",
+	label: "Location List Title",
+	locationListTitle: "Nearest car parks",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+};

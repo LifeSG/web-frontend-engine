@@ -18,6 +18,7 @@ export interface ILocationFieldSchema<V = undefined>
 		Pick<IStaticMapProps, "staticMapPinColor"> {
 	className?: string;
 	locationModalStyles?: string | undefined;
+	locationListTitle?: string | undefined;
 	mapBannerText?: string | undefined;
 }
 

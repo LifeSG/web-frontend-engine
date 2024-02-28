@@ -27,6 +27,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			interactiveMapPinIconUrl,
 			label: _label,
 			locationInputPlaceholder,
+			locationListTitle,
 			locationModalStyles,
 			mapBannerText,
 			mapPanZoom,
@@ -141,6 +142,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 						mustHavePostalCode={mustHavePostalCode}
 						locationModalStyles={locationModalStyles}
+						locationListTitle={locationListTitle}
 						mapBannerText={mapBannerText}
 					/>
 				)}
