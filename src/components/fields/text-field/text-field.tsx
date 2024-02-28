@@ -6,7 +6,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
-import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema, TCustomOptionsText } from "./types";
+import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./types";
 
 export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFieldSchema | INumericFieldSchema>) => {
 	// ================================================
@@ -21,7 +21,6 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		schema: { customOptions, inputMode, label: _label, uiType, validation, ...otherSchema },
 		...otherProps
 	} = props;
-	const isText = "text-field" === uiType;
 
 	const [stateValue, setStateValue] = useState<string | number>(value || "");
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
@@ -96,7 +95,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	}, [value]);
 
 	useEffect(() => {
-		if (isText && ref.current.selectionEnd !== caret.current) {
+		if (props.schema.uiType === "text-field" && ref.current.selectionEnd !== caret.current) {
 			// keep caret in place after uppercase, not available for 'email' & 'number' HTML input types
 			ref.current.setSelectionRange(caret.current, caret.current);
 		}
@@ -104,10 +103,14 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	}, [stateValue]);
 
 	useEffect(() => {
-		if (isText && stateValue && (customOptions as TCustomOptionsText)?.textTransform === "uppercase") {
+		if (
+			props.schema.uiType === "text-field" &&
+			props.schema.customOptions?.textTransform === "uppercase" &&
+			stateValue
+		) {
 			setStateValue((previous) => (previous ? ("" + previous).toUpperCase() : ""));
 		}
-	}, [(customOptions as TCustomOptionsText)?.textTransform]);
+	}, [props.schema.uiType === "text-field" && props.schema.customOptions?.textTransform]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -117,7 +120,8 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			onChange({ target: { value: undefined } });
 		} else if (uiType === "text-field") {
 			const inputted = event.target.value;
-			const doUpperCase = isText && (customOptions as TCustomOptionsText)?.textTransform === "uppercase";
+			const doUpperCase =
+				props.schema.uiType === "text-field" && props.schema.customOptions?.textTransform === "uppercase";
 
 			caret.current = event.target.selectionEnd; // must save current caret position before mutating event.target
 			if (doUpperCase) {
