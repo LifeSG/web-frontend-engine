@@ -110,6 +110,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		) {
 			setStateValue((previous) => (previous ? ("" + previous).toUpperCase() : ""));
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.schema.uiType === "text-field" && props.schema.customOptions?.textTransform]);
 
 	// =============================================================================
