@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
-import React, { HTMLInputTypeAttribute, useEffect, useState } from "react";
+import React, { HTMLInputTypeAttribute, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
@@ -12,19 +12,15 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
-	const {
-		error,
-		formattedLabel,
-		id,
-		onChange,
-		value,
-		schema: { customOptions, inputMode, label: _label, uiType, validation, ...otherSchema },
-		...otherProps
-	} = props;
+	const { error, formattedLabel, id, onChange, value, schema, ...otherProps } = props;
+	const { customOptions, inputMode, label: _label, uiType, validation, ...otherSchema } = schema;
 
 	const [stateValue, setStateValue] = useState<string | number>(value || "");
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
 	const { setFieldValidationConfig } = useValidationConfig();
+
+	const ref = useRef<HTMLInputElement>(null);
+	const caret = useRef<number>(0);
 
 	// ================================================
 	// EFFECTS
@@ -91,12 +87,35 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
+	useEffect(() => {
+		if (uiType === "text-field" && ref.current.selectionEnd !== caret.current) {
+			// keep caret in place after uppercase, not available for 'email' & 'number' HTML input types
+			ref.current.setSelectionRange(caret.current, caret.current);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [stateValue]);
+
+	useEffect(() => {
+		if (schema.uiType === "text-field" && schema.customOptions?.textTransform === "uppercase" && stateValue) {
+			setStateValue((previous) => previous?.toString().toUpperCase());
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [schema.uiType === "text-field" && schema.customOptions?.textTransform]);
+
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
 		if (uiType === "numeric-field" && !event.target.value) {
 			onChange({ target: { value: undefined } });
+		} else if (schema.uiType === "text-field") {
+			caret.current = event.target.selectionEnd; // must save current caret position before mutating event.target
+
+			if (schema.customOptions?.textTransform === "uppercase") {
+				event.target.value = event.target.value.toUpperCase();
+			}
+
+			onChange(event);
 		} else {
 			onChange(event);
 		}
@@ -144,6 +163,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			{...derivedAttributes}
 			id={id}
 			data-testid={TestHelper.generateId(id, uiType)}
+			ref={ref}
 			type={formatInputType()}
 			label={formattedLabel}
 			onPaste={(e) => (customOptions?.preventCopyAndPaste ? e.preventDefault() : null)}

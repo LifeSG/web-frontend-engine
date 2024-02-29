@@ -7,10 +7,14 @@ type TCustomOptions = {
 	preventDragAndDrop?: boolean | undefined;
 };
 
+export type TCustomOptionsText = TCustomOptions & {
+	textTransform?: "uppercase" | undefined;
+};
+
 export interface ITextFieldSchema<V = undefined>
 	extends IBaseFieldSchema<"text-field", V>,
 		TComponentOmitProps<FormInputProps, "type" | "maxLength"> {
-	customOptions?: TCustomOptions | undefined;
+	customOptions?: TCustomOptionsText | undefined;
 }
 
 export interface IEmailFieldSchema<V = undefined>

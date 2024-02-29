@@ -167,6 +167,18 @@ describe(UI_TYPE, () => {
 		expect(event).toBe(true);
 	});
 
+	// testing the return value of onChange event when customOptions.uppercase is set to true
+	it("should return string in uppercase if uppercase is true", () => {
+		renderComponent({
+			customOptions: {
+				textTransform: "uppercase",
+			},
+		});
+
+		fireEvent.change(getTextfield(), { target: { value: "hello" } });
+		expect(getTextfield()).toHaveValue("HELLO");
+	});
+
 	describe("reset", () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
