@@ -152,6 +152,7 @@ PreventDragAndDrop.args = {
 		preventDragAndDrop: true,
 	},
 };
+
 export const Reset = ResetStoryTemplate<IEmailFieldSchema>("email-reset").bind({});
 Reset.args = {
 	uiType: "email-field",
