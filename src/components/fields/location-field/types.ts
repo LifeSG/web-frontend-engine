@@ -14,7 +14,6 @@ export interface ILocationFieldSchema<V = undefined>
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
 			| "hasExplicitEdit"
-			| "onEditPrompt"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder" | "disabled" | "readOnly">,
 		Pick<IStaticMapProps, "staticMapPinColor"> {
@@ -61,11 +60,6 @@ export interface IResultsMetaData {
 export interface IDisplayResultListParams extends IResultsMetaData {
 	queryString?: string | undefined;
 	boldResults?: boolean | undefined;
-}
-
-export interface IEditPrompt {
-	onEdit?: () => void;
-	onClose?: () => void;
 }
 
 export type TErrorType = {

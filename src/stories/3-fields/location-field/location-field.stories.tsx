@@ -2,37 +2,9 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta } from "@storybook/react";
 import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import { CommonFieldStoryProps, DefaultStoryTemplate, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
-import { Prompt } from "../../../components/shared";
-import { ERROR_SVG } from "../../../components/fields/location-field/location-modal/location-modal.data";
-import { ErrorImage } from "../../../components/fields/location-field/location-modal/location-modal.styles";
 
 const reverseGeoCodeEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code";
 const convertLatLngToXYEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/convert-latlng-to-xy";
-const editPrompt = ({ onEdit, onClose }) => {
-	return (
-		<Prompt
-			id="location-edit-prompt"
-			title="Edit Location?"
-			size="large"
-			show={true}
-			image={<ErrorImage src={ERROR_SVG} />}
-			description="sample prompt message"
-			buttons={[
-				{
-					id: "edit",
-					title: "Edit location",
-					onClick: onEdit,
-				},
-				{
-					id: "cancel",
-					title: "Cancel",
-					onClick: onClose,
-					buttonStyle: "secondary",
-				},
-			]}
-		/>
-	);
-};
 const meta: Meta = {
 	title: "Field/LocationField",
 	parameters: {
@@ -242,19 +214,4 @@ LocationListTitle.args = {
 	locationListTitle: "Nearest car parks",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
-};
-
-export const hasExplicitEdit = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-explicit-edit"
-).bind({});
-hasExplicitEdit.args = {
-	uiType: "location-field",
-	label: "hasExplicitEdit",
-	defaultValues: {
-		address: "Fusionopolis View",
-	},
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
-	hasExplicitEdit: "explicit",
-	onEditPrompt: editPrompt,
 };

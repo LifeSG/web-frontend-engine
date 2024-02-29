@@ -1,5 +1,4 @@
 import {
-	IEditPrompt,
 	ILocationCoord,
 	ILocationFieldValues,
 	TExplicitEditMode,
@@ -30,5 +29,4 @@ export interface ILocationSearchProps {
 	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
 	hasExplicitEdit?: TExplicitEditMode | undefined;
-	onEditPrompt?: (editPrompt: IEditPrompt) => void;
 }

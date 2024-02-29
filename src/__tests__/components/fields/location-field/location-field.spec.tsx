@@ -1,7 +1,7 @@
 import { MediaWidths } from "@lifesg/react-design-system";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	FrontendEngine,
 	IFrontendEngineData,
@@ -47,6 +47,7 @@ const UI_TYPE = "location-field";
 const LABEL = "Location field";
 
 const setCurrentLocationSpy = jest.fn();
+const editButtonOnClickSpy = jest.fn();
 
 enum ELocationInputEvents {
 	"SET_CURRENT_LOCATION" = "set-current-location",
@@ -54,6 +55,7 @@ enum ELocationInputEvents {
 	"MOUNT" = "mount",
 	"SHOW_MODAL" = "show-location-modal",
 	"HIDE_MODAL" = "hide-location-modal",
+	"EDIT_BUTTON_ONCLICK" = "edit-button-onclick",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -70,6 +72,7 @@ const FrontendEngineWithEventListener = ({
 	...otherProps
 }: ICustomFrontendEngineProps) => {
 	const formRef = useRef<IFrontendEngineRef>();
+	const [showEditPrompt, setShowEditPrompt] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (!withEvents || !locationDetails) return;
@@ -90,10 +93,19 @@ const FrontendEngineWithEventListener = ({
 					);
 				})
 			);
+			addFieldEventListener(
+				ELocationInputEvents.EDIT_BUTTON_ONCLICK,
+				COMPONENT_ID,
+				editButtonOnClickSpy.mockImplementation((e) => {
+					e.preventDefault();
+					handleShowEditPrompt(e);
+				})
+			);
 		};
 
 		const handleRemoveFieldEventListener = () => {
 			removeFieldEventListener(ELocationInputEvents.GET_CURRENT_LOCATION, COMPONENT_ID, setCurrentLocationSpy);
+			removeFieldEventListener(ELocationInputEvents.EDIT_BUTTON_ONCLICK, COMPONENT_ID, editButtonOnClickSpy);
 		};
 
 		handleAddFieldEventListener();
@@ -110,7 +122,46 @@ const FrontendEngineWithEventListener = ({
 		}
 	}, [eventListener, eventType]);
 
-	return <FrontendEngine {...otherProps} ref={formRef} />;
+	const handleShowEditPrompt = (e) => {
+		e.preventDefault();
+		setShowEditPrompt(true);
+	};
+
+	const handleShowLocationModal = () => {
+		setShowEditPrompt(false);
+		formRef.current.dispatchFieldEvent(ELocationInputEvents.SHOW_MODAL, COMPONENT_ID);
+	};
+
+	const handleCancelOnClick = () => {
+		setShowEditPrompt(false);
+	};
+
+	return (
+		<>
+			<FrontendEngine {...otherProps} ref={formRef} />
+			<Prompt
+				id={TestHelper.generateId(COMPONENT_ID, "edit-prompt")}
+				title="Edit Location?"
+				size="large"
+				show={showEditPrompt}
+				image={<ErrorImage src={ERROR_SVG} />}
+				description="sample prompt message"
+				buttons={[
+					{
+						id: "edit",
+						title: "Edit location",
+						onClick: handleShowLocationModal,
+					},
+					{
+						id: "cancel",
+						title: "Cancel",
+						onClick: handleCancelOnClick,
+						buttonStyle: "secondary",
+					},
+				]}
+			/>
+		</>
+	);
 };
 
 interface IRenderProps {
@@ -241,32 +292,6 @@ const getEditLocationModalEditButton = (query = false) => {
 
 const getEditLocationModalCancelButton = (query = false) => {
 	return within(testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "edit-prompt", "show"))).getByText("Cancel");
-};
-
-const editPrompt = ({ onEdit, onClose }) => {
-	return (
-		<Prompt
-			id={TestHelper.generateId(COMPONENT_ID, "edit-prompt")}
-			title="Edit Location?"
-			size="large"
-			show={true}
-			image={<ErrorImage src={ERROR_SVG} />}
-			description="sample prompt message"
-			buttons={[
-				{
-					id: "edit",
-					title: "Edit location",
-					onClick: onEdit,
-				},
-				{
-					id: "cancel",
-					title: "Cancel",
-					onClick: onClose,
-					buttonStyle: "secondary",
-				},
-			]}
-		/>
-	);
 };
 
 // assert network error
@@ -569,6 +594,56 @@ describe("location-input-group", () => {
 				expect(handleHideReviewModal).toBeCalled();
 			});
 		});
+
+		//Explicit Edit Events
+		describe("Explicit Edit events", () => {
+			it("should fire edit-button-onclick event when edit button been clicked", async () => {
+				renderComponent({
+					withEvents: true,
+					locationDetails: {
+						errors: {
+							generic: "throw something",
+						},
+					},
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: "Fusionopolis View",
+							},
+						},
+					},
+					overrideField: {
+						hasExplicitEdit: "explicit",
+					},
+				});
+				await waitFor(() => window.dispatchEvent(new Event("online")));
+
+				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
+				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+				expect(getEditLocationButton(true)).toBeInTheDocument();
+				expect(getLocationInput()).toHaveAttribute("disabled");
+				fireEvent.click(getEditLocationButton());
+
+				expect(editButtonOnClickSpy).toBeCalled();
+
+				await waitFor(() => {
+					expect(getEditLocationModal(true)).toBeInTheDocument();
+					expect(getEditLocationModalTitle(true)).toBeInTheDocument();
+					expect(getEditLocationModalDesc(true)).toBeInTheDocument();
+					expect(getEditLocationModalEditButton(true)).toBeInTheDocument();
+					expect(getEditLocationModalCancelButton(true)).toBeInTheDocument();
+				});
+
+				fireEvent.click(getEditLocationModalCancelButton());
+				await waitFor(() => {
+					expect(getEditLocationModal(true)).not.toBeInTheDocument();
+				});
+
+				fireEvent.click(getEditLocationButton());
+				fireEvent.click(getEditLocationModalEditButton());
+				expect(screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "modal", "show"))).toBeVisible();
+			});
+		});
 	});
 
 	describe("functionality", () => {
@@ -740,127 +815,6 @@ describe("location-input-group", () => {
 					it.todo("handle when fetch address endpoint is down");
 
 					it.todo("handle when reverse geocode endpoint is down");
-				});
-
-				describe("when has default address and explicit edit is `explicit`", () => {
-					beforeEach(async () => {
-						fetchSingleLocationByAddressSpy.mockImplementation((_, onSuccess) => {
-							onSuccess(mockInputValues);
-						});
-						reverseGeocodeSpy.mockImplementation(() => {
-							return mockReverseGeoCodeResponse;
-						});
-						renderComponent({
-							withEvents: false,
-							overrideSchema: {
-								defaultValues: {
-									[COMPONENT_ID]: {
-										address: "Fusionopolis View",
-									},
-								},
-							},
-							overrideField: {
-								hasExplicitEdit: "explicit",
-								onEditPrompt: editPrompt,
-							},
-						});
-
-						await waitFor(() => {
-							expect(getLocationInput(true)).toBeInTheDocument();
-							expect(getStaticMap(true)).toBeInTheDocument();
-						});
-					});
-
-					it("should render edit button", async () => {
-						await waitFor(() => {
-							expect(getEditLocationButton(true)).toBeInTheDocument();
-						});
-					});
-
-					it("should disable input field", async () => {
-						await waitFor(() => {
-							expect(getLocationInput()).toHaveAttribute("disabled");
-						});
-					});
-
-					it("should show edit prompt edit button is clicked", async () => {
-						fireEvent.click(getEditLocationButton());
-
-						await waitFor(() => {
-							expect(getEditLocationModal(true)).toBeInTheDocument();
-							expect(getEditLocationModalTitle(true)).toBeInTheDocument();
-							expect(getEditLocationModalDesc(true)).toBeInTheDocument();
-							expect(getEditLocationModalEditButton(true)).toBeInTheDocument();
-							expect(getEditLocationModalCancelButton(true)).toBeInTheDocument();
-						});
-					});
-
-					it("should close edit prompt when cancel is clicked", async () => {
-						fireEvent.click(getEditLocationButton());
-						fireEvent.click(getEditLocationModalCancelButton());
-
-						await waitFor(() => {
-							expect(getEditLocationModal(true)).not.toBeInTheDocument();
-						});
-					});
-
-					it("should open location modal when edit location is clicked", async () => {
-						fireEvent.click(getEditLocationButton());
-						fireEvent.click(getEditLocationModalEditButton());
-
-						await waitFor(() => {
-							expect(getLocationModal(true)).toBeInTheDocument();
-						});
-					});
-				});
-
-				describe("when has default address and explicit edit is `show` and without onEditPrompt", () => {
-					beforeEach(async () => {
-						fetchSingleLocationByAddressSpy.mockImplementation((_, onSuccess) => {
-							onSuccess(mockInputValues);
-						});
-						reverseGeocodeSpy.mockImplementation(() => {
-							return mockReverseGeoCodeResponse;
-						});
-						renderComponent({
-							withEvents: false,
-							overrideSchema: {
-								defaultValues: {
-									[COMPONENT_ID]: {
-										address: "Fusionopolis View",
-									},
-								},
-							},
-							overrideField: {
-								hasExplicitEdit: "show",
-							},
-						});
-
-						await waitFor(() => {
-							expect(getLocationInput(true)).toBeInTheDocument();
-							expect(getStaticMap(true)).toBeInTheDocument();
-						});
-					});
-
-					it("should render edit button", async () => {
-						await waitFor(() => {
-							expect(getEditLocationButton(true)).toBeInTheDocument();
-						});
-					});
-
-					it("should not disable input field", async () => {
-						await waitFor(() => {
-							expect(getLocationInput()).not.toHaveAttribute("disabled");
-						});
-					});
-
-					it("should open location modal when edit button is clicked", async () => {
-						fireEvent.click(getEditLocationButton());
-
-						await waitFor(() => {
-							expect(getLocationModal(true)).toBeInTheDocument();
-						});
-					});
 				});
 				// What other scenarios?
 			});

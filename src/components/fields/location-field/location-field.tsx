@@ -38,20 +38,27 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			staticMapPinColor,
 			validation,
 			hasExplicitEdit,
-			onEditPrompt,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
 	} = props;
 
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
-	const [showEditPrompt, setShowEditPrompt] = useState<boolean>(false);
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationConfig();
-	const { dispatchFieldEvent } = useFieldEvent();
+	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		addFieldEventListener("show-location-modal", id, handleLocationModalShow);
+
+		return () => {
+			removeFieldEventListener("show-location-modal", id, handleLocationModalShow);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 
@@ -102,13 +109,12 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		dispatchFieldEvent("hide-location-modal", id);
 	};
 
-	const handleLocationModalShow = () => {
-		setShowLocationModal(true);
-		setShowEditPrompt(false);
+	const handleEditLocationOnClick = () => {
+		dispatchFieldEvent("edit-button-onclick", id);
 	};
 
-	const handleEditPromptClose = () => {
-		setShowEditPrompt(false);
+	const handleLocationModalShow = () => {
+		setShowLocationModal(true);
 	};
 
 	// =============================================================================
@@ -133,7 +139,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					id={TestHelper.generateId(id, "edit-button")}
 					data-testid={TestHelper.generateId(id, "edit-button")}
 					styleType="secondary"
-					onClick={() => (onEditPrompt ? setShowEditPrompt(true) : setShowLocationModal(true))}
+					onClick={handleEditLocationOnClick}
 				>
 					Edit
 				</Button.Default>
@@ -171,7 +177,6 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					/>
 				)}
 			</Suspense>
-			{showEditPrompt && <>{onEditPrompt({ onEdit: handleLocationModalShow, onClose: handleEditPromptClose })}</>}
 		</div>
 	);
 };
