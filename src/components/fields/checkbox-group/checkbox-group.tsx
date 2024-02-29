@@ -124,7 +124,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	const renderToggles = () => {
 		return (
 			options.length > 0 && (
-				<ToggleWrapper>
+				<ToggleWrapper layoutType={customOptions?.layoutType ?? "horizontal"}>
 					{options.map((option, index) => {
 						const checkboxId = formatId(index);
 

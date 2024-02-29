@@ -12,14 +12,18 @@ interface IToggleOption extends IOption {
 	none?: boolean;
 }
 
+export type layoutType = "horizontal" | "vertical";
+
 type TCustomOptions =
 	| {
 			styleType: "default";
+			layoutType?: layoutType;
 	  }
 	| {
 			styleType: "toggle";
 			indicator?: boolean;
 			border?: boolean;
+			layoutType?: layoutType;
 	  };
 export interface ICheckboxGroupSchema<V = undefined>
 	extends IBaseFieldSchema<"checkbox", V>,
