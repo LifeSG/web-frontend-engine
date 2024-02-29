@@ -1,13 +1,14 @@
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
-import { layoutType } from "./types";
+import { checkboxToggleLayoutType } from "./types";
+
 interface ILabelProps {
 	disabled?: boolean | undefined;
 }
 
 interface ILayoutTypeProps {
-	layoutType: layoutType;
+	layoutType: checkboxToggleLayoutType;
 }
 
 export const Label = styled(Text.BodySmall)<ILabelProps>`

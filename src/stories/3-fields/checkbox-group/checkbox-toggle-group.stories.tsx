@@ -77,21 +77,6 @@ Default.args = {
 	],
 };
 
-export const VerticalLayout = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default-vertical").bind({});
-VerticalLayout.args = {
-	uiType: "checkbox",
-	label: "Show fruits vertically",
-	customOptions: {
-		styleType: "toggle",
-		layoutType: "vertical",
-	},
-	options: [
-		{ label: "Apple", value: "Apple" },
-		{ label: "Berry", value: "Berry" },
-		{ label: "Cherry", value: "Cherry" },
-	],
-};
-
 export const DefaultValue = DefaultStoryTemplate<ICheckboxGroupSchema, string[]>("checkbox-default-value").bind({});
 DefaultValue.args = {
 	uiType: "checkbox",
@@ -197,6 +182,21 @@ NoneOption.args = {
 
 export const WithIndicator = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
 WithIndicator.args = {
+	uiType: "checkbox",
+	label: "Fruits",
+	customOptions: {
+		styleType: "toggle",
+		indicator: true,
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
+export const VerticalLayout = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default-vertical").bind({});
+VerticalLayout.args = {
 	uiType: "checkbox",
 	label: "Fruits",
 	customOptions: {
