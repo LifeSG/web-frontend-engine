@@ -1,5 +1,5 @@
 import { RadioButtonProps } from "@lifesg/react-design-system/radio-button";
-import { TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 interface IOption {
@@ -7,6 +7,7 @@ interface IOption {
 	value: string;
 	disabled?: boolean | undefined;
 	imgSrc?: string | undefined;
+	children?: Record<string, TFrontendEngineFieldSchema>;
 }
 
 export type TRadioToggleLayoutType = "horizontal" | "vertical";

@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
 import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";
@@ -143,6 +144,13 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
 								error={!!error?.message}
+								subLabel={() =>
+									option.children ? (
+										<div style={{ pointerEvents: "auto" }}>
+											<Wrapper>{option.children}</Wrapper>
+										</div>
+									) : null
+								}
 							>
 								{option.label}
 							</Toggle>

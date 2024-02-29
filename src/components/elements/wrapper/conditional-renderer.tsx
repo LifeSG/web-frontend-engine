@@ -90,8 +90,23 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 		const childIdList: string[] = [];
 
 		// Handle special fields that render additional fields
-		if (schema.uiType === "chips") {
-			childIdList.push(id + "-textarea");
+		switch (schema.uiType) {
+			case "chips":
+				childIdList.push(id + "-textarea");
+				break;
+			case "checkbox":
+			case "radio":
+				schema.options.forEach((option) => {
+					if (!isEmpty(option.children) && isObject(option.children)) {
+						Object.entries(option.children).forEach(([id, child]) => {
+							childIdList.push(id);
+							if (child["children"]) {
+								childIdList.push(...listAllChildIds(child["children"]));
+							}
+						});
+					}
+				});
+				break;
 		}
 
 		// Handle nested fields

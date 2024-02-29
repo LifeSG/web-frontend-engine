@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Wrapper } from "../../elements/wrapper";
 import { Sanitize } from "../../shared";
 import {
 	FlexImageWrapper,
@@ -124,6 +125,13 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								checked={isRadioButtonChecked(option.value)}
 								onChange={() => handleChangeOrClick(option.value)}
 								error={!!error?.message}
+								subLabel={() =>
+									option.children ? (
+										<div style={{ pointerEvents: "auto" }}>
+											<Wrapper>{option.children}</Wrapper>
+										</div>
+									) : null
+								}
 							>
 								{option.label}
 							</Toggle>

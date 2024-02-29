@@ -213,6 +213,30 @@ WithoutBorder.args = {
 	validation: [{ required: true }],
 };
 
+export const NestedFields = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-nested").bind({});
+NestedFields.args = {
+	uiType: "radio",
+	label: "Select a reason",
+	customOptions: {
+		styleType: "toggle",
+		indicator: true,
+	},
+	options: [
+		{
+			label: "Others",
+			value: "Others",
+			children: {
+				otherInput: {
+					uiType: "textarea",
+					label: "",
+					validation: [{ required: true }, { max: 100 }],
+					showIf: [{ "radio-nested": [{ equals: "Others" }] }],
+				},
+			},
+		},
+	],
+};
+
 export const Reset = ResetStoryTemplate<IRadioButtonGroupSchema>("radio-reset").bind({});
 Reset.args = {
 	uiType: "radio",

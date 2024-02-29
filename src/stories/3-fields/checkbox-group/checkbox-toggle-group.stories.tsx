@@ -226,6 +226,30 @@ WithoutBorder.args = {
 	],
 };
 
+export const NestedFields = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-nested").bind({});
+NestedFields.args = {
+	uiType: "checkbox",
+	label: "Select a reason",
+	customOptions: {
+		styleType: "toggle",
+		indicator: true,
+	},
+	options: [
+		{
+			label: "Others",
+			value: "Others",
+			children: {
+				otherInput: {
+					uiType: "textarea",
+					label: "",
+					validation: [{ required: true }, { max: 100 }],
+					showIf: [{ "checkbox-nested": [{ filled: true }, { includes: ["Others"] }] }],
+				},
+			},
+		},
+	],
+};
+
 export const Reset = ResetStoryTemplate<ICheckboxGroupSchema>("checkbox-reset").bind({});
 Reset.args = {
 	uiType: "checkbox",

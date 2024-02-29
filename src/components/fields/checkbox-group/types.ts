@@ -1,5 +1,5 @@
 import { CheckboxProps } from "@lifesg/react-design-system/checkbox";
-import { TComponentOmitProps } from "../../frontend-engine";
+import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 interface IOption {
@@ -10,6 +10,7 @@ interface IOption {
 
 interface IToggleOption extends IOption {
 	none?: boolean;
+	children?: Record<string, TFrontendEngineFieldSchema>;
 }
 
 export type TCheckboxToggleLayoutType = "horizontal" | "vertical";
