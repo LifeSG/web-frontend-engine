@@ -8,7 +8,14 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Sanitize } from "../../shared";
-import { FlexWrapper, Label, RadioContainer, StyledImageButton, StyledRadioButton } from "./radio-button.styles";
+import {
+	FlexImageWrapper,
+	FlexToggleWrapper,
+	Label,
+	RadioContainer,
+	StyledImageButton,
+	StyledRadioButton,
+} from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
@@ -98,7 +105,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderToggles = () => {
 		return (
 			options.length > 0 && (
-				<FlexWrapper className={className}>
+				<FlexToggleWrapper className={className} layoutType={customOptions?.layoutType ?? "horizontal"}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -125,7 +132,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							</Toggle>
 						);
 					})}
-				</FlexWrapper>
+				</FlexToggleWrapper>
 			)
 		);
 	};
@@ -133,7 +140,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderImageButtons = () => {
 		return (
 			options.length > 0 && (
-				<FlexWrapper className={className}>
+				<FlexImageWrapper className={className}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -157,7 +164,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							</StyledImageButton>
 						);
 					})}
-				</FlexWrapper>
+				</FlexImageWrapper>
 			)
 		);
 	};

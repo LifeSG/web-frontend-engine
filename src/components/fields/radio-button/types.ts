@@ -9,17 +9,22 @@ interface IOption {
 	imgSrc?: string | undefined;
 }
 
+export type radioToggleLayoutType = "horizontal" | "vertical";
+
 type TCustomOptions =
 	| {
 			styleType: "default";
+			layoutType?: radioToggleLayoutType;
 	  }
 	| {
 			styleType: "toggle";
 			indicator?: boolean | undefined;
 			border?: boolean | undefined;
+			layoutType?: radioToggleLayoutType;
 	  }
 	| {
 			styleType: "image-button";
+			layoutType?: radioToggleLayoutType;
 	  };
 
 // TODO: discriminating union to differentiate extended props between different styleType
