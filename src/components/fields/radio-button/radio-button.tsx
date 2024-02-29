@@ -105,7 +105,12 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderToggles = () => {
 		return (
 			options.length > 0 && (
-				<FlexToggleWrapper className={className} layoutType={customOptions?.layoutType ?? "horizontal"}>
+				<FlexToggleWrapper
+					className={className}
+					layoutType={
+						customOptions.styleType === "toggle" ? customOptions?.layoutType ?? "horizontal" : undefined
+					}
+				>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 

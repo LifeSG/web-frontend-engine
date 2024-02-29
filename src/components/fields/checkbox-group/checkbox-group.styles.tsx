@@ -1,14 +1,14 @@
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
-import { checkboxToggleLayoutType } from "./types";
+import { TCheckboxToggleLayoutType } from "./types";
 
 interface ILabelProps {
 	disabled?: boolean | undefined;
 }
 
-interface ILayoutTypeProps {
-	layoutType: checkboxToggleLayoutType;
+interface IToggleWrapperProps {
+	layoutType: TCheckboxToggleLayoutType;
 }
 
 export const Label = styled(Text.BodySmall)<ILabelProps>`
@@ -28,9 +28,9 @@ export const CheckboxContainer = styled.div`
 	}
 `;
 
-export const ToggleWrapper = styled.div<ILayoutTypeProps>`
+export const ToggleWrapper = styled.div<IToggleWrapperProps>`
 	display: flex;
-	flex-direction: ${(props) => (props.layoutType === "horizontal" ? "row" : "column")};
+	flex-direction: ${(props) => (props.layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
 	gap: 1rem;
 `;

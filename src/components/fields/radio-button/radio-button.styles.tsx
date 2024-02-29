@@ -2,14 +2,14 @@ import { ImageButton } from "@lifesg/react-design-system";
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
-import { radioToggleLayoutType } from "./types";
+import { TRadioToggleLayoutType } from "./types";
 
 interface ILabelProps {
 	disabled?: boolean | undefined;
 }
 
-interface ILayoutTypeProps {
-	layoutType?: radioToggleLayoutType;
+interface IToggleWrapperProps {
+	layoutType?: TRadioToggleLayoutType;
 }
 
 export const Label = styled(Text.BodySmall)<ILabelProps>`
@@ -42,9 +42,9 @@ export const FlexImageWrapper = styled.div`
 	gap: 1rem;
 `;
 
-export const FlexToggleWrapper = styled.div<ILayoutTypeProps>`
+export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
 	display: flex;
-	flex-direction: ${(props) => (props.layoutType === "horizontal" ? "row" : "column")};
+	flex-direction: ${(props) => (props.layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
 	gap: 1rem;
 `;
