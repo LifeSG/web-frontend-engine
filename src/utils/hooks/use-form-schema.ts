@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import merge from "lodash/merge";
 import { useCallback, useContext } from "react";
 import { IFrontendEngineData } from "../../components";
-import { FormSchemaContext } from "../../components/frontend-engine/form-schema";
+import { FormSchemaContext } from "../../context-providers";
 import { ObjectHelper } from "../object-helper";
 
 export const useFormSchema = () => {

@@ -1,5 +1,5 @@
 import { Dispatch, ReactElement, SetStateAction, createContext, useState } from "react";
-import { IFrontendEngineData } from "../types";
+import { IFrontendEngineData } from "../../components/frontend-engine/types";
 
 interface IFormSchemaContext {
 	formSchema: IFrontendEngineData;

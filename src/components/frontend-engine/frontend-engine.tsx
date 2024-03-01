@@ -4,6 +4,14 @@ import isEmpty from "lodash/isEmpty";
 import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
+import {
+	EventProvider,
+	FormSchemaProvider,
+	FormValuesProvider,
+	IYupValidationRule,
+	YupHelper,
+	YupProvider,
+} from "../../context-providers";
 import { ObjectHelper, TestHelper } from "../../utils";
 import {
 	useFieldEvent,
@@ -13,11 +21,7 @@ import {
 	useValidationSchema,
 } from "../../utils/hooks";
 import { Sections } from "../elements/sections";
-import { EventProvider } from "./event";
-import { FormSchemaProvider } from "./form-schema";
-import { FormValuesProvider } from "./form-values";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
-import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================

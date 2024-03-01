@@ -4,7 +4,7 @@
  */
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import type { IColumns, IYupValidationRule } from "../frontend-engine";
-import type { TRenderRules } from "../frontend-engine/yup";
+import type { TRenderRules } from "../../context-providers";
 import type { IFilterSchema } from "./filter/filter/types";
 import type { IReviewSchema } from "./review";
 

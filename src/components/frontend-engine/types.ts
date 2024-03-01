@@ -3,12 +3,12 @@ import { TCustomComponentSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
-import { TYupSchemaType } from "./yup";
+import { TYupSchemaType } from "../../context-providers";
 
 // =============================================================================
 // YUP SCHEMA
 // =============================================================================
-export type { IYupValidationRule } from "./yup";
+export type { IYupValidationRule } from "../../context-providers";
 
 // =============================================================================
 // FRONTEND ENGINE

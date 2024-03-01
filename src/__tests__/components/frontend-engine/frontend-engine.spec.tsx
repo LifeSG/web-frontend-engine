@@ -4,7 +4,7 @@ import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { useEffect, useRef, useState } from "react";
 import { FrontendEngine } from "../../../components";
-import { IYupValidationRule } from "../../../components/frontend-engine/yup";
+import { IYupValidationRule } from "../../../context-providers";
 import { ERROR_MESSAGES } from "../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
 import { TestHelper } from "../../../utils";

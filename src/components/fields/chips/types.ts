@@ -1,6 +1,6 @@
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema, IComplexLabel } from "../types";
-import { IYupValidationRule } from "../../frontend-engine/yup/types";
+import { IYupValidationRule } from "../../../context-providers";
 
 export interface IChipOption {
 	label: string;
