@@ -4,14 +4,7 @@ import isEmpty from "lodash/isEmpty";
 import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
-import {
-	EventProvider,
-	FormSchemaProvider,
-	FormValuesProvider,
-	IYupValidationRule,
-	YupHelper,
-	YupProvider,
-} from "../../context-providers";
+import { ContextProviders, IYupValidationRule, YupHelper } from "../../context-providers";
 import { ObjectHelper, TestHelper } from "../../utils";
 import {
 	useFieldEvent,
@@ -242,15 +235,9 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
  */
 export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	return (
-		<YupProvider>
-			<EventProvider>
-				<FormSchemaProvider>
-					<FormValuesProvider>
-						<FrontendEngineInner {...props} ref={ref} />
-					</FormValuesProvider>
-				</FormSchemaProvider>
-			</EventProvider>
-		</YupProvider>
+		<ContextProviders>
+			<FrontendEngineInner {...props} ref={ref} />
+		</ContextProviders>
 	);
 }) as <V = undefined>(
 	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
