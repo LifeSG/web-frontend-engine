@@ -55,7 +55,7 @@ enum ELocationInputEvents {
 	"MOUNT" = "mount",
 	"SHOW_MODAL" = "show-location-modal",
 	"HIDE_MODAL" = "hide-location-modal",
-	"EDIT_BUTTON_ONCLICK" = "edit-button-onclick",
+	"CLICK_EDIT_BUTTON" = "click-edit-button",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -94,7 +94,7 @@ const FrontendEngineWithEventListener = ({
 				})
 			);
 			addFieldEventListener(
-				ELocationInputEvents.EDIT_BUTTON_ONCLICK,
+				ELocationInputEvents.CLICK_EDIT_BUTTON,
 				COMPONENT_ID,
 				editButtonOnClickSpy.mockImplementation((e) => {
 					e.preventDefault();
@@ -105,7 +105,7 @@ const FrontendEngineWithEventListener = ({
 
 		const handleRemoveFieldEventListener = () => {
 			removeFieldEventListener(ELocationInputEvents.GET_CURRENT_LOCATION, COMPONENT_ID, setCurrentLocationSpy);
-			removeFieldEventListener(ELocationInputEvents.EDIT_BUTTON_ONCLICK, COMPONENT_ID, editButtonOnClickSpy);
+			removeFieldEventListener(ELocationInputEvents.CLICK_EDIT_BUTTON, COMPONENT_ID, editButtonOnClickSpy);
 		};
 
 		handleAddFieldEventListener();
@@ -597,7 +597,7 @@ describe("location-input-group", () => {
 
 		//Explicit Edit Events
 		describe("Explicit Edit events", () => {
-			it("should fire edit-button-onclick event when edit button been clicked", async () => {
+			it("should fire click-edit-button event when edit button been clicked", async () => {
 				renderComponent({
 					withEvents: true,
 					locationDetails: {

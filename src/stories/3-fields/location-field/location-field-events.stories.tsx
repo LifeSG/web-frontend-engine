@@ -77,22 +77,22 @@ const Template = (eventName: string) =>
 const EditPromptTemplate = () =>
 	((args) => {
 		const [showEditPrompt, setShowEditPrompt] = useState<boolean>(false);
-		const id = "location-field-edit-button-onclick";
+		const id = "location-field-click-edit-button";
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("edit-button-onclick", id, handleShowEditPrompt);
+			currentFormRef.addFieldEventListener("click-edit-button", id, handleShowEditPrompt);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("edit-button-onclick", id, handleShowEditPrompt);
+				currentFormRef.removeFieldEventListener("click-edit-button", id, handleShowEditPrompt);
 			};
 		}, []);
 
 		const handleShowEditPrompt = (e) => {
 			e.preventDefault();
 			setShowEditPrompt(true);
-			return action("edit-button-onclick")(e);
+			return action("click-edit-button")(e);
 		};
 
 		const handleShowLocationModal = () => {

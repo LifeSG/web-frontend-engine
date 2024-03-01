@@ -110,7 +110,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	};
 
 	const handleEditLocationOnClick = () => {
-		dispatchFieldEvent("edit-button-onclick", id);
+		dispatchFieldEvent("click-edit-button", id);
 	};
 
 	const handleLocationModalShow = () => {
