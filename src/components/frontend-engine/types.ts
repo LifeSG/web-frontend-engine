@@ -1,5 +1,5 @@
 import { UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
-import { TCustomComponentSchema } from "../custom";
+import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
@@ -117,7 +117,7 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // JSON SCHEMA
 // =============================================================================
 // contains all schema types except for sections schema
-export type TFrontendEngineFieldSchema<V = undefined> = TFieldSchema<V> | TCustomComponentSchema | TElementSchema;
+export type TFrontendEngineFieldSchema<V = undefined> = TFieldSchema<V> | TCustomSchema | TElementSchema;
 
 type MobileCol = 1 | 2 | 3 | 4;
 type MobileColRange = MobileCol | 5;
