@@ -12,7 +12,7 @@ export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 
 	const {
 		id,
-		schema: { children, uiType, ...rest },
+		schema: { children, uiType: _uiType, ...rest },
 	} = props;
 
 	// =========================================================================

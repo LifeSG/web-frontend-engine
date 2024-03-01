@@ -25,7 +25,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const { id, schema, children, warnings } = props;
-	const { showIf, uiType, children: schemaChildren, ...otherSchema } = schema || {};
+	const { showIf: _showIf, uiType, children: schemaChildren, ...otherSchema } = schema || {};
 
 	const [components, setComponents] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
