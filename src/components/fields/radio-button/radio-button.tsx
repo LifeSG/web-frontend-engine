@@ -119,12 +119,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								name={radioButtonId}
-								indicator={customOptions.styleType === "toggle" && customOptions?.indicator}
-								styleType={
-									customOptions.styleType === "toggle" && customOptions?.border === false
-										? "no-border"
-										: "default"
-								}
+								indicator={customOptions?.indicator}
+								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isRadioButtonChecked(option.value)}
 								onChange={() => handleChangeOrClick(option.value)}
 								error={!!error?.message}

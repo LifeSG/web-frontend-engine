@@ -138,12 +138,8 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 								id={checkboxId}
 								disabled={disabled ?? option.disabled}
 								name={checkboxId}
-								indicator={customOptions.styleType === "toggle" && customOptions?.indicator}
-								styleType={
-									customOptions.styleType === "toggle" && customOptions?.border === false
-										? "no-border"
-										: "default"
-								}
+								indicator={customOptions?.indicator}
+								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
 								error={!!error?.message}
