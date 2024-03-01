@@ -44,7 +44,7 @@ const meta: Meta = {
 				"<div>A custom options on which styling to use for rendering the toggle group.</div><ul><li>`styleType` prop accept either `default` or `toggle` and also can be `undefined`.If set to `toggle` will render toggle button, else render default checkboxes.</li><li>`indicator` show/hide checkbox icon, `false` by default.</li><li>`border` show/hide border,`true` by default.</li><li>`layoutType` render toggle buttons horizontally or vertically, `horizontal` by default.</li></ul>",
 			table: {
 				type: {
-					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean, layoutType: "horizontal" | "vertical"}`,
+					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean, layoutType?: "horizontal" | "vertical"}`,
 				},
 			},
 			type: { name: "object", value: {} },

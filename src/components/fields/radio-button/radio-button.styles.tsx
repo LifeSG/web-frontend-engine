@@ -9,7 +9,7 @@ interface ILabelProps {
 }
 
 interface IToggleWrapperProps {
-	layoutType?: TRadioToggleLayoutType;
+	$layoutType?: TRadioToggleLayoutType;
 }
 
 export const Label = styled(Text.BodySmall)<ILabelProps>`
@@ -44,7 +44,7 @@ export const FlexImageWrapper = styled.div`
 
 export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
 	display: flex;
-	flex-direction: ${(props) => (props.layoutType === "vertical" ? "column" : "row")};
+	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
 	gap: 1rem;
 `;

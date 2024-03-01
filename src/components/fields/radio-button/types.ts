@@ -19,7 +19,7 @@ type TCustomOptions =
 			styleType: "toggle";
 			indicator?: boolean | undefined;
 			border?: boolean | undefined;
-			layoutType?: TRadioToggleLayoutType;
+			layoutType?: TRadioToggleLayoutType | undefined;
 	  }
 	| {
 			styleType: "image-button";
