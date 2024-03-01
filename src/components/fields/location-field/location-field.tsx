@@ -110,7 +110,10 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	};
 
 	const handleEditLocationOnClick = () => {
-		dispatchFieldEvent("click-edit-button", id);
+		const shouldPreventDefault = !dispatchFieldEvent("click-edit-button", id);
+		if (!shouldPreventDefault) {
+			setShowLocationModal(true);
+		}
 	};
 
 	const handleLocationModalShow = () => {
