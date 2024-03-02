@@ -71,3 +71,22 @@ export interface IGenericCustomFieldProps<T> extends Partial<ControllerFieldStat
 	id: string;
 	schema: T;
 }
+
+// =============================================================================
+// CUSTOM COMPONENTS
+// =============================================================================
+// these typings are meant for external devs to use when coming up with custom components outside Frontend Engine
+// they are not meant to be used internally
+
+/**
+ * base custom component schema to extend from
+ *
+ * T = string to be used in referenceKey
+ */
+export type TCustomComponentSchema<T> = IBaseCustomFieldSchema<T>;
+/**
+ * standard custom component props
+ *
+ * S = custom component schema
+ */
+export type TCustomComponentProps<S> = IGenericCustomFieldProps<S>;

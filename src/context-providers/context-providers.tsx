@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import { CustomComponentsProvider } from "./custom-components";
 import { EventProvider } from "./event";
 import { FormSchemaProvider } from "./form-schema";
 import { FormValuesProvider } from "./form-values";
@@ -13,7 +14,9 @@ export const ContextProviders = ({ children }: IProps) => {
 		<YupProvider>
 			<EventProvider>
 				<FormSchemaProvider>
-					<FormValuesProvider>{children}</FormValuesProvider>
+					<FormValuesProvider>
+						<CustomComponentsProvider>{children}</CustomComponentsProvider>
+					</FormValuesProvider>
 				</FormSchemaProvider>
 			</EventProvider>
 		</YupProvider>
