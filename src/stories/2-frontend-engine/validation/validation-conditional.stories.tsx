@@ -85,3 +85,30 @@ SchemaAsCondition.args = {
 	value: { field2: "something" },
 	extraFields: { field2: { schema: Yup.string(), validationRules: [] } },
 };
+
+export const NestedConditional = Template.bind({});
+NestedConditional.args = {
+	type: "string",
+	rule: {
+		when: {
+			field2: {
+				is: [{ filled: true }],
+				then: [
+					{
+						when: {
+							field3: {
+								is: [{ filled: true }],
+								then: [{ required: true, errorMessage: "Field 1 is required" }],
+							},
+						},
+					},
+				],
+			},
+		},
+	},
+	value: { field2: "hello", field3: "world" },
+	extraFields: {
+		field2: { schema: Yup.string(), validationRules: [] },
+		field3: { schema: Yup.string(), validationRules: [] },
+	},
+};
