@@ -3,7 +3,7 @@ import React, { Fragment, ReactNode, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
-import { useFormSchema, useIsomorphicDeepLayoutEffect } from "../../../utils/hooks";
+import { useCustomComponents, useFormSchema, useIsomorphicDeepLayoutEffect } from "../../../utils/hooks";
 import * as FrontendEngineCustomComponents from "../../custom";
 import { ECustomElementType, ECustomFieldType } from "../../custom";
 import { EElementType } from "../../elements";
@@ -29,6 +29,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 	const [components, setComponents] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
+	const { getCustomComponent } = useCustomComponents();
 	const {
 		formSchema: { overrides },
 		overrideSchema,
@@ -56,7 +57,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 				);
 				if ("referenceKey" in childSchema) {
 					const referenceKey = childSchema.referenceKey.toUpperCase();
-					if (FrontendEngineCustomComponents[ECustomFieldType[referenceKey]]) {
+					if (getCustomComponent(childSchema.referenceKey)) {
+						renderComponent = buildConditionalRenderer(childId, childSchema)(buildField);
+					} else if (FrontendEngineCustomComponents[ECustomFieldType[referenceKey]]) {
 						renderComponent = buildConditionalRenderer(childId, childSchema)(buildField);
 					} else if (FrontendEngineCustomComponents[ECustomElementType[referenceKey]]) {
 						renderComponent = buildConditionalRenderer(childId, childSchema)(buildElement);
@@ -80,7 +83,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 			setComponents(ERROR_MESSAGES.GENERIC.UNSUPPORTED);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [schemaChildren || children, overrides, control, warnings]);
+	}, [schemaChildren || children, overrides, control, warnings, getCustomComponent]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -106,7 +109,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		if ("uiType" in childSchema) {
 			Field = FrontendEngineFields[EFieldType[childSchema.uiType?.toUpperCase()]];
 		} else if ("referenceKey" in childSchema) {
-			Field = FrontendEngineCustomComponents[ECustomFieldType[childSchema.referenceKey?.toUpperCase()]];
+			Field =
+				FrontendEngineCustomComponents[ECustomFieldType[childSchema.referenceKey?.toUpperCase()]] ||
+				getCustomComponent(childSchema.referenceKey);
 		}
 
 		if (!Field) return null;

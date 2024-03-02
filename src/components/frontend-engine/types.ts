@@ -16,6 +16,8 @@ export type { IYupValidationRule } from "../../context-providers";
 export interface IFrontendEngineProps<V = undefined> {
 	/** HTML class attribute that is applied on the `<form>` element */
 	className?: string;
+	/** Custom components defined outside Frontend Engine. Key denotes referenceKey in schema while value is the component to be used */
+	components?: TCustomComponents | undefined;
 	/** JSON configuration to define the components and functionalities of the form */
 	data?: IFrontendEngineData<V> | undefined;
 	/** Fires every time a value changes in any fields */
