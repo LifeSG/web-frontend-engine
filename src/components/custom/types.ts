@@ -28,7 +28,7 @@ export enum ECustomFieldType {
 /**
  * union type to represent all custom elements / fields schema
  */
-export type TCustomSchema = ICustomElementJsonSchema<string> | IFilterSchema | IReviewSchema;
+export type TCustomSchema<C = undefined> = ICustomElementJsonSchema<string> | IFilterSchema | IReviewSchema | C;
 
 /**
  * base schema for custom elements
@@ -81,9 +81,10 @@ export interface IGenericCustomFieldProps<T> extends Partial<ControllerFieldStat
 /**
  * base custom component schema to extend from
  *
- * T = string to be used in referenceKey
+ * - T = string to be used in referenceKey
+ * - V = custom validation definition
  */
-export type TCustomComponentSchema<T> = IBaseCustomFieldSchema<T>;
+export type TCustomComponentSchema<T, V = undefined> = IBaseCustomFieldSchema<T, V>;
 /**
  * standard custom component props
  *

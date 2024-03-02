@@ -239,6 +239,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
  * The one and only component needed to create your form
  *
  * Minimally you will need to set the `data` props which is the JSON schema to define the form
+ *
+ * Generics
+ * - V = custom validation types
+ * - C = custom component types
  */
 export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	return (

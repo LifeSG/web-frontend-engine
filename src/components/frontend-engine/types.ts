@@ -1,9 +1,9 @@
 import { UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
+import { TCustomComponents, TYupSchemaType } from "../../context-providers";
 import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
-import { TYupSchemaType } from "../../context-providers";
 
 // =============================================================================
 // YUP SCHEMA
@@ -13,13 +13,19 @@ export type { IYupValidationRule } from "../../context-providers";
 // =============================================================================
 // FRONTEND ENGINE
 // =============================================================================
-export interface IFrontendEngineProps<V = undefined> {
+export interface IFrontendEngineProps<V = undefined, C = undefined> {
 	/** HTML class attribute that is applied on the `<form>` element */
-	className?: string;
+	className?: string | undefined;
 	/** Custom components defined outside Frontend Engine. Key denotes referenceKey in schema while value is the component to be used */
 	components?: TCustomComponents | undefined;
-	/** JSON configuration to define the components and functionalities of the form */
-	data?: IFrontendEngineData<V> | undefined;
+	/**
+	 * JSON configuration to define the components and functionalities of the form
+	 *
+	 * Generics
+	 * - V = custom validation types
+	 * - C = custom component types
+	 *  */
+	data?: IFrontendEngineData<V, C> | undefined;
 	/** Fires every time a value changes in any fields */
 	onChange?: ((values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown) | undefined;
 	/** Submit event handler, will receive the form data if form validation is successful */
@@ -28,7 +34,14 @@ export interface IFrontendEngineProps<V = undefined> {
 	onSubmitError?: (errors: TFrontendEngineValues) => unknown | undefined;
 }
 
-export interface IFrontendEngineData<V = undefined> {
+/**
+ * JSON configuration to define the components and functionalities of the form
+ *
+ * Generics
+ * - V = custom validation types
+ * - C = custom component types
+ */
+export interface IFrontendEngineData<V = undefined, C = undefined> {
 	/** HTML class attribute */
 	className?: string | undefined;
 	/** Fields' initial values on mount. The key of each field needs to match the id used in the field */
@@ -40,7 +53,7 @@ export interface IFrontendEngineData<V = undefined> {
 	 *
 	 * Note: sections accept only section `uiType`, the subsequent children accepts uiType other than section
 	 * */
-	sections: Record<string, ISectionSchema<V>>;
+	sections: Record<string, ISectionSchema<V, C>>;
 	/** Unique HTML id attribute that is applied on the `<form>` element */
 	id?: string | undefined;
 	/** Validation strategy when inputs with errors get re-validated after a user submits the form (onSubmit event) */
@@ -119,7 +132,10 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 // JSON SCHEMA
 // =============================================================================
 // contains all schema types except for sections schema
-export type TFrontendEngineFieldSchema<V = undefined> = TFieldSchema<V> | TCustomSchema | TElementSchema;
+export type TFrontendEngineFieldSchema<V = undefined, C = undefined> =
+	| TFieldSchema<V>
+	| TCustomSchema<C>
+	| TElementSchema;
 
 type MobileCol = 1 | 2 | 3 | 4;
 type MobileColRange = MobileCol | 5;
