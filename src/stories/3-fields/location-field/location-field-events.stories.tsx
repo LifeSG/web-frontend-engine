@@ -74,6 +74,79 @@ const Template = (eventName: string) =>
 /* eslint-enable react-hooks/rules-of-hooks */
 
 /* eslint-disable react-hooks/rules-of-hooks */
+const EditPromptTemplate = () =>
+	((args) => {
+		const [showEditPrompt, setShowEditPrompt] = useState<boolean>(false);
+		const id = "location-field-click-edit-button";
+		const formRef = useRef<IFrontendEngineRef>();
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("click-edit-button", id, handleShowEditPrompt);
+
+			return () => {
+				currentFormRef.removeFieldEventListener("click-edit-button", id, handleShowEditPrompt);
+			};
+		}, []);
+
+		const handleShowEditPrompt = (e) => {
+			e.preventDefault();
+			setShowEditPrompt(true);
+			return action("click-edit-button")(e);
+		};
+
+		const handleShowLocationModal = () => {
+			setShowEditPrompt(false);
+			formRef.current.dispatchFieldEvent("show-location-modal", id);
+		};
+
+		const handleCancelOnClick = () => {
+			setShowEditPrompt(false);
+		};
+
+		return (
+			<>
+				<FrontendEngine
+					ref={formRef}
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[id]: args,
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					}}
+				/>
+				<Prompt
+					id="location-edit-prompt"
+					title="Edit Location?"
+					size="large"
+					show={showEditPrompt}
+					image={<ErrorImage src={ERROR_SVG} />}
+					description="sample prompt message"
+					buttons={[
+						{
+							id: "edit",
+							title: "Edit location",
+							onClick: handleShowLocationModal,
+						},
+						{
+							id: "cancel",
+							title: "Cancel",
+							onClick: handleCancelOnClick,
+							buttonStyle: "secondary",
+						},
+					]}
+				/>
+			</>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+/* eslint-enable react-hooks/rules-of-hooks */
+
+/* eslint-disable react-hooks/rules-of-hooks */
 const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 	((args) => {
 		const id = "location-field-get-current-location";
@@ -125,6 +198,13 @@ export const HideModal = Template("hide-location-modal").bind({});
 HideModal.args = {
 	uiType: "location-field",
 	label: "Hide Modal",
+};
+
+export const ShowEditPrompt = EditPromptTemplate().bind({});
+ShowEditPrompt.args = {
+	uiType: "location-field",
+	label: "Has Explicit Edit",
+	hasExplicitEdit: "explicit",
 };
 
 export const GeolocationWithErrors = GeolocationTemplate({

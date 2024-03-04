@@ -1,3 +1,4 @@
+import { Button } from "@lifesg/react-design-system/button";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
@@ -36,6 +37,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			reverseGeoCodeEndpoint,
 			staticMapPinColor,
 			validation,
+			hasExplicitEdit,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -44,10 +46,19 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
 	const { setValue } = useFormContext();
 	const { setFieldValidationConfig } = useValidationConfig();
-	const { dispatchFieldEvent } = useFieldEvent();
+	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		addFieldEventListener("show-location-modal", id, handleLocationModalShow);
+
+		return () => {
+			removeFieldEventListener("show-location-modal", id, handleLocationModalShow);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 
@@ -97,6 +108,18 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		setShowLocationModal(false);
 		dispatchFieldEvent("hide-location-modal", id);
 	};
+
+	const handleEditLocationOnClick = () => {
+		const shouldPreventDefault = !dispatchFieldEvent("click-edit-button", id);
+		if (!shouldPreventDefault) {
+			setShowLocationModal(true);
+		}
+	};
+
+	const handleLocationModalShow = () => {
+		setShowLocationModal(true);
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -111,9 +134,19 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 				onFocus={handleFocus}
 				value={formValue?.address || ""}
 				errorMessage={error?.message}
-				disabled={disabled}
+				disabled={(hasExplicitEdit === "explicit" && formValue?.address) || disabled}
 				readOnly={readOnly}
 			/>
+			{hasExplicitEdit && formValue?.address && (
+				<Button.Default
+					id={TestHelper.generateId(id, "edit-button")}
+					data-testid={TestHelper.generateId(id, "edit-button")}
+					styleType="secondary"
+					onClick={handleEditLocationOnClick}
+				>
+					Edit
+				</Button.Default>
+			)}
 			{!!formValue?.lat && !!formValue?.lng && (
 				<StaticMap
 					id={id}

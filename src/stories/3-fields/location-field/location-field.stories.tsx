@@ -52,7 +52,7 @@ const meta: Meta = {
 				type: "text",
 			},
 		},
-    locationListTitle: {
+		locationListTitle: {
 			description: "Specifies the search results list title.",
 			table: {
 				type: {

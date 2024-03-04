@@ -1,4 +1,10 @@
-import { ILocationCoord, ILocationFieldValues, TPanelInputMode, TSinglePanelInputMode } from "../../types";
+import {
+	ILocationCoord,
+	ILocationFieldValues,
+	TExplicitEditMode,
+	TPanelInputMode,
+	TSinglePanelInputMode,
+} from "../../types";
 
 export interface ILocationSearchProps {
 	id?: string | undefined;
@@ -22,4 +28,5 @@ export interface ILocationSearchProps {
 	formValues?: ILocationFieldValues | undefined;
 	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
+	hasExplicitEdit?: TExplicitEditMode | undefined;
 }
