@@ -1,5 +1,4 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { Toggle } from "@lifesg/react-design-system/toggle";
 import without from "lodash/without";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -10,7 +9,14 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
-import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
+import {
+	CheckboxContainer,
+	Label,
+	StyledCheckbox,
+	StyledToggle,
+	ToggleSublabel,
+	ToggleWrapper,
+} from "./checkbox-group.styles";
 import { ICheckboxGroupSchema } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
@@ -131,7 +137,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 						const checkboxId = formatId(index);
 
 						return (
-							<Toggle
+							<StyledToggle
 								key={index}
 								{...otherSchema}
 								type="checkbox"
@@ -146,14 +152,14 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 								error={!!error?.message}
 								subLabel={() =>
 									option.children ? (
-										<div style={{ pointerEvents: "auto" }}>
+										<ToggleSublabel>
 											<Wrapper>{option.children}</Wrapper>
-										</div>
+										</ToggleSublabel>
 									) : null
 								}
 							>
 								{option.label}
-							</Toggle>
+							</StyledToggle>
 						);
 					})}
 				</ToggleWrapper>

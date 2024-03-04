@@ -1,3 +1,4 @@
+import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
@@ -33,4 +34,14 @@ export const ToggleWrapper = styled.div<IToggleWrapperProps>`
 	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
 	gap: 1rem;
+`;
+
+export const StyledToggle = styled(Toggle)`
+	[data-id="toggle-sublabel"] {
+		margin-top: 0;
+	}
+`;
+
+export const ToggleSublabel = styled.div`
+	pointer-events: auto;
 `;

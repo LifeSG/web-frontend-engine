@@ -1,5 +1,4 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { Toggle } from "@lifesg/react-design-system/toggle";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -16,6 +15,8 @@ import {
 	RadioContainer,
 	StyledImageButton,
 	StyledRadioButton,
+	StyledToggle,
+	ToggleSublabel,
 } from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
@@ -112,7 +113,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 						const radioButtonId = formatId(index);
 
 						return (
-							<Toggle
+							<StyledToggle
 								{...otherSchema}
 								key={index}
 								type="radio"
@@ -127,14 +128,14 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								error={!!error?.message}
 								subLabel={() =>
 									option.children ? (
-										<div style={{ pointerEvents: "auto" }}>
+										<ToggleSublabel>
 											<Wrapper>{option.children}</Wrapper>
-										</div>
+										</ToggleSublabel>
 									) : null
 								}
 							>
 								{option.label}
-							</Toggle>
+							</StyledToggle>
 						);
 					})}
 				</FlexToggleWrapper>
