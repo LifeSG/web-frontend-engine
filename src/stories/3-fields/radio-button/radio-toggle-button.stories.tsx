@@ -41,10 +41,10 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description:
-				"<div>A custom options on which styling to use for rendering the toggle group.</div><ul><li>`styleType` prop accept either `default` or `toggle` and also can be `undefined`.If set to `toggle` will render toggle button, else render default radio buttons.</li><li>`indicator` show/hide radio icon, `false` by default.</li><li>`border` show/hide border,`true` by default.</li></ul>",
+				"<div>A custom options on which styling to use for rendering the toggle group.</div><ul><li>`styleType` prop accept either `default` or `toggle` and also can be `undefined`.If set to `toggle` will render toggle button, else render default radio buttons.</li><li>`indicator` show/hide radio icon, `false` by default.</li><li>`border` show/hide border,`true` by default.</li><li>`layoutType` render radio buttons horizontally or vertically, `horizontal` by default.</li></ul>",
 			table: {
 				type: {
-					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean}`,
+					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean, layoutType?: "horizontal" | "vertical"}`,
 				},
 			},
 			type: { name: "object", value: {} },
@@ -171,6 +171,23 @@ WithIndicator.args = {
 	customOptions: {
 		styleType: "toggle",
 		indicator: true,
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	validation: [{ required: true }],
+};
+
+export const VerticalLayout = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation-vertical").bind({});
+VerticalLayout.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+		indicator: true,
+		layoutType: "vertical",
 	},
 	options: [
 		{ label: "Apple", value: "Apple" },

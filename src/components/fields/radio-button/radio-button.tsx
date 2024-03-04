@@ -8,7 +8,14 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Sanitize } from "../../shared";
-import { FlexWrapper, Label, RadioContainer, StyledImageButton, StyledRadioButton } from "./radio-button.styles";
+import {
+	FlexImageWrapper,
+	FlexToggleWrapper,
+	Label,
+	RadioContainer,
+	StyledImageButton,
+	StyledRadioButton,
+} from "./radio-button.styles";
 import { IRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
@@ -97,8 +104,9 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 
 	const renderToggles = () => {
 		return (
-			options.length > 0 && (
-				<FlexWrapper className={className}>
+			options.length > 0 &&
+			customOptions.styleType === "toggle" && (
+				<FlexToggleWrapper className={className} $layoutType={customOptions?.layoutType ?? "horizontal"}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -111,12 +119,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								name={radioButtonId}
-								indicator={customOptions.styleType === "toggle" && customOptions?.indicator}
-								styleType={
-									customOptions.styleType === "toggle" && customOptions?.border === false
-										? "no-border"
-										: "default"
-								}
+								indicator={customOptions?.indicator}
+								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isRadioButtonChecked(option.value)}
 								onChange={() => handleChangeOrClick(option.value)}
 								error={!!error?.message}
@@ -125,7 +129,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							</Toggle>
 						);
 					})}
-				</FlexWrapper>
+				</FlexToggleWrapper>
 			)
 		);
 	};
@@ -133,7 +137,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 	const renderImageButtons = () => {
 		return (
 			options.length > 0 && (
-				<FlexWrapper className={className}>
+				<FlexImageWrapper className={className}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId(index);
 
@@ -157,7 +161,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 							</StyledImageButton>
 						);
 					})}
-				</FlexWrapper>
+				</FlexImageWrapper>
 			)
 		);
 	};

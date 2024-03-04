@@ -123,8 +123,9 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 
 	const renderToggles = () => {
 		return (
-			options.length > 0 && (
-				<ToggleWrapper>
+			options.length > 0 &&
+			customOptions.styleType === "toggle" && (
+				<ToggleWrapper $layoutType={customOptions?.layoutType ?? "horizontal"}>
 					{options.map((option, index) => {
 						const checkboxId = formatId(index);
 
@@ -137,12 +138,8 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 								id={checkboxId}
 								disabled={disabled ?? option.disabled}
 								name={checkboxId}
-								indicator={customOptions.styleType === "toggle" && customOptions?.indicator}
-								styleType={
-									customOptions.styleType === "toggle" && customOptions?.border === false
-										? "no-border"
-										: "default"
-								}
+								indicator={customOptions?.indicator}
+								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
 								error={!!error?.message}

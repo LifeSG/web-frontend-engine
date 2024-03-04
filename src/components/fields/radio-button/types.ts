@@ -9,6 +9,8 @@ interface IOption {
 	imgSrc?: string | undefined;
 }
 
+export type TRadioToggleLayoutType = "horizontal" | "vertical";
+
 type TCustomOptions =
 	| {
 			styleType: "default";
@@ -17,6 +19,7 @@ type TCustomOptions =
 			styleType: "toggle";
 			indicator?: boolean | undefined;
 			border?: boolean | undefined;
+			layoutType?: TRadioToggleLayoutType | undefined;
 	  }
 	| {
 			styleType: "image-button";
