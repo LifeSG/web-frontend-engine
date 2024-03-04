@@ -3,12 +3,7 @@ import { action } from "@storybook/addon-actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef } from "react";
 import styled from "styled-components";
-import {
-	IFrontendEngineProps,
-	IYupValidationRule,
-	FrontendEngine as OriginalFrontendEngine,
-	TCustomComponentSchema,
-} from "../components";
+import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import {
 	IFrontendEngineRef,
@@ -214,7 +209,7 @@ export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProp
 		ref={ref}
 		{...props}
 	/>
-)) as <V = undefined, C extends TCustomComponentSchema<unknown> = undefined>(
+)) as <V = undefined, C = undefined>(
 	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>, C> & { ref?: Ref<IFrontendEngineRef> }
 ) => ReactElement;
 
