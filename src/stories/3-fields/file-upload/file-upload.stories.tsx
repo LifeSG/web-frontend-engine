@@ -143,6 +143,7 @@ Default.args = {
 export const Customisation = DefaultStoryTemplate<IFileUploadSchema>("upload-customisation").bind({});
 Customisation.args = {
 	...COMMON_STORY_ARGS,
+	label: "Label <strong>with bold text</strong>",
 	description: "Description <strong>with bold text</strong>",
 	styleType: "no-border",
 	warning: "Warning <a href='#'>with link</a>",
@@ -186,7 +187,6 @@ DefaultValue.argTypes = {
 		},
 	},
 };
-
 export const WithValidation = DefaultStoryTemplate<IFileUploadSchema>("upload-with-validation").bind({});
 WithValidation.args = {
 	...COMMON_STORY_ARGS,

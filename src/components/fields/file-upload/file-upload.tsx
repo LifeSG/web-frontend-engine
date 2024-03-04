@@ -227,7 +227,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				maxFiles={maxFilesRuleRef.current.max}
 				onChange={handleChange}
 				onDelete={handleDelete}
-				title={label}
+				title={renderHtmlText(label)}
 				warning={renderHtmlText(warning)}
 			/>
 		</>
