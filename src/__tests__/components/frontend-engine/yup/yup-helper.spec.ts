@@ -303,6 +303,39 @@ describe("YupHelper", () => {
 			const schema = YupHelper.mapRules(YupHelper.mapSchemaType(type), [{ min: 5, errorMessage: ERROR_MESSAGE }]);
 			expect(() => schema.validateSync(value)).not.toThrowError();
 		});
+
+		it("should be able to support nested conditional validation", () => {
+			const schema = Yup.object().shape({
+				field1: YupHelper.mapRules(YupHelper.mapSchemaType("string"), [
+					{
+						when: {
+							field2: {
+								is: [{ filled: true }],
+								then: [
+									{
+										when: {
+											field3: {
+												is: [{ filled: true }],
+												then: [{ required: true, errorMessage: ERROR_MESSAGE }],
+												yupSchema: YupHelper.mapSchemaType("string"),
+											},
+										},
+									},
+								],
+								yupSchema: YupHelper.mapSchemaType("string"),
+							},
+						},
+					},
+				]),
+			});
+
+			expect(() => schema.validateSync({ field1: "a", field2: "b", field3: "c" })).not.toThrow();
+			expect(() => schema.validateSync({ field1: undefined, field2: undefined, field3: "c" })).not.toThrow();
+			expect(() => schema.validateSync({ field1: undefined, field2: "b", field3: undefined })).not.toThrow();
+			expect(
+				TestHelper.getError(() => schema.validateSync({ field1: undefined, field2: "b", field3: "c" })).message
+			).toBe(ERROR_MESSAGE);
+		});
 	});
 
 	describe("addCondition", () => {
