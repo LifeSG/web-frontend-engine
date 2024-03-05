@@ -48,6 +48,7 @@ const LABEL = "Location field";
 
 const setCurrentLocationSpy = jest.fn();
 const editButtonOnClickSpy = jest.fn();
+const confirmLocationOnClickSpy = jest.fn();
 
 enum ELocationInputEvents {
 	"SET_CURRENT_LOCATION" = "set-current-location",
@@ -56,6 +57,8 @@ enum ELocationInputEvents {
 	"SHOW_MODAL" = "show-location-modal",
 	"HIDE_MODAL" = "hide-location-modal",
 	"CLICK_EDIT_BUTTON" = "click-edit-button",
+	"CLICK_CONFIRM_LOCATION" = "click-confirm-location",
+	"CONFIRM_LOCATION" = "confirm-location",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -73,6 +76,7 @@ const FrontendEngineWithEventListener = ({
 }: ICustomFrontendEngineProps) => {
 	const formRef = useRef<IFrontendEngineRef>();
 	const [showEditPrompt, setShowEditPrompt] = useState<boolean>(false);
+	const [showConfirmLocationPrompt, setShowConfirmLocationPrompt] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (!withEvents || !locationDetails) return;
@@ -101,11 +105,24 @@ const FrontendEngineWithEventListener = ({
 					handleShowEditPrompt(e);
 				})
 			);
+			addFieldEventListener(
+				ELocationInputEvents.CLICK_CONFIRM_LOCATION,
+				COMPONENT_ID,
+				confirmLocationOnClickSpy.mockImplementation((e) => {
+					e.preventDefault();
+					handleShowConfirmLocationPrompt(e);
+				})
+			);
 		};
 
 		const handleRemoveFieldEventListener = () => {
 			removeFieldEventListener(ELocationInputEvents.GET_CURRENT_LOCATION, COMPONENT_ID, setCurrentLocationSpy);
 			removeFieldEventListener(ELocationInputEvents.CLICK_EDIT_BUTTON, COMPONENT_ID, editButtonOnClickSpy);
+			removeFieldEventListener(
+				ELocationInputEvents.CLICK_CONFIRM_LOCATION,
+				COMPONENT_ID,
+				confirmLocationOnClickSpy
+			);
 		};
 
 		handleAddFieldEventListener();
@@ -136,6 +153,17 @@ const FrontendEngineWithEventListener = ({
 		setShowEditPrompt(false);
 	};
 
+	const handleShowConfirmLocationPrompt = async (e) => {
+		e.preventDefault();
+		setShowConfirmLocationPrompt(true);
+		await new Promise(() =>
+			setTimeout(() => {
+				setShowConfirmLocationPrompt(false);
+				formRef.current.dispatchFieldEvent(ELocationInputEvents.CONFIRM_LOCATION, COMPONENT_ID, e.detail);
+			}, 3000)
+		);
+	};
+
 	return (
 		<>
 			<FrontendEngine {...otherProps} ref={formRef} />
@@ -159,6 +187,13 @@ const FrontendEngineWithEventListener = ({
 						buttonStyle: "secondary",
 					},
 				]}
+			/>
+			<Prompt
+				id={TestHelper.generateId(COMPONENT_ID, "confirm-location-prompt")}
+				title="Confirm Location"
+				size="large"
+				show={showConfirmLocationPrompt}
+				description="Timeout"
 			/>
 		</>
 	);
@@ -292,6 +327,10 @@ const getEditLocationModalEditButton = (query = false) => {
 
 const getEditLocationModalCancelButton = (query = false) => {
 	return within(testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "edit-prompt", "show"))).getByText("Cancel");
+};
+
+const getConfirmLocationModal = (query = false) => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "confirm-location-prompt", "show"));
 };
 
 // assert network error
@@ -642,6 +681,69 @@ describe("location-input-group", () => {
 				fireEvent.click(getEditLocationButton());
 				fireEvent.click(getEditLocationModalEditButton());
 				expect(screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "modal", "show"))).toBeVisible();
+			});
+		});
+
+		//Confirm Location Events
+		describe("Confirm Location events", () => {
+			beforeEach(async () => {
+				getCurrentLocationSpy.mockRejectedValue({
+					code: 1,
+				});
+
+				renderComponent({
+					withEvents: true,
+					locationDetails: {
+						errors: {
+							generic: "throw something",
+						},
+					},
+				});
+
+				await waitFor(() => window.dispatchEvent(new Event("online")));
+
+				getLocationInput().focus();
+
+				await waitFor(() => {
+					expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+				});
+
+				within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+			});
+
+			it("should show confirm location prompt when confirm location", async () => {
+				fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+					onSuccess(mock1PageFetchAddressResponse);
+				});
+
+				fireEvent.change(getLocationSearchInput(), { target: { value: "found somthing" } });
+
+				expect(fetchAddressSpy).toHaveBeenCalled();
+
+				await waitFor(() => {
+					expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
+				});
+
+				const resultContainer = getLocationSearchResults();
+				const selectedResult = resultContainer.getElementsByTagName("div")[0];
+				fireEvent.click(selectedResult);
+
+				await waitFor(() => {
+					expect(selectedResult).toHaveAttribute("data-testid", expect.stringContaining("active"));
+					expect(getLocationModalControlButtons("Confirm")).not.toHaveAttribute("disabled");
+				});
+
+				fireEvent.click(getLocationModalControlButtons("Confirm"));
+
+				await waitFor(() => {
+					expect(confirmLocationOnClickSpy).toBeCalled();
+					expect(getConfirmLocationModal(true)).toBeInTheDocument();
+				});
+				await new Promise((resolve) => setTimeout(resolve, 3500));
+				await waitFor(() => {
+					expect(getConfirmLocationModal(true)).not.toBeInTheDocument();
+					expect(getLocationModal(true)).not.toBeInTheDocument();
+				});
 			});
 		});
 	});

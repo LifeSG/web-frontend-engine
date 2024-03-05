@@ -91,9 +91,11 @@ const LocationModal = ({
 		};
 
 		addFieldEventListener("error-end", id, handleError);
+		addFieldEventListener("confirm-location", id, handleConfirm);
 
 		return () => {
 			removeFieldEventListener("error-end", id, handleError);
+			removeFieldEventListener("confirm-location", id, handleConfirm);
 		};
 	}, []);
 
@@ -208,8 +210,16 @@ const LocationModal = ({
 		handleCloseLocationModal();
 	};
 
-	const handleConfirm = () => {
-		onConfirm(selectedAddressInfo);
+	const handleOnConfirm = () => {
+		const shouldPreventDefault = !dispatchFieldEvent("click-confirm-location", id, selectedAddressInfo);
+		if (!shouldPreventDefault) {
+			handleConfirm();
+		}
+	};
+
+	const handleConfirm = (e?: CustomEvent) => {
+		const addressInfo = !isEmpty(e?.detail) ? e?.detail : selectedAddressInfo;
+		onConfirm(addressInfo);
 		handleCloseLocationModal();
 	};
 
@@ -379,7 +389,7 @@ const LocationModal = ({
 								id={id}
 								className={className}
 								onCancel={handleCancel}
-								onConfirm={handleConfirm}
+								onConfirm={handleOnConfirm}
 								updateFormValues={updateFormValues}
 								gettingCurrentLocation={gettingCurrentLocation}
 								panelInputMode={panelInputMode}
