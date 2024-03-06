@@ -210,14 +210,14 @@ const LocationModal = ({
 		handleCloseLocationModal();
 	};
 
-	const handleOnConfirm = () => {
+	const handleClickConfirm = () => {
 		const shouldPreventDefault = !dispatchFieldEvent("click-confirm-location", id, selectedAddressInfo);
 		if (!shouldPreventDefault) {
 			handleConfirm();
 		}
 	};
 
-	const handleConfirm = (e?: CustomEvent) => {
+	const handleConfirm = (e?: CustomEvent | undefined) => {
 		const addressInfo = !isEmpty(e?.detail) ? e?.detail : selectedAddressInfo;
 		onConfirm(addressInfo);
 		handleCloseLocationModal();
@@ -389,7 +389,7 @@ const LocationModal = ({
 								id={id}
 								className={className}
 								onCancel={handleCancel}
-								onConfirm={handleOnConfirm}
+								onConfirm={handleClickConfirm}
 								updateFormValues={updateFormValues}
 								gettingCurrentLocation={gettingCurrentLocation}
 								panelInputMode={panelInputMode}

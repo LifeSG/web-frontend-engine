@@ -687,6 +687,7 @@ describe("location-input-group", () => {
 		//Confirm Location Events
 		describe("Confirm Location events", () => {
 			beforeEach(async () => {
+				jest.useFakeTimers();
 				getCurrentLocationSpy.mockRejectedValue({
 					code: 1,
 				});
@@ -705,10 +706,10 @@ describe("location-input-group", () => {
 				getLocationInput().focus();
 
 				await waitFor(() => {
-					expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+					expect(getCurrentLocationErrorModal()).toBeInTheDocument();
 				});
 
-				within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+				within(getCurrentLocationErrorModal()).getByRole("button").click();
 			});
 
 			it("should show confirm location prompt when confirm location", async () => {
@@ -737,9 +738,9 @@ describe("location-input-group", () => {
 
 				await waitFor(() => {
 					expect(confirmLocationOnClickSpy).toBeCalled();
-					expect(getConfirmLocationModal(true)).toBeInTheDocument();
+					expect(getConfirmLocationModal()).toBeInTheDocument();
 				});
-				await new Promise((resolve) => setTimeout(resolve, 3500));
+				jest.advanceTimersByTime(3500);
 				await waitFor(() => {
 					expect(getConfirmLocationModal(true)).not.toBeInTheDocument();
 					expect(getLocationModal(true)).not.toBeInTheDocument();
