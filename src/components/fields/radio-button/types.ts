@@ -7,7 +7,7 @@ interface IOption {
 	value: string;
 	disabled?: boolean | undefined;
 	imgSrc?: string | undefined;
-	children?: Record<string, TFrontendEngineFieldSchema>;
+	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
 }
 
 export type TRadioToggleLayoutType = "horizontal" | "vertical";
@@ -31,5 +31,5 @@ export interface IRadioButtonGroupSchema<V = undefined>
 	extends IBaseFieldSchema<"radio", V>,
 		TComponentOmitProps<RadioButtonProps> {
 	options: IOption[];
-	customOptions?: TCustomOptions;
+	customOptions?: TCustomOptions | undefined;
 }

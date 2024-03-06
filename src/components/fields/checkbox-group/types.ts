@@ -9,8 +9,8 @@ interface IOption {
 }
 
 interface IToggleOption extends IOption {
-	none?: boolean;
-	children?: Record<string, TFrontendEngineFieldSchema>;
+	none?: boolean | undefined;
+	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
 }
 
 export type TCheckboxToggleLayoutType = "horizontal" | "vertical";
@@ -29,5 +29,5 @@ export interface ICheckboxGroupSchema<V = undefined>
 	extends IBaseFieldSchema<"checkbox", V>,
 		TComponentOmitProps<CheckboxProps> {
 	options: IToggleOption[];
-	customOptions?: TCustomOptions;
+	customOptions?: TCustomOptions | undefined;
 }

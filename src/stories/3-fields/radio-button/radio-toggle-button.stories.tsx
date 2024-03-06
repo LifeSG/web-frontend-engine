@@ -51,10 +51,11 @@ const meta: Meta = {
 		},
 		options: {
 			description:
-				"A list of options that a user can choose from. Component <code>disabled</code> will take precedence over option <code>disabled</code>",
+				"A list of options that a user can choose from. Component <code>disabled</code> will take precedence over option <code>disabled</code>.<br/><br/>Specify <code>children</code> to display a sublabel or nested fields associated with an option.",
 			table: {
 				type: {
-					summary: "{ label: string, value: string, disabled?: boolean }[]",
+					summary:
+						"{ label: string, value: string, disabled?: boolean; children?: Record<string, TFrontendEngineFieldSchema> }[]",
 				},
 			},
 			type: { name: "object", value: {} },
