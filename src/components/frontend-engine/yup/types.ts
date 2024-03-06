@@ -56,7 +56,7 @@ export interface IYupValidationRule extends IYupRule {
 		| {
 				[id: string]: {
 					is: string | number | boolean | string[] | number[] | boolean[] | IYupConditionalValidationRule[];
-					then: Omit<IYupValidationRule, "when">[];
+					then: IYupValidationRule[];
 					otherwise?: Omit<IYupValidationRule, "when">[];
 					yupSchema?: Yup.AnySchema | undefined;
 				};

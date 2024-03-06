@@ -40,33 +40,61 @@ export namespace YupHelper {
 	 * @param fieldConfigs config containing the yup schema and validation config on each field
 	 * @returns parsed field config
 	 */
-	const parseWhenKeys = (yupSchemaConfig: TFormYupConfig): [Record<string, IFieldYupConfig>, [string, string][]] => {
+	const parseWhenKeys = (fieldConfigs: TFormYupConfig): [Record<string, IFieldYupConfig>, [string, string][]] => {
 		// Yup's escape hatch for cycling dependency error
 		// this happens when 2 fields have conditional validation that rely on each other
 		// typically used to ensure user fill in one of many fields
 		// https://github.com/jquense/yup/issues/176#issuecomment-367352042
 		const whenPairIds: [string, string][] = [];
 
-		const parsedFieldConfigs = { ...yupSchemaConfig };
+		const parsedFieldConfigs = { ...fieldConfigs };
 		Object.entries(parsedFieldConfigs).forEach(([id, { validationRules }]) => {
-			const notWhenRules = validationRules?.filter((rule) => !("when" in rule)) || [];
-			const whenRules =
-				validationRules
-					?.filter((rule) => "when" in rule)
-					.map((rule) => {
-						const parsedRule = { ...rule };
-						Object.keys(parsedRule.when).forEach((whenFieldId) => {
-							parsedRule.when[whenFieldId] = {
-								...parsedRule.when[whenFieldId],
-								yupSchema: parsedFieldConfigs[whenFieldId]?.schema,
-							};
-							whenPairIds.push([id, whenFieldId]);
-						});
-						return parsedRule;
-					}) || [];
-			parsedFieldConfigs[id].validationRules = [...notWhenRules, ...whenRules];
+			const [parsedFieldConfig, fieldWhenPairIds] = addSchemaToWhenRules(id, fieldConfigs, validationRules);
+			whenPairIds.push(...fieldWhenPairIds);
+			parsedFieldConfigs[id].validationRules = parsedFieldConfig;
 		});
 		return [parsedFieldConfigs, whenPairIds];
+	};
+
+	/**
+	 * Recursively adds validation schema to each when rule, including nested ones
+	 * @param id id of the field with the when rule
+	 * @param fieldConfigs the entire config containing the yup schema and validation config of each field
+	 * @param fieldValidationConfig validation config of a single field
+	 * @returns an array containing the parsed field config and conditional field id pairs
+	 */
+	const addSchemaToWhenRules = (
+		id: string,
+		fieldConfigs: TFormYupConfig,
+		fieldValidationConfig: IYupValidationRule[]
+	): [IYupValidationRule[], [string, string][]] => {
+		const whenPairIds: [string, string][] = [];
+		const parsedFieldValidationConfig =
+			fieldValidationConfig?.filter((fieldValidationConfig) => !("when" in fieldValidationConfig)) || [];
+		fieldValidationConfig
+			?.filter((fieldValidationConfig) => "when" in fieldValidationConfig)
+			.forEach((fieldValidationConfig) => {
+				const parsedConfig = { ...fieldValidationConfig };
+				Object.keys(parsedConfig.when).forEach((whenFieldId) => {
+					// when
+					whenPairIds.push([id, whenFieldId]);
+					parsedConfig.when[whenFieldId] = {
+						...parsedConfig.when[whenFieldId],
+						yupSchema: fieldConfigs[whenFieldId].schema.clone(),
+					};
+
+					// then
+					const [parsedThenRules, thenPairIds] = addSchemaToWhenRules(
+						id,
+						fieldConfigs,
+						parsedConfig.when[whenFieldId].then
+					);
+					parsedConfig.when[whenFieldId].then = parsedThenRules;
+					whenPairIds.push(...thenPairIds);
+				});
+				parsedFieldValidationConfig.push(parsedConfig);
+			});
+		return [parsedFieldValidationConfig, whenPairIds];
 	};
 
 	/**
