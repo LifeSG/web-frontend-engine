@@ -1,5 +1,5 @@
 import { FileItemProps, FileUploadProps } from "@lifesg/react-design-system";
-import { IYupValidationRule } from "../../..//context-providers";
+import { IYupValidationRule } from "../../../context-providers";
 import { IBaseFieldSchema } from "../types";
 
 export type TUploadType = "base64" | "multipart";
