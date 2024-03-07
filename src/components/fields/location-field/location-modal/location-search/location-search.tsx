@@ -667,6 +667,8 @@ export const LocationSearch = ({
 						Cancel
 					</ButtonItem>
 					<ButtonItem
+						id={TestHelper.generateId(id, "location-search-controls-confirm")}
+						data-testid={TestHelper.generateId(id, "location-search-controls-confirm")}
 						buttonType="confirm"
 						onClick={onConfirm}
 						disabled={selectedIndex < 0 || resultState !== "found"}

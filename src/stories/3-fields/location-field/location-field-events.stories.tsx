@@ -188,6 +188,62 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 	}) as StoryFn<ILocationFieldSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
+/* eslint-disable react-hooks/rules-of-hooks */
+const ConfirmLocationPromptTemplate = () =>
+	((args) => {
+		const [showConfirmLocationPrompt, setShowConfirmLocationPrompt] = useState<boolean>(false);
+		const id = "location-search-controls-confirm";
+		const formRef = useRef<IFrontendEngineRef>();
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("click-confirm-location", id, handleShowConfirmLocationPrompt);
+
+			return () => {
+				currentFormRef.removeFieldEventListener("click-confirm-location", id, handleShowConfirmLocationPrompt);
+			};
+		}, []);
+
+		const handleShowConfirmLocationPrompt = async (e) => {
+			e.preventDefault();
+			setShowConfirmLocationPrompt(true);
+			await new Promise(() =>
+				setTimeout(() => {
+					setShowConfirmLocationPrompt(false);
+					formRef.current.dispatchFieldEvent("confirm-location", id, e.detail);
+				}, 3000)
+			);
+			return action("click-confirm-location")(e);
+		};
+
+		return (
+			<>
+				<FrontendEngine
+					ref={formRef}
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[id]: args,
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					}}
+				/>
+				<Prompt
+					id="location-confirm-location-prompt"
+					title="Confirm Location"
+					size="large"
+					show={showConfirmLocationPrompt}
+					description="Timeout"
+				/>
+			</>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+/* eslint-enable react-hooks/rules-of-hooks */
+
 export const ShowModal = Template("show-location-modal").bind({});
 ShowModal.args = {
 	uiType: "location-field",
@@ -215,6 +271,12 @@ export const GeolocationWithErrors = GeolocationTemplate({
 GeolocationWithErrors.args = {
 	uiType: "location-field",
 	label: "Geolocation with errors",
+};
+
+export const ConfirmLocation = ConfirmLocationPromptTemplate().bind({});
+ConfirmLocation.args = {
+	uiType: "location-field",
+	label: "Confirm Location",
 };
 
 interface HotlineContent {
