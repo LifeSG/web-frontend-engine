@@ -98,9 +98,9 @@ export const ImageThumbnails = (props: IProps) => {
 
 	// render only when no. of added images is less than max count or if max count is zero
 	const renderAddButton = () =>
-		images.filter(({ status, addedFrom }) => status >= EImageStatus.NONE || addedFrom === "reviewModal").length <
+		(images.filter(({ status, addedFrom }) => status >= EImageStatus.NONE || addedFrom === "reviewModal").length <
 			maxFiles ||
-		(!maxFiles && (
+			!maxFiles) && (
 			<>
 				<HiddenFileSelect
 					id={TestHelper.generateId(id, "file-input")}
@@ -123,7 +123,7 @@ export const ImageThumbnails = (props: IProps) => {
 					<img alt="add" src={ADD_PLACEHOLDER_ICON} />
 				</AddImageButton>
 			</>
-		));
+		);
 
 	return (
 		<ThumbnailsWrapper id={TestHelper.generateId(id)}>

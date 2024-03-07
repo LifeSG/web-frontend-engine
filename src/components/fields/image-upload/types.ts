@@ -24,6 +24,8 @@ export interface IImageUploadSchema<V = undefined>
 	uploadOnAddingFile?: { method: TUploadMethod; url: string } | undefined;
 	compress?: boolean | undefined;
 	dimensions?: IImageDimensions | undefined;
+	multiple?: boolean | undefined;
+	editAfterUpload?: boolean | undefined;
 }
 
 export interface ISharedImageProps {

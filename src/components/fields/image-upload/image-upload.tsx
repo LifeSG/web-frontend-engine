@@ -28,6 +28,8 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			outputType = "jpg",
 			uploadOnAddingFile,
 			validation,
+			multiple,
+			editAfterUpload,
 		},
 		id,
 		isDirty,
@@ -251,6 +253,9 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				dimensions={dimensions}
 				errorMessage={otherProps.error?.message}
 				validation={validation}
+				multiple={multiple}
+				editAfterUpload={editAfterUpload}
+				setShowReviewModal={setShowReviewModal}
 			/>
 			{renderReviewPrompt()}
 			{renderImageReviewModal()}

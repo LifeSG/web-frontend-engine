@@ -24,6 +24,9 @@ interface IImageInputProps extends ISharedImageProps {
 	errorMessage?: string | undefined;
 	label: string;
 	validation: IImageUploadValidationRule[];
+	multiple?: boolean | undefined;
+	editAfterUpload?: boolean | undefined;
+	setShowReviewModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -45,6 +48,9 @@ export const ImageInput = (props: IImageInputProps) => {
 		maxSizeInKb,
 		validation,
 		errorMessage,
+		multiple,
+		editAfterUpload,
+		setShowReviewModal,
 	} = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
@@ -73,6 +79,10 @@ export const ImageInput = (props: IImageInputProps) => {
 		event?.preventDefault();
 		dispatchFieldEvent("file-dialog", id);
 		dragUploadRef?.current?.fileDialog();
+	};
+
+	const handleEditClick = (): void => {
+		setShowReviewModal(true);
 	};
 
 	const handleDeleteFile = (index: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -131,18 +141,33 @@ export const ImageInput = (props: IImageInputProps) => {
 
 	// render uploader as long as there are available slots or max is not defined
 	const renderUploader = () => {
-		if (maxFiles && remainingPhotos <= 0) return null;
 		return (
 			<UploadWrapper>
-				<AddButton
-					onClick={handleClick}
-					styleType="secondary"
-					id={TestHelper.generateId(id, "file-input-add-button")}
-					data-testid={TestHelper.generateId(id, "file-input-add-button")}
-				>
-					{buttonLabel}
-				</AddButton>
-				<DropThemHereText>or drop them here</DropThemHereText>
+				{maxFiles && remainingPhotos <= 0 ? (
+					<></>
+				) : (
+					<>
+						<AddButton
+							onClick={handleClick}
+							styleType="secondary"
+							id={TestHelper.generateId(id, "file-input-add-button")}
+							data-testid={TestHelper.generateId(id, "file-input-add-button")}
+						>
+							{buttonLabel}
+						</AddButton>
+						<DropThemHereText>or drop them here</DropThemHereText>
+					</>
+				)}
+				{editAfterUpload && images.length > 0 && (
+					<AddButton
+						onClick={handleEditClick}
+						styleType="secondary"
+						id={TestHelper.generateId(id, "file-input-edit-button")}
+						data-testid={TestHelper.generateId(id, "file-input-edit-button")}
+					>
+						Edit
+					</AddButton>
+				)}
 			</UploadWrapper>
 		);
 	};
@@ -182,7 +207,13 @@ export const ImageInput = (props: IImageInputProps) => {
 			aria-invalid={!!errorMessage}
 			aria-describedby={!!errorMessage && TestHelper.generateId(id, "error")}
 		>
-			<DragUpload id={`${id}-drag-upload`} accept={accepts} onInput={handleInput} ref={dragUploadRef}>
+			<DragUpload
+				id={`${id}-drag-upload`}
+				accept={accepts}
+				onInput={handleInput}
+				ref={dragUploadRef}
+				multiple={multiple}
+			>
 				<Subtitle
 					as="label"
 					htmlFor={TestHelper.generateId(id, "file-input-add-button")}
