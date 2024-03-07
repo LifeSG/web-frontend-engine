@@ -18,9 +18,9 @@ import {
 	StyledToggle,
 	ToggleSublabel,
 } from "./radio-button.styles";
-import { IRadioButtonGroupSchema } from "./types";
+import { TRadioButtonGroupSchema } from "./types";
 
-export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
+export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================

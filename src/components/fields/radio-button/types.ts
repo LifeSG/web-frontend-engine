@@ -50,7 +50,7 @@ interface IRadioButtonImageButtonSchema<V = undefined>
 	};
 }
 
-export type IRadioButtonGroupSchema<V = undefined> =
+export type TRadioButtonGroupSchema<V = undefined> =
 	| IRadioButtonDefaultSchema<V>
 	| IRadioButtonToggleSchema<V>
 	| IRadioButtonImageButtonSchema<V>;

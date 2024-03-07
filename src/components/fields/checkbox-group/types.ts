@@ -38,4 +38,4 @@ interface ICheckboxGroupToggleSchema<V = undefined>
 	};
 }
 
-export type ICheckboxGroupSchema<V = undefined> = ICheckboxGroupDefaultSchema<V> | ICheckboxGroupToggleSchema<V>;
+export type TCheckboxGroupSchema<V = undefined> = ICheckboxGroupDefaultSchema<V> | ICheckboxGroupToggleSchema<V>;

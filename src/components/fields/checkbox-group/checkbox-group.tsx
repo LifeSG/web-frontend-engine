@@ -17,9 +17,9 @@ import {
 	ToggleSublabel,
 	ToggleWrapper,
 } from "./checkbox-group.styles";
-import { ICheckboxGroupSchema, IToggleOption } from "./types";
+import { IToggleOption, TCheckboxGroupSchema } from "./types";
 
-export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
+export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================

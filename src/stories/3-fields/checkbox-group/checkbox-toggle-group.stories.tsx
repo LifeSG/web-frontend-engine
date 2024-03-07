@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { ICheckboxGroupSchema } from "../../../components/fields/checkbox-group";
+import { TCheckboxGroupSchema } from "../../../components/fields/checkbox-group";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
@@ -64,7 +64,7 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
+export const Default = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-default").bind({});
 Default.args = {
 	uiType: "checkbox",
 	label: "Toggle",
@@ -78,7 +78,7 @@ Default.args = {
 	],
 };
 
-export const DefaultValue = DefaultStoryTemplate<ICheckboxGroupSchema, string[]>("checkbox-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<TCheckboxGroupSchema, string[]>("checkbox-default-value").bind({});
 DefaultValue.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -104,7 +104,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const LabelCustomisation = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-label-customisation").bind({});
+export const LabelCustomisation = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-label-customisation").bind({});
 LabelCustomisation.args = {
 	uiType: "checkbox",
 	label: {
@@ -122,7 +122,7 @@ LabelCustomisation.args = {
 	],
 };
 
-export const DisabledOptions = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-disabled-options").bind({});
+export const DisabledOptions = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -136,7 +136,7 @@ DisabledOptions.args = {
 	],
 };
 
-export const Disabled = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-disabled").bind({});
 Disabled.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -151,7 +151,7 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const WithValidation = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-with-validation").bind({});
 WithValidation.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -166,7 +166,7 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const NoneOption = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
+export const NoneOption = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-default").bind({});
 NoneOption.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -181,7 +181,7 @@ NoneOption.args = {
 	],
 };
 
-export const WithIndicator = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
+export const WithIndicator = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-default").bind({});
 WithIndicator.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -196,7 +196,7 @@ WithIndicator.args = {
 	],
 };
 
-export const VerticalLayout = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default-vertical").bind({});
+export const VerticalLayout = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-default-vertical").bind({});
 VerticalLayout.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -212,7 +212,7 @@ VerticalLayout.args = {
 	],
 };
 
-export const WithoutBorder = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-default").bind({});
+export const WithoutBorder = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-default").bind({});
 WithoutBorder.args = {
 	uiType: "checkbox",
 	label: "Fruits",
@@ -227,7 +227,7 @@ WithoutBorder.args = {
 	],
 };
 
-export const NestedFields = DefaultStoryTemplate<ICheckboxGroupSchema>("checkbox-nested").bind({});
+export const NestedFields = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-nested").bind({});
 NestedFields.args = {
 	uiType: "checkbox",
 	label: "Select a reason",
@@ -251,7 +251,7 @@ NestedFields.args = {
 	],
 };
 
-export const Reset = ResetStoryTemplate<ICheckboxGroupSchema>("checkbox-reset").bind({});
+export const Reset = ResetStoryTemplate<TCheckboxGroupSchema>("checkbox-reset").bind({});
 Reset.args = {
 	uiType: "checkbox",
 	label: "Checkbox",
@@ -265,7 +265,7 @@ Reset.args = {
 	],
 };
 
-export const ResetWithDefaultValues = ResetStoryTemplate<ICheckboxGroupSchema, string[]>(
+export const ResetWithDefaultValues = ResetStoryTemplate<TCheckboxGroupSchema, string[]>(
 	"checkbox-reset-default-values"
 ).bind({});
 ResetWithDefaultValues.args = {
@@ -293,7 +293,7 @@ ResetWithDefaultValues.argTypes = {
 	},
 };
 
-export const Overrides = OverrideStoryTemplate<ICheckboxGroupSchema>("checkbox-overrides").bind({});
+export const Overrides = OverrideStoryTemplate<TCheckboxGroupSchema>("checkbox-overrides").bind({});
 Overrides.args = {
 	uiType: "checkbox",
 	label: "Checkbox",

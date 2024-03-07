@@ -3,7 +3,7 @@ import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IColumns } from "../frontend-engine";
 import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
 import { IButtonSchema } from "./button";
-import { ICheckboxGroupSchema } from "./checkbox-group";
+import { TCheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
 import { IContactFieldSchema } from "./contact-field";
 import { IDateFieldSchema } from "./date-field";
@@ -15,7 +15,7 @@ import { ILocationFieldSchema } from "./location-field";
 import { IMaskedFieldSchema } from "./masked-field";
 import { IMultiSelectSchema } from "./multi-select";
 import { INestedMultiSelectSchema } from "./nested-multi-select";
-import { IRadioButtonGroupSchema } from "./radio-button";
+import { TRadioButtonGroupSchema } from "./radio-button";
 import { IRangeSelectSchema } from "./range-select";
 import { IResetButtonSchema } from "./reset-button";
 import { ISelectSchema } from "./select";
@@ -66,7 +66,7 @@ export enum EFieldType {
  */
 export type TFieldSchema<V = undefined> =
 	| IButtonSchema
-	| ICheckboxGroupSchema<V>
+	| TCheckboxGroupSchema<V>
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
 	| IDateFieldSchema<V>
@@ -81,7 +81,7 @@ export type TFieldSchema<V = undefined> =
 	| IRangeSelectSchema
 	| INestedMultiSelectSchema<V>
 	| INumericFieldSchema<V>
-	| IRadioButtonGroupSchema<V>
+	| TRadioButtonGroupSchema<V>
 	| IResetButtonSchema
 	| ISelectSchema<V>
 	| ISliderSchema<V>

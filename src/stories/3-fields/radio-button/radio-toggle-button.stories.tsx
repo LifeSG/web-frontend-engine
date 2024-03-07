@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
+import { TRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
@@ -64,7 +64,7 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-default").bind({});
+export const Default = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-default").bind({});
 Default.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -78,7 +78,7 @@ Default.args = {
 	],
 };
 
-export const DefaultValue = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-default-value").bind({});
 DefaultValue.args = {
 	uiType: "radio",
 	label: "Fruits",
@@ -103,7 +103,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const LabelCustomisation = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-label-customisation").bind({});
+export const LabelCustomisation = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-label-customisation").bind({});
 LabelCustomisation.args = {
 	uiType: "radio",
 	label: {
@@ -121,7 +121,7 @@ LabelCustomisation.args = {
 	],
 };
 
-export const DisabledOptions = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-disabled-options").bind({});
+export const DisabledOptions = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-disabled-options").bind({});
 DisabledOptions.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -135,7 +135,7 @@ DisabledOptions.args = {
 	],
 };
 
-export const Disabled = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-disabled").bind({});
 Disabled.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -150,7 +150,7 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const WithValidation = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation").bind({});
+export const WithValidation = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-with-validation").bind({});
 WithValidation.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -165,7 +165,7 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const WithIndicator = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation").bind({});
+export const WithIndicator = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-with-validation").bind({});
 WithIndicator.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -181,7 +181,7 @@ WithIndicator.args = {
 	validation: [{ required: true }],
 };
 
-export const VerticalLayout = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation-vertical").bind({});
+export const VerticalLayout = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-with-validation-vertical").bind({});
 VerticalLayout.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -198,7 +198,7 @@ VerticalLayout.args = {
 	validation: [{ required: true }],
 };
 
-export const WithoutBorder = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-with-validation").bind({});
+export const WithoutBorder = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-with-validation").bind({});
 WithoutBorder.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -214,7 +214,7 @@ WithoutBorder.args = {
 	validation: [{ required: true }],
 };
 
-export const NestedFields = DefaultStoryTemplate<IRadioButtonGroupSchema>("radio-nested").bind({});
+export const NestedFields = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-nested").bind({});
 NestedFields.args = {
 	uiType: "radio",
 	label: "Select a reason",
@@ -238,7 +238,7 @@ NestedFields.args = {
 	],
 };
 
-export const Reset = ResetStoryTemplate<IRadioButtonGroupSchema>("radio-reset").bind({});
+export const Reset = ResetStoryTemplate<TRadioButtonGroupSchema>("radio-reset").bind({});
 Reset.args = {
 	uiType: "radio",
 	label: "Radio Button",
@@ -252,7 +252,7 @@ Reset.args = {
 	],
 };
 
-export const ResetWithDefaultValues = ResetStoryTemplate<IRadioButtonGroupSchema>("radio-reset-default-values").bind(
+export const ResetWithDefaultValues = ResetStoryTemplate<TRadioButtonGroupSchema>("radio-reset-default-values").bind(
 	{}
 );
 ResetWithDefaultValues.args = {
@@ -279,7 +279,7 @@ ResetWithDefaultValues.argTypes = {
 	},
 };
 
-export const Overrides = OverrideStoryTemplate<IRadioButtonGroupSchema>("radio-overrides").bind({});
+export const Overrides = OverrideStoryTemplate<TRadioButtonGroupSchema>("radio-overrides").bind({});
 Overrides.args = {
 	uiType: "radio",
 	label: "Radio Button",

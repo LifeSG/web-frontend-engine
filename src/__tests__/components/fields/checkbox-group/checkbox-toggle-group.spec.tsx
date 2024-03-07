@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { useState } from "react";
-import { ICheckboxGroupSchema } from "../../../../components/fields";
+import { TCheckboxGroupSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
@@ -50,7 +50,7 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (overrideField?: TOverrideField<TCheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
 	merge(json, {
 		sections: {
