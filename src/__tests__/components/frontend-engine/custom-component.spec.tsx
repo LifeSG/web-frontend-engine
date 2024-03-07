@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
+import "@testing-library/react/dont-cleanup-after-each"; // must import this before @testing-library/react
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/react/dont-cleanup-after-each";
 import { useEffect, useRef } from "react";
 import * as Yup from "yup";
 import {
