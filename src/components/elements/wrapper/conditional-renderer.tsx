@@ -8,6 +8,7 @@ import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
+import { ICheckboxGroupSchema, IRadioButtonGroupSchema } from "../../fields";
 
 interface IProps {
 	id: string;
@@ -96,9 +97,10 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 				break;
 			case "checkbox":
 			case "radio":
-				schema.options.forEach((option) => {
-					if (!isEmpty(option.children) && isObject(option.children)) {
-						Object.entries(option.children).forEach(([id, child]) => {
+				(schema as ICheckboxGroupSchema | IRadioButtonGroupSchema).options.forEach((option) => {
+					const optionChildren = option["children"];
+					if (!isEmpty(optionChildren) && isObject(optionChildren)) {
+						Object.entries(optionChildren).forEach(([id, child]) => {
 							childIdList.push(id);
 							if (child["children"]) {
 								childIdList.push(...listAllChildIds(child["children"]));

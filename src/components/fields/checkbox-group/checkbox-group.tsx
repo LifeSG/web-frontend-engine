@@ -17,7 +17,7 @@ import {
 	ToggleSublabel,
 	ToggleWrapper,
 } from "./checkbox-group.styles";
-import { ICheckboxGroupSchema } from "./types";
+import { ICheckboxGroupSchema, IToggleOption } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
 	// =============================================================================
@@ -73,7 +73,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (value: string, none?: boolean): void => {
-		const nullOpt = options.find((opt) => opt.none === true);
+		const nullOpt = options.find((opt: IToggleOption) => opt.none === true);
 		let updatedStateValues = [...stateValue];
 		if (none) {
 			updatedStateValues = updatedStateValues.includes(value) ? [] : [value];

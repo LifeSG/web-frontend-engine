@@ -6,30 +6,51 @@ interface IOption {
 	label: string;
 	value: string;
 	disabled?: boolean | undefined;
-	imgSrc?: string | undefined;
+}
+
+interface IToggleOption extends IOption {
 	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
+}
+
+interface IImageButtonOption extends IOption {
+	imgSrc?: string | undefined;
 }
 
 export type TRadioToggleLayoutType = "horizontal" | "vertical";
 
-type TCustomOptions =
-	| {
-			styleType: "default";
-	  }
-	| {
-			styleType: "toggle";
-			indicator?: boolean | undefined;
-			border?: boolean | undefined;
-			layoutType?: TRadioToggleLayoutType | undefined;
-	  }
-	| {
-			styleType: "image-button";
-	  };
-
-// TODO: discriminating union to differentiate extended props between different styleType
-export interface IRadioButtonGroupSchema<V = undefined>
+interface IRadioButtonDefaultSchema<V = undefined>
 	extends IBaseFieldSchema<"radio", V>,
 		TComponentOmitProps<RadioButtonProps> {
 	options: IOption[];
-	customOptions?: TCustomOptions | undefined;
+	customOptions?:
+		| {
+				styleType: "default";
+		  }
+		| undefined;
 }
+
+interface IRadioButtonToggleSchema<V = undefined>
+	extends IBaseFieldSchema<"radio", V>,
+		TComponentOmitProps<RadioButtonProps> {
+	options: IToggleOption[];
+	customOptions: {
+		styleType: "toggle";
+		indicator?: boolean | undefined;
+		border?: boolean | undefined;
+		layoutType?: TRadioToggleLayoutType | undefined;
+	};
+}
+
+interface IRadioButtonImageButtonSchema<V = undefined>
+	extends IBaseFieldSchema<"radio", V>,
+		TComponentOmitProps<RadioButtonProps> {
+	options: IImageButtonOption[];
+	customOptions: {
+		styleType: "image-button";
+	};
+}
+
+export type IRadioButtonGroupSchema<V = undefined> =
+	| IRadioButtonDefaultSchema<V>
+	| IRadioButtonToggleSchema<V>
+	| IRadioButtonImageButtonSchema<V>;
