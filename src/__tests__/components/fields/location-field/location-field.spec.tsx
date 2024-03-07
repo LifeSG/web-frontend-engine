@@ -712,6 +712,10 @@ describe("location-input-group", () => {
 				within(getCurrentLocationErrorModal()).getByRole("button").click();
 			});
 
+			afterEach(() => {
+				jest.useRealTimers();
+			});
+
 			it("should show confirm location prompt when confirm location", async () => {
 				fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
 					onSuccess(mock1PageFetchAddressResponse);
