@@ -64,6 +64,19 @@ const meta: Meta = {
 				type: "text",
 			},
 		},
+		disableTextSearch: {
+			description: "Specifies if the search input field is disable",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;

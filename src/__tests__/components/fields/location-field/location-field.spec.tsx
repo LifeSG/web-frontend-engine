@@ -1401,6 +1401,24 @@ describe("location-input-group", () => {
 						).not.toBeInTheDocument();
 					});
 				});
+
+				describe("when using the disable text search", () => {
+					it("should allow text input when disable text search is default as false", () => {
+						renderComponent();
+
+						getLocationSearchInput().focus();
+						fireEvent.change(getLocationSearchInput(), { target: { value: "text input" } });
+
+						expect(getLocationSearchInput()).toHaveFocus();
+						expect(getLocationSearchInput()).toHaveValue("text input");
+					});
+
+					it("should disable text input when disable text search is true", () => {
+						renderComponent({ overrideField: { disableTextSearch: true } });
+
+						expect(getLocationSearchInput()).toBeDisabled();
+					});
+				});
 			});
 
 			describe("when internet connectivity errors occurs", () => {
