@@ -66,11 +66,9 @@ export enum EFieldType {
  */
 export type TFieldSchema<V = undefined> =
 	| IButtonSchema
-	| TCheckboxGroupSchema<V>
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
 	| IDateFieldSchema<V>
-	| TDateRangeFieldSchema<V>
 	| IEmailFieldSchema<V>
 	| IFileUploadSchema<V>
 	| IHistogramSliderSchema<V>
@@ -81,7 +79,6 @@ export type TFieldSchema<V = undefined> =
 	| IRangeSelectSchema
 	| INestedMultiSelectSchema<V>
 	| INumericFieldSchema<V>
-	| TRadioButtonGroupSchema<V>
 	| IResetButtonSchema
 	| ISelectSchema<V>
 	| ISliderSchema<V>
@@ -90,7 +87,10 @@ export type TFieldSchema<V = undefined> =
 	| ITextareaSchema<V>
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
-	| IUnitNumberFieldSchema<V>;
+	| IUnitNumberFieldSchema<V>
+	| TCheckboxGroupSchema<V>
+	| TDateRangeFieldSchema<V>
+	| TRadioButtonGroupSchema<V>;
 
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
