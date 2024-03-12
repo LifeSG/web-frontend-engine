@@ -464,6 +464,18 @@ export const LocationSearch = ({
 			handleApiErrors(error);
 		};
 
+		if (selectablePins.length) {
+			const index = selectablePins.findIndex((pin) => pin.lat === addressLat && pin.lng === addressLng);
+			setSelectedIndex(index);
+			setQueryString(selectablePins[index]?.address ?? "");
+			onChangeSelectedAddressInfo({
+				lat: addressLat,
+				lng: addressLng,
+				address: selectablePins[index]?.address,
+			});
+			return;
+		}
+
 		let resultListItem: IResultListItem[];
 		try {
 			resultListItem = await fetchLocationList(
@@ -562,8 +574,8 @@ export const LocationSearch = ({
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderList = () => {
-		return searchBuildingResults.map((item, index) => (
+	const renderList = () =>
+		searchBuildingResults.map((item, index) => (
 			<ResultItem
 				key={`${index}_${item.lat}_${item.lng}`}
 				onClick={() => handleClickResult(item, index)}
@@ -588,7 +600,6 @@ export const LocationSearch = ({
 				</Sanitize>
 			</ResultItem>
 		));
-	};
 
 	const renderPostalCodeError = () => (
 		<Prompt

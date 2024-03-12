@@ -35,6 +35,7 @@ export const LocationPicker = ({
 	gettingCurrentLocation,
 	onMapCenterChange,
 	mapBannerText,
+	disableSelectionFromMap,
 	disableCurrLocationMarker,
 	selectablePins,
 }: ILocationPickerProps) => {
@@ -94,7 +95,7 @@ export const LocationPicker = ({
 
 			// Reattach event listeners
 			map.on("click", ({ latlng }: L.LeafletMouseEvent) => {
-				if (!gettingCurrentLocation) {
+				if (!disableSelectionFromMap && !gettingCurrentLocation) {
 					onMapCenterChange(latlng);
 				}
 			});
@@ -124,7 +125,7 @@ export const LocationPicker = ({
 			if (!disableCurrLocationMarker) {
 				pins.push(selectedLocationCoord);
 			}
-			zoomWithMarkers(pins, true, selectedLocationCoord);
+			zoomWithMarkers(pins, true, selectedLocationCoord, true);
 		} else {
 			zoomWithMarkers([selectedLocationCoord], !disableCurrLocationMarker);
 		}
@@ -142,20 +143,46 @@ export const LocationPicker = ({
 		}
 	};
 
-	const zoomWithMarkers = (targets: ILocationCoord[], shouldSetMarkers = true, _zoomCenter?: ILocationCoord) => {
+	const zoomWithMarkers = (
+		targets: ILocationCoord[],
+		shouldSetMarkers = true,
+		_zoomCenter?: ILocationCoord,
+		selectableMarkers = false
+	) => {
 		const map = mapRef.current;
 		if (!map) return;
 		removeMarkers(markersRef.current);
 
 		if (shouldSetMarkers) {
-			markersRef.current = targets.map((target) => markerFrom(target, interactiveMapPinIconUrl).addTo(map));
+			markersRef.current = getMarkers(map, targets, selectableMarkers);
 		}
+
+		flyzoom(map, _zoomCenter || targets[0]);
+	};
+
+	const getMarkers = (map: L.Map, targets: ILocationCoord[], shouldSelectOnClick: boolean) =>
+		targets.map((target) => {
+			const marker = markerFrom(target, interactiveMapPinIconUrl).addTo(map);
+
+			return shouldSelectOnClick
+				? marker.on("click", () => {
+						// To accurately identify the pin, use the original lat & lng from the pin
+						// instead of the ones from the LeafletMouseEvent.
+						flyzoom(map, { lat: target.lat, lng: target.lng });
+						onMapCenterChange({
+							lat: target.lat,
+							lng: target.lng,
+						});
+				  })
+				: marker;
+		});
+
+	const flyzoom = (map: L.Map, zoomCenter: ILocationCoord) => {
 		const panZoomValue = Math.max(
 			mapPanZoom?.min ?? leafletConfig.minZoom,
 			isMobile ? mapPanZoom?.mobile ?? 18 : mapPanZoom?.nonMobile ?? 17
 		);
 
-		const zoomCenter = _zoomCenter || targets[0];
 		const zoomValue =
 			map.getBounds().contains([zoomCenter.lat, zoomCenter.lng]) && map.getZoom() > panZoomValue
 				? map.getZoom()

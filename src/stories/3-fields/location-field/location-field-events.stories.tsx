@@ -18,6 +18,7 @@ import { Description as PDescription } from "../../../components/shared/prompt/p
 import { TestHelper } from "../../../utils";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-field.stories";
+import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 
 const meta: Meta = {
 	title: "Field/LocationField/Events",
@@ -560,7 +561,15 @@ const SetSelectablePinsTemplate = () =>
 			];
 			setTimeout(() => {
 				formRef.current.dispatchFieldEvent("set-selectable-pins", id, {
-					pins: res.map((r) => ({ lat: r.latitude, lng: r.longitude })),
+					pins: res.map(
+						(r) =>
+							({
+								lat: r.latitude,
+								lng: r.longitude,
+								resultListItemText: r.carParkName,
+								address: `${r.carParkName} (${r.carParkNumber})`,
+							} as IMapPin)
+					),
 				});
 			}, 2000);
 		};

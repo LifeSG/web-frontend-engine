@@ -242,9 +242,6 @@ const LocationModal = ({
 	};
 
 	const handleMapClick = (latlng: ILocationCoord) => {
-		if (disableLocationSelectionOnStart) {
-			return;
-		}
 		setMapPickedLatLng(latlng);
 	};
 
@@ -442,6 +439,7 @@ const LocationModal = ({
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapPanZoom={mapPanZoom}
 								mapBannerText={mapBannerText}
+								disableSelectionFromMap={disableLocationSelectionOnStart}
 								disableCurrLocationMarker={disableLocationSelectionOnStart}
 								selectablePins={selectablePins}
 							/>
