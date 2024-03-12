@@ -71,7 +71,8 @@ export const LocationSearch = ({
 
 	setSinglePanelMode,
 	updateFormValues,
-	disableListPopulation,
+	restrictLocationSelection,
+	selectablePins,
 }: ILocationSearchProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -306,6 +307,18 @@ export const LocationSearch = ({
 		}
 	}, [totalNumPages, apiPageNum, currentPaginationPageNum, apiResults.length, PAGE_SIZE]);
 
+	useEffect(() => {
+		if (selectablePins.length) {
+			populateDisplayList({
+				results: selectablePins.map((pin) => ({
+					...pin,
+					displayText: pin.resultListItemText,
+					displayAddressText: pin.resultListItemText,
+				})),
+			});
+		}
+	}, [selectablePins]);
+
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
@@ -495,7 +508,7 @@ export const LocationSearch = ({
 			return;
 		}
 
-		if (!disableListPopulation) {
+		if (!restrictLocationSelection) {
 			populateDisplayList({ results: resultListItem });
 			setQueryString(nearestLocation.address);
 			setSelectedIndex(nearestLocationIndex);
@@ -609,7 +622,6 @@ export const LocationSearch = ({
 				>
 					<SearchBarModalCross />
 				</SearchBarIconButton>
-
 				<SearchBarContainer hasScrolled={hasScrolled}>
 					<SearchBarIconButton
 						onClick={handleInputFocus}
@@ -628,14 +640,15 @@ export const LocationSearch = ({
 						value={!gettingCurrentLocation ? queryString : gettingCurrentLocationFetchMessage}
 						ref={inputRef}
 					/>
-
-					<SearchBarIconButton
-						onClick={handleClearInput}
-						id={TestHelper.generateId(id, "location-search-input-clear")}
-						data-testid={TestHelper.generateId(id, "location-search-input-clear")}
-					>
-						<SearchBarCross type="cross" />
-					</SearchBarIconButton>
+					{!restrictLocationSelection && (
+						<SearchBarIconButton
+							onClick={handleClearInput}
+							id={TestHelper.generateId(id, "location-search-input-clear")}
+							data-testid={TestHelper.generateId(id, "location-search-input-clear")}
+						>
+							<SearchBarCross type="cross" />
+						</SearchBarIconButton>
+					)}
 				</SearchBarContainer>
 				<ResultWrapper
 					id={TestHelper.generateId(id, "location-search-results")}

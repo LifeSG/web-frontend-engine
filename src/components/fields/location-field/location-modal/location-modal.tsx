@@ -423,7 +423,8 @@ const LocationModal = ({
 								gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 								mustHavePostalCode={mustHavePostalCode}
 								locationListTitle={locationListTitle}
-								disableListPopulation={disableLocationSelectionOnStart}
+								restrictLocationSelection={disableLocationSelectionOnStart}
+								selectablePins={selectablePins}
 							/>
 							<StyledLocationPicker
 								id={id}
