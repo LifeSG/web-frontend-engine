@@ -52,7 +52,7 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 				aria-hidden="true"
 				tabIndex={-1}
 				capture={capture}
-				accept={accept?.map((type) => `.${type}`).join(",")}
+				accept={accept?.map((type) => `image/${type}`).join(",")}
 				onChange={handleInputChange}
 				onClick={(event) => {
 					(event.target as HTMLInputElement).value = "";
