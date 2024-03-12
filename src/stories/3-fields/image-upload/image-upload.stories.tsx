@@ -130,6 +130,21 @@ const meta: Meta = {
 				defaultValue: { summary: null },
 			},
 		},
+		capture: {
+			type: { name: "string", required: false },
+			description:
+				"Whether to open user-facing (user) or outward-facing (environment) camera when Add photos button is pressed",
+			table: {
+				type: {
+					summary: ["user", "environment"],
+				},
+				defaultValue: { summary: null },
+			},
+			options: ["user", "environment"],
+			control: {
+				type: "select",
+			},
+		},
 	},
 };
 export default meta;
@@ -315,3 +330,11 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const CaptureType = DefaultStoryTemplate<IImageUploadSchema>("upload-with-capture").bind({});
+CaptureType.args = {
+	label: "Provide images",
+	uiType: "image-upload",
+	description: "Opens user-facing camera, should be verified using a mobile device",
+	capture: "user",
+};
