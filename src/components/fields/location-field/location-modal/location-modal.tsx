@@ -44,6 +44,7 @@ const LocationModal = ({
 	onConfirm,
 	updateFormValues,
 	locationListTitle,
+	disableLocationSelectionOnStart,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -228,6 +229,9 @@ const LocationModal = ({
 	};
 
 	const handleMapClick = (latlng: ILocationCoord) => {
+		if (disableLocationSelectionOnStart) {
+			return;
+		}
 		setMapPickedLatLng(latlng);
 	};
 
@@ -406,6 +410,7 @@ const LocationModal = ({
 								gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 								mustHavePostalCode={mustHavePostalCode}
 								locationListTitle={locationListTitle}
+								disableListPopulation={disableLocationSelectionOnStart}
 							/>
 							<StyledLocationPicker
 								id={id}
@@ -423,6 +428,7 @@ const LocationModal = ({
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapPanZoom={mapPanZoom}
 								mapBannerText={mapBannerText}
+								disableCurrLocationMarker={disableLocationSelectionOnStart}
 							/>
 						</>
 					) : (

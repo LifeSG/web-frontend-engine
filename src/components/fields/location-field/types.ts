@@ -3,6 +3,7 @@ import { IStaticMapProps } from "../../shared";
 import { ILocationInputProps } from "./location-input";
 import { ILocationPickerProps } from "./location-modal/location-picker/types";
 import { ILocationSearchProps } from "./location-modal/location-search/types";
+import { ILocationModalProps } from "./location-modal/types";
 
 export interface ILocationFieldSchema<V = undefined>
 	extends IBaseFieldSchema<"location-field", V>,
@@ -16,7 +17,8 @@ export interface ILocationFieldSchema<V = undefined>
 			| "hasExplicitEdit"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder" | "disabled" | "readOnly">,
-		Pick<IStaticMapProps, "staticMapPinColor"> {
+		Pick<IStaticMapProps, "staticMapPinColor">,
+		Pick<ILocationModalProps, "disableLocationSelectionOnStart"> {
 	className?: string;
 	locationModalStyles?: string | undefined;
 	locationListTitle?: string | undefined;

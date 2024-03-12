@@ -29,4 +29,5 @@ export interface ILocationSearchProps {
 	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
 	hasExplicitEdit?: TExplicitEditMode | undefined;
+	disableListPopulation?: boolean | undefined;
 }

@@ -71,11 +71,12 @@ export const LocationSearch = ({
 
 	setSinglePanelMode,
 	updateFormValues,
+	disableListPopulation,
 }: ILocationSearchProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { addFieldEventListener, removeFieldEventListener } = useFieldEvent();
+	const { addFieldEventListener, removeFieldEventListener, dispatchFieldEvent } = useFieldEvent();
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const resultRef = useRef<HTMLDivElement>(null);
@@ -109,7 +110,6 @@ export const LocationSearch = ({
 		checkAndSetPinLocationAsResult,
 	} = LocationHelper;
 
-	const { dispatchFieldEvent } = useFieldEvent();
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -479,7 +479,6 @@ export const LocationSearch = ({
 		}
 
 		resultRef.current?.scrollTo(0, 0);
-		populateDisplayList({ results: resultListItem });
 
 		const nearestLocationIndex = LocationHelper.getNearestLocationIndexFromList(
 			resultListItem,
@@ -495,7 +494,11 @@ export const LocationSearch = ({
 			return;
 		}
 
-		setQueryString(nearestLocation.address);
+		if (!disableListPopulation) {
+			populateDisplayList({ results: resultListItem });
+			setQueryString(nearestLocation.address);
+			setSelectedIndex(nearestLocationIndex);
+		}
 
 		const locationFieldValue = {
 			...nearestLocation,
@@ -508,8 +511,6 @@ export const LocationSearch = ({
 			locationFieldValue.y = Y;
 		}
 		onChangeSelectedAddressInfo(locationFieldValue);
-
-		setSelectedIndex(nearestLocationIndex);
 	};
 
 	/**

@@ -64,6 +64,19 @@ const meta: Meta = {
 				type: "text",
 			},
 		},
+		disableMapClickOnStart: {
+			description: "Specifies if the location can be selected by clicking on the map",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -214,4 +227,15 @@ LocationListTitle.args = {
 	locationListTitle: "Nearest car parks",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
+};
+
+export const DisableLocationSelectionOnStart = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-disable-map-click-on-start"
+).bind({});
+DisableLocationSelectionOnStart.args = {
+	uiType: "location-field",
+	label: "Disable Location Selection On Start",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	disableLocationSelectionOnStart: true,
 };

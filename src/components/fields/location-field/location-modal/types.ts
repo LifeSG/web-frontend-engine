@@ -21,4 +21,5 @@ export interface ILocationModalProps
 	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 	locationListTitle?: string | undefined;
 	mapBannerText?: string | undefined;
+	disableLocationSelectionOnStart?: boolean | undefined;
 }

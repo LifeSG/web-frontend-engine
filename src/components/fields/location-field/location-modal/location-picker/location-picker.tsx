@@ -35,6 +35,7 @@ export const LocationPicker = ({
 	gettingCurrentLocation,
 	onMapCenterChange,
 	mapBannerText,
+	disableCurrLocationMarker,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -136,7 +137,9 @@ export const LocationPicker = ({
 		if (!map) return;
 		removeMarkers(markersRef.current);
 
-		markersRef.current = [markerFrom(target, interactiveMapPinIconUrl).addTo(map)];
+		if (!disableCurrLocationMarker) {
+			markersRef.current = [markerFrom(target, interactiveMapPinIconUrl).addTo(map)];
+		}
 		const panZoomValue = Math.max(
 			mapPanZoom?.min ?? leafletConfig.minZoom,
 			isMobile ? mapPanZoom?.mobile ?? 18 : mapPanZoom?.nonMobile ?? 17
