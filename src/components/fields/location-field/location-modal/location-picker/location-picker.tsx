@@ -36,6 +36,7 @@ export const LocationPicker = ({
 	onMapCenterChange,
 	mapBannerText,
 	disableCurrLocationMarker,
+	selectablePins,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -87,7 +88,7 @@ export const LocationPicker = ({
 			// even if it didn't change, as it may have panned off-centre.
 			if (!gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
 				// NOTE: map will zoom when input is cleared in search panelInputMode and switches to map panelInputMode
-				zoomWithMarkers({ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng });
+				zoomWithMarkers([{ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng }]);
 			}
 			const map = mapRef.current;
 
@@ -113,12 +114,21 @@ export const LocationPicker = ({
 	 * Show the pan when we can see the map
 	 */
 	useEffect(() => {
-		if (selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
-			zoomWithMarkers(selectedLocationCoord);
-		} else {
+		if (!selectedLocationCoord?.lat || !selectedLocationCoord?.lng) {
 			resetView();
+			return;
 		}
-	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng]);
+
+		if (selectablePins.length) {
+			const pins = selectablePins;
+			if (!disableCurrLocationMarker) {
+				pins.push(selectedLocationCoord);
+			}
+			zoomWithMarkers(pins, true, selectedLocationCoord);
+		} else {
+			zoomWithMarkers([selectedLocationCoord], !disableCurrLocationMarker);
+		}
+	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng, selectablePins]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -132,25 +142,26 @@ export const LocationPicker = ({
 		}
 	};
 
-	const zoomWithMarkers = (target: ILocationCoord) => {
+	const zoomWithMarkers = (targets: ILocationCoord[], shouldSetMarkers = true, _zoomCenter?: ILocationCoord) => {
 		const map = mapRef.current;
 		if (!map) return;
 		removeMarkers(markersRef.current);
 
-		if (!disableCurrLocationMarker) {
-			markersRef.current = [markerFrom(target, interactiveMapPinIconUrl).addTo(map)];
+		if (shouldSetMarkers) {
+			markersRef.current = targets.map((target) => markerFrom(target, interactiveMapPinIconUrl).addTo(map));
 		}
 		const panZoomValue = Math.max(
 			mapPanZoom?.min ?? leafletConfig.minZoom,
 			isMobile ? mapPanZoom?.mobile ?? 18 : mapPanZoom?.nonMobile ?? 17
 		);
 
+		const zoomCenter = _zoomCenter || targets[0];
 		const zoomValue =
-			map.getBounds().contains([target.lat, target.lng]) && map.getZoom() > panZoomValue
+			map.getBounds().contains([zoomCenter.lat, zoomCenter.lng]) && map.getZoom() > panZoomValue
 				? map.getZoom()
 				: panZoomValue;
 
-		map.flyTo(L.latLng(target.lat, target.lng), zoomValue);
+		map.flyTo(L.latLng(zoomCenter.lat, zoomCenter.lng), zoomValue);
 		setTimeout(() => map.invalidateSize(), 500);
 	};
 

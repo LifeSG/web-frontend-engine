@@ -18,6 +18,7 @@ import {
 } from "../types";
 import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
+import { IMapPin } from "./location-picker/types";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 import { ILocationModalProps } from "./types";
@@ -55,6 +56,7 @@ const LocationModal = ({
 	// onConfirm we will save to state
 	// if cancel, this value will need to be reset to form state value
 	const [selectedAddressInfo, setSelectedAddressInfo] = useState<ILocationFieldValues>({});
+	const [selectablePins, setSelectablePins] = useState<IMapPin[]>([]);
 
 	const [locationAvailable, setLocationAvailable] = useState(true);
 
@@ -91,11 +93,22 @@ const LocationModal = ({
 			}
 		};
 
+		const handleSetSelectablePins = (e: TLocationFieldEvents["set-selectable-pins"]) => {
+			const pinsArray = e.detail.pins;
+			if (!Array.isArray(pinsArray)) {
+				setShowOneMapError(true);
+				return;
+			}
+			setSelectablePins(pinsArray);
+		};
+
 		addFieldEventListener("error-end", id, handleError);
+		addFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
 		addFieldEventListener("confirm-location", id, handleConfirm);
 
 		return () => {
 			removeFieldEventListener("error-end", id, handleError);
+			removeFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
 			removeFieldEventListener("confirm-location", id, handleConfirm);
 		};
 	}, []);
@@ -429,6 +442,7 @@ const LocationModal = ({
 								mapPanZoom={mapPanZoom}
 								mapBannerText={mapBannerText}
 								disableCurrLocationMarker={disableLocationSelectionOnStart}
+								selectablePins={selectablePins}
 							/>
 						</>
 					) : (

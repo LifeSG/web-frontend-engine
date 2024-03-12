@@ -26,4 +26,5 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 	onMapCenterChange: (latlng: ILocationCoord) => void;
 	mapBannerText?: string | undefined;
 	disableCurrLocationMarker?: boolean | undefined;
+	selectablePins: IMapPin[];
 }

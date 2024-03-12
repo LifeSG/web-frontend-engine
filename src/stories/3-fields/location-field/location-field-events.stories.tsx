@@ -4,6 +4,7 @@ import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
 import {
+	ILocationCoord,
 	ILocationFieldSchema,
 	TLocationFieldErrorDetail,
 	TLocationFieldEvents,
@@ -525,4 +526,72 @@ CustomErrorHandling.args = {
 	label: "Custom error handling",
 	mustHavePostalCode: true,
 	reverseGeoCodeEndpoint: "willBreak",
+};
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const SetSelectablePinsTemplate = () =>
+	((args) => {
+		const id = "location-enable-map-click";
+		const formRef = useRef<IFrontendEngineRef>();
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("current-location-has-set", id, getPins);
+
+			return () => {
+				currentFormRef.removeFieldEventListener("current-location-has-set", id, getPins);
+			};
+		}, []);
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const getPins = (e: CustomEvent<ILocationCoord>) => {
+			const res = [
+				{
+					carParkName: "BLK 120 TO 124 PAYA LEBAR WAY",
+					carParkNumber: "M32",
+					carParkType: "SURFACE CAR PARK",
+					parkingSystem: "ELECTRONIC PARKING",
+					latitude: 1.3223122045708784,
+					longitude: 103.88279263612282,
+					xCoord: 33506.0078,
+					yCoord: 33840.2109,
+					distanceFromReference: 109.9831233911331,
+				},
+			];
+			setTimeout(() => {
+				formRef.current.dispatchFieldEvent("set-selectable-pins", id, {
+					pins: res.map((r) => ({ lat: r.latitude, lng: r.longitude })),
+				});
+			}, 2000);
+		};
+
+		return (
+			<>
+				<FrontendEngine
+					ref={formRef}
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[id]: {
+										...args,
+										reverseGeoCodeEndpoint:
+											"https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code",
+									},
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					}}
+				/>
+			</>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+/* eslint-enable react-hooks/rules-of-hooks */
+
+export const SetSelectablePins = SetSelectablePinsTemplate().bind({});
+SetSelectablePins.args = {
+	uiType: "location-field",
+	label: "Enable Map Click",
 };
