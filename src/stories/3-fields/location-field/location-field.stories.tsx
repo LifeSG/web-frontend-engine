@@ -64,6 +64,15 @@ const meta: Meta = {
 				type: "text",
 			},
 		},
+		mapPanZoom: {
+			description: "Specifies the map pan zoom value.",
+			table: {
+				type: {
+					summary: `{mobile?: number, nonMobile?: number, min?: number, max?: number}`,
+				},
+			},
+			control: { type: "object" },
+		},
 	},
 };
 export default meta;
@@ -214,4 +223,15 @@ LocationListTitle.args = {
 	locationListTitle: "Nearest car parks",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
+};
+
+export const WithCustomMapPanZoom = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-custom-map-pan-zoom"
+).bind({});
+WithCustomMapPanZoom.args = {
+	uiType: "location-field",
+	label: "WithCustomMapPanZoom",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14 },
 };

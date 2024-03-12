@@ -72,7 +72,7 @@ export const LocationPicker = ({
 			const basemap = L.tileLayer("https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png", {
 				detectRetina: true,
 				maxNativeZoom: 18,
-				maxZoom: isMobile ? 20 : 19,
+				maxZoom: mapPanZoom?.max ?? (isMobile ? 20 : 19),
 				minZoom: leafletConfig.minZoom,
 				// Do not remove this attribution
 				attribution:
