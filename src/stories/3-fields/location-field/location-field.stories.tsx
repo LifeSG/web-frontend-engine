@@ -65,7 +65,7 @@ const meta: Meta = {
 			},
 		},
 		disableTextSearch: {
-			description: "Specifies if the search input field is disable",
+			description: "Specifies if the search input field is disabled",
 			table: {
 				type: {
 					summary: "boolean",
@@ -227,4 +227,13 @@ LocationListTitle.args = {
 	locationListTitle: "Nearest car parks",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
+};
+
+export const DisableTextSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
+DisableTextSearch.args = {
+	uiType: "location-field",
+	label: "DisableTextSearch",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	disableTextSearch: true,
 };

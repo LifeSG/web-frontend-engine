@@ -613,7 +613,9 @@ export const LocationSearch = ({
 					<SearchBarIconButton
 						onClick={handleInputFocus}
 						id={TestHelper.generateId(id, "location-search-modal-search")}
+						data-testid={TestHelper.generateId(id, "location-search-modal-search")}
 						disabled={disableTextSearch}
+						disableCursor={disableTextSearch}
 					>
 						<SearchBarIcon src={SEARCH_SVG} alt="Search" />
 					</SearchBarIconButton>
@@ -628,12 +630,15 @@ export const LocationSearch = ({
 						value={!gettingCurrentLocation ? queryString : gettingCurrentLocationFetchMessage}
 						ref={inputRef}
 						disabled={disableTextSearch}
+						disableInput={disableTextSearch}
 					/>
 
 					<SearchBarIconButton
 						onClick={handleClearInput}
 						id={TestHelper.generateId(id, "location-search-input-clear")}
 						data-testid={TestHelper.generateId(id, "location-search-input-clear")}
+						disabled={disableTextSearch}
+						disableCursor={disableTextSearch}
 					>
 						<SearchBarCross type="cross" />
 					</SearchBarIconButton>
