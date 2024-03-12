@@ -8,6 +8,7 @@ import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../frontend-engine/yup";
+import { TCheckboxGroupSchema, TRadioButtonGroupSchema } from "../../fields";
 
 interface IProps {
 	id: string;
@@ -90,8 +91,24 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 		const childIdList: string[] = [];
 
 		// Handle special fields that render additional fields
-		if (schema.uiType === "chips") {
-			childIdList.push(id + "-textarea");
+		switch (schema.uiType) {
+			case "chips":
+				childIdList.push(id + "-textarea");
+				break;
+			case "checkbox":
+			case "radio":
+				(schema as TCheckboxGroupSchema | TRadioButtonGroupSchema).options.forEach((option) => {
+					const optionChildren = option["children"];
+					if (!isEmpty(optionChildren) && isObject(optionChildren)) {
+						Object.entries(optionChildren).forEach(([id, child]) => {
+							childIdList.push(id);
+							if (child["children"]) {
+								childIdList.push(...listAllChildIds(child["children"]));
+							}
+						});
+					}
+				});
+				break;
 		}
 
 		// Handle nested fields

@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
-import { IRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
+import { TRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
 import {
 	CommonFieldStoryProps,
 	FrontendEngine,
@@ -85,7 +85,7 @@ const Template = (id: string) =>
 				}),
 			}}
 		/>
-	)) as StoryFn<IRadioButtonGroupSchema & { defaultValues?: string | undefined }>;
+	)) as StoryFn<TRadioButtonGroupSchema & { defaultValues?: string | undefined }>;
 
 export const Default = Template("radio-default").bind({});
 Default.args = {
@@ -198,7 +198,7 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const Overrides = OverrideStoryTemplate<IRadioButtonGroupSchema>("radio-overrides").bind({});
+export const Overrides = OverrideStoryTemplate<TRadioButtonGroupSchema>("radio-overrides").bind({});
 Overrides.args = {
 	uiType: "radio",
 	label: "Radio Button",

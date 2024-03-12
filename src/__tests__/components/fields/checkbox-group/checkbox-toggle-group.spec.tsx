@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { useState } from "react";
-import { ICheckboxGroupSchema } from "../../../../components/fields";
+import { TCheckboxGroupSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
@@ -21,6 +21,7 @@ import { labelTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
+const NESTED_FIELD_ID = "nested-field";
 const UI_TYPE = "checkbox";
 
 const JSON_SCHEMA: IFrontendEngineData = {
@@ -49,7 +50,7 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-const renderComponent = (overrideField?: TOverrideField<ICheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (overrideField?: TOverrideField<TCheckboxGroupSchema>, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
 	merge(json, {
 		sections: {
@@ -76,6 +77,10 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 
 const getToggles = (): HTMLElement[] => {
 	return screen.getAllByRole("checkbox");
+};
+
+const getNestedField = (): HTMLElement => {
+	return screen.queryByRole("textbox");
 };
 
 describe("checkbox toggle group", () => {
@@ -259,6 +264,110 @@ describe("checkbox toggle group", () => {
 				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
 			}
 		);
+	});
+
+	describe("nested fields in options", () => {
+		it("should be able to support default values in nested field", async () => {
+			const defaultValues = ["Apple"];
+			const defaultTextAreaValue = "Fuji";
+			renderComponent(
+				{
+					options: [
+						{
+							label: "A",
+							value: "Apple",
+							children: { [NESTED_FIELD_ID]: { uiType: "text-field", label: "Variety" } },
+						},
+					],
+				},
+				{
+					defaultValues: {
+						[COMPONENT_ID]: defaultValues,
+						[NESTED_FIELD_ID]: defaultTextAreaValue,
+					},
+				}
+			);
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({
+					[COMPONENT_ID]: defaultValues,
+					[NESTED_FIELD_ID]: defaultTextAreaValue,
+				})
+			);
+		});
+
+		it("should be able to support validation for nested field", async () => {
+			renderComponent({
+				options: [
+					{
+						label: "A",
+						value: "Apple",
+						children: {
+							[NESTED_FIELD_ID]: {
+								uiType: "text-field",
+								label: "Variety",
+								validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+							},
+						},
+					},
+				],
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			fireEvent.change(getNestedField(), { target: { value: "Hello" } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({
+					[NESTED_FIELD_ID]: "Hello",
+				})
+			);
+		});
+
+		it("should be able to support validation for conditionally rendered nested field", async () => {
+			renderComponent({
+				options: [
+					{
+						label: "A",
+						value: "Apple",
+						children: {
+							[NESTED_FIELD_ID]: {
+								uiType: "text-field",
+								label: "Variety",
+								validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+								showIf: [{ [COMPONENT_ID]: [{ filled: true }, { includes: ["Apple"] }] }],
+							},
+						},
+					},
+				],
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.not.objectContaining({ [NESTED_FIELD_ID]: expect.anything() })
+			);
+
+			const checkboxes = getToggles();
+			fireEvent.click(checkboxes[0]);
+			fireEvent.change(getNestedField(), { target: { value: "Hello" } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({
+					[COMPONENT_ID]: ["Apple"],
+					[NESTED_FIELD_ID]: "Hello",
+				})
+			);
+		});
 	});
 
 	describe("reset", () => {
