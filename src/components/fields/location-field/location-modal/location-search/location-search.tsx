@@ -163,7 +163,6 @@ export const LocationSearch = ({
 			// TODO: no op or error?
 			if (!payload?.lat || !payload?.lng) return;
 
-			dispatchFieldEvent("current-location-has-set", id, payload);
 			const { lat, lng } = payload;
 			displayResultsFromLatLng(lat, lng);
 			onGetLocationCallback(lat, lng);

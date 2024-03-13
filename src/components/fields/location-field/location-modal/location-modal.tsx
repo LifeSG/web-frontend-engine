@@ -143,16 +143,25 @@ const LocationModal = ({
 			panelInputMode !== "double" && setPanelInputMode("map");
 			return;
 		}
-		/**
-		 * We should only getCurrentLocation when nothing is prefilled
-		 * when formvalues are prefilled, the useEffect will recenter
-		 * the location for us
-		 *
-		 * This is meant for first entry
-		 */
-		if (!formValues?.lat && !formValues?.lng) {
-			getCurrentLocation();
-		}
+
+		const recenterAndTriggerEvent = async () => {
+			/**
+			 * We should only getCurrentLocation when nothing is prefilled
+			 * when formvalues are prefilled, the useEffect will recenter
+			 * the location for us
+			 *
+			 * This is meant for first entry
+			 */
+			let currSelectedLocation: ILocationCoord = {
+				lat: formValues?.lat,
+				lng: formValues?.lng,
+			};
+			if (!formValues?.lat && !formValues?.lng) {
+				currSelectedLocation = await getCurrentLocation();
+			}
+			dispatchFieldEvent("get-selectable-pins", id, currSelectedLocation);
+		};
+		recenterAndTriggerEvent();
 	}, [showLocationModal]);
 
 	/**
@@ -263,12 +272,13 @@ const LocationModal = ({
 			const detail: TSetCurrentLocationDetail = {};
 
 			try {
-				detail["payload"] = await GeoLocationHelper.getCurrentLocation();
+				detail.payload = await GeoLocationHelper.getCurrentLocation();
 			} catch (error) {
-				detail["errors"] = error;
+				detail.errors = error;
 			}
 
 			dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
+			return detail.payload;
 		}
 	};
 

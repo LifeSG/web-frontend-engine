@@ -537,10 +537,10 @@ const SetSelectablePinsTemplate = () =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("current-location-has-set", id, getPins);
+			currentFormRef.addFieldEventListener("get-selectable-pins", id, getPins);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("current-location-has-set", id, getPins);
+				currentFormRef.removeFieldEventListener("get-selectable-pins", id, getPins);
 			};
 		}, []);
 
