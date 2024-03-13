@@ -26,9 +26,9 @@ const meta: Meta = {
 		docs: {
 			page: () => (
 				<>
-					<Title>Events for Image Upload field</Title>
+					<Title>Events for Location field</Title>
 					<Description>
-						Custom events unique to the image upload field, it allows adding of event listeners to it.
+						Custom events unique to the location field, it allows adding of event listeners to it.
 					</Description>
 					<Stories includePrimary={true} title="Examples" />
 				</>
@@ -602,5 +602,5 @@ const SetSelectablePinsTemplate = () =>
 export const SetSelectablePins = SetSelectablePinsTemplate().bind({});
 SetSelectablePins.args = {
 	uiType: "location-field",
-	label: "Enable Map Click",
+	label: "Set Selectable Pins",
 };
