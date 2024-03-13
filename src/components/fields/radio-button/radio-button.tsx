@@ -1,5 +1,4 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { Toggle } from "@lifesg/react-design-system/toggle";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -7,6 +6,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Wrapper } from "../../elements/wrapper";
 import { Sanitize } from "../../shared";
 import {
 	FlexImageWrapper,
@@ -15,10 +15,12 @@ import {
 	RadioContainer,
 	StyledImageButton,
 	StyledRadioButton,
+	StyledToggle,
+	ToggleSublabel,
 } from "./radio-button.styles";
-import { IRadioButtonGroupSchema } from "./types";
+import { TRadioButtonGroupSchema } from "./types";
 
-export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSchema>) => {
+export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -111,7 +113,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 						const radioButtonId = formatId(index);
 
 						return (
-							<Toggle
+							<StyledToggle
 								{...otherSchema}
 								key={index}
 								type="radio"
@@ -124,9 +126,16 @@ export const RadioButtonGroup = (props: IGenericFieldProps<IRadioButtonGroupSche
 								checked={isRadioButtonChecked(option.value)}
 								onChange={() => handleChangeOrClick(option.value)}
 								error={!!error?.message}
+								subLabel={() =>
+									option.children ? (
+										<ToggleSublabel>
+											<Wrapper>{option.children}</Wrapper>
+										</ToggleSublabel>
+									) : null
+								}
 							>
 								{option.label}
-							</Toggle>
+							</StyledToggle>
 						);
 					})}
 				</FlexToggleWrapper>

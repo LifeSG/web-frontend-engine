@@ -1,6 +1,7 @@
-import { ImageButton } from "@lifesg/react-design-system";
+import { ImageButton } from "@lifesg/react-design-system/image-button";
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import { Text } from "@lifesg/react-design-system/text";
+import { Toggle } from "@lifesg/react-design-system/toggle";
 import styled from "styled-components";
 import { TRadioToggleLayoutType } from "./types";
 
@@ -47,4 +48,14 @@ export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
 	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
 	gap: 1rem;
+`;
+
+export const StyledToggle = styled(Toggle)`
+	[data-id="toggle-sublabel"] {
+		margin-top: 0;
+	}
+`;
+
+export const ToggleSublabel = styled.div`
+	pointer-events: auto;
 `;
