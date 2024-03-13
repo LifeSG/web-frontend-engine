@@ -73,6 +73,19 @@ const meta: Meta = {
 			},
 			control: { type: "object" },
 		},
+		disableTextSearch: {
+			description: "Specifies if the search input field is disabled",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -234,4 +247,13 @@ WithCustomMapPanZoom.args = {
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14 },
+};
+
+export const DisableTextSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
+DisableTextSearch.args = {
+	uiType: "location-field",
+	label: "DisableTextSearch",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	disableTextSearch: true,
 };

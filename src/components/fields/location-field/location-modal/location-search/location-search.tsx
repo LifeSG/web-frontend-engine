@@ -44,6 +44,7 @@ export const LocationSearch = ({
 
 	showLocationModal,
 	mustHavePostalCode,
+	disableTextSearch,
 
 	panelInputMode,
 	selectedAddressInfo,
@@ -612,6 +613,8 @@ export const LocationSearch = ({
 					<SearchBarIconButton
 						onClick={handleInputFocus}
 						id={TestHelper.generateId(id, "location-search-modal-search")}
+						data-testid={TestHelper.generateId(id, "location-search-modal-search")}
+						disabled={disableTextSearch}
 					>
 						<SearchBarIcon src={SEARCH_SVG} alt="Search" />
 					</SearchBarIconButton>
@@ -625,12 +628,14 @@ export const LocationSearch = ({
 						readOnly={gettingCurrentLocation}
 						value={!gettingCurrentLocation ? queryString : gettingCurrentLocationFetchMessage}
 						ref={inputRef}
+						disabled={disableTextSearch}
 					/>
 
 					<SearchBarIconButton
 						onClick={handleClearInput}
 						id={TestHelper.generateId(id, "location-search-input-clear")}
 						data-testid={TestHelper.generateId(id, "location-search-input-clear")}
+						disabled={disableTextSearch}
 					>
 						<SearchBarCross type="cross" />
 					</SearchBarIconButton>

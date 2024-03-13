@@ -38,6 +38,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			staticMapPinColor,
 			validation,
 			hasExplicitEdit,
+			disableTextSearch,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -177,6 +178,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						locationModalStyles={locationModalStyles}
 						locationListTitle={locationListTitle}
 						mapBannerText={mapBannerText}
+						disableTextSearch={disableTextSearch}
 					/>
 				)}
 			</Suspense>

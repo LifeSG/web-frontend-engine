@@ -44,6 +44,7 @@ const LocationModal = ({
 	onConfirm,
 	updateFormValues,
 	locationListTitle,
+	disableTextSearch,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -406,6 +407,7 @@ const LocationModal = ({
 								gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 								mustHavePostalCode={mustHavePostalCode}
 								locationListTitle={locationListTitle}
+								disableTextSearch={disableTextSearch}
 							/>
 							<StyledLocationPicker
 								id={id}

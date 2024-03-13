@@ -51,6 +51,10 @@ export const SearchBarIconButton = styled.button`
 	padding: 0;
 	margin: 0;
 	cursor: pointer;
+
+	&:disabled {
+		cursor: not-allowed;
+	}
 `;
 
 export const SearchBarIcon = styled.img`
@@ -69,6 +73,10 @@ export const SearchBarInput = styled.input`
 	::placeholder,
 	::-webkit-input-placeholder {
 		color: ${Color.Neutral[4]};
+	}
+
+	&:disabled {
+		background-color: unset;
 	}
 `;
 
