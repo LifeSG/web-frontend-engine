@@ -42,7 +42,7 @@ export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	}
 `;
 
-export const SearchBarIconButton = styled.button<{ disableCursor?: boolean }>`
+export const SearchBarIconButton = styled.button`
 	display: flex;
 	width: fit-content;
 	align-items: center;
@@ -50,7 +50,11 @@ export const SearchBarIconButton = styled.button<{ disableCursor?: boolean }>`
 	border: none;
 	padding: 0;
 	margin: 0;
-	cursor: ${({ disableCursor }) => (disableCursor ? `not-allowed;` : `pointer;`)};
+	cursor: pointer;
+
+	&:disabled {
+		cursor: not-allowed;
+	}
 `;
 
 export const SearchBarIcon = styled.img`
@@ -58,7 +62,7 @@ export const SearchBarIcon = styled.img`
 	height: auto;
 `;
 
-export const SearchBarInput = styled.input<{ disableInput?: boolean }>`
+export const SearchBarInput = styled.input`
 	border: none;
 	width: 100%;
 	margin: 0;
@@ -68,7 +72,11 @@ export const SearchBarInput = styled.input<{ disableInput?: boolean }>`
 
 	::placeholder,
 	::-webkit-input-placeholder {
-		color: ${({ disableInput }) => (disableInput ? `unset` : `${Color.Neutral[4]}`)};
+		color: ${Color.Neutral[4]};
+	}
+
+	&:disabled {
+		background-color: unset;
 	}
 `;
 
