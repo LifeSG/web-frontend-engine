@@ -93,10 +93,14 @@ const LocationModal = ({
 
 		addFieldEventListener("error-end", id, handleError);
 		addFieldEventListener("confirm-location", id, handleConfirm);
+		addFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
+		addFieldEventListener("close-location-modal", id, handleCancel);
 
 		return () => {
 			removeFieldEventListener("error-end", id, handleError);
 			removeFieldEventListener("confirm-location", id, handleConfirm);
+			removeFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
+			removeFieldEventListener("close-location-modal", id, handleCancel);
 		};
 	}, []);
 
@@ -211,6 +215,10 @@ const LocationModal = ({
 		handleCloseLocationModal();
 	};
 
+	const handleHidePermissionModal = () => {
+		setShowGetLocationError(false);
+	};
+
 	const handleClickConfirm = () => {
 		const shouldPreventDefault = !dispatchFieldEvent("click-confirm-location", id, selectedAddressInfo);
 		if (!shouldPreventDefault) {
@@ -225,7 +233,10 @@ const LocationModal = ({
 	};
 
 	const handleCloseLocationPermissionModal = () => {
-		setShowGetLocationError(false);
+		const shouldPreventDefault = !dispatchFieldEvent("click-ok-permission", id);
+		if (!shouldPreventDefault) {
+			setShowGetLocationError(false);
+		}
 	};
 
 	const handleMapClick = (latlng: ILocationCoord) => {
