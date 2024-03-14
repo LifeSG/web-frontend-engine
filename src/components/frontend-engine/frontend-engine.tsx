@@ -11,6 +11,7 @@ import {
 	useFieldEvent,
 	useFormSchema,
 	useFormValues,
+	useFrontendEngineForm,
 	useValidationConfig,
 	useValidationSchema,
 } from "../../utils/hooks";
@@ -41,6 +42,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 	const { setCustomComponents } = useCustomComponents();
+	const { setSubmitHandler, setWrapInForm } = useFrontendEngineForm();
 	const { addWarnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
 	const { formValidationConfig } = useValidationConfig();
 	const formMethods = useForm({
@@ -103,15 +105,19 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		}
 	}, [getValues, hardValidationSchema]);
 
-	const handleSubmit = (): void => {
+	const handleSubmit = useCallback((): void => {
 		onSubmit?.(getFormValues(undefined, stripUnknown));
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [getFormValues, onSubmit, stripUnknown]);
 
-	const handleSubmitError = (errors: TFrontendEngineValues): void => {
-		// NOTE: this delays the callback into the process tick, ensuring the dom has updated by then
-		// this allows for potential error handling targeting attribute tags like `aria-invalid`
-		setTimeout(() => onSubmitError?.(errors));
-	};
+	const handleSubmitError = useCallback(
+		(errors: TFrontendEngineValues): void => {
+			// NOTE: this delays the callback into the process tick, ensuring the dom has updated by then
+			// this allows for potential error handling targeting attribute tags like `aria-invalid`
+			setTimeout(() => onSubmitError?.(errors));
+		},
+		[onSubmitError]
+	);
 
 	// NOTE: Wrapper component contains nested fields
 	const setErrors = (errors: TErrorPayload): void => {
@@ -225,6 +231,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		setCustomComponents(components);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [components]);
+
+	useEffect(() => {
+		setSubmitHandler(() => reactFormHookSubmit(handleSubmit, handleSubmitError));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [handleSubmit, handleSubmitError]);
+
+	useEffect(() => {
+		setWrapInForm(wrapInForm);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [wrapInForm]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS

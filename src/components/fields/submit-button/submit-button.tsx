@@ -4,7 +4,7 @@ import { useWatch } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { useValidationConfig, useValidationSchema } from "../../../utils/hooks";
+import { useFrontendEngineForm, useValidationConfig, useValidationSchema } from "../../../utils/hooks";
 import { ISubmitButtonSchema } from "./types";
 
 export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => {
@@ -16,6 +16,7 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 		schema: { disabled, label, ...otherSchema },
 		...otherProps
 	} = props;
+	const { submitHandler, wrapInForm } = useFrontendEngineForm();
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { hardValidationSchema } = useValidationSchema();
 	const formValues = useWatch({ disabled: disabled !== "invalid-form" });
@@ -41,10 +42,29 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 	}, [formValues, hardValidationSchema]);
 
 	// =============================================================================
+	// EVENT HANDLERS
+	// =============================================================================
+	const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		// perform manual submission only if FEE does not render the <form>
+		if (!wrapInForm) {
+			e.preventDefault();
+			submitHandler?.();
+		}
+	};
+
+	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Button.Default {...otherSchema} {...otherProps} disabled={isDisabled} data-testid={id} id={id} type="submit">
+		<Button.Default
+			{...otherSchema}
+			{...otherProps}
+			disabled={isDisabled}
+			data-testid={id}
+			id={id}
+			onClick={handleClick}
+			type="submit"
+		>
 			{label}
 		</Button.Default>
 	);

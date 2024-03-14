@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { UseFormReturn, useFormContext } from "react-hook-form";
 import { FormValuesContext } from "../../context-providers";
 
@@ -44,33 +44,37 @@ export const useFormValues = (formMethods?: UseFormReturn | undefined) => {
 	 * @param payload specify the value(s) by field id(s) to return
 	 * @param stripUnknown whether to exclude values of unregistered fields
 	 */
-	const getFormValues = (payload?: string | string[] | undefined, stripUnknown = false) => {
-		if (typeof payload === "string") {
-			if (!stripUnknown || (stripUnknown && registeredFields.includes(payload))) {
-				return formMethods?.getValues(payload) || formContext?.getValues(payload);
-			}
-		} else if (Array.isArray(payload)) {
-			if (!stripUnknown) {
-				return formMethods?.getValues(payload) || formContext?.getValues(payload);
+	const getFormValues = useCallback(
+		(payload?: string | string[] | undefined, stripUnknown = false) => {
+			if (typeof payload === "string") {
+				if (!stripUnknown || (stripUnknown && registeredFields.includes(payload))) {
+					return formMethods?.getValues(payload) || formContext?.getValues(payload);
+				}
+			} else if (Array.isArray(payload)) {
+				if (!stripUnknown) {
+					return formMethods?.getValues(payload) || formContext?.getValues(payload);
+				} else {
+					const registeredFieldIds = payload.filter((fieldId) => registeredFields.includes(fieldId));
+					return formMethods?.getValues(registeredFieldIds) || formContext?.getValues(registeredFieldIds);
+				}
 			} else {
-				const registeredFieldIds = payload.filter((fieldId) => registeredFields.includes(fieldId));
-				return formMethods?.getValues(registeredFieldIds) || formContext?.getValues(registeredFieldIds);
+				const values = formMethods?.getValues() || formContext?.getValues();
+				if (!stripUnknown) {
+					return values;
+				} else {
+					const registeredFormValues = {};
+					Object.entries(values).forEach(([key, value]) => {
+						if (registeredFields.includes(key)) {
+							registeredFormValues[key] = value;
+						}
+					});
+					return registeredFormValues;
+				}
 			}
-		} else {
-			const values = formMethods?.getValues() || formContext?.getValues();
-			if (!stripUnknown) {
-				return values;
-			} else {
-				const registeredFormValues = {};
-				Object.entries(values).forEach(([key, value]) => {
-					if (registeredFields.includes(key)) {
-						registeredFormValues[key] = value;
-					}
-				});
-				return registeredFormValues;
-			}
-		}
-	};
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[formContext?.getValues, formMethods?.getValues, registeredFields]
+	);
 
 	return {
 		formValues,
