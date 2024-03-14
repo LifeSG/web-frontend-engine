@@ -526,3 +526,44 @@ CustomErrorHandling.args = {
 	mustHavePostalCode: true,
 	reverseGeoCodeEndpoint: "willBreak",
 };
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const StrictLocationTemplate = () =>
+	((args) => {
+		const id = "location-modal";
+		const formRef = useRef<IFrontendEngineRef>();
+
+		const handleCloseLocationModal = (e) => {
+			e.preventDefault();
+			formRef.current.dispatchFieldEvent("close-location-modal", id);
+		};
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("click-ok-permission", id, handleCloseLocationModal);
+			return () => currentFormRef.removeFieldEventListener("click-ok-permission", id, handleCloseLocationModal);
+		}, []);
+
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				}}
+			/>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+
+export const StrictLocation = StrictLocationTemplate().bind({});
+StrictLocation.args = {
+	uiType: "location-field",
+	label: "Strict Location",
+};
