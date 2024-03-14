@@ -159,7 +159,9 @@ const LocationModal = ({
 			if (!formValues?.lat && !formValues?.lng) {
 				currSelectedLocation = await getCurrentLocation();
 			}
-			dispatchFieldEvent("get-selectable-pins", id, currSelectedLocation);
+			if (currSelectedLocation?.lat && currSelectedLocation?.lng) {
+				dispatchFieldEvent("get-selectable-pins", id, currSelectedLocation);
+			}
 		};
 		recenterAndTriggerEvent();
 	}, [showLocationModal]);
