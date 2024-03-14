@@ -86,6 +86,18 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		hasExplicitEdit: {
+			description:
+				"<div>Specifies the explicit edit behaviour: <ul><li>explicit: Show edit button after select location and disabled input field</li><li>show: Show edit button after select location.</li></ul></div>",
+			table: {
+				type: {
+					summary: "explicit | show",
+				},
+			},
+			control: {
+				type: "text",
+			},
+		},
 	},
 };
 export default meta;
