@@ -66,6 +66,18 @@ const meta: Meta = {
 		},
 		disableMapClickOnStart: {
 			description: "Specifies if the location can be selected by clicking on the map",
+		},
+		mapPanZoom: {
+			description: "Specifies the map pan zoom value.",
+			table: {
+				type: {
+					summary: `{mobile?: number, nonMobile?: number, min?: number, max?: number}`,
+				},
+			},
+			control: { type: "object" },
+		},
+		disableTextSearch: {
+			description: "Specifies if the search input field is disabled",
 			table: {
 				type: {
 					summary: "boolean",
@@ -227,6 +239,26 @@ LocationListTitle.args = {
 	locationListTitle: "Nearest car parks",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
+};
+
+export const WithCustomMapPanZoom = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-custom-map-pan-zoom"
+).bind({});
+WithCustomMapPanZoom.args = {
+	uiType: "location-field",
+	label: "WithCustomMapPanZoom",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14 },
+};
+
+export const DisableTextSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
+DisableTextSearch.args = {
+	uiType: "location-field",
+	label: "DisableTextSearch",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	disableTextSearch: true,
 };
 
 export const DisableLocationSelectionOnStart = DefaultStoryTemplate<ILocationFieldSchema>(

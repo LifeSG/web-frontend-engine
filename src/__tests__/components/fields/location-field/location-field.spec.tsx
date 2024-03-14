@@ -286,6 +286,10 @@ const getLocationSearchInput = (query = false) => {
 	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-search-modal-input"));
 };
 
+const getLocationSearchButton = (query = false) => {
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-search-modal-search"));
+};
+
 const getLocationInput = (query = false) => {
 	return within(testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-input"))).getByTestId("input");
 };
@@ -1526,6 +1530,28 @@ describe("location-input-group", () => {
 						expect(
 							screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "location-banner"))
 						).not.toBeInTheDocument();
+					});
+				});
+
+				describe("when using the disable text search", () => {
+					it("should allow text input when disable text search is default as false", () => {
+						renderComponent();
+
+						getLocationSearchInput().focus();
+						fireEvent.change(getLocationSearchInput(), { target: { value: "text input" } });
+
+						expect(getLocationSearchButton()).toBeEnabled();
+						expect(getLocationSearchInput()).toHaveFocus();
+						expect(getLocationSearchInput()).toHaveValue("text input");
+						expect(getLocationSearchClearButton()).toBeEnabled();
+					});
+
+					it("should disable text input when disable text search is true", () => {
+						renderComponent({ overrideField: { disableTextSearch: true } });
+
+						expect(getLocationSearchButton()).toBeDisabled();
+						expect(getLocationSearchInput()).toBeDisabled();
+						expect(getLocationSearchClearButton()).toBeDisabled();
 					});
 				});
 			});

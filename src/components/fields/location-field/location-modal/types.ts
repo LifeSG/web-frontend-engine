@@ -10,6 +10,7 @@ export interface ILocationModalProps
 			| "convertLatLngToXYEndpoint"
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
+			| "disableTextSearch"
 		> {
 	id: string;
 	className: string;

@@ -1,5 +1,4 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { Toggle } from "@lifesg/react-design-system/toggle";
 import without from "lodash/without";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -8,11 +7,19 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
-import { CheckboxContainer, Label, StyledCheckbox, ToggleWrapper } from "./checkbox-group.styles";
-import { ICheckboxGroupSchema } from "./types";
+import {
+	CheckboxContainer,
+	Label,
+	StyledCheckbox,
+	StyledToggle,
+	ToggleSublabel,
+	ToggleWrapper,
+} from "./checkbox-group.styles";
+import { IToggleOption, TCheckboxGroupSchema } from "./types";
 
-export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) => {
+export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -66,7 +73,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (value: string, none?: boolean): void => {
-		const nullOpt = options.find((opt) => opt.none === true);
+		const nullOpt = options.find((opt: IToggleOption) => opt.none === true);
 		let updatedStateValues = [...stateValue];
 		if (none) {
 			updatedStateValues = updatedStateValues.includes(value) ? [] : [value];
@@ -130,7 +137,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 						const checkboxId = formatId(index);
 
 						return (
-							<Toggle
+							<StyledToggle
 								key={index}
 								{...otherSchema}
 								type="checkbox"
@@ -143,9 +150,16 @@ export const CheckboxGroup = (props: IGenericFieldProps<ICheckboxGroupSchema>) =
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
 								error={!!error?.message}
+								subLabel={() =>
+									option.children ? (
+										<ToggleSublabel>
+											<Wrapper>{option.children}</Wrapper>
+										</ToggleSublabel>
+									) : null
+								}
 							>
 								{option.label}
-							</Toggle>
+							</StyledToggle>
 						);
 					})}
 				</ToggleWrapper>

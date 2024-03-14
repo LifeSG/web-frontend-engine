@@ -32,4 +32,5 @@ export interface ILocationSearchProps {
 	hasExplicitEdit?: TExplicitEditMode | undefined;
 	restrictLocationSelection?: boolean | undefined;
 	selectablePins: IMapPin[];
+	disableTextSearch?: boolean | undefined;
 }
