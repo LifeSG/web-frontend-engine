@@ -659,6 +659,7 @@ export const LocationSearch = ({
 							onClick={handleClearInput}
 							id={TestHelper.generateId(id, "location-search-input-clear")}
 							data-testid={TestHelper.generateId(id, "location-search-input-clear")}
+							disabled={disableTextSearch}
 						>
 							<SearchBarCross type="cross" />
 						</SearchBarIconButton>
