@@ -88,10 +88,10 @@ const meta: Meta = {
 		},
 		hasExplicitEdit: {
 			description:
-				"<div>Specifies the explicit edit behaviour: <ul><li>explicit: Show edit button after select location and disabled input field</li><li>show: Show edit button after select location.</li></ul></div>",
+				"<div>Specifies the explicit edit behaviour: <ul><li>undefined: Edit button will not be shown even after select location</li><li>explicit: Show edit button after select location and disabled input field</li><li>show: Show edit button after select location.</li></ul></div>",
 			table: {
 				type: {
-					summary: "explicit | show",
+					summary: "undefined | explicit | show",
 				},
 			},
 			control: {
