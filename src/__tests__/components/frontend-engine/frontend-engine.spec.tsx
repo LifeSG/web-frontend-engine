@@ -113,110 +113,210 @@ describe("frontend-engine", () => {
 		expect(getFieldOne()).toBeInTheDocument();
 	});
 
-	describe("onChange", () => {
-		const onChange = jest.fn();
-		it("should call onChange prop", async () => {
-			renderComponent({
-				onChange,
+	describe.each`
+		wrapInForm   | element
+		${undefined} | ${"form"}
+		${true}      | ${"form"}
+		${false}     | ${"div"}
+	`("when wrapInForm=$wrapInForm", ({ wrapInForm, element }) => {
+		it(`should render the fields in a ${element}`, () => {
+			renderComponent({ wrapInForm });
+
+			expect(screen.getByTestId("test__frontend-engine").nodeName).toBe(element.toUpperCase());
+		});
+
+		describe("onChange", () => {
+			const onChange = jest.fn();
+			it("should call onChange prop", async () => {
+				renderComponent({
+					onChange,
+					wrapInForm,
+				});
+
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
 			});
 
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			it("should return the correct validity when form is prefilled with valid values", async () => {
+				renderComponent(
+					{ onChange },
+					{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[FIELD_ONE_ID]: {
+										uiType: "text-field",
+										label: FIELD_ONE_LABEL,
+										validation: [{ required: true }],
+									},
+								},
+							},
+						},
+						defaultValues: { [FIELD_ONE_ID]: "a" },
+					}
+				);
+
+				expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), true);
+			});
+
+			it("should return the correct validity when form is prefilled with invalid values", async () => {
+				renderComponent(
+					{ onChange },
+					{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[FIELD_ONE_ID]: {
+										uiType: "text-field",
+										label: FIELD_ONE_LABEL,
+										validation: [{ min: 5 }],
+									},
+								},
+							},
+						},
+						defaultValues: { [FIELD_ONE_ID]: "a" },
+					}
+				);
+
+				expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false);
+			});
+
+			it("should include form values of unregistered fields if stripUnknown is not true", () => {
+				renderComponent({ onChange }, { ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } });
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+				const finalOnChangeCall = onChange.mock.lastCall[0];
+				expect(finalOnChangeCall).toEqual({
+					[FIELD_ONE_ID]: "hello",
+					nonExistentField: "hello world",
+					submit: undefined,
+				});
+			});
+
+			it("should exclude form values of unregistered fields if stripUnknown is true", () => {
+				renderComponent(
+					{ onChange },
+					{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }
+				);
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+				const finalOnChangeCall = onChange.mock.lastCall[0];
+				expect(finalOnChangeCall).toEqual({
+					[FIELD_ONE_ID]: "hello",
+					submit: undefined,
+				});
+			});
+		});
+
+		it("should call onSubmitError prop and not onSubmit prop on submit with validation error(s)", async () => {
+			const onSubmit = jest.fn();
+			const onSubmitError = jest.fn();
+			renderComponent({
+				onSubmit,
+				onSubmitError,
+				wrapInForm,
+			});
+
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
+			expect(onSubmitError).toBeCalledWith({
+				[FIELD_ONE_ID]: {
+					message: ERROR_MESSAGE,
+					ref: expect.anything(),
+					type: expect.anything(),
+				},
+			});
+			expect(onSubmit).not.toBeCalled();
 		});
 
-		it("should return the correct validity when form is prefilled with valid values", async () => {
-			renderComponent(
-				{ onChange },
-				{
-					sections: {
-						section: {
-							uiType: "section",
-							children: {
-								[FIELD_ONE_ID]: {
-									uiType: "text-field",
-									label: FIELD_ONE_LABEL,
-									validation: [{ required: true }],
-								},
-							},
-						},
-					},
-					defaultValues: { [FIELD_ONE_ID]: "a" },
-				}
-			);
+		describe("submit", () => {
+			it("should submit through submit method", async () => {
+				const submitFn = jest.fn();
+				render(<FrontendEngine data={JSON_SCHEMA} wrapInForm={wrapInForm} onSubmit={submitFn} />);
 
-			expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), true);
-		});
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		it("should return the correct validity when form is prefilled with invalid values", async () => {
-			renderComponent(
-				{ onChange },
-				{
-					sections: {
-						section: {
-							uiType: "section",
-							children: {
-								[FIELD_ONE_ID]: {
-									uiType: "text-field",
-									label: FIELD_ONE_LABEL,
-									validation: [{ min: 5 }],
-								},
-							},
-						},
-					},
-					defaultValues: { [FIELD_ONE_ID]: "a" },
-				}
-			);
+				expect(submitFn).toBeCalledWith({ [FIELD_ONE_ID]: "hello", submit: undefined });
+			});
 
-			expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false);
-		});
+			it("should include form values of unregistered fields if stripUnknown is not true", async () => {
+				const submitFn = jest.fn();
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue("nonExistentField2", "john doe");
+				};
+				render(
+					<FrontendEngineWithCustomButton
+						data={{ ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } }}
+						onClick={handleClick}
+						onSubmit={submitFn}
+						overrideProps={{ wrapInForm }}
+					/>
+				);
 
-		it("should include form values of unregistered fields if stripUnknown is not true", () => {
-			renderComponent({ onChange }, { ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } });
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				fireEvent.click(getCustomButton());
+				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			const finalOnChangeCall = onChange.mock.lastCall[0];
-			expect(finalOnChangeCall).toEqual({
-				[FIELD_ONE_ID]: "hello",
-				nonExistentField: "hello world",
-				submit: undefined,
+				expect(submitFn).toBeCalledWith({
+					[FIELD_ONE_ID]: "hello",
+					nonExistentField: "hello world",
+					nonExistentField2: "john doe",
+					submit: undefined,
+				});
+			});
+
+			it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
+				const submitFn = jest.fn();
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue("nonExistentField2", "john doe");
+				};
+				render(
+					<FrontendEngineWithCustomButton
+						data={{
+							...JSON_SCHEMA,
+							stripUnknown: true,
+							defaultValues: { nonExistentField: "hello world" },
+						}}
+						onClick={handleClick}
+						onSubmit={submitFn}
+						overrideProps={{ wrapInForm }}
+					/>
+				);
+
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				fireEvent.click(getCustomButton());
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(submitFn).toBeCalledWith({
+					[FIELD_ONE_ID]: "hello",
+					submit: undefined,
+				});
 			});
 		});
 
-		it("should exclude form values of unregistered fields if stripUnknown is true", () => {
-			renderComponent(
-				{ onChange },
-				{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }
+		it("should reset through reset method", async () => {
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.reset();
+			};
+
+			render(
+				<FrontendEngineWithCustomButton
+					data={JSON_SCHEMA}
+					onClick={handleClick}
+					overrideProps={{ wrapInForm }}
+				/>
 			);
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			const field = getFieldOne();
+			fireEvent.change(field, { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(getCustomButton()));
 
-			const finalOnChangeCall = onChange.mock.lastCall[0];
-			expect(finalOnChangeCall).toEqual({
-				[FIELD_ONE_ID]: "hello",
-				submit: undefined,
-			});
+			expect(field).toHaveValue("");
 		});
-	});
-
-	it("should call onSubmitError prop and not onSubmit prop on submit with validation error(s)", async () => {
-		const onSubmit = jest.fn();
-		const onSubmitError = jest.fn();
-		renderComponent({
-			onSubmit,
-			onSubmitError,
-		});
-
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
-		expect(onSubmitError).toBeCalledWith({
-			[FIELD_ONE_ID]: {
-				message: ERROR_MESSAGE,
-				ref: expect.anything(),
-				type: expect.anything(),
-			},
-		});
-		expect(onSubmit).not.toBeCalled();
 	});
 
 	describe("getValues()", () => {
@@ -460,79 +560,6 @@ describe("frontend-engine", () => {
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		fireEvent.click(getCustomButton());
 		expect(isDirty).toBe(true);
-	});
-
-	describe("submit", () => {
-		it("should submit through submit method", async () => {
-			const submitFn = jest.fn();
-			render(<FrontendEngine data={JSON_SCHEMA} onSubmit={submitFn} />);
-
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-
-			expect(submitFn).toBeCalledWith({ [FIELD_ONE_ID]: "hello", submit: undefined });
-		});
-
-		it("should include form values of unregistered fields if stripUnknown is not true", async () => {
-			const submitFn = jest.fn();
-			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.setValue("nonExistentField2", "john doe");
-			};
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } }}
-					onClick={handleClick}
-					onSubmit={submitFn}
-				/>
-			);
-
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-			fireEvent.click(getCustomButton());
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-
-			expect(submitFn).toBeCalledWith({
-				[FIELD_ONE_ID]: "hello",
-				nonExistentField: "hello world",
-				nonExistentField2: "john doe",
-				submit: undefined,
-			});
-		});
-
-		it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
-			const submitFn = jest.fn();
-			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.setValue("nonExistentField2", "john doe");
-			};
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }}
-					onClick={handleClick}
-					onSubmit={submitFn}
-				/>
-			);
-
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-			fireEvent.click(getCustomButton());
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-
-			expect(submitFn).toBeCalledWith({
-				[FIELD_ONE_ID]: "hello",
-				submit: undefined,
-			});
-		});
-	});
-
-	it("should reset through reset method", async () => {
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			ref.current.reset();
-		};
-
-		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-		const field = getFieldOne();
-		fireEvent.change(field, { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(getCustomButton()));
-
-		expect(field).toHaveValue("");
 	});
 
 	it("should support custom validation", async () => {
