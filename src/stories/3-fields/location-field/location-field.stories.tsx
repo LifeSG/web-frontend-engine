@@ -3,8 +3,8 @@ import { Meta } from "@storybook/react";
 import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import { CommonFieldStoryProps, DefaultStoryTemplate, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
-const reverseGeoCodeEndpoint = "https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code";
-const convertLatLngToXYEndpoint = "https://www.dev.lifesg.io/book-facilities/api/v1/one-map/convert-latlng-to-xy";
+const reverseGeoCodeEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code";
+const convertLatLngToXYEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/convert-latlng-to-xy";
 const meta: Meta = {
 	title: "Field/LocationField",
 	parameters: {
