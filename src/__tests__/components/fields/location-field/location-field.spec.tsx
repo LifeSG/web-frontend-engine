@@ -59,12 +59,15 @@ enum ELocationInputEvents {
 	"CLICK_EDIT_BUTTON" = "click-edit-button",
 	"CLICK_CONFIRM_LOCATION" = "click-confirm-location",
 	"CONFIRM_LOCATION" = "confirm-location",
+	"CLICK_OK_PERMISSION" = "click-ok-permission",
+	"HIDE_PERMISSION_MODAL" = "hide-permission-modal",
+	"CLOSE_LOCATION_MODAL" = "close-location-modal",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
 	withEvents?: boolean;
 	eventType?: string;
-	eventListener?: (this: Element, ev: Event) => any;
+	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
 
 const FrontendEngineWithEventListener = ({
@@ -134,8 +137,9 @@ const FrontendEngineWithEventListener = ({
 	useEffect(() => {
 		if (eventType && eventListener) {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventType, "field", eventListener);
-			return () => currentFormRef.removeFieldEventListener(eventType, "field", eventListener);
+			const el = eventListener(currentFormRef);
+			currentFormRef.addFieldEventListener(eventType, COMPONENT_ID, el);
+			return () => currentFormRef.removeFieldEventListener(eventType, COMPONENT_ID, el);
 		}
 	}, [eventListener, eventType]);
 
@@ -206,7 +210,7 @@ interface IRenderProps {
 	locationDetails?: TSetCurrentLocationDetail;
 	validation?: IYupValidationRule[];
 	eventType?: string;
-	eventListener?: (this: Element, ev: Event) => any;
+	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
 
 const renderComponent = (
@@ -620,7 +624,7 @@ describe("location-input-group", () => {
 				const handleShowReviewModal = jest.fn();
 				renderComponent({
 					eventType: ELocationInputEvents.SHOW_MODAL,
-					eventListener: handleShowReviewModal,
+					eventListener: () => handleShowReviewModal,
 				});
 				getLocationInput().focus();
 				expect(handleShowReviewModal).toBeCalled();
@@ -630,7 +634,7 @@ describe("location-input-group", () => {
 				const handleHideReviewModal = jest.fn();
 				renderComponent({
 					eventType: "hide-location-modal",
-					eventListener: handleHideReviewModal,
+					eventListener: () => handleHideReviewModal,
 				});
 				getLocationInput().focus();
 				await waitFor(() => fireEvent.click(getField("button", "Cancel", false)));
@@ -1751,6 +1755,68 @@ describe("location-input-group", () => {
 			await waitFor(() => {
 				const locationListTitle = screen.getByText("Nearest car parks");
 				expect(locationListTitle).toBeInTheDocument();
+			});
+		});
+	});
+
+	describe("Permission Modal events", () => {
+		it("should hide location modal for strict location", async () => {
+			renderComponent({
+				withEvents: true,
+				locationDetails: {
+					errors: {
+						generic: "throw something",
+					},
+				},
+				eventType: ELocationInputEvents.CLICK_OK_PERMISSION,
+				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+					formRef.dispatchFieldEvent(ELocationInputEvents.CLOSE_LOCATION_MODAL, COMPONENT_ID);
+				},
+			});
+
+			await waitFor(() => window.dispatchEvent(new Event("online")));
+
+			getLocationInput().focus();
+
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+			});
+
+			within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).not.toBeInTheDocument();
+				expect(getLocationModal(true)).not.toBeInTheDocument();
+			});
+		});
+
+		it("should hide permission modal and still show location modal for non-strict location", async () => {
+			renderComponent({
+				withEvents: true,
+				locationDetails: {
+					errors: {
+						generic: "throw something",
+					},
+				},
+				eventType: ELocationInputEvents.CLICK_OK_PERMISSION,
+				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+					formRef.dispatchFieldEvent(ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
+				},
+			});
+
+			await waitFor(() => window.dispatchEvent(new Event("online")));
+
+			getLocationInput().focus();
+
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+			});
+
+			within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).not.toBeInTheDocument();
+				expect(getLocationModal(true)).toBeInTheDocument();
 			});
 		});
 	});
