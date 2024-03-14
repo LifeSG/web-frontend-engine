@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { EventContext } from "../../components/frontend-engine/event";
+import { EventContext } from "../../context-providers";
 
 /**
  * Hook that interacts with the event context provider

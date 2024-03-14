@@ -1,7 +1,7 @@
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IColumns } from "../frontend-engine";
-import { IYupValidationRule, TRenderRules } from "../frontend-engine/yup";
+import { IYupValidationRule, TRenderRules } from "../../context-providers";
 import { IButtonSchema } from "./button";
 import { TCheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";

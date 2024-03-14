@@ -209,8 +209,8 @@ export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProp
 		ref={ref}
 		{...props}
 	/>
-)) as <V = undefined>(
-	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
+)) as <V = undefined, C = undefined>(
+	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>, C> & { ref?: Ref<IFrontendEngineRef> }
 ) => ReactElement;
 
 export const LOREM_IPSUM = (prefix: string) => {

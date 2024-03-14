@@ -1,7 +1,7 @@
 import intersection from "lodash/intersection";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES } from "../../components/shared";
 import {
 	IFieldYupConfig,
 	IYupConditionalValidationRule,

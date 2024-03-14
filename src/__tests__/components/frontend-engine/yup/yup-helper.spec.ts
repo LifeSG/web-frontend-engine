@@ -1,7 +1,7 @@
 import isEqual from "lodash/isEqual";
 import * as Yup from "yup";
 import { SchemaDescription } from "yup/lib/schema";
-import { IYupValidationRule, TYupSchemaType, YupHelper } from "../../../../components/frontend-engine/yup";
+import { IYupValidationRule, TYupSchemaType, YupHelper } from "../../../../context-providers";
 import { TestHelper } from "../../../../utils";
 
 const ERROR_MESSAGE = "test error message";

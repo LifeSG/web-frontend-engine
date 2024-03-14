@@ -1,4 +1,4 @@
-import { YupHelper } from "../../../../components/frontend-engine/yup";
+import { YupHelper } from "../../../../context-providers";
 import { TestHelper } from "../../../../utils";
 
 describe("validateUinfin", () => {

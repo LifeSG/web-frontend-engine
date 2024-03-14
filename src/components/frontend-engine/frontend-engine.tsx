@@ -4,8 +4,10 @@ import isEmpty from "lodash/isEmpty";
 import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
+import { ContextProviders, IYupValidationRule, YupHelper } from "../../context-providers";
 import { ObjectHelper, TestHelper } from "../../utils";
 import {
+	useCustomComponents,
 	useFieldEvent,
 	useFormSchema,
 	useFormValues,
@@ -13,17 +15,13 @@ import {
 	useValidationSchema,
 } from "../../utils/hooks";
 import { Sections } from "../elements/sections";
-import { EventProvider } from "./event";
-import { FormSchemaProvider } from "./form-schema";
-import { FormValuesProvider } from "./form-values";
 import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
-import { IYupValidationRule, YupHelper, YupProvider } from "./yup";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { data, className = null, onChange, onSubmit, onSubmitError } = props;
+	const { data, className = null, components, onChange, onSubmit, onSubmitError } = props;
 	const {
 		className: dataClassName = null,
 		defaultValues,
@@ -35,6 +33,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	} = data || {};
 
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
+	const { setCustomComponents } = useCustomComponents();
 	const { warnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
 	const { formValidationConfig } = useValidationConfig();
 	const formMethods = useForm({
@@ -201,6 +200,11 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		setFormSchema(data);
 	}, [data || {}]);
 
+	useEffect(() => {
+		setCustomComponents(components);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [components]);
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -235,21 +239,19 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
  * The one and only component needed to create your form
  *
  * Minimally you will need to set the `data` props which is the JSON schema to define the form
+ *
+ * Generics
+ * - V = custom validation types
+ * - C = custom component types
  */
 export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	return (
-		<YupProvider>
-			<EventProvider>
-				<FormSchemaProvider>
-					<FormValuesProvider>
-						<FrontendEngineInner {...props} ref={ref} />
-					</FormValuesProvider>
-				</FormSchemaProvider>
-			</EventProvider>
-		</YupProvider>
+		<ContextProviders>
+			<FrontendEngineInner {...props} ref={ref} />
+		</ContextProviders>
 	);
-}) as <V = undefined>(
-	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>> & { ref?: Ref<IFrontendEngineRef> }
+}) as <V = undefined, C = undefined>(
+	props: IFrontendEngineProps<TNoInfer<V, IYupValidationRule>, C> & { ref?: Ref<IFrontendEngineRef> }
 ) => ReactElement;
 
 /**

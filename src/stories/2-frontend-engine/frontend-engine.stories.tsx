@@ -1,9 +1,15 @@
 import { Button } from "@lifesg/react-design-system/button";
+import { Form } from "@lifesg/react-design-system/form";
+import { Text } from "@lifesg/react-design-system/text";
 import { action } from "@storybook/addon-actions";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
+import * as Yup from "yup";
+import { TCustomComponentProps, TCustomComponentSchema } from "../../components";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
+import { TCustomComponent } from "../../context-providers";
+import { useFrontendEngineComponent } from "../../utils/hooks";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../common";
 
 const meta: Meta = {
@@ -713,5 +719,100 @@ export const StripUnknown: StoryFn<IFrontendEngineProps> = () => {
 	);
 };
 StripUnknown.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+interface MyCustomSchema extends TCustomComponentSchema<"my-custom-component"> {
+	displayTitle: string;
+	description: string;
+}
+
+const MyCustomComponent: TCustomComponent<MyCustomSchema> = (props: TCustomComponentProps<MyCustomSchema>) => {
+	const {
+		error,
+		id,
+		onChange,
+		schema: { description, displayTitle, validation },
+		...otherProps
+	} = props;
+
+	const {
+		validation: { setValidation },
+		event: { dispatchFieldEvent },
+	} = useFrontendEngineComponent();
+
+	useEffect(() => {
+		setValidation(
+			id,
+			Yup.string().test("custom-rule", "My custom component error", (value) => {
+				return value === "hello" || value === "world";
+			}),
+			validation
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [validation]);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		onChange(e);
+		dispatchFieldEvent("custom-change", id, e);
+	};
+
+	return (
+		<>
+			<Text.BodySmall style={{ marginBottom: "2rem" }}>{description}</Text.BodySmall>
+			<Form.Input
+				label={displayTitle}
+				id={id}
+				errorMessage={error?.message}
+				onChange={handleChange}
+				{...otherProps}
+			/>
+		</>
+	);
+};
+
+export const CustomComponent: StoryFn<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+
+	useEffect(() => {
+		const currentFormRef = ref.current;
+		currentFormRef.addFieldEventListener("custom-change", "myCustomComponent", handleEvent);
+
+		return () => {
+			currentFormRef.removeFieldEventListener("custom-change", "myCustomComponent", handleEvent);
+		};
+	}, []);
+
+	const handleEvent = (e) => {
+		action("custom-change")(e);
+	};
+
+	const json: IFrontendEngineData<undefined, MyCustomSchema> = {
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					myCustomComponent: {
+						referenceKey: "my-custom-component",
+						displayTitle: "Custom component",
+						description: `This component is defined outside Frontend Engine and fed into the instance at runtime. It accepts either "hello" or "world" and fires "custom-change" event on change.`,
+						validation: [{ required: true }],
+					},
+					...SUBMIT_BUTTON_SCHEMA,
+				},
+			},
+		},
+	};
+	return (
+		<FrontendEngine<undefined, MyCustomSchema>
+			components={{
+				"my-custom-component": MyCustomComponent,
+			}}
+			data={json}
+			ref={ref}
+		/>
+	);
+};
+CustomComponent.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
