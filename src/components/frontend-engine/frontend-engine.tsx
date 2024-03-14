@@ -28,7 +28,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { data, className = null, components, onChange, onSubmit, onSubmitError } = props;
+	const { data, className = null, components, onChange, onSubmit, onSubmitError, wrapInForm = true } = props;
 	const {
 		className: dataClassName = null,
 		defaultValues,
@@ -231,6 +231,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// =============================================================================
 	const formId = id ? `frontend-engine-${id}` : "frontend-engine";
 	const formClassNames = [className, dataClassName].join(" ").trim();
+	const InnerElement = wrapInForm ? "form" : "div";
 
 	if (!data) {
 		return (
@@ -242,16 +243,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	return (
 		<FormProvider {...formMethods}>
-			<form
+			<InnerElement
 				id={formId}
-				data-testid={TestHelper.generateId(id, "frontend-engine")}
+				data-testid={id ? TestHelper.generateId(id, "frontend-engine") : formId}
 				className={formClassNames}
 				noValidate
 				onSubmit={reactFormHookSubmit(handleSubmit, handleSubmitError)}
 				ref={ref}
 			>
 				<Sections schema={sections} />
-			</form>
+			</InnerElement>
 		</FormProvider>
 	);
 });

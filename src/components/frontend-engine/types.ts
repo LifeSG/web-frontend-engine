@@ -32,6 +32,14 @@ export interface IFrontendEngineProps<V = undefined, C = undefined> {
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 	/** Submit error event handler, invoked when form fails validation on submissiohn. Will receive validation errors */
 	onSubmitError?: (errors: TFrontendEngineValues) => unknown | undefined;
+	/** Indicates whether to wrap Frontend Engine fields within the `<form>` element, by default, fields will be rendered within the `<form>` element
+	 *
+	 * When false, the fields will be rendered within the `<div>` element instead
+	 *
+	 * This is for instances where Frontend Engine needs to be rendered within another <form> element
+	 *
+	 * Default: true */
+	wrapInForm?: boolean | undefined;
 }
 
 /**
@@ -83,7 +91,9 @@ export type TErrorMessage = string | string[] | Record<string, string | string[]
 export type TErrorPayload = Record<string, TErrorMessage>;
 export type TWarningPayload = Record<string, string>;
 
-export interface IFrontendEngineRef extends HTMLFormElement {
+export interface IFrontendEngineRef
+	extends Omit<HTMLDivElement, "addEventListener" | "removeEventListener">,
+		HTMLFormElement {
 	addCustomValidation: (
 		type: TYupSchemaType | "mixed",
 		name: string,
