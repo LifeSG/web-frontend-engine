@@ -1,4 +1,4 @@
-import { Suspense, lazy, useContext, useEffect, useState } from "react";
+import { Suspense, lazy, useContext, useEffect, useMemo, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { FileHelper, WindowHelper } from "../../../utils";
@@ -46,6 +46,10 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [showReviewModal, setShowReviewModal] = useState(false);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
+	const acceptsMIMEtypes = useMemo(
+		() => acceptedFileTypes.map(FileHelper.fileExtensionToMimeType),
+		[acceptedFileTypes]
+	);
 
 	// =============================================================================
 	// EFFECTS
@@ -247,7 +251,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				label={label}
 				description={description}
 				buttonLabel={buttonLabel}
-				accepts={acceptedFileTypes}
+				accepts={acceptsMIMEtypes}
 				maxFiles={maxFiles}
 				maxSizeInKb={maxFileSize}
 				dimensions={dimensions}

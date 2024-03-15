@@ -52,7 +52,9 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 				aria-hidden="true"
 				tabIndex={-1}
 				capture={capture}
-				accept={accept?.map((type) => `image/${type}`).join(",")}
+				// accept needs to be full MIME types (e.g., image/jpeg).
+				// Otherwise, the camera on some Android devices will not open when the capture attribute is set.
+				accept={accept?.map((type) => `${type}`).join(",")}
 				onChange={handleInputChange}
 				onClick={(event) => {
 					(event.target as HTMLInputElement).value = "";

@@ -18,7 +18,8 @@ import {
 	Wrapper,
 } from "./file-item.styles";
 
-interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
+interface IProps extends Omit<ISharedImageProps, "maxFiles" | "accepts"> {
+	accepts: string[];
 	id?: string;
 	index: number;
 	fileItem: IImage;
