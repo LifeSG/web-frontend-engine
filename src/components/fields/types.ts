@@ -26,6 +26,7 @@ import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./text
 import { ITextareaSchema } from "./textarea";
 import { ITimeFieldSchema } from "./time-field";
 import { IUnitNumberFieldSchema } from "./unit-number-field";
+import { IHiddenFieldSchema } from "./hidden-field/types";
 
 /**
  * field types
@@ -41,6 +42,7 @@ export enum EFieldType {
 	"DATE-RANGE-FIELD" = "DateRangeField",
 	"EMAIL-FIELD" = "TextField",
 	"FILE-UPLOAD" = "FileUpload",
+	"HIDDEN-FIELD" = "HiddenField",
 	"HISTOGRAM-SLIDER" = "HistogramSlider",
 	"IMAGE-UPLOAD" = "ImageUpload",
 	"LOCATION-FIELD" = "LocationField",
@@ -71,6 +73,7 @@ export type TFieldSchema<V = undefined> =
 	| IDateFieldSchema<V>
 	| IEmailFieldSchema<V>
 	| IFileUploadSchema<V>
+	| IHiddenFieldSchema<V>
 	| IHistogramSliderSchema<V>
 	| IImageUploadSchema<V>
 	| ILocationFieldSchema<V>
