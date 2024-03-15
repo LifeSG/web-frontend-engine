@@ -81,6 +81,7 @@ export type TValidationMode = keyof ValidationMode;
 export type TRestoreMode = "none" | "default-value" | "user-input";
 export type TErrorMessage = string | string[] | Record<string, string | string[]>;
 export type TErrorPayload = Record<string, TErrorMessage>;
+export type TWarningPayload = Record<string, string>;
 
 export interface IFrontendEngineRef extends HTMLFormElement {
 	addCustomValidation: (
@@ -120,8 +121,10 @@ export interface IFrontendEngineRef extends HTMLFormElement {
 	) => void;
 	/** resets the form to the default state */
 	reset: UseFormReset<TFrontendEngineValues>;
-	/** allows setting of custom errors thrown by endpoints */
+	/** allows setting of custom errors */
 	setErrors: (errors: TErrorPayload) => void;
+	/** allows setting of custom warnings */
+	setWarnings: (warnings: TWarningPayload) => void;
 	/** sets field value by id */
 	setValue: UseFormSetValue<TFrontendEngineValues>;
 	/** triggers form submission */

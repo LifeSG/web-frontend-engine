@@ -15,7 +15,14 @@ import {
 	useValidationSchema,
 } from "../../utils/hooks";
 import { Sections } from "../elements/sections";
-import { IFrontendEngineProps, IFrontendEngineRef, TErrorPayload, TFrontendEngineValues, TNoInfer } from "./types";
+import {
+	IFrontendEngineProps,
+	IFrontendEngineRef,
+	TErrorPayload,
+	TFrontendEngineValues,
+	TNoInfer,
+	TWarningPayload,
+} from "./types";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
@@ -34,7 +41,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 	const { setCustomComponents } = useCustomComponents();
-	const { warnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
+	const { addWarnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
 	const { formValidationConfig } = useValidationConfig();
 	const formMethods = useForm({
 		mode: validationMode,
@@ -82,6 +89,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			}
 		},
 		setErrors,
+		setWarnings,
 		setValue,
 		submit: reactFormHookSubmit(handleSubmit, handleSubmitError),
 	}));
@@ -128,6 +136,19 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				}
 			}
 		});
+	};
+
+	const setWarnings = (warningPayload: TWarningPayload) => {
+		const newWarnings: TWarningPayload = {};
+		Object.entries(warningPayload).forEach(([key, value]) => {
+			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(sections, key);
+			if (!isValidFieldKey) {
+				return;
+			}
+
+			newWarnings[key] = value;
+		});
+		addWarnings(newWarnings);
 	};
 
 	// =============================================================================
@@ -229,7 +250,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				onSubmit={reactFormHookSubmit(handleSubmit, handleSubmitError)}
 				ref={ref}
 			>
-				<Sections warnings={warnings} schema={sections} />
+				<Sections schema={sections} />
 			</form>
 		</FormProvider>
 	);
