@@ -1616,7 +1616,7 @@ describe("location-input-group", () => {
 			});
 		});
 
-		describe("disableLocationSelectionOnStart: true", () => {
+		describe("locationSelectionMode = 'pins'", () => {
 			beforeEach(async () => {
 				getCurrentLocationSpy.mockResolvedValue({
 					lat: 1.29994179707526,
@@ -1625,7 +1625,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should not render search clear button", async () => {
-				renderComponent({ overrideField: { disableLocationSelectionOnStart: true } });
+				renderComponent({ overrideField: { locationSelectionMode: "pins-only" } });
 
 				getLocationInput().focus();
 
@@ -1644,7 +1644,7 @@ describe("location-input-group", () => {
 				renderComponent({
 					overrideField: {
 						reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
-						disableLocationSelectionOnStart: true,
+						locationSelectionMode: "pins-only",
 					},
 				});
 

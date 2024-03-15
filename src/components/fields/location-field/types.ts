@@ -19,7 +19,7 @@ export interface ILocationFieldSchema<V = undefined>
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder" | "disabled" | "readOnly">,
 		Pick<IStaticMapProps, "staticMapPinColor">,
-		Pick<ILocationModalProps, "disableLocationSelectionOnStart"> {
+		Pick<ILocationModalProps, "locationSelectionMode"> {
 	className?: string;
 	locationModalStyles?: string | undefined;
 	locationListTitle?: string | undefined;

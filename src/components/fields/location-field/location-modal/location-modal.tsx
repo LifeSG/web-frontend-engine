@@ -45,7 +45,7 @@ const LocationModal = ({
 	onConfirm,
 	updateFormValues,
 	locationListTitle,
-	disableLocationSelectionOnStart,
+	locationSelectionMode,
 	disableSearch,
 }: ILocationModalProps) => {
 	// =============================================================================
@@ -433,7 +433,7 @@ const LocationModal = ({
 								gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 								mustHavePostalCode={mustHavePostalCode}
 								locationListTitle={locationListTitle}
-								restrictLocationSelection={disableLocationSelectionOnStart}
+								restrictLocationSelection={locationSelectionMode === "pins-only"}
 								selectablePins={selectablePins}
 								disableSearch={disableSearch}
 							/>
@@ -453,8 +453,8 @@ const LocationModal = ({
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapPanZoom={mapPanZoom}
 								mapBannerText={mapBannerText}
-								disableSelectionFromMap={disableLocationSelectionOnStart}
-								disableCurrLocationMarker={disableLocationSelectionOnStart}
+								disableSelectionFromMap={locationSelectionMode === "pins-only"}
+								disableCurrLocationMarker={locationSelectionMode === "pins-only"}
 								selectablePins={selectablePins}
 							/>
 						</>

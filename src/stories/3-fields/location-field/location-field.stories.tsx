@@ -64,9 +64,6 @@ const meta: Meta = {
 				type: "text",
 			},
 		},
-		disableMapClickOnStart: {
-			description: "Specifies if the location can be selected by clicking on the map",
-		},
 		mapPanZoom: {
 			description: "Specifies the map pan zoom value.",
 			table: {
@@ -75,6 +72,20 @@ const meta: Meta = {
 				},
 			},
 			control: { type: "object" },
+		},
+		locationSelectionMode: {
+			description:
+				"Specifies how the user can select location. If set to 'pins-only', user can only selection location based on pins. If set to 'default' or undefined, user can select on by clicking on map as well as pins",
+			table: {
+				type: {
+					summary: "string",
+				},
+				defaultValue: { summary: "default" },
+			},
+			options: ["default", "pins-only", undefined],
+			control: {
+				type: "text",
+			},
 		},
 		disableSearch: {
 			description: "Specifies if the search input field is disabled or set to read only. Enabled if undefined",
@@ -261,13 +272,13 @@ DisableSearch.args = {
 	disableSearch: "disabled",
 };
 
-export const DisableLocationSelectionOnStart = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-disable-map-click-on-start"
-).bind({});
-DisableLocationSelectionOnStart.args = {
+export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-selection-mode").bind(
+	{}
+);
+locationSelectionMode.args = {
 	uiType: "location-field",
-	label: "Disable Location Selection On Start",
+	label: "Location Selection Mode",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
-	disableLocationSelectionOnStart: true,
+	locationSelectionMode: "pins-only",
 };

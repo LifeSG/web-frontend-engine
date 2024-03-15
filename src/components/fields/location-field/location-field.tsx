@@ -38,7 +38,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			staticMapPinColor,
 			validation,
 			hasExplicitEdit,
-			disableLocationSelectionOnStart,
+			locationSelectionMode = "default",
 			disableSearch,
 		},
 		// form values can initially be undefined when passed in via props
@@ -179,7 +179,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						locationModalStyles={locationModalStyles}
 						locationListTitle={locationListTitle}
 						mapBannerText={mapBannerText}
-						disableLocationSelectionOnStart={disableLocationSelectionOnStart}
+						locationSelectionMode={locationSelectionMode}
 						disableSearch={disableSearch}
 					/>
 				)}
