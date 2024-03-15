@@ -94,8 +94,9 @@ const meta: Meta = {
 					summary: "undefined | explicit | show",
 				},
 			},
+			options: [undefined, "explicit", "show"],
 			control: {
-				type: "text",
+				type: "select",
 			},
 		},
 	},
