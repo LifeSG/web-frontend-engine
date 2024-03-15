@@ -91,6 +91,10 @@ const LocationModal = ({
 			}
 		};
 
+		const handleHidePermissionModal = () => {
+			setShowGetLocationError(false);
+		};
+
 		addFieldEventListener("error-end", id, handleError);
 		addFieldEventListener("confirm-location", id, handleConfirm);
 		addFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
@@ -213,10 +217,6 @@ const LocationModal = ({
 	const handleCancel = () => {
 		restoreFormvalues();
 		handleCloseLocationModal();
-	};
-
-	const handleHidePermissionModal = () => {
-		setShowGetLocationError(false);
 	};
 
 	const handleClickConfirm = () => {
