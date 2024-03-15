@@ -121,7 +121,7 @@ export const LocationPicker = ({
 		}
 
 		if (selectablePins.length) {
-			const pins = selectablePins;
+			const pins = [...selectablePins];
 			if (!disableCurrLocationMarker) {
 				pins.push(selectedLocationCoord);
 			}
