@@ -84,7 +84,7 @@ const meta: Meta = {
 			},
 			options: ["default", "pins-only", undefined],
 			control: {
-				type: "text",
+				type: "select",
 			},
 		},
 		disableSearch: {
@@ -97,7 +97,7 @@ const meta: Meta = {
 			},
 			options: ["disabled", "readonly", undefined],
 			control: {
-				type: "text",
+				type: "select",
 			},
 		},
 	},
