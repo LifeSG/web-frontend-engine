@@ -76,17 +76,17 @@ const meta: Meta = {
 			},
 			control: { type: "object" },
 		},
-		disableTextSearch: {
-			description: "Specifies if the search input field is disabled",
+		disableSearch: {
+			description: "Specifies if the search input field is disabled or set to read only. Enabled if undefined",
 			table: {
 				type: {
-					summary: "boolean",
+					summary: "string",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: undefined },
 			},
-			options: [true, false],
+			options: ["disabled", "readonly", undefined],
 			control: {
-				type: "boolean",
+				type: "text",
 			},
 		},
 	},
@@ -252,13 +252,13 @@ WithCustomMapPanZoom.args = {
 	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14 },
 };
 
-export const DisableTextSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
-DisableTextSearch.args = {
+export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
+DisableSearch.args = {
 	uiType: "location-field",
-	label: "DisableTextSearch",
+	label: "DisableSearch",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
-	disableTextSearch: true,
+	disableSearch: "disabled",
 };
 
 export const DisableLocationSelectionOnStart = DefaultStoryTemplate<ILocationFieldSchema>(

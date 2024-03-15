@@ -46,7 +46,7 @@ const LocationModal = ({
 	updateFormValues,
 	locationListTitle,
 	disableLocationSelectionOnStart,
-	disableTextSearch,
+	disableSearch,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -435,7 +435,7 @@ const LocationModal = ({
 								locationListTitle={locationListTitle}
 								restrictLocationSelection={disableLocationSelectionOnStart}
 								selectablePins={selectablePins}
-								disableTextSearch={disableTextSearch}
+								disableSearch={disableSearch}
 							/>
 							<StyledLocationPicker
 								id={id}

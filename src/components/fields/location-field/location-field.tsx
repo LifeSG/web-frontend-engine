@@ -39,7 +39,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			validation,
 			hasExplicitEdit,
 			disableLocationSelectionOnStart,
-			disableTextSearch,
+			disableSearch,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -180,7 +180,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						locationListTitle={locationListTitle}
 						mapBannerText={mapBannerText}
 						disableLocationSelectionOnStart={disableLocationSelectionOnStart}
-						disableTextSearch={disableTextSearch}
+						disableSearch={disableSearch}
 					/>
 				)}
 			</Suspense>

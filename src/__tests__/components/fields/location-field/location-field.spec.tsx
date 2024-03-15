@@ -1533,8 +1533,8 @@ describe("location-input-group", () => {
 					});
 				});
 
-				describe("when using the disable text search", () => {
-					it("should allow text input when disable text search is default as false", () => {
+				describe("when using the disableSearch", () => {
+					it("should allow text input when disableSearch is default (undefined))", () => {
 						renderComponent();
 
 						getLocationSearchInput().focus();
@@ -1546,11 +1546,21 @@ describe("location-input-group", () => {
 						expect(getLocationSearchClearButton()).toBeEnabled();
 					});
 
-					it("should disable text input when disable text search is true", () => {
-						renderComponent({ overrideField: { disableTextSearch: true } });
+					it("should disable text input when disableSearch is 'disabled'", () => {
+						renderComponent({ overrideField: { disableSearch: "disabled" } });
 
 						expect(getLocationSearchButton()).toBeDisabled();
 						expect(getLocationSearchInput()).toBeDisabled();
+						expect((getLocationSearchInput() as HTMLInputElement).readOnly).not.toBe(true);
+						expect(getLocationSearchClearButton()).toBeDisabled();
+					});
+
+					it("should set text input to readonly when disableSearch is 'readonly'", () => {
+						renderComponent({ overrideField: { disableSearch: "readonly" } });
+
+						expect(getLocationSearchButton()).toBeDisabled();
+						expect(getLocationSearchInput()).not.toBeDisabled();
+						expect((getLocationSearchInput() as HTMLInputElement).readOnly).toBe(true);
 						expect(getLocationSearchClearButton()).toBeDisabled();
 					});
 				});

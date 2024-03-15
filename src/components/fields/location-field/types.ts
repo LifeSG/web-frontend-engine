@@ -15,7 +15,7 @@ export interface ILocationFieldSchema<V = undefined>
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
 			| "hasExplicitEdit"
-			| "disableTextSearch"
+			| "disableSearch"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder" | "disabled" | "readOnly">,
 		Pick<IStaticMapProps, "staticMapPinColor">,
