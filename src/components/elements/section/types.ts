@@ -12,5 +12,4 @@ export interface ISectionSchema<V = undefined, C = undefined>
 export interface ISectionProps {
 	id: string;
 	sectionSchema: ISectionSchema;
-	warnings?: Record<string, string> | undefined;
 }
