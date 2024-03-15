@@ -605,12 +605,49 @@ export const SetCustomErrors: StoryFn<IFrontendEngineProps> = () => {
 			/>
 			<br />
 			<Button.Default styleType="secondary" onClick={handleClick}>
-				Trigger API error upon submission
+				Trigger API error upon click
 			</Button.Default>
 		</>
 	);
 };
 SetCustomErrors.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+export const SetWarnings: StoryFn<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const handleClick = () => {
+		ref.current.setWarnings({ name: "Warning" });
+	};
+
+	return (
+		<>
+			<FrontendEngine
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								name: {
+									label: "What is your name",
+									uiType: "text-field",
+								},
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+					validationMode: "onSubmit",
+				}}
+				ref={ref}
+			/>
+			<br />
+			<Button.Default styleType="secondary" onClick={handleClick}>
+				Trigger warning upon click
+			</Button.Default>
+		</>
+	);
+};
+SetWarnings.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 

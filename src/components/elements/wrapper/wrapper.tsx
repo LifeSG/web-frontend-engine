@@ -127,7 +127,11 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		return (
 			<ColWrapper id={childId} childSchema={childSchema}>
 				<FieldWrapper id={childId} schema={childSchema} Field={Field} />
-				{warning && <DSAlert type="warning">{warning}</DSAlert>}
+				{warning && (
+					<DSAlert type="warning" data-testid={TestHelper.generateId(childId, "warning")}>
+						{warning}
+					</DSAlert>
+				)}
 			</ColWrapper>
 		);
 	};
