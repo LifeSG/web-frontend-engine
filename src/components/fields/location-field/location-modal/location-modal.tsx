@@ -93,7 +93,11 @@ const LocationModal = ({
 					break;
 			}
 		};
-
+    
+		const handleHidePermissionModal = () => {
+			setShowGetLocationError(false);
+		};
+      
 		const handleSetSelectablePins = (e: TLocationFieldEvents["set-selectable-pins"]) => {
 			const pinsArray = e.detail.pins;
 			if (!Array.isArray(pinsArray)) {
@@ -106,11 +110,15 @@ const LocationModal = ({
 		addFieldEventListener("error-end", id, handleError);
 		addFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
 		addFieldEventListener("confirm-location", id, handleConfirm);
+		addFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
+		addFieldEventListener("dismiss-location-modal", id, handleCancel);
 
 		return () => {
 			removeFieldEventListener("error-end", id, handleError);
 			removeFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
 			removeFieldEventListener("confirm-location", id, handleConfirm);
+			removeFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
+			removeFieldEventListener("dismiss-location-modal", id, handleCancel);
 		};
 	}, []);
 
@@ -250,7 +258,10 @@ const LocationModal = ({
 	};
 
 	const handleCloseLocationPermissionModal = () => {
-		setShowGetLocationError(false);
+		const shouldPreventDefault = !dispatchFieldEvent("before-hide-permission-modal", id);
+		if (!shouldPreventDefault) {
+			setShowGetLocationError(false);
+		}
 	};
 
 	const handleMapClick = (latlng: ILocationCoord) => {

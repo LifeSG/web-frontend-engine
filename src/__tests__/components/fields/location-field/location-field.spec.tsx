@@ -61,6 +61,9 @@ enum ELocationInputEvents {
 	"CLICK_EDIT_BUTTON" = "click-edit-button",
 	"CLICK_CONFIRM_LOCATION" = "click-confirm-location",
 	"CONFIRM_LOCATION" = "confirm-location",
+	"BEFORE_HIDE_PERMISSION_MODAL" = "before-hide-permission-modal",
+	"HIDE_PERMISSION_MODAL" = "hide-permission-modal",
+	"DISMISS_LOCATION_MODAL" = "dismiss-location-modal",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -1929,6 +1932,68 @@ describe("location-input-group", () => {
 			await waitFor(() => {
 				const locationListTitle = screen.getByText("Nearest car parks");
 				expect(locationListTitle).toBeInTheDocument();
+			});
+		});
+	});
+
+	describe("Permission Modal events", () => {
+		it("should hide location modal for strict location", async () => {
+			renderComponent({
+				withEvents: true,
+				locationDetails: {
+					errors: {
+						generic: "throw something",
+					},
+				},
+				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
+				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+					formRef.dispatchFieldEvent(ELocationInputEvents.DISMISS_LOCATION_MODAL, COMPONENT_ID);
+				},
+			});
+
+			await waitFor(() => window.dispatchEvent(new Event("online")));
+
+			getLocationInput().focus();
+
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+			});
+
+			within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).not.toBeInTheDocument();
+				expect(getLocationModal(true)).not.toBeInTheDocument();
+			});
+		});
+
+		it("should hide permission modal and still show location modal for non-strict location", async () => {
+			renderComponent({
+				withEvents: true,
+				locationDetails: {
+					errors: {
+						generic: "throw something",
+					},
+				},
+				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
+				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+					formRef.dispatchFieldEvent(ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
+				},
+			});
+
+			await waitFor(() => window.dispatchEvent(new Event("online")));
+
+			getLocationInput().focus();
+
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+			});
+
+			within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).not.toBeInTheDocument();
+				expect(getLocationModal(true)).toBeInTheDocument();
 			});
 		});
 	});
