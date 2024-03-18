@@ -16,8 +16,7 @@ import {
 	Wrapper,
 } from "./image-input.styles";
 
-interface IImageInputProps extends Omit<ISharedImageProps, "accepts"> {
-	accepts: string[];
+interface IImageInputProps extends ISharedImageProps {
 	buttonLabel?: string | undefined;
 	capture?: TFileCapture | undefined;
 	className?: string | undefined;
