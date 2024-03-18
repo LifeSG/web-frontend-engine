@@ -1,12 +1,13 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useEffect, useRef } from "react";
-import { IReviewSchema } from "../../../../components/custom";
+import { TReviewSchema } from "../../../../components/custom";
 import {
 	FrontendEngine,
 	IFrontendEngineData,
 	IFrontendEngineProps,
 	IFrontendEngineRef,
 } from "../../../../components/frontend-engine";
+import { AxiosApiClient } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, getField } from "../../../common";
 
 const COMPONENT_ID = "field";
@@ -41,7 +42,7 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 };
 
 interface IRenderAndPerformActionsOptions {
-	overrideField?: Partial<IReviewSchema>;
+	overrideField?: Partial<TReviewSchema>;
 	eventType?: string;
 	eventListener?: (this: Element, ev: Event) => any;
 }

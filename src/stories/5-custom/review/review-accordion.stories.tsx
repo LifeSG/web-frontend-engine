@@ -4,7 +4,7 @@ import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
-import { IReviewSchema } from "../../../components/custom/review";
+import { TReviewSchema } from "../../../components/custom/review";
 import { CommonCustomStoryProps, DefaultStoryTemplate, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 const meta: Meta = {
@@ -150,10 +150,10 @@ const EventTemplate = (eventName: string) =>
 				}}
 			/>
 		);
-	}) as StoryFn<IReviewSchema>;
+	}) as StoryFn<TReviewSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const Default = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
+export const Default = DefaultStoryTemplate<TReviewSchema>("review-default").bind({});
 Default.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -161,7 +161,7 @@ Default.args = {
 	items: SAMPLE_ITEMS,
 };
 
-export const Masking = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
+export const Masking = DefaultStoryTemplate<TReviewSchema>("review-masking").bind({});
 Masking.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -187,7 +187,7 @@ Masking.args = {
 	],
 };
 
-export const NotCollapsible = DefaultStoryTemplate<IReviewSchema>("review-button-collapsible").bind({});
+export const NotCollapsible = DefaultStoryTemplate<TReviewSchema>("review-button-collapsible").bind({});
 NotCollapsible.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -196,7 +196,7 @@ NotCollapsible.args = {
 	collapsible: false,
 };
 
-export const Collapsed = DefaultStoryTemplate<IReviewSchema>("review-button-collapsed").bind({});
+export const Collapsed = DefaultStoryTemplate<TReviewSchema>("review-button-collapsed").bind({});
 Collapsed.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -205,7 +205,7 @@ Collapsed.args = {
 	expanded: false,
 };
 
-export const ButtonLabel = DefaultStoryTemplate<IReviewSchema>("review-button-label").bind({});
+export const ButtonLabel = DefaultStoryTemplate<TReviewSchema>("review-button-label").bind({});
 ButtonLabel.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -214,7 +214,7 @@ ButtonLabel.args = {
 	button: { label: "Modify" },
 };
 
-export const ButtonHidden = DefaultStoryTemplate<IReviewSchema>("review-button-hidden").bind({});
+export const ButtonHidden = DefaultStoryTemplate<TReviewSchema>("review-button-hidden").bind({});
 ButtonHidden.args = {
 	referenceKey: "review",
 	variant: "accordion",

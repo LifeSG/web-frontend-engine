@@ -6,7 +6,10 @@ import type { ICustomElementJsonSchema } from "../types";
 
 type TReviewSectionChildren = IAlertSchema | ITextSchema | IWrapperSchema;
 
-export type IReviewSchema = IReviewSchemaAccordion | IReviewSchemaBox;
+export type TReviewSchema = IReviewSchemaAccordion | IReviewSchemaBox;
+
+/** @deprecated use TReviewSchema */
+export type IReviewSchema = TReviewSchema;
 
 export interface IReviewSchemaBox extends ICustomElementJsonSchema<"review"> {
 	label?: string | undefined;
