@@ -61,7 +61,7 @@ enum ELocationInputEvents {
 	"CONFIRM_LOCATION" = "confirm-location",
 	"BEFORE_HIDE_PERMISSION_MODAL" = "before-hide-permission-modal",
 	"HIDE_PERMISSION_MODAL" = "hide-permission-modal",
-	"CLOSE_LOCATION_MODAL" = "close-location-modal",
+	"DISMISS_LOCATION_MODAL" = "dismiss-location-modal",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -1770,7 +1770,7 @@ describe("location-input-group", () => {
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
 				eventListener: (formRef: IFrontendEngineRef) => (e) => {
-					formRef.dispatchFieldEvent(ELocationInputEvents.CLOSE_LOCATION_MODAL, COMPONENT_ID);
+					formRef.dispatchFieldEvent(ELocationInputEvents.DISMISS_LOCATION_MODAL, COMPONENT_ID);
 				},
 			});
 

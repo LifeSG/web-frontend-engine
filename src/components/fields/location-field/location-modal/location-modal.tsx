@@ -98,13 +98,13 @@ const LocationModal = ({
 		addFieldEventListener("error-end", id, handleError);
 		addFieldEventListener("confirm-location", id, handleConfirm);
 		addFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
-		addFieldEventListener("close-location-modal", id, handleCancel);
+		addFieldEventListener("dismiss-location-modal", id, handleCancel);
 
 		return () => {
 			removeFieldEventListener("error-end", id, handleError);
 			removeFieldEventListener("confirm-location", id, handleConfirm);
 			removeFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
-			removeFieldEventListener("close-location-modal", id, handleCancel);
+			removeFieldEventListener("dismiss-location-modal", id, handleCancel);
 		};
 	}, []);
 

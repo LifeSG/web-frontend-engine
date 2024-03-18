@@ -535,7 +535,7 @@ const StrictLocationTemplate = () =>
 
 		const handleCloseLocationModal = (e) => {
 			e.preventDefault();
-			formRef.current.dispatchFieldEvent("close-location-modal", id);
+			formRef.current.dispatchFieldEvent("dismiss-location-modal", id);
 		};
 
 		useEffect(() => {
