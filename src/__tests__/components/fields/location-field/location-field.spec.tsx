@@ -39,6 +39,8 @@ import {
 } from "./mock-values";
 jest.mock("../../../../services/onemap/onemap-service.ts");
 
+window.HTMLElement.prototype.scrollTo = jest.fn; // required for .scrollTo in location-search
+
 const io = mockIntersectionObserver();
 
 const SUBMIT_FN = jest.fn();
@@ -64,7 +66,7 @@ interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
 	withEvents?: boolean;
 	eventType?: string;
-	eventListener?: (this: Element, ev: Event) => any;
+	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
 
 const FrontendEngineWithEventListener = ({
@@ -134,8 +136,9 @@ const FrontendEngineWithEventListener = ({
 	useEffect(() => {
 		if (eventType && eventListener) {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventType, "field", eventListener);
-			return () => currentFormRef.removeFieldEventListener(eventType, "field", eventListener);
+			const eventListenerWithFormRef = eventListener(currentFormRef);
+			currentFormRef.addFieldEventListener(eventType, "field", eventListenerWithFormRef);
+			return () => currentFormRef.removeFieldEventListener(eventType, "field", eventListenerWithFormRef);
 		}
 	}, [eventListener, eventType]);
 
@@ -206,7 +209,7 @@ interface IRenderProps {
 	locationDetails?: TSetCurrentLocationDetail;
 	validation?: IYupValidationRule[];
 	eventType?: string;
-	eventListener?: (this: Element, ev: Event) => any;
+	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
 
 const renderComponent = (
@@ -337,6 +340,8 @@ const getConfirmLocationModal = (query = false) => {
 	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "confirm-location-prompt", "show"));
 };
 
+const getOneMapErrorModal = (query = false) => testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "onemap-error"));
+
 // assert network error
 
 /**
@@ -379,6 +384,7 @@ describe("location-input-group", () => {
 	let staticMapSpy;
 	let fetchSingleLocationByAddressSpy;
 	let fetchSingleLocationByLatLngSpy;
+	let fetchLocationListSpy;
 
 	const setWindowAndViewPort = (width: number, height = MediaWidths.tablet) => {
 		Object.defineProperty(window, "innerWidth", {
@@ -425,6 +431,7 @@ describe("location-input-group", () => {
 		fetchSingleLocationByAddressSpy = jest.spyOn(LocationHelper, "fetchSingleLocationByAddress");
 		staticMapSpy = jest.spyOn(LocationHelper, "getStaticMapUrl").mockReturnValue(mockStaticMapDataUri);
 		fetchSingleLocationByLatLngSpy = jest.spyOn(LocationHelper, "fetchSingleLocationByLatLng");
+		fetchLocationListSpy = jest.spyOn(LocationHelper, "fetchLocationList");
 
 		viewport = mockViewport({
 			width: MediaWidths.tablet,
@@ -620,7 +627,7 @@ describe("location-input-group", () => {
 				const handleShowReviewModal = jest.fn();
 				renderComponent({
 					eventType: ELocationInputEvents.SHOW_MODAL,
-					eventListener: handleShowReviewModal,
+					eventListener: () => handleShowReviewModal,
 				});
 				getLocationInput().focus();
 				expect(handleShowReviewModal).toBeCalled();
@@ -630,7 +637,7 @@ describe("location-input-group", () => {
 				const handleHideReviewModal = jest.fn();
 				renderComponent({
 					eventType: "hide-location-modal",
-					eventListener: handleHideReviewModal,
+					eventListener: () => handleHideReviewModal,
 				});
 				getLocationInput().focus();
 				await waitFor(() => fireEvent.click(getField("button", "Cancel", false)));
@@ -752,6 +759,126 @@ describe("location-input-group", () => {
 				await waitFor(() => {
 					expect(getConfirmLocationModal(true)).not.toBeInTheDocument();
 					expect(getLocationModal(true)).not.toBeInTheDocument();
+				});
+			});
+		});
+
+		// Selectable Pin Events
+		describe("Selectable Pin events", () => {
+			const getSelectablePinsEvent = "get-selectable-pins";
+
+			describe("get-selectable-pins", () => {
+				const getSelectablePins = jest.fn();
+				const event = {
+					eventType: getSelectablePinsEvent,
+					eventListener: () => getSelectablePins,
+				};
+
+				beforeEach(() => {
+					jest.clearAllMocks;
+				});
+
+				it("should fire get-selectable-pins event if default location is set", async () => {
+					renderComponent({
+						...event,
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: {
+									lat: 1.29994179707526,
+									lng: 103.789404349716,
+								},
+							},
+						},
+					});
+					getLocationInput().focus();
+					await waitFor(() => {
+						expect(getSelectablePins).toHaveBeenCalled();
+					});
+				});
+
+				it("should fire get-selectable-pins event if current location is fetched", async () => {
+					getCurrentLocationSpy.mockResolvedValue({
+						lat: 1.29994179707526,
+						lng: 103.789404349716,
+					});
+
+					renderComponent(event);
+					getLocationInput().focus();
+					await waitFor(() => {
+						expect(getSelectablePins).toHaveBeenCalled();
+					});
+				});
+
+				it("should not fire get-selectable-pins event if failed to get current location", async () => {
+					renderComponent(event);
+					getLocationInput().focus();
+					await waitFor(() => {
+						expect(getSelectablePins).not.toHaveBeenCalled();
+					});
+				});
+			});
+
+			describe("set-selectable-pins", () => {
+				it("should show error modal if selectable pins is not an array", async () => {
+					renderComponent({
+						eventType: getSelectablePinsEvent,
+						eventListener: (formRef) => () => {
+							formRef.dispatchFieldEvent("set-selectable-pins", COMPONENT_ID, {
+								pins: "not array",
+							});
+						},
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: {
+									lat: 1.29994179707526,
+									lng: 103.789404349716,
+								},
+							},
+						},
+					});
+					getLocationInput().focus();
+
+					await waitFor(() => {
+						expect(getOneMapErrorModal(true)).toBeDefined();
+					});
+				});
+
+				it("should populate results list with pins", async () => {
+					renderComponent({
+						eventType: getSelectablePinsEvent,
+						eventListener: (formRef) => () => {
+							formRef.dispatchFieldEvent("set-selectable-pins", COMPONENT_ID, {
+								pins: [
+									{
+										lat: 1.21,
+										lng: 103.78,
+										resultListItemText: "address 1",
+										address: "address 1",
+									},
+									{
+										lat: 1.23,
+										lng: 103.79,
+										resultListItemText: "address 2",
+										address: "address 2",
+									},
+								],
+							});
+						},
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: {
+									lat: 1.29994179707526,
+									lng: 103.789404349716,
+								},
+							},
+						},
+					});
+					getLocationInput().focus();
+
+					await waitFor(() => {
+						expect(screen.queryByText("address 1")).toBeDefined();
+						expect(screen.queryByText("address 2")).toBeDefined();
+					});
 				});
 			});
 		});
@@ -1406,8 +1533,8 @@ describe("location-input-group", () => {
 					});
 				});
 
-				describe("when using the disable text search", () => {
-					it("should allow text input when disable text search is default as false", () => {
+				describe("when using the disableSearch", () => {
+					it("should allow text input when disableSearch is default (undefined))", () => {
 						renderComponent();
 
 						getLocationSearchInput().focus();
@@ -1419,11 +1546,21 @@ describe("location-input-group", () => {
 						expect(getLocationSearchClearButton()).toBeEnabled();
 					});
 
-					it("should disable text input when disable text search is true", () => {
-						renderComponent({ overrideField: { disableTextSearch: true } });
+					it("should disable text input when disableSearch is 'disabled'", () => {
+						renderComponent({ overrideField: { disableSearch: "disabled" } });
 
 						expect(getLocationSearchButton()).toBeDisabled();
 						expect(getLocationSearchInput()).toBeDisabled();
+						expect((getLocationSearchInput() as HTMLInputElement).readOnly).not.toBe(true);
+						expect(getLocationSearchClearButton()).toBeDisabled();
+					});
+
+					it("should set text input to readonly when disableSearch is 'readonly'", () => {
+						renderComponent({ overrideField: { disableSearch: "readonly" } });
+
+						expect(getLocationSearchButton()).toBeDisabled();
+						expect(getLocationSearchInput()).not.toBeDisabled();
+						expect((getLocationSearchInput() as HTMLInputElement).readOnly).toBe(true);
 						expect(getLocationSearchClearButton()).toBeDisabled();
 					});
 				});
@@ -1476,6 +1613,47 @@ describe("location-input-group", () => {
 				//		- when clicking location button on the map
 				// showGetLocationTimeoutError
 				// - handleGetLocationError variance (triggered by device)
+			});
+		});
+
+		describe("locationSelectionMode = 'pins'", () => {
+			beforeEach(async () => {
+				getCurrentLocationSpy.mockResolvedValue({
+					lat: 1.29994179707526,
+					lng: 103.789404349716,
+				});
+			});
+
+			it("should not render search clear button", async () => {
+				renderComponent({ overrideField: { locationSelectionMode: "pins-only" } });
+
+				getLocationInput().focus();
+
+				await waitFor(() => {
+					const a = getLocationSearchClearButton(true);
+					expect(a).toBeNull();
+				});
+			});
+
+			it("should not populate search bar input ", async () => {
+				fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+					onSuccess(mock1PageFetchAddressResponse);
+				});
+				reverseGeocodeSpy.mockImplementation(() => mockReverseGeoCodeResponse);
+				fetchLocationListSpy.mockImplementation(() => mockReverseGeoCodeResponse);
+				renderComponent({
+					overrideField: {
+						reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+						locationSelectionMode: "pins-only",
+					},
+				});
+
+				getLocationInput().focus();
+
+				await waitFor(() => {
+					const locationListTitle = screen.queryByText(mockReverseGeoCodeResponse[0].address);
+					expect(locationListTitle).not.toBeInTheDocument();
+				});
 			});
 		});
 	});

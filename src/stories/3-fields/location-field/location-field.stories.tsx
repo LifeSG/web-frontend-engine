@@ -73,17 +73,31 @@ const meta: Meta = {
 			},
 			control: { type: "object" },
 		},
-		disableTextSearch: {
-			description: "Specifies if the search input field is disabled",
+		locationSelectionMode: {
+			description:
+				"Specifies how the user can select location. If set to 'pins-only', user can only selection location based on pins. If set to 'default' or undefined, user can select on by clicking on map as well as pins",
 			table: {
 				type: {
-					summary: "boolean",
+					summary: "string",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "default" },
 			},
-			options: [true, false],
+			options: ["default", "pins-only", undefined],
 			control: {
-				type: "boolean",
+				type: "select",
+			},
+		},
+		disableSearch: {
+			description: "Specifies if the search input field is disabled or set to read only. Enabled if undefined",
+			table: {
+				type: {
+					summary: "string",
+				},
+				defaultValue: { summary: undefined },
+			},
+			options: ["disabled", "readonly", undefined],
+			control: {
+				type: "select",
 			},
 		},
 		hasExplicitEdit: {
@@ -262,11 +276,22 @@ WithCustomMapPanZoom.args = {
 	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14 },
 };
 
-export const DisableTextSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
-DisableTextSearch.args = {
+export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
+DisableSearch.args = {
 	uiType: "location-field",
-	label: "DisableTextSearch",
+	label: "DisableSearch",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
-	disableTextSearch: true,
+	disableSearch: "disabled",
+};
+
+export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-selection-mode").bind(
+	{}
+);
+locationSelectionMode.args = {
+	uiType: "location-field",
+	label: "Location Selection Mode",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	locationSelectionMode: "pins-only",
 };

@@ -35,6 +35,9 @@ export const LocationPicker = ({
 	gettingCurrentLocation,
 	onMapCenterChange,
 	mapBannerText,
+	disableSelectionFromMap,
+	disableCurrLocationMarker,
+	selectablePins,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -86,13 +89,13 @@ export const LocationPicker = ({
 			// even if it didn't change, as it may have panned off-centre.
 			if (!gettingCurrentLocation && selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
 				// NOTE: map will zoom when input is cleared in search panelInputMode and switches to map panelInputMode
-				zoomWithMarkers({ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng });
+				zoomWithMarkers([{ lat: selectedLocationCoord.lat, lng: selectedLocationCoord.lng }]);
 			}
 			const map = mapRef.current;
 
 			// Reattach event listeners
 			map.on("click", ({ latlng }: L.LeafletMouseEvent) => {
-				if (!gettingCurrentLocation) {
+				if (!disableSelectionFromMap && !gettingCurrentLocation) {
 					onMapCenterChange(latlng);
 				}
 			});
@@ -112,12 +115,21 @@ export const LocationPicker = ({
 	 * Show the pan when we can see the map
 	 */
 	useEffect(() => {
-		if (selectedLocationCoord?.lat && selectedLocationCoord?.lng) {
-			zoomWithMarkers(selectedLocationCoord);
-		} else {
+		if (!selectedLocationCoord?.lat || !selectedLocationCoord?.lng) {
 			resetView();
+			return;
 		}
-	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng]);
+
+		if (selectablePins.length) {
+			const pins = [...selectablePins];
+			if (!disableCurrLocationMarker) {
+				pins.push(selectedLocationCoord);
+			}
+			zoomWithMarkers(pins, true, selectedLocationCoord, true, true);
+		} else {
+			zoomWithMarkers([selectedLocationCoord], !disableCurrLocationMarker);
+		}
+	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng, selectablePins]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -131,23 +143,61 @@ export const LocationPicker = ({
 		}
 	};
 
-	const zoomWithMarkers = (target: ILocationCoord) => {
+	const zoomWithMarkers = (
+		targets: ILocationCoord[],
+		shouldSetMarkers = true,
+		_zoomCenter?: ILocationCoord,
+		selectableMarkers = false,
+		enlargeSelectedMarker = false
+	) => {
 		const map = mapRef.current;
 		if (!map) return;
 		removeMarkers(markersRef.current);
 
-		markersRef.current = [markerFrom(target, interactiveMapPinIconUrl).addTo(map)];
+		if (shouldSetMarkers) {
+			markersRef.current = getMarkers(map, targets, selectableMarkers, enlargeSelectedMarker);
+		}
+
+		zoomAndCenter(map, _zoomCenter || targets[0]);
+	};
+
+	const getMarkers = (
+		map: L.Map,
+		targets: ILocationCoord[],
+		shouldSelectOnClick: boolean,
+		enlargeSelectedMarker: boolean
+	) =>
+		targets.map((target) => {
+			const isSelected = enlargeSelectedMarker
+				? target.lat === selectedLocationCoord.lat && target.lng === selectedLocationCoord.lng
+				: undefined;
+			const marker = markerFrom(target, interactiveMapPinIconUrl, isSelected).addTo(map);
+
+			return shouldSelectOnClick
+				? marker.on("click", () => {
+						// To accurately identify the pin, use the original lat & lng from the pin
+						// instead of the ones from the LeafletMouseEvent.
+						zoomAndCenter(map, { lat: target.lat, lng: target.lng });
+						onMapCenterChange({
+							lat: target.lat,
+							lng: target.lng,
+						});
+				  })
+				: marker;
+		});
+
+	const zoomAndCenter = (map: L.Map, zoomCenter: ILocationCoord) => {
 		const panZoomValue = Math.max(
 			mapPanZoom?.min ?? leafletConfig.minZoom,
 			isMobile ? mapPanZoom?.mobile ?? 18 : mapPanZoom?.nonMobile ?? 17
 		);
 
 		const zoomValue =
-			map.getBounds().contains([target.lat, target.lng]) && map.getZoom() > panZoomValue
+			map.getBounds().contains([zoomCenter.lat, zoomCenter.lng]) && map.getZoom() > panZoomValue
 				? map.getZoom()
 				: panZoomValue;
 
-		map.flyTo(L.latLng(target.lat, target.lng), zoomValue);
+		map.flyTo(L.latLng(zoomCenter.lat, zoomCenter.lng), zoomValue);
 		setTimeout(() => map.invalidateSize(), 500);
 	};
 
