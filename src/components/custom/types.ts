@@ -6,7 +6,7 @@ import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import type { IColumns, IYupValidationRule } from "../frontend-engine";
 import type { TRenderRules } from "../../context-providers";
 import type { IFilterSchema } from "./filter/filter/types";
-import type { IReviewSchema } from "./review";
+import type { TReviewSchema } from "./review";
 
 /**
  * custom element types
@@ -28,7 +28,7 @@ export enum ECustomFieldType {
 /**
  * union type to represent all custom elements / fields schema
  */
-export type TCustomSchema<C = undefined> = ICustomElementJsonSchema<string> | IFilterSchema | IReviewSchema | C;
+export type TCustomSchema<C = undefined> = ICustomElementJsonSchema<string> | IFilterSchema | TReviewSchema | C;
 
 /**
  * base schema for custom elements

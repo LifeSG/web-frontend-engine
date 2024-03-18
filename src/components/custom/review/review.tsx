@@ -9,9 +9,9 @@ import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { IGenericCustomElementProps } from "../types";
 import { AccordionItem } from "./accordion-item";
-import { IReviewSchema, IReviewSchemaAccordion, IReviewSchemaBox } from "./types";
+import { IReviewSchemaAccordion, IReviewSchemaBox, TReviewSchema } from "./types";
 
-export const Review = (props: IGenericCustomElementProps<IReviewSchema>) => {
+export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================

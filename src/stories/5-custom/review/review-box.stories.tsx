@@ -1,6 +1,6 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { IReviewSchema } from "../../../components/custom/review";
+import { TReviewSchema } from "../../../components/custom/review";
 import { CommonCustomStoryProps, DefaultStoryTemplate } from "../../common";
 import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 
@@ -112,7 +112,7 @@ const SAMPLE_ITEMS: UneditableSectionItemProps[] = [
 	},
 ];
 
-export const Default = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
+export const Default = DefaultStoryTemplate<TReviewSchema>("review-default").bind({});
 Default.args = {
 	referenceKey: "review",
 	label: "Your personal information",
@@ -121,7 +121,7 @@ Default.args = {
 	variant: "box",
 };
 
-export const CustomTopSection = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
+export const CustomTopSection = DefaultStoryTemplate<TReviewSchema>("review-default").bind({});
 CustomTopSection.args = {
 	referenceKey: "review",
 	label: "Your personal information",
@@ -137,7 +137,7 @@ CustomTopSection.args = {
 	},
 };
 
-export const CustomBottomSection = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
+export const CustomBottomSection = DefaultStoryTemplate<TReviewSchema>("review-default").bind({});
 CustomBottomSection.args = {
 	referenceKey: "review",
 	label: "Your personal information",
