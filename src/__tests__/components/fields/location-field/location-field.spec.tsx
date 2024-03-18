@@ -59,7 +59,7 @@ enum ELocationInputEvents {
 	"CLICK_EDIT_BUTTON" = "click-edit-button",
 	"CLICK_CONFIRM_LOCATION" = "click-confirm-location",
 	"CONFIRM_LOCATION" = "confirm-location",
-	"CLICK_OK_PERMISSION" = "click-ok-permission",
+	"BEFORE_HIDE_PERMISSION_MODAL" = "before-hide-permission-modal",
 	"HIDE_PERMISSION_MODAL" = "hide-permission-modal",
 	"CLOSE_LOCATION_MODAL" = "close-location-modal",
 }
@@ -1768,7 +1768,7 @@ describe("location-input-group", () => {
 						generic: "throw something",
 					},
 				},
-				eventType: ELocationInputEvents.CLICK_OK_PERMISSION,
+				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
 				eventListener: (formRef: IFrontendEngineRef) => (e) => {
 					formRef.dispatchFieldEvent(ELocationInputEvents.CLOSE_LOCATION_MODAL, COMPONENT_ID);
 				},
@@ -1798,7 +1798,7 @@ describe("location-input-group", () => {
 						generic: "throw something",
 					},
 				},
-				eventType: ELocationInputEvents.CLICK_OK_PERMISSION,
+				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
 				eventListener: (formRef: IFrontendEngineRef) => (e) => {
 					formRef.dispatchFieldEvent(ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
 				},

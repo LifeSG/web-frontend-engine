@@ -233,7 +233,7 @@ const LocationModal = ({
 	};
 
 	const handleCloseLocationPermissionModal = () => {
-		const shouldPreventDefault = !dispatchFieldEvent("click-ok-permission", id);
+		const shouldPreventDefault = !dispatchFieldEvent("before-hide-permission-modal", id);
 		if (!shouldPreventDefault) {
 			setShowGetLocationError(false);
 		}

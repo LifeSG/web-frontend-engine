@@ -540,8 +540,9 @@ const StrictLocationTemplate = () =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("click-ok-permission", id, handleCloseLocationModal);
-			return () => currentFormRef.removeFieldEventListener("click-ok-permission", id, handleCloseLocationModal);
+			currentFormRef.addFieldEventListener("before-hide-permission-modal", id, handleCloseLocationModal);
+			return () =>
+				currentFormRef.removeFieldEventListener("before-hide-permission-modal", id, handleCloseLocationModal);
 		}, []);
 
 		return (
