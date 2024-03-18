@@ -1,4 +1,4 @@
-export { ECustomElementType, ECustomFieldType } from "./custom";
+export type { ECustomElementType, ECustomFieldType, TCustomComponentSchema, TCustomComponentProps } from "./custom";
 export { EElementType } from "./elements";
 export { EFieldType } from "./fields";
 export type {

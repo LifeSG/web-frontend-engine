@@ -1,8 +1,9 @@
-import { IBaseFieldSchema } from "../types";
 import { IStaticMapProps } from "../../shared";
+import { IBaseFieldSchema } from "../types";
 import { ILocationInputProps } from "./location-input";
-import { ILocationPickerProps } from "./location-modal/location-picker/types";
+import { ILocationPickerProps, IMapPin } from "./location-modal/location-picker/types";
 import { ILocationSearchProps } from "./location-modal/location-search/types";
+import { ILocationModalProps } from "./location-modal/types";
 
 export interface ILocationFieldSchema<V = undefined>
 	extends IBaseFieldSchema<"location-field", V>,
@@ -14,10 +15,11 @@ export interface ILocationFieldSchema<V = undefined>
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
 			| "hasExplicitEdit"
-			| "disableTextSearch"
+			| "disableSearch"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder" | "disabled" | "readOnly">,
-		Pick<IStaticMapProps, "staticMapPinColor"> {
+		Pick<IStaticMapProps, "staticMapPinColor">,
+		Pick<ILocationModalProps, "locationSelectionMode"> {
 	className?: string;
 	locationModalStyles?: string | undefined;
 	locationListTitle?: string | undefined;
@@ -81,6 +83,7 @@ export type TLocationFieldEvents = {
 	"set-current-location": CustomEvent<TSetCurrentLocationDetail>;
 	error: CustomEvent<TLocationFieldErrorDetail>;
 	"error-end": CustomEvent<TLocationFieldErrorDetail>;
+	"set-selectable-pins": CustomEvent<{ pins: IMapPin[] }>;
 };
 
 export class GeolocationPositionErrorWrapper extends Error {

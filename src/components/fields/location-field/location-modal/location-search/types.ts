@@ -5,6 +5,7 @@ import {
 	TPanelInputMode,
 	TSinglePanelInputMode,
 } from "../../types";
+import { IMapPin } from "../location-picker/types";
 
 export interface ILocationSearchProps {
 	id?: string | undefined;
@@ -29,5 +30,7 @@ export interface ILocationSearchProps {
 	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 	setSinglePanelMode: (panelMode: TSinglePanelInputMode) => void;
 	hasExplicitEdit?: TExplicitEditMode | undefined;
-	disableTextSearch?: boolean | undefined;
+	restrictLocationSelection?: boolean | undefined;
+	selectablePins: IMapPin[];
+	disableSearch?: "disabled" | "readonly" | undefined;
 }

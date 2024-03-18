@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { UseFormReturn, useFormContext } from "react-hook-form";
-import { FormValuesContext } from "../../components/frontend-engine/form-values";
+import { FormValuesContext } from "../../context-providers";
 
 export const useFormValues = (formMethods?: UseFormReturn | undefined) => {
 	const formContext = useFormContext();

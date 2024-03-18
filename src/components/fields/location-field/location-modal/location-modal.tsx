@@ -18,6 +18,7 @@ import {
 } from "../types";
 import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
 import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
+import { IMapPin } from "./location-picker/types";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 import { ILocationModalProps } from "./types";
@@ -44,7 +45,8 @@ const LocationModal = ({
 	onConfirm,
 	updateFormValues,
 	locationListTitle,
-	disableTextSearch,
+	locationSelectionMode,
+	disableSearch,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -55,6 +57,7 @@ const LocationModal = ({
 	// onConfirm we will save to state
 	// if cancel, this value will need to be reset to form state value
 	const [selectedAddressInfo, setSelectedAddressInfo] = useState<ILocationFieldValues>({});
+	const [selectablePins, setSelectablePins] = useState<IMapPin[]>([]);
 
 	const [locationAvailable, setLocationAvailable] = useState(true);
 
@@ -90,18 +93,29 @@ const LocationModal = ({
 					break;
 			}
 		};
-
+    
 		const handleHidePermissionModal = () => {
 			setShowGetLocationError(false);
 		};
+      
+		const handleSetSelectablePins = (e: TLocationFieldEvents["set-selectable-pins"]) => {
+			const pinsArray = e.detail.pins;
+			if (!Array.isArray(pinsArray)) {
+				setShowOneMapError(true);
+				return;
+			}
+			setSelectablePins(pinsArray);
+		};
 
 		addFieldEventListener("error-end", id, handleError);
+		addFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
 		addFieldEventListener("confirm-location", id, handleConfirm);
 		addFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
 		addFieldEventListener("dismiss-location-modal", id, handleCancel);
 
 		return () => {
 			removeFieldEventListener("error-end", id, handleError);
+			removeFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
 			removeFieldEventListener("confirm-location", id, handleConfirm);
 			removeFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
 			removeFieldEventListener("dismiss-location-modal", id, handleCancel);
@@ -138,16 +152,27 @@ const LocationModal = ({
 			panelInputMode !== "double" && setPanelInputMode("map");
 			return;
 		}
-		/**
-		 * We should only getCurrentLocation when nothing is prefilled
-		 * when formvalues are prefilled, the useEffect will recenter
-		 * the location for us
-		 *
-		 * This is meant for first entry
-		 */
-		if (!formValues?.lat && !formValues?.lng) {
-			getCurrentLocation();
-		}
+
+		const recenterAndTriggerEvent = async () => {
+			/**
+			 * We should only getCurrentLocation when nothing is prefilled
+			 * when formvalues are prefilled, the useEffect will recenter
+			 * the location for us
+			 *
+			 * This is meant for first entry
+			 */
+			let currSelectedLocation: ILocationCoord = {
+				lat: formValues?.lat,
+				lng: formValues?.lng,
+			};
+			if (!formValues?.lat && !formValues?.lng) {
+				currSelectedLocation = await getCurrentLocation();
+			}
+			if (currSelectedLocation?.lat && currSelectedLocation?.lng) {
+				dispatchFieldEvent("get-selectable-pins", id, currSelectedLocation);
+			}
+		};
+		recenterAndTriggerEvent();
 	}, [showLocationModal]);
 
 	/**
@@ -261,12 +286,13 @@ const LocationModal = ({
 			const detail: TSetCurrentLocationDetail = {};
 
 			try {
-				detail["payload"] = await GeoLocationHelper.getCurrentLocation();
+				detail.payload = await GeoLocationHelper.getCurrentLocation();
 			} catch (error) {
-				detail["errors"] = error;
+				detail.errors = error;
 			}
 
 			dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
+			return detail.payload;
 		}
 	};
 
@@ -418,7 +444,9 @@ const LocationModal = ({
 								gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 								mustHavePostalCode={mustHavePostalCode}
 								locationListTitle={locationListTitle}
-								disableTextSearch={disableTextSearch}
+								restrictLocationSelection={locationSelectionMode === "pins-only"}
+								selectablePins={selectablePins}
+								disableSearch={disableSearch}
 							/>
 							<StyledLocationPicker
 								id={id}
@@ -436,6 +464,9 @@ const LocationModal = ({
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapPanZoom={mapPanZoom}
 								mapBannerText={mapBannerText}
+								disableSelectionFromMap={locationSelectionMode === "pins-only"}
+								disableCurrLocationMarker={locationSelectionMode === "pins-only"}
+								selectablePins={selectablePins}
 							/>
 						</>
 					) : (

@@ -10,7 +10,7 @@ export interface ILocationModalProps
 			| "convertLatLngToXYEndpoint"
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
-			| "disableTextSearch"
+			| "disableSearch"
 		> {
 	id: string;
 	className: string;
@@ -22,4 +22,5 @@ export interface ILocationModalProps
 	updateFormValues: (values: ILocationFieldValues, shouldDirty?: boolean) => void;
 	locationListTitle?: string | undefined;
 	mapBannerText?: string | undefined;
+	locationSelectionMode?: "default" | "pins-only" | undefined;
 }

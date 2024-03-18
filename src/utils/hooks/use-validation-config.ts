@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import * as Yup from "yup";
-import { IYupValidationRule, YupContext } from "../../components/frontend-engine/yup";
+import { IYupValidationRule, YupContext } from "../../context-providers";
 
 /**
  * Hook that interacts with the validation config

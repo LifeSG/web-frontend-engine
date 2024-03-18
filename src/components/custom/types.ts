@@ -4,7 +4,7 @@
  */
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import type { IColumns, IYupValidationRule } from "../frontend-engine";
-import type { TRenderRules } from "../frontend-engine/yup";
+import type { TRenderRules } from "../../context-providers";
 import type { IFilterSchema } from "./filter/filter/types";
 import type { IReviewSchema } from "./review";
 
@@ -28,7 +28,7 @@ export enum ECustomFieldType {
 /**
  * union type to represent all custom elements / fields schema
  */
-export type TCustomComponentSchema = ICustomElementJsonSchema<string> | IFilterSchema | IReviewSchema;
+export type TCustomSchema<C = undefined> = ICustomElementJsonSchema<string> | IFilterSchema | IReviewSchema | C;
 
 /**
  * base schema for custom elements
@@ -71,3 +71,23 @@ export interface IGenericCustomFieldProps<T> extends Partial<ControllerFieldStat
 	id: string;
 	schema: T;
 }
+
+// =============================================================================
+// CUSTOM COMPONENTS
+// =============================================================================
+// these typings are meant for external devs to use when coming up with custom components outside Frontend Engine
+// they are not meant to be used internally
+
+/**
+ * base custom component schema to extend from
+ *
+ * - T = string to be used in referenceKey
+ * - V = custom validation definition
+ */
+export type TCustomComponentSchema<T, V = undefined> = IBaseCustomFieldSchema<T, V>;
+/**
+ * standard custom component props
+ *
+ * S = custom component schema
+ */
+export type TCustomComponentProps<S> = IGenericCustomFieldProps<S>;

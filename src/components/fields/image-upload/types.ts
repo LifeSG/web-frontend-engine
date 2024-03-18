@@ -1,5 +1,5 @@
 import { IBaseFieldSchema } from "../types";
-import { IYupValidationRule } from "../../frontend-engine/yup/types";
+import { IYupValidationRule } from "../../../context-providers";
 
 export type TUploadMethod = "post" | "put" | "patch";
 export const ACCEPTED_FILE_TYPES = ["jpg", "gif", "png", "heic", "heif", "webp"] as const;

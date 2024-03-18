@@ -1,5 +1,5 @@
 import { IColumns } from "../frontend-engine";
-import { TRenderRules } from "../frontend-engine/yup";
+import { TRenderRules } from "../../context-providers";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
 import { IGridSchema } from "./grid";

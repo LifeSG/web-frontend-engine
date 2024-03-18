@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { TFrontendEngineValues } from "../../components/frontend-engine/types";
-import { IFieldYupConfig, TFormYupConfig, YupContext, YupHelper } from "../../components/frontend-engine/yup";
+import { IFieldYupConfig, TFormYupConfig, YupContext, YupHelper } from "../../context-providers";
 import { ObjectHelper } from "../object-helper";
 
 /**

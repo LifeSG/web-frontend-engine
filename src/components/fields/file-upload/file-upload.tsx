@@ -117,7 +117,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		// for defaultValue
 		if (!isDirty && Array.isArray(value)) {
 			const newFiles: IFile[] = [];
-			(value as IFileUploadValue[]).forEach(({ dataURL, fileId, fileName, fileUrl }, i) => {
+			(value as IFileUploadValue[]).forEach(({ dataURL, fileId, fileName, fileUrl }) => {
 				newFiles.push({
 					addedFrom: "schema",
 					dataURL,

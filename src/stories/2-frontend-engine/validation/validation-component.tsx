@@ -1,12 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import styled from "styled-components";
 import * as Yup from "yup";
-import {
-	IFieldYupConfig,
-	IYupValidationRule,
-	TYupSchemaType,
-	YupHelper,
-} from "../../../components/frontend-engine/yup";
+import { IFieldYupConfig, IYupValidationRule, TYupSchemaType, YupHelper } from "../../../context-providers";
 
 export interface IValidationComponentProps {
 	type: TYupSchemaType;

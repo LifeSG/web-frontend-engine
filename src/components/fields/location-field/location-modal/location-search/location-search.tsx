@@ -44,7 +44,7 @@ export const LocationSearch = ({
 
 	showLocationModal,
 	mustHavePostalCode,
-	disableTextSearch,
+	disableSearch,
 
 	panelInputMode,
 	selectedAddressInfo,
@@ -72,11 +72,13 @@ export const LocationSearch = ({
 
 	setSinglePanelMode,
 	updateFormValues,
+	restrictLocationSelection,
+	selectablePins,
 }: ILocationSearchProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { addFieldEventListener, removeFieldEventListener } = useFieldEvent();
+	const { addFieldEventListener, removeFieldEventListener, dispatchFieldEvent } = useFieldEvent();
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const resultRef = useRef<HTMLDivElement>(null);
@@ -110,7 +112,6 @@ export const LocationSearch = ({
 		checkAndSetPinLocationAsResult,
 	} = LocationHelper;
 
-	const { dispatchFieldEvent } = useFieldEvent();
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -306,6 +307,18 @@ export const LocationSearch = ({
 		}
 	}, [totalNumPages, apiPageNum, currentPaginationPageNum, apiResults.length, PAGE_SIZE]);
 
+	useEffect(() => {
+		if (selectablePins.length) {
+			populateDisplayList({
+				results: selectablePins.map((pin) => ({
+					...pin,
+					displayText: pin.resultListItemText,
+					displayAddressText: pin.resultListItemText,
+				})),
+			});
+		}
+	}, [selectablePins]);
+
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
@@ -451,6 +464,18 @@ export const LocationSearch = ({
 			handleApiErrors(error);
 		};
 
+		if (selectablePins.length) {
+			const index = selectablePins.findIndex((pin) => pin.lat === addressLat && pin.lng === addressLng);
+			setSelectedIndex(index);
+			setQueryString(selectablePins[index]?.address ?? "");
+			onChangeSelectedAddressInfo({
+				lat: addressLat,
+				lng: addressLng,
+				address: selectablePins[index]?.address,
+			});
+			return;
+		}
+
 		let resultListItem: IResultListItem[];
 		try {
 			resultListItem = await fetchLocationList(
@@ -480,7 +505,6 @@ export const LocationSearch = ({
 		}
 
 		resultRef.current?.scrollTo(0, 0);
-		populateDisplayList({ results: resultListItem });
 
 		const nearestLocationIndex = LocationHelper.getNearestLocationIndexFromList(
 			resultListItem,
@@ -496,7 +520,11 @@ export const LocationSearch = ({
 			return;
 		}
 
-		setQueryString(nearestLocation.address);
+		if (!restrictLocationSelection) {
+			populateDisplayList({ results: resultListItem });
+			setQueryString(nearestLocation.address);
+			setSelectedIndex(nearestLocationIndex);
+		}
 
 		const locationFieldValue = {
 			...nearestLocation,
@@ -509,8 +537,6 @@ export const LocationSearch = ({
 			locationFieldValue.y = Y;
 		}
 		onChangeSelectedAddressInfo(locationFieldValue);
-
-		setSelectedIndex(nearestLocationIndex);
 	};
 
 	/**
@@ -548,8 +574,8 @@ export const LocationSearch = ({
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderList = () => {
-		return searchBuildingResults.map((item, index) => (
+	const renderList = () =>
+		searchBuildingResults.map((item, index) => (
 			<ResultItem
 				key={`${index}_${item.lat}_${item.lng}`}
 				onClick={() => handleClickResult(item, index)}
@@ -574,7 +600,6 @@ export const LocationSearch = ({
 				</Sanitize>
 			</ResultItem>
 		));
-	};
 
 	const renderPostalCodeError = () => (
 		<Prompt
@@ -608,13 +633,12 @@ export const LocationSearch = ({
 				>
 					<SearchBarModalCross />
 				</SearchBarIconButton>
-
 				<SearchBarContainer hasScrolled={hasScrolled}>
 					<SearchBarIconButton
 						onClick={handleInputFocus}
 						id={TestHelper.generateId(id, "location-search-modal-search")}
 						data-testid={TestHelper.generateId(id, "location-search-modal-search")}
-						disabled={disableTextSearch}
+						disabled={!!disableSearch}
 					>
 						<SearchBarIcon src={SEARCH_SVG} alt="Search" />
 					</SearchBarIconButton>
@@ -625,20 +649,21 @@ export const LocationSearch = ({
 						onFocus={handleInputFocus}
 						onChange={handleInputChange}
 						placeholder={addressFieldPlaceholder}
-						readOnly={gettingCurrentLocation}
+						readOnly={gettingCurrentLocation || disableSearch === "readonly"}
 						value={!gettingCurrentLocation ? queryString : gettingCurrentLocationFetchMessage}
 						ref={inputRef}
-						disabled={disableTextSearch}
+						disabled={disableSearch === "disabled"}
 					/>
-
-					<SearchBarIconButton
-						onClick={handleClearInput}
-						id={TestHelper.generateId(id, "location-search-input-clear")}
-						data-testid={TestHelper.generateId(id, "location-search-input-clear")}
-						disabled={disableTextSearch}
-					>
-						<SearchBarCross type="cross" />
-					</SearchBarIconButton>
+					{!restrictLocationSelection && (
+						<SearchBarIconButton
+							onClick={handleClearInput}
+							id={TestHelper.generateId(id, "location-search-input-clear")}
+							data-testid={TestHelper.generateId(id, "location-search-input-clear")}
+							disabled={!!disableSearch}
+						>
+							<SearchBarCross type="cross" />
+						</SearchBarIconButton>
+					)}
 				</SearchBarContainer>
 				<ResultWrapper
 					id={TestHelper.generateId(id, "location-search-results")}
