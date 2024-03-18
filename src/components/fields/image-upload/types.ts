@@ -1,7 +1,7 @@
 import { IBaseFieldSchema } from "../types";
 import { IYupValidationRule } from "../../../context-providers";
-import { TFileCapture } from "../../shared";
 
+export type TFileCapture = boolean | "user" | "environment" | undefined;
 export type TUploadMethod = "post" | "put" | "patch";
 export const ACCEPTED_FILE_TYPES = ["jpg", "gif", "png", "heic", "heif", "webp"] as const;
 export type TImageUploadAcceptedFileType = (typeof ACCEPTED_FILE_TYPES)[number];

@@ -1,11 +1,12 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
 import { TestHelper } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
-import { DragUpload, ERROR_MESSAGES, IDragUploadRef, Sanitize, TFileCapture } from "../../../shared";
+import { ERROR_MESSAGES, Sanitize } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps } from "../types";
+import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps, TFileCapture } from "../types";
 import { FileItem } from "./file-item";
+import { DragUpload, IDragUploadRef } from "./drag-upload";
 import {
 	AddButton,
 	AlertContainer,

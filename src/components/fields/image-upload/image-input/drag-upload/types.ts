@@ -1,4 +1,4 @@
-export type TFileCapture = boolean | "user" | "environment" | undefined;
+import { TImageUploadAcceptedFileType, TFileCapture } from "../../types";
 
 export interface IDragUploadRef {
 	fileDialog: () => unknown;
@@ -9,7 +9,7 @@ export interface IDragUploadProps {
 	capture?: TFileCapture;
 	className?: string | undefined;
 	/** applies to input field only and not for drag & drop */
-	accept?: string[] | undefined;
+	accept?: TImageUploadAcceptedFileType[] | undefined;
 	children: React.ReactNode;
 	hint?: string | undefined;
 	onInput: (files: File[]) => void;

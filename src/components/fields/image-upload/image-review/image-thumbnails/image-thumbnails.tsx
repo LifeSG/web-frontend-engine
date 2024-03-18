@@ -1,6 +1,6 @@
 import { ChangeEvent, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
-import { TFileCapture } from "../../../../shared";
+import { TFileCapture } from "../../types";
 import { EImageStatus, IImage, ISharedImageProps } from "../../types";
 import {
 	AddImageButton,
