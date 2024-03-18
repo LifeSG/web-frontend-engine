@@ -18,7 +18,7 @@ export const Sections = (props: ISectionsProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { schema, warnings } = props;
+	const { schema } = props;
 	const {
 		formSchema: { overrides },
 		overrideSchema,
@@ -31,7 +31,7 @@ export const Sections = (props: ISectionsProps) => {
 		const overriddenSchema = overrideSchema(schema, overrides);
 		if (overriddenSchema) {
 			return Object.entries(overriddenSchema).map(([id, section], i) => (
-				<Section key={`section-${i}`} id={id} sectionSchema={section} warnings={warnings} />
+				<Section key={`section-${i}`} id={id} sectionSchema={section} />
 			));
 		} else {
 			return (

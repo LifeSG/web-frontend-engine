@@ -21,5 +21,4 @@ export interface IWrapperProps {
 		| Record<string, TFrontendEngineFieldSchema>
 		| Record<string, IFilterItemSchema | IFilterCheckboxSchema>
 		| undefined;
-	warnings?: Record<string, string> | undefined;
 }

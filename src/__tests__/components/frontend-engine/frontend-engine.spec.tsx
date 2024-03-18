@@ -713,6 +713,42 @@ describe("frontend-engine", () => {
 		});
 	});
 
+	describe("setWarnings", () => {
+		it("should support setting of warnings", async () => {
+			const handleSetWarnings = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				try {
+					throw new Error("API error");
+				} catch (error) {
+					ref.current.setWarnings({
+						[FIELD_ONE_ID]: ERROR_MESSAGE,
+					});
+				}
+			};
+
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleSetWarnings} />);
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(screen.getByTestId(`${FIELD_ONE_ID}__warning`)).toHaveTextContent(ERROR_MESSAGE);
+		});
+
+		it("should support setting of warnings for nested fields", async () => {
+			const handleSetWarnings = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				try {
+					throw new Error("API error");
+				} catch (error) {
+					ref.current.setWarnings({
+						[FIELD_TWO_ID]: ERROR_MESSAGE,
+					});
+				}
+			};
+
+			render(<FrontendEngineWithCustomButton data={NESTED_JSON_SCHEMA} onClick={handleSetWarnings} />);
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(screen.getByTestId(`${FIELD_TWO_ID}__warning`)).toHaveTextContent(ERROR_MESSAGE);
+		});
+	});
+
 	describe("validationMode", () => {
 		it("should support validate on touched by default", async () => {
 			renderComponent();

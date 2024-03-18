@@ -3,7 +3,12 @@ import React, { Fragment, ReactNode, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as FrontendEngineElements from "..";
 import { TestHelper } from "../../../utils";
-import { useCustomComponents, useFormSchema, useIsomorphicDeepLayoutEffect } from "../../../utils/hooks";
+import {
+	useCustomComponents,
+	useFormSchema,
+	useIsomorphicDeepLayoutEffect,
+	useValidationSchema,
+} from "../../../utils/hooks";
 import * as FrontendEngineCustomComponents from "../../custom";
 import { ECustomElementType, ECustomFieldType } from "../../custom";
 import { EElementType } from "../../elements";
@@ -24,8 +29,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { id, schema, children, warnings } = props;
+	const { id, schema, children } = props;
 	const { showIf: _showIf, uiType, children: schemaChildren, ...otherSchema } = schema || {};
+	const { warnings } = useValidationSchema();
 
 	const [components, setComponents] = useState<React.ReactNode>(null);
 	const { control } = useFormContext();
@@ -121,7 +127,11 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 		return (
 			<ColWrapper id={childId} childSchema={childSchema}>
 				<FieldWrapper id={childId} schema={childSchema} Field={Field} />
-				{warning && <DSAlert type="warning">{warning}</DSAlert>}
+				{warning && (
+					<DSAlert type="warning" data-testid={TestHelper.generateId(childId, "warning")}>
+						{warning}
+					</DSAlert>
+				)}
 			</ColWrapper>
 		);
 	};

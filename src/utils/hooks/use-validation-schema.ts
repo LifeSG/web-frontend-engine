@@ -2,7 +2,7 @@ import isEmpty from "lodash/isEmpty";
 import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
-import { TFrontendEngineValues } from "../../components/frontend-engine/types";
+import { TFrontendEngineValues, TWarningPayload } from "../../components/frontend-engine/types";
 import { IFieldYupConfig, TFormYupConfig, YupContext, YupHelper } from "../../context-providers";
 import { ObjectHelper } from "../object-helper";
 
@@ -10,10 +10,9 @@ import { ObjectHelper } from "../object-helper";
  * Hook that handles the generation of the validationSchema
  */
 export const useValidationSchema = () => {
-	const { formValidationConfig } = useContext(YupContext);
+	const { formValidationConfig, warnings, setWarnings } = useContext(YupContext);
 	const [hardValidationSchema, setHardValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>(Yup.object());
 	const [softValidationSchema, setSoftValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>(Yup.object());
-	const [warnings, setWarnings] = useState<Record<string, string>>({});
 
 	useEffect(() => {
 		if (formValidationConfig) {
@@ -76,10 +75,15 @@ export const useValidationSchema = () => {
 		}
 	};
 
+	const addWarnings = (warningPayload: TWarningPayload) => {
+		setWarnings({ ...warnings, ...warningPayload });
+	};
+
 	return {
 		warnings,
 		softValidationSchema,
 		hardValidationSchema,
 		performSoftValidation,
+		addWarnings,
 	};
 };
