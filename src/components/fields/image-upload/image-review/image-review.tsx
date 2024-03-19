@@ -3,7 +3,7 @@ import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
-import { TFileCapture } from "../../../shared";
+import { TFileCapture } from "../types";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
 import { EImageStatus, IImage, ISharedImageProps } from "../types";

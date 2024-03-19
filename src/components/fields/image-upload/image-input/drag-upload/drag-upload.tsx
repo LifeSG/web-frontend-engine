@@ -1,6 +1,6 @@
 import { ChangeEvent, forwardRef, useImperativeHandle, useRef } from "react";
 import { useDropzone } from "react-dropzone";
-import { TestHelper } from "../../../utils";
+import { TestHelper } from "../../../../../utils";
 import { HiddenInput, HintContainer, HintText, Wrapper } from "./drag-upload.styles";
 import { IDragUploadProps, IDragUploadRef } from "./types";
 
@@ -52,7 +52,10 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 				aria-hidden="true"
 				tabIndex={-1}
 				capture={capture}
-				accept={accept?.map((type) => `.${type}`).join(",")}
+				/* accept needs to be full MIME types (e.g., image/jpeg).
+				Otherwise, the camera on some Android devices will not open when the capture attribute is set.
+				See more here: https://stackoverflow.com/questions/77876374 */
+				accept={accept?.map((type) => `image/${type}`).join(",")}
 				onChange={handleInputChange}
 				onClick={(event) => {
 					(event.target as HTMLInputElement).value = "";

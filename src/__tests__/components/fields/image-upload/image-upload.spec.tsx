@@ -1030,4 +1030,15 @@ describe("image-upload", () => {
 			expect(formIsDirty).toBe(false);
 		});
 	});
+
+	describe("when capture value is specified", () => {
+		it("should render an input element with the specified capture value", async () => {
+			await renderComponent({ overrideField: { capture: "user" } });
+
+			const input = screen.getByTestId("field-drag-upload__hidden-input");
+
+			expect(input.getAttribute("type")).toBe("file");
+			expect(input.getAttribute("capture")).toBe("user");
+		});
+	});
 });

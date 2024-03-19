@@ -1,11 +1,12 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
 import { TestHelper } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
-import { DragUpload, ERROR_MESSAGES, IDragUploadRef, Sanitize } from "../../../shared";
+import { ERROR_MESSAGES, Sanitize } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps } from "../types";
+import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps, TFileCapture } from "../types";
 import { FileItem } from "./file-item";
+import { DragUpload, IDragUploadRef } from "./drag-upload";
 import {
 	AddButton,
 	AlertContainer,
@@ -18,6 +19,7 @@ import {
 
 interface IImageInputProps extends ISharedImageProps {
 	buttonLabel?: string | undefined;
+	capture?: TFileCapture | undefined;
 	className?: string | undefined;
 	description?: string | undefined;
 	dimensions: { width: number; height: number };
@@ -35,6 +37,7 @@ export const ImageInput = (props: IImageInputProps) => {
 	// =============================================================================
 	const {
 		id,
+		capture,
 		className,
 		label,
 		buttonLabel = "Add photos",
@@ -182,7 +185,13 @@ export const ImageInput = (props: IImageInputProps) => {
 			aria-invalid={!!errorMessage}
 			aria-describedby={!!errorMessage && TestHelper.generateId(id, "error")}
 		>
-			<DragUpload id={`${id}-drag-upload`} accept={accepts} onInput={handleInput} ref={dragUploadRef}>
+			<DragUpload
+				id={`${id}-drag-upload`}
+				accept={accepts}
+				capture={capture}
+				onInput={handleInput}
+				ref={dragUploadRef}
+			>
 				<Subtitle
 					as="label"
 					htmlFor={TestHelper.generateId(id, "file-input-add-button")}

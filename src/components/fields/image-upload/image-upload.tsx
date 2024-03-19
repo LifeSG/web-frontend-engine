@@ -19,6 +19,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const {
 		schema: {
 			buttonLabel,
+			capture,
 			className,
 			compress,
 			description,
@@ -241,6 +242,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			</Suspense>
 			<ImageInput
 				id={id}
+				capture={capture}
 				className={className}
 				label={label}
 				description={description}
