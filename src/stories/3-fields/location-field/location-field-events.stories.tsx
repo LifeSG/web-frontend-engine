@@ -569,6 +569,7 @@ export const StrictLocation = StrictLocationTemplate().bind({});
 StrictLocation.args = {
 	uiType: "location-field",
 	label: "Strict Location",
+};
 
 const SetSelectablePinsTemplate = () =>
 	((args) => {
