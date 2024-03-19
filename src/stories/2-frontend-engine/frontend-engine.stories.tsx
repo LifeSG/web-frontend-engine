@@ -821,15 +821,6 @@ const MyCustomComponent: TCustomComponent<MyCustomSchema> = (props: TCustomCompo
 	};
 
 	return (
-		<FrontendEngine
-			data={DATA}
-			onChange={() => console.log("change")}
-			onSubmit={() => console.log("submit")}
-			wrapInForm={false}
-		/>
-	);
-
-	return (
 		<>
 			<Text.BodySmall style={{ marginBottom: "2rem" }}>{description}</Text.BodySmall>
 			<Form.Input
