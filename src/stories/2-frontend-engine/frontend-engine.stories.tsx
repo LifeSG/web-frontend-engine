@@ -10,7 +10,7 @@ import { TCustomComponentProps, TCustomComponentSchema } from "../../components"
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../components/frontend-engine";
 import { TCustomComponent } from "../../context-providers";
 import { useFrontendEngineComponent } from "../../utils/hooks";
-import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../common";
+import { FrontendEngine, RESET_BUTTON_SCHEMA, SUBMIT_BUTTON_SCHEMA } from "../common";
 
 const meta: Meta = {
 	title: "Form/Frontend Engine",
@@ -47,6 +47,16 @@ const meta: Meta = {
 					summary: "string",
 				},
 			},
+		},
+		components: {
+			description:
+				"Custom components defined outside Frontend Engine. Key denotes referenceKey in schema while value is the component to be used",
+			table: {
+				type: {
+					summary: "TCustomComponents",
+				},
+			},
+			type: { name: "object", value: {} },
 		},
 		"data.className": {
 			description: "HTML class attribute that is applied on the `<form>` element",
@@ -181,6 +191,21 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		wrapInForm: {
+			description:
+				"Indicates whether to wrap Frontend Engine fields within the `<form>` element, by default, fields will be rendered within the `<form>` element<br>When false, the fields will be rendered within the `<div>` element instead<br>This is for instances where Frontend Engine needs to be rendered within another <form> element",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: {
+					summary: "true",
+				},
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -239,6 +264,7 @@ const DATA: IFrontendEngineData = {
 					chipTexts: ["Best", "Good", "Bad", "Horrible"],
 				},
 				...SUBMIT_BUTTON_SCHEMA,
+				...RESET_BUTTON_SCHEMA,
 			},
 		},
 	},
@@ -306,7 +332,7 @@ export const ExternalSubmit: StoryFn<IFrontendEngineProps> = () => {
 
 	return (
 		<>
-			<FrontendEngine data={DATA} ref={ref} />
+			<FrontendEngine data={DATA} ref={ref} wrapInForm={false} />
 			<br />
 			<Button.Default styleType="secondary" onClick={handleClick}>
 				My custom submit button
@@ -836,6 +862,7 @@ export const CustomComponent: StoryFn<IFrontendEngineProps> = () => {
 						validation: [{ required: true }],
 					},
 					...SUBMIT_BUTTON_SCHEMA,
+					...RESET_BUTTON_SCHEMA,
 				},
 			},
 		},
@@ -847,9 +874,37 @@ export const CustomComponent: StoryFn<IFrontendEngineProps> = () => {
 			}}
 			data={json}
 			ref={ref}
+			onChange={(v) => console.log("outer change", v)}
+			onSubmit={(v) => console.log("outer submit", v)}
 		/>
 	);
 };
 CustomComponent.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
+export const RenderWithoutForm: StoryFn<IFrontendEngineProps> = () => {
+	return (
+		<FrontendEngine
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							intro: {
+								uiType: "div",
+								className: "margin--bottom",
+								children: "These fields are not rendered within the <form> element.",
+							},
+							...DATA.sections.section.children,
+						},
+					},
+				},
+			}}
+			wrapInForm={false}
+		/>
+	);
+};
+RenderWithoutForm.parameters = {
 	controls: { hideNoControlsWarning: true },
 };

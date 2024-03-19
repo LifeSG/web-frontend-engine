@@ -3,6 +3,7 @@ import { CustomComponentsProvider } from "./custom-components";
 import { EventProvider } from "./event";
 import { FormSchemaProvider } from "./form-schema";
 import { FormValuesProvider } from "./form-values";
+import { FrontendEngineFormProvider } from "./frontend-engine-form";
 import { YupProvider } from "./yup";
 
 interface IProps {
@@ -15,7 +16,9 @@ export const ContextProviders = ({ children }: IProps) => {
 			<EventProvider>
 				<FormSchemaProvider>
 					<FormValuesProvider>
-						<CustomComponentsProvider>{children}</CustomComponentsProvider>
+						<CustomComponentsProvider>
+							<FrontendEngineFormProvider>{children}</FrontendEngineFormProvider>
+						</CustomComponentsProvider>
 					</FormValuesProvider>
 				</FormSchemaProvider>
 			</EventProvider>
