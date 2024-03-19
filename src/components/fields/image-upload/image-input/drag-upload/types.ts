@@ -1,4 +1,4 @@
-import { TImageUploadAcceptedFileType, TFileCapture } from "../../types";
+import { TFileCapture, TImageUploadAcceptedFileType } from "../../types";
 
 export interface IDragUploadRef {
 	fileDialog: () => unknown;
