@@ -6,8 +6,15 @@ export interface ISliderValidationRule {
 	increment?: number | undefined;
 }
 
-type TCustomOptions = Pick<InputSliderProps, "showSliderLabels" | "sliderLabelPrefix" | "sliderLabelSuffix">;
-
+type TCustomOptions = Pick<
+	InputSliderProps,
+	| "showSliderLabels"
+	| "sliderLabelPrefix"
+	| "sliderLabelSuffix"
+	| "showIndicatorLabel"
+	| "indicatorLabelPrefix"
+	| "indicatorLabelSuffix"
+>;
 export interface ISliderSchema<V = undefined>
 	extends IBaseFieldSchema<"slider", V, ISliderValidationRule>,
 		TComponentOmitProps<Pick<InputSliderProps, "className" | "disabled" | "readOnly" | "ariaLabel">> {
