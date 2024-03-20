@@ -572,7 +572,7 @@ StrictLocation.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const NonStrictLocationTemplate = () =>
+const HidePermissionModalTemplate = () =>
 	((args) => {
 		const id = "location-modal";
 		const formRef = useRef<IFrontendEngineRef>();
@@ -607,10 +607,10 @@ const NonStrictLocationTemplate = () =>
 		);
 	}) as StoryFn<ILocationFieldSchema>;
 
-export const NonStrictLocation = NonStrictLocationTemplate().bind({});
-NonStrictLocation.args = {
+export const HidePermissionModal = HidePermissionModalTemplate().bind({});
+HidePermissionModal.args = {
 	uiType: "location-field",
-	label: "Non Strict Location",
+	label: "Hide Permission Modal",
 };
 
 const SetSelectablePinsTemplate = () =>
