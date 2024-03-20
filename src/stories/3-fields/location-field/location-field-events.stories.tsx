@@ -571,6 +571,48 @@ StrictLocation.args = {
 	label: "Strict Location",
 };
 
+/* eslint-disable react-hooks/rules-of-hooks */
+const NonStrictLocationTemplate = () =>
+	((args) => {
+		const id = "location-modal";
+		const formRef = useRef<IFrontendEngineRef>();
+
+		const handleCloseLocationModal = (e) => {
+			e.preventDefault();
+			formRef.current.dispatchFieldEvent("hide-permission-modal", id);
+		};
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("before-hide-permission-modal", id, handleCloseLocationModal);
+			return () =>
+				currentFormRef.removeFieldEventListener("before-hide-permission-modal", id, handleCloseLocationModal);
+		}, []);
+
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				}}
+			/>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+
+export const NonStrictLocation = NonStrictLocationTemplate().bind({});
+NonStrictLocation.args = {
+	uiType: "location-field",
+	label: "Non Strict Location",
+};
+
 const SetSelectablePinsTemplate = () =>
 	((args) => {
 		const id = "location-enable-map-click";
