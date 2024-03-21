@@ -41,10 +41,10 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description:
-				"<ul><li>`showSliderLabels` specifies if max and min labels are displayed.</li><br/><li>Use `sliderLabelPrefix` and `sliderLabelSuffix` to customise the labels</li></ul>",
+				"<ul><li>`showSliderLabels` specifies if max and min labels are displayed.</li><br/><li>Use `sliderLabelPrefix` and `sliderLabelSuffix` to customise the labels</li><br /> <li> `showIndicatorLabel` specifies if indicator will be displayed </li> <br/> <li> Use `indicatorLabelPrefix` and `indicatorLabelSuffix` to customise the indicator. </li> <br/> </ul>",
 			table: {
 				type: {
-					summary: `{ showSliderLabels?: boolean; sliderLabelPrefix?: string; sliderLabelSuffix?: string; }`,
+					summary: `{ showSliderLabels?: boolean; sliderLabelPrefix?: string; sliderLabelSuffix?: string; showIndicatorLabel?: boolean; indicatorLabelPrefix?: string; indicatorLabelSuffix?: string;  }`,
 				},
 			},
 			type: { name: "object", value: {} },
@@ -91,6 +91,9 @@ Labels.args = {
 		showSliderLabels: true,
 		sliderLabelPrefix: "$",
 		sliderLabelSuffix: ".00",
+		showIndicatorLabel: true,
+		indicatorLabelPrefix: "Within $",
+		indicatorLabelSuffix: ".00",
 	},
 };
 
