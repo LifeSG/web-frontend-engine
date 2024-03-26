@@ -3,6 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
@@ -30,7 +31,7 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentActiveTabId]);
 
-	useEffect(() => {
+	useDeepCompareEffectNoCheck(() => {
 		Object.values(children).forEach((childSchema, index) => {
 			if (index === currentTabIndex) {
 				return;
