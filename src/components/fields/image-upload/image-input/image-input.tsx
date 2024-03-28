@@ -156,26 +156,26 @@ export const ImageInput = (props: IImageInputProps) => {
 	const renderFileExceededAlert = () => {
 		const lengthRule = validation?.find((rule) => "length" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
-		let errorMessage = lengthRule?.errorMessage || maxRule?.errorMessage;
-		if (!errorMessage) {
+		let _errorMessage = lengthRule?.errorMessage || maxRule?.errorMessage;
+		if (!_errorMessage) {
 			if (remainingPhotos < 1 || images.length) {
-				errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles);
+				_errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles);
 			} else {
-				errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
+				_errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
 			}
 		}
 
 		return (
 			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "error")}>
-				{errorMessage}
+				{_errorMessage}
 			</AlertContainer>
 		);
 	};
 
-	const renderCustomError = (errorMessage: string) => {
+	const renderCustomError = (_errorMessage: string) => {
 		return (
 			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "error")}>
-				{errorMessage}
+				{_errorMessage}
 			</AlertContainer>
 		);
 	};
