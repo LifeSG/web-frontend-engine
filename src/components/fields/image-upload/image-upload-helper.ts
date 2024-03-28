@@ -18,4 +18,9 @@ export namespace ImageUploadHelper {
 		const openSlots = possibleSlots.filter((possibleSlot) => !takenSlots.includes(possibleSlot));
 		return openSlots[0] ?? maxSlots;
 	};
+
+	export const assignImageId = (name: string, slot?: number, images?: IImage[]) => {
+		const _slot = slot ?? findAvailableSlot(images);
+		return `${_slot}-${name}`;
+	};
 }

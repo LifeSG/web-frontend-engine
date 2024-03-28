@@ -7,6 +7,7 @@ import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";
 import { ImageReview } from "./image-review";
+import { ImageUploadHelper } from "./image-upload-helper";
 import { ACCEPTED_FILE_TYPES, EImageStatus, IImage, IImageUploadSchema, TImageUploadAcceptedFileType } from "./types";
 
 // lazy load to fix next.js SSR errors
@@ -60,6 +61,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			const newImages: IImage[] = [];
 			(value as { fileName: string; dataURL: string }[]).forEach(({ fileName, dataURL }, i) => {
 				const newImage: IImage = {
+					id: ImageUploadHelper.assignImageId(fileName, i),
 					file: {} as File,
 					name: fileName,
 					dimensions: { width: 10, height: 10 },
