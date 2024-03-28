@@ -53,6 +53,7 @@ export enum EImageStatus {
 	UPLOAD_READY = 4,
 	UPLOADING = 5,
 	UPLOADED = 6,
+	PENDING = 7,
 }
 
 export interface IImage {
@@ -76,4 +77,10 @@ export interface IImage {
 export interface IImageDimensions {
 	width: number;
 	height: number;
+}
+
+export interface IUpdateImageValidation {
+	id: string;
+	updatedStatus: EImageStatus;
+	errorMessage?: string;
 }
