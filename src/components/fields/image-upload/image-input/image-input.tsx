@@ -5,8 +5,8 @@ import { ERROR_MESSAGES, Sanitize } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
 import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps, TFileCapture } from "../types";
-import { FileItem } from "./file-item";
 import { DragUpload, IDragUploadRef } from "./drag-upload";
+import { FileItem } from "./file-item";
 import {
 	AddButton,
 	AlertContainer,
@@ -54,6 +54,7 @@ export const ImageInput = (props: IImageInputProps) => {
 	const dragUploadRef = createRef<IDragUploadRef>();
 	const [remainingPhotos, setRemainingPhotos] = useState<number>(0);
 	const [exceededFiles, setExceedError] = useState<boolean>();
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -94,14 +95,16 @@ export const ImageInput = (props: IImageInputProps) => {
 		if (!maxFiles || inputFiles.length + images.length <= maxFiles) {
 			const updatedImages: IImage[] = [...images];
 			inputFiles.forEach((inputFile) => {
+				const slot = ImageUploadHelper.findAvailableSlot(updatedImages);
 				updatedImages.push({
+					id: ImageUploadHelper.assignImageId(inputFile.name, slot),
 					file: inputFile,
 					name: inputFile.name,
 					dimensions,
 					status: EImageStatus.NONE,
 					uploadProgress: 0,
 					addedFrom: "dragInput",
-					slot: ImageUploadHelper.findAvailableSlot(updatedImages),
+					slot,
 				});
 			});
 			setImages(updatedImages);

@@ -127,16 +127,18 @@ export const ImageReview = (props: IProps) => {
 		) {
 			// image manager will handle the rest
 			setImages((prev) => {
+				const slot = ImageUploadHelper.findAvailableSlot(prev);
 				return [
 					...prev,
 					{
+						id: ImageUploadHelper.assignImageId(selectedFile.name, slot),
 						file: selectedFile,
 						name: selectedFile.name,
 						dimensions,
 						status: EImageStatus.NONE,
 						uploadProgress: 0,
 						addedFrom: "reviewModal",
-						slot: ImageUploadHelper.findAvailableSlot(prev),
+						slot,
 					},
 				];
 			});

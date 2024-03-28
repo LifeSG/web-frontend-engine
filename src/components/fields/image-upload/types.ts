@@ -56,6 +56,7 @@ export enum EImageStatus {
 }
 
 export interface IImage {
+	id: string;
 	file: File;
 	name: string;
 	type?: string;
