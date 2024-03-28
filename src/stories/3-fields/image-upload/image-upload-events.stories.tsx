@@ -161,7 +161,8 @@ const ImageUploadDoneTemplate = (eventName: string) =>
 				setTimeout(() => {
 					currentFormRef.dispatchFieldEvent("update-file-validation", id, {
 						id: e.detail.imageData.id,
-						updatedStatus: EImageStatus.UPLOAD_READY,
+						updatedStatus: EImageStatus.ERROR_CUSTOM,
+						errorMessage: "custom error message",
 					} as IUpdateImageValidation);
 				}, 3000);
 			};

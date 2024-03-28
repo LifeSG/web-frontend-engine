@@ -76,6 +76,12 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				setErrorMessage(_errorMessage);
 				break;
 			}
+			case EImageStatus.ERROR_CUSTOM: {
+				const _errorMessage = fileItem.customErrorMsg;
+				setError(true);
+				setErrorMessage(_errorMessage);
+				break;
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [status, dataURL, file.type, maxSizeInKb]);

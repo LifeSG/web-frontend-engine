@@ -37,6 +37,7 @@ export interface ISharedImageProps {
 
 export enum EImageStatus {
 	INJECTED = -99,
+	ERROR_CUSTOM = -5,
 	TO_DELETE = -4,
 	ERROR_FORMAT = -3,
 	ERROR_GENERIC = -2,
@@ -72,6 +73,7 @@ export interface IImage {
 	uploadProgress: number;
 	uploadResponse?: any;
 	slot: number;
+	customErrorMsg?: string;
 }
 
 export interface IImageDimensions {
