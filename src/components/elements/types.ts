@@ -1,8 +1,9 @@
-import { IColumns } from "../frontend-engine";
 import { TRenderRules } from "../../context-providers";
+import { IColumns } from "../frontend-engine";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
 import { IGridSchema } from "./grid";
+import { IListItemSchema, IOrderedListSchema, IUnorderedListSchema } from "./list";
 import { ITabItemSchema, ITabSchema } from "./tab";
 import type { ITextSchema } from "./text";
 import type { IWrapperSchema } from "./wrapper";
@@ -41,6 +42,9 @@ export enum EElementType {
 	GRID = "Grid",
 	TAB = "Tab",
 	"TAB-ITEM" = "TabItem",
+	"LIST-ITEM" = "ListItem",
+	"ORDERED-LIST" = "List",
+	"UNORDERED-LIST" = "List",
 }
 
 /**
@@ -49,11 +53,15 @@ export enum EElementType {
 export type TElementSchema =
 	| IAlertSchema
 	| IDividerSchema
-	| ITextSchema
-	| IWrapperSchema
 	| IGridSchema
+	| IListItemSchema
+	| IOrderedListSchema
+	| ITabItemSchema
 	| ITabSchema
-	| ITabItemSchema;
+	| ITextSchema
+	| IUnorderedListSchema
+	| IWrapperSchema;
+
 /**
  * common element schema for element schemas to extend from
  */
