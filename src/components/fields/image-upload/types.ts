@@ -61,7 +61,7 @@ export interface IImage {
 	id: string;
 	file: File;
 	name: string;
-	type?: string;
+	type?: string | undefined;
 	/** refers to preview dimensions and eventual output dimensions */
 	dimensions: IImageDimensions;
 	dataURL?: string;
@@ -73,7 +73,7 @@ export interface IImage {
 	uploadProgress: number;
 	uploadResponse?: any;
 	slot: number;
-	customErrorMsg?: string;
+	customErrorMsg?: string | undefined;
 }
 
 export interface IImageDimensions {
@@ -84,5 +84,5 @@ export interface IImageDimensions {
 export interface IUpdateImageValidation {
 	id: string;
 	updatedStatus: EImageStatus;
-	errorMessage?: string;
+	errorMessage?: string | undefined;
 }
