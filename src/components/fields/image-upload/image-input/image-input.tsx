@@ -1,5 +1,5 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
-import { TestHelper } from "../../../../utils";
+import { TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ERROR_MESSAGES, Sanitize } from "../../../shared";
 import { ImageContext } from "../image-context";
@@ -97,7 +97,7 @@ export const ImageInput = (props: IImageInputProps) => {
 			inputFiles.forEach((inputFile) => {
 				const slot = ImageUploadHelper.findAvailableSlot(updatedImages);
 				updatedImages.push({
-					id: ImageUploadHelper.assignImageId(inputFile.name, slot),
+					id: generateRandomId(),
 					file: inputFile,
 					name: inputFile.name,
 					dimensions,

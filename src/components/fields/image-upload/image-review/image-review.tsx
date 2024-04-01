@@ -1,12 +1,11 @@
 import { Modal } from "@lifesg/react-design-system/modal";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
-import { FileHelper, ImageHelper, TestHelper } from "../../../../utils";
+import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
-import { TFileCapture } from "../types";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, ISharedImageProps } from "../types";
+import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../types";
 import { IImageEditorRef } from "./image-editor";
 import { ImageError } from "./image-error";
 import { ImagePrompts } from "./image-prompts";
@@ -131,7 +130,7 @@ export const ImageReview = (props: IProps) => {
 				return [
 					...prev,
 					{
-						id: ImageUploadHelper.assignImageId(selectedFile.name, slot),
+						id: generateRandomId(),
 						file: selectedFile,
 						name: selectedFile.name,
 						dimensions,
