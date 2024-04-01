@@ -77,7 +77,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				break;
 			}
 			case EImageStatus.ERROR_CUSTOM: {
-				const _errorMessage = fileItem.customErrorMsg;
+				const _errorMessage = fileItem.customErrorMessage;
 				setError(true);
 				setErrorMessage(_errorMessage);
 				break;

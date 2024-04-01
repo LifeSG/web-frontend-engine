@@ -51,7 +51,7 @@ export const ImageManager = (props: IProps) => {
 				const imageIndex = prev.findIndex((image) => image.id === e.detail.id);
 				const updatedImage = { ...prev[imageIndex] };
 				updatedImage.status = e.detail.updatedStatus;
-				updatedImage.customErrorMsg = e.detail.errorMessage;
+				updatedImage.customErrorMessage = e.detail.errorMessage;
 
 				const newImages = [...prev];
 				newImages.splice(imageIndex, 1, updatedImage);

@@ -73,7 +73,7 @@ export interface IImage {
 	uploadProgress: number;
 	uploadResponse?: any;
 	slot: number;
-	customErrorMsg?: string | undefined;
+	customErrorMessage?: string | undefined;
 }
 
 export interface IImageDimensions {
