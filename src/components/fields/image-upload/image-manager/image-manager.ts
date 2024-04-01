@@ -132,7 +132,7 @@ export const ImageManager = (props: IProps) => {
 					case EImageStatus.CONVERTED:
 					case EImageStatus.RECOMPRESSED:
 						if (!editImage) {
-							const shouldPreventDefault = !dispatchFieldEvent("upload-done", id, { imageData: image });
+							const shouldPreventDefault = !dispatchFieldEvent("upload-ready", id, { imageData: image });
 
 							setImages((prev) => {
 								const updatedImages = [...prev];

@@ -148,13 +148,13 @@ SaveReviewImages.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const ImageUploadDoneTemplate = (eventName: string) =>
+const ImageUploadReadyTemplate = (eventName: string) =>
 	((args) => {
 		const id = `image-upload-${eventName}`;
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
-			const handleUploadDone = async (e: CustomEvent<{ imageData: IImage }>) => {
+			const handleUploadReady = async (e: CustomEvent<{ imageData: IImage }>) => {
 				action(eventName)(e);
 				e.preventDefault();
 
@@ -168,8 +168,8 @@ const ImageUploadDoneTemplate = (eventName: string) =>
 			};
 
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventName, id, handleUploadDone);
-			return () => currentFormRef.removeFieldEventListener(eventName, id, handleUploadDone);
+			currentFormRef.addFieldEventListener(eventName, id, handleUploadReady);
+			return () => currentFormRef.removeFieldEventListener(eventName, id, handleUploadReady);
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
 
@@ -192,9 +192,9 @@ const ImageUploadDoneTemplate = (eventName: string) =>
 	}) as StoryFn<IImageUploadSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const ImageUploadDone = ImageUploadDoneTemplate("upload-done").bind({});
-ImageUploadDone.args = {
+export const ImageUploadReady = ImageUploadReadyTemplate("upload-ready").bind({});
+ImageUploadReady.args = {
 	label: "Provide images",
-	description: "Listen for `upload-done` event",
+	description: "Listen for `upload-ready` event",
 	uiType: "image-upload",
 };
