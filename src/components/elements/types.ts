@@ -3,7 +3,7 @@ import { IColumns } from "../frontend-engine";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
 import { IGridSchema } from "./grid";
-import { IListItemSchema, IOrderedListSchema, IUnorderedListSchema } from "./list";
+import { IOrderedListSchema, IUnorderedListSchema } from "./list";
 import { ITabItemSchema, ITabSchema } from "./tab";
 import type { ITextSchema } from "./text";
 import type { IWrapperSchema } from "./wrapper";
@@ -54,7 +54,6 @@ export type TElementSchema =
 	| IAlertSchema
 	| IDividerSchema
 	| IGridSchema
-	| IListItemSchema
 	| IOrderedListSchema
 	| ITabItemSchema
 	| ITabSchema

@@ -19,7 +19,7 @@ import { ERROR_MESSAGES } from "../../shared";
 import { ColWrapper } from "./col-wrapper";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { FieldWrapper } from "./field-wrapper";
-import { IWrapperProps } from "./types";
+import { IWrapperProps, TWrapperChildSchema } from "./types";
 import { DSAlert } from "./wrapper.styles";
 
 const fieldTypeKeys = Object.keys(EFieldType);
@@ -96,8 +96,8 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	/* eslint-disable indent */
 	const buildConditionalRenderer =
-		(childId: string, childSchema: TFrontendEngineFieldSchema) =>
-		(buildFn: (childId: string, child: TFrontendEngineFieldSchema) => JSX.Element) =>
+		(childId: string, childSchema: TWrapperChildSchema) =>
+		(buildFn: (childId: string, child: TWrapperChildSchema) => JSX.Element) =>
 			(
 				<ConditionalRenderer
 					id={childId}
