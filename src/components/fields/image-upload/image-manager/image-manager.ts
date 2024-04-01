@@ -1,9 +1,16 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
-import { usePrevious } from "../../../../utils/hooks";
+import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
-import { EImageStatus, IImage, ISharedImageProps, TImageUploadOutputFileType, TUploadMethod } from "../types";
+import {
+	EImageStatus,
+	IImage,
+	ISharedImageProps,
+	IUpdateImageValidation,
+	TImageUploadOutputFileType,
+	TUploadMethod,
+} from "../types";
 
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	editImage: boolean;
@@ -33,9 +40,28 @@ export const ImageManager = (props: IProps) => {
 	const { setValue } = useFormContext();
 	const sessionId = useRef<string>();
 
+	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		const handleUpdateValidation = (e: CustomEvent<IUpdateImageValidation>) => {
+			setImages((prev) => {
+				const imageIndex = prev.findIndex((image) => image.id === e.detail.id);
+				const updatedImage = { ...prev[imageIndex] };
+				updatedImage.status = e.detail.updatedStatus;
+				updatedImage.customErrorMessage = e.detail.errorMessage;
+
+				const newImages = [...prev];
+				newImages.splice(imageIndex, 1, updatedImage);
+				return newImages;
+			});
+		};
+		addFieldEventListener("update-file-validation", id, handleUpdateValidation);
+		return () => removeFieldEventListener("update-file-validation", id, handleUpdateValidation);
+	}, []);
+
 	// generate pseudo-random session id
 	useEffect(() => {
 		sessionId.current = Array(5)
@@ -106,11 +132,13 @@ export const ImageManager = (props: IProps) => {
 					case EImageStatus.CONVERTED:
 					case EImageStatus.RECOMPRESSED:
 						if (!editImage) {
+							const shouldPreventDefault = !dispatchFieldEvent("upload-ready", id, { imageData: image });
+
 							setImages((prev) => {
 								const updatedImages = [...prev];
 								updatedImages[index] = {
 									...updatedImages[index],
-									status: EImageStatus.UPLOAD_READY,
+									status: shouldPreventDefault ? EImageStatus.PENDING : EImageStatus.UPLOAD_READY,
 								};
 								return updatedImages;
 							});

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
-import { AxiosApiClient, FileHelper, ImageHelper } from "../../../utils";
+import { AxiosApiClient, FileHelper, ImageHelper, generateRandomId } from "../../../utils";
 import { usePrevious } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
 import { FileUploadContext } from "./file-upload-context";
@@ -94,12 +94,6 @@ export const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	// pseudo-random session id generator
-	const generateRandomId = () =>
-		Array(5)
-			.fill(0)
-			.map(() => Math.random().toString(36).slice(2))
-			.join("");
 
 	const handleGenericError = (index: number) => {
 		setFiles((prev) => {

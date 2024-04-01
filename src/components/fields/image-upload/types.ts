@@ -37,6 +37,7 @@ export interface ISharedImageProps {
 
 export enum EImageStatus {
 	INJECTED = -99,
+	ERROR_CUSTOM = -5,
 	TO_DELETE = -4,
 	ERROR_FORMAT = -3,
 	ERROR_GENERIC = -2,
@@ -53,12 +54,14 @@ export enum EImageStatus {
 	UPLOAD_READY = 4,
 	UPLOADING = 5,
 	UPLOADED = 6,
+	PENDING = 7,
 }
 
 export interface IImage {
+	id: string;
 	file: File;
 	name: string;
-	type?: string;
+	type?: string | undefined;
 	/** refers to preview dimensions and eventual output dimensions */
 	dimensions: IImageDimensions;
 	dataURL?: string;
@@ -70,9 +73,16 @@ export interface IImage {
 	uploadProgress: number;
 	uploadResponse?: any;
 	slot: number;
+	customErrorMessage?: string | undefined;
 }
 
 export interface IImageDimensions {
 	width: number;
 	height: number;
+}
+
+export interface IUpdateImageValidation {
+	id: string;
+	updatedStatus: EImageStatus;
+	errorMessage?: string | undefined;
 }

@@ -1,7 +1,7 @@
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { FileHelper, WindowHelper } from "../../../utils";
+import { FileHelper, WindowHelper, generateRandomId } from "../../../utils";
 import { useFieldEvent, usePrevious, useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
@@ -60,6 +60,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			const newImages: IImage[] = [];
 			(value as { fileName: string; dataURL: string }[]).forEach(({ fileName, dataURL }, i) => {
 				const newImage: IImage = {
+					id: generateRandomId(),
 					file: {} as File,
 					name: fileName,
 					dimensions: { width: 10, height: 10 },

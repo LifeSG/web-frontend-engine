@@ -93,11 +93,11 @@ const LocationModal = ({
 					break;
 			}
 		};
-    
+
 		const handleHidePermissionModal = () => {
 			setShowGetLocationError(false);
 		};
-      
+
 		const handleSetSelectablePins = (e: TLocationFieldEvents["set-selectable-pins"]) => {
 			const pinsArray = e.detail.pins;
 			if (!Array.isArray(pinsArray)) {

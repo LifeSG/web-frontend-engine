@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, createContext, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useState } from "react";
 import { IImage } from "../types";
 
 interface IImageContext {
@@ -22,7 +22,17 @@ export const ImageContext = createContext<IImageContext>({
 export const ImageProvider = ({ children }: Props) => {
 	const [images, setImages] = useState<IImage[]>([]);
 	const [errorCount, setErrorCount] = useState(0);
-	const values = useMemo(() => ({ images, setImages, errorCount, setErrorCount }), [images, errorCount]);
 
-	return <ImageContext.Provider value={values}>{children}</ImageContext.Provider>;
+	return (
+		<ImageContext.Provider
+			value={{
+				images,
+				setImages,
+				errorCount,
+				setErrorCount,
+			}}
+		>
+			{children}
+		</ImageContext.Provider>
+	);
 };

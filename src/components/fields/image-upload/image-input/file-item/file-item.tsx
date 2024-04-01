@@ -59,9 +59,9 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 		switch (status) {
 			case EImageStatus.ERROR_FORMAT: {
 				const fileTypeRule = validation?.find((rule) => "fileType" in rule);
-				const errorMessage = fileTypeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").FILE_TYPE(accepts);
+				const _errorMessage = fileTypeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").FILE_TYPE(accepts);
 				setError(true);
-				setErrorMessage(errorMessage);
+				setErrorMessage(_errorMessage);
 				break;
 			}
 			case EImageStatus.ERROR_GENERIC:
@@ -70,10 +70,16 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				break;
 			case EImageStatus.ERROR_SIZE: {
 				const fileSizeRule = validation?.find((rule) => "maxSizeInKb" in rule);
-				const errorMessage =
+				const _errorMessage =
 					fileSizeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxSizeInKb);
 				setError(true);
-				setErrorMessage(errorMessage);
+				setErrorMessage(_errorMessage);
+				break;
+			}
+			case EImageStatus.ERROR_CUSTOM: {
+				const _errorMessage = fileItem.customErrorMessage;
+				setError(true);
+				setErrorMessage(_errorMessage);
 				break;
 			}
 		}

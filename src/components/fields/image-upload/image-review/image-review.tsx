@@ -1,12 +1,11 @@
 import { Modal } from "@lifesg/react-design-system/modal";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
-import { FileHelper, ImageHelper, TestHelper } from "../../../../utils";
+import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
-import { TFileCapture } from "../types";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, ISharedImageProps } from "../types";
+import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../types";
 import { IImageEditorRef } from "./image-editor";
 import { ImageError } from "./image-error";
 import { ImagePrompts } from "./image-prompts";
@@ -127,16 +126,18 @@ export const ImageReview = (props: IProps) => {
 		) {
 			// image manager will handle the rest
 			setImages((prev) => {
+				const slot = ImageUploadHelper.findAvailableSlot(prev);
 				return [
 					...prev,
 					{
+						id: generateRandomId(),
 						file: selectedFile,
 						name: selectedFile.name,
 						dimensions,
 						status: EImageStatus.NONE,
 						uploadProgress: 0,
 						addedFrom: "reviewModal",
-						slot: ImageUploadHelper.findAvailableSlot(prev),
+						slot,
 					},
 				];
 			});

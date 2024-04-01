@@ -1,12 +1,12 @@
 import React, { createRef, useContext, useEffect, useState } from "react";
-import { TestHelper } from "../../../../utils";
+import { TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ERROR_MESSAGES, Sanitize } from "../../../shared";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
 import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps, TFileCapture } from "../types";
-import { FileItem } from "./file-item";
 import { DragUpload, IDragUploadRef } from "./drag-upload";
+import { FileItem } from "./file-item";
 import {
 	AddButton,
 	AlertContainer,
@@ -54,6 +54,7 @@ export const ImageInput = (props: IImageInputProps) => {
 	const dragUploadRef = createRef<IDragUploadRef>();
 	const [remainingPhotos, setRemainingPhotos] = useState<number>(0);
 	const [exceededFiles, setExceedError] = useState<boolean>();
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -94,14 +95,16 @@ export const ImageInput = (props: IImageInputProps) => {
 		if (!maxFiles || inputFiles.length + images.length <= maxFiles) {
 			const updatedImages: IImage[] = [...images];
 			inputFiles.forEach((inputFile) => {
+				const slot = ImageUploadHelper.findAvailableSlot(updatedImages);
 				updatedImages.push({
+					id: generateRandomId(),
 					file: inputFile,
 					name: inputFile.name,
 					dimensions,
 					status: EImageStatus.NONE,
 					uploadProgress: 0,
 					addedFrom: "dragInput",
-					slot: ImageUploadHelper.findAvailableSlot(updatedImages),
+					slot,
 				});
 			});
 			setImages(updatedImages);
@@ -153,26 +156,26 @@ export const ImageInput = (props: IImageInputProps) => {
 	const renderFileExceededAlert = () => {
 		const lengthRule = validation?.find((rule) => "length" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
-		let errorMessage = lengthRule?.errorMessage || maxRule?.errorMessage;
-		if (!errorMessage) {
+		let _errorMessage = lengthRule?.errorMessage || maxRule?.errorMessage;
+		if (!_errorMessage) {
 			if (remainingPhotos < 1 || images.length) {
-				errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles);
+				_errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles);
 			} else {
-				errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
+				_errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
 			}
 		}
 
 		return (
 			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "error")}>
-				{errorMessage}
+				{_errorMessage}
 			</AlertContainer>
 		);
 	};
 
-	const renderCustomError = (errorMessage: string) => {
+	const renderCustomError = (_errorMessage: string) => {
 		return (
 			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "error")}>
-				{errorMessage}
+				{_errorMessage}
 			</AlertContainer>
 		);
 	};
