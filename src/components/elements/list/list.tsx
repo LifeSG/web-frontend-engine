@@ -19,7 +19,7 @@ export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrdered
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderText = (): JSX.Element[] | JSX.Element => {
+	const renderChildren = (): JSX.Element[] | JSX.Element => {
 		return children.map((childSchema, index) => {
 			if (typeof childSchema === "string") {
 				return (
@@ -38,7 +38,7 @@ export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrdered
 			data-testid={TestHelper.generateId(id, uiType)}
 			{...otherSchema}
 		>
-			{renderText()}
+			{renderChildren()}
 		</Element>
 	);
 };
