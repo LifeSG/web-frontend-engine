@@ -5,16 +5,14 @@ import { useFormContext } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { TFormYupConfig, TRenderRules, TYupSchemaType, YupHelper } from "../../../context-providers";
 import { useFormValues, useValidationConfig } from "../../../utils/hooks";
-import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
-import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
 import { TCheckboxGroupSchema, TRadioButtonGroupSchema } from "../../fields";
-import { TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { TWrapperChildSchema } from "./types";
 
 interface IProps {
 	id: string;
 	renderRules?: TRenderRules[] | undefined;
 	children: React.ReactNode;
-	schema: TFrontendEngineFieldSchema | IFilterItemSchema | IFilterCheckboxSchema;
+	schema: TWrapperChildSchema;
 }
 
 /**
