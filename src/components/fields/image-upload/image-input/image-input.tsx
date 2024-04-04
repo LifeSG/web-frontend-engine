@@ -158,7 +158,7 @@ export const ImageInput = (props: IImageInputProps) => {
 		const maxRule = validation?.find((rule) => "max" in rule);
 		let _errorMessage = lengthRule?.errorMessage || maxRule?.errorMessage;
 		if (!_errorMessage) {
-			if (remainingPhotos < 1 || images.length) {
+			if (remainingPhotos < 1 || images.length === 0) {
 				_errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles);
 			} else {
 				_errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
