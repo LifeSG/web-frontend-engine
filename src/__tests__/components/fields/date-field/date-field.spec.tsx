@@ -379,5 +379,21 @@ describe(UI_TYPE, () => {
 		});
 	});
 
+	describe("hideInputKeyboard", () => {
+		it("should have inputMode set to numeric if hideInputKeyboard is false", () => {
+			renderComponent({ hideInputKeyboard: false });
+			expect(getDayInput()).toHaveAttribute("inputMode", "numeric");
+			expect(getMonthInput()).toHaveAttribute("inputMode", "numeric");
+			expect(getYearInput()).toHaveAttribute("inputMode", "numeric");
+		});
+
+		it("should have inputMode set to none if hideInputKeyboard is true", () => {
+			renderComponent({ hideInputKeyboard: true });
+			expect(getDayInput()).toHaveAttribute("inputMode", "none");
+			expect(getMonthInput()).toHaveAttribute("inputMode", "none");
+			expect(getYearInput()).toHaveAttribute("inputMode", "none");
+		});
+	});
+
 	labelTestSuite(renderComponent);
 });
