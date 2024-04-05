@@ -69,6 +69,18 @@ const meta: Meta = {
 			},
 			defaultValue: `range`,
 		},
+		hideInputKeyboard: {
+			description: "Indicates if the component should hide input keyboard when user clicks on input field",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 
@@ -247,10 +259,18 @@ WeekRange.args = {
 	variant: "week",
 	validation: [{ required: true }],
 };
+
 export const FixedRange = DefaultStoryTemplate<TDateRangeFieldSchema>("fixed-range").bind({});
 FixedRange.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	variant: "fixed-range",
 	validation: [{ required: true }, { numberOfDays: 7 }],
+};
+
+export const HideInputKeyboard = DefaultStoryTemplate<TDateRangeFieldSchema>("hide-input-keyboard").bind({});
+HideInputKeyboard.args = {
+	uiType: "date-range-field",
+	label: "Date",
+	hideInputKeyboard: true,
 };

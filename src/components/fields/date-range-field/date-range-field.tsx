@@ -26,7 +26,14 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		id,
 		isDirty,
 		onChange,
-		schema: { dateFormat = DEFAULT_DATE_FORMAT, label: _label, validation, variant, ...otherSchema },
+		schema: {
+			dateFormat = DEFAULT_DATE_FORMAT,
+			label: _label,
+			validation,
+			variant,
+			hideInputKeyboard,
+			...otherSchema
+		},
 		value = { from: undefined, to: undefined },
 		...otherProps
 	} = props;
@@ -296,6 +303,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 			value={stateValue}
 			valueEnd={stateValueEnd}
 			variant={variant}
+			hideInputKeyboard={hideInputKeyboard}
 		/>
 	);
 };
