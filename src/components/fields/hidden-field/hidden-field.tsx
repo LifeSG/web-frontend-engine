@@ -11,7 +11,6 @@ export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
 	const {
 		id,
 		schema: { showIf: _showIf, uiType: _uiType, validation, ...otherSchema },
-		...otherProps
 	} = props;
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -26,5 +25,16 @@ export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	return <input {...otherSchema} {...otherProps} type="hidden" id={id} data-testid={id} />;
+	return (
+		<input
+			onBlur={onBlur}
+			onChange={onChange}
+			{...otherSchema}
+			type="hidden"
+			id={id}
+			data-testid={id}
+			name={name}
+			value={value}
+		/>
+	);
 };
