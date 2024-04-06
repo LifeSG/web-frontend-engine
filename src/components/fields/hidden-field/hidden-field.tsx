@@ -10,7 +10,11 @@ export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
 	// =============================================================================
 	const {
 		id,
-		schema: { showIf: _showIf, uiType: _uiType, validation, ...otherSchema },
+		name,
+		onBlur,
+		onChange,
+		schema: { showIf: _showIf, uiType: _uiType, validation, valueType, ...otherSchema },
+		value,
 	} = props;
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -18,9 +22,21 @@ export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
+		let baseYupSchema: Yup.AnySchema;
+		switch (valueType) {
+			case "number":
+				baseYupSchema = Yup.number();
+				break;
+			case "boolean":
+				baseYupSchema = Yup.boolean();
+				break;
+			case "string":
+			default:
+				baseYupSchema = Yup.string();
+		}
+		setFieldValidationConfig(id, baseYupSchema, validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
+	}, [validation, valueType]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS

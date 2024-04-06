@@ -23,6 +23,21 @@ const meta: Meta = {
 		columns: { table: { disable: true } },
 		label: { table: { disable: true } },
 		validation: { table: { disable: true } },
+		valueType: {
+			description:
+				"Defines the primitive data type of the value. This affects how the field will be validated and how other fields can be conditionally rendered based on this field's value.",
+			table: {
+				type: {
+					summary: "string | number | boolean",
+				},
+				defaultValue: { summary: "string" },
+			},
+			type: { name: "string" },
+			options: ["string", "number", "boolean"],
+			control: {
+				type: "select",
+			},
+		},
 	},
 };
 export default meta;
@@ -45,6 +60,30 @@ DefaultValue.argTypes = {
 				summary: "string",
 			},
 		},
+	},
+};
+
+export const NumericValue = DefaultStoryTemplate<IHiddenFieldSchema, number>("hidden-numeric-value").bind({});
+NumericValue.args = {
+	uiType: "hidden-field",
+	valueType: "number",
+	defaultValues: 1,
+};
+NumericValue.argTypes = {
+	defaultValues: {
+		table: { disable: true },
+	},
+};
+
+export const BooleanValue = DefaultStoryTemplate<IHiddenFieldSchema, boolean>("hidden-boolean-value").bind({});
+BooleanValue.args = {
+	uiType: "hidden-field",
+	valueType: "boolean",
+	defaultValues: true,
+};
+BooleanValue.argTypes = {
+	defaultValues: {
+		table: { disable: true },
 	},
 };
 
