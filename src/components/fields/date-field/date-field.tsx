@@ -26,14 +26,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		id,
 		isDirty,
 		onChange,
-		schema: {
-			label: _label,
-			useCurrentDate,
-			dateFormat = DEFAULT_DATE_FORMAT,
-			validation,
-			hideInputKeyboard,
-			...otherSchema
-		},
+		schema: { label: _label, useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, validation, ...otherSchema },
 		value,
 		...otherProps
 	} = props;
@@ -228,7 +221,6 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 			errorMessage={error?.message}
 			onChange={handleChange}
 			value={stateValue}
-			hideInputKeyboard={hideInputKeyboard}
 		/>
 	);
 };
