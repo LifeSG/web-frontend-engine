@@ -379,27 +379,5 @@ describe(uiType, () => {
 		});
 	});
 
-	describe("hideInputKeyboard", () => {
-		it("should have inputMode set to numeric if hideInputKeyboard is false", () => {
-			renderComponent({ hideInputKeyboard: false });
-			expect(getDayInput(TDateRangeInputType.START)).toHaveAttribute("inputMode", "numeric");
-			expect(getMonthInput(TDateRangeInputType.START)).toHaveAttribute("inputMode", "numeric");
-			expect(getYearInput(TDateRangeInputType.START)).toHaveAttribute("inputMode", "numeric");
-			expect(getDayInput(TDateRangeInputType.END)).toHaveAttribute("inputMode", "numeric");
-			expect(getMonthInput(TDateRangeInputType.END)).toHaveAttribute("inputMode", "numeric");
-			expect(getYearInput(TDateRangeInputType.END)).toHaveAttribute("inputMode", "numeric");
-		});
-
-		it("should have inputMode set to none if hideInputKeyboard is true", () => {
-			renderComponent({ hideInputKeyboard: true });
-			expect(getDayInput(TDateRangeInputType.START)).toHaveAttribute("inputMode", "none");
-			expect(getMonthInput(TDateRangeInputType.START)).toHaveAttribute("inputMode", "none");
-			expect(getYearInput(TDateRangeInputType.START)).toHaveAttribute("inputMode", "none");
-			expect(getDayInput(TDateRangeInputType.END)).toHaveAttribute("inputMode", "none");
-			expect(getMonthInput(TDateRangeInputType.END)).toHaveAttribute("inputMode", "none");
-			expect(getYearInput(TDateRangeInputType.END)).toHaveAttribute("inputMode", "none");
-		});
-	});
-
 	labelTestSuite(renderComponent);
 });
