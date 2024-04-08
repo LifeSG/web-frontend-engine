@@ -65,6 +65,18 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		hideInputKeyboard: {
+			description: "Indicates if the component should hide input keyboard when user clicks on input field",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -252,3 +264,10 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const HideInputKeyboard = DefaultStoryTemplate<IDateFieldSchema>("hide-input-keyboard").bind({});
+HideInputKeyboard.args = {
+	uiType: "date-field",
+	label: "Date",
+	hideInputKeyboard: true,
+};
