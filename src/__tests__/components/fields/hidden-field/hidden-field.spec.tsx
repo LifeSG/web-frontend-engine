@@ -70,6 +70,7 @@ describe(UI_TYPE, () => {
 
 		expect(SUBMIT_FN).not.toHaveBeenCalled();
 	});
+
 	it("should support default value", async () => {
 		const defaultValue = "hello";
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
@@ -78,6 +79,30 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+	});
+
+	it("should support number validation if valueType=number", async () => {
+		const defaultValue = 1;
+		renderComponent(
+			{ valueType: "number", validation: [{ moreThan: 2, errorMessage: ERROR_MESSAGE }] },
+			{ defaultValues: { [COMPONENT_ID]: defaultValue } }
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
+	});
+
+	it("should support boolean validation if valueType=boolean", async () => {
+		const defaultValue = true;
+		renderComponent(
+			{ valueType: "boolean", validation: [{ equals: false, errorMessage: ERROR_MESSAGE }] },
+			{ defaultValues: { [COMPONENT_ID]: defaultValue } }
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
 	});
 
 	describe("dirty state", () => {
