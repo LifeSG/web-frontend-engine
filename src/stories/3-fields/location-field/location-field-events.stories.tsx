@@ -687,3 +687,53 @@ SetSelectablePins.args = {
 	uiType: "location-field",
 	label: "Set Selectable Pins",
 };
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const ResetLocationTemplate = () =>
+	((args) => {
+		const id = "location-reset";
+		const formRef = useRef<IFrontendEngineRef>();
+
+		const handleResetLocation = (e: Event) => {
+			e.preventDefault();
+			formRef.current.dispatchFieldEvent("confirm-reset-location", id);
+		};
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("reset-location", id, handleResetLocation);
+
+			return () => {
+				currentFormRef.removeFieldEventListener("reset-location", id, handleResetLocation);
+			};
+		}, []);
+
+		return (
+			<>
+				<FrontendEngine
+					ref={formRef}
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[id]: {
+										...args,
+										reverseGeoCodeEndpoint:
+											"https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code",
+									},
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					}}
+				/>
+			</>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+
+export const ResetLocation = ResetLocationTemplate().bind({});
+ResetLocation.args = {
+	uiType: "location-field",
+	label: "Reset Location",
+};

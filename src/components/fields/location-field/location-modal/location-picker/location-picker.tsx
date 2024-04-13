@@ -4,6 +4,7 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
+import { useFieldEvent } from "../../../../../utils/hooks";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
 import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE, LOCATION_PIN_BLUE } from "./location-picker.data";
@@ -51,6 +52,7 @@ export const LocationPicker = ({
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,
 	};
+	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 
 	// =============================================================================
 	// EFFECTS
@@ -130,6 +132,24 @@ export const LocationPicker = ({
 			zoomWithMarkers([selectedLocationCoord], !disableCurrLocationMarker);
 		}
 	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng, selectablePins]);
+
+	useEffect(() => {
+		addFieldEventListener("confirm-reset-location", id, getCurrentLocation);
+
+		return () => {
+			removeFieldEventListener("confirm-reset-location", id, getCurrentLocation);
+		};
+	}, []);
+
+	// =============================================================================
+	// EVENT HANDLERS
+	// =============================================================================
+	const handleResetLocation = () => {
+		const shouldPreventDefault = !dispatchFieldEvent("reset-location", id);
+		if (!shouldPreventDefault) {
+			getCurrentLocation();
+		}
+	};
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -217,7 +237,7 @@ export const LocationPicker = ({
 			<LeafletWrapper ref={leafletWrapperRef} />
 			<ButtonLocation
 				onClick={() => {
-					locationAvailable && getCurrentLocation();
+					locationAvailable && handleResetLocation();
 				}}
 			>
 				<ButtonLocationImage
