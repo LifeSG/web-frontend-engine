@@ -64,6 +64,8 @@ enum ELocationInputEvents {
 	"BEFORE_HIDE_PERMISSION_MODAL" = "before-hide-permission-modal",
 	"HIDE_PERMISSION_MODAL" = "hide-permission-modal",
 	"DISMISS_LOCATION_MODAL" = "dismiss-location-modal",
+	"RESET_LOCATION" = "reset-location",
+	"CONFIRM_RESET_LOCATION" = "confirm-reset-location",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -344,6 +346,9 @@ const getConfirmLocationModal = (query = false) => {
 };
 
 const getOneMapErrorModal = (query = false) => testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "onemap-error"));
+
+const getCurrentLocationButton = (query = false) =>
+	testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "current-location-button"));
 
 // assert network error
 
@@ -882,6 +887,66 @@ describe("location-input-group", () => {
 						expect(screen.queryByText("address 1")).toBeDefined();
 						expect(screen.queryByText("address 2")).toBeDefined();
 					});
+				});
+			});
+		});
+
+		describe("Reset Location events", () => {
+			describe("reset-location event", () => {
+				it("should fire reset-location event when get current location button is click", async () => {
+					const resetLocation = jest.fn();
+					renderComponent({
+						eventType: ELocationInputEvents.RESET_LOCATION,
+						eventListener: () => resetLocation,
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: {
+									lat: 1.29994179707526,
+									lng: 103.789404349716,
+								},
+							},
+						},
+					});
+
+					await waitFor(() => window.dispatchEvent(new Event("online")));
+
+					getLocationInput().focus();
+
+					expect(getCurrentLocationButton(true)).toBeInTheDocument();
+
+					fireEvent.click(getCurrentLocationButton(true));
+
+					expect(resetLocation).toHaveBeenCalled();
+
+					expect(getCurrentLocationSpy).toHaveBeenCalledTimes(1);
+				});
+			});
+
+			describe("confirm-reset-location event", () => {
+				it("should run getCurrentLocation function when received confirm-reset-location event", async () => {
+					renderComponent({
+						eventType: ELocationInputEvents.RESET_LOCATION,
+						eventListener: (formRef: IFrontendEngineRef) => (e) => {
+							e.preventDefault();
+							formRef.dispatchFieldEvent(ELocationInputEvents.CONFIRM_RESET_LOCATION, COMPONENT_ID);
+						},
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: {
+									lat: 1.29994179707526,
+									lng: 103.789404349716,
+								},
+							},
+						},
+					});
+
+					await waitFor(() => window.dispatchEvent(new Event("online")));
+
+					getLocationInput().focus();
+
+					fireEvent.click(getCurrentLocationButton(true));
+
+					expect(getCurrentLocationSpy).toHaveBeenCalledTimes(1);
 				});
 			});
 		});

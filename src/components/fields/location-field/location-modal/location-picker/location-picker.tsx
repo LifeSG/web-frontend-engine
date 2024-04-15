@@ -236,6 +236,7 @@ export const LocationPicker = ({
 			)}
 			<LeafletWrapper ref={leafletWrapperRef} />
 			<ButtonLocation
+				data-testid={TestHelper.generateId(id, "current-location-button")}
 				onClick={() => {
 					locationAvailable && handleResetLocation();
 				}}
