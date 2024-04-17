@@ -26,6 +26,7 @@ export interface IImageUploadSchema<V = undefined>
 	compress?: boolean | undefined;
 	dimensions?: IImageDimensions | undefined;
 	capture?: TFileCapture | undefined;
+	multiple?: boolean | undefined;
 }
 
 export interface ISharedImageProps {

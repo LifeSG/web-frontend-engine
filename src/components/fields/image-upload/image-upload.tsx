@@ -29,6 +29,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			outputType = "jpg",
 			uploadOnAddingFile,
 			validation,
+			multiple,
 		},
 		id,
 		isDirty,
@@ -222,6 +223,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				onExit={() => setShowReviewModal(false)}
 				outputType={outputType}
 				show={showReviewModal}
+				multiple={multiple}
 			/>
 		);
 	};
@@ -254,6 +256,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				dimensions={dimensions}
 				errorMessage={otherProps.error?.message}
 				validation={validation}
+				multiple={multiple}
 			/>
 			{renderReviewPrompt()}
 			{renderImageReviewModal()}

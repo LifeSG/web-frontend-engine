@@ -13,4 +13,5 @@ export interface IDragUploadProps {
 	children: React.ReactNode;
 	hint?: string | undefined;
 	onInput: (files: File[]) => void;
+	multiple?: boolean | undefined;
 }

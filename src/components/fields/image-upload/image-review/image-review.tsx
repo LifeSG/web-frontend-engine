@@ -61,6 +61,7 @@ interface IProps extends ISharedImageProps {
 	onExit: () => void;
 	outputType: string;
 	show: boolean;
+	multiple?: boolean | undefined;
 }
 
 export const ImageReview = (props: IProps) => {
@@ -79,8 +80,9 @@ export const ImageReview = (props: IProps) => {
 		onExit,
 		outputType,
 		show,
+		multiple,
 	} = props;
-	const { images, setImages } = useContext(ImageContext);
+	const { images, setImages, setExceedError } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
 	const previousShow = usePrevious(show);
 
@@ -117,30 +119,36 @@ export const ImageReview = (props: IProps) => {
 	// =============================================================================
 	// - REVIEW MODAL
 	// =============================================================================
-	const handleSelectFile = (selectedFile: File) => {
+	const handleSelectFile = (selectedFiles: File[]) => {
 		if (
 			!maxFiles ||
-			(selectedFile &&
-				images.filter(({ addedFrom, status }) => status >= EImageStatus.NONE || addedFrom === "reviewModal")
-					.length < maxFiles)
+			selectedFiles.length +
+				images.filter(({ status, addedFrom }) => status >= EImageStatus.NONE || addedFrom === "reviewModal")
+					.length <=
+				maxFiles
 		) {
-			// image manager will handle the rest
-			setImages((prev) => {
-				const slot = ImageUploadHelper.findAvailableSlot(prev);
-				return [
-					...prev,
-					{
-						id: generateRandomId(),
-						file: selectedFile,
-						name: selectedFile.name,
-						dimensions,
-						status: EImageStatus.NONE,
-						uploadProgress: 0,
-						addedFrom: "reviewModal",
-						slot,
-					},
-				];
+			selectedFiles.forEach((selectedFile) => {
+				setImages((prev) => {
+					const slot = ImageUploadHelper.findAvailableSlot(prev);
+					return [
+						...prev,
+						{
+							id: generateRandomId(),
+							file: selectedFile,
+							name: selectedFile.name,
+							dimensions,
+							status: EImageStatus.NONE,
+							uploadProgress: 0,
+							addedFrom: "reviewModal",
+							slot,
+						},
+					];
+				});
 			});
+		} else {
+			setImages(images.filter(({ status }) => status == EImageStatus.UPLOADED));
+			setExceedError(true);
+			onExit();
 		}
 	};
 
@@ -359,6 +367,7 @@ export const ImageReview = (props: IProps) => {
 						images={images}
 						onClickThumbnail={setActiveFileIndex}
 						onSelectFile={handleSelectFile}
+						multiple={multiple}
 					/>
 					<FooterSaveButton
 						id={TestHelper.generateId(id, "save-button")}

@@ -26,6 +26,7 @@ interface IImageInputProps extends ISharedImageProps {
 	errorMessage?: string | undefined;
 	label: string;
 	validation: IImageUploadValidationRule[];
+	multiple?: boolean | undefined;
 }
 
 /**
@@ -48,12 +49,12 @@ export const ImageInput = (props: IImageInputProps) => {
 		maxSizeInKb,
 		validation,
 		errorMessage,
+		multiple,
 	} = props;
-	const { images, setImages, setErrorCount } = useContext(ImageContext);
+	const { images, setImages, setErrorCount, exceededFiles, setExceedError } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
 	const dragUploadRef = createRef<IDragUploadRef>();
 	const [remainingPhotos, setRemainingPhotos] = useState<number>(0);
-	const [exceededFiles, setExceedError] = useState<boolean>();
 
 	// =============================================================================
 	// EFFECTS
@@ -194,6 +195,7 @@ export const ImageInput = (props: IImageInputProps) => {
 				capture={capture}
 				onInput={handleInput}
 				ref={dragUploadRef}
+				multiple={multiple}
 			>
 				<Subtitle
 					as="label"
