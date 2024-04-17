@@ -46,7 +46,7 @@ export const ImageThumbnails = (props: IProps) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleInputChange = async (event: ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files.length > 0) {
+		if (event.target.files?.length > 0) {
 			onSelectFile(Array.from(event.target.files));
 		}
 	};
