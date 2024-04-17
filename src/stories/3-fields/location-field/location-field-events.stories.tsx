@@ -689,22 +689,22 @@ SetSelectablePins.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const ResetLocationTemplate = () =>
+const RefreshLocationTemplate = () =>
 	((args) => {
-		const id = "location-reset";
+		const id = "location-refresh";
 		const formRef = useRef<IFrontendEngineRef>();
 
-		const handleResetLocation = (e: Event) => {
+		const handleRefreshLocation = (e: Event) => {
 			e.preventDefault();
-			formRef.current.dispatchFieldEvent("confirm-reset-location", id);
+			formRef.current.dispatchFieldEvent("refresh-current-location", id);
 		};
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("reset-location", id, handleResetLocation);
+			currentFormRef.addFieldEventListener("before-get-current-location", id, handleRefreshLocation);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("reset-location", id, handleResetLocation);
+				currentFormRef.removeFieldEventListener("before-get-current-location", id, handleRefreshLocation);
 			};
 		}, []);
 
@@ -732,8 +732,8 @@ const ResetLocationTemplate = () =>
 		);
 	}) as StoryFn<ILocationFieldSchema>;
 
-export const ResetLocation = ResetLocationTemplate().bind({});
+export const ResetLocation = RefreshLocationTemplate().bind({});
 ResetLocation.args = {
 	uiType: "location-field",
-	label: "Reset Location",
+	label: "Refresh current location",
 };

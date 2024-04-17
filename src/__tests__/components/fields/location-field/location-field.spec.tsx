@@ -64,8 +64,8 @@ enum ELocationInputEvents {
 	"BEFORE_HIDE_PERMISSION_MODAL" = "before-hide-permission-modal",
 	"HIDE_PERMISSION_MODAL" = "hide-permission-modal",
 	"DISMISS_LOCATION_MODAL" = "dismiss-location-modal",
-	"RESET_LOCATION" = "reset-location",
-	"CONFIRM_RESET_LOCATION" = "confirm-reset-location",
+	"BEFORE_GET_CURRENT_LOCATION" = "before-get-current-location",
+	"REFRESH_CURRENT_LOCATION" = "refresh-current-location",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -891,12 +891,12 @@ describe("location-input-group", () => {
 			});
 		});
 
-		describe("Reset Location events", () => {
-			describe("reset-location event", () => {
-				it("should fire reset-location event when get current location button is click", async () => {
+		describe("Refresh current location events", () => {
+			describe("before-get-current-location event", () => {
+				it("should fire before-get-current-location event when get current location button is click", async () => {
 					const resetLocation = jest.fn();
 					renderComponent({
-						eventType: ELocationInputEvents.RESET_LOCATION,
+						eventType: ELocationInputEvents.BEFORE_GET_CURRENT_LOCATION,
 						eventListener: () => resetLocation,
 						overrideSchema: {
 							defaultValues: {
@@ -922,13 +922,13 @@ describe("location-input-group", () => {
 				});
 			});
 
-			describe("confirm-reset-location event", () => {
-				it("should run getCurrentLocation function when received confirm-reset-location event", async () => {
+			describe("refresh-current-location event", () => {
+				it("should run getCurrentLocation function when received refresh-current-location event", async () => {
 					renderComponent({
-						eventType: ELocationInputEvents.RESET_LOCATION,
+						eventType: ELocationInputEvents.BEFORE_GET_CURRENT_LOCATION,
 						eventListener: (formRef: IFrontendEngineRef) => (e) => {
 							e.preventDefault();
-							formRef.dispatchFieldEvent(ELocationInputEvents.CONFIRM_RESET_LOCATION, COMPONENT_ID);
+							formRef.dispatchFieldEvent(ELocationInputEvents.REFRESH_CURRENT_LOCATION, COMPONENT_ID);
 						},
 						overrideSchema: {
 							defaultValues: {

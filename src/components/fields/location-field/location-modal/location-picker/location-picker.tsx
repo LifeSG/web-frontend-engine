@@ -32,6 +32,7 @@ export const LocationPicker = ({
 	selectedLocationCoord,
 	interactiveMapPinIconUrl = LOCATION_PIN_BLUE,
 	getCurrentLocation,
+	handleGetCurrentLocation,
 	locationAvailable,
 	gettingCurrentLocation,
 	onMapCenterChange,
@@ -52,7 +53,7 @@ export const LocationPicker = ({
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,
 	};
-	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
+	const { addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 
 	// =============================================================================
 	// EFFECTS
@@ -134,22 +135,12 @@ export const LocationPicker = ({
 	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng, selectablePins]);
 
 	useEffect(() => {
-		addFieldEventListener("confirm-reset-location", id, getCurrentLocation);
+		addFieldEventListener("refresh-current-location", id, handleGetCurrentLocation);
 
 		return () => {
-			removeFieldEventListener("confirm-reset-location", id, getCurrentLocation);
+			removeFieldEventListener("refresh-current-location", id, handleGetCurrentLocation);
 		};
 	}, []);
-
-	// =============================================================================
-	// EVENT HANDLERS
-	// =============================================================================
-	const handleResetLocation = () => {
-		const shouldPreventDefault = !dispatchFieldEvent("reset-location", id);
-		if (!shouldPreventDefault) {
-			getCurrentLocation();
-		}
-	};
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -238,7 +229,7 @@ export const LocationPicker = ({
 			<ButtonLocation
 				data-testid={TestHelper.generateId(id, "current-location-button")}
 				onClick={() => {
-					locationAvailable && handleResetLocation();
+					locationAvailable && getCurrentLocation();
 				}}
 			>
 				<ButtonLocationImage
