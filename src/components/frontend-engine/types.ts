@@ -1,5 +1,5 @@
 import { UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
-import { TCustomComponents, TYupSchemaType } from "../../context-providers";
+import { TCustomComponents, TCustomValidationFunction, TYupSchemaType } from "../../context-providers";
 import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
@@ -94,11 +94,7 @@ export type TWarningPayload = Record<string, string>;
 export interface IFrontendEngineRef
 	extends Omit<HTMLDivElement, "addEventListener" | "removeEventListener">,
 		HTMLFormElement {
-	addCustomValidation: (
-		type: TYupSchemaType | "mixed",
-		name: string,
-		fn: (value: unknown, arg: unknown) => boolean
-	) => void;
+	addCustomValidation: (type: TYupSchemaType | "mixed", name: string, fn: TCustomValidationFunction) => void;
 	addFieldEventListener: <T = any>(
 		type: string,
 		id: string,
