@@ -693,20 +693,47 @@ const RefreshLocationTemplate = () =>
 	((args) => {
 		const id = "location-refresh";
 		const formRef = useRef<IFrontendEngineRef>();
+		const [showRefreshLocationPrompt, setShowRefreshLocationPrompt] = useState(false);
+		const [isFirstEntry, setIsFirstEntry] = useState(true);
 
-		const handleRefreshLocation = (e: Event) => {
-			e.preventDefault();
+		const handleFirstEntry = () => {
+			// After setting the current location, it is no longer the first entry
+			setIsFirstEntry(false);
+		};
+
+		const handleRefreshLocation = () => {
+			setShowRefreshLocationPrompt(false);
 			formRef.current.dispatchFieldEvent("refresh-current-location", id);
+		};
+
+		const handleShowRefreshLocationPrompt = (e) => {
+			if (isFirstEntry) return;
+
+			e.preventDefault();
+			setShowRefreshLocationPrompt(true);
 		};
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("before-get-current-location", id, handleRefreshLocation);
+			currentFormRef.addFieldEventListener("set-current-location", id, handleFirstEntry);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("before-get-current-location", id, handleRefreshLocation);
+				currentFormRef.removeFieldEventListener("set-current-location", id, handleFirstEntry);
 			};
 		}, []);
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("before-get-current-location", id, handleShowRefreshLocationPrompt);
+
+			return () => {
+				currentFormRef.removeFieldEventListener(
+					"before-get-current-location",
+					id,
+					handleShowRefreshLocationPrompt
+				);
+			};
+		}, [isFirstEntry]);
 
 		return (
 			<>
@@ -728,12 +755,32 @@ const RefreshLocationTemplate = () =>
 						},
 					}}
 				/>
+				<Prompt
+					id="location-refresh-prompt"
+					title="Retrieve current location?"
+					size="large"
+					show={showRefreshLocationPrompt}
+					description="This will refresh your current location."
+					buttons={[
+						{
+							id: "retrieve",
+							title: "Retrieve current location",
+							onClick: handleRefreshLocation,
+						},
+						{
+							id: "cancel",
+							title: "Cancel",
+							onClick: () => setShowRefreshLocationPrompt(false),
+							buttonStyle: "secondary",
+						},
+					]}
+				/>
 			</>
 		);
 	}) as StoryFn<ILocationFieldSchema>;
 
-export const ResetLocation = RefreshLocationTemplate().bind({});
-ResetLocation.args = {
+export const RefreshLocation = RefreshLocationTemplate().bind({});
+RefreshLocation.args = {
 	uiType: "location-field",
 	label: "Refresh current location",
 };
