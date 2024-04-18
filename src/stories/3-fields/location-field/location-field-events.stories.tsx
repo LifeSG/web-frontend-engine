@@ -732,8 +732,8 @@ const RefreshLocationTemplate = () =>
 		);
 	}) as StoryFn<ILocationFieldSchema>;
 
-export const ResetLocation = RefreshLocationTemplate().bind({});
-ResetLocation.args = {
+export const RefreshLocation = RefreshLocationTemplate().bind({});
+RefreshLocation.args = {
 	uiType: "location-field",
 	label: "Refresh current location",
 };

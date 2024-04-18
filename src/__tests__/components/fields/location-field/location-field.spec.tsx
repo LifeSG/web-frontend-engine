@@ -894,10 +894,10 @@ describe("location-input-group", () => {
 		describe("Refresh current location events", () => {
 			describe("before-get-current-location event", () => {
 				it("should fire before-get-current-location event when get current location button is click", async () => {
-					const resetLocation = jest.fn();
+					const refreshLocation = jest.fn();
 					renderComponent({
 						eventType: ELocationInputEvents.BEFORE_GET_CURRENT_LOCATION,
-						eventListener: () => resetLocation,
+						eventListener: () => refreshLocation,
 						overrideSchema: {
 							defaultValues: {
 								[COMPONENT_ID]: {
@@ -916,7 +916,7 @@ describe("location-input-group", () => {
 
 					fireEvent.click(getCurrentLocationButton(true));
 
-					expect(resetLocation).toHaveBeenCalled();
+					expect(refreshLocation).toHaveBeenCalled();
 
 					expect(getCurrentLocationSpy).toHaveBeenCalledTimes(1);
 				});
