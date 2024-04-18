@@ -22,6 +22,7 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 	selectedLocationCoord?: ILocationCoord | undefined;
 	interactiveMapPinIconUrl?: string | undefined;
 	getCurrentLocation: () => void;
+	handleGetCurrentLocation: () => Promise<ILocationCoord>;
 	locationAvailable: boolean;
 	gettingCurrentLocation: boolean;
 	onMapCenterChange: (latlng: ILocationCoord) => void;
