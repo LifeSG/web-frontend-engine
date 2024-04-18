@@ -21,7 +21,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		error,
 		isDirty,
 		value,
-		schema: { description, label, uploadOnAddingFile, validation, warning, ...otherSchema },
+		schema: { compressImages, description, label, uploadOnAddingFile, validation, warning, ...otherSchema },
 	} = props;
 	const { files, setFiles } = useContext(FileUploadContext);
 	const fileTypeRuleRef = useRef<IFileUploadValidationRule>({});
@@ -216,6 +216,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				maxFileSizeRule={maxFileSizeRuleRef.current}
 				upload={uploadOnAddingFile}
 				value={value}
+				compressImages={!!compressImages}
 			/>
 			<DSFileUpload
 				{...otherSchema}

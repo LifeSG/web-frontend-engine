@@ -508,6 +508,46 @@ describe(UI_TYPE, () => {
 				);
 			});
 		});
+
+		describe("image compression", () => {
+			it("should not compress image by default", async () => {
+				const compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				await renderComponent({
+					files: [FILE_1],
+					uploadType: inputType,
+				});
+				await flushPromise();
+
+				expect(compressSpy).not.toHaveBeenCalled();
+			});
+
+			it("should compress image if compress=true and max size is defined", async () => {
+				const compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				await act(async () => {
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: { compressImages: true, validation: [{ maxSizeInKb: 0.001 }] },
+						uploadType: inputType,
+					});
+					await flushPromise();
+				});
+
+				expect(compressSpy).toHaveBeenCalled();
+			});
+
+			it("should not compress non-image file", async () => {
+				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ mime: "application/pdf", ext: ".pdf" });
+				const compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: { compressImages: true, validation: [{ maxSizeInKb: 0.001 }] },
+					uploadType: inputType,
+				});
+				await flushPromise();
+
+				expect(compressSpy).not.toHaveBeenCalled();
+			});
+		});
 	});
 
 	describe("events", () => {
