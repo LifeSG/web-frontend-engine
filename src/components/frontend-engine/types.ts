@@ -96,8 +96,14 @@ export interface IFrontendEngineRef
 	 * @param type The schema type
 	 * @param name Name of the condition
 	 * @param fn Validation function, it must return a boolean
+	 * @param overwrite Whether to replace if the custom validation is already exists
 	 */
-	addCustomValidation: (type: TYupSchemaType | "mixed", name: string, fn: TCustomValidationFunction) => void;
+	addCustomValidation: (
+		type: TYupSchemaType | "mixed",
+		name: string,
+		fn: TCustomValidationFunction,
+		overwrite?: boolean | undefined
+	) => void;
 	addFieldEventListener: <T = any>(
 		type: string,
 		id: string,

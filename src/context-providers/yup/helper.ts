@@ -259,23 +259,25 @@ export namespace YupHelper {
 	 * @param name Name of the condition
 	 * @param fn Validation function, it must return a boolean
 	 * @param yupId Assign the custom condition to a specific schema
+	 * @param overwrite Whether to replace if the custom validation is already exists
 	 */
 	export const addCondition = (
 		type: TYupSchemaType | "mixed",
 		name: string,
 		fn: TCustomValidationFunction,
-		yupId?: string | undefined
+		yupId?: string | undefined,
+		overwrite = false
 	) => {
 		if (yupId) {
 			if (!customValidationMapping[yupId]) {
 				customValidationMapping[yupId] = {};
 			}
-			if (customValidationMapping[yupId][name]) {
+			if (customValidationMapping[yupId][name] && overwrite !== true) {
 				console.warn(`the validation condition "${name}" is not added because it already exists!`);
 				return;
 			}
 			customValidationMapping[yupId][name] = fn;
-		} else if (customYupConditions.includes(name)) {
+		} else if (customYupConditions.includes(name) && overwrite !== true) {
 			console.warn(`the validation condition "${name}" is not added because it already exists!`);
 			return;
 		}

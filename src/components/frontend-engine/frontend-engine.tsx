@@ -103,8 +103,13 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		submit: reactFormHookSubmit(handleSubmit, handleSubmitError),
 	}));
 
-	const addCustomValidation = (type: TYupSchemaType | "mixed", name: string, fn: TCustomValidationFunction) => {
-		YupHelper.addCondition(type, name, fn, yupId);
+	const addCustomValidation = (
+		type: TYupSchemaType | "mixed",
+		name: string,
+		fn: TCustomValidationFunction,
+		override = false
+	) => {
+		YupHelper.addCondition(type, name, fn, yupId, override);
 	};
 
 	const checkIsFormValid = useCallback(() => {
