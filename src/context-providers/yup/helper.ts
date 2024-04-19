@@ -7,6 +7,7 @@ import {
 	IYupConditionalValidationRule,
 	IYupRenderRule,
 	IYupValidationRule,
+	TCustomValidationFunction,
 	TFormYupConfig,
 	TYupCondition,
 	TYupSchemaType,
@@ -17,13 +18,18 @@ interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 
 export namespace YupHelper {
 	const customYupConditions: string[] = [];
+	const customValidationMapping: Record<string, Record<string, TCustomValidationFunction>> = {};
 
 	/**
 	 * Constructs the entire Yup schema for frontend engine to use
 	 * @param yupSchemaConfig JSON representation of the eventual Yup schema
+	 * @param yupId Optionally assign an id to the schema for custom validation
 	 * @returns Yup schema ready to be used by FrontendEngine
 	 */
-	export const buildSchema = (yupSchemaConfig: TFormYupConfig): Yup.ObjectSchema<ObjectShape> => {
+	export const buildSchema = (
+		yupSchemaConfig: TFormYupConfig,
+		yupId?: string | undefined
+	): Yup.ObjectSchema<ObjectShape> => {
 		const yupSchema: ObjectShape = {};
 		const [parsedYupSchemaConfig, whenPairIds] = parseWhenKeys(yupSchemaConfig);
 		Object.keys(parsedYupSchemaConfig).forEach((id) => {
@@ -31,7 +37,7 @@ export namespace YupHelper {
 			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
 		});
 
-		return Yup.object().shape(yupSchema, whenPairIds);
+		return Yup.object().meta({ yupId, customRules: [] }).shape(yupSchema, whenPairIds);
 	};
 
 	/**
@@ -252,22 +258,43 @@ export namespace YupHelper {
 	 * @param type The schema type
 	 * @param name Name of the condition
 	 * @param fn Validation function, it must return a boolean
+	 * @param yupId Assign the custom condition to a specific schema
 	 */
 	export const addCondition = (
 		type: TYupSchemaType | "mixed",
 		name: string,
-		fn: (value: unknown, arg: unknown, context: Yup.TestContext) => boolean
+		fn: TCustomValidationFunction,
+		yupId?: string | undefined
 	) => {
-		if (customYupConditions.includes(name)) {
+		if (yupId) {
+			if (!customValidationMapping[yupId]) {
+				customValidationMapping[yupId] = {};
+			}
+			if (customValidationMapping[yupId][name]) {
+				console.warn(`the validation condition "${name}" is not added because it already exists!`);
+				return;
+			}
+			customValidationMapping[yupId][name] = fn;
+		} else if (customYupConditions.includes(name)) {
 			console.warn(`the validation condition "${name}" is not added because it already exists!`);
 			return;
 		}
-		customYupConditions.push(name);
+		if (!customYupConditions.includes(name)) {
+			customYupConditions.push(name);
+		}
+
 		Yup.addMethod<Yup.AnySchema>(Yup[type], name, function (arg: unknown, errorMessage: string) {
 			return this.test({
 				name,
 				message: errorMessage,
-				test: (value, testContext) => fn(value, arg, testContext),
+				test: (value, testContext) => {
+					if (!yupId) return fn(value, arg, testContext);
+
+					// from typing is only added in v1.0.0-beta.7 (https://github.com/jquense/yup/issues/1631)
+					// TODO: switch from dynamic reference once yup is updated
+					const metaYupId = testContext.options["from"][0].schema.describe().meta.yupId;
+					return customValidationMapping[metaYupId]?.[name](value, arg, testContext);
+				},
 			});
 		});
 	};

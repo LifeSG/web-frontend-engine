@@ -10,7 +10,7 @@ import { ObjectHelper } from "../object-helper";
  * Hook that handles the generation of the validationSchema
  */
 export const useValidationSchema = () => {
-	const { formValidationConfig, warnings, setWarnings } = useContext(YupContext);
+	const { formValidationConfig, warnings, setWarnings, yupId } = useContext(YupContext);
 	const [hardValidationSchema, setHardValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>(Yup.object());
 	const [softValidationSchema, setSoftValidationSchema] = useState<Yup.ObjectSchema<ObjectShape>>(Yup.object());
 
@@ -45,10 +45,10 @@ export const useValidationSchema = () => {
 				}
 			});
 
-			setSoftValidationSchema(YupHelper.buildSchema(softValidationConfig));
-			setHardValidationSchema(YupHelper.buildSchema(hardValidationConfig));
+			setSoftValidationSchema(YupHelper.buildSchema(softValidationConfig, yupId));
+			setHardValidationSchema(YupHelper.buildSchema(hardValidationConfig, yupId));
 		}
-	}, [formValidationConfig]);
+	}, [formValidationConfig, yupId]);
 
 	/**
 	 * Executes validation based on allowSoftValidation flag provided in the schema to generate warning messages
@@ -85,5 +85,6 @@ export const useValidationSchema = () => {
 		hardValidationSchema,
 		performSoftValidation,
 		addWarnings,
+		yupId,
 	};
 };

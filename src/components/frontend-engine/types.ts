@@ -5,10 +5,7 @@ import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
 
-// =============================================================================
-// YUP SCHEMA
-// =============================================================================
-export type { IYupValidationRule } from "../../context-providers";
+export type { IYupValidationRule, TCustomValidationFunction, TCustomComponents } from "../../context-providers";
 
 // =============================================================================
 // FRONTEND ENGINE
@@ -94,6 +91,12 @@ export type TWarningPayload = Record<string, string>;
 export interface IFrontendEngineRef
 	extends Omit<HTMLDivElement, "addEventListener" | "removeEventListener">,
 		HTMLFormElement {
+	/**
+	 * adds custom validation rule
+	 * @param type The schema type
+	 * @param name Name of the condition
+	 * @param fn Validation function, it must return a boolean
+	 */
 	addCustomValidation: (type: TYupSchemaType | "mixed", name: string, fn: TCustomValidationFunction) => void;
 	addFieldEventListener: <T = any>(
 		type: string,
