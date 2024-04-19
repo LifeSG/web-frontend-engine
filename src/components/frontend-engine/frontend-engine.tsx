@@ -49,8 +49,14 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 	const { setCustomComponents } = useCustomComponents();
 	const { setSubmitHandler, setWrapInForm } = useFrontendEngineForm();
-	const { addWarnings, performSoftValidation, softValidationSchema, hardValidationSchema, yupId } =
-		useValidationSchema();
+	const {
+		addWarnings,
+		performSoftValidation,
+		softValidationSchema,
+		hardValidationSchema,
+		rebuildValidationSchema,
+		yupId,
+	} = useValidationSchema();
 	const { formValidationConfig } = useValidationConfig();
 	const formMethods = useForm({
 		mode: validationMode,
@@ -110,6 +116,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		override = false
 	) => {
 		YupHelper.addCondition(type, name, fn, yupId, override);
+		rebuildValidationSchema();
 	};
 
 	const checkIsFormValid = useCallback(() => {
