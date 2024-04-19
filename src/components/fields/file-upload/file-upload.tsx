@@ -1,5 +1,5 @@
 import { FileUpload as DSFileUpload, FileItemProps } from "@lifesg/react-design-system/file-upload";
-import { useContext, useEffect, useRef } from "react";
+import { Suspense, lazy, useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
@@ -9,8 +9,10 @@ import { IYupValidationRule } from "../../frontend-engine";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
 import { FileUploadContext, FileUploadProvider } from "./file-upload-context";
 import { FileUploadHelper } from "./file-upload-helper";
-import { FileUploadManager } from "./file-upload-manager";
 import { EFileStatus, IFile, IFileUploadSchema, IFileUploadValidationRule, IFileUploadValue } from "./types";
+
+// lazy load to fix next.js SSR errors
+const FileUploadManager = lazy(() => import("./file-upload-manager"));
 
 export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) => {
 	// =============================================================================
@@ -210,14 +212,16 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 
 	return (
 		<>
-			<FileUploadManager
-				id={id}
-				fileTypeRule={fileTypeRuleRef.current}
-				maxFileSizeRule={maxFileSizeRuleRef.current}
-				upload={uploadOnAddingFile}
-				value={value}
-				compressImages={!!compressImages}
-			/>
+			<Suspense fallback={null}>
+				<FileUploadManager
+					id={id}
+					fileTypeRule={fileTypeRuleRef.current}
+					maxFileSizeRule={maxFileSizeRuleRef.current}
+					upload={uploadOnAddingFile}
+					value={value}
+					compressImages={!!compressImages}
+				/>
+			</Suspense>
 			<DSFileUpload
 				{...otherSchema}
 				accept={generateAcceptedFileTypes()}

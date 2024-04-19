@@ -17,7 +17,7 @@ interface IProps {
 
 const RESIZEABLE_IMAGE_TYPES = ["image/jpeg", "image/gif", "image/png"];
 
-export const FileUploadManager = (props: IProps) => {
+const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -343,3 +343,5 @@ export const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	return null;
 };
+
+export default FileUploadManager;
