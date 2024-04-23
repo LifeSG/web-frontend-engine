@@ -212,6 +212,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	);
 
 	const renderImageReviewModal = () => {
+		const maxRule = validation?.find((rule) => "max" in rule);
 		return (
 			<ImageReview
 				accepts={acceptedFileTypes}
@@ -219,6 +220,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				id={id}
 				className={className}
 				maxFiles={maxFiles}
+				maxFilesErrorMessage={maxRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles)}
 				maxSizeInKb={maxFileSize}
 				onExit={() => setShowReviewModal(false)}
 				outputType={outputType}

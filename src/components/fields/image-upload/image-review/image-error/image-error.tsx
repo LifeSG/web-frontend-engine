@@ -10,6 +10,7 @@ const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/w
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	image: IImage;
 	onClickOk: (e: React.MouseEvent<HTMLButtonElement>) => void;
+	maxFilesErrorMessage?: string;
 }
 
 export const ImageError = (props: IProps) => {
@@ -22,6 +23,7 @@ export const ImageError = (props: IProps) => {
 		accepts,
 		maxSizeInKb,
 		onClickOk,
+		maxFilesErrorMessage,
 	} = props;
 	const [errorTitle, setErrorTitle] = useState<string>();
 	const [errorDescription, setErrorDescription] = useState<JSX.Element>();
@@ -45,6 +47,11 @@ export const ImageError = (props: IProps) => {
 				setErrorDescription(
 					ERROR_MESSAGES.UPLOAD("photo").MODAL.MAX_FILE_SIZE.DESCRIPTION(filename, maxSizeInKb)
 				);
+				break;
+
+			case EImageStatus.ERROR_EXCEED:
+				setErrorTitle("Upload failed");
+				setErrorDescription(<>{maxFilesErrorMessage}</>);
 				break;
 		}
 	}, [accepts, maxSizeInKb, name, status]);

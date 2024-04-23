@@ -6,8 +6,6 @@ interface IImageContext {
 	setImages: Dispatch<SetStateAction<IImage[]>>;
 	errorCount: number;
 	setErrorCount: Dispatch<SetStateAction<number>>;
-	exceededFiles: boolean;
-	setExceedError: Dispatch<SetStateAction<boolean>>;
 }
 
 interface Props {
@@ -19,14 +17,11 @@ export const ImageContext = createContext<IImageContext>({
 	setImages: () => null,
 	errorCount: 0,
 	setErrorCount: () => null,
-	exceededFiles: undefined,
-	setExceedError: () => undefined,
 });
 
 export const ImageProvider = ({ children }: Props) => {
 	const [images, setImages] = useState<IImage[]>([]);
 	const [errorCount, setErrorCount] = useState(0);
-	const [exceededFiles, setExceedError] = useState<boolean>();
 
 	return (
 		<ImageContext.Provider
@@ -35,8 +30,6 @@ export const ImageProvider = ({ children }: Props) => {
 				setImages,
 				errorCount,
 				setErrorCount,
-				exceededFiles,
-				setExceedError,
 			}}
 		>
 			{children}

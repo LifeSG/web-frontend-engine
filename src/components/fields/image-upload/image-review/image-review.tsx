@@ -62,6 +62,7 @@ interface IProps extends ISharedImageProps {
 	outputType: string;
 	show: boolean;
 	multiple?: boolean | undefined;
+	maxFilesErrorMessage?: string;
 }
 
 export const ImageReview = (props: IProps) => {
@@ -81,8 +82,9 @@ export const ImageReview = (props: IProps) => {
 		outputType,
 		show,
 		multiple,
+		maxFilesErrorMessage,
 	} = props;
-	const { images, setImages, setExceedError } = useContext(ImageContext);
+	const { images, setImages } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
 	const previousShow = usePrevious(show);
 
@@ -146,9 +148,22 @@ export const ImageReview = (props: IProps) => {
 				});
 			});
 		} else {
-			setImages(images.filter(({ status }) => status == EImageStatus.UPLOADED));
-			setExceedError(true);
-			onExit();
+			setImages((prev) => {
+				const slot = ImageUploadHelper.findAvailableSlot(prev);
+				return [
+					...prev,
+					{
+						id: generateRandomId(),
+						file: selectedFiles[0],
+						name: selectedFiles[0].name,
+						dimensions,
+						status: EImageStatus.ERROR_EXCEED,
+						uploadProgress: 0,
+						addedFrom: "reviewModal",
+						slot,
+					},
+				];
+			});
 		}
 	};
 
@@ -349,6 +364,7 @@ export const ImageReview = (props: IProps) => {
 					accepts={accepts}
 					maxSizeInKb={maxSizeInKb}
 					onClickOk={() => handleDeleteDecision(true)}
+					maxFilesErrorMessage={maxFilesErrorMessage}
 				/>
 			)}
 		</ContentSection>

@@ -51,10 +51,11 @@ export const ImageInput = (props: IImageInputProps) => {
 		errorMessage,
 		multiple,
 	} = props;
-	const { images, setImages, setErrorCount, exceededFiles, setExceedError } = useContext(ImageContext);
+	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
 	const dragUploadRef = createRef<IDragUploadRef>();
 	const [remainingPhotos, setRemainingPhotos] = useState<number>(0);
+	const [exceededFiles, setExceedError] = useState<boolean>();
 
 	// =============================================================================
 	// EFFECTS
