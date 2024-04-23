@@ -138,6 +138,30 @@ NotEquals.args = {
 	...SUBMIT_BUTTON_SCHEMA,
 };
 
+export const Shown = Template.bind({});
+Shown.args = {
+	intro: {
+		uiType: "div",
+		className: "margin--bottom",
+		children: "Show field 3 as long as field 2 is shown (requires field 1 to be filled)",
+	},
+	field1: {
+		label: "Field 1",
+		uiType: "text-field",
+	},
+	field2: {
+		label: "Field 2",
+		uiType: "text-field",
+		showIf: [{ field1: [{ filled: true }] }],
+	},
+	field3: {
+		label: "Field 3",
+		uiType: "text-field",
+		showIf: [{ field2: [{ shown: true }] }],
+	},
+	...SUBMIT_BUTTON_SCHEMA,
+};
+
 export const AndConditions = Template.bind({});
 AndConditions.args = {
 	intro: {

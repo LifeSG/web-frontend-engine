@@ -1,3 +1,4 @@
+import * as Yup from "yup";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 import React, { useState } from "react";
@@ -58,6 +59,14 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 			if (!isValid) {
 				const renderSchemaConfig: TFormYupConfig = {};
 				Object.entries(ruleGroup).forEach(([fieldId, rules]) => {
+					if (rules.find((rule) => rule.shown) && !formValidationConfig?.[fieldId]) {
+						renderSchemaConfig[fieldId] = {
+							schema: Yup.mixed().test("shown", () => false),
+							validationRules: [],
+						};
+						return;
+					}
+
 					const yupType = formValidationConfig?.[fieldId]?.schema.type as TYupSchemaType;
 					if (yupType) {
 						let yupBaseSchema = YupHelper.mapSchemaType(yupType);

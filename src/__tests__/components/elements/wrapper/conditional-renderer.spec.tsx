@@ -41,8 +41,8 @@ const renderComponent = (
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-const getFieldOne = (): HTMLElement => {
-	return getField("textbox", FIELD_ONE_LABEL);
+const getFieldOne = (isQuery = false): HTMLElement => {
+	return getField("textbox", FIELD_ONE_LABEL, isQuery);
 };
 
 const getFieldTwo = (isQuery = false): HTMLElement => {
@@ -405,6 +405,114 @@ describe("conditional-renderer", () => {
 		const values = SUBMIT_FN.mock.lastCall[0];
 		expect(values).not.toHaveProperty(FIELD_TWO_ID);
 		expect(values).not.toHaveProperty(FIELD_THREE_ID);
+	});
+
+	describe("shown condition", () => {
+		it("should support shown condition", () => {
+			const uiType = "text-field";
+			const fields: Record<string, TFrontendEngineFieldSchema> = {
+				[FIELD_ONE_ID]: {
+					label: FIELD_ONE_LABEL,
+					uiType,
+				},
+				[FIELD_TWO_ID]: {
+					label: FIELD_TWO_LABEL,
+					uiType,
+					showIf: [{ [FIELD_ONE_ID]: [{ equals: "show" }] }],
+				},
+				[FIELD_THREE_ID]: {
+					label: FIELD_THREE_LABEL,
+					uiType,
+					showIf: [{ [FIELD_TWO_ID]: [{ shown: true }] }],
+				},
+			};
+			renderComponent(fields);
+
+			fireEvent.change(getFieldOne(), { target: { value: "show" } });
+			expect(getFieldTwo()).toBeInTheDocument();
+			expect(getFieldThree()).toBeInTheDocument();
+
+			fireEvent.change(getFieldOne(), { target: { value: "hide" } });
+			expect(getFieldTwo(true)).not.toBeInTheDocument();
+			expect(getFieldThree(true)).not.toBeInTheDocument();
+		});
+
+		it("should support shown condition as one of the conditional rendering rules", () => {
+			const uiType = "text-field";
+			const fields: Record<string, TFrontendEngineFieldSchema> = {
+				[FIELD_ONE_ID]: {
+					label: FIELD_ONE_LABEL,
+					uiType,
+				},
+				[FIELD_TWO_ID]: {
+					label: FIELD_TWO_LABEL,
+					uiType,
+					showIf: [{ [FIELD_ONE_ID]: [{ equals: "show" }] }],
+				},
+				[FIELD_THREE_ID]: {
+					label: FIELD_THREE_LABEL,
+					uiType,
+					showIf: [{ [FIELD_TWO_ID]: [{ shown: true }, { filled: true }] }],
+				},
+			};
+			renderComponent(fields);
+
+			fireEvent.change(getFieldOne(), { target: { value: "show" } });
+			fireEvent.change(getFieldTwo(), { target: { value: "val" } });
+			expect(getFieldTwo()).toBeInTheDocument();
+			expect(getFieldThree()).toBeInTheDocument();
+
+			fireEvent.change(getFieldOne(), { target: { value: "hide" } });
+			expect(getFieldTwo(true)).not.toBeInTheDocument();
+			expect(getFieldThree(true)).not.toBeInTheDocument();
+		});
+
+		it("should support shown conditions declared out of order", () => {
+			const uiType = "text-field";
+			const fields: Record<string, TFrontendEngineFieldSchema> = {
+				[FIELD_THREE_ID]: {
+					label: FIELD_THREE_LABEL,
+					uiType,
+					showIf: [{ [FIELD_TWO_ID]: [{ shown: true }] }],
+				},
+				[FIELD_TWO_ID]: {
+					label: FIELD_TWO_LABEL,
+					uiType,
+					showIf: [{ [FIELD_ONE_ID]: [{ equals: "show" }] }],
+				},
+				[FIELD_ONE_ID]: {
+					label: FIELD_ONE_LABEL,
+					uiType,
+				},
+			};
+			renderComponent(fields);
+
+			fireEvent.change(getFieldOne(), { target: { value: "show" } });
+			expect(getFieldTwo()).toBeInTheDocument();
+			expect(getFieldThree()).toBeInTheDocument();
+
+			fireEvent.change(getFieldOne(), { target: { value: "hide" } });
+			expect(getFieldTwo(true)).not.toBeInTheDocument();
+			expect(getFieldThree(true)).not.toBeInTheDocument();
+		});
+
+		it("should still evaluate shown condition if source field is not defined", async () => {
+			const uiType = "text-field";
+			const fields: Record<string, TFrontendEngineFieldSchema> = {
+				[FIELD_ONE_ID]: {
+					label: FIELD_ONE_LABEL,
+					uiType,
+					showIf: [{ missing: [{ shown: true }] }],
+					validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+				},
+			};
+			renderComponent(fields);
+
+			expect(getFieldOne(true)).not.toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({}));
+		});
 	});
 
 	describe("overrides", () => {

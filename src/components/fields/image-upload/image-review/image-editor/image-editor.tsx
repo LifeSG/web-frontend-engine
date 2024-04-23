@@ -60,7 +60,9 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 				}) || "";
 			const filesize = FileHelper.getFilesizeFromBase64(dataURL);
 
-			if (limit && filesize > limit) return toDataURLWithLimit(limit, quality - 0.05);
+			const reducedQuality = quality - 0.05;
+			if (reducedQuality < 0) return dataURL;
+			if (limit && filesize > limit) return toDataURLWithLimit(limit, reducedQuality);
 			return dataURL;
 		}
 		return "";

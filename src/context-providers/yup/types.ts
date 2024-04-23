@@ -72,6 +72,7 @@ export interface IYupConditionalValidationRule extends IYupRule {
 
 export interface IYupRenderRule extends IYupRule {
 	filled?: boolean | undefined;
+	shown?: boolean | undefined;
 }
 
 export type TRenderRules = Record<string, IYupRenderRule[]>;
