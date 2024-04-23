@@ -113,9 +113,9 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		type: TYupSchemaType | "mixed",
 		name: string,
 		fn: TCustomValidationFunction,
-		override = false
+		overwrite = false
 	) => {
-		YupHelper.addCondition(type, name, fn, yupId, override);
+		YupHelper.addCondition(type, name, fn, yupId, overwrite);
 		rebuildValidationSchema();
 	};
 
