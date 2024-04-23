@@ -2,11 +2,13 @@ import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FrontendEngine } from "../../../components";
-import { IYupValidationRule } from "../../../context-providers";
+import { ITextFieldSchema } from "../../../components/fields";
 import { ERROR_MESSAGES } from "../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
+import { IYupValidationRule } from "../../../context-providers";
+import { SUBMIT_BUTTON_SCHEMA } from "../../../stories/common";
 import { TestHelper } from "../../../utils";
 import {
 	ERROR_MESSAGE,
@@ -562,48 +564,144 @@ describe("frontend-engine", () => {
 		expect(isDirty).toBe(true);
 	});
 
-	it("should support custom validation", async () => {
+	describe("custom validation", () => {
 		interface IYupCustomValidationRule extends IYupValidationRule {
-			mustBeHello?: boolean | undefined;
+			myCustomRule?: boolean | undefined;
 		}
 
-		const FrontendEngineWithCustomRule = () => {
-			const ref = useRef<IFrontendEngineRef>();
-			useEffect(() => {
-				ref.current?.addCustomValidation("string", "mustBeHello", (value) => value === "hello");
-			}, [ref]);
+		const TestComponent = (props: {
+			fieldSchema?: Record<string, ITextFieldSchema<IYupCustomValidationRule>> | undefined;
+			onClick: (ref: IFrontendEngineRef) => void;
+		}) => {
+			const {
+				fieldSchema = {
+					[FIELD_ONE_ID]: {
+						label: FIELD_ONE_LABEL,
+						uiType: UI_TYPE,
+						validation: [{ myCustomRule: true, errorMessage: ERROR_MESSAGE }],
+					},
+				},
+				onClick,
+			} = props;
+			const formRef = useRef<IFrontendEngineRef>();
 
 			return (
-				<FrontendEngine<IYupCustomValidationRule>
-					ref={ref}
-					data={{
-						...JSON_SCHEMA,
-						sections: {
-							section: {
-								uiType: "section",
-								children: {
-									...JSON_SCHEMA.sections.section.children,
-									[FIELD_ONE_ID]: {
-										label: FIELD_ONE_LABEL,
-										uiType: UI_TYPE,
-										validation: [{ mustBeHello: true, errorMessage: ERROR_MESSAGE }],
+				<>
+					<FrontendEngine
+						ref={formRef}
+						data={{
+							sections: {
+								section: {
+									uiType: "section",
+									children: {
+										...fieldSchema,
+										...SUBMIT_BUTTON_SCHEMA,
 									},
 								},
 							},
-						},
-					}}
-				/>
+						}}
+					/>
+					<button onClick={() => onClick(formRef.current)}>Apply validation</button>
+				</>
 			);
 		};
-		render(<FrontendEngineWithCustomRule />);
 
-		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(getErrorMessage()).toBeInTheDocument();
+		it("should support custom validation", async () => {
+			const handleClick = (ref: IFrontendEngineRef) => {
+				ref.addCustomValidation("string", "myCustomRule", (value) => value === "hello");
+			};
 
-		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(getErrorMessage(true)).not.toBeInTheDocument();
+			render(<TestComponent onClick={handleClick} />);
+			fireEvent.click(getField("button", "Apply validation"));
+
+			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+
+		it("should support different custom validation of the same name in different instances", async () => {
+			const handleClick1 = (ref: IFrontendEngineRef) => {
+				ref.addCustomValidation("string", "myCustomRule", (value) => value === "hello");
+			};
+			const handleClick2 = (ref: IFrontendEngineRef) => {
+				ref.addCustomValidation("string", "myCustomRule", (value) => value === "world");
+			};
+
+			render(
+				<>
+					<TestComponent onClick={handleClick1} />
+					<TestComponent
+						fieldSchema={{
+							[FIELD_TWO_ID]: {
+								label: FIELD_TWO_LABEL,
+								uiType: UI_TYPE,
+								validation: [{ myCustomRule: true, errorMessage: ERROR_MESSAGE }],
+							},
+						}}
+						onClick={handleClick2}
+					/>
+				</>
+			);
+
+			const applyButtons = screen.getAllByRole("button", { name: "Apply validation" });
+			const submitButtons = screen.getAllByRole("button", { name: "Submit" });
+
+			applyButtons.forEach((button) => fireEvent.click(button));
+
+			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+			fireEvent.change(getFieldTwo(), { target: { value: "hi" } });
+			await waitFor(() => fireEvent.click(submitButtons[0]));
+			await waitFor(() => fireEvent.click(submitButtons[1]));
+
+			expect(screen.getAllByText(ERROR_MESSAGE).length).toBe(2);
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			fireEvent.change(getFieldTwo(), { target: { value: "world" } });
+			await waitFor(() => fireEvent.click(submitButtons[0]));
+			await waitFor(() => fireEvent.click(submitButtons[1]));
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+
+		it("should not allow adding custom validation of the same name if overwrite is not true", async () => {
+			const handleClick = (ref: IFrontendEngineRef) => {
+				ref.addCustomValidation("string", "myCustomRule", (value) => value === "hello");
+				ref.addCustomValidation("string", "myCustomRule", (value) => value === "hi");
+			};
+
+			render(<TestComponent onClick={handleClick} />);
+			fireEvent.click(getField("button", "Apply validation"));
+
+			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+
+		it("should allow adding custom validation of the same name if overwrite is true", async () => {
+			const handleClick = (ref: IFrontendEngineRef) => {
+				ref.addCustomValidation("string", "myCustomRule", (value) => value === "hello", true);
+				ref.addCustomValidation("string", "myCustomRule", (value) => value === "hi", true);
+			};
+
+			render(<TestComponent onClick={handleClick} />);
+			fireEvent.click(getField("button", "Apply validation"));
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+
+			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
 	});
 
 	it("should silently skip rendering schema with referenceKey", () => {

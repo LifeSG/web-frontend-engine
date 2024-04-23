@@ -1,14 +1,11 @@
 import { UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
-import { TCustomComponents, TYupSchemaType } from "../../context-providers";
+import { TCustomComponents, TCustomValidationFunction, TYupSchemaType } from "../../context-providers";
 import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
 
-// =============================================================================
-// YUP SCHEMA
-// =============================================================================
-export type { IYupValidationRule } from "../../context-providers";
+export type { IYupValidationRule, TCustomValidationFunction, TCustomComponents } from "../../context-providers";
 
 // =============================================================================
 // FRONTEND ENGINE
@@ -94,10 +91,18 @@ export type TWarningPayload = Record<string, string>;
 export interface IFrontendEngineRef
 	extends Omit<HTMLDivElement, "addEventListener" | "removeEventListener">,
 		HTMLFormElement {
+	/**
+	 * adds custom validation rule
+	 * @param type The schema type
+	 * @param name Name of the condition
+	 * @param fn Validation function, it must return a boolean
+	 * @param overwrite Whether to replace if the custom validation is already exists
+	 */
 	addCustomValidation: (
 		type: TYupSchemaType | "mixed",
 		name: string,
-		fn: (value: unknown, arg: unknown) => boolean
+		fn: TCustomValidationFunction,
+		overwrite?: boolean | undefined
 	) => void;
 	addFieldEventListener: <T = any>(
 		type: string,

@@ -869,13 +869,9 @@ export const CustomComponent: StoryFn<IFrontendEngineProps> = () => {
 	};
 	return (
 		<FrontendEngine<undefined, MyCustomSchema>
-			components={{
-				"my-custom-component": MyCustomComponent,
-			}}
+			components={{ "my-custom-component": MyCustomComponent }}
 			data={json}
 			ref={ref}
-			onChange={(v) => console.log("outer change", v)}
-			onSubmit={(v) => console.log("outer submit", v)}
 		/>
 	);
 };
