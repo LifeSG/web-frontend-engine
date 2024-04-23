@@ -37,7 +37,7 @@ export namespace YupHelper {
 			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
 		});
 
-		return Yup.object().meta({ yupId, customRules: [] }).shape(yupSchema, whenPairIds);
+		return Yup.object().meta({ yupId }).shape(yupSchema, whenPairIds);
 	};
 
 	/**
