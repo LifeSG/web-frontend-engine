@@ -19,6 +19,7 @@ export interface IFileUploadSchema<V = undefined>
 	label: string;
 	uploadOnAddingFile: { type: TUploadType; url: string };
 	warning?: string | undefined;
+	compressImages?: boolean | undefined;
 }
 
 export enum EFileStatus {

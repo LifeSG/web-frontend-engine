@@ -100,7 +100,7 @@ export namespace ImageHelper {
 	};
 
 	/**
-	 * rescursively attempt to compress image till the desired filesize
+	 * rescursively attempt to compress image till the desired filesize or lowest quality is reached
 	 *
 	 * fileSize is in kb
 	 * optional `maxAttempts` to limit the attempts, if file size still exceeds at the end of it, return the best compressed image
@@ -112,7 +112,7 @@ export namespace ImageHelper {
 		const { quality = 1, fileSize, attempts = 0, maxAttempts } = options;
 		const image = await blobToImage(file);
 
-		if (file.size <= fileSize * 1024) return file;
+		if (file.size <= fileSize * 1024 || quality < 0) return file;
 		const compressed = await resampleImage(image, { scale: 1, quality });
 
 		if (compressed.size > fileSize * 1024) {

@@ -7,6 +7,7 @@ import { FileUploadContext } from "./file-upload-context";
 import { EFileStatus, IFile, IFileUploadSchema, IFileUploadValidationRule, IFileUploadValue } from "./types";
 
 interface IProps {
+	compressImages: boolean;
 	fileTypeRule: IFileUploadValidationRule;
 	id: string;
 	maxFileSizeRule: IFileUploadValidationRule;
@@ -14,11 +15,13 @@ interface IProps {
 	value: IFileUploadValue[];
 }
 
-export const FileUploadManager = (props: IProps) => {
+const RESIZEABLE_IMAGE_TYPES = ["image/jpeg", "image/gif", "image/png"];
+
+const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { fileTypeRule, id, maxFileSizeRule, upload, value } = props;
+	const { compressImages, fileTypeRule, id, maxFileSizeRule, upload, value } = props;
 	const { files, setFiles } = useContext(FileUploadContext);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
@@ -114,7 +117,7 @@ export const FileUploadManager = (props: IProps) => {
 	};
 
 	const generateThumbnail = async (file: IFile, fileType?: string | undefined) => {
-		if (["image/jpeg", "image/gif", "image/png"].includes(fileType || file.fileItem?.type)) {
+		if (RESIZEABLE_IMAGE_TYPES.includes(fileType || file.fileItem?.type)) {
 			const image = await ImageHelper.dataUrlToImage(file.dataURL);
 			const thumbnail = await ImageHelper.resampleImage(image, { width: 94, height: 94, crop: true });
 			return await FileHelper.fileToDataUrl(thumbnail);
@@ -218,13 +221,14 @@ export const FileUploadManager = (props: IProps) => {
 	};
 
 	const parseFile = async (fileToParse: IFile, index: number) => {
-		const dataURL = await FileHelper.fileToDataUrl(fileToParse.rawFile);
-		const { errorMessage, fileType, status } = await readFile({ dataURL, ...fileToParse });
+		const compressedFile = await compressImageFile(fileToParse);
+		const dataURL = await FileHelper.fileToDataUrl(compressedFile.rawFile);
+		const { errorMessage, fileType, status } = await readFile({ dataURL, ...compressedFile });
 
 		setFiles((prev) => {
 			const updatedFiles = [...prev];
 			updatedFiles[index] = {
-				...fileToParse,
+				...compressedFile,
 				dataURL,
 				fileItem: {
 					errorMessage,
@@ -232,9 +236,9 @@ export const FileUploadManager = (props: IProps) => {
 					name: FileHelper.deduplicateFileName(
 						files.map(({ fileItem }) => fileItem?.name),
 						index,
-						fileToParse.rawFile.name
+						compressedFile.rawFile.name
 					),
-					size: fileToParse.rawFile.size,
+					size: compressedFile.rawFile.size,
 					type: fileType.mime,
 					progress: 0,
 				},
@@ -308,8 +312,36 @@ export const FileUploadManager = (props: IProps) => {
 		setFiles((prev) => prev.filter((_file, i) => i !== index));
 	};
 
+	const compressImageFile = async (fileToCompress: IFile) => {
+		if (maxFileSizeRule.maxSizeInKb > 0 && compressImages) {
+			const maxSizeInB = maxFileSizeRule.maxSizeInKb * 1024;
+			if (fileToCompress.rawFile.size > maxSizeInB) {
+				const fileType = await FileHelper.getType(fileToCompress.rawFile);
+				if (RESIZEABLE_IMAGE_TYPES.includes(fileType.mime)) {
+					let fileOrBlob = await ImageHelper.compressImage(fileToCompress.rawFile, {
+						fileSize: maxFileSizeRule.maxSizeInKb,
+					});
+					if (fileOrBlob instanceof Blob) {
+						fileOrBlob = FileHelper.blobToFile(fileOrBlob, {
+							name: fileToCompress.rawFile.name,
+							lastModified: fileToCompress.rawFile.lastModified,
+						});
+					}
+					return {
+						...fileToCompress,
+						rawFile: fileOrBlob,
+					};
+				}
+			}
+		}
+
+		return fileToCompress;
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return null;
 };
+
+export default FileUploadManager;
