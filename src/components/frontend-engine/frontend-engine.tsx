@@ -4,7 +4,13 @@ import isEmpty from "lodash/isEmpty";
 import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
-import { ContextProviders, IYupValidationRule, YupHelper } from "../../context-providers";
+import {
+	ContextProviders,
+	IYupValidationRule,
+	TCustomValidationFunction,
+	TYupSchemaType,
+	YupHelper,
+} from "../../context-providers";
 import { ObjectHelper, TestHelper } from "../../utils";
 import {
 	useCustomComponents,
@@ -43,7 +49,14 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 	const { setCustomComponents } = useCustomComponents();
 	const { setSubmitHandler, setWrapInForm } = useFrontendEngineForm();
-	const { addWarnings, performSoftValidation, softValidationSchema, hardValidationSchema } = useValidationSchema();
+	const {
+		addWarnings,
+		performSoftValidation,
+		softValidationSchema,
+		hardValidationSchema,
+		rebuildValidationSchema,
+		yupId,
+	} = useValidationSchema();
 	const { formValidationConfig } = useValidationConfig();
 	const formMethods = useForm({
 		mode: validationMode,
@@ -75,7 +88,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// =============================================================================
 	useImperativeHandle<Partial<IFrontendEngineRef>, Partial<IFrontendEngineRef>>(ref, () => ({
 		addFieldEventListener,
-		addCustomValidation: YupHelper.addCondition,
+		addCustomValidation,
 		dispatchFieldEvent,
 		getValues: (payload?: string | string[] | undefined) => getFormValues(payload, stripUnknown),
 		isDirty: formState.isDirty,
@@ -95,6 +108,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		setValue,
 		submit: reactFormHookSubmit(handleSubmit, handleSubmitError),
 	}));
+
+	const addCustomValidation = (
+		type: TYupSchemaType | "mixed",
+		name: string,
+		fn: TCustomValidationFunction,
+		overwrite = false
+	) => {
+		YupHelper.addCondition(type, name, fn, yupId, overwrite);
+		rebuildValidationSchema();
+	};
 
 	const checkIsFormValid = useCallback(() => {
 		try {

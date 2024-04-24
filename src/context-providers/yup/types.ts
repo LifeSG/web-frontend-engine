@@ -83,3 +83,5 @@ export interface IFieldYupConfig {
 }
 
 export type TFormYupConfig = Record<string, IFieldYupConfig>;
+
+export type TCustomValidationFunction = (value: unknown, arg: unknown, context: Yup.TestContext) => boolean;
