@@ -62,7 +62,7 @@ interface IProps extends ISharedImageProps {
 	outputType: string;
 	show: boolean;
 	multiple?: boolean | undefined;
-	maxFilesErrorMessage?: string;
+	maxFilesErrorMessage?: string | undefined;
 }
 
 export const ImageReview = (props: IProps) => {
@@ -365,6 +365,7 @@ export const ImageReview = (props: IProps) => {
 					maxSizeInKb={maxSizeInKb}
 					onClickOk={() => handleDeleteDecision(true)}
 					maxFilesErrorMessage={maxFilesErrorMessage}
+					maxFiles={maxFiles}
 				/>
 			)}
 		</ContentSection>

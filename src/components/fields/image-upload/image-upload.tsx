@@ -220,7 +220,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				id={id}
 				className={className}
 				maxFiles={maxFiles}
-				maxFilesErrorMessage={maxRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles)}
+				maxFilesErrorMessage={maxRule?.errorMessage}
 				maxSizeInKb={maxFileSize}
 				onExit={() => setShowReviewModal(false)}
 				outputType={outputType}
