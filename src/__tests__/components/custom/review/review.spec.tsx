@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useEffect, useRef } from "react";
 import { TReviewSchema } from "../../../../components/custom";
 import {
@@ -69,6 +69,187 @@ const renderComponent = (options: IRenderAndPerformActionsOptions) => {
 	return render(<FrontendEngineWithEventListener data={json} eventType={eventType} eventListener={eventListener} />);
 };
 
+const maskTestSuite = (variant: "box" | "accordion") => {
+	describe("mask / unmask", () => {
+		it("should be able to mask / unmask uinfin if mask = uinfin", async () => {
+			renderComponent({
+				overrideField: { variant, items: [{ label: "NRIC", value: "S1234567D", mask: "uinfin" }] },
+			});
+
+			expect(screen.getByText("S••••567D")).toBeInTheDocument();
+			expect(screen.getByTestId("masked-icon")).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(screen.getByTestId("masked-icon")));
+
+			expect(screen.getByText("S1234567D")).toBeInTheDocument();
+		});
+
+		it("should be able to mask / unmask entire value if mask = whole", async () => {
+			const value = "John Doe";
+			renderComponent({
+				overrideField: { variant, items: [{ label: "Name", value, mask: "whole" }] },
+			});
+
+			expect(screen.getByText("•".repeat(value.length))).toBeInTheDocument();
+			expect(screen.getByTestId("masked-icon")).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(screen.getByTestId("masked-icon")));
+
+			expect(screen.getByText("John Doe")).toBeInTheDocument();
+		});
+
+		it("should call unmask api provided and update with unmasked value", async () => {
+			const unmaskSchema = { url: "url", body: { hello: "world" } };
+			const mockUnmaskedValue = "S1234567D";
+			const unmaskSpy = jest
+				.spyOn(AxiosApiClient.prototype, "post")
+				.mockResolvedValue({ data: { value: mockUnmaskedValue } });
+
+			renderComponent({
+				overrideField: {
+					variant,
+					items: [{ label: "NRIC", value: "S****567D", mask: "uinfin", unmask: unmaskSchema }],
+				},
+			});
+
+			await waitFor(() => fireEvent.click(screen.getByTestId("masked-icon")));
+
+			expect(unmaskSpy).toHaveBeenCalledWith(unmaskSchema.url, unmaskSchema.body, {
+				headers: { "Content-Type": "application/json" },
+			});
+			expect(screen.getByText(mockUnmaskedValue)).toBeInTheDocument();
+		});
+
+		it("should not call unmask api again if it has been unmasked successfully before", async () => {
+			const unmaskSchema = { url: "url", body: { hello: "world" } };
+			const mockUnmaskedValue = "S1234567D";
+			const unmaskSpy = jest
+				.spyOn(AxiosApiClient.prototype, "post")
+				.mockResolvedValue({ data: { value: mockUnmaskedValue } });
+
+			renderComponent({
+				overrideField: {
+					variant,
+					items: [{ label: "NRIC", value: "S****567D", mask: "uinfin", unmask: unmaskSchema }],
+				},
+			});
+
+			await waitFor(() => fireEvent.click(screen.getByTestId("masked-icon")));
+			await waitFor(() => fireEvent.click(screen.getByTestId("unmasked-icon")));
+			await waitFor(() => fireEvent.click(screen.getByTestId("masked-icon")));
+
+			expect(unmaskSpy).toHaveBeenCalledTimes(1);
+		});
+
+		it("should error on unmask failure", async () => {
+			const unmaskSchema = { url: "url", body: { hello: "world" } };
+			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue({});
+
+			renderComponent({
+				overrideField: {
+					variant,
+					items: [{ label: "NRIC", value: "S****567D", mask: "uinfin", unmask: unmaskSchema }],
+				},
+			});
+
+			await waitFor(() => fireEvent.click(screen.getByTestId("masked-icon")));
+
+			expect(screen.getByText("Error")).toBeInTheDocument();
+			expect(screen.getByText("Try again?")).toBeInTheDocument();
+		});
+
+		it("should be able to retry a failed unmask attempt", async () => {
+			const mockUnmaskedValue = "S1234567D";
+			const unmaskSchema = { url: "url", body: { hello: "world" } };
+			const unmaskErrorSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValueOnce({});
+			const unmaskSuccessSpy = jest
+				.spyOn(AxiosApiClient.prototype, "post")
+				.mockResolvedValue({ data: { value: mockUnmaskedValue } });
+
+			renderComponent({
+				overrideField: {
+					variant,
+					items: [{ label: "NRIC", value: "S****567D", mask: "uinfin", unmask: unmaskSchema }],
+				},
+			});
+
+			await waitFor(() => fireEvent.click(screen.getByTestId("masked-icon")));
+			await waitFor(() => fireEvent.click(screen.getByText("Try again?")));
+
+			expect(screen.getByText(mockUnmaskedValue)).toBeInTheDocument();
+			expect(unmaskErrorSpy).toHaveBeenCalled();
+			expect(unmaskSuccessSpy).toHaveBeenCalled();
+		});
+
+		it("should show alert message with error and try again after 3 consecutive failed unmask attempts", async () => {
+			const unmaskSchema = { url: "url", body: { hello: "world" } };
+			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue({});
+
+			renderComponent({
+				overrideField: {
+					variant,
+					items: [{ label: "NRIC", value: "S****567D", mask: "uinfin", unmask: unmaskSchema }],
+				},
+			});
+
+			await waitFor(() => fireEvent.click(screen.getByTestId("masked-icon")));
+			await waitFor(() => fireEvent.click(screen.getByText("Try again?")));
+			await waitFor(() => fireEvent.click(screen.getByText("Try again?")));
+
+			expect(screen.getByText("Error")).toBeInTheDocument();
+			expect(screen.getByText("Try again?")).toBeInTheDocument();
+			expect(screen.getByText("You can still submit form with this error")).toBeInTheDocument();
+		});
+	});
+};
+
+const topBottomSectionTestSuite = (variant: "box" | "accordion") => {
+	describe("top / bottom sections", () => {
+		it("should be able to render the topSection", () => {
+			renderComponent({
+				overrideField: {
+					variant,
+					description: DESCRIPTION,
+					topSection: {
+						alertTop: {
+							uiType: "alert",
+							type: "warning",
+							children: ALERT_TOP,
+						},
+					},
+					bottomSection: {
+						alertBottom: {
+							uiType: "alert",
+							type: "warning",
+							children: ALERT_BOTTOM,
+						},
+					},
+				},
+			});
+
+			expect(screen.getByText(ALERT_TOP)).toBeInTheDocument();
+		});
+
+		it("should be able to render the bottomSection", () => {
+			renderComponent({
+				overrideField: {
+					variant,
+					description: DESCRIPTION,
+					bottomSection: {
+						alertBottom: {
+							uiType: "alert",
+							type: "warning",
+							children: ALERT_BOTTOM,
+						},
+					},
+				},
+			});
+
+			expect(screen.getByText(ALERT_BOTTOM)).toBeInTheDocument();
+		});
+	});
+};
+
 describe(REFERENCE_KEY, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
@@ -89,31 +270,8 @@ describe(REFERENCE_KEY, () => {
 			expect(screen.getByText(ITEMS[1].value)).toBeInTheDocument();
 		});
 
-		it("should be able to render the topSection and bottomSection", () => {
-			renderComponent({
-				overrideField: {
-					variant: "box",
-					description: DESCRIPTION,
-					topSection: {
-						alertTop: {
-							uiType: "alert",
-							type: "warning",
-							children: ALERT_TOP,
-						},
-					},
-					bottomSection: {
-						alertBottom: {
-							uiType: "alert",
-							type: "warning",
-							children: ALERT_BOTTOM,
-						},
-					},
-				},
-			});
-
-			expect(screen.getByText(ALERT_TOP)).toBeInTheDocument();
-			expect(screen.getByText(ALERT_BOTTOM)).toBeInTheDocument();
-		});
+		maskTestSuite("box");
+		topBottomSectionTestSuite("box");
 	});
 
 	describe("accordion variant", () => {
@@ -124,37 +282,6 @@ describe(REFERENCE_KEY, () => {
 			expect(getField("button", "Edit")).toBeInTheDocument();
 			expect(screen.getByText(ITEMS[0].label)).toBeInTheDocument();
 			expect(screen.getByText(ITEMS[1].value)).toBeInTheDocument();
-		});
-
-		it("should render eye icon and be able to mask / unmask uinfin if mask = uinfin", async () => {
-			renderComponent({
-				overrideField: { variant: "accordion", items: [{ label: "NRIC", value: "S1234567D", mask: "uinfin" }] },
-			});
-
-			expect(screen.getByText("S••••567D")).toBeInTheDocument();
-			expect(screen.getByTestId(`${COMPONENT_ID}__eye`)).toBeInTheDocument();
-
-			act(() => {
-				fireEvent.click(screen.getByTestId(`${COMPONENT_ID}__eye`));
-			});
-
-			expect(screen.getByText("S1234567D")).toBeInTheDocument();
-		});
-
-		it("should render eye icon and be able to mask / unmask entire value if mask = whole", async () => {
-			const value = "John Doe";
-			renderComponent({
-				overrideField: { variant: "accordion", items: [{ label: "Name", value, mask: "whole" }] },
-			});
-
-			expect(screen.getByText("•".repeat(value.length))).toBeInTheDocument();
-			expect(screen.getByTestId(`${COMPONENT_ID}__eye`)).toBeInTheDocument();
-
-			act(() => {
-				fireEvent.click(screen.getByTestId(`${COMPONENT_ID}__eye`));
-			});
-
-			expect(screen.getByText("John Doe")).toBeInTheDocument();
 		});
 
 		it("should be able to customise button label", () => {
@@ -194,5 +321,8 @@ describe(REFERENCE_KEY, () => {
 				expect(testFn).toHaveBeenCalled();
 			});
 		});
+
+		maskTestSuite("accordion");
+		topBottomSectionTestSuite("accordion");
 	});
 });

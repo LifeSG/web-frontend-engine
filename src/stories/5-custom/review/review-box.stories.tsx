@@ -1,8 +1,7 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { TReviewSchema } from "../../../components/custom/review";
+import { TReviewSchema, TReviewSchemaItem } from "../../../components/custom/review";
 import { CommonCustomStoryProps, DefaultStoryTemplate } from "../../common";
-import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 
 const meta: Meta = {
 	title: "Custom/Review/Box",
@@ -55,17 +54,18 @@ const meta: Meta = {
 		items: {
 			type: { name: "object", value: {}, required: true },
 			description:
-				"<div>The uneditable items to be displayed. Items are displayed in a label and value format.</div><ul><li><strong>label</strong>: Label of the uneditable item</li><li><strong>value</strong>: Value of the uneditable item</li><li><strong>displayWidth</strong>: Width that the item can span across the entire section.</li></ul>",
+				"<div>The items to be displayed. Items are displayed in a label and value format.</div><ul><li><strong>label</strong>: Label of the uneditable item</li><li><strong>value</strong>: Value of the uneditable item</li><li><strong>displayWidth</strong>: Width that the item can span across the entire section.<br><strong>mask</strong>: Conceal value by replacing specific portions with a dot (•) according to the mask type provided.</li><li><strong>unmask</strong>: Reveal unmasked value by retrieving from api call</li><li><strong>disableMaskUnmask</strong>: Hides eye icon and prevents mask / unmask of the value</li></ul>",
 			table: {
 				type: {
-					summary: "{ label: string, value: string, displayWidth?: half|full }",
+					summary:
+						"{ label: string, value: string, displayWidth?: half|full, mask?: uinfin|whole, unmask?: { url: string, body: {}, withCredentials?: boolean }, disableMaskUnmask?: boolean }",
 				},
 				defaultValue: { summary: null },
 			},
 		},
 		topSection: {
 			type: { name: "object", value: {} },
-			description: "A custom section that can be rendered above the main uneditable items section",
+			description: "A custom section that can be rendered above the main section",
 			table: {
 				type: {
 					summary: "Record<string, TReviewSectionChildren>",
@@ -74,7 +74,7 @@ const meta: Meta = {
 		},
 		bottomSection: {
 			type: { name: "object", value: {} },
-			description: "A custom section that can be rendered below the main uneditable items section",
+			description: "A custom section that can be rendered below the main section",
 			table: {
 				type: {
 					summary: "Record<string, TReviewSectionChildren>",
@@ -85,7 +85,7 @@ const meta: Meta = {
 };
 export default meta;
 
-const SAMPLE_ITEMS: UneditableSectionItemProps[] = [
+const SAMPLE_ITEMS: TReviewSchemaItem[] = [
 	{
 		label: "Name (as in NRIC or passport)",
 		value: "Tom Tan Li Ho",
@@ -102,13 +102,13 @@ const SAMPLE_ITEMS: UneditableSectionItemProps[] = [
 		displayWidth: "half",
 	},
 	{
-		label: "Residential Address",
-		value: "Block 287, #05-11, Tampines street 22, Singapore 534788",
+		label: "Ethnicity",
+		value: "Chinese",
 		displayWidth: "half",
 	},
 	{
-		label: "Ethnicity",
-		value: "Chinese",
+		label: "Residential Address",
+		value: "Block 287, #05-11, Tampines street 22, Singapore 534788",
 	},
 ];
 
@@ -150,4 +150,61 @@ CustomBottomSection.args = {
 			children: "Sample alert",
 		},
 	},
+};
+
+export const Masking = DefaultStoryTemplate<TReviewSchema>("review-masking").bind({});
+Masking.args = {
+	referenceKey: "review",
+	label: "Your personal information",
+	description: "Retrieved on 27 Jun 2023",
+	items: [
+		{
+			label: "Name (as in NRIC or passport)",
+			value: "Tom Tan Li Ho",
+			displayWidth: "half",
+		},
+		{
+			label: "NRIC",
+			value: "S1234567D",
+			displayWidth: "half",
+			mask: "uinfin",
+		},
+		{
+			label: "Sensitive info",
+			value: "Something sensitive",
+			displayWidth: "half",
+			mask: "whole",
+		},
+		{
+			label: "Prevent unmasking",
+			value: "Something sensitive",
+			displayWidth: "half",
+			mask: "whole",
+			disableMaskUnmask: true,
+		},
+		{
+			label: "Unmask via API",
+			value: "S1••••67D",
+			displayWidth: "half",
+			mask: "uinfin",
+			unmask: {
+				url: "https://a2fd2c71-5250-49ad-82f1-c63606b81062.mock.pstmn.io/unmask",
+				body: {
+					serviceId: "serviceId",
+					actionId: "actionId",
+					fieldId: "fieldId",
+				},
+			},
+		},
+		{
+			label: "Unmask with API error",
+			value: "S1••••67D",
+			displayWidth: "half",
+			mask: "uinfin",
+			unmask: {
+				url: "https://invalid.url",
+				body: { hello: "world" },
+			},
+		},
+	],
 };
