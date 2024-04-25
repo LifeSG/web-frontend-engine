@@ -5,34 +5,68 @@ import type { IWrapperSchema } from "../../elements/wrapper";
 import type { ICustomElementJsonSchema } from "../types";
 
 type TReviewSectionChildren = IAlertSchema | ITextSchema | IWrapperSchema;
-
 export type TReviewSchema = IReviewSchemaAccordion | IReviewSchemaBox;
 
 /** @deprecated use TReviewSchema */
 export type IReviewSchema = TReviewSchema;
 
-export interface IReviewSchemaBox extends ICustomElementJsonSchema<"review"> {
-	label?: string | undefined;
-	variant?: "box" | undefined;
-	description?: string | undefined;
-	topSection?: Record<string, TReviewSectionChildren> | undefined;
-	bottomSection?: Record<string, TReviewSectionChildren> | undefined;
-	items: UneditableSectionItemProps[];
+export interface IUnmaskConfig {
+	url: string;
+	body?: unknown | undefined;
+	withCredentials?: boolean | undefined;
 }
 
-export interface IReviewSchemaAccordionItem extends UneditableSectionItemProps {
-	mask?: "uinfin" | "whole" | undefined;
-	// TODO: add endpoint option to perform unmasking via backend
+export interface IReviewItemDetails {
+	formattedItem: UneditableSectionItemProps;
+	unmask?: IUnmaskConfig | undefined;
+	unmaskFailureCount: number;
+	unmaskedValue?: string | undefined;
+}
+
+// =========================================================================
+// COMMON
+// =========================================================================
+interface IReviewSchemaItemBase extends Pick<UneditableSectionItemProps, "label" | "value" | "displayWidth"> {}
+
+interface IReviewSchemaItem extends IReviewSchemaItemBase {
+	disableMaskUnmask?: never | undefined;
+	mask?: never | undefined;
+	unmask?: never | undefined;
+}
+
+interface IReviewSchemaMaskedItem extends IReviewSchemaItemBase {
+	disableMaskUnmask?: boolean | undefined;
+	mask: "uinfin" | "whole";
+	unmask?: IUnmaskConfig | undefined;
+}
+
+export type TReviewSchemaItem = IReviewSchemaItem | IReviewSchemaMaskedItem;
+
+interface IReviewBaseSchema {
+	label?: string | undefined;
+	topSection?: Record<string, TReviewSectionChildren> | undefined;
+	bottomSection?: Record<string, TReviewSectionChildren> | undefined;
+	items: TReviewSchemaItem[];
+}
+// =========================================================================
+// BOX VARIANT
+// =========================================================================
+export interface IReviewSchemaBox extends IReviewBaseSchema, ICustomElementJsonSchema<"review"> {
+	variant?: "box" | undefined;
+	description?: string | undefined;
+}
+
+// =========================================================================
+// ACCORDION VARIANT
+// =========================================================================
+export interface IButtonAccordion {
+	label?: string | undefined;
 }
 
 export interface IReviewSchemaAccordion
-	extends ICustomElementJsonSchema<"review">,
+	extends IReviewBaseSchema,
+		ICustomElementJsonSchema<"review">,
 		Omit<BoxContainerProps, "children" | "title" | "callToActionComponent" | "subComponentTestIds"> {
-	label: string;
 	variant: "accordion";
 	button?: false | IButtonAccordion | undefined;
-	items: IReviewSchemaAccordionItem[];
-}
-export interface IButtonAccordion {
-	label?: string | undefined;
 }
