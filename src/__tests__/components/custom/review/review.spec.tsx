@@ -217,13 +217,6 @@ const topBottomSectionTestSuite = (variant: "box" | "accordion") => {
 							children: ALERT_TOP,
 						},
 					},
-					bottomSection: {
-						alertBottom: {
-							uiType: "alert",
-							type: "warning",
-							children: ALERT_BOTTOM,
-						},
-					},
 				},
 			});
 
