@@ -50,6 +50,22 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
+		compressImages: {
+			type: { name: "boolean", required: false },
+			defaultValue: false,
+			description:
+				"Whether to compress image if file size exceeds `maxSizeInKb`. Supported image types: `png`, `jpg`, `gif`",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: "false" },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 		description: {
 			description: "Extra line of copy underneath label",
 			table: {
@@ -220,6 +236,7 @@ MaxFileSize.args = {
 	...COMMON_STORY_ARGS,
 	description: "Max 100kb",
 	validation: [{ maxSizeInKb: 100, errorMessage: "Max 100kb" }],
+	compressImages: true,
 };
 
 export const Reset = ResetStoryTemplate<IFileUploadSchema>("upload-reset").bind({});

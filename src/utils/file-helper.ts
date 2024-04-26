@@ -122,4 +122,12 @@ export namespace FileHelper {
 			return fileName;
 		}
 	};
+
+	export const blobToFile = (blob: Blob, metadata: { name: string; lastModified: number }): File => {
+		const { name, lastModified } = metadata;
+		return new File([blob], name, {
+			type: blob.type,
+			lastModified,
+		});
+	};
 }
