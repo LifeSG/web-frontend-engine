@@ -16,6 +16,7 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
+import useDeepCompareEffect from "use-deep-compare-effect";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -39,7 +40,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEffect(() => {
+	useDeepCompareEffect(() => {
 		const newItemDetailList = schema.items.map((item: TReviewSchemaItem, i: number): IReviewItemDetails => {
 			const itemId = `item-${i + 1}`;
 			const itemDetail: IReviewItemDetails = {
