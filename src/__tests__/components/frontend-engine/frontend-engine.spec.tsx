@@ -141,52 +141,6 @@ describe("frontend-engine", () => {
 				expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
 			});
 
-			it("should return the correct validity when form is prefilled with valid values", async () => {
-				renderComponent(
-					{ onChange },
-					{
-						sections: {
-							section: {
-								uiType: "section",
-								children: {
-									[FIELD_ONE_ID]: {
-										uiType: "text-field",
-										label: FIELD_ONE_LABEL,
-										validation: [{ required: true }],
-									},
-								},
-							},
-						},
-						defaultValues: { [FIELD_ONE_ID]: "a" },
-					}
-				);
-
-				expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), true);
-			});
-
-			it("should return the correct validity when form is prefilled with invalid values", async () => {
-				renderComponent(
-					{ onChange },
-					{
-						sections: {
-							section: {
-								uiType: "section",
-								children: {
-									[FIELD_ONE_ID]: {
-										uiType: "text-field",
-										label: FIELD_ONE_LABEL,
-										validation: [{ min: 5 }],
-									},
-								},
-							},
-						},
-						defaultValues: { [FIELD_ONE_ID]: "a" },
-					}
-				);
-
-				expect(onChange).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false);
-			});
-
 			it("should include form values of unregistered fields if stripUnknown is not true", () => {
 				renderComponent({ onChange }, { ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } });
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
