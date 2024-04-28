@@ -6,10 +6,11 @@ import { IListItemSchema } from "../list";
 
 export type TWrapperType = "div" | "span" | "header" | "footer" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
 
-export interface IWrapperSchema extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
+export interface IWrapperSchema<V = undefined>
+	extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
 	uiType: TWrapperType;
 	showIf?: TRenderRules[] | undefined;
-	children: Record<string, TFrontendEngineFieldSchema> | string;
+	children: Record<string, TFrontendEngineFieldSchema<V>> | string;
 	/** set responsive columns */
 	columns?: IColumns | undefined;
 }

@@ -153,7 +153,7 @@ export interface IFrontendEngineRef
 export type TFrontendEngineFieldSchema<V = undefined, C = undefined> =
 	| TFieldSchema<V>
 	| TCustomSchema<C>
-	| TElementSchema;
+	| TElementSchema<V>;
 
 type MobileCol = 1 | 2 | 3 | 4;
 type MobileColRange = MobileCol | 5;

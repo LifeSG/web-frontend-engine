@@ -50,16 +50,16 @@ export enum EElementType {
 /**
  * union type to represent all element schemas
  */
-export type TElementSchema =
+export type TElementSchema<V = undefined> =
 	| IAlertSchema
 	| IDividerSchema
-	| IGridSchema
-	| IOrderedListSchema
-	| ITabItemSchema
-	| ITabSchema
+	| IGridSchema<V>
+	| IOrderedListSchema<V>
+	| ITabItemSchema<V>
+	| ITabSchema<V>
 	| ITextSchema
-	| IUnorderedListSchema
-	| IWrapperSchema;
+	| IUnorderedListSchema<V>
+	| IWrapperSchema<V>;
 
 /**
  * common element schema for element schemas to extend from
