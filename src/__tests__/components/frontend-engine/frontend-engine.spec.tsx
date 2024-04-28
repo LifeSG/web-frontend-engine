@@ -27,6 +27,7 @@ const FIELD_TWO_ID = "field2";
 const FIELD_TWO_LABEL = "Field 2";
 const CUSTOM_BUTTON_LABEL = "Custom Button";
 const COMPONENT_TEST_ID = TestHelper.generateId(FRONTEND_ENGINE_ID, "frontend-engine");
+const ERROR_MESSAGE_2 = "error message 2";
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
@@ -73,6 +74,20 @@ const NESTED_JSON_SCHEMA: IFrontendEngineData = {
 		},
 	},
 };
+
+const MULTI_FIELD_SCHEMA = merge(cloneDeep(JSON_SCHEMA), {
+	sections: {
+		section: {
+			children: {
+				[FIELD_TWO_ID]: {
+					label: FIELD_TWO_LABEL,
+					uiType: UI_TYPE,
+					validation: [{ required: true, errorMessage: ERROR_MESSAGE_2 }],
+				},
+			},
+		},
+	},
+});
 
 const getFieldOne = (): HTMLElement => {
 	return getField("textbox", FIELD_ONE_LABEL);
@@ -322,20 +337,6 @@ describe("frontend-engine", () => {
 	});
 
 	describe("getValues()", () => {
-		const MULTI_FIELD_SCHEMA = merge(cloneDeep(JSON_SCHEMA), {
-			sections: {
-				section: {
-					children: {
-						[FIELD_TWO_ID]: {
-							label: FIELD_TWO_LABEL,
-							uiType: UI_TYPE,
-							validation: [{ required: true }],
-						},
-					},
-				},
-			},
-		});
-
 		describe("no payload", () => {
 			let formValues: Record<string, unknown> = {};
 			it("should return form values", () => {
@@ -547,6 +548,41 @@ describe("frontend-engine", () => {
 		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 		fireEvent.click(getCustomButton());
 		expect(isValid).toBe(true);
+	});
+
+	describe("validate()", () => {
+		it("should trigger form validation through validate method", async () => {
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.validate();
+			};
+			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(getCustomButton());
+
+			expect(await screen.findByText(ERROR_MESSAGE)).toBeInTheDocument();
+			expect(await screen.findByText(ERROR_MESSAGE_2)).toBeInTheDocument();
+		});
+
+		it("should trigger field validation through validate method", async () => {
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.validate(FIELD_ONE_ID);
+			};
+			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(getCustomButton());
+
+			expect(await screen.findByText(ERROR_MESSAGE)).toBeInTheDocument();
+			expect(screen.queryByText(ERROR_MESSAGE_2)).not.toBeInTheDocument();
+		});
+
+		it("should trigger multiple field validations through validate method", async () => {
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.validate([FIELD_ONE_ID, FIELD_TWO_ID]);
+			};
+			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(getCustomButton());
+
+			expect(await screen.findByText(ERROR_MESSAGE)).toBeInTheDocument();
+			expect(await screen.findByText(ERROR_MESSAGE_2)).toBeInTheDocument();
+		});
 	});
 
 	it("should return form isDirty state accordingly", async () => {
