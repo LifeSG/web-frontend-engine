@@ -1,10 +1,9 @@
-import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 import { action } from "@storybook/addon-actions";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
-import { IReviewSchema } from "../../../components/custom/review";
+import { TReviewSchema, TReviewSchemaItem } from "../../../components/custom/review";
 import { CommonCustomStoryProps, DefaultStoryTemplate, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 const meta: Meta = {
@@ -51,10 +50,11 @@ const meta: Meta = {
 		items: {
 			type: { name: "object", value: {}, required: true },
 			description:
-				"<div>The items to be displayed. Items are displayed in a label and value format.</div><ul><li><strong>label</strong>: Label of the uneditable item</li><li><strong>value</strong>: Value of the uneditable item</li><li><strong>displayWidth</strong>: Width that the item can span across the entire section.<br><strong>Mask</strong>: Conceal value by replacing specific portions with a dot (•) according to the mask type provided.</li></ul>",
+				"<div>The items to be displayed. Items are displayed in a label and value format.</div><ul><li><strong>label</strong>: Label of the uneditable item</li><li><strong>value</strong>: Value of the uneditable item</li><li><strong>displayWidth</strong>: Width that the item can span across the entire section.<br><strong>mask</strong>: Conceal value by replacing specific portions with a dot (•) according to the mask type provided.</li><li><strong>unmask</strong>: Reveal unmasked value by retrieving from api call</li><li><strong>disableMaskUnmask</strong>: Hides eye icon and prevents mask / unmask of the value</li></ul>",
 			table: {
 				type: {
-					summary: "{ label: string, value: string, displayWidth?: half|full, mask?: uinfin|whole }",
+					summary:
+						"{ label: string, value: string, displayWidth?: half|full, mask?: uinfin|whole, unmask?: { url: string, body: {}, withCredentials?: boolean }, disableMaskUnmask?: boolean }",
 				},
 				defaultValue: { summary: null },
 			},
@@ -93,11 +93,29 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		topSection: {
+			type: { name: "object", value: {} },
+			description: "A custom section that can be rendered at the top of the contents",
+			table: {
+				type: {
+					summary: "Record<string, TReviewSectionChildren>",
+				},
+			},
+		},
+		bottomSection: {
+			type: { name: "object", value: {} },
+			description: "A custom section that can be rendered at the bottom of the contents",
+			table: {
+				type: {
+					summary: "Record<string, TReviewSectionChildren>",
+				},
+			},
+		},
 	},
 };
 export default meta;
 
-const SAMPLE_ITEMS: UneditableSectionItemProps[] = [
+const SAMPLE_ITEMS: TReviewSchemaItem[] = [
 	{
 		label: "Name (as in NRIC or passport)",
 		value: "Tom Tan Li Ho",
@@ -106,14 +124,17 @@ const SAMPLE_ITEMS: UneditableSectionItemProps[] = [
 	{
 		label: "Date of birth",
 		value: "6 November 1992",
+		displayWidth: "half",
 	},
 	{
 		label: "Ethnicity",
 		value: "Chinese",
+		displayWidth: "half",
 	},
 	{
 		label: "Spoken Language",
 		value: "English, Mandarin, French",
+		displayWidth: "half",
 	},
 	{
 		label: "Residential Address",
@@ -150,10 +171,10 @@ const EventTemplate = (eventName: string) =>
 				}}
 			/>
 		);
-	}) as StoryFn<IReviewSchema>;
+	}) as StoryFn<TReviewSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const Default = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
+export const Default = DefaultStoryTemplate<TReviewSchema>("review-default").bind({});
 Default.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -161,7 +182,38 @@ Default.args = {
 	items: SAMPLE_ITEMS,
 };
 
-export const Masking = DefaultStoryTemplate<IReviewSchema>("review-default").bind({});
+export const CustomTopSection = DefaultStoryTemplate<TReviewSchema>("review-default").bind({});
+CustomTopSection.args = {
+	referenceKey: "review",
+	variant: "accordion",
+	label: "Your personal information",
+	items: SAMPLE_ITEMS,
+	topSection: {
+		alert: {
+			uiType: "alert",
+			type: "warning",
+			className: "margin--bottom",
+			children: "Sample alert",
+		},
+	},
+};
+
+export const CustomBottomSection = DefaultStoryTemplate<TReviewSchema>("review-default").bind({});
+CustomBottomSection.args = {
+	referenceKey: "review",
+	variant: "accordion",
+	label: "Your personal information",
+	items: SAMPLE_ITEMS,
+	bottomSection: {
+		alert: {
+			uiType: "alert",
+			type: "warning",
+			children: "Sample alert",
+		},
+	},
+};
+
+export const Masking = DefaultStoryTemplate<TReviewSchema>("review-masking").bind({});
 Masking.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -184,10 +236,41 @@ Masking.args = {
 			displayWidth: "half",
 			mask: "whole",
 		},
+		{
+			label: "Prevent unmasking",
+			value: "Something sensitive",
+			displayWidth: "half",
+			mask: "whole",
+			disableMaskUnmask: true,
+		},
+		{
+			label: "Unmask via API",
+			value: "S1••••67D",
+			displayWidth: "half",
+			mask: "uinfin",
+			unmask: {
+				url: "https://a2fd2c71-5250-49ad-82f1-c63606b81062.mock.pstmn.io/unmask",
+				body: {
+					serviceId: "serviceId",
+					actionId: "actionId",
+					fieldId: "fieldId",
+				},
+			},
+		},
+		{
+			label: "Unmask with API error",
+			value: "S1••••67D",
+			displayWidth: "half",
+			mask: "uinfin",
+			unmask: {
+				url: "https://invalid.url",
+				body: { hello: "world" },
+			},
+		},
 	],
 };
 
-export const NotCollapsible = DefaultStoryTemplate<IReviewSchema>("review-button-collapsible").bind({});
+export const NotCollapsible = DefaultStoryTemplate<TReviewSchema>("review-button-collapsible").bind({});
 NotCollapsible.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -196,7 +279,7 @@ NotCollapsible.args = {
 	collapsible: false,
 };
 
-export const Collapsed = DefaultStoryTemplate<IReviewSchema>("review-button-collapsed").bind({});
+export const Collapsed = DefaultStoryTemplate<TReviewSchema>("review-button-collapsed").bind({});
 Collapsed.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -205,7 +288,7 @@ Collapsed.args = {
 	expanded: false,
 };
 
-export const ButtonLabel = DefaultStoryTemplate<IReviewSchema>("review-button-label").bind({});
+export const ButtonLabel = DefaultStoryTemplate<TReviewSchema>("review-button-label").bind({});
 ButtonLabel.args = {
 	referenceKey: "review",
 	variant: "accordion",
@@ -214,7 +297,7 @@ ButtonLabel.args = {
 	button: { label: "Modify" },
 };
 
-export const ButtonHidden = DefaultStoryTemplate<IReviewSchema>("review-button-hidden").bind({});
+export const ButtonHidden = DefaultStoryTemplate<TReviewSchema>("review-button-hidden").bind({});
 ButtonHidden.args = {
 	referenceKey: "review",
 	variant: "accordion",
