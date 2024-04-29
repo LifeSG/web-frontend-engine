@@ -179,7 +179,13 @@ const SIDEBAR_WIDTH = 210;
 const SPACER = 550;
 
 const StyledForm = styled(OriginalFrontendEngine)`
-	width: calc(${MediaWidths.desktopM}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+	width: calc(${MediaWidths.desktopL}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+	max-width: 820px;
+
+	${MediaQuery.MaxWidth.desktopM} {
+		min-width: 500px;
+		width: calc(${MediaWidths.desktopM}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+	}
 
 	${MediaQuery.MaxWidth.tablet} {
 		min-width: 400px;
