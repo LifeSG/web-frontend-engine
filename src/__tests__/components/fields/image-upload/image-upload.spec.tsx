@@ -1041,4 +1041,68 @@ describe("image-upload", () => {
 			expect(input.getAttribute("capture")).toBe("user");
 		});
 	});
+
+	describe("upload multiple images at once", () => {
+		it("able to upload multiple images at once", async () => {
+			await renderComponent({
+				overrideField: { multiple: true },
+			});
+			await act(async () => {
+				fireEvent.change(getDragInputUploadField(), {
+					target: {
+						files: [FILE_1, FILE_2],
+					},
+				});
+				await flushPromise();
+			});
+			expect((getDragInputUploadField() as HTMLInputElement).files).toHaveLength(2);
+			expect(screen.getByText(FILE_1.name)).toBeInTheDocument();
+			expect(screen.getByText(FILE_2.name)).toBeInTheDocument();
+		});
+
+		it("should show exceed error when add over the max number", async () => {
+			await renderComponent({
+				overrideField: { multiple: true, validation: [{ max: 1 }] },
+			});
+			await act(async () => {
+				fireEvent.change(getDragInputUploadField(), {
+					target: {
+						files: [FILE_1, FILE_2],
+					},
+				});
+			});
+			expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(1))).toBeInTheDocument();
+		});
+
+		describe("when add through review modal", () => {
+			it("able to upload multiple images at once", async () => {
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: { multiple: true, editImage: true },
+					reviewImage: true,
+				});
+				await waitFor(() =>
+					fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1, FILE_2] } })
+				);
+				expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
+				expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
+				expect(getField("button", `thumbnail of test (1).jpg`)).toBeInTheDocument();
+			});
+
+			it("should show exceed error when add over the max number", async () => {
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: { multiple: true, editImage: true, validation: [{ max: 2 }] },
+					reviewImage: true,
+				});
+				await waitFor(() =>
+					fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1, FILE_2] } })
+				);
+				expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
+				expect(
+					screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(1))
+				).toBeInTheDocument();
+			});
+		});
+	});
 });
