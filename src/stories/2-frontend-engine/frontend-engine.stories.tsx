@@ -144,7 +144,15 @@ const meta: Meta = {
 			},
 		},
 		onChange: {
-			description: "Fires every time a value changes in any fields",
+			description: "Fires on mount and every time the schema or value in any fields changes",
+			table: {
+				type: {
+					summary: "(values: TFrontendEngineValues<any>, isValid?: boolean) => unknown",
+				},
+			},
+		},
+		onValueChange: {
+			description: "Fires every time a value in any fields changes",
 			table: {
 				type: {
 					summary: "(values: TFrontendEngineValues<any>, isValid?: boolean) => unknown",
@@ -320,8 +328,43 @@ ValidateOnAll.args = {
 
 export const OnChange: StoryFn<IFrontendEngineProps> = (args: IFrontendEngineProps) => <FrontendEngine {...args} />;
 OnChange.args = {
-	data: DATA,
+	data: {
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					explanation: {
+						uiType: "div",
+						className: "margin--bottom",
+						children: "onChange is fired on mount and every time the schema of value changes",
+					},
+					...DATA.sections.section.children,
+				},
+			},
+		},
+	},
 	onChange: (values, isValid) => action("change")(values, isValid),
+};
+
+export const OnValueChange: StoryFn<IFrontendEngineProps> = (args: IFrontendEngineProps) => (
+	<FrontendEngine {...args} />
+);
+OnValueChange.args = {
+	data: {
+		sections: {
+			section: {
+				uiType: "section",
+				children: {
+					explanation: {
+						uiType: "div",
+						className: "margin--bottom",
+						children: "onValueChange is only fired every time a value changes",
+					},
+					...DATA.sections.section.children,
+				},
+			},
+		},
+	},
 };
 
 export const ExternalSubmit: StoryFn<IFrontendEngineProps> = () => {

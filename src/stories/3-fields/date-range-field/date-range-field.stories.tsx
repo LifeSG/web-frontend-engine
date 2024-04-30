@@ -97,6 +97,13 @@ Default.args = {
 	validation: [{ notPast: true, errorMessage: "No past dates" }],
 };
 
+export const WithoutButtons = DefaultStoryTemplate<TDateRangeFieldSchema>("date-without-buttons").bind({});
+WithoutButtons.args = {
+	uiType: "date-range-field",
+	label: "Date",
+	withButton: false,
+};
+
 export const DefaultValue = DefaultStoryTemplate<TDateRangeFieldSchema, InputRangeProp<string>>(
 	"date-default-value"
 ).bind({});

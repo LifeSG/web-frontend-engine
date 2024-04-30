@@ -283,6 +283,14 @@ Disabled.args = {
 	disabled: true,
 };
 
+export const Searchable = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-select-searchable").bind({});
+Searchable.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options,
+	enableSearch: true,
+};
+
 export const CustomWidth = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-custom-width").bind({});
 CustomWidth.args = {
 	uiType: "nested-multi-select",

@@ -98,6 +98,13 @@ UseCurrentDate.args = {
 	useCurrentDate: true,
 };
 
+export const WithoutButtons = DefaultStoryTemplate<IDateFieldSchema>("date-without-buttons").bind({});
+WithoutButtons.args = {
+	uiType: "date-field",
+	label: "Date",
+	withButton: false,
+};
+
 export const DefaultValue = DefaultStoryTemplate<IDateFieldSchema>("date-default-value").bind({});
 DefaultValue.args = {
 	uiType: "date-field",

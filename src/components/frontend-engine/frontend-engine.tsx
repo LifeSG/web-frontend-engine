@@ -35,7 +35,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { data, className = null, components, onChange, onSubmit, onSubmitError, wrapInForm = true } = props;
+	const {
+		data,
+		className = null,
+		components,
+		onChange,
+		onSubmit,
+		onSubmitError,
+		onValueChange,
+		wrapInForm = true,
+	} = props;
 	const {
 		className: dataClassName = null,
 		defaultValues,
@@ -201,7 +210,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, []);
 
 	useEffect(() => {
-		// attach / fire onChange event only formValidationConfig has values
+		// attach / fire onChange event only when formValidationConfig has values
 		// otherwise isValid will be returned incorrectly as true
 		if (onChange && Object.keys(formValidationConfig || {}).length) {
 			const subscription = watch(() => {
@@ -214,6 +223,19 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [checkIsFormValid, onChange, watch, formValidationConfig]);
+
+	useEffect(() => {
+		// attach / fire onValueChange event only when formValidationConfig has values
+		// otherwise isValid will be returned incorrectly as true
+		if (onValueChange && Object.keys(formValidationConfig || {}).length) {
+			const subscription = watch(() => {
+				onValueChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
+			});
+			return () => subscription.unsubscribe();
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [checkIsFormValid, onValueChange, watch, formValidationConfig]);
 
 	useEffect(() => {
 		const errors = formState.errors;

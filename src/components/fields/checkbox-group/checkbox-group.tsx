@@ -28,7 +28,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 		error,
 		id,
 		onChange,
-		schema: { customOptions, disabled, label: _label, options, validation, ...otherSchema },
+		schema: { className, customOptions, disabled, label: _label, options, validation, ...otherSchema },
 		value,
 	} = props;
 
@@ -108,11 +108,15 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 				const checkboxId = formatId(index);
 
 				return (
-					<CheckboxContainer key={index}>
+					<CheckboxContainer
+						key={index}
+						className={className ? `${className}-checkbox-container` : undefined}
+					>
 						<StyledCheckbox
 							{...otherSchema}
 							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={checkboxId}
+							className={className}
 							disabled={disabled ?? option.disabled}
 							name={checkboxId}
 							value={option.value}
@@ -132,17 +136,20 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 		return (
 			options.length > 0 &&
 			customOptions.styleType === "toggle" && (
-				<ToggleWrapper $layoutType={customOptions?.layoutType ?? "horizontal"}>
+				<ToggleWrapper
+					$layoutType={customOptions?.layoutType ?? "horizontal"}
+					className={className ? `${className}-checkbox-container` : undefined}
+				>
 					{options.map((option, index) => {
 						const checkboxId = formatId(index);
 
 						return (
 							<StyledToggle
 								key={index}
-								{...otherSchema}
 								type="checkbox"
 								data-testid={TestHelper.generateId(id, "toggle")}
 								id={checkboxId}
+								className={className}
 								disabled={disabled ?? option.disabled}
 								name={checkboxId}
 								indicator={customOptions?.indicator}

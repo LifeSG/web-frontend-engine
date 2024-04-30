@@ -131,6 +131,18 @@ Disabled.args = {
 	disabled: true,
 };
 
+export const Searchable = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-searchable").bind({});
+Searchable.args = {
+	uiType: "multi-select",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "apple" },
+		{ label: "Berry", value: "berry" },
+		{ label: "Cherry", value: "cherry" },
+	],
+	enableSearch: true,
+};
+
 export const CustomWidth = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-custom-width").bind({});
 CustomWidth.args = {
 	uiType: "multi-select",

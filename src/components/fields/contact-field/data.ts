@@ -215,7 +215,7 @@ export const CountryData = [
 	["Zimbabwe", ["africa"], "zw", "263"],
 ] as const;
 
-const getCountryMap = (): TCallingCodeMap => {
+export const getCountryMap = (): TCallingCodeMap => {
 	const countryMap = new Map();
 
 	CountryData.forEach((item) => {
@@ -226,12 +226,6 @@ const getCountryMap = (): TCallingCodeMap => {
 	});
 
 	return countryMap;
-};
-
-export const getInternationalCallingCodeMap = (): TCallingCodeMap => {
-	const country = getCountryMap();
-
-	return country;
 };
 
 export const getCountries = (): string[] => {

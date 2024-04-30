@@ -2,12 +2,14 @@ import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-
 import { IBaseElementSchema } from "../types";
 import { IWrapperSchema } from "../wrapper";
 
-export interface ITabSchema extends IBaseElementSchema<"tab">, TComponentOmitProps<IWrapperSchema> {
-	children: Record<string, ITabItemSchema>;
+export interface ITabSchema<V = undefined> extends IBaseElementSchema<"tab">, TComponentOmitProps<IWrapperSchema> {
+	children: Record<string, ITabItemSchema<V>>;
 	currentActiveTabId?: string | undefined;
 }
 
-export interface ITabItemSchema extends IBaseElementSchema<"tab-item">, TComponentOmitProps<IWrapperSchema> {
-	children: Record<string, TFrontendEngineFieldSchema>;
+export interface ITabItemSchema<V = undefined>
+	extends IBaseElementSchema<"tab-item">,
+		TComponentOmitProps<IWrapperSchema> {
+	children: Record<string, TFrontendEngineFieldSchema<V>>;
 	title: string;
 }

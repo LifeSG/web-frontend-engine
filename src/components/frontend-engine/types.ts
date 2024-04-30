@@ -23,12 +23,14 @@ export interface IFrontendEngineProps<V = undefined, C = undefined> {
 	 * - C = custom component types
 	 *  */
 	data?: IFrontendEngineData<V, C> | undefined;
-	/** Fires every time a value changes in any fields */
+	/** Fires on mount and every time the schema or value changes */
 	onChange?: ((values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown) | undefined;
 	/** Submit event handler, will receive the form data if form validation is successful */
 	onSubmit?: (values: TFrontendEngineValues) => unknown | undefined;
 	/** Submit error event handler, invoked when form fails validation on submissiohn. Will receive validation errors */
 	onSubmitError?: (errors: TFrontendEngineValues) => unknown | undefined;
+	/** Fires every time a value changes in any fields */
+	onValueChange?: ((values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown) | undefined;
 	/** Indicates whether to wrap Frontend Engine fields within the `<form>` element, by default, fields will be rendered within the `<form>` element
 	 *
 	 * When false, the fields will be rendered within the `<div>` element instead
@@ -157,7 +159,7 @@ export interface IFrontendEngineRef
 export type TFrontendEngineFieldSchema<V = undefined, C = undefined> =
 	| TFieldSchema<V>
 	| TCustomSchema<C>
-	| TElementSchema;
+	| TElementSchema<V>;
 
 type MobileCol = 1 | 2 | 3 | 4;
 type MobileColRange = MobileCol | 5;
