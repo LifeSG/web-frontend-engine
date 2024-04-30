@@ -1042,7 +1042,7 @@ describe("image-upload", () => {
 		});
 	});
 
-	describe("upload multiple images at once", () => {
+	describe("upload multiple images at once through file dialog", () => {
 		it("able to upload multiple images at once", async () => {
 			await renderComponent({
 				overrideField: { multiple: true },
