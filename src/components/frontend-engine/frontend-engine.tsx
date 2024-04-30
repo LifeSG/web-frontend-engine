@@ -205,6 +205,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			const subscription = watch(() => {
 				onChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
 			});
+			onChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
 
 			return () => subscription.unsubscribe();
 		}
