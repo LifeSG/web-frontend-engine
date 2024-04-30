@@ -210,7 +210,7 @@ const StyledForm = styled(OriginalFrontendEngine)`
 // naming it as `FrontendEngine` because this is shown in code view
 export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => (
 	<StyledForm
-		onChange={(values, isValid) => action("change")(values, isValid)}
+		onValueChange={(values, isValid) => action("valueChange")(values, isValid)}
 		onSubmit={(e) => action("submit")(e)}
 		ref={ref}
 		{...props}
