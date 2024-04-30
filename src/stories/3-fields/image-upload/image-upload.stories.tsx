@@ -145,6 +145,20 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
+		multiple: {
+			type: { name: "boolean" },
+			defaultValue: false,
+			description: "Whether to allow user upload multiple images at once.",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -337,4 +351,13 @@ CaptureType.args = {
 	uiType: "image-upload",
 	description: "Opens user-facing camera, should be verified using a mobile device",
 	capture: "user",
+};
+
+export const Multiple = DefaultStoryTemplate<IImageUploadSchema>("upload-multiple-images").bind({});
+Multiple.args = {
+	label: "Provide images",
+	uiType: "image-upload",
+	description: "Upload multiple images at once",
+	multiple: true,
+	editImage: true,
 };

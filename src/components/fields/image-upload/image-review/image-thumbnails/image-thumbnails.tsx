@@ -21,7 +21,8 @@ interface IProps extends Omit<ISharedImageProps, "maxSizeInKb"> {
 	capture?: TFileCapture;
 	images: IImage[];
 	onClickThumbnail: (index: number) => void;
-	onSelectFile: (file: File) => void;
+	onSelectFile: (files: File[]) => void;
+	multiple?: boolean | undefined;
 }
 
 export const ImageThumbnails = (props: IProps) => {
@@ -37,6 +38,7 @@ export const ImageThumbnails = (props: IProps) => {
 		maxFiles,
 		onClickThumbnail,
 		onSelectFile,
+		multiple,
 	} = props;
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,8 +46,8 @@ export const ImageThumbnails = (props: IProps) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleInputChange = async (event: ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files) {
-			onSelectFile(event.target.files[0]);
+		if (event.target.files?.length > 0) {
+			onSelectFile(Array.from(event.target.files));
 		}
 	};
 
@@ -78,7 +80,7 @@ export const ImageThumbnails = (props: IProps) => {
 						<BorderOverlay isSelected={activeFileIndex === index} />
 					</ThumbnailItem>
 				);
-			} else if (image.addedFrom === "reviewModal") {
+			} else if (image.addedFrom === "reviewModal" || image.status < EImageStatus.NONE) {
 				return (
 					<ThumbnailItem
 						key={index}
@@ -98,9 +100,9 @@ export const ImageThumbnails = (props: IProps) => {
 
 	// render only when no. of added images is less than max count or if max count is zero
 	const renderAddButton = () =>
-		images.filter(({ status, addedFrom }) => status >= EImageStatus.NONE || addedFrom === "reviewModal").length <
+		(images.filter(({ status, addedFrom }) => status >= EImageStatus.NONE || addedFrom === "reviewModal").length <
 			maxFiles ||
-		(!maxFiles && (
+			!maxFiles) && (
 			<>
 				<HiddenFileSelect
 					id={TestHelper.generateId(id, "file-input")}
@@ -112,6 +114,7 @@ export const ImageThumbnails = (props: IProps) => {
 					ref={fileInputRef}
 					accept={accepts.map((fileType) => `.${fileType}`).join(", ")}
 					onChange={handleInputChange}
+					multiple={multiple}
 				/>
 				<AddImageButton
 					type="button"
@@ -123,7 +126,7 @@ export const ImageThumbnails = (props: IProps) => {
 					<img alt="add" src={ADD_PLACEHOLDER_ICON} />
 				</AddImageButton>
 			</>
-		));
+		);
 
 	return (
 		<ThumbnailsWrapper id={TestHelper.generateId(id)}>

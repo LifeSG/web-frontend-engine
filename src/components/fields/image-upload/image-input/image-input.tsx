@@ -26,6 +26,7 @@ interface IImageInputProps extends ISharedImageProps {
 	errorMessage?: string | undefined;
 	label: string;
 	validation: IImageUploadValidationRule[];
+	multiple?: boolean | undefined;
 }
 
 /**
@@ -48,6 +49,7 @@ export const ImageInput = (props: IImageInputProps) => {
 		maxSizeInKb,
 		validation,
 		errorMessage,
+		multiple,
 	} = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
@@ -194,6 +196,7 @@ export const ImageInput = (props: IImageInputProps) => {
 				capture={capture}
 				onInput={handleInput}
 				ref={dragUploadRef}
+				multiple={multiple}
 			>
 				<Subtitle
 					as="label"

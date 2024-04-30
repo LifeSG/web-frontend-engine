@@ -29,6 +29,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			outputType = "jpg",
 			uploadOnAddingFile,
 			validation,
+			multiple,
 		},
 		id,
 		isDirty,
@@ -211,6 +212,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	);
 
 	const renderImageReviewModal = () => {
+		const maxRule = validation?.find((rule) => "max" in rule);
 		return (
 			<ImageReview
 				accepts={acceptedFileTypes}
@@ -218,10 +220,12 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				id={id}
 				className={className}
 				maxFiles={maxFiles}
+				maxFilesErrorMessage={maxRule?.errorMessage}
 				maxSizeInKb={maxFileSize}
 				onExit={() => setShowReviewModal(false)}
 				outputType={outputType}
 				show={showReviewModal}
+				multiple={multiple}
 			/>
 		);
 	};
@@ -254,6 +258,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				dimensions={dimensions}
 				errorMessage={otherProps.error?.message}
 				validation={validation}
+				multiple={multiple}
 			/>
 			{renderReviewPrompt()}
 			{renderImageReviewModal()}

@@ -1,7 +1,8 @@
 import { Text } from "@lifesg/react-design-system/text";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
+import { ImageContext } from "../../image-context";
 import { EImageStatus, IImage, ISharedImageProps } from "../../types";
 import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, Wrapper } from "./image-error.styles";
 
@@ -10,6 +11,8 @@ const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/w
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	image: IImage;
 	onClickOk: (e: React.MouseEvent<HTMLButtonElement>) => void;
+	maxFilesErrorMessage?: string | undefined;
+	maxFiles?: number | undefined;
 }
 
 export const ImageError = (props: IProps) => {
@@ -22,7 +25,10 @@ export const ImageError = (props: IProps) => {
 		accepts,
 		maxSizeInKb,
 		onClickOk,
+		maxFilesErrorMessage,
+		maxFiles,
 	} = props;
+	const { images } = useContext(ImageContext);
 	const [errorTitle, setErrorTitle] = useState<string>();
 	const [errorDescription, setErrorDescription] = useState<JSX.Element>();
 
@@ -46,8 +52,23 @@ export const ImageError = (props: IProps) => {
 					ERROR_MESSAGES.UPLOAD("photo").MODAL.MAX_FILE_SIZE.DESCRIPTION(filename, maxSizeInKb)
 				);
 				break;
+
+			case EImageStatus.ERROR_EXCEED: {
+				const remainingPhotos = maxFiles - images.filter(({ status }) => status >= EImageStatus.NONE).length;
+				let errorMessage = maxFilesErrorMessage;
+				if (!errorMessage) {
+					if (remainingPhotos < 1 || images.length === 0) {
+						errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(maxFiles);
+					} else {
+						errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
+					}
+				}
+				setErrorTitle("Upload failed");
+				setErrorDescription(<>{errorMessage}</>);
+				break;
+			}
 		}
-	}, [accepts, maxSizeInKb, name, status]);
+	}, [accepts, images, maxFiles, maxFilesErrorMessage, maxSizeInKb, name, status]);
 
 	//  =============================================================================
 	// RENDER FUNCTIONS

@@ -61,6 +61,8 @@ interface IProps extends ISharedImageProps {
 	onExit: () => void;
 	outputType: string;
 	show: boolean;
+	multiple?: boolean | undefined;
+	maxFilesErrorMessage?: string | undefined;
 }
 
 export const ImageReview = (props: IProps) => {
@@ -79,6 +81,8 @@ export const ImageReview = (props: IProps) => {
 		onExit,
 		outputType,
 		show,
+		multiple,
+		maxFilesErrorMessage,
 	} = props;
 	const { images, setImages } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
@@ -117,24 +121,43 @@ export const ImageReview = (props: IProps) => {
 	// =============================================================================
 	// - REVIEW MODAL
 	// =============================================================================
-	const handleSelectFile = (selectedFile: File) => {
+	const handleSelectFile = (selectedFiles: File[]) => {
 		if (
 			!maxFiles ||
-			(selectedFile &&
-				images.filter(({ addedFrom, status }) => status >= EImageStatus.NONE || addedFrom === "reviewModal")
-					.length < maxFiles)
+			selectedFiles.length +
+				images.filter(({ status, addedFrom }) => status >= EImageStatus.NONE || addedFrom === "reviewModal")
+					.length <=
+				maxFiles
 		) {
-			// image manager will handle the rest
+			selectedFiles.forEach((selectedFile) => {
+				setImages((prev) => {
+					const slot = ImageUploadHelper.findAvailableSlot(prev);
+					return [
+						...prev,
+						{
+							id: generateRandomId(),
+							file: selectedFile,
+							name: selectedFile.name,
+							dimensions,
+							status: EImageStatus.NONE,
+							uploadProgress: 0,
+							addedFrom: "reviewModal",
+							slot,
+						},
+					];
+				});
+			});
+		} else {
 			setImages((prev) => {
 				const slot = ImageUploadHelper.findAvailableSlot(prev);
 				return [
 					...prev,
 					{
 						id: generateRandomId(),
-						file: selectedFile,
-						name: selectedFile.name,
+						file: selectedFiles[0],
+						name: selectedFiles[0].name,
 						dimensions,
-						status: EImageStatus.NONE,
+						status: EImageStatus.ERROR_EXCEED,
 						uploadProgress: 0,
 						addedFrom: "reviewModal",
 						slot,
@@ -341,6 +364,8 @@ export const ImageReview = (props: IProps) => {
 					accepts={accepts}
 					maxSizeInKb={maxSizeInKb}
 					onClickOk={() => handleDeleteDecision(true)}
+					maxFilesErrorMessage={maxFilesErrorMessage}
+					maxFiles={maxFiles}
 				/>
 			)}
 		</ContentSection>
@@ -359,6 +384,7 @@ export const ImageReview = (props: IProps) => {
 						images={images}
 						onClickThumbnail={setActiveFileIndex}
 						onSelectFile={handleSelectFile}
+						multiple={multiple}
 					/>
 					<FooterSaveButton
 						id={TestHelper.generateId(id, "save-button")}
