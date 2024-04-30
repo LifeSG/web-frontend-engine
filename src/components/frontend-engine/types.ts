@@ -127,6 +127,10 @@ export interface IFrontendEngineRef
 	isDirty: boolean;
 	/** checks if form is valid */
 	isValid: () => boolean;
+	/**
+	 * triggers validation in the form or for specific field
+	 */
+	validate: (name?: string | string[] | undefined) => Promise<boolean>;
 	/** adds custom validation rule */
 	removeFieldEventListener: <T = any>(
 		type: string,

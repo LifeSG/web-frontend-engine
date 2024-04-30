@@ -76,6 +76,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		getValues,
 		setValue,
 		setError,
+		trigger,
 		formState,
 		clearErrors,
 	} = formMethods;
@@ -93,6 +94,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		getValues: (payload?: string | string[] | undefined) => getFormValues(payload, stripUnknown),
 		isDirty: formState.isDirty,
 		isValid: checkIsFormValid,
+		validate: trigger,
 		removeFieldEventListener,
 		reset: (values, options) => {
 			reset(values, options);

@@ -536,6 +536,34 @@ CheckIsValid.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
+export const TriggerValidation: StoryFn<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const handleClick = (fields?: string | string[] | undefined) => {
+		ref.current.validate(fields);
+	};
+
+	return (
+		<>
+			<FrontendEngine data={DATA} ref={ref} />
+			<br />
+			<Button.Default styleType="secondary" onClick={() => handleClick("name")}>
+				Validate name only
+			</Button.Default>
+			<br />
+			<Button.Default styleType="secondary" onClick={() => handleClick(["name", "email"])}>
+				Validate name and email address only
+			</Button.Default>
+			<br />
+			<Button.Default styleType="secondary" onClick={() => handleClick()}>
+				Validate entire form
+			</Button.Default>
+		</>
+	);
+};
+TriggerValidation.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
 export const CheckUserIntervention: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
