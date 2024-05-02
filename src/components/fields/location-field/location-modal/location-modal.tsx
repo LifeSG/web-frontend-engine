@@ -276,7 +276,7 @@ const LocationModal = ({
 		setPanelInputMode(inputMode);
 	};
 
-	const handleGetCurrentLocation = async () => {
+	const getCurrentLocation = async () => {
 		setGettingCurrentLocation(true);
 
 		// TODO add documentation for how to cancel events and handle default
@@ -293,13 +293,6 @@ const LocationModal = ({
 
 			dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
 			return detail.payload;
-		}
-	};
-
-	const getCurrentLocation = async () => {
-		const shouldPreventDefault = !dispatchFieldEvent("before-get-current-location", id);
-		if (!shouldPreventDefault) {
-			return handleGetCurrentLocation();
 		}
 	};
 
@@ -467,7 +460,6 @@ const LocationModal = ({
 									lng: selectedAddressInfo.lng,
 								}}
 								getCurrentLocation={getCurrentLocation}
-								handleGetCurrentLocation={handleGetCurrentLocation}
 								onMapCenterChange={handleMapClick}
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapPanZoom={mapPanZoom}

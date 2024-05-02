@@ -4,7 +4,6 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
-import { useFieldEvent } from "../../../../../utils/hooks";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
 import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE, LOCATION_PIN_BLUE } from "./location-picker.data";
@@ -32,7 +31,6 @@ export const LocationPicker = ({
 	selectedLocationCoord,
 	interactiveMapPinIconUrl = LOCATION_PIN_BLUE,
 	getCurrentLocation,
-	handleGetCurrentLocation,
 	locationAvailable,
 	gettingCurrentLocation,
 	onMapCenterChange,
@@ -53,7 +51,6 @@ export const LocationPicker = ({
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,
 	};
-	const { addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 
 	// =============================================================================
 	// EFFECTS
@@ -133,14 +130,6 @@ export const LocationPicker = ({
 			zoomWithMarkers([selectedLocationCoord], !disableCurrLocationMarker);
 		}
 	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng, selectablePins]);
-
-	useEffect(() => {
-		addFieldEventListener("refresh-current-location", id, handleGetCurrentLocation);
-
-		return () => {
-			removeFieldEventListener("refresh-current-location", id, handleGetCurrentLocation);
-		};
-	}, []);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -227,7 +216,6 @@ export const LocationPicker = ({
 			)}
 			<LeafletWrapper ref={leafletWrapperRef} />
 			<ButtonLocation
-				data-testid={TestHelper.generateId(id, "current-location-button")}
 				onClick={() => {
 					locationAvailable && getCurrentLocation();
 				}}
