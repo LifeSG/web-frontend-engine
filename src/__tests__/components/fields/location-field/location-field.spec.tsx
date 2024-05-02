@@ -64,6 +64,7 @@ enum ELocationInputEvents {
 	"BEFORE_HIDE_PERMISSION_MODAL" = "before-hide-permission-modal",
 	"HIDE_PERMISSION_MODAL" = "hide-permission-modal",
 	"DISMISS_LOCATION_MODAL" = "dismiss-location-modal",
+	"CLICK_REFRESH_CURRENT_LOCATION" = "click-refresh-current-location",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -344,6 +345,9 @@ const getConfirmLocationModal = (query = false) => {
 };
 
 const getOneMapErrorModal = (query = false) => testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "onemap-error"));
+
+const getCurrentLocationButton = (query = false) =>
+	testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "refresh-current-location-button"));
 
 // assert network error
 
@@ -883,6 +887,36 @@ describe("location-input-group", () => {
 						expect(screen.queryByText("address 2")).toBeDefined();
 					});
 				});
+			});
+		});
+
+		describe("Refresh location events", () => {
+			fit("should fire click-refresh-current-location event when get current location button is clicked", async () => {
+				const mockRefreshLocation = jest.fn();
+				renderComponent({
+					eventType: ELocationInputEvents.CLICK_REFRESH_CURRENT_LOCATION,
+					eventListener: () => mockRefreshLocation,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								lat: 1.29994179707526,
+								lng: 103.789404349716,
+							},
+						},
+					},
+				});
+
+				await waitFor(() => window.dispatchEvent(new Event("online")));
+
+				getLocationInput().focus();
+
+				const refreshCurrentLocationButton = getCurrentLocationButton();
+
+				expect(refreshCurrentLocationButton).toBeInTheDocument();
+
+				fireEvent.click(refreshCurrentLocationButton);
+
+				expect(mockRefreshLocation).toHaveBeenCalled();
 			});
 		});
 	});

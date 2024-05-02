@@ -687,3 +687,71 @@ SetSelectablePins.args = {
 	uiType: "location-field",
 	label: "Set Selectable Pins",
 };
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const RefreshLocationTemplate = () =>
+	((args) => {
+		const id = "location-refresh";
+		const formRef = useRef<IFrontendEngineRef>();
+		const [showRefreshLocationPrompt, setShowRefreshLocationPrompt] = useState(false);
+
+		const handleShowRefreshLocationPrompt = (e) => {
+			e.preventDefault();
+			setShowRefreshLocationPrompt(true);
+		};
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("click-refresh-current-location", id, handleShowRefreshLocationPrompt);
+
+			return () => {
+				currentFormRef.removeFieldEventListener(
+					"click-refresh-current-location",
+					id,
+					handleShowRefreshLocationPrompt
+				);
+			};
+		}, []);
+
+		return (
+			<>
+				<FrontendEngine
+					ref={formRef}
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[id]: {
+										...args,
+										reverseGeoCodeEndpoint: "http://localhost:3021/api/v1/one-map/reverse-geo-code",
+									},
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					}}
+				/>
+				<Prompt
+					id="location-refresh-prompt"
+					title="'click-refresh-current-location' event"
+					size="large"
+					show={showRefreshLocationPrompt}
+					description="You have intercepted the 'click-refresh-current-location' event"
+					buttons={[
+						{
+							id: "close",
+							title: "close modal",
+							onClick: () => setShowRefreshLocationPrompt(false),
+						},
+					]}
+				/>
+			</>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+
+export const RefreshLocation = RefreshLocationTemplate().bind({});
+RefreshLocation.args = {
+	uiType: "location-field",
+	label: "Refresh current location",
+};
