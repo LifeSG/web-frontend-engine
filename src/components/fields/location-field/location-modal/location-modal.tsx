@@ -161,15 +161,8 @@ const LocationModal = ({
 			 *
 			 * This is meant for first entry
 			 */
-			let currSelectedLocation: ILocationCoord = {
-				lat: formValues?.lat,
-				lng: formValues?.lng,
-			};
 			if (!formValues?.lat && !formValues?.lng) {
-				currSelectedLocation = await getCurrentLocation();
-			}
-			if (currSelectedLocation?.lat && currSelectedLocation?.lng) {
-				dispatchFieldEvent("get-selectable-pins", id, currSelectedLocation);
+				await getCurrentLocation();
 			}
 		};
 		recenterAndTriggerEvent();
