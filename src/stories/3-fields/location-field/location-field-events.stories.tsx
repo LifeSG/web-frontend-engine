@@ -629,7 +629,6 @@ const SetSelectablePinsTemplate = () =>
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const getPins = (e: CustomEvent<ILocationCoord>) => {
-			console.log("==== get pins");
 			const res = [
 				{
 					carParkName: "BLK 120 TO 124 PAYA LEBAR WAY",
@@ -669,7 +668,8 @@ const SetSelectablePinsTemplate = () =>
 								children: {
 									[id]: {
 										...args,
-										reverseGeoCodeEndpoint: "http://localhost:3021/api/v1/one-map/reverse-geo-code",
+										reverseGeoCodeEndpoint:
+											"https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code",
 									},
 									...SUBMIT_BUTTON_SCHEMA,
 								},
@@ -724,7 +724,8 @@ const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 								children: {
 									[id]: {
 										...args,
-										reverseGeoCodeEndpoint: "http://localhost:3021/api/v1/one-map/reverse-geo-code",
+										reverseGeoCodeEndpoint:
+											"https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code",
 									},
 									...SUBMIT_BUTTON_SCHEMA,
 								},
