@@ -107,18 +107,23 @@ const LocationModal = ({
 			setSelectablePins(pinsArray);
 		};
 
-		addFieldEventListener("error-end", id, handleError);
-		addFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
-		addFieldEventListener("confirm-location", id, handleConfirm);
-		addFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
-		addFieldEventListener("dismiss-location-modal", id, handleCancel);
+		const eventsData = {
+			["error-end"]: handleError,
+			["set-selectable-pins"]: handleSetSelectablePins,
+			["confirm-location"]: handleConfirm,
+			["hide-permission-modal"]: handleHidePermissionModal,
+			["dismiss-location-modal"]: handleCancel,
+			["trigger-get-current-location"]: getCurrentLocation,
+		};
+
+		Object.entries(eventsData).forEach(([event, callback]) => {
+			addFieldEventListener(event, id, callback);
+		});
 
 		return () => {
-			removeFieldEventListener("error-end", id, handleError);
-			removeFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
-			removeFieldEventListener("confirm-location", id, handleConfirm);
-			removeFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
-			removeFieldEventListener("dismiss-location-modal", id, handleCancel);
+			Object.entries(eventsData).forEach(([event, callback]) => {
+				removeFieldEventListener(event, id, callback);
+			});
 		};
 	}, []);
 

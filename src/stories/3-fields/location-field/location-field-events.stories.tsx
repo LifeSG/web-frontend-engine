@@ -629,6 +629,7 @@ const SetSelectablePinsTemplate = () =>
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const getPins = (e: CustomEvent<ILocationCoord>) => {
+			console.log("==== get pins");
 			const res = [
 				{
 					carParkName: "BLK 120 TO 124 PAYA LEBAR WAY",
@@ -668,8 +669,7 @@ const SetSelectablePinsTemplate = () =>
 								children: {
 									[id]: {
 										...args,
-										reverseGeoCodeEndpoint:
-											"https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code",
+										reverseGeoCodeEndpoint: "http://localhost:3021/api/v1/one-map/reverse-geo-code",
 									},
 									...SUBMIT_BUTTON_SCHEMA,
 								},
@@ -689,7 +689,7 @@ SetSelectablePins.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const RefreshLocationTemplate = () =>
+const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 	((args) => {
 		const id = "location-refresh";
 		const formRef = useRef<IFrontendEngineRef>();
@@ -740,6 +740,14 @@ const RefreshLocationTemplate = () =>
 					description="You have intercepted the 'click-refresh-current-location' event"
 					buttons={[
 						{
+							id: "refresh",
+							title: "trigger getCurrentLoation",
+							onClick: () => {
+								formRef.current.dispatchFieldEvent("trigger-get-current-location", id);
+								setShowRefreshLocationPrompt(false);
+							},
+						},
+						{
 							id: "close",
 							title: "close modal",
 							onClick: () => setShowRefreshLocationPrompt(false),
@@ -750,8 +758,10 @@ const RefreshLocationTemplate = () =>
 		);
 	}) as StoryFn<ILocationFieldSchema>;
 
-export const RefreshLocation = RefreshLocationTemplate().bind({});
-RefreshLocation.args = {
+export const RefreshLocationAndTriggerGetCurrentLocation = RefreshLocationAndTriggerGetCurrentLocationTemplate().bind(
+	{}
+);
+RefreshLocationAndTriggerGetCurrentLocation.args = {
 	uiType: "location-field",
-	label: "Refresh current location",
+	label: "Refresh current location and trigger get current location",
 };
