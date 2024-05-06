@@ -107,18 +107,23 @@ const LocationModal = ({
 			setSelectablePins(pinsArray);
 		};
 
-		addFieldEventListener("error-end", id, handleError);
-		addFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
-		addFieldEventListener("confirm-location", id, handleConfirm);
-		addFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
-		addFieldEventListener("dismiss-location-modal", id, handleCancel);
+		const eventsData = {
+			["error-end"]: handleError,
+			["set-selectable-pins"]: handleSetSelectablePins,
+			["confirm-location"]: handleConfirm,
+			["hide-permission-modal"]: handleHidePermissionModal,
+			["dismiss-location-modal"]: handleCancel,
+			["trigger-get-current-location"]: getCurrentLocation,
+		};
+
+		Object.entries(eventsData).forEach(([event, callback]) => {
+			addFieldEventListener(event, id, callback);
+		});
 
 		return () => {
-			removeFieldEventListener("error-end", id, handleError);
-			removeFieldEventListener("set-selectable-pins", id, handleSetSelectablePins);
-			removeFieldEventListener("confirm-location", id, handleConfirm);
-			removeFieldEventListener("hide-permission-modal", id, handleHidePermissionModal);
-			removeFieldEventListener("dismiss-location-modal", id, handleCancel);
+			Object.entries(eventsData).forEach(([event, callback]) => {
+				removeFieldEventListener(event, id, callback);
+			});
 		};
 	}, []);
 
@@ -161,15 +166,8 @@ const LocationModal = ({
 			 *
 			 * This is meant for first entry
 			 */
-			let currSelectedLocation: ILocationCoord = {
-				lat: formValues?.lat,
-				lng: formValues?.lng,
-			};
 			if (!formValues?.lat && !formValues?.lng) {
-				currSelectedLocation = await getCurrentLocation();
-			}
-			if (currSelectedLocation?.lat && currSelectedLocation?.lng) {
-				dispatchFieldEvent("get-selectable-pins", id, currSelectedLocation);
+				await getCurrentLocation();
 			}
 		};
 		recenterAndTriggerEvent();
@@ -276,7 +274,7 @@ const LocationModal = ({
 		setPanelInputMode(inputMode);
 	};
 
-	const handleGetCurrentLocation = async () => {
+	const getCurrentLocation = async () => {
 		setGettingCurrentLocation(true);
 
 		// TODO add documentation for how to cancel events and handle default
@@ -293,13 +291,6 @@ const LocationModal = ({
 
 			dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
 			return detail.payload;
-		}
-	};
-
-	const getCurrentLocation = async () => {
-		const shouldPreventDefault = !dispatchFieldEvent("before-get-current-location", id);
-		if (!shouldPreventDefault) {
-			return handleGetCurrentLocation();
 		}
 	};
 
@@ -467,7 +458,6 @@ const LocationModal = ({
 									lng: selectedAddressInfo.lng,
 								}}
 								getCurrentLocation={getCurrentLocation}
-								handleGetCurrentLocation={handleGetCurrentLocation}
 								onMapCenterChange={handleMapClick}
 								interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 								mapPanZoom={mapPanZoom}

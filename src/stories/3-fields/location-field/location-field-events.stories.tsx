@@ -689,51 +689,29 @@ SetSelectablePins.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const RefreshLocationTemplate = () =>
+const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 	((args) => {
 		const id = "location-refresh";
 		const formRef = useRef<IFrontendEngineRef>();
 		const [showRefreshLocationPrompt, setShowRefreshLocationPrompt] = useState(false);
-		const [isFirstEntry, setIsFirstEntry] = useState(true);
-
-		const handleFirstEntry = () => {
-			// After setting the current location, it is no longer the first entry
-			setIsFirstEntry(false);
-		};
-
-		const handleRefreshLocation = () => {
-			setShowRefreshLocationPrompt(false);
-			formRef.current.dispatchFieldEvent("refresh-current-location", id);
-		};
 
 		const handleShowRefreshLocationPrompt = (e) => {
-			if (isFirstEntry) return;
-
 			e.preventDefault();
 			setShowRefreshLocationPrompt(true);
 		};
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("set-current-location", id, handleFirstEntry);
-
-			return () => {
-				currentFormRef.removeFieldEventListener("set-current-location", id, handleFirstEntry);
-			};
-		}, []);
-
-		useEffect(() => {
-			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("before-get-current-location", id, handleShowRefreshLocationPrompt);
+			currentFormRef.addFieldEventListener("click-refresh-current-location", id, handleShowRefreshLocationPrompt);
 
 			return () => {
 				currentFormRef.removeFieldEventListener(
-					"before-get-current-location",
+					"click-refresh-current-location",
 					id,
 					handleShowRefreshLocationPrompt
 				);
 			};
-		}, [isFirstEntry]);
+		}, []);
 
 		return (
 			<>
@@ -757,21 +735,23 @@ const RefreshLocationTemplate = () =>
 				/>
 				<Prompt
 					id="location-refresh-prompt"
-					title="Retrieve current location?"
+					title="'click-refresh-current-location' event"
 					size="large"
 					show={showRefreshLocationPrompt}
-					description="This will refresh your current location."
+					description="You have intercepted the 'click-refresh-current-location' event"
 					buttons={[
 						{
-							id: "retrieve",
-							title: "Retrieve current location",
-							onClick: handleRefreshLocation,
+							id: "refresh",
+							title: "trigger getCurrentLoation",
+							onClick: () => {
+								formRef.current.dispatchFieldEvent("trigger-get-current-location", id);
+								setShowRefreshLocationPrompt(false);
+							},
 						},
 						{
-							id: "cancel",
-							title: "Cancel",
+							id: "close",
+							title: "close modal",
 							onClick: () => setShowRefreshLocationPrompt(false),
-							buttonStyle: "secondary",
 						},
 					]}
 				/>
@@ -779,8 +759,10 @@ const RefreshLocationTemplate = () =>
 		);
 	}) as StoryFn<ILocationFieldSchema>;
 
-export const RefreshLocation = RefreshLocationTemplate().bind({});
-RefreshLocation.args = {
+export const RefreshLocationAndTriggerGetCurrentLocation = RefreshLocationAndTriggerGetCurrentLocationTemplate().bind(
+	{}
+);
+RefreshLocationAndTriggerGetCurrentLocation.args = {
 	uiType: "location-field",
-	label: "Refresh current location",
+	label: "Refresh current location and trigger get current location",
 };

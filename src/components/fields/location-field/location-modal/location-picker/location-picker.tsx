@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
+import { LocationHelper } from "../../location-helper";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
 import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE, LOCATION_PIN_BLUE } from "./location-picker.data";
@@ -17,7 +18,6 @@ import {
 	LocationPickerWrapper,
 } from "./location-picker.styles";
 import { ILocationPickerProps } from "./types";
-import { LocationHelper } from "../../location-helper";
 
 // Show picker when
 // tablet: "map" mode
@@ -32,7 +32,6 @@ export const LocationPicker = ({
 	selectedLocationCoord,
 	interactiveMapPinIconUrl = LOCATION_PIN_BLUE,
 	getCurrentLocation,
-	handleGetCurrentLocation,
 	locationAvailable,
 	gettingCurrentLocation,
 	onMapCenterChange,
@@ -53,7 +52,8 @@ export const LocationPicker = ({
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,
 	};
-	const { addFieldEventListener, removeFieldEventListener } = useFieldEvent();
+
+	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =============================================================================
 	// EFFECTS
@@ -133,14 +133,6 @@ export const LocationPicker = ({
 			zoomWithMarkers([selectedLocationCoord], !disableCurrLocationMarker);
 		}
 	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng, selectablePins]);
-
-	useEffect(() => {
-		addFieldEventListener("refresh-current-location", id, handleGetCurrentLocation);
-
-		return () => {
-			removeFieldEventListener("refresh-current-location", id, handleGetCurrentLocation);
-		};
-	}, []);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -227,9 +219,14 @@ export const LocationPicker = ({
 			)}
 			<LeafletWrapper ref={leafletWrapperRef} />
 			<ButtonLocation
-				data-testid={TestHelper.generateId(id, "current-location-button")}
+				data-testid={TestHelper.generateId(id, "refresh-current-location-button")}
 				onClick={() => {
-					locationAvailable && getCurrentLocation();
+					if (locationAvailable) {
+						const shouldPreventDefault = !dispatchFieldEvent("click-refresh-current-location", id);
+						if (!shouldPreventDefault) {
+							getCurrentLocation();
+						}
+					}
 				}}
 			>
 				<ButtonLocationImage
