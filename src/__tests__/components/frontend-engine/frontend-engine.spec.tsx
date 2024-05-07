@@ -889,36 +889,11 @@ describe("frontend-engine", () => {
 	});
 
 	describe("setErrors", () => {
-		const handleClickDefault = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			try {
-				throw new Error("API error");
-			} catch (error) {
-				ref.current.setErrors({
-					[FIELD_ONE_ID]: ERROR_MESSAGE,
-				});
-			}
+		const handleClickDefault = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			ref.current.setErrors({ [FIELD_ONE_ID]: ERROR_MESSAGE });
 		};
-
-		const handleClickArray = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			try {
-				throw new Error("API error");
-			} catch (error) {
-				ref.current.setErrors({
-					[FIELD_ONE_ID]: [ERROR_MESSAGE],
-				});
-			}
-		};
-
-		const handleClickNested = async (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			try {
-				throw new Error("API error");
-			} catch (error) {
-				ref.current.setErrors({
-					[FIELD_ONE_ID]: {
-						[FIELD_TWO_ID]: ERROR_MESSAGE,
-					},
-				});
-			}
+		const handleClickArray = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			ref.current.setErrors({ [FIELD_ONE_ID]: [ERROR_MESSAGE] });
 		};
 
 		it("should support setting of custom errors", async () => {
@@ -929,10 +904,31 @@ describe("frontend-engine", () => {
 		});
 
 		it("should support setting of custom errors for nested fields", async () => {
+			const handleClickNested = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.setErrors({ [FIELD_ONE_ID]: { [FIELD_TWO_ID]: ERROR_MESSAGE } });
+			};
 			render(<FrontendEngineWithCustomButton data={NESTED_JSON_SCHEMA} onClick={handleClickNested} />);
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
 			expect(getFieldTwo().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
+		});
+
+		it("should convert error object to string if the direct descendants don't match any fields", async () => {
+			const handleClickNested = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.setErrors({
+					[FIELD_ONE_ID]: {
+						something: "else",
+					},
+				});
+			};
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClickNested} />);
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(
+				JSON.stringify({
+					something: "else",
+				})
+			);
 		});
 
 		it("should clear the error message related to API when the user edits the field", async () => {

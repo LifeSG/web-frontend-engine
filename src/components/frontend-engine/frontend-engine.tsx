@@ -165,7 +165,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			if (Array.isArray(value)) {
 				setError(key, { type: "api", message: value[0] });
 			} else if (typeof value === "object") {
-				setErrors(value as TErrorPayload);
+				const fieldSchema = ObjectHelper.getNestedValueByKey(data.sections, key);
+				const childKeys = Object.keys(value);
+				const haveNestedErrors = childKeys.every(
+					(childKey) => !isEmpty(ObjectHelper.getNestedValueByKey(fieldSchema, childKey))
+				);
+				if (!haveNestedErrors) {
+					setError(key, { type: "api", message: JSON.stringify(value) });
+				} else {
+					setErrors(value as TErrorPayload);
+				}
 			} else {
 				const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
 				if (!isEmpty(errorObject)) {
