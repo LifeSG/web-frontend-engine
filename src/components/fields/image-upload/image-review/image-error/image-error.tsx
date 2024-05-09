@@ -63,7 +63,7 @@ export const ImageError = (props: IProps) => {
 						errorMessage = ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(remainingPhotos);
 					}
 				}
-				setErrorTitle("Upload failed");
+				setErrorTitle("Photo limit exceeded");
 				setErrorDescription(<>{errorMessage}</>);
 				break;
 			}
