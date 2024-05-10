@@ -168,6 +168,11 @@ const LocationModal = ({
 			 */
 			if (!formValues?.lat && !formValues?.lng) {
 				await getCurrentLocation();
+			} else {
+				dispatchFieldEvent<ILocationCoord>("get-selectable-pins", id, {
+					lat: formValues.lat,
+					lng: formValues.lng,
+				});
 			}
 		};
 		recenterAndTriggerEvent();

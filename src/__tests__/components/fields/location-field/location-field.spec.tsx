@@ -891,7 +891,7 @@ describe("location-input-group", () => {
 		});
 
 		describe("Refresh location events", () => {
-			fit("should fire click-refresh-current-location event when get current location button is clicked", async () => {
+			it("should fire click-refresh-current-location event when get current location button is clicked", async () => {
 				const mockRefreshLocation = jest.fn();
 				renderComponent({
 					eventType: ELocationInputEvents.CLICK_REFRESH_CURRENT_LOCATION,
