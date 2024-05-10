@@ -8,6 +8,7 @@ import { LocationHelper } from "../../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
 	IDisplayResultListParams,
+	ILocationCoord,
 	IResultListItem,
 	IResultsMetaData,
 	TErrorType,
@@ -164,7 +165,7 @@ export const LocationSearch = ({
 			// TODO: no op or error?
 			if (!payload?.lat || !payload?.lng) return;
 
-			dispatchFieldEvent("get-selectable-pins", id, payload);
+			dispatchFieldEvent<ILocationCoord>("get-selectable-pins", id, payload);
 			const { lat, lng } = payload;
 			displayResultsFromLatLng(lat, lng);
 			onGetLocationCallback(lat, lng);
