@@ -9,7 +9,7 @@ import { IContactFieldSchema } from "./contact-field";
 import { IDateFieldSchema } from "./date-field";
 import { TDateRangeFieldSchema } from "./date-range-field";
 import { IESignatureFieldSchema } from "./e-signature-field/types";
-import { IFileUploadSchema } from "./file-upload";
+import { IFileUploadSchema, TFileUploadEvents } from "./file-upload";
 import { IHiddenFieldSchema } from "./hidden-field/types";
 import { IHistogramSliderSchema } from "./histogram-slider";
 import { IImageUploadSchema, TImageUploadEvents, TImageUploadTriggers } from "./image-upload";
@@ -101,7 +101,7 @@ export type TFieldSchema<V = undefined, C = undefined> =
 /**
  * intersection type to represent all field events
  */
-export type TFieldEvents = TButtonEvents & TImageUploadEvents;
+export type TFieldEvents = TButtonEvents & TFileUploadEvents & TImageUploadEvents;
 
 /**
  * intersection type to represent all field triggers
