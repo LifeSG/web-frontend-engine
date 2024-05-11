@@ -1,5 +1,12 @@
 import { UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
-import { TCustomComponents, TCustomValidationFunction, TYupSchemaType } from "../../context-providers";
+import {
+	TAddFieldEventListener,
+	TCustomComponents,
+	TCustomValidationFunction,
+	TDispatchFieldEvent,
+	TRemoveFieldEventListener,
+	TYupSchemaType,
+} from "../../context-providers";
 import { RecursivePartial } from "../../utils";
 import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
@@ -107,13 +114,8 @@ export interface IFrontendEngineRef
 		fn: TCustomValidationFunction,
 		overwrite?: boolean | undefined
 	) => void;
-	addFieldEventListener: <T = any>(
-		type: string,
-		id: string,
-		listener: (ev: CustomEvent<T>) => void,
-		options?: boolean | AddEventListenerOptions
-	) => void;
-	dispatchFieldEvent: <T = any>(type: string, id: string, detail?: T) => boolean;
+	addFieldEventListener: TAddFieldEventListener;
+	dispatchFieldEvent: TDispatchFieldEvent;
 	/**
 	 * gets form values
 	 * @param payload specify the value(s) by field id(s) to return
@@ -135,12 +137,7 @@ export interface IFrontendEngineRef
 	 */
 	validate: (name?: string | string[] | undefined) => Promise<boolean>;
 	/** adds custom validation rule */
-	removeFieldEventListener: <T = any>(
-		type: string,
-		id: string,
-		listener: (ev: CustomEvent<T>) => void,
-		options?: boolean | EventListenerOptions
-	) => void;
+	removeFieldEventListener: TRemoveFieldEventListener;
 	/** resets the form to the default state */
 	reset: UseFormReset<TFrontendEngineValues>;
 	/** allows setting of custom errors */
