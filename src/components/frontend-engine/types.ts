@@ -1,11 +1,12 @@
 import { UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
 import { TCustomComponents, TCustomValidationFunction, TYupSchemaType } from "../../context-providers";
+import { RecursivePartial } from "../../utils";
 import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
 
-export type { IYupValidationRule, TCustomValidationFunction, TCustomComponents } from "../../context-providers";
+export type { IYupValidationRule, TCustomComponents, TCustomValidationFunction } from "../../context-providers";
 
 // =============================================================================
 // FRONTEND ENGINE
@@ -215,16 +216,3 @@ type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
  * Omits clashing keys between native props and frontend engine
  */
 export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
-
-// =============================================================================
-// HELPERS
-// =============================================================================
-/**
- * prevents inferrence
- * https://stackoverflow.com/questions/56687668/a-way-to-disable-type-argument-inference-in-generics
- */
-export type TNoInfer<T, U> = [T][T extends U ? 0 : never];
-
-export type RecursivePartial<T> = {
-	[P in keyof T]?: RecursivePartial<T[P]>;
-};
