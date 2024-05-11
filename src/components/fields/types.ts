@@ -95,6 +95,16 @@ export type TFieldSchema<V = undefined> =
 	| TDateRangeFieldSchema<V>
 	| TRadioButtonGroupSchema<V>;
 
+/**
+ * intersection type to represent all field events
+ */
+export type TFieldEvents = any;
+
+/**
+ * intersection type to represent all field triggers
+ */
+export type TFieldTriggers = any;
+
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 	/** defines what kind of component to be rendered */
