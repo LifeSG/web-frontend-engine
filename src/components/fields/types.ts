@@ -2,7 +2,7 @@ import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IColumns } from "../frontend-engine";
 import { IYupValidationRule, TRenderRules } from "../../context-providers";
-import { IButtonSchema } from "./button";
+import { IButtonSchema, TButtonEvents } from "./button";
 import { TCheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
 import { IContactFieldSchema } from "./contact-field";
@@ -98,7 +98,7 @@ export type TFieldSchema<V = undefined> =
 /**
  * intersection type to represent all field events
  */
-export type TFieldEvents = any;
+export type TFieldEvents = TButtonEvents;
 
 /**
  * intersection type to represent all field triggers
