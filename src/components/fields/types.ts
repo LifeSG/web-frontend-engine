@@ -13,7 +13,7 @@ import { IFileUploadSchema, TFileUploadEvents } from "./file-upload";
 import { IHiddenFieldSchema } from "./hidden-field/types";
 import { IHistogramSliderSchema } from "./histogram-slider";
 import { IImageUploadSchema, TImageUploadEvents, TImageUploadTriggers } from "./image-upload";
-import { ILocationFieldSchema } from "./location-field";
+import { ILocationFieldSchema, TLocationEvents, TLocationFieldTriggers } from "./location-field";
 import { IMaskedFieldSchema } from "./masked-field";
 import { IMultiSelectSchema } from "./multi-select";
 import { INestedMultiSelectSchema } from "./nested-multi-select";
@@ -101,12 +101,12 @@ export type TFieldSchema<V = undefined, C = undefined> =
 /**
  * intersection type to represent all field events
  */
-export type TFieldEvents = TButtonEvents & TFileUploadEvents & TImageUploadEvents;
+export type TFieldEvents = TButtonEvents & TFileUploadEvents & TImageUploadEvents & TLocationEvents;
 
 /**
  * intersection type to represent all field triggers
  */
-export type TFieldTriggers = TImageUploadTriggers;
+export type TFieldTriggers = TImageUploadTriggers & TLocationFieldTriggers;
 
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
