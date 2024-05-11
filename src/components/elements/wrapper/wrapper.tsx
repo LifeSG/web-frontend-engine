@@ -20,7 +20,6 @@ import { ColWrapper } from "./col-wrapper";
 import { ConditionalRenderer } from "./conditional-renderer";
 import { FieldWrapper } from "./field-wrapper";
 import { IWrapperProps, TWrapperChildSchema } from "./types";
-import { DSAlert } from "./wrapper.styles";
 
 const fieldTypeKeys = Object.keys(EFieldType);
 const elementTypeKeys = Object.keys(EElementType);
@@ -122,16 +121,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 
 		if (!Field) return null;
 
-		const warning = warnings?.[childId];
-
 		return (
 			<ColWrapper id={childId} childSchema={childSchema}>
-				<FieldWrapper id={childId} schema={childSchema} Field={Field} />
-				{warning && (
-					<DSAlert type="warning" data-testid={TestHelper.generateId(childId, "warning")}>
-						{warning}
-					</DSAlert>
-				)}
+				<FieldWrapper id={childId} schema={childSchema} Field={Field} warning={warnings?.[childId]} />
 			</ColWrapper>
 		);
 	};

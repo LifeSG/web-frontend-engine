@@ -24,9 +24,10 @@ interface IProps {
 	schema: TFrontendEngineFieldSchema;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	Field: React.ComponentType<any>;
+	warning?: string | undefined;
 }
 
-export const FieldWrapper = ({ Field, id, schema }: IProps) => {
+export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 	// =========================================================================
 	// CONST, STATE, REFS
 	// =========================================================================
@@ -116,6 +117,7 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 			id,
 			formattedLabel: constructFormattedLabel(id, schema),
 			value: getField(id),
+			warning,
 			ref: undefined, // not passing ref because not all components have fields to be manipulated
 		};
 		return <Field schema={schema} {...fieldProps} {...fieldState} />;

@@ -135,4 +135,5 @@ export interface IGenericFieldProps<T> extends Partial<ControllerFieldState>, Pa
 	id: string;
 	formattedLabel?: string | FormLabelProps | undefined;
 	schema: T;
+	warning?: string | undefined;
 }
