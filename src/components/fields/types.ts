@@ -10,7 +10,7 @@ import { IDateFieldSchema } from "./date-field";
 import { TDateRangeFieldSchema } from "./date-range-field";
 import { IFileUploadSchema } from "./file-upload";
 import { IHistogramSliderSchema } from "./histogram-slider";
-import { IImageUploadSchema } from "./image-upload";
+import { IImageUploadSchema, TImageUploadEvents, TImageUploadTriggers } from "./image-upload";
 import { ILocationFieldSchema } from "./location-field";
 import { IMaskedFieldSchema } from "./masked-field";
 import { IMultiSelectSchema } from "./multi-select";
@@ -98,12 +98,12 @@ export type TFieldSchema<V = undefined> =
 /**
  * intersection type to represent all field events
  */
-export type TFieldEvents = TButtonEvents;
+export type TFieldEvents = TButtonEvents & TImageUploadEvents;
 
 /**
  * intersection type to represent all field triggers
  */
-export type TFieldTriggers = any;
+export type TFieldTriggers = TImageUploadTriggers;
 
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
