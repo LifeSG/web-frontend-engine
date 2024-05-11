@@ -65,6 +65,11 @@ export type TElementSchema<V = undefined, C = undefined> =
 	| IWrapperSchema<V, C>;
 
 /**
+ * intersection type to represent all field events
+ */
+export type TElementEvents = any;
+
+/**
  * common element schema for element schemas to extend from
  */
 export interface IBaseElementSchema<T> {

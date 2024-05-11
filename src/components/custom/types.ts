@@ -35,6 +35,11 @@ export type TCustomSchema<V = undefined, C = undefined> =
 	| C;
 
 /**
+ * intersection type to represent all field events
+ */
+export type TCustomEvents = any;
+
+/**
  * base schema for custom elements
  */
 export interface ICustomElementJsonSchema<T> {
