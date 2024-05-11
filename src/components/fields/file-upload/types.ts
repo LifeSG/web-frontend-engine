@@ -59,7 +59,7 @@ export interface IFileUploadValue {
 // =============================================================================
 /** fired when field is mounted */
 function fileUploadEvent(
-	uiType: "image-upload",
+	uiType: "file-upload",
 	type: "mount",
 	id: string,
 	listener: TFieldEventListener,
