@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Warning } from "../../shared";
 import { IMaskedFieldSchema } from "./types";
 
 export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
@@ -19,6 +20,7 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		onChange,
 		value,
 		schema: { label: _label, uiType, validation, maskRegex, iconMask, iconUnmask, ...otherSchema },
+		warning,
 		...otherProps
 	} = props;
 
@@ -82,19 +84,22 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 	};
 
 	return (
-		<Form.MaskedInput
-			{...otherSchema}
-			{...otherProps}
-			{...derivedAttributes}
-			id={id}
-			data-testid={TestHelper.generateId(id, uiType)}
-			label={formattedLabel}
-			onChange={handleChange}
-			value={stateValue}
-			errorMessage={error?.message}
-			maskRegex={getRegex()}
-			iconMask={renderIcon(iconMask)}
-			iconUnmask={renderIcon(iconUnmask)}
-		/>
+		<>
+			<Form.MaskedInput
+				{...otherSchema}
+				{...otherProps}
+				{...derivedAttributes}
+				id={id}
+				data-testid={TestHelper.generateId(id, uiType)}
+				label={formattedLabel}
+				onChange={handleChange}
+				value={stateValue}
+				errorMessage={error?.message}
+				maskRegex={getRegex()}
+				iconMask={renderIcon(iconMask)}
+				iconUnmask={renderIcon(iconUnmask)}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

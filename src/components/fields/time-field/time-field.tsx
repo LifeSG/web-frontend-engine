@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Warning } from "../../shared";
 import { ITimeFieldSchema } from "./types";
 
 export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
@@ -18,6 +19,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 		onChange,
 		schema: { is24HourFormat, label: _label, placeholder, useCurrentTime, validation, ...otherSchema },
 		value,
+		warning,
 		...otherProps
 	} = props;
 
@@ -64,17 +66,20 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.Timepicker
-			{...otherSchema}
-			{...otherProps}
-			id={id}
-			data-testid={TestHelper.generateId(id, "time")}
-			label={formattedLabel}
-			errorMessage={error?.message}
-			value={stateValue}
-			placeholder={placeholder}
-			format={is24HourFormat ? "24hr" : "12hr"}
-			onChange={handleChange}
-		/>
+		<>
+			<Form.Timepicker
+				{...otherSchema}
+				{...otherProps}
+				id={id}
+				data-testid={TestHelper.generateId(id, "time")}
+				label={formattedLabel}
+				errorMessage={error?.message}
+				value={stateValue}
+				placeholder={placeholder}
+				format={is24HourFormat ? "24hr" : "12hr"}
+				onChange={handleChange}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

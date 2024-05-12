@@ -7,7 +7,7 @@ import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IGenericFieldProps } from "../types";
 import { IDateFieldSchema } from "./types";
 
@@ -28,6 +28,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		onChange,
 		schema: { label: _label, useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, validation, ...otherSchema },
 		value,
+		warning,
 		...otherProps
 	} = props;
 	const { setValue } = useFormContext();
@@ -211,16 +212,19 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	// =============================================================================
 
 	return (
-		<Form.DateInput
-			{...otherSchema}
-			{...otherProps}
-			{...derivedProps}
-			id={id}
-			data-testid={TestHelper.generateId(id, "date")}
-			label={formattedLabel}
-			errorMessage={error?.message}
-			onChange={handleChange}
-			value={stateValue}
-		/>
+		<>
+			<Form.DateInput
+				{...otherSchema}
+				{...otherProps}
+				{...derivedProps}
+				id={id}
+				data-testid={TestHelper.generateId(id, "date")}
+				label={formattedLabel}
+				errorMessage={error?.message}
+				onChange={handleChange}
+				value={stateValue}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { ISelectOption } from "../select/types";
 import { IMultiSelectOption, IMultiSelectSchema } from "./types";
 
@@ -21,6 +21,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 		onChange,
 		schema: { label: _label, options, validation, ...otherSchema },
 		value,
+		warning,
 		...otherProps
 	} = props;
 
@@ -78,18 +79,21 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.MultiSelect
-			{...otherSchema}
-			{...otherProps}
-			id={id}
-			data-testid={TestHelper.generateId(id)}
-			label={formattedLabel}
-			options={options}
-			onSelectOptions={handleChange}
-			selectedOptions={getSelectOptions()}
-			valueExtractor={(item: IMultiSelectOption) => item.value}
-			listExtractor={(item: IMultiSelectOption) => item.label}
-			errorMessage={error?.message}
-		/>
+		<>
+			<Form.MultiSelect
+				{...otherSchema}
+				{...otherProps}
+				id={id}
+				data-testid={TestHelper.generateId(id)}
+				label={formattedLabel}
+				options={options}
+				onSelectOptions={handleChange}
+				selectedOptions={getSelectOptions()}
+				valueExtractor={(item: IMultiSelectOption) => item.value}
+				listExtractor={(item: IMultiSelectOption) => item.label}
+				errorMessage={error?.message}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

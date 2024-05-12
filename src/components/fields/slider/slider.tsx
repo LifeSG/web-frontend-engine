@@ -1,12 +1,12 @@
 import { Form } from "@lifesg/react-design-system/form";
+import { InputSliderProps } from "@lifesg/react-design-system/input-slider";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { ISliderSchema } from "./types";
-import { InputSliderProps } from "@lifesg/react-design-system/input-slider";
-import { ERROR_MESSAGES } from "../../shared";
 
 export const Slider = (props: IGenericFieldProps<ISliderSchema>) => {
 	// =============================================================================
@@ -20,6 +20,7 @@ export const Slider = (props: IGenericFieldProps<ISliderSchema>) => {
 		// picking specific props to avoid passing non-standard HTML attributes props to the underlying component
 		schema: { label: _label, customOptions, validation, disabled, readOnly, className, ariaLabel },
 		value,
+		warning,
 	} = props;
 
 	const [derivedProps, setDerivedProps] = useState<Pick<InputSliderProps, "min" | "max" | "step">>();
@@ -69,19 +70,22 @@ export const Slider = (props: IGenericFieldProps<ISliderSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.Slider
-			{...customOptions}
-			{...derivedProps}
-			id={id}
-			data-testid={TestHelper.generateId(id, "slider")}
-			label={formattedLabel}
-			errorMessage={error?.message}
-			onChangeEnd={handleChangeEnd}
-			value={value}
-			disabled={disabled}
-			readOnly={readOnly}
-			className={className}
-			ariaLabel={ariaLabel}
-		/>
+		<>
+			<Form.Slider
+				{...customOptions}
+				{...derivedProps}
+				id={id}
+				data-testid={TestHelper.generateId(id, "slider")}
+				label={formattedLabel}
+				errorMessage={error?.message}
+				onChangeEnd={handleChangeEnd}
+				value={value}
+				disabled={disabled}
+				readOnly={readOnly}
+				className={className}
+				ariaLabel={ariaLabel}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

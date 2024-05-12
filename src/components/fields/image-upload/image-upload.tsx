@@ -34,6 +34,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		id,
 		isDirty,
 		value,
+		warning,
 		...otherProps
 	} = props;
 	const { images, setImages } = useContext(ImageContext);
@@ -259,7 +260,9 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				errorMessage={otherProps.error?.message}
 				validation={validation}
 				multiple={multiple}
+				warning={warning}
 			/>
+
 			{renderReviewPrompt()}
 			{renderImageReviewModal()}
 		</>

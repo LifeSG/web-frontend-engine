@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { TDateRangeFieldSchema, TDateRangeInputType } from "./types";
 
 const DEFAULT_DATE_FORMAT = "uuuu-MM-dd";
@@ -28,6 +28,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		onChange,
 		schema: { dateFormat = DEFAULT_DATE_FORMAT, label: _label, validation, variant, ...otherSchema },
 		value = { from: undefined, to: undefined },
+		warning,
 		...otherProps
 	} = props;
 	const [stateValue, setStateValue] = useState<string>(value.from || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
@@ -284,18 +285,21 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	// =============================================================================
 
 	return (
-		<Form.DateRangeInput
-			{...otherSchema}
-			{...otherProps}
-			{...derivedProps}
-			id={id}
-			data-testid={TestHelper.generateId(id, "date")}
-			label={formattedLabel}
-			errorMessage={error?.message}
-			onChange={handleChange}
-			value={stateValue}
-			valueEnd={stateValueEnd}
-			variant={variant}
-		/>
+		<>
+			<Form.DateRangeInput
+				{...otherSchema}
+				{...otherProps}
+				{...derivedProps}
+				id={id}
+				data-testid={TestHelper.generateId(id, "date")}
+				label={formattedLabel}
+				errorMessage={error?.message}
+				onChange={handleChange}
+				value={stateValue}
+				valueEnd={stateValueEnd}
+				variant={variant}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

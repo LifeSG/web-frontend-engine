@@ -27,6 +27,7 @@ interface IImageInputProps extends ISharedImageProps {
 	label: string;
 	validation: IImageUploadValidationRule[];
 	multiple?: boolean | undefined;
+	warning?: string | undefined;
 }
 
 /**
@@ -50,6 +51,7 @@ export const ImageInput = (props: IImageInputProps) => {
 		validation,
 		errorMessage,
 		multiple,
+		warning,
 	} = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
@@ -182,6 +184,14 @@ export const ImageInput = (props: IImageInputProps) => {
 		);
 	};
 
+	const renderWarning = () => {
+		if (!warning) return null;
+		return (
+			<AlertContainer type="warning" data-testid={TestHelper.generateId(id, "warning")}>
+				{warning}
+			</AlertContainer>
+		);
+	};
 	return (
 		<Wrapper
 			id={TestHelper.generateId(id)}
@@ -214,6 +224,7 @@ export const ImageInput = (props: IImageInputProps) => {
 				{renderFiles()}
 				{exceededFiles ? renderFileExceededAlert() : null}
 				{errorMessage && renderCustomError(errorMessage)}
+				{renderWarning()}
 				{renderUploader()}
 			</DragUpload>
 		</Wrapper>

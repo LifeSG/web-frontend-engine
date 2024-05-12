@@ -8,7 +8,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
-import { ERROR_MESSAGES, Sanitize } from "../../shared";
+import { ERROR_MESSAGES, Sanitize, Warning } from "../../shared";
 import {
 	CheckboxContainer,
 	Label,
@@ -30,6 +30,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 		onChange,
 		schema: { className, customOptions, disabled, label: _label, options, validation, ...otherSchema },
 		value,
+		warning,
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -175,8 +176,11 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 	};
 
 	return (
-		<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-			{customOptions?.styleType === "toggle" ? renderToggles() : renderCheckboxes()}
-		</Form.CustomField>
+		<>
+			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
+				{customOptions?.styleType === "toggle" ? renderToggles() : renderCheckboxes()}
+			</Form.CustomField>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

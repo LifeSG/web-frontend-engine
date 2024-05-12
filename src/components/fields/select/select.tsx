@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Warning } from "../../shared";
 import { ISelectOption, ISelectSchema } from "./types";
 
 export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
@@ -19,6 +20,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 		onChange,
 		schema: { label: _label, options, validation, ...otherSchema },
 		value,
+		warning,
 		...otherProps
 	} = props;
 
@@ -60,19 +62,22 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.Select
-			{...otherSchema}
-			{...otherProps}
-			id={id}
-			data-testid={TestHelper.generateId(id, "select")}
-			label={formattedLabel}
-			errorMessage={error?.message}
-			options={options}
-			onSelectOption={handleChange}
-			selectedOption={getSelectOption()}
-			displayValueExtractor={(item: ISelectOption) => item.label}
-			valueExtractor={(item: ISelectOption) => item.value}
-			listExtractor={(item: ISelectOption) => item.label}
-		/>
+		<>
+			<Form.Select
+				{...otherSchema}
+				{...otherProps}
+				id={id}
+				data-testid={TestHelper.generateId(id, "select")}
+				label={formattedLabel}
+				errorMessage={error?.message}
+				options={options}
+				onSelectOption={handleChange}
+				selectedOption={getSelectOption()}
+				displayValueExtractor={(item: ISelectOption) => item.label}
+				valueExtractor={(item: ISelectOption) => item.value}
+				listExtractor={(item: ISelectOption) => item.label}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

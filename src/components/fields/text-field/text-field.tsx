@@ -6,13 +6,14 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
+import { Warning } from "../../shared/warning";
 import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./types";
 
 export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFieldSchema | INumericFieldSchema>) => {
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
-	const { error, formattedLabel, id, onChange, value, schema, ...otherProps } = props;
+	const { error, formattedLabel, id, onChange, value, schema, warning, ...otherProps } = props;
 	const { customOptions, inputMode, label: _label, uiType, validation, ...otherSchema } = schema;
 
 	const [stateValue, setStateValue] = useState<string | number>(value || "");
@@ -157,21 +158,24 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.Input
-			{...otherSchema}
-			{...otherProps}
-			{...derivedAttributes}
-			id={id}
-			data-testid={TestHelper.generateId(id, uiType)}
-			ref={ref}
-			type={formatInputType()}
-			label={formattedLabel}
-			onPaste={(e) => (customOptions?.preventCopyAndPaste ? e.preventDefault() : null)}
-			onDrop={(e) => (customOptions?.preventDragAndDrop ? e.preventDefault() : null)}
-			inputMode={formatInputMode()}
-			onChange={handleChange}
-			value={stateValue}
-			errorMessage={error?.message}
-		/>
+		<>
+			<Form.Input
+				{...otherSchema}
+				{...otherProps}
+				{...derivedAttributes}
+				id={id}
+				data-testid={TestHelper.generateId(id, uiType)}
+				ref={ref}
+				type={formatInputType()}
+				label={formattedLabel}
+				onPaste={(e) => (customOptions?.preventCopyAndPaste ? e.preventDefault() : null)}
+				onDrop={(e) => (customOptions?.preventDragAndDrop ? e.preventDefault() : null)}
+				inputMode={formatInputMode()}
+				onChange={handleChange}
+				value={stateValue}
+				errorMessage={error?.message}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

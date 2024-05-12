@@ -7,7 +7,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
-import { Sanitize } from "../../shared";
+import { Sanitize, Warning } from "../../shared";
 import {
 	FlexImageWrapper,
 	FlexToggleWrapper,
@@ -31,6 +31,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		onChange,
 		schema: { className, customOptions, disabled, label: _label, options, validation, ...otherSchema },
 		value,
+		warning,
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -192,8 +193,11 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	};
 
 	return (
-		<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-			{renderOptions()}
-		</Form.CustomField>
+		<>
+			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
+				{renderOptions()}
+			</Form.CustomField>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };
