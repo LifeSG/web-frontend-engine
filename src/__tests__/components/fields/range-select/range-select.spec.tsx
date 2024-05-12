@@ -21,6 +21,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -410,4 +411,18 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<IRangeSelectSchema>({
+		label: "RangeSelect",
+		uiType: UI_TYPE,
+		options: {
+			from: [
+				{ label: "A", value: "Apple" },
+				{ label: "B", value: "Berry" },
+			],
+			to: [
+				{ label: "C", value: "Cherry" },
+				{ label: "D", value: "Date" },
+			],
+		},
+	});
 });

@@ -17,6 +17,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const label = "Date";
@@ -380,4 +381,5 @@ describe(uiType, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<TDateRangeFieldSchema>({ uiType, label, variant });
 });
