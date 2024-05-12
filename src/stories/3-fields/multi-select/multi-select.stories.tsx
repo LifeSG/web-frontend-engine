@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -177,6 +178,17 @@ WithValidation.args = {
 		{ value: "Cherry", label: "Cherry" },
 	],
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IMultiSelectSchema>("multi-select-with-warning").bind({});
+Warning.args = {
+	uiType: "multi-select",
+	label: "Fruits",
+	options: [
+		{ value: "Apple", label: "Apple" },
+		{ value: "Berry", label: "Berry" },
+		{ value: "Cherry", label: "Cherry" },
+	],
 };
 
 export const Reset = ResetStoryTemplate<IMultiSelectSchema>("multi-select-reset").bind({});

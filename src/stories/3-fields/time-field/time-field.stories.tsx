@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -136,6 +137,12 @@ Use24HoursFormat.args = {
 	label: "Time",
 	uiType: "time-field",
 	is24HourFormat: true,
+};
+
+export const Warning = WarningStoryTemplate<ITimeFieldSchema>("time-with-warning").bind({});
+Warning.args = {
+	label: "Time",
+	uiType: "time-field",
 };
 
 export const Reset = ResetStoryTemplate<ITimeFieldSchema>("time-reset").bind({});

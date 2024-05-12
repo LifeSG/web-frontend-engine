@@ -8,6 +8,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -227,6 +228,28 @@ WithValidation.args = {
 		to: "",
 	},
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IRangeSelectSchema>("checkbox-with-warning").bind({});
+Warning.args = {
+	uiType: "range-select",
+	label: "Fruits",
+	options: {
+		from: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+			{ label: "Dates", value: "Dates" },
+			{ label: "Orange", value: "Orange" },
+		],
+		to: [
+			{ label: "Apple", value: "Apple" },
+			{ label: "Berry", value: "Berry" },
+			{ label: "Cherry", value: "Cherry" },
+			{ label: "Dates", value: "Dates" },
+			{ label: "Orange", value: "Orange" },
+		],
+	},
 };
 
 export const Reset = ResetStoryTemplate<IRangeSelectSchema, InputRangeProp<string>>("range-select-reset").bind({});

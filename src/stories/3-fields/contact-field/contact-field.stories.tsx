@@ -8,6 +8,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -230,6 +231,12 @@ InternationalNumberValidation.args = {
 			},
 		},
 	],
+};
+
+export const Warning = WarningStoryTemplate<IContactFieldSchema>("contact-with-warning").bind({});
+Warning.args = {
+	uiType: "contact-field",
+	label: "Contact Number",
 };
 
 export const Reset = ResetStoryTemplate<IContactFieldSchema>("contact-reset").bind({});

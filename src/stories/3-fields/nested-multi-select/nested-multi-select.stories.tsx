@@ -8,6 +8,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -315,6 +316,13 @@ WithValidation.args = {
 	label: "Fruits",
 	options: options,
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-with-warning").bind({});
+Warning.args = {
+	uiType: "nested-multi-select",
+	label: "Fruits",
+	options: options,
 };
 
 export const Reset = ResetStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-reset").bind({});

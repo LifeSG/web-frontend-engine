@@ -8,6 +8,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -218,6 +219,11 @@ export const WithValidation = DefaultStoryTemplate<IMaskedFieldSchema>("masked-f
 WithValidation.args = {
 	...COMMON_STORY_ARGS,
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IMaskedFieldSchema>("masked-field-with-warning").bind({});
+Warning.args = {
+	...COMMON_STORY_ARGS,
 };
 
 export const CustomMaskIcon = DefaultStoryTemplate<IMaskedFieldSchema>("masked-field-custom-icon").bind({});

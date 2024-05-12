@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 import { jpgDataURL } from "../image-upload/image-data-url";
 
@@ -208,6 +209,11 @@ WithValidation.args = {
 	...COMMON_STORY_ARGS,
 	description: "Required field",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IFileUploadSchema>("upload-with-warning").bind({});
+Warning.args = {
+	...COMMON_STORY_ARGS,
 };
 
 export const AcceptedFileTypes = DefaultStoryTemplate<IFileUploadSchema>("upload-file-type").bind({});

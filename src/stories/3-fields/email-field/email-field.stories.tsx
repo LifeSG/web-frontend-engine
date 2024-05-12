@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -133,6 +134,12 @@ WithValidation.args = {
 	label: "Email",
 	uiType: "email-field",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IEmailFieldSchema>("email-with-warning").bind({});
+Warning.args = {
+	label: "Email",
+	uiType: "email-field",
 };
 
 export const PreventCopyAndPaste = DefaultStoryTemplate<IEmailFieldSchema>("prevent-copy-and-paste").bind({});

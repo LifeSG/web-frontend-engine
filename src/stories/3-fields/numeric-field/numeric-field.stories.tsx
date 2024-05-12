@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -126,6 +127,12 @@ WithValidation.args = {
 	label: "Number",
 	uiType: "numeric-field",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<INumericFieldSchema>("numeric-with-warning").bind({});
+Warning.args = {
+	label: "Number",
+	uiType: "numeric-field",
 };
 
 export const PreventCopyAndPaste = DefaultStoryTemplate<INumericFieldSchema>("prevent-copy-and-paste").bind({});

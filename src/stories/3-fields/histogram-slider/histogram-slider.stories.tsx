@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -145,6 +146,19 @@ WithValidation.args = {
 	],
 	interval: 10,
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IHistogramSliderSchema>("histogram-slider-with-warning").bind({});
+Warning.args = {
+	uiType: "histogram-slider",
+	label: "Price of fruits",
+	bins: [
+		{ minValue: 0, count: 0 },
+		{ minValue: 10, count: 2 },
+		{ minValue: 20, count: 3 },
+		{ minValue: 90, count: 8 },
+	],
+	interval: 10,
 };
 
 export const Reset = ResetStoryTemplate<IHistogramSliderSchema>("histogram-slider-reset").bind({});

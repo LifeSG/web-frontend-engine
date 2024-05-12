@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -150,6 +151,12 @@ WithValidation.args = {
 	uiType: "textarea",
 	label: "Textarea with validation",
 	validation: [{ required: true }, { min: 3, errorMessage: "Min. 3 characters" }],
+};
+
+export const Warning = WarningStoryTemplate<ITextareaSchema>("textarea-with-warning").bind({});
+Warning.args = {
+	uiType: "textarea",
+	label: "Textarea with validation",
 };
 
 export const WithPlaceholder = DefaultStoryTemplate<ITextareaSchema>("textarea-with-placeholder").bind({});
