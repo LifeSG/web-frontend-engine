@@ -150,6 +150,9 @@ export const ImageManager = (props: IProps) => {
 					case EImageStatus.TO_DELETE:
 						setImages((prev) => prev.filter(({ status }) => status !== EImageStatus.TO_DELETE));
 						break;
+					case EImageStatus.UPLOADED:
+						dispatchFieldEvent("uploaded", id, { imageDate: image });
+						break;
 				}
 			}
 		});
