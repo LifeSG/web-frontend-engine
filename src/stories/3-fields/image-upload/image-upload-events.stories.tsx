@@ -91,6 +91,14 @@ FileDialog.args = {
 	editImage: true,
 };
 
+export const Uploaded = Template("uploaded").bind({});
+Uploaded.args = {
+	label: "Provide images",
+	description: "Listen for `uploaded` event",
+	uiType: "image-upload",
+	editImage: true,
+};
+
 /* eslint-disable react-hooks/rules-of-hooks */
 const SaveReviewImagesTemplate = (eventName: string) =>
 	((args) => {
@@ -148,7 +156,7 @@ SaveReviewImages.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const ImageUploadReadyTemplate = (eventName: string) =>
+const ImageUploadReadyTemplate = (eventName: string, customMuted: boolean) =>
 	((args) => {
 		const id = `image-upload-${eventName}`;
 		const formRef = useRef<IFrontendEngineRef>();
@@ -161,8 +169,8 @@ const ImageUploadReadyTemplate = (eventName: string) =>
 				setTimeout(() => {
 					currentFormRef.dispatchFieldEvent("update-image-status", id, {
 						id: e.detail.imageData.id,
-						updatedStatus: EImageStatus.ERROR_CUSTOM,
-						errorMessage: "custom error message",
+						updatedStatus: customMuted ? EImageStatus.ERROR_CUSTOM_MUTED : EImageStatus.ERROR_CUSTOM,
+						errorMessage: customMuted ? "custom error muted message" : "custom error message",
 					} as IUpdateImageStatus);
 				}, 3000);
 			};
@@ -192,58 +200,14 @@ const ImageUploadReadyTemplate = (eventName: string) =>
 	}) as StoryFn<IImageUploadSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const ImageUploadReady = ImageUploadReadyTemplate("upload-ready").bind({});
+export const ImageUploadReady = ImageUploadReadyTemplate("upload-ready", false).bind({});
 ImageUploadReady.args = {
 	label: "Provide images",
 	description: "Listen for `upload-ready` event",
 	uiType: "image-upload",
 };
 
-/* eslint-disable react-hooks/rules-of-hooks */
-const ImageUploadReadyTemplateWithMuted = (eventName: string) =>
-	((args) => {
-		const id = `image-upload-${eventName}`;
-		const formRef = useRef<IFrontendEngineRef>();
-
-		useEffect(() => {
-			const handleUploadReady = async (e: CustomEvent<{ imageData: IImage }>) => {
-				action(eventName)(e);
-				e.preventDefault();
-
-				setTimeout(() => {
-					currentFormRef.dispatchFieldEvent("update-image-status", id, {
-						id: e.detail.imageData.id,
-						updatedStatus: EImageStatus.ERROR_CUSTOM_MUTED,
-						errorMessage: "custom error muted message",
-					} as IUpdateImageStatus);
-				}, 3000);
-			};
-
-			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventName, id, handleUploadReady);
-			return () => currentFormRef.removeFieldEventListener(eventName, id, handleUploadReady);
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, []);
-
-		return (
-			<FrontendEngine
-				ref={formRef}
-				data={{
-					sections: {
-						section: {
-							uiType: "section",
-							children: {
-								[id]: args,
-								...SUBMIT_BUTTON_SCHEMA,
-							},
-						},
-					},
-				}}
-			/>
-		);
-	}) as StoryFn<IImageUploadSchema>;
-/* eslint-enable react-hooks/rules-of-hooks */
-export const ImageUploadReadyWithMutedError = ImageUploadReadyTemplateWithMuted("upload-ready").bind({});
+export const ImageUploadReadyWithMutedError = ImageUploadReadyTemplate("upload-ready", true).bind({});
 ImageUploadReadyWithMutedError.args = {
 	label: "Provide images",
 	description: "Listen for `upload-ready` event",
