@@ -1,6 +1,6 @@
 import { Modal } from "@lifesg/react-design-system/modal";
 import { CrossIcon } from "@lifesg/react-icons/cross";
-import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
