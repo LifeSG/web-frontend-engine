@@ -90,3 +90,6 @@ export interface IUpdateImageStatus {
 	errorMessage?: string | undefined;
 }
 
+export interface IDismissReviewModalEvent {
+	removePendingImages: boolean;
+}

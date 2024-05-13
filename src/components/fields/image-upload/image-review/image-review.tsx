@@ -1,6 +1,6 @@
 import { Modal } from "@lifesg/react-design-system/modal";
 import { CrossIcon } from "@lifesg/react-icons/cross";
-import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
@@ -85,7 +85,7 @@ export const ImageReview = (props: IProps) => {
 		maxFilesErrorMessage,
 	} = props;
 	const { images, setImages } = useContext(ImageContext);
-	const { dispatchFieldEvent } = useFieldEvent();
+	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	const previousShow = usePrevious(show);
 
 	// review image
@@ -106,6 +106,23 @@ export const ImageReview = (props: IProps) => {
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		const eventsData = {
+			["trigger-save-review-image"]: handleSetImageStatus,
+			["remove-pending-images"]: handleRemovePendimgImage,
+		};
+
+		Object.entries(eventsData).forEach(([event, callback]) => {
+			addFieldEventListener(event, id, callback);
+		});
+
+		return () => {
+			Object.entries(eventsData).forEach(([event, callback]) => {
+				removeFieldEventListener(event, id, callback);
+			});
+		};
+	}, []);
+
 	useEffect(() => {
 		setActiveFileIndex(images.length - 1);
 	}, [images.length]);
@@ -199,24 +216,37 @@ export const ImageReview = (props: IProps) => {
 		setActivePrompt(null);
 	};
 
+	const handleRemovePendimgImage = () => {
+		//remove others but keep the uploaded
+		setImages((prev) => {
+			return prev.filter(({ status }) => status === EImageStatus.UPLOADED);
+		});
+	};
+
+	const handleSetImageStatus = () => {
+		setImages((prev) =>
+			prev
+				.filter(({ status }) => status >= EImageStatus.NONE)
+				.map((file) => {
+					const editedFile: IImage = { ...file };
+					if (file.drawingDataURL) {
+						editedFile.dataURL = file.drawingDataURL;
+					}
+					if (file.status < EImageStatus.UPLOAD_READY && file.status > EImageStatus.NONE) {
+						editedFile.status = EImageStatus.UPLOAD_READY;
+					}
+					editedFile.drawingDataURL = undefined;
+					editedFile.drawing = undefined;
+					return editedFile;
+				})
+		);
+	};
+
 	const handleSave = () => {
-		if (dispatchFieldEvent("save-review-images", id, { images, retry: handleSave })) {
-			setImages(
-				images
-					.filter(({ status }) => status >= EImageStatus.NONE)
-					.map((file) => {
-						const editedFile: IImage = { ...file };
-						if (file.drawingDataURL) {
-							editedFile.dataURL = file.drawingDataURL;
-						}
-						if (file.status < EImageStatus.UPLOAD_READY && file.status > EImageStatus.NONE) {
-							editedFile.status = EImageStatus.UPLOAD_READY;
-						}
-						editedFile.drawingDataURL = undefined;
-						editedFile.drawing = undefined;
-						return editedFile;
-					})
-			);
+		const shouldPreventDefault = !dispatchFieldEvent("save-review-images", id, { images, retry: handleSave });
+
+		if (!shouldPreventDefault) {
+			handleSetImageStatus();
 			onExit();
 		}
 	};
