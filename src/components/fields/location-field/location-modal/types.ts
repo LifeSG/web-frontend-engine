@@ -11,6 +11,7 @@ export interface ILocationModalProps
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
 			| "disableSearch"
+			| "addressFieldPlaceholder"
 		> {
 	id: string;
 	className: string;

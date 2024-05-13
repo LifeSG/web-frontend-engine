@@ -40,6 +40,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			hasExplicitEdit,
 			locationSelectionMode = "default",
 			disableSearch,
+			addressFieldPlaceholder,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -181,6 +182,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						mapBannerText={mapBannerText}
 						locationSelectionMode={locationSelectionMode}
 						disableSearch={disableSearch}
+						addressFieldPlaceholder={addressFieldPlaceholder}
 					/>
 				)}
 			</Suspense>
