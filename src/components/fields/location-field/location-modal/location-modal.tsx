@@ -47,6 +47,7 @@ const LocationModal = ({
 	locationListTitle,
 	locationSelectionMode,
 	disableSearch,
+	addressFieldPlaceholder,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -450,6 +451,7 @@ const LocationModal = ({
 								restrictLocationSelection={locationSelectionMode === "pins-only"}
 								selectablePins={selectablePins}
 								disableSearch={disableSearch}
+								addressFieldPlaceholder={addressFieldPlaceholder}
 							/>
 							<StyledLocationPicker
 								id={id}
