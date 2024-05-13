@@ -7,7 +7,7 @@ import {
 	EImageStatus,
 	IImage,
 	ISharedImageProps,
-	IUpdateImageValidation,
+	IUpdateImageStatus,
 	TImageUploadOutputFileType,
 	TUploadMethod,
 } from "../types";
@@ -46,7 +46,7 @@ export const ImageManager = (props: IProps) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const handleUpdateValidation = (e: CustomEvent<IUpdateImageValidation>) => {
+		const handleUpdateImageStatus = (e: CustomEvent<IUpdateImageStatus>) => {
 			setImages((prev) => {
 				const imageIndex = prev.findIndex((image) => image.id === e.detail.id);
 				const updatedImage = { ...prev[imageIndex] };
@@ -58,8 +58,9 @@ export const ImageManager = (props: IProps) => {
 				return newImages;
 			});
 		};
-		addFieldEventListener("update-file-validation", id, handleUpdateValidation);
-		return () => removeFieldEventListener("update-file-validation", id, handleUpdateValidation);
+
+		addFieldEventListener("update-image-status", id, handleUpdateImageStatus);
+		return () => removeFieldEventListener("update-image-status", id, handleUpdateImageStatus);
 	}, []);
 
 	// generate pseudo-random session id

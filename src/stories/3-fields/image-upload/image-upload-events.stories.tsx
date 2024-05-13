@@ -2,7 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { EImageStatus, IImage, IImageUploadSchema, IUpdateImageValidation } from "../../../components/fields";
+import { EImageStatus, IImage, IImageUploadSchema, IUpdateImageStatus } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import DefaultImageUploadConfig from "./image-upload.stories";
@@ -159,11 +159,11 @@ const ImageUploadReadyTemplate = (eventName: string) =>
 				e.preventDefault();
 
 				setTimeout(() => {
-					currentFormRef.dispatchFieldEvent("update-file-validation", id, {
+					currentFormRef.dispatchFieldEvent("update-image-status", id, {
 						id: e.detail.imageData.id,
 						updatedStatus: EImageStatus.ERROR_CUSTOM,
 						errorMessage: "custom error message",
-					} as IUpdateImageValidation);
+					} as IUpdateImageStatus);
 				}, 3000);
 			};
 
@@ -194,6 +194,57 @@ const ImageUploadReadyTemplate = (eventName: string) =>
 
 export const ImageUploadReady = ImageUploadReadyTemplate("upload-ready").bind({});
 ImageUploadReady.args = {
+	label: "Provide images",
+	description: "Listen for `upload-ready` event",
+	uiType: "image-upload",
+};
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const ImageUploadReadyTemplateWithMuted = (eventName: string) =>
+	((args) => {
+		const id = `image-upload-${eventName}`;
+		const formRef = useRef<IFrontendEngineRef>();
+
+		useEffect(() => {
+			const handleUploadReady = async (e: CustomEvent<{ imageData: IImage }>) => {
+				action(eventName)(e);
+				e.preventDefault();
+
+				setTimeout(() => {
+					currentFormRef.dispatchFieldEvent("update-image-status", id, {
+						id: e.detail.imageData.id,
+						updatedStatus: EImageStatus.ERROR_CUSTOM_MUTED,
+						errorMessage: "custom error muted message",
+					} as IUpdateImageStatus);
+				}, 3000);
+			};
+
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(eventName, id, handleUploadReady);
+			return () => currentFormRef.removeFieldEventListener(eventName, id, handleUploadReady);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				}}
+			/>
+		);
+	}) as StoryFn<IImageUploadSchema>;
+/* eslint-enable react-hooks/rules-of-hooks */
+export const ImageUploadReadyWithMutedError = ImageUploadReadyTemplateWithMuted("upload-ready").bind({});
+ImageUploadReadyWithMutedError.args = {
 	label: "Provide images",
 	description: "Listen for `upload-ready` event",
 	uiType: "image-upload",

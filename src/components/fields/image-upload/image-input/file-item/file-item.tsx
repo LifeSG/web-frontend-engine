@@ -32,6 +32,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	// =============================================================================
 	const { dataURL, file, name: fileName, status, uploadProgress } = fileItem;
 	const [isError, setError] = useState<boolean>(false);
+	const [isCustomMuted, setCustomMuted] = useState<boolean>(false);
 	const [errorMessage, setErrorMessage] = useState<string>();
 	const fileNameWrapperRef = useRef<HTMLDivElement>(null);
 	const [transformedFileName, setTransformedFileName] = useState<string>();
@@ -61,11 +62,13 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				const fileTypeRule = validation?.find((rule) => "fileType" in rule);
 				const _errorMessage = fileTypeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").FILE_TYPE(accepts);
 				setError(true);
+				setCustomMuted(false);
 				setErrorMessage(_errorMessage);
 				break;
 			}
 			case EImageStatus.ERROR_GENERIC:
 				setError(true);
+				setCustomMuted(false);
 				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").GENERIC);
 				break;
 			case EImageStatus.ERROR_SIZE: {
@@ -73,12 +76,21 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				const _errorMessage =
 					fileSizeRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MAX_FILE_SIZE(maxSizeInKb);
 				setError(true);
+				setCustomMuted(false);
 				setErrorMessage(_errorMessage);
 				break;
 			}
 			case EImageStatus.ERROR_CUSTOM: {
 				const _errorMessage = fileItem.customErrorMessage;
 				setError(true);
+				setCustomMuted(false);
+				setErrorMessage(_errorMessage);
+				break;
+			}
+			case EImageStatus.ERROR_CUSTOM_MUTED: {
+				const _errorMessage = fileItem.customErrorMessage;
+				setError(false);
+				setCustomMuted(true);
 				setErrorMessage(_errorMessage);
 				break;
 			}
@@ -98,7 +110,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	)} KB`;
 
 	const renderError = () =>
-		isError && (
+		(isError || isCustomMuted) && (
 			<ErrorText
 				weight={"semibold"}
 				id={TestHelper.generateId(`${id}-${index + 1}`, "error-text")}
@@ -143,7 +155,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 		>
 			<>
 				<CellInfo>
-					{status === EImageStatus.UPLOADED && !isError && (
+					{((status === EImageStatus.UPLOADED && !isError) || isCustomMuted) && (
 						<Thumbnail
 							src={fileItem.dataURL ?? ""}
 							id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
