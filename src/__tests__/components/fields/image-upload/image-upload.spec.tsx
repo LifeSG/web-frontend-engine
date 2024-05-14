@@ -1,3 +1,4 @@
+import { Button } from "@lifesg/react-design-system/button";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { useEffect, useRef } from "react";
@@ -52,7 +53,22 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 		}
 	}, [eventListener, eventType]);
 
-	return <FrontendEngine {...otherProps} ref={formRef} />;
+	const dispatchDismissReviewModal = () => {
+		formRef.current?.dispatchFieldEvent("dismiss-review-modal", COMPONENT_ID, {
+			removePendingImages: false,
+		});
+	};
+	const dispatchTriggerReviewModal = () => {
+		formRef.current?.dispatchFieldEvent("trigger-save-review-images", COMPONENT_ID);
+	};
+
+	return (
+		<>
+			<FrontendEngine {...otherProps} ref={formRef} />
+			<Button.Default onClick={dispatchDismissReviewModal}>Dispatch dismiss-review-modal</Button.Default>
+			<Button.Default onClick={dispatchTriggerReviewModal}>Dispatch trigger-save-review-modal</Button.Default>
+		</>
+	);
 };
 
 interface IRenderAndPerformActionsOptions {
@@ -105,13 +121,16 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		},
 		...overrideSchema,
 	};
+
 	render(
-		<FrontendEngineWithEventListener
-			data={json}
-			onSubmit={SUBMIT_FN}
-			eventType={eventType}
-			eventListener={eventListener}
-		/>
+		<>
+			<FrontendEngineWithEventListener
+				data={json}
+				onSubmit={SUBMIT_FN}
+				eventType={eventType}
+				eventListener={eventListener}
+			/>
+		</>
 	);
 
 	const uploadField = await waitFor(() =>
@@ -828,6 +847,50 @@ describe("image-upload", () => {
 			expect(mockCounter.value).toBeCalledTimes(2);
 			expect(getSaveButton(true)).not.toBeInTheDocument();
 			expect(uploadSpy).toBeCalled();
+		});
+
+		it("should fire hide-review-modal event on hiding review modal", async () => {
+			const handleHideReviewModal = jest.fn();
+			await renderComponent({
+				eventType: "hide-review-modal",
+				eventListener: handleHideReviewModal,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+			await waitFor(() => fireEvent.click(getSaveButton()));
+
+			expect(handleHideReviewModal).toBeCalled();
+		});
+
+		it("listen to dismiss-review-modal and execute the dismiss fn", async () => {
+			const handleDismissReviewModal = jest.fn();
+			await renderComponent({
+				eventType: "dismiss-review-modal",
+				eventListener: handleDismissReviewModal,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+
+			fireEvent.click(screen.getByRole("button", { name: "Dispatch trigger-save-review-images" }));
+
+			expect(handleDismissReviewModal).toBeCalled();
+		});
+
+		it("listen to trigger-review-save-image and execute the save fn", async () => {
+			const saveReviewImageFn = jest.fn();
+			await renderComponent({
+				eventType: "dismiss-review-modal",
+				eventListener: saveReviewImageFn,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+
+			fireEvent.click(screen.getByRole("button", { name: "Dispatch dismiss-review-modal" }));
+
+			expect(saveReviewImageFn).toBeCalled();
 		});
 	});
 
