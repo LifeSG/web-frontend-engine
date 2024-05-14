@@ -66,7 +66,7 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 		<>
 			<FrontendEngine {...otherProps} ref={formRef} />
 			<Button.Default onClick={dispatchDismissReviewModal}>Dispatch dismiss-review-modal</Button.Default>
-			<Button.Default onClick={dispatchTriggerReviewModal}>Dispatch trigger-save-review-modal</Button.Default>
+			<Button.Default onClick={dispatchTriggerReviewModal}>Dispatch trigger-save-review-images</Button.Default>
 		</>
 	);
 };
