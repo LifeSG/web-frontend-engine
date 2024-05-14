@@ -1,7 +1,7 @@
 import { Text } from "@lifesg/react-design-system/text";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FileHelper, TestHelper } from "../../../../../utils";
+import { FileHelper, TestHelper, WindowHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
 import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps } from "../../types";
 import {
@@ -104,7 +104,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	)} KB`;
 
 	const renderError = () =>
-		(isError || status === EImageStatus.ERROR_CUSTOM_MUTED) && (
+		(isError || (status === EImageStatus.ERROR_CUSTOM_MUTED && WindowHelper.isMobileView())) && (
 			<ErrorText
 				weight={"semibold"}
 				id={TestHelper.generateId(`${id}-${index + 1}`, "error-text")}
@@ -149,7 +149,8 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 		>
 			<>
 				<CellInfo>
-					{((status === EImageStatus.UPLOADED && !isError) || status === EImageStatus.ERROR_CUSTOM_MUTED) && (
+					{((status === EImageStatus.UPLOADED && !isError) ||
+						(status === EImageStatus.ERROR_CUSTOM_MUTED && WindowHelper.isMobileView())) && (
 						<Thumbnail
 							src={fileItem.dataURL ?? ""}
 							id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
