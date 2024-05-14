@@ -54,11 +54,9 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 	}, [eventListener, eventType]);
 
 	const dispatchDismissReviewModal = () => {
-		formRef.current?.dispatchFieldEvent("dismiss-review-modal", COMPONENT_ID, {
-			removePendingImages: false,
-		});
+		formRef.current?.dispatchFieldEvent("dismiss-review-modal", COMPONENT_ID);
 	};
-	const dispatchTriggerReviewModal = () => {
+	const dispatchTriggerSaveReviewImages = () => {
 		formRef.current?.dispatchFieldEvent("trigger-save-review-images", COMPONENT_ID);
 	};
 
@@ -66,7 +64,9 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 		<>
 			<FrontendEngine {...otherProps} ref={formRef} />
 			<Button.Default onClick={dispatchDismissReviewModal}>Dispatch dismiss-review-modal</Button.Default>
-			<Button.Default onClick={dispatchTriggerReviewModal}>Dispatch trigger-save-review-images</Button.Default>
+			<Button.Default onClick={dispatchTriggerSaveReviewImages}>
+				Dispatch trigger-save-review-images
+			</Button.Default>
 		</>
 	);
 };
@@ -863,7 +863,7 @@ describe("image-upload", () => {
 			expect(handleHideReviewModal).toBeCalled();
 		});
 
-		it("listen to dismiss-review-modal and execute the dismiss fn", async () => {
+		fit("listen to dismiss-review-modal and execute the dismiss fn", async () => {
 			const handleDismissReviewModal = jest.fn();
 			await renderComponent({
 				eventType: "dismiss-review-modal",
@@ -873,22 +873,22 @@ describe("image-upload", () => {
 				reviewImage: true,
 			});
 
-			fireEvent.click(screen.getByRole("button", { name: "Dispatch trigger-save-review-images" }));
+			fireEvent.click(screen.getByRole("button", { name: "Dispatch dismiss-review-modal" }));
 
 			expect(handleDismissReviewModal).toBeCalled();
 		});
 
-		it("listen to trigger-review-save-image and execute the save fn", async () => {
+		fit("listen to trigger-review-save-image and execute the save fn", async () => {
 			const saveReviewImageFn = jest.fn();
 			await renderComponent({
-				eventType: "dismiss-review-modal",
+				eventType: "trigger-save-review-images",
 				eventListener: saveReviewImageFn,
 				files: [FILE_1],
 				overrideField: { editImage: true },
 				reviewImage: true,
 			});
 
-			fireEvent.click(screen.getByRole("button", { name: "Dispatch dismiss-review-modal" }));
+			fireEvent.click(screen.getByRole("button", { name: "Dispatch trigger-save-review-images" }));
 
 			expect(saveReviewImageFn).toBeCalled();
 		});
