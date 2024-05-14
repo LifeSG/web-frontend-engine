@@ -63,13 +63,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	}, []);
 
 	useEffect(() => {
-		addFieldEventListener("dismiss-review-modal", id, handleDismissReviewModal);
-		return () => {
-			removeFieldEventListener("dismiss-review-modal", id, handleDismissReviewModal);
-		};
-	}, []);
-
-	useEffect(() => {
 		// for `defaultValue`
 		if (!isDirty && Array.isArray(value)) {
 			const newImages: IImage[] = [];
@@ -197,13 +190,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			);
 		}
 		setShowReviewPrompt(false);
-	};
-
-	const handleDismissReviewModal = (e: CustomEvent<IDismissReviewModalEvent>) => {
-		if (e.detail.removePendingImages) {
-			dispatchFieldEvent("remove-pending-images", id);
-		}
-		setShowReviewModal(false);
 	};
 
 	// =============================================================================

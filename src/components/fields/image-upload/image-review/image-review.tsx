@@ -5,7 +5,7 @@ import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../types";
+import { EImageStatus, IDismissReviewModalEvent, IImage, ISharedImageProps, TFileCapture } from "../types";
 import { IImageEditorRef } from "./image-editor";
 import { ImageError } from "./image-error";
 import { ImagePrompts } from "./image-prompts";
@@ -108,8 +108,8 @@ export const ImageReview = (props: IProps) => {
 	// =============================================================================
 	useEffect(() => {
 		const eventsData = {
-			["trigger-save-review-image"]: handleSetImageStatus,
-			["remove-pending-images"]: handleRemovePendimgImage,
+			["trigger-save-review-images"]: handleSetImagesStatus,
+			["dismiss-review-modal"]: handleDismissReviewModal,
 		};
 
 		Object.entries(eventsData).forEach(([event, callback]) => {
@@ -138,6 +138,19 @@ export const ImageReview = (props: IProps) => {
 	// =============================================================================
 	// - REVIEW MODAL
 	// =============================================================================
+
+	const handleDismissReviewModal = (e: CustomEvent<IDismissReviewModalEvent>) => {
+		if (e.detail.removePendingImages) {
+			//remove others but keep the uploaded
+			setImages((prev) => {
+				return prev.filter(
+					({ status, addedFrom }) => status === EImageStatus.UPLOADED && addedFrom === "reviewModal"
+				);
+			});
+		}
+		onExit();
+	};
+
 	const handleSelectFile = (selectedFiles: File[]) => {
 		if (
 			!maxFiles ||
@@ -216,14 +229,7 @@ export const ImageReview = (props: IProps) => {
 		setActivePrompt(null);
 	};
 
-	const handleRemovePendimgImage = () => {
-		//remove others but keep the uploaded
-		setImages((prev) => {
-			return prev.filter(({ status }) => status === EImageStatus.UPLOADED);
-		});
-	};
-
-	const handleSetImageStatus = () => {
+	const handleSetImagesStatus = () => {
 		setImages((prev) =>
 			prev
 				.filter(({ status }) => status >= EImageStatus.NONE)
@@ -246,7 +252,7 @@ export const ImageReview = (props: IProps) => {
 		const shouldPreventDefault = !dispatchFieldEvent("save-review-images", id, { images, retry: handleSave });
 
 		if (!shouldPreventDefault) {
-			handleSetImageStatus();
+			handleSetImagesStatus();
 			onExit();
 		}
 	};
