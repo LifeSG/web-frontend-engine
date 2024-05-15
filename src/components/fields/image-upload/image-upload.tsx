@@ -7,14 +7,7 @@ import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";
 import { ImageReview } from "./image-review";
-import {
-	ACCEPTED_FILE_TYPES,
-	EImageStatus,
-	IDismissReviewModalEvent,
-	IImage,
-	IImageUploadSchema,
-	TImageUploadAcceptedFileType,
-} from "./types";
+import { ACCEPTED_FILE_TYPES, EImageStatus, IImage, IImageUploadSchema, TImageUploadAcceptedFileType } from "./types";
 
 // lazy load to fix next.js SSR errors
 const ImageManager = lazy(() => import("./image-manager"));
@@ -53,7 +46,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [showReviewPrompt, setShowReviewPrompt] = useState(false);
 	const [showReviewModal, setShowReviewModal] = useState(false);
 	const { setFieldValidationConfig } = useValidationConfig();
-	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
+	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =============================================================================
 	// EFFECTS
