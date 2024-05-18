@@ -22,8 +22,8 @@ const ALERT_TOP = "test top alert";
 const ALERT_BOTTOM = "test bottom alert";
 
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
-	eventType?: string;
-	eventListener?: (this: Element, ev: Event) => any;
+	eventType?: string | undefined;
+	eventListener?: ((this: Element, ev: Event) => any) | undefined;
 }
 
 const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
@@ -33,8 +33,9 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 	useEffect(() => {
 		if (eventType && eventListener) {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventType, COMPONENT_ID, eventListener);
-			return () => currentFormRef.removeFieldEventListener(eventType, COMPONENT_ID, eventListener);
+			currentFormRef.addFieldEventListener(REFERENCE_KEY, eventType as any, COMPONENT_ID, eventListener);
+			return () =>
+				currentFormRef.removeFieldEventListener(REFERENCE_KEY, eventType as any, COMPONENT_ID, eventListener);
 		}
 	}, [eventListener, eventType]);
 
@@ -42,9 +43,9 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 };
 
 interface IRenderAndPerformActionsOptions {
-	overrideField?: Partial<TReviewSchema>;
-	eventType?: string;
-	eventListener?: (this: Element, ev: Event) => any;
+	overrideField?: Partial<TReviewSchema> | undefined;
+	eventType?: string | undefined;
+	eventListener?: ((this: Element, ev: Event) => any) | undefined;
 }
 
 const renderComponent = (options: IRenderAndPerformActionsOptions) => {

@@ -49,8 +49,8 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 	useEffect(() => {
 		if (eventType && eventListener) {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventType, "field", eventListener);
-			return () => currentFormRef.removeFieldEventListener(eventType, "field", eventListener);
+			currentFormRef.addFieldEventListener(UI_TYPE, eventType as any, "field", eventListener);
+			return () => currentFormRef.removeFieldEventListener(UI_TYPE, eventType as any, "field", eventListener);
 		}
 	}, [eventListener, eventType]);
 
@@ -864,7 +864,7 @@ describe("image-upload", () => {
 		it("should allow dismissing of the review modal via dismiss-review-modal event", async () => {
 			const handleDismissReviewModal = jest.fn();
 			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current?.dispatchFieldEvent("dismiss-review-modal", COMPONENT_ID, {
+				ref.current?.dispatchFieldEvent(UI_TYPE, "dismiss-review-modal", COMPONENT_ID, {
 					removePendingImages: false,
 				});
 			};
@@ -885,9 +885,7 @@ describe("image-upload", () => {
 		it("should be able to save review images via trigger-save-review-images event", async () => {
 			const saveReviewImageFn = jest.fn();
 			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current?.dispatchFieldEvent("trigger-save-review-images", COMPONENT_ID, {
-					removePendingImages: false,
-				});
+				ref.current?.dispatchFieldEvent(UI_TYPE, "trigger-save-review-images", COMPONENT_ID);
 			};
 			await renderComponent({
 				eventType: "trigger-save-review-images",
@@ -907,7 +905,7 @@ describe("image-upload", () => {
 			const mockID = "mock-random-id";
 			jest.spyOn(IdHelper, "generateRandomId").mockReturnValue(mockID);
 			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current?.dispatchFieldEvent("update-image-status", COMPONENT_ID, {
+				ref.current?.dispatchFieldEvent(UI_TYPE, "update-image-status", COMPONENT_ID, {
 					id: mockID,
 					updatedStatus: EImageStatus.ERROR_CUSTOM_MUTED,
 					errorMessage: ERROR_MESSAGE,
