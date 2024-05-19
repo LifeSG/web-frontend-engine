@@ -81,11 +81,11 @@ export const FieldWrapper = ({ Field, id, schema }: IProps) => {
 		const label: string | IComplexLabel = schema["label"];
 		if (typeof label === "string") {
 			return {
-				children: <Sanitize>{label}</Sanitize>,
+				children: <Sanitize inline>{label}</Sanitize>,
 			};
 		} else if (!!label && typeof label === "object" && label.mainLabel) {
 			return {
-				children: <Sanitize>{label.mainLabel}</Sanitize>,
+				children: <Sanitize inline>{label.mainLabel}</Sanitize>,
 				subtitle: <StyledSublabel className="sub-label">{label.subLabel}</StyledSublabel>,
 				// acccept tooltip type when it's ready
 				addon: label.hint?.content

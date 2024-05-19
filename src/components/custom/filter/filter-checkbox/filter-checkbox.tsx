@@ -60,7 +60,11 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 			expanded={expandedState}
 			onExpandChange={setExpandedState}
 			onSelect={handleChange}
-			labelExtractor={(item) => <Sanitize sanitizeOptions={{ allowedAttributes: false }}>{item.label}</Sanitize>}
+			labelExtractor={(item) => (
+				<Sanitize inline sanitizeOptions={{ allowedAttributes: false }}>
+					{item.label}
+				</Sanitize>
+			)}
 		></Filter.Checkbox>
 	);
 };
