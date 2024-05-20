@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
+import { AxiosApiClient, FileHelper, ImageHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import {
@@ -65,10 +65,7 @@ export const ImageManager = (props: IProps) => {
 
 	// generate pseudo-random session id
 	useEffect(() => {
-		sessionId.current = Array(5)
-			.fill(0)
-			.map(() => Math.random().toString(36).slice(2))
-			.join("");
+		sessionId.current = generateRandomId();
 	}, []);
 
 	useEffect(() => {
