@@ -117,15 +117,13 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 	};
 
 	render(
-		<>
-			<FrontendEngineWithEventListener
-				data={json}
-				onSubmit={SUBMIT_FN}
-				eventType={eventType}
-				eventListener={eventListener}
-				onClick={onClick}
-			/>
-		</>
+		<FrontendEngineWithEventListener
+			data={json}
+			onSubmit={SUBMIT_FN}
+			eventType={eventType}
+			eventListener={eventListener}
+			onClick={onClick}
+		/>
 	);
 
 	const uploadField = await waitFor(() =>
