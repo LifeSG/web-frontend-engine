@@ -4,9 +4,9 @@ import { MediaQuery } from "@lifesg/react-design-system/media";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 
-export const Wrapper = styled.div<{ isError?: boolean }>`
+export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: ${(props) => (props.isCustomMuted ? "nowrap" : "wrap")};
 	align-items: center;
 	gap: 0.5rem;
 	border: ${(props) =>
@@ -69,10 +69,17 @@ export const TextBody = styled(Text.Body)`
 	flex: 1;
 `;
 
-export const MobileFileSize = styled.div`
+export const MobileTextBodyDetail = styled.div`
 	display: none;
 	${MediaQuery.MaxWidth.tablet} {
 		display: block;
+	}
+`;
+
+export const DesktopTextBodyDetail = styled.div`
+	display: block;
+	${MediaQuery.MaxWidth.tablet} {
+		display: none;
 	}
 `;
 
@@ -121,4 +128,8 @@ export const DeleteButton = styled(IconButton)`
 		height: 1.875rem;
 		width: 1.875rem;
 	}
+`;
+
+export const ErrorCustomMutedThumbnailContainer = styled.div`
+	display: flex;
 `;
