@@ -921,8 +921,9 @@ describe("image-upload", () => {
 			});
 
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+			const errMsg = screen.getAllByTestId("field-file-item-1__error-text")[0].innerHTML;
+			expect(errMsg).toBe(ERROR_MESSAGE);
+			expect(screen.getAllByTestId("field-file-item-1__error-text")[0]).toBeInTheDocument();
 		});
 	});
 
