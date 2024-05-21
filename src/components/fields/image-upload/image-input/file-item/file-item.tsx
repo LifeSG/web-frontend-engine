@@ -144,21 +144,18 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	};
 
 	const renderCellInfoDetails = () => {
-		// Helper function to generate IDs and testIDs
-		const generateTestIdAndId = (prefix, suffix) => TestHelper.generateId(`${prefix}-${suffix}`, "image");
-
 		return status === EImageStatus.ERROR_CUSTOM_MUTED ? (
 			<>
 				<ErrorCustomMutedThumbnailContainer>
 					<Thumbnail
 						src={fileItem.dataURL ?? ""}
-						id={generateTestIdAndId(id, index + 1)}
-						data-testid={generateTestIdAndId(id, index + 1)}
+						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
+						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
 					<TextBody
 						as="div"
-						id={generateTestIdAndId(id, index + 1)}
-						data-testid={generateTestIdAndId(id, index + 1)}
+						id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
+						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 						ref={fileNameWrapperRef}
 					>
 						{transformedFileName}
@@ -168,8 +165,8 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				</ErrorCustomMutedThumbnailContainer>
 				<TextBody
 					as="div"
-					id={generateTestIdAndId(id, index + 1)}
-					data-testid={generateTestIdAndId(id, index + 1)}
+					id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
+					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 					ref={fileNameWrapperRef}
 				>
 					<MobileTextBodyDetail>{renderError()}</MobileTextBodyDetail>
@@ -180,14 +177,14 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				{status === EImageStatus.UPLOADED && !isError && (
 					<Thumbnail
 						src={fileItem.dataURL ?? ""}
-						id={generateTestIdAndId(id, index + 1)}
-						data-testid={generateTestIdAndId(id, index + 1)}
+						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
+						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
 				)}
 				<TextBody
 					as="div"
-					id={generateTestIdAndId(id, index + 1)}
-					data-testid={generateTestIdAndId(id, index + 1)}
+					id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
+					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 					ref={fileNameWrapperRef}
 				>
 					{transformedFileName}
