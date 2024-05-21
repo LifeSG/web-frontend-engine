@@ -6,6 +6,7 @@ import { EImageStatus, IImageUploadSchema } from "../../../../components/fields"
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
 import { AxiosApiClient, FileHelper, ImageHelper, WindowHelper } from "../../../../utils";
+import * as IdHelper from "../../../../utils/id-helper";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -145,11 +146,6 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		await new Promise((resolve) => setTimeout(resolve));
 	}
 };
-
-const mockID = "mock-random-id";
-jest.mock("src/utils/id-helper.ts", () => ({
-	generateRandomId: jest.fn(() => mockID),
-}));
 
 describe("image-upload", () => {
 	beforeEach(() => {
@@ -903,7 +899,9 @@ describe("image-upload", () => {
 			expect(saveReviewImageFn).toBeCalled();
 		});
 
-		it("should be able to see custom error message when update-image-status is fired", async () => {
+		it("should be able to show custom error message when update-image-status is fired", async () => {
+			const mockID = "mock-random-id";
+			jest.spyOn(IdHelper, "generateRandomId").mockReturnValue(mockID);
 			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 				ref.current?.dispatchFieldEvent("update-image-status", COMPONENT_ID, {
 					id: mockID,
