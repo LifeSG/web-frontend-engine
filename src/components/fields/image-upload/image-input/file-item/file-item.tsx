@@ -165,8 +165,8 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				</ErrorCustomMutedThumbnailContainer>
 				<TextBody
 					as="div"
-					id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
-					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
+					id={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
+					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
 					ref={fileNameWrapperRef}
 				>
 					<MobileTextBodyDetail>{renderError()}</MobileTextBodyDetail>
