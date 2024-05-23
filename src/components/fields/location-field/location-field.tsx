@@ -146,6 +146,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					data-testid={TestHelper.generateId(id, "edit-button")}
 					styleType="secondary"
 					onClick={handleEditLocationOnClick}
+					type="button"
 				>
 					Edit
 				</Button.Default>
