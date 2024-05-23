@@ -2,7 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { EImageStatus, IImage, IImageUploadSchema, IUpdateImageValidation } from "../../../components/fields";
+import { EImageStatus, IImage, IImageUploadSchema, IUpdateImageStatus } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import DefaultImageUploadConfig from "./image-upload.stories";
@@ -91,6 +91,14 @@ FileDialog.args = {
 	editImage: true,
 };
 
+export const Uploaded = Template("uploaded").bind({});
+Uploaded.args = {
+	label: "Provide images",
+	description: "Listen for `uploaded` event",
+	uiType: "image-upload",
+	editImage: true,
+};
+
 /* eslint-disable react-hooks/rules-of-hooks */
 const SaveReviewImagesTemplate = (eventName: string) =>
 	((args) => {
@@ -148,7 +156,7 @@ SaveReviewImages.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const ImageUploadReadyTemplate = (eventName: string) =>
+const ImageUploadReadyTemplate = (eventName: string, customMuted: boolean) =>
 	((args) => {
 		const id = `image-upload-${eventName}`;
 		const formRef = useRef<IFrontendEngineRef>();
@@ -159,11 +167,11 @@ const ImageUploadReadyTemplate = (eventName: string) =>
 				e.preventDefault();
 
 				setTimeout(() => {
-					currentFormRef.dispatchFieldEvent("update-file-validation", id, {
+					currentFormRef.dispatchFieldEvent("update-image-status", id, {
 						id: e.detail.imageData.id,
-						updatedStatus: EImageStatus.ERROR_CUSTOM,
-						errorMessage: "custom error message",
-					} as IUpdateImageValidation);
+						updatedStatus: customMuted ? EImageStatus.ERROR_CUSTOM_MUTED : EImageStatus.ERROR_CUSTOM,
+						errorMessage: customMuted ? "custom error muted message" : "custom error message",
+					} as IUpdateImageStatus);
 				}, 3000);
 			};
 
@@ -192,8 +200,15 @@ const ImageUploadReadyTemplate = (eventName: string) =>
 	}) as StoryFn<IImageUploadSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const ImageUploadReady = ImageUploadReadyTemplate("upload-ready").bind({});
+export const ImageUploadReady = ImageUploadReadyTemplate("upload-ready", false).bind({});
 ImageUploadReady.args = {
+	label: "Provide images",
+	description: "Listen for `upload-ready` event",
+	uiType: "image-upload",
+};
+
+export const ImageUploadReadyWithMutedError = ImageUploadReadyTemplate("upload-ready", true).bind({});
+ImageUploadReadyWithMutedError.args = {
 	label: "Provide images",
 	description: "Listen for `upload-ready` event",
 	uiType: "image-upload",

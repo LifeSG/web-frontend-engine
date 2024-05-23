@@ -10,8 +10,10 @@ import {
 	CellInfo,
 	CellProgressBar,
 	DeleteButton,
+	DesktopTextBodyDetail,
+	ErrorCustomMutedThumbnailContainer,
 	ErrorText,
-	MobileFileSize,
+	MobileTextBodyDetail,
 	ProgressBar,
 	TextBody,
 	Thumbnail,
@@ -82,6 +84,12 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				setErrorMessage(_errorMessage);
 				break;
 			}
+			case EImageStatus.ERROR_CUSTOM_MUTED: {
+				const _errorMessage = fileItem.customErrorMessage;
+				setError(false);
+				setErrorMessage(_errorMessage);
+				break;
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [status, dataURL, file.type, maxSizeInKb]);
@@ -98,7 +106,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	)} KB`;
 
 	const renderError = () =>
-		isError && (
+		(isError || status === EImageStatus.ERROR_CUSTOM_MUTED) && (
 			<ErrorText
 				weight={"semibold"}
 				id={TestHelper.generateId(`${id}-${index + 1}`, "error-text")}
@@ -135,21 +143,15 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 		);
 	};
 
-	return (
-		<Wrapper
-			isError={isError}
-			id={TestHelper.generateId(`${id}-${index + 1}`)}
-			data-testid={TestHelper.generateId(`${id}-${index + 1}`)}
-		>
+	const renderCellInfoDetails = () => {
+		return status === EImageStatus.ERROR_CUSTOM_MUTED ? (
 			<>
-				<CellInfo>
-					{status === EImageStatus.UPLOADED && !isError && (
-						<Thumbnail
-							src={fileItem.dataURL ?? ""}
-							id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
-							data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
-						/>
-					)}
+				<ErrorCustomMutedThumbnailContainer>
+					<Thumbnail
+						src={fileItem.dataURL ?? ""}
+						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
+						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
+					/>
 					<TextBody
 						as="div"
 						id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
@@ -157,10 +159,51 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 						ref={fileNameWrapperRef}
 					>
 						{transformedFileName}
-						<MobileFileSize>{fileSize}</MobileFileSize>
+						<DesktopTextBodyDetail>{renderError()}</DesktopTextBodyDetail>
+						<MobileTextBodyDetail>{fileSize}</MobileTextBodyDetail>
 					</TextBody>
+				</ErrorCustomMutedThumbnailContainer>
+				<TextBody
+					as="div"
+					id={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
+					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
+					ref={fileNameWrapperRef}
+				>
+					<MobileTextBodyDetail>{renderError()}</MobileTextBodyDetail>
+				</TextBody>
+			</>
+		) : (
+			<>
+				{status === EImageStatus.UPLOADED && !isError && (
+					<Thumbnail
+						src={fileItem.dataURL ?? ""}
+						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
+						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
+					/>
+				)}
+				<TextBody
+					as="div"
+					id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
+					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
+					ref={fileNameWrapperRef}
+				>
+					{transformedFileName}
 					{renderError()}
-				</CellInfo>
+					<MobileTextBodyDetail>{fileSize}</MobileTextBodyDetail>
+				</TextBody>
+			</>
+		);
+	};
+
+	return (
+		<Wrapper
+			isError={isError}
+			isCustomMuted={status === EImageStatus.ERROR_CUSTOM_MUTED}
+			id={TestHelper.generateId(`${id}-${index + 1}`)}
+			data-testid={TestHelper.generateId(`${id}-${index + 1}`)}
+		>
+			<>
+				<CellInfo>{renderCellInfoDetails()}</CellInfo>
 				<CellFileSize>
 					<Text.Body
 						id={TestHelper.generateId(`${id}-${index + 1}`, "file-size")}

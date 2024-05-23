@@ -5,7 +5,7 @@ import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../types";
+import { EImageStatus, IDismissReviewModalEvent, IImage, ISharedImageProps, TFileCapture } from "../types";
 import { IImageEditorRef } from "./image-editor";
 import { ImageError } from "./image-error";
 import { ImagePrompts } from "./image-prompts";
@@ -85,7 +85,7 @@ export const ImageReview = (props: IProps) => {
 		maxFilesErrorMessage,
 	} = props;
 	const { images, setImages } = useContext(ImageContext);
-	const { dispatchFieldEvent } = useFieldEvent();
+	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	const previousShow = usePrevious(show);
 
 	// review image
@@ -107,6 +107,23 @@ export const ImageReview = (props: IProps) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const eventsData = {
+			["trigger-save-review-images"]: handleSetImagesStatus,
+			["dismiss-review-modal"]: handleDismissReviewModal,
+		};
+
+		Object.entries(eventsData).forEach(([event, callback]) => {
+			addFieldEventListener(event, id, callback);
+		});
+
+		return () => {
+			Object.entries(eventsData).forEach(([event, callback]) => {
+				removeFieldEventListener(event, id, callback);
+			});
+		};
+	}, []);
+
+	useEffect(() => {
 		setActiveFileIndex(images.length - 1);
 	}, [images.length]);
 
@@ -121,6 +138,19 @@ export const ImageReview = (props: IProps) => {
 	// =============================================================================
 	// - REVIEW MODAL
 	// =============================================================================
+
+	const handleDismissReviewModal = (e: CustomEvent<IDismissReviewModalEvent>) => {
+		if (e.detail.removePendingImages) {
+			//remove others but keep the uploaded
+			setImages((prev) => {
+				return prev.filter(
+					({ status, addedFrom }) => status === EImageStatus.UPLOADED && addedFrom === "reviewModal"
+				);
+			});
+		}
+		onExit();
+	};
+
 	const handleSelectFile = (selectedFiles: File[]) => {
 		if (
 			!maxFiles ||
@@ -199,24 +229,30 @@ export const ImageReview = (props: IProps) => {
 		setActivePrompt(null);
 	};
 
+	const handleSetImagesStatus = () => {
+		setImages((prev) =>
+			prev
+				.filter(({ status }) => status >= EImageStatus.NONE)
+				.map((file) => {
+					const editedFile: IImage = { ...file };
+					if (file.drawingDataURL) {
+						editedFile.dataURL = file.drawingDataURL;
+					}
+					if (file.status < EImageStatus.UPLOAD_READY && file.status > EImageStatus.NONE) {
+						editedFile.status = EImageStatus.UPLOAD_READY;
+					}
+					editedFile.drawingDataURL = undefined;
+					editedFile.drawing = undefined;
+					return editedFile;
+				})
+		);
+	};
+
 	const handleSave = () => {
-		if (dispatchFieldEvent("save-review-images", id, { images, retry: handleSave })) {
-			setImages(
-				images
-					.filter(({ status }) => status >= EImageStatus.NONE)
-					.map((file) => {
-						const editedFile: IImage = { ...file };
-						if (file.drawingDataURL) {
-							editedFile.dataURL = file.drawingDataURL;
-						}
-						if (file.status < EImageStatus.UPLOAD_READY && file.status > EImageStatus.NONE) {
-							editedFile.status = EImageStatus.UPLOAD_READY;
-						}
-						editedFile.drawingDataURL = undefined;
-						editedFile.drawing = undefined;
-						return editedFile;
-					})
-			);
+		const shouldPreventDefault = !dispatchFieldEvent("save-review-images", id, { images, retry: handleSave });
+
+		if (!shouldPreventDefault) {
+			handleSetImagesStatus();
 			onExit();
 		}
 	};

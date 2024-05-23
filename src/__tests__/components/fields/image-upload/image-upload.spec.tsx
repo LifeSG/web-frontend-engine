@@ -2,10 +2,11 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
-import { IImageUploadSchema } from "../../../../components/fields";
+import { EImageStatus, IImageUploadSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
 import { AxiosApiClient, FileHelper, ImageHelper, WindowHelper } from "../../../../utils";
+import * as IdHelper from "../../../../utils/id-helper";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -40,9 +41,10 @@ const getReviewModalUploadField = (): HTMLElement => screen.getByTestId("field-i
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	eventType: string;
 	eventListener: (this: Element, ev: Event) => any;
+	onClick?: (ref: React.MutableRefObject<IFrontendEngineRef>) => void;
 }
 const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
-	const { eventType, eventListener, ...otherProps } = props;
+	const { eventType, eventListener, onClick, data, ...otherProps } = props;
 	const formRef = useRef<IFrontendEngineRef>();
 	useEffect(() => {
 		if (eventType && eventListener) {
@@ -52,7 +54,14 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 		}
 	}, [eventListener, eventType]);
 
-	return <FrontendEngine {...otherProps} ref={formRef} />;
+	return (
+		<>
+			<FrontendEngine {...otherProps} data={data} ref={formRef} />
+			<button type="button" onClick={() => onClick(formRef)}>
+				Custom Button
+			</button>
+		</>
+	);
 };
 
 interface IRenderAndPerformActionsOptions {
@@ -63,6 +72,7 @@ interface IRenderAndPerformActionsOptions {
 	reviewImage?: boolean;
 	eventType?: string;
 	eventListener?: (this: Element, ev: Event) => any;
+	onClick?: (ref: React.MutableRefObject<IFrontendEngineRef>) => void;
 }
 
 /**
@@ -82,6 +92,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		files = [],
 		uploadType = "input",
 		reviewImage,
+		onClick,
 	} = options;
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -105,12 +116,14 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		},
 		...overrideSchema,
 	};
+
 	render(
 		<FrontendEngineWithEventListener
 			data={json}
 			onSubmit={SUBMIT_FN}
 			eventType={eventType}
 			eventListener={eventListener}
+			onClick={onClick}
 		/>
 	);
 
@@ -828,6 +841,85 @@ describe("image-upload", () => {
 			expect(mockCounter.value).toBeCalledTimes(2);
 			expect(getSaveButton(true)).not.toBeInTheDocument();
 			expect(uploadSpy).toBeCalled();
+		});
+
+		it("should fire hide-review-modal event on hiding review modal", async () => {
+			const handleHideReviewModal = jest.fn();
+			await renderComponent({
+				eventType: "hide-review-modal",
+				eventListener: handleHideReviewModal,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+			});
+			await waitFor(() => fireEvent.click(getSaveButton()));
+
+			expect(handleHideReviewModal).toBeCalled();
+		});
+
+		it("should allow dismissing of the review modal via dismiss-review-modal event", async () => {
+			const handleDismissReviewModal = jest.fn();
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current?.dispatchFieldEvent("dismiss-review-modal", COMPONENT_ID, {
+					removePendingImages: false,
+				});
+			};
+			await renderComponent({
+				eventType: "dismiss-review-modal",
+				eventListener: handleDismissReviewModal,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+				onClick: handleClick,
+			});
+
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(handleDismissReviewModal).toBeCalled();
+		});
+
+		it("should be able to save review images via trigger-save-review-images event", async () => {
+			const saveReviewImageFn = jest.fn();
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current?.dispatchFieldEvent("trigger-save-review-images", COMPONENT_ID, {
+					removePendingImages: false,
+				});
+			};
+			await renderComponent({
+				eventType: "trigger-save-review-images",
+				eventListener: saveReviewImageFn,
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+				onClick: handleClick,
+			});
+
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(saveReviewImageFn).toBeCalled();
+		});
+
+		it("should be able to show custom error message when update-image-status is fired", async () => {
+			const mockID = "mock-random-id";
+			jest.spyOn(IdHelper, "generateRandomId").mockReturnValue(mockID);
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current?.dispatchFieldEvent("update-image-status", COMPONENT_ID, {
+					id: mockID,
+					updatedStatus: EImageStatus.ERROR_CUSTOM_MUTED,
+					errorMessage: ERROR_MESSAGE,
+				});
+			};
+			await renderComponent({
+				files: [FILE_1],
+				overrideField: { editImage: true },
+				reviewImage: true,
+				onClick: handleClick,
+			});
+
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+			const errMsg = screen.getAllByTestId("field-file-item-1__error-text")[0].innerHTML;
+			expect(errMsg).toBe(ERROR_MESSAGE);
+			expect(screen.getAllByTestId("field-file-item-1__error-text")[0]).toBeInTheDocument();
 		});
 	});
 

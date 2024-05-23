@@ -1,13 +1,13 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
+import { AxiosApiClient, FileHelper, ImageHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import {
 	EImageStatus,
 	IImage,
 	ISharedImageProps,
-	IUpdateImageValidation,
+	IUpdateImageStatus,
 	TImageUploadOutputFileType,
 	TUploadMethod,
 } from "../types";
@@ -46,7 +46,7 @@ export const ImageManager = (props: IProps) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const handleUpdateValidation = (e: CustomEvent<IUpdateImageValidation>) => {
+		const handleUpdateImageStatus = (e: CustomEvent<IUpdateImageStatus>) => {
 			setImages((prev) => {
 				const imageIndex = prev.findIndex((image) => image.id === e.detail.id);
 				const updatedImage = { ...prev[imageIndex] };
@@ -58,16 +58,14 @@ export const ImageManager = (props: IProps) => {
 				return newImages;
 			});
 		};
-		addFieldEventListener("update-file-validation", id, handleUpdateValidation);
-		return () => removeFieldEventListener("update-file-validation", id, handleUpdateValidation);
+
+		addFieldEventListener("update-image-status", id, handleUpdateImageStatus);
+		return () => removeFieldEventListener("update-image-status", id, handleUpdateImageStatus);
 	}, []);
 
 	// generate pseudo-random session id
 	useEffect(() => {
-		sessionId.current = Array(5)
-			.fill(0)
-			.map(() => Math.random().toString(36).slice(2))
-			.join("");
+		sessionId.current = generateRandomId();
 	}, []);
 
 	useEffect(() => {
@@ -149,6 +147,9 @@ export const ImageManager = (props: IProps) => {
 						break;
 					case EImageStatus.TO_DELETE:
 						setImages((prev) => prev.filter(({ status }) => status !== EImageStatus.TO_DELETE));
+						break;
+					case EImageStatus.UPLOADED:
+						dispatchFieldEvent("uploaded", id, { imageData: image });
 						break;
 				}
 			}
