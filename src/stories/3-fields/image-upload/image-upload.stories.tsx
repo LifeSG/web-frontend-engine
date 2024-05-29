@@ -219,7 +219,7 @@ export const HTMLDescription = DefaultStoryTemplate<IImageUploadSchema>("upload-
 HTMLDescription.args = {
 	label: "Provide images",
 	uiType: "image-upload",
-	description: "<span>Testing<br>&#x2022; Testing<br>&#x2022; Testing</span>",
+	description: "Testing<ul><li>Testing</li><li>Testing</li></span>",
 };
 
 export const Dimensions = DefaultStoryTemplate<IImageUploadSchema>("upload-dimensions").bind({});
