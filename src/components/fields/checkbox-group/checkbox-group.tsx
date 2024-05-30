@@ -124,7 +124,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 							onChange={() => handleChange(option.value)}
 						/>
 						<Label as="label" htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
-							<Sanitize>{option.label}</Sanitize>
+							<Sanitize inline>{option.label}</Sanitize>
 						</Label>
 					</CheckboxContainer>
 				);

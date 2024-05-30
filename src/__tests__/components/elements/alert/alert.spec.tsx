@@ -33,6 +33,15 @@ const renderComponent = (overrideField?: TOverrideField<IAlertSchema>, overrideS
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
+		window.ResizeObserver = jest.fn().mockImplementation(() => ({
+			observe: jest.fn(),
+			unobserve: jest.fn(),
+			disconnect: jest.fn(),
+		}));
+	});
+
+	afterEach(() => {
+		window.ResizeObserver = ResizeObserver;
 	});
 
 	it("should be able to render the field", () => {

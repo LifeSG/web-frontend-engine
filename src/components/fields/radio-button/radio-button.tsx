@@ -96,7 +96,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							onChange={() => handleChangeOrClick(option.value)}
 						/>
 						<Label as="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
-							<Sanitize>{option.label}</Sanitize>
+							<Sanitize inline>{option.label}</Sanitize>
 						</Label>
 					</RadioContainer>
 				);

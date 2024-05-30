@@ -2,7 +2,7 @@ import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
 import { Color } from "@lifesg/react-design-system/color";
 import { MediaQuery } from "@lifesg/react-design-system/media";
-import { Text } from "@lifesg/react-design-system/text";
+import { Text, TextStyleHelper } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 
 export interface SubtitleProps {
@@ -26,7 +26,8 @@ export const Subtitle = styled(Text.Body)<SubtitleProps>`
 	margin-bottom: ${(props) => (props.$hasDescription ? "0.5rem" : "1rem")};
 `;
 
-export const Content = styled(Text.BodySmall)`
+export const Content = styled.div`
+	${TextStyleHelper.getTextStyle("BodySmall", "regular")}
 	margin-bottom: 1.5rem;
 	color: ${Color.Neutral[4]};
 `;

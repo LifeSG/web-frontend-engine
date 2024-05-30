@@ -24,7 +24,7 @@ export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrdered
 			if (typeof childSchema === "string") {
 				return (
 					<li key={index}>
-						<Sanitize>{childSchema}</Sanitize>
+						<Sanitize inline>{childSchema}</Sanitize>
 					</li>
 				);
 			}

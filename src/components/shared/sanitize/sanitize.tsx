@@ -1,11 +1,15 @@
+import { Markup, MarkupProps } from "@lifesg/react-design-system/markup";
 import { renderToStaticMarkup } from "react-dom/server";
 import sanitize, { IOptions } from "sanitize-html";
 import { TestHelper } from "../../../utils";
 
 interface IProps {
+	baseTextColor?: MarkupProps["baseTextColor"] | undefined;
+	baseTextSize?: MarkupProps["baseTextSize"] | undefined;
 	children: string | React.ReactNode;
 	className?: string | undefined;
 	id?: string | undefined;
+	inline?: boolean | undefined;
 	sanitizeOptions?: IOptions;
 }
 
@@ -13,7 +17,7 @@ export const Sanitize = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { children, className, id, sanitizeOptions } = props;
+	const { baseTextColor, baseTextSize, children, className, id, inline, sanitizeOptions } = props;
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -40,7 +44,10 @@ export const Sanitize = (props: IProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<span
+		<Markup
+			baseTextColor={baseTextColor}
+			baseTextSize={baseTextSize}
+			inline={inline}
 			id={formatId()}
 			className={className}
 			data-testid={formatId()}

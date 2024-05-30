@@ -64,7 +64,9 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 
 				return (
 					<Element key={index} id={childrenId} data-testid={getTestId(childrenId)}>
-						<Sanitize id={childrenId}>{text}</Sanitize>
+						<Sanitize id={childrenId} inline>
+							{text}
+						</Sanitize>
 					</Element>
 				);
 			});
@@ -87,7 +89,9 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}
 			>
-				<Sanitize sanitizeOptions={{ allowedAttributes: false }}>{renderText()}</Sanitize>
+				<Sanitize inline sanitizeOptions={{ allowedAttributes: false }}>
+					{renderText()}
+				</Sanitize>
 			</Element>
 
 			{showExpandButton && (
