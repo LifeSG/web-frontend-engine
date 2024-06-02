@@ -4,7 +4,6 @@ import "../../../../../jest/mocks/match-media";
 import { ITextFieldSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema, getField, getSubmitButtonProps } from "../../../common";
-const { ResizeObserver } = window;
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -46,18 +45,8 @@ const renderComponent = (overrideField?: TOverrideField<ITextFieldSchema>, overr
 
 // TODO: Add more tests
 describe(REFERENCE_KEY, () => {
-	beforeEach(() => {
-		jest.resetAllMocks();
-		delete window.ResizeObserver;
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-	});
-
 	afterEach(() => {
-		window.ResizeObserver = ResizeObserver;
+		jest.resetAllMocks();
 		jest.restoreAllMocks();
 	});
 

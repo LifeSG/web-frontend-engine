@@ -81,7 +81,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

@@ -60,7 +60,7 @@ const getMaskedField = (): HTMLElement => {
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

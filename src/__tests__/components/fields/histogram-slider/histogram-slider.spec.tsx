@@ -75,14 +75,6 @@ describe(UI_TYPE, () => {
 
 	beforeEach(() => {
 		jest.restoreAllMocks();
-
-		delete window.ResizeObserver;
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-
 		sliderSpy = jest.spyOn(Form, "HistogramSlider");
 	});
 

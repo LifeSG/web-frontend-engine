@@ -131,13 +131,6 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		setupJestCanvasMock();
-
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-
 		jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
 		uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({});
 	});

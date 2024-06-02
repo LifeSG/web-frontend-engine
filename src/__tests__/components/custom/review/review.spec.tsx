@@ -244,13 +244,8 @@ const topBottomSectionTestSuite = (variant: "box" | "accordion") => {
 };
 
 describe(REFERENCE_KEY, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
-		global.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
 	});
 
 	describe("box variant", () => {

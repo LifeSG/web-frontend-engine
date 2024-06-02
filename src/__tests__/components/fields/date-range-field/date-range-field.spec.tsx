@@ -62,17 +62,8 @@ const getYearInput = (type: TDateRangeInputType): HTMLElement => {
 };
 
 describe(uiType, () => {
-	beforeEach(() => {
-		jest.resetAllMocks();
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-	});
-
 	afterEach(() => {
-		window.ResizeObserver = ResizeObserver;
+		jest.resetAllMocks();
 		jest.restoreAllMocks();
 	});
 	it("should be able to render the field", () => {

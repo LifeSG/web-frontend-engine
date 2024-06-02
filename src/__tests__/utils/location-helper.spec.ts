@@ -11,8 +11,11 @@ describe("when reverseGeoCode returns an error", () => {
 	};
 
 	beforeEach(() => {
-		jest.resetAllMocks();
 		global.abortController = jest.fn();
+	});
+
+	afterEach(() => {
+		jest.resetAllMocks();
 	});
 
 	it("should call onError function if the error is not a canceled error", async () => {

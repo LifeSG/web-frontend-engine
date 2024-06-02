@@ -30,7 +30,7 @@ const renderComponent = (overrideField?: TOverrideField<IOrderedListSchema>, ove
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

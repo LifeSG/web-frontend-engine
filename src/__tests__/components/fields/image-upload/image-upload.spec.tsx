@@ -155,16 +155,6 @@ describe("image-upload", () => {
 
 		jest.spyOn(FileHelper, "truncateFileName").mockImplementation((fileName) => fileName);
 		uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ id: 1 });
-
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-	});
-
-	afterEach(() => {
-		window.ResizeObserver = ResizeObserver;
 	});
 
 	it("should be able to render the field", async () => {

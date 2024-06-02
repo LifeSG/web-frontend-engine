@@ -68,7 +68,7 @@ const setFieldValue = (floor: string, unit: string) => {
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

@@ -60,7 +60,7 @@ const getTextarea = (): HTMLElement => {
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

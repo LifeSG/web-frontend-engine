@@ -119,17 +119,8 @@ const renderComponent = (
 };
 
 describe("frontend-engine", () => {
-	beforeEach(() => {
-		jest.resetAllMocks();
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-	});
-
 	afterEach(() => {
-		window.ResizeObserver = ResizeObserver;
+		jest.resetAllMocks();
 	});
 
 	it("should render a form with JSON provided", () => {

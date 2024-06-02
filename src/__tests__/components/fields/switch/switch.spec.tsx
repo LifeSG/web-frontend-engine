@@ -59,7 +59,7 @@ const renderComponent = (overrideField?: TOverrideField<ISwitchSchema>, override
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

@@ -80,15 +80,8 @@ const pickValidTime = async () => {
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
-
-		// NOTE: Timepicker internally uses ResizeObserver
-		global.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
 	});
 
 	it("should be able to render the field", () => {

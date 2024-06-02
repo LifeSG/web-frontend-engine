@@ -62,7 +62,7 @@ const getNumericField = (): HTMLElement => {
 
 describe(UI_TYPE, () => {
 	const EXPECTED_NUMBER = 10;
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

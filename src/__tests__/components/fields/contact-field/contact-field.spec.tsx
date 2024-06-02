@@ -69,8 +69,11 @@ const getDefaultDropdownToggle = (): HTMLElement => {
 
 describe(UI_TYPE, () => {
 	beforeEach(() => {
-		jest.resetAllMocks();
 		setupJestCanvasMock();
+	});
+
+	afterEach(() => {
+		jest.resetAllMocks();
 	});
 
 	it("should be able to render the field", () => {
