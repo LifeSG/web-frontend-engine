@@ -985,7 +985,7 @@ describe("image-upload", () => {
 		});
 	});
 
-	fdescribe("warning", () => {
+	describe("warning", () => {
 		const warningMessage = "warning message";
 		beforeEach(async () => {
 			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
