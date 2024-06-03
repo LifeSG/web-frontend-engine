@@ -232,7 +232,7 @@ export const ImageReview = (props: IProps) => {
 	const handleSetImagesStatus = () => {
 		setImages((prev) =>
 			prev
-				.filter(({ status }) => status >= EImageStatus.NONE)
+				.filter(({ status }) => status >= EImageStatus.NONE || status === EImageStatus.ERROR_CUSTOM_MUTED)
 				.map((file) => {
 					const editedFile: IImage = { ...file };
 					if (file.drawingDataURL) {
