@@ -171,7 +171,9 @@ export const ImageManager = (props: IProps) => {
 		setErrorCount((prev) => Math.max(0, prev + updatedManagerErrorCount - managerErrorCount));
 		setManagerErrorCount(updatedManagerErrorCount);
 
-		const uploadedImages = images.filter(({ status }) => status === EImageStatus.UPLOADED);
+		const uploadedImages = images.filter(
+			({ status }) => status === EImageStatus.UPLOADED || status === EImageStatus.ERROR_CUSTOM_MUTED
+		);
 		const notPrefilledImages = uploadedImages.filter(({ addedFrom }) => addedFrom !== "schema");
 		const gotDeleteImages = images.filter(({ status }) => status === EImageStatus.TO_DELETE).length > 0;
 
