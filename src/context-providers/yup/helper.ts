@@ -200,13 +200,9 @@ export namespace YupHelper {
 					{
 						Object.keys(rule.when).forEach((fieldId) => {
 							const isRule = rule.when[fieldId].is;
-							const thenRule = mapRules(
-								mapSchemaType(yupSchema.type as TYupSchemaType),
-								rule.when[fieldId].then
-							);
+							const thenRule = mapRules(yupSchema, rule.when[fieldId].then);
 							const otherwiseRule =
-								rule.when[fieldId].otherwise &&
-								mapRules(mapSchemaType(yupSchema.type as TYupSchemaType), rule.when[fieldId].otherwise);
+								rule.when[fieldId].otherwise && mapRules(yupSchema, rule.when[fieldId].otherwise);
 
 							if (Array.isArray(isRule) && (isRule as unknown[]).every((r) => typeof r === "object")) {
 								yupSchema = yupSchema.when(fieldId, (value: unknown) => {

@@ -304,6 +304,31 @@ describe("YupHelper", () => {
 			expect(() => schema.validateSync(value)).not.toThrowError();
 		});
 
+		it("should run non conditional validation rules regardless whether conditional validation is fulfilled or not", () => {
+			const schema = Yup.object().shape({
+				field1: YupHelper.mapRules(YupHelper.mapSchemaType("string"), [
+					{ min: 5, errorMessage: ERROR_MESSAGE },
+					{
+						when: {
+							field2: {
+								is: [{ filled: true }],
+								then: [{ max: 15, errorMessage: ERROR_MESSAGE_2 }],
+								otherwise: [{ max: 10, errorMessage: ERROR_MESSAGE_3 }],
+								yupSchema: YupHelper.mapSchemaType("string"),
+							},
+						},
+					},
+				]),
+			});
+
+			expect(TestHelper.getError(() => schema.validateSync({ field1: "hi", field2: "hi" })).message).toBe(
+				ERROR_MESSAGE
+			);
+			expect(TestHelper.getError(() => schema.validateSync({ field1: "hi", field2: undefined })).message).toBe(
+				ERROR_MESSAGE
+			);
+		});
+
 		it("should be able to support nested conditional validation", () => {
 			const schema = Yup.object().shape({
 				field1: YupHelper.mapRules(YupHelper.mapSchemaType("string"), [
