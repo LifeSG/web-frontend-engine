@@ -93,7 +93,7 @@ export interface IUpdateImageStatus {
 export interface IUploadedImage {
 	dataURL: string;
 	fileName: string;
-	uploadResponse: string;
+	uploadResponse?: any;
 }
 
 export interface IDismissReviewModalEvent {
