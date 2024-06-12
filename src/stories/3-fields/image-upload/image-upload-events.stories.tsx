@@ -207,8 +207,8 @@ ImageUploadReady.args = {
 	uiType: "image-upload",
 };
 
-export const ImageUploadReadyWithMutedError = ImageUploadReadyOrUploadedTemplate("uploaded", true).bind({});
-ImageUploadReadyWithMutedError.args = {
+export const ImageUploadedWithMutedError = ImageUploadReadyOrUploadedTemplate("uploaded", true).bind({});
+ImageUploadedWithMutedError.args = {
 	label: "Provide images",
 	description: "Listen for `uploaded` event",
 	uiType: "image-upload",
