@@ -7,7 +7,14 @@ import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";
 import { ImageReview } from "./image-review";
-import { ACCEPTED_FILE_TYPES, EImageStatus, IImage, IImageUploadSchema, TImageUploadAcceptedFileType } from "./types";
+import {
+	ACCEPTED_FILE_TYPES,
+	EImageStatus,
+	IImage,
+	IImageUploadSchema,
+	IUploadedImage,
+	TImageUploadAcceptedFileType,
+} from "./types";
 
 // lazy load to fix next.js SSR errors
 const ImageManager = lazy(() => import("./image-manager"));
@@ -59,7 +66,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		// for `defaultValue`
 		if (!isDirty && Array.isArray(value)) {
 			const newImages: IImage[] = [];
-			(value as { fileName: string; dataURL: string }[]).forEach(({ fileName, dataURL }, i) => {
+			(value as IUploadedImage[]).forEach(({ fileName, dataURL, uploadResponse }, i) => {
 				const newImage: IImage = {
 					id: generateRandomId(),
 					file: {} as File,
@@ -70,6 +77,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					addedFrom: "schema",
 					uploadProgress: 100,
 					slot: i,
+					uploadResponse,
 				};
 				newImages.push(newImage);
 			});

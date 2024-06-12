@@ -90,6 +90,12 @@ export interface IUpdateImageStatus {
 	errorMessage?: string | undefined;
 }
 
+export interface IUploadedImage {
+	dataURL: string;
+	fileName: string;
+	uploadResponse?: any;
+}
+
 export interface IDismissReviewModalEvent {
 	removePendingImages: boolean;
 }

@@ -66,7 +66,7 @@ export const ImageThumbnails = (props: IProps) => {
 						))}
 					</LoadingBox>
 				);
-			} else if (image.status > EImageStatus.NONE) {
+			} else if (image.status > EImageStatus.NONE || image.status === EImageStatus.ERROR_CUSTOM_MUTED) {
 				return (
 					<ThumbnailItem
 						key={index}
@@ -100,8 +100,10 @@ export const ImageThumbnails = (props: IProps) => {
 
 	// render only when no. of added images is less than max count or if max count is zero
 	const renderAddButton = () =>
-		(images.filter(({ status, addedFrom }) => status >= EImageStatus.NONE || addedFrom === "reviewModal").length <
-			maxFiles ||
+		(images.filter(
+			({ status, addedFrom }) =>
+				status >= EImageStatus.NONE || status === EImageStatus.ERROR_CUSTOM_MUTED || addedFrom === "reviewModal"
+		).length < maxFiles ||
 			!maxFiles) && (
 			<>
 				<HiddenFileSelect
