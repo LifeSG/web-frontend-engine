@@ -2,7 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { Description, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { EImageStatus, IImage, IImageUploadSchema, IUpdateImageStatus } from "../../../components/fields";
+import { EFieldType, EImageStatus, IImage, IImageUploadSchema, IUpdateImageStatus } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import DefaultImageUploadConfig from "./image-upload.stories";
@@ -156,7 +156,7 @@ SaveReviewImages.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const ImageUploadReadyTemplate = (eventName: string, customMuted: boolean) =>
+const ImageUploadReadyOrUploadedTemplate = (eventName: string, customMuted: boolean) =>
 	((args) => {
 		const id = `image-upload-${eventName}`;
 		const formRef = useRef<IFrontendEngineRef>();
@@ -200,14 +200,14 @@ const ImageUploadReadyTemplate = (eventName: string, customMuted: boolean) =>
 	}) as StoryFn<IImageUploadSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const ImageUploadReady = ImageUploadReadyTemplate("upload-ready", false).bind({});
+export const ImageUploadReady = ImageUploadReadyOrUploadedTemplate("upload-ready", false).bind({});
 ImageUploadReady.args = {
 	label: "Provide images",
 	description: "Listen for `upload-ready` event",
 	uiType: "image-upload",
 };
 
-export const ImageUploadReadyWithMutedError = ImageUploadReadyTemplate("upload-ready", true).bind({});
+export const ImageUploadReadyWithMutedError = ImageUploadReadyOrUploadedTemplate("uploaded", true).bind({});
 ImageUploadReadyWithMutedError.args = {
 	label: "Provide images",
 	description: "Listen for `upload-ready` event",
