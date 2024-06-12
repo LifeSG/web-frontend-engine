@@ -212,4 +212,5 @@ ImageUploadReadyWithMutedError.args = {
 	label: "Provide images",
 	description: "Listen for `uploaded` event",
 	uiType: "image-upload",
+	editImage: true,
 };
