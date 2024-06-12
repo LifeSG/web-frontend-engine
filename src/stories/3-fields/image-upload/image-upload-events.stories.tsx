@@ -210,6 +210,6 @@ ImageUploadReady.args = {
 export const ImageUploadReadyWithMutedError = ImageUploadReadyOrUploadedTemplate("uploaded", true).bind({});
 ImageUploadReadyWithMutedError.args = {
 	label: "Provide images",
-	description: "Listen for `upload-ready` event",
+	description: "Listen for `uploaded` event",
 	uiType: "image-upload",
 };
