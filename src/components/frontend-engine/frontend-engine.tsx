@@ -89,8 +89,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		formState,
 		clearErrors,
 	} = formMethods;
-	const { resetFields, setFields, setField, getFormValues } = useFormValues(formMethods);
-
+	const { resetFields, setFields, setField, getFormValues, registeredFields } = useFormValues(formMethods);
 	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
 
 	// =============================================================================
@@ -156,8 +155,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	// NOTE: Wrapper component contains nested fields
 	const setErrors = (errors: TErrorPayload): void => {
 		Object.entries(errors).forEach(([key, value]) => {
-			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(sections, key);
-
+			const isValidFieldKey = registeredFields.includes(key);
 			if (!isValidFieldKey) {
 				return;
 			}
@@ -190,7 +188,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const setWarnings = (warningPayload: TWarningPayload) => {
 		const newWarnings: TWarningPayload = {};
 		Object.entries(warningPayload).forEach(([key, value]) => {
-			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(sections, key);
+			const isValidFieldKey = registeredFields.includes(key);
 			if (!isValidFieldKey) {
 				return;
 			}
