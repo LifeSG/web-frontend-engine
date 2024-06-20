@@ -5,3 +5,4 @@ export * from "./list";
 export * from "./tab";
 export * from "./text";
 export * from "./types";
+export * from "./accordion";

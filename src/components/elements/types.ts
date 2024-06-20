@@ -45,6 +45,7 @@ export enum EElementType {
 	"LIST-ITEM" = "ListItem",
 	"ORDERED-LIST" = "List",
 	"UNORDERED-LIST" = "List",
+	ACCORDION = "Accordion",
 }
 
 /**
