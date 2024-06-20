@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -126,6 +127,12 @@ WithValidation.args = {
 	label: "Textfield",
 	uiType: "text-field",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<ITextFieldSchema>("text-with-warning").bind({});
+Warning.args = {
+	label: "Textfield",
+	uiType: "text-field",
 };
 
 export const PreventCopyAndPaste = DefaultStoryTemplate<ITextFieldSchema>("prevent-copy-and-paste").bind({});

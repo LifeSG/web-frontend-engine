@@ -23,7 +23,16 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		error,
 		isDirty,
 		value,
-		schema: { compressImages, description, label, uploadOnAddingFile, validation, warning, ...otherSchema },
+		schema: {
+			compressImages,
+			description,
+			label,
+			uploadOnAddingFile,
+			validation,
+			warning: schemaWarning,
+			...otherSchema
+		},
+		warning,
 	} = props;
 	const { files, setFiles } = useContext(FileUploadContext);
 	const fileTypeRuleRef = useRef<IFileUploadValidationRule>({});
@@ -234,7 +243,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				onChange={handleChange}
 				onDelete={handleDelete}
 				title={renderHtmlText(label)}
-				warning={renderHtmlText(warning)}
+				warning={renderHtmlText(warning || schemaWarning)}
 			/>
 		</>
 	);

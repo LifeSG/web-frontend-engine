@@ -37,18 +37,8 @@ const renderComponent = () => {
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
-		jest.resetAllMocks();
-		delete window.ResizeObserver;
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-	});
-
 	afterEach(() => {
-		window.ResizeObserver = ResizeObserver;
+		jest.resetAllMocks();
 		jest.restoreAllMocks();
 	});
 

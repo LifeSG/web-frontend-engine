@@ -58,7 +58,7 @@ const getResetButton = (): HTMLElement => {
 };
 
 describe("reset", () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

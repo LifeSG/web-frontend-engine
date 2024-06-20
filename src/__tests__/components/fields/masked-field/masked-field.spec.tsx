@@ -17,6 +17,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -59,7 +60,7 @@ const getMaskedField = (): HTMLElement => {
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
@@ -222,4 +223,5 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite({ label: COMPONENT_LABEL, uiType: UI_TYPE, maskRange: [0, 100] });
 });

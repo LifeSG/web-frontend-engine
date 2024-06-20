@@ -19,6 +19,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -74,14 +75,6 @@ describe(UI_TYPE, () => {
 
 	beforeEach(() => {
 		jest.restoreAllMocks();
-
-		delete window.ResizeObserver;
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-
 		sliderSpy = jest.spyOn(Form, "HistogramSlider");
 	});
 
@@ -232,4 +225,15 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<IHistogramSliderSchema>({
+		label: "Histogram slider",
+		uiType: UI_TYPE,
+		bins: [
+			{ minValue: 10, count: 1 },
+			{ minValue: 20, count: 0 },
+			{ minValue: 30, count: 3 },
+			{ minValue: 90, count: 3 },
+		],
+		interval: 10,
+	});
 });

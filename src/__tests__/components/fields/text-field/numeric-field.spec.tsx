@@ -19,6 +19,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -61,7 +62,7 @@ const getNumericField = (): HTMLElement => {
 
 describe(UI_TYPE, () => {
 	const EXPECTED_NUMBER = 10;
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
@@ -255,4 +256,5 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<INumericFieldSchema>({ label: COMPONENT_LABEL, uiType: UI_TYPE });
 });

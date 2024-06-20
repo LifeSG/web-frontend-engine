@@ -20,6 +20,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -69,14 +70,6 @@ describe(UI_TYPE, () => {
 
 	beforeEach(() => {
 		jest.restoreAllMocks();
-
-		delete window.ResizeObserver;
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-
 		sliderSpy = jest.spyOn(Form, "Slider");
 	});
 
@@ -219,4 +212,5 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<ISliderSchema>({ label: "Slider", uiType: UI_TYPE });
 });

@@ -7,7 +7,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { FieldWrapper } from "../../elements/wrapper/field-wrapper";
-import { Chip, ERROR_MESSAGES } from "../../shared";
+import { Chip, ERROR_MESSAGES, Warning } from "../../shared";
 import { ITextareaSchema, Textarea } from "../textarea";
 import { ChipContainer } from "./chips.styles";
 import { IChipsSchema } from "./types";
@@ -23,6 +23,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		onChange,
 		schema: { disabled, label: _label, options, textarea, validation, ...otherSchema },
 		value,
+		warning,
 		...otherProps
 	} = props;
 
@@ -185,12 +186,15 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	};
 
 	return (
-		<Form.CustomField label={formattedLabel} errorMessage={error?.message} {...otherProps}>
-			<ChipContainer data-testid={TestHelper.generateId(id, "chips")} $showTextarea={showTextarea}>
-				{renderChips()}
-				{renderTextareaChip()}
-			</ChipContainer>
-			{renderTextarea()}
-		</Form.CustomField>
+		<>
+			<Form.CustomField label={formattedLabel} errorMessage={error?.message} {...otherProps}>
+				<ChipContainer data-testid={TestHelper.generateId(id, "chips")} $showTextarea={showTextarea}>
+					{renderChips()}
+					{renderTextareaChip()}
+				</ChipContainer>
+				{renderTextarea()}
+			</Form.CustomField>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

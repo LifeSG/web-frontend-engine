@@ -20,6 +20,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -77,17 +78,8 @@ const changeDate = async (day: string, month: string, year: string) => {
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
-		jest.resetAllMocks();
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-	});
-
 	afterEach(() => {
-		window.ResizeObserver = ResizeObserver;
+		jest.resetAllMocks();
 		jest.restoreAllMocks();
 	});
 	it("should be able to render the field", () => {
@@ -380,4 +372,5 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<IDateFieldSchema>({ label: COMPONENT_LABEL, uiType: UI_TYPE });
 });

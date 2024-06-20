@@ -37,6 +37,8 @@ import {
 	mockReverseGeoCodeResponse,
 	mockStaticMapDataUri,
 } from "./mock-values";
+import { warningTestSuite } from "../../../common/tests/warnings";
+
 jest.mock("../../../../services/onemap/onemap-service.ts");
 
 window.HTMLElement.prototype.scrollTo = jest.fn; // required for .scrollTo in location-search
@@ -933,6 +935,7 @@ describe("location-input-group", () => {
 			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => {
 				renderComponent({ overrideField });
 			});
+			warningTestSuite<ILocationFieldSchema>({ label: LABEL, uiType: UI_TYPE });
 
 			// test functionality
 			describe("when there are default values", () => {

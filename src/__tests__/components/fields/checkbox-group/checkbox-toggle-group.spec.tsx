@@ -84,7 +84,7 @@ const getNestedField = (): HTMLElement => {
 };
 
 describe("checkbox toggle group", () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

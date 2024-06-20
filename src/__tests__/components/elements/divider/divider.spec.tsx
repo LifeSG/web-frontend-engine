@@ -28,7 +28,7 @@ const renderComponent = (overrideField?: TOverrideField<IDividerSchema>, overrid
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

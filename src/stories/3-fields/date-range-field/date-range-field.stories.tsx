@@ -4,7 +4,7 @@ import { InputRangeProp } from "@lifesg/react-design-system/input-range-select/t
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { TDateRangeFieldSchema } from "src/components/fields/date-range-field/types";
-import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate, WarningStoryTemplate } from "../../common";
 
 const meta: Meta = {
 	title: "Field/DateRangeField",
@@ -158,6 +158,12 @@ WithValidation.args = {
 	uiType: "date-range-field",
 	label: "Date",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<TDateRangeFieldSchema>("date-with-warning").bind({});
+Warning.args = {
+	uiType: "date-range-field",
+	label: "Date",
 };
 
 export const WithDisabledDates = DefaultStoryTemplate<TDateRangeFieldSchema>("date-disabled-dates").bind({});

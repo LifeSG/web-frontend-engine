@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES, StaticMap } from "../../shared";
+import { ERROR_MESSAGES, StaticMap, Warning } from "../../shared";
 import { LocationHelper } from "./location-helper";
 import { LocationInput } from "./location-input";
 import { ILocationFieldSchema, ILocationFieldValues } from "./types";
@@ -44,6 +44,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
+		warning,
 	} = props;
 
 	const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
@@ -187,6 +188,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					/>
 				)}
 			</Suspense>
+			<Warning id={id} message={warning} />
 		</div>
 	);
 };

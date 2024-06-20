@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { usePrevious, useValidationConfig } from "../../../utils/hooks";
+import { Warning } from "../../shared";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
 import { getCountryFromPrefix, getCountryMap, getPrefixFromCountry } from "./data";
 import { IContactFieldSchema, ISelectedCountry, TCallingCodeMap, TCountry, TSingaporeNumberRule } from "./types";
@@ -23,6 +24,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		onChange,
 		schema: { defaultCountry, disabled, enableSearch, label: _label, placeholder, validation, ...otherSchema },
 		value,
+		warning,
 		...otherProps
 	} = props;
 
@@ -195,20 +197,23 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.PhoneNumberInput
-			{...otherSchema}
-			{...otherProps}
-			data-testid={TestHelper.generateId(id, "contact")}
-			disabled={disabled}
-			enableSearch={enableSearch}
-			errorMessage={error?.message}
-			fixedCountry={fixedCountry}
-			id={id}
-			label={formattedLabel}
-			name={name}
-			placeholder={getPlaceholderText()}
-			value={formatDisplayValue()}
-			onChange={handleChange}
-		/>
+		<>
+			<Form.PhoneNumberInput
+				{...otherSchema}
+				{...otherProps}
+				data-testid={TestHelper.generateId(id, "contact")}
+				disabled={disabled}
+				enableSearch={enableSearch}
+				errorMessage={error?.message}
+				fixedCountry={fixedCountry}
+				id={id}
+				label={formattedLabel}
+				name={name}
+				placeholder={getPlaceholderText()}
+				value={formatDisplayValue()}
+				onChange={handleChange}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

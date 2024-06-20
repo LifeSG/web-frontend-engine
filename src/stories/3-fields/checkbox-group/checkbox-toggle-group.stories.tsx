@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -164,6 +165,20 @@ WithValidation.args = {
 		{ label: "Cherry", value: "Cherry" },
 	],
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<TCheckboxGroupSchema>("checkbox-with-warning").bind({});
+Warning.args = {
+	uiType: "checkbox",
+	label: "Fruits",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
 };
 
 export const NoneOption = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-default").bind({});

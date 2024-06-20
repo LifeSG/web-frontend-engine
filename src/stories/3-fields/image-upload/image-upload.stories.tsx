@@ -1,12 +1,18 @@
+import { Button } from "@lifesg/react-design-system/button";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
+import { useRef } from "react";
+import { IFrontendEngineRef } from "../../../components";
 import { IImageUploadSchema } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
+	FrontendEngine,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
+	WarningStoryTemplate,
 } from "../../common";
 import { jpgDataURL } from "./image-data-url";
 
@@ -296,6 +302,12 @@ WithValidation.args = {
 	uiType: "image-upload",
 	description: "Required field",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IImageUploadSchema>("upload-with-warning").bind({});
+Warning.args = {
+	label: "Provide images",
+	uiType: "image-upload",
 };
 
 export const Reset = ResetStoryTemplate<IImageUploadSchema>("upload-reset").bind({});

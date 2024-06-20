@@ -11,7 +11,6 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { IFilterItemSchema } from "../../../../components/custom/filter/filter-item/types";
-const { ResizeObserver } = window;
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -60,18 +59,8 @@ const getTextfield = (): HTMLElement => {
 };
 // TODO: Add more tests
 describe(REFERENCE_KEY, () => {
-	beforeEach(() => {
-		jest.resetAllMocks();
-		delete window.ResizeObserver;
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-	});
-
 	afterEach(() => {
-		window.ResizeObserver = ResizeObserver;
+		jest.resetAllMocks();
 		jest.restoreAllMocks();
 	});
 

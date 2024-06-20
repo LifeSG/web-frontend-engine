@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { INestedMultiSelectSchema, TL1OptionProps, TNestedValues } from "./types";
 
 export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSchema>) => {
@@ -21,6 +21,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		formattedLabel,
 		onChange,
 		error,
+		warning,
 		...otherProps
 	} = props;
 
@@ -137,16 +138,19 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.NestedMultiSelect
-			{...otherSchema}
-			{...otherProps}
-			id={id}
-			data-testid={TestHelper.generateId(id)}
-			label={formattedLabel}
-			options={options as L1OptionProps<string, string, string>[]}
-			onSelectOptions={handleChange}
-			selectedKeyPaths={keyPaths}
-			errorMessage={error?.message}
-		/>
+		<>
+			<Form.NestedMultiSelect
+				{...otherSchema}
+				{...otherProps}
+				id={id}
+				data-testid={TestHelper.generateId(id)}
+				label={formattedLabel}
+				options={options as L1OptionProps<string, string, string>[]}
+				onSelectOptions={handleChange}
+				selectedKeyPaths={keyPaths}
+				errorMessage={error?.message}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

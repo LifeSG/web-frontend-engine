@@ -21,6 +21,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -125,10 +126,10 @@ const getCheckboxC = (isQuery = false, options?: ByRoleOptions): HTMLElement => 
 
 describe(UI_TYPE, () => {
 	beforeEach(() => {
-		jest.resetAllMocks();
 		setupJestCanvasMock();
 	});
 	afterEach(() => {
+		jest.resetAllMocks();
 		cleanup();
 	});
 
@@ -654,4 +655,14 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<INestedMultiSelectSchema>({
+		label: "Nestedmultiselect",
+		uiType: UI_TYPE,
+		options: [
+			{ label: "A", value: "Apple", key: "appleKey" },
+			{ label: "B", value: "Berry", key: "berryKey" },
+			{ label: "C", value: "Cherry", key: "cherryKey" },
+			{ label: "D", value: "Durian", key: "durianKey" },
+		],
+	});
 });

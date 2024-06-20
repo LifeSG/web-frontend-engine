@@ -17,6 +17,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const label = "Date";
@@ -61,17 +62,8 @@ const getYearInput = (type: TDateRangeInputType): HTMLElement => {
 };
 
 describe(uiType, () => {
-	beforeEach(() => {
-		jest.resetAllMocks();
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-	});
-
 	afterEach(() => {
-		window.ResizeObserver = ResizeObserver;
+		jest.resetAllMocks();
 		jest.restoreAllMocks();
 	});
 	it("should be able to render the field", () => {
@@ -380,4 +372,5 @@ describe(uiType, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<TDateRangeFieldSchema>({ uiType, label, variant });
 });

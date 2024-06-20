@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { Chip } from "../../shared";
+import { Chip, Warning } from "../../shared";
 import { IGenericFieldProps } from "../types";
 import { ChipContainer, StyledTextarea, Wrapper } from "./textarea.styles";
 import { ITextareaSchema } from "./types";
@@ -22,6 +22,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		onChange,
 		schema: { className, chipTexts, chipPosition, rows = 1, resizable, label: _label, validation, ...otherSchema },
 		value,
+		warning,
 		...otherProps
 	} = props;
 	const { setValue } = useFormContext();
@@ -96,24 +97,27 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	return (
-		<Form.CustomField label={formattedLabel} id={id} errorMessage={error?.message}>
-			<Wrapper chipPosition={chipPosition}>
-				{renderChips()}
-				<StyledTextarea
-					{...otherSchema}
-					{...otherProps}
-					id={id + "-base"}
-					data-testid={TestHelper.generateId(id, "textarea")}
-					className={className}
-					name={name}
-					maxLength={maxLength}
-					rows={rows}
-					resizable={resizable}
-					onChange={handleChange}
-					value={stateValue}
-					error={!!error?.message}
-				/>
-			</Wrapper>
-		</Form.CustomField>
+		<>
+			<Form.CustomField label={formattedLabel} id={id} errorMessage={error?.message}>
+				<Wrapper chipPosition={chipPosition}>
+					{renderChips()}
+					<StyledTextarea
+						{...otherSchema}
+						{...otherProps}
+						id={id + "-base"}
+						data-testid={TestHelper.generateId(id, "textarea")}
+						className={className}
+						name={name}
+						maxLength={maxLength}
+						rows={rows}
+						resizable={resizable}
+						onChange={handleChange}
+						value={stateValue}
+						error={!!error?.message}
+					/>
+				</Wrapper>
+			</Form.CustomField>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

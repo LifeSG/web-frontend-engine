@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -145,6 +146,17 @@ WithValidation.args = {
 		{ label: "Cherry", value: "Cherry" },
 	],
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<TRadioButtonGroupSchema>("radio-with-warning").bind({});
+Warning.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
 };
 
 export const Reset = ResetStoryTemplate<TRadioButtonGroupSchema>("radio-reset").bind({});

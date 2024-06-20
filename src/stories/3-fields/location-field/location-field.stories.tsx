@@ -1,7 +1,13 @@
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	WarningStoryTemplate,
+} from "../../common";
 
 const reverseGeoCodeEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code";
 const convertLatLngToXYEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/convert-latlng-to-xy";
@@ -209,6 +215,14 @@ MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",
 	mustHavePostalCode: true,
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+};
+
+export const Warning = WarningStoryTemplate<ILocationFieldSchema>("location-field-with-warning").bind({});
+Warning.args = {
+	uiType: "location-field",
+	label: "Default",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 };

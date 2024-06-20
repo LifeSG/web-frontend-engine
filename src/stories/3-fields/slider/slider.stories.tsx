@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -109,6 +110,12 @@ WithValidation.args = {
 	uiType: "slider",
 	label: "Number of fruits",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<ISliderSchema>("slider-with-warning").bind({});
+Warning.args = {
+	uiType: "slider",
+	label: "Number of fruits",
 };
 
 export const Reset = ResetStoryTemplate<ISliderSchema>("slider-reset").bind({});

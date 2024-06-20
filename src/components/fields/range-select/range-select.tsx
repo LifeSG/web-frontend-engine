@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Warning } from "../../shared";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
 import { IRangeSelectOption, IRangeSelectSchema } from "./types";
 
@@ -21,6 +22,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 		onChange,
 		schema: { label: _label, options, validation, ...otherSchema },
 		value = { from: undefined, to: undefined },
+		warning,
 		...otherProps
 	} = props;
 
@@ -101,21 +103,24 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.RangeSelect
-			{...otherSchema}
-			{...otherProps}
-			id={id}
-			onHideOptions={handleBlur}
-			data-testid={TestHelper.generateId(id)}
-			label={formattedLabel}
-			options={options}
-			onSelectOption={handleChange}
-			selectedOptions={getSelectedOptions()}
-			valueToStringFunction={(value) => `${value.from} - ${value.to}`}
-			valueExtractor={(item: IRangeSelectOption) => ({ from: item.value, to: item.value })}
-			displayValueExtractor={(item: IRangeSelectOption) => item.label}
-			listExtractor={(item: IRangeSelectOption) => item.label}
-			errorMessage={error?.message}
-		/>
+		<>
+			<Form.RangeSelect
+				{...otherSchema}
+				{...otherProps}
+				id={id}
+				onHideOptions={handleBlur}
+				data-testid={TestHelper.generateId(id)}
+				label={formattedLabel}
+				options={options}
+				onSelectOption={handleChange}
+				selectedOptions={getSelectedOptions()}
+				valueToStringFunction={(value) => `${value.from} - ${value.to}`}
+				valueExtractor={(item: IRangeSelectOption) => ({ from: item.value, to: item.value })}
+				displayValueExtractor={(item: IRangeSelectOption) => item.label}
+				listExtractor={(item: IRangeSelectOption) => item.label}
+				errorMessage={error?.message}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

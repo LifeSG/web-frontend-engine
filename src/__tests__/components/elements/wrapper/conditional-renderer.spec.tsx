@@ -54,7 +54,7 @@ const getFieldThree = (isQuery = false): HTMLElement => {
 };
 
 describe("conditional-renderer", () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 

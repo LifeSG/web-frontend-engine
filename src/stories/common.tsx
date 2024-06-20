@@ -1,7 +1,8 @@
+import { Button } from "@lifesg/react-design-system/button";
 import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { action } from "@storybook/addon-actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
-import { ReactElement, Ref, forwardRef } from "react";
+import { ReactElement, Ref, forwardRef, useRef } from "react";
 import styled from "styled-components";
 import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
@@ -318,3 +319,46 @@ export const OverrideStoryTemplate = <T,>(id: string, showSubmitButton = true) =
 			/>
 		);
 	}) as StoryFn<(args: T & { overrides?: RecursivePartial<T> | undefined }) => ReactElement>;
+
+/**
+ * Story template that contains the component and a button trigger warning
+ *
+ * &lt;T&gt; generic: component schema definition
+ */
+export const WarningStoryTemplate = <T,>(id: string) =>
+	((args) => {
+		return <FrontendEngineWithWarning id={id} fieldSchema={args as unknown as TFrontendEngineFieldSchema} />;
+	}) as StoryFn<(args: T & { overrides?: RecursivePartial<T> | undefined }) => ReactElement>;
+
+const FrontendEngineWithWarning = ({ id, fieldSchema }: { id: string; fieldSchema: TFrontendEngineFieldSchema }) => {
+	const formRef = useRef<IFrontendEngineRef>(null);
+
+	return (
+		<>
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: fieldSchema,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				}}
+			/>
+			<Button.Default
+				onClick={() =>
+					formRef.current?.setWarnings({
+						[id]: "This is a warning message, it is set via `setWarnings()` from Frontend Engine.",
+					})
+				}
+				style={{ marginTop: "2rem" }}
+			>
+				Show warning
+			</Button.Default>
+		</>
+	);
+};

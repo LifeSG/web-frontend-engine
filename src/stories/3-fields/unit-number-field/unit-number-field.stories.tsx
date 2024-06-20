@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -112,6 +113,12 @@ WithValidation.args = {
 	label: "Unit number with validation",
 	uiType: "unit-number-field",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IUnitNumberFieldSchema>("unit-number-with-warning").bind({});
+Warning.args = {
+	label: "Unit number with validation",
+	uiType: "unit-number-field",
 };
 
 export const Reset = ResetStoryTemplate<IUnitNumberFieldSchema>("unit-number-reset").bind({});

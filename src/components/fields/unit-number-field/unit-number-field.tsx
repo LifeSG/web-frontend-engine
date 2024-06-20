@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IUnitNumberFieldSchema } from "./types";
 
 export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema>) => {
@@ -18,6 +18,7 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 		onChange,
 		schema: { label: _label, validation, ...otherSchema },
 		value,
+		warning,
 		...otherProps
 	} = props;
 
@@ -55,15 +56,18 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.UnitNumberInput
-			{...otherSchema}
-			{...otherProps}
-			id={id}
-			data-testid={TestHelper.generateId(id, "unit-number")}
-			label={formattedLabel}
-			value={stateValue}
-			onChange={handleChange}
-			errorMessage={error?.message}
-		/>
+		<>
+			<Form.UnitNumberInput
+				{...otherSchema}
+				{...otherProps}
+				id={id}
+				data-testid={TestHelper.generateId(id, "unit-number")}
+				label={formattedLabel}
+				value={stateValue}
+				onChange={handleChange}
+				errorMessage={error?.message}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

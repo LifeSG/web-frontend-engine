@@ -22,7 +22,7 @@ module.exports = async () => ({
 	setupFilesAfterEnv: [
 		"jest-canvas-mock",
 		"@testing-library/jest-dom",
-		"<rootDir>/src/__tests__/setup/globalSetup.js",
+		"<rootDir>/src/__tests__/setup/global-setup.js",
 	],
 	verbose: true,
 	bail: false,

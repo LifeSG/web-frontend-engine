@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Warning } from "../../shared";
 import { FlexWrapper } from "./switch.styles";
 import { ISwitchSchema } from "./types";
 
@@ -20,6 +21,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 		onChange,
 		schema: { className, customOptions, disabled, label, validation, ...otherSchema },
 		value,
+		warning,
 	} = props;
 
 	const [stateValue, setStateValue] = useState<boolean>(value || undefined);
@@ -59,43 +61,46 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	// RENDER FUNCTIONS
 	// =========================================================================
 	return (
-		<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-			<FlexWrapper
-				className={className}
-				role="radiogroup"
-				aria-label={typeof label === "string" ? label : sanitize(label.mainLabel, { allowedTags: [] })}
-			>
-				<Toggle
-					{...otherSchema}
-					type="yes"
-					id={formatId("yes")}
-					data-testid={TestHelper.generateId(id, "switch-yes")}
-					disabled={disabled}
-					styleType={customOptions?.border === false ? "no-border" : "default"}
-					checked={isSwitchChecked(true)}
-					onChange={() => handleClick(true)}
-					indicator={true}
-					name={id}
-					error={!!error?.message}
+		<>
+			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
+				<FlexWrapper
+					className={className}
+					role="radiogroup"
+					aria-label={typeof label === "string" ? label : sanitize(label.mainLabel, { allowedTags: [] })}
 				>
-					Yes
-				</Toggle>
-				<Toggle
-					{...otherSchema}
-					type="no"
-					id={formatId("no")}
-					data-testid={TestHelper.generateId(id, "switch-no")}
-					disabled={disabled}
-					styleType={customOptions?.border === false ? "no-border" : "default"}
-					checked={isSwitchChecked(false)}
-					onChange={() => handleClick(false)}
-					indicator={true}
-					name={id}
-					error={!!error?.message}
-				>
-					No
-				</Toggle>
-			</FlexWrapper>
-		</Form.CustomField>
+					<Toggle
+						{...otherSchema}
+						type="yes"
+						id={formatId("yes")}
+						data-testid={TestHelper.generateId(id, "switch-yes")}
+						disabled={disabled}
+						styleType={customOptions?.border === false ? "no-border" : "default"}
+						checked={isSwitchChecked(true)}
+						onChange={() => handleClick(true)}
+						indicator={true}
+						name={id}
+						error={!!error?.message}
+					>
+						Yes
+					</Toggle>
+					<Toggle
+						{...otherSchema}
+						type="no"
+						id={formatId("no")}
+						data-testid={TestHelper.generateId(id, "switch-no")}
+						disabled={disabled}
+						styleType={customOptions?.border === false ? "no-border" : "default"}
+						checked={isSwitchChecked(false)}
+						onChange={() => handleClick(false)}
+						indicator={true}
+						name={id}
+						error={!!error?.message}
+					>
+						No
+					</Toggle>
+				</FlexWrapper>
+			</Form.CustomField>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

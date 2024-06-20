@@ -19,6 +19,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -79,15 +80,8 @@ const pickValidTime = async () => {
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
-
-		// NOTE: Timepicker internally uses ResizeObserver
-		global.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
 	});
 
 	it("should be able to render the field", () => {
@@ -247,4 +241,5 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<ITimeFieldSchema>({ label: COMPONENT_LABEL, uiType: UI_TYPE });
 });

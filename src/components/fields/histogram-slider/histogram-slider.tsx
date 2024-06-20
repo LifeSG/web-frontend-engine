@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IHistogramSliderSchema } from "./types";
 
 export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema>) => {
@@ -20,6 +20,7 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 		onChange,
 		schema: { label: _label, bins, interval, validation, disabled, readOnly, className, customOptions },
 		value,
+		warning,
 	} = props;
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>(undefined);
@@ -91,19 +92,22 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Form.HistogramSlider
-			{...customOptions}
-			id={id}
-			data-testid={TestHelper.generateId(id, "histogram-slider")}
-			label={formattedLabel}
-			errorMessage={error?.message}
-			onChangeEnd={handleChangeEnd}
-			value={stateValue}
-			bins={bins}
-			interval={interval}
-			disabled={disabled}
-			readOnly={readOnly}
-			className={className}
-		/>
+		<>
+			<Form.HistogramSlider
+				{...customOptions}
+				id={id}
+				data-testid={TestHelper.generateId(id, "histogram-slider")}
+				label={formattedLabel}
+				errorMessage={error?.message}
+				onChangeEnd={handleChangeEnd}
+				value={stateValue}
+				bins={bins}
+				interval={interval}
+				disabled={disabled}
+				readOnly={readOnly}
+				className={className}
+			/>
+			<Warning id={id} message={warning} />
+		</>
 	);
 };

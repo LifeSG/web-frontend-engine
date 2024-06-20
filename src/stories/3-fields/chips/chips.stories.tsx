@@ -10,6 +10,7 @@ import {
 	RESET_BUTTON_SCHEMA,
 	ResetStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -192,6 +193,17 @@ WithValidation.args = {
 		{ label: "Cherry", value: "Cherry" },
 	],
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IChipsSchema>("chips-with-warning").bind({});
+Warning.args = {
+	uiType: "chips",
+	label: "Fruits",
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
 };
 
 export const WithTextarea = DefaultStoryTemplate<IChipsSchema>("chips-with-textarea").bind({});

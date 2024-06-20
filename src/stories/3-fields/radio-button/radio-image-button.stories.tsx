@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -196,6 +197,20 @@ WithValidation.args = {
 		{ label: "Cherry", value: "Cherry", imgSrc: "https://cdn-icons-png.flaticon.com/128/7254/7254245.png" },
 	],
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<TRadioButtonGroupSchema>("radio-with-warning").bind({});
+Warning.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	customOptions: {
+		styleType: "image-button",
+	},
+	options: [
+		{ label: "Apple", value: "Apple", imgSrc: "https://cdn-icons-png.flaticon.com/512/415/415733.png" },
+		{ label: "Berry", value: "Berry", imgSrc: "https://cdn-icons-png.flaticon.com/128/2105/2105891.png" },
+		{ label: "Cherry", value: "Cherry", imgSrc: "https://cdn-icons-png.flaticon.com/128/7254/7254245.png" },
+	],
 };
 
 export const Overrides = OverrideStoryTemplate<TRadioButtonGroupSchema>("radio-overrides").bind({});

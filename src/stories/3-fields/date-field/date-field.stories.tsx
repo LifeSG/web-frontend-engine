@@ -9,6 +9,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -154,6 +155,12 @@ WithValidation.args = {
 	uiType: "date-field",
 	label: "Date",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<IDateFieldSchema>("date-with-warning").bind({});
+Warning.args = {
+	uiType: "date-field",
+	label: "Date",
 };
 
 export const WithDisabledDates = DefaultStoryTemplate<IDateFieldSchema>("date-disabled-dates").bind({});

@@ -7,6 +7,7 @@ import {
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	WarningStoryTemplate,
 } from "../../common";
 
 const meta: Meta = {
@@ -100,6 +101,12 @@ WithValidation.args = {
 	uiType: "switch",
 	label: "Switch",
 	validation: [{ required: true }],
+};
+
+export const Warning = WarningStoryTemplate<ISwitchSchema>("switch-with-warning").bind({});
+Warning.args = {
+	uiType: "switch",
+	label: "Switch",
 };
 
 export const WithoutBorder = DefaultStoryTemplate<ISwitchSchema>("switch-without-border").bind({});

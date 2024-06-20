@@ -20,6 +20,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -80,7 +81,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 describe(UI_TYPE, () => {
-	beforeEach(() => {
+	afterEach(() => {
 		jest.resetAllMocks();
 	});
 
@@ -334,4 +335,12 @@ describe(UI_TYPE, () => {
 	});
 
 	labelTestSuite(renderComponent);
+	warningTestSuite<TRadioButtonGroupSchema>({
+		label: "Radio",
+		uiType: UI_TYPE,
+		options: [
+			{ label: "A", value: "Apple" },
+			{ label: "B", value: "Berry" },
+		],
+	});
 });

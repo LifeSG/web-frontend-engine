@@ -131,13 +131,6 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		setupJestCanvasMock();
-
-		window.ResizeObserver = jest.fn().mockImplementation(() => ({
-			observe: jest.fn(),
-			unobserve: jest.fn(),
-			disconnect: jest.fn(),
-		}));
-
 		jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
 		uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({});
 	});
@@ -606,6 +599,58 @@ describe(UI_TYPE, () => {
 					]),
 				})
 			);
+		});
+	});
+
+	describe("warning", () => {
+		const warningMessage = "warning message";
+		beforeEach(async () => {
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current?.setWarnings({ [COMPONENT_ID]: warningMessage });
+			};
+
+			render(
+				<FrontendEngineWithCustomButton
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[COMPONENT_ID]: {
+										label: "Upload",
+										uiType: "file-upload",
+										uploadOnAddingFile: {
+											type: "base64",
+											url: "test",
+										},
+									},
+									...getSubmitButtonProps(),
+								},
+							},
+						},
+					}}
+					onClick={handleClick}
+				/>
+			);
+
+			await waitFor(() => getDragInputUploadField());
+		});
+
+		it("should not render warning by default", () => {
+			expect(screen.queryByTestId(`${COMPONENT_ID}__warning`)).not.toBeInTheDocument();
+			expect(screen.queryByText(warningMessage)).not.toBeInTheDocument();
+		});
+
+		it("should be able to render warning via setWarnings()", () => {
+			fireEvent.click(getField("button", "Custom Button"));
+
+			expect(screen.getByText(warningMessage)).toBeInTheDocument();
+		});
+
+		it("should clear warnings on submit", async () => {
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.queryByText(warningMessage)).not.toBeInTheDocument();
 		});
 	});
 
