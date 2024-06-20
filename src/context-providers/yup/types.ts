@@ -50,14 +50,19 @@ interface IYupRule {
 	equalsField?: unknown | undefined;
 }
 
-export interface IYupValidationRule extends IYupRule {
+/**
+ * V and U generics are needed here to be passed into `then` and `otherwise` conditional validation
+ * `V` - custom validation rules
+ * `U` - custom validation rules defined by components, for internal use, prevents getting overwritten by custom validation rules
+ */
+export interface IYupValidationRule<V = undefined, U = undefined> extends IYupRule {
 	required?: boolean | undefined;
 	when?:
 		| {
 				[id: string]: {
 					is: string | number | boolean | string[] | number[] | boolean[] | IYupConditionalValidationRule[];
-					then: IYupValidationRule[];
-					otherwise?: Omit<IYupValidationRule, "when">[];
+					then: (IYupValidationRule<V, U> | V | U)[];
+					otherwise?: (Omit<IYupValidationRule<V, U>, "when"> | V | U)[];
 					yupSchema?: Yup.AnySchema | undefined;
 				};
 		  }

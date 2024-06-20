@@ -106,7 +106,7 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 	 * - in order for an object to be valid, need to fulfil all conditions in that object (AND condition) */
 	showIf?: TRenderRules[] | undefined;
 	/** validation config, can be customised by passing generics */
-	validation?: (V | U | IYupValidationRule)[];
+	validation?: (V | U | IYupValidationRule<V, U>)[];
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
 	/** set responsive columns */
