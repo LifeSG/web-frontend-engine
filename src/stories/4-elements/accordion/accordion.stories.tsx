@@ -1,7 +1,10 @@
+import { action } from "@storybook/addon-actions";
 import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
+import { useEffect, useRef } from "react";
+import { IFrontendEngineRef } from "../../../components";
 import { IAccordionSchema } from "../../../components/elements/accordion/types";
-import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate, FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 const meta: Meta = {
 	title: "Element/Accordion",
@@ -87,6 +90,36 @@ const meta: Meta = {
 };
 export default meta;
 
+const EventTemplate = <T, U = string>(id: string, eventName: string) =>
+	((args) => {
+		const formRef = useRef<IFrontendEngineRef>();
+
+		const handleEvent = (e: unknown) => action(eventName)(e);
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
+			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+
+		return (
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+				}}
+			/>
+		);
+	}) as StoryFn<IAccordionSchema>;
+
 export const Default = DefaultStoryTemplate<IAccordionSchema>("accordion-default").bind({});
 Default.args = {
 	uiType: "accordion",
@@ -108,7 +141,7 @@ Default.args = {
 	title: "Title",
 };
 
-export const Collapsible = DefaultStoryTemplate<IAccordionSchema>("accordion-default").bind({});
+export const Collapsible = DefaultStoryTemplate<IAccordionSchema>("accordion-collapsible").bind({});
 Collapsible.args = {
 	uiType: "accordion",
 	children: {
@@ -132,7 +165,7 @@ Collapsible.args = {
 	title: "Title",
 };
 
-export const Button = DefaultStoryTemplate<IAccordionSchema>("accordion-default").bind({});
+export const Button = EventTemplate<IAccordionSchema>("accordion-button", "edit").bind({});
 Button.args = {
 	uiType: "accordion",
 	children: {
@@ -158,7 +191,7 @@ Button.args = {
 	title: "Accordion With Button",
 };
 
-export const ButtonLabel = DefaultStoryTemplate<IAccordionSchema>("accordion-default").bind({});
+export const ButtonLabel = EventTemplate<IAccordionSchema>("accordion-button-label", "edit").bind({});
 ButtonLabel.args = {
 	uiType: "accordion",
 	children: {
@@ -184,7 +217,7 @@ ButtonLabel.args = {
 	title: "Accordion With Button",
 };
 
-export const DisplayState = DefaultStoryTemplate<IAccordionSchema>("accordion-default").bind({});
+export const DisplayState = DefaultStoryTemplate<IAccordionSchema>("accordion-display-state").bind({});
 DisplayState.args = {
 	uiType: "accordion",
 	children: {
