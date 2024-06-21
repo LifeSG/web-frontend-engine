@@ -22,6 +22,67 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonFieldStoryProps("accordion", true),
+		children: {
+			description: "Elements that are the descendant of this component",
+			table: {
+				type: { summary: "TFrontendEngineFieldSchema" },
+			},
+			type: { name: "object", value: {}, required: true },
+		},
+		button: {
+			description:
+				"<div>Define button-related settings.</div><ul><li><strong>label</strong>: Label of the button (Default: Edit)</li></ul>",
+			table: {
+				type: {
+					summary: "{ label: string }",
+				},
+				defaultValue: { summary: "{ label: 'Edit' }" },
+			},
+		},
+		collapsible: {
+			description: "Specifies if the contents can be collapsed or expanded",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: false },
+			},
+			control: {
+				type: "boolean",
+			},
+		},
+		expanded: {
+			description: "Specifies if the component is to be unfolded to reveal the items",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: true },
+			},
+			control: {
+				type: "boolean",
+			},
+		},
+		title: {
+			description: "A name of the purpose of the element",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+		},
+		displayState: {
+			description: "Specifies the display state which renders an icon",
+			table: {
+				type: {
+					summary: `"default" | "error" | "warning" | undefined"`,
+				},
+			},
+			options: ["default", "error", "warning", "undefined"],
+			control: {
+				type: "select",
+			},
+		},
 	},
 };
 export default meta;
