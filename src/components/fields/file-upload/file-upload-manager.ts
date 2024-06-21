@@ -61,6 +61,7 @@ const FileUploadManager = (props: IProps) => {
 			// track / update values
 			const uploadedFiles = files.filter(({ status }) => status === EFileStatus.UPLOADED);
 			const notPrefilledFiles = uploadedFiles.filter(({ addedFrom }) => addedFrom !== "schema");
+			const hasNotPrefilledFiles = notPrefilledFiles.length > 0;
 			const gotDeleteFiles = files.filter(({ status }) => status === EFileStatus.TO_DELETE).length > 0;
 
 			/**
@@ -69,7 +70,7 @@ const FileUploadManager = (props: IProps) => {
 			 * - there are non-prefilled files
 			 * - user deleted file (differentiated from reset)
 			 */
-			const shouldDirty = notPrefilledFiles.length > 0 || gotDeleteFiles;
+			const shouldDirty = hasNotPrefilledFiles || gotDeleteFiles;
 
 			setValue(
 				id,
@@ -80,7 +81,7 @@ const FileUploadManager = (props: IProps) => {
 					fileUrl,
 					uploadResponse,
 				})),
-				{ shouldDirty }
+				{ shouldDirty, shouldTouch: hasNotPrefilledFiles }
 			);
 		}, // eslint-disable-next-line react-hooks/exhaustive-deps
 		[files.map(({ fileItem, status }) => `${fileItem?.id}-${status}`).join(",")]

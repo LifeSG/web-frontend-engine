@@ -183,7 +183,8 @@ export const ImageManager = (props: IProps) => {
 		 * - there are non-prefilled images
 		 * - user deleted image (differentiated from reset)
 		 */
-		const shouldDirty = notPrefilledImages.length > 0 || gotDeleteImages;
+		const hasNotPrefilledImages = notPrefilledImages.length > 0;
+		const shouldDirty = hasNotPrefilledImages || gotDeleteImages;
 
 		setValue(
 			id,
@@ -192,7 +193,7 @@ export const ImageManager = (props: IProps) => {
 				dataURL: drawingDataURL || dataURL,
 				uploadResponse,
 			})),
-			{ shouldDirty }
+			{ shouldDirty, shouldTouch: hasNotPrefilledImages }
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [images.map((image) => image.status).join(",")]);

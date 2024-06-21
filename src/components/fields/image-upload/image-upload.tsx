@@ -40,6 +40,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		},
 		id,
 		isDirty,
+		isTouched,
 		value,
 		...otherProps
 	} = props;
@@ -60,11 +61,11 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	// =============================================================================
 	useEffect(() => {
 		dispatchFieldEvent("mount", id);
-	}, []);
+	}, [dispatchFieldEvent, id]);
 
 	useEffect(() => {
 		// for `defaultValue`
-		if (!isDirty && Array.isArray(value)) {
+		if (!isDirty && !isTouched && Array.isArray(value) && value.length > 0) {
 			const newImages: IImage[] = [];
 			(value as IUploadedImage[]).forEach(({ fileName, dataURL, uploadResponse }, i) => {
 				const newImage: IImage = {
@@ -83,8 +84,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			});
 			setImages(newImages);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isDirty]);
+	}, [isDirty, isTouched, setImages, value]);
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
