@@ -94,10 +94,12 @@ Default.args = {
 		text: {
 			uiType: "text-field",
 			label: "Text",
+			validation: [{ required: true }],
 		},
 		text2: {
 			uiType: "text-field",
 			label: "Text 2",
+			validation: [{ required: true }],
 		},
 	},
 	button: false,
@@ -113,6 +115,7 @@ Collapsible.args = {
 		text: {
 			uiType: "text-field",
 			label: "Text",
+			validation: [{ required: true }],
 		},
 		checkbox: {
 			label: "Checkbox",
@@ -121,10 +124,11 @@ Collapsible.args = {
 				{ label: "A", value: "Apple" },
 				{ label: "B", value: "Boy" },
 			],
+			validation: [{ required: true }],
 		},
 	},
 	button: false,
-	collapsible: false,
+	collapsible: true,
 	title: "Title",
 };
 
@@ -135,6 +139,7 @@ Button.args = {
 		text: {
 			uiType: "text-field",
 			label: "Text",
+			validation: [{ required: true }],
 		},
 		checkbox: {
 			label: "Checkbox",
@@ -143,6 +148,7 @@ Button.args = {
 				{ label: "A", value: "Apple" },
 				{ label: "B", value: "Boy" },
 			],
+			validation: [{ required: true }],
 		},
 	},
 	button: {
@@ -159,6 +165,7 @@ ButtonLabel.args = {
 		text: {
 			uiType: "text-field",
 			label: "Text",
+			validation: [{ required: true }],
 		},
 		checkbox: {
 			label: "Checkbox",
@@ -167,6 +174,7 @@ ButtonLabel.args = {
 				{ label: "A", value: "Apple" },
 				{ label: "B", value: "Boy" },
 			],
+			validation: [{ required: true }],
 		},
 	},
 	button: {
@@ -183,6 +191,7 @@ DisplayState.args = {
 		text: {
 			uiType: "text-field",
 			label: "Text",
+			validation: [{ required: true }],
 		},
 		checkbox: {
 			label: "Checkbox",
@@ -191,6 +200,7 @@ DisplayState.args = {
 				{ label: "A", value: "Apple" },
 				{ label: "B", value: "Boy" },
 			],
+			validation: [{ required: true }],
 		},
 	},
 	button: false,
