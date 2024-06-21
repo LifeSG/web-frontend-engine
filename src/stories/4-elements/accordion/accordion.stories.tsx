@@ -188,11 +188,11 @@ Button.args = {
 		label: undefined,
 	},
 	collapsible: false,
-	title: "Accordion With Button",
+	title: "Accordion With Default Button",
 };
 
-export const ButtonLabel = EventTemplate<IAccordionSchema>("accordion-button-label", "edit").bind({});
-ButtonLabel.args = {
+export const CustomButton = EventTemplate<IAccordionSchema>("accordion-button-label", "edit").bind({});
+CustomButton.args = {
 	uiType: "accordion",
 	children: {
 		text: {
@@ -214,7 +214,7 @@ ButtonLabel.args = {
 		label: "Custom Label",
 	},
 	collapsible: false,
-	title: "Accordion With Button",
+	title: "Accordion With Custom Button Label",
 };
 
 export const DisplayState = DefaultStoryTemplate<IAccordionSchema>("accordion-display-state").bind({});
