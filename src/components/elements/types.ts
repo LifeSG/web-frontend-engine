@@ -1,5 +1,6 @@
 import { TRenderRules } from "../../context-providers";
 import { IColumns } from "../frontend-engine";
+import { IAccordionSchema } from "./accordion";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
 import { IGridSchema } from "./grid";
@@ -60,7 +61,8 @@ export type TElementSchema<V = undefined> =
 	| ITabSchema<V>
 	| ITextSchema
 	| IUnorderedListSchema<V>
-	| IWrapperSchema<V>;
+	| IWrapperSchema<V>
+	| IAccordionSchema<V>;
 
 /**
  * common element schema for element schemas to extend from
