@@ -3,11 +3,15 @@ import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-
 import { IBaseElementSchema } from "../types";
 import { IWrapperSchema } from "../wrapper";
 
+export interface IButtonAccordion {
+	label: string | undefined;
+}
+
 export interface IAccordionSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"accordion">,
 		TComponentOmitProps<IWrapperSchema> {
 	uiType: "accordion";
-	buttonLabel?: string | undefined;
+	button?: false | IButtonAccordion;
 	children: Record<string, TFrontendEngineFieldSchema<V, C>>;
 	className?: string | undefined;
 	"data-testid"?: string | undefined;

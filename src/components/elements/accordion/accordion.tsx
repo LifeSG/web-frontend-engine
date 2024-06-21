@@ -1,7 +1,8 @@
-import { BoxContainer, Button } from "@lifesg/react-design-system";
+import { BoxContainer, Button, Layout } from "@lifesg/react-design-system";
 import { useFieldEvent } from "../../../utils/hooks";
 import { Wrapper } from "../wrapper";
 import { IAccordionProps } from "./types";
+import { Container } from "./accordion.styles";
 
 /**
  * this component is meant to render fields that are nested in a box / accordion
@@ -11,7 +12,7 @@ export const Accordion = (props: IAccordionProps) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const { schema, id } = props;
-	const { children, buttonLabel, title, ...otherProps } = schema;
+	const { children, button, title, ...otherProps } = schema;
 
 	const { dispatchFieldEvent } = useFieldEvent();
 
@@ -25,14 +26,18 @@ export const Accordion = (props: IAccordionProps) => {
 				title={title}
 				{...otherProps}
 				callToActionComponent={
-					buttonLabel === undefined ? undefined : (
+					button === false ? undefined : (
 						<Button.Default styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
-							{buttonLabel ?? "Edit"}
+							{button?.label ?? "Edit"}
 						</Button.Default>
 					)
 				}
 			>
-				<Wrapper id={id}>{children}</Wrapper>
+				<Layout.Content>
+					<Container>
+						<Wrapper id={id}>{children}</Wrapper>
+					</Container>
+				</Layout.Content>
 			</BoxContainer>
 		);
 	};
