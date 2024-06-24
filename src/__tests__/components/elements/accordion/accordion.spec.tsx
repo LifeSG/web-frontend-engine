@@ -1,9 +1,9 @@
-import { useRef, useEffect } from "react";
-import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
-import { FRONTEND_ENGINE_ID, TOverrideField, getField } from "../../../common";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { TestHelper } from "../../../../utils";
+import { useEffect, useRef } from "react";
+import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
 import { IAccordionSchema } from "../../../../components/elements";
+import { TestHelper } from "../../../../utils";
+import { FRONTEND_ENGINE_ID, TOverrideField, getField } from "../../../common";
 
 const COMPONENT_ID = "field";
 const UI_TYPE = "accordion";
@@ -101,16 +101,38 @@ describe(UI_TYPE, () => {
 		expect(screen.getByText(ACCORDION_TITLE)).toBeInTheDocument();
 	});
 
-	it("should render the default button", () => {
+	it("should render the default button if button is true", () => {
 		renderComponent(
 			{},
 			{
-				button: {
-					label: undefined,
-				},
+				button: true,
 			}
 		);
 		expect(screen.getByText("Edit")).toBeInTheDocument();
+
+		const element = screen.queryByText(CUSTOM_LABEL);
+		expect(element).toBeNull();
+	});
+
+	it("should not render the button if button is false", () => {
+		renderComponent(
+			{},
+			{
+				button: false,
+			}
+		);
+
+		const element = screen.queryByText(CUSTOM_LABEL);
+		expect(element).toBeNull();
+	});
+
+	it("should not render the button if button is undefined", () => {
+		renderComponent(
+			{},
+			{
+				button: false,
+			}
+		);
 
 		const element = screen.queryByText(CUSTOM_LABEL);
 		expect(element).toBeNull();

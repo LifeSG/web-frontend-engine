@@ -1,46 +1,42 @@
-import { BoxContainer, Button, Layout } from "@lifesg/react-design-system";
+import { BoxContainer } from "@lifesg/react-design-system/box-container";
+import { Button } from "@lifesg/react-design-system/button";
+import { Layout } from "@lifesg/react-design-system/layout";
 import { useFieldEvent } from "../../../utils/hooks";
+import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
-import { IAccordionProps } from "./types";
 import { Container } from "./accordion.styles";
+import { IAccordionSchema } from "./types";
 
 /**
  * this component is meant to render fields that are nested in a box / accordion
  */
-export const Accordion = (props: IAccordionProps) => {
+export const Accordion = (props: IGenericElementProps<IAccordionSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
 	const { schema, id } = props;
-	const { children, button, title, ...otherProps } = schema;
+	const { children, button, title, ...otherSchema } = schema;
 
 	const { dispatchFieldEvent } = useFieldEvent();
 
-	// =============================================================================
-	// RENDER FUNCTIONS
-	// =============================================================================
-	const renderAccordion = () => {
-		return (
-			<BoxContainer
-				id={id}
-				title={title}
-				{...otherProps}
-				callToActionComponent={
-					button === false ? undefined : (
-						<Button.Default styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
-							{button?.label ?? "Edit"}
-						</Button.Default>
-					)
-				}
-			>
-				<Layout.Content>
-					<Container>
-						<Wrapper id={id}>{children}</Wrapper>
-					</Container>
-				</Layout.Content>
-			</BoxContainer>
-		);
-	};
-
-	return <>{renderAccordion()}</>;
+	return (
+		<BoxContainer
+			id={id}
+			title={title}
+			{...otherSchema}
+			callToActionComponent={
+				button ? (
+					<Button.Default styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
+						{typeof button === "object" ? button.label : "Edit"}
+					</Button.Default>
+				) : undefined
+			}
+		>
+			<Layout.Content>
+				<Container>
+					<Wrapper id={id}>{children}</Wrapper>
+				</Container>
+			</Layout.Content>
+		</BoxContainer>
+	);
 };

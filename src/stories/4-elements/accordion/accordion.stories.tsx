@@ -34,12 +34,12 @@ const meta: Meta = {
 		},
 		button: {
 			description:
-				"<div>Define button-related settings.</div><ul><li><strong>label</strong>: Label of the button (Default: Edit)</li></ul>",
+				"<div>Define button-related settings.</div><ul><li><strong>label</strong>: Label of the button (Default: Edit)</li></ul>. Render default `Edit` with value true and false | undefined to hide the button",
 			table: {
 				type: {
-					summary: "{ label: string }",
+					summary: "true | false | { label: string } | undefined",
 				},
-				defaultValue: { summary: "{ label: 'Edit' }" },
+				defaultValue: { summary: "boolean | { label: 'Edit' }" },
 			},
 		},
 		collapsible: {
@@ -48,7 +48,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: true },
 			},
 			control: {
 				type: "boolean",
@@ -95,6 +95,7 @@ const EventTemplate = <T, U = string>(id: string, eventName: string) =>
 		const formRef = useRef<IFrontendEngineRef>();
 
 		const handleEvent = (e: unknown) => action(eventName)(e);
+		// eslint-disable-next-line react-hooks/rules-of-hooks
 		useEffect(() => {
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
