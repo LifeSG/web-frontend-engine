@@ -61,7 +61,7 @@ export const ImageManager = (props: IProps) => {
 
 		addFieldEventListener("update-image-status", id, handleUpdateImageStatus);
 		return () => removeFieldEventListener("update-image-status", id, handleUpdateImageStatus);
-	}, []);
+	}, [addFieldEventListener, id, removeFieldEventListener, setImages]);
 
 	// generate pseudo-random session id
 	useEffect(() => {
