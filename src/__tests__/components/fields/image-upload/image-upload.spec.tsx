@@ -214,6 +214,10 @@ describe("image-upload", () => {
 							fileName: FILE_1.name,
 							dataURL: JPG_BASE64,
 						},
+						{
+							fileName: FILE_2.name,
+							dataURL: JPG_BASE64,
+						},
 					],
 				},
 			},
@@ -223,7 +227,7 @@ describe("image-upload", () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 		});
 
-		expect(SUBMIT_FN).toBeCalledWith(
+		expect(SUBMIT_FN).toHaveBeenCalledWith(
 			expect.objectContaining({
 				field: expect.arrayContaining([
 					expect.objectContaining({
@@ -287,7 +291,7 @@ describe("image-upload", () => {
 			it("should submit as many base64 and upload response", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -330,7 +334,7 @@ describe("image-upload", () => {
 			it("should submit base64 and upload response up to max number of images", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -363,7 +367,7 @@ describe("image-upload", () => {
 
 			it("should submit only the valid files", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -393,7 +397,7 @@ describe("image-upload", () => {
 			it("should submit only the valid files", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -428,7 +432,7 @@ describe("image-upload", () => {
 			it("should submit only the valid files", async () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
 						field: expect.arrayContaining([
 							expect.objectContaining({
@@ -943,7 +947,7 @@ describe("image-upload", () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(screen.queryByText(FILE_1.name)).not.toBeInTheDocument();
 			expect(screen.queryByText(FILE_2.name)).not.toBeInTheDocument();
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -972,7 +976,7 @@ describe("image-upload", () => {
 
 			expect(screen.getByText(FILE_1.name)).toBeInTheDocument();
 			expect(screen.queryByText(FILE_2.name)).not.toBeInTheDocument();
-			expect(SUBMIT_FN).toBeCalledWith(
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({
 					field: expect.arrayContaining([
 						expect.objectContaining({

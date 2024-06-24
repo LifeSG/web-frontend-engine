@@ -40,7 +40,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		},
 		id,
 		isDirty,
-		isTouched,
 		value,
 		...otherProps
 	} = props;
@@ -65,9 +64,12 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 
 	useEffect(() => {
 		// for `defaultValue`
-		if (!isDirty && !isTouched && Array.isArray(value) && value.length > 0) {
+		const valuesToHandle = Array.isArray(value)
+			? (value as IUploadedImage[]).filter(({ handledFromDefault }) => !handledFromDefault)
+			: [];
+		if (!isDirty && valuesToHandle.length > 0) {
 			const newImages: IImage[] = [];
-			(value as IUploadedImage[]).forEach(({ fileName, dataURL, uploadResponse }, i) => {
+			valuesToHandle.forEach(({ fileName, dataURL, uploadResponse }, i) => {
 				const newImage: IImage = {
 					id: generateRandomId(),
 					file: {} as File,
@@ -84,7 +86,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			});
 			setImages(newImages);
 		}
-	}, [isDirty, isTouched, setImages, value]);
+	}, [isDirty, setImages, value]);
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);

@@ -35,10 +35,10 @@ export const ImageManager = (props: IProps) => {
 	const { accepts, compress, dimensions, editImage, id, maxSizeInKb, outputType, upload, value } = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
-	const [managerErrorCount, setManagerErrorCount] = useState(0);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
 	const sessionId = useRef<string>();
+	const managerErrorCount = useRef(0);
 
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 
@@ -168,8 +168,8 @@ export const ImageManager = (props: IProps) => {
 				updatedManagerErrorCount++;
 			}
 		});
-		setErrorCount((prev) => Math.max(0, prev + updatedManagerErrorCount - managerErrorCount));
-		setManagerErrorCount(updatedManagerErrorCount);
+		setErrorCount((prev) => Math.max(0, prev + updatedManagerErrorCount - managerErrorCount.current));
+		managerErrorCount.current = updatedManagerErrorCount;
 
 		const uploadedImages = images.filter(
 			({ status }) => status === EImageStatus.UPLOADED || status === EImageStatus.ERROR_CUSTOM_MUTED
@@ -188,15 +188,15 @@ export const ImageManager = (props: IProps) => {
 
 		setValue(
 			id,
-			uploadedImages.map(({ dataURL, drawingDataURL, name, uploadResponse }) => ({
+			uploadedImages.map(({ dataURL, drawingDataURL, name, uploadResponse, addedFrom }) => ({
 				fileName: name,
 				dataURL: drawingDataURL || dataURL,
 				uploadResponse,
+				handledFromDefault: addedFrom === "schema",
 			})),
 			{ shouldDirty, shouldTouch: hasNotPrefilledImages }
 		);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [images.map((image) => image.status).join(",")]);
+	}, [accepts, id, images, setErrorCount, setValue]);
 
 	useEffect(() => {
 		if (previousValue !== undefined && value === undefined && images.length) {
