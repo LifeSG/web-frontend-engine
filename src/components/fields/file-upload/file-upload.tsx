@@ -140,9 +140,13 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 
 	useEffect(() => {
 		// for defaultValue
-		if (!isDirty && !isTouched && Array.isArray(value) && value.length > 0) {
+		const filesToHandle = Array.isArray(value)
+			? (value as IFileUploadValue[]).filter(({ handledFromDefault }) => !handledFromDefault)
+			: [];
+
+		if (!isDirty && filesToHandle.length > 0) {
 			const newFiles: IFile[] = [];
-			(value as IFileUploadValue[]).forEach(({ dataURL, fileId, fileName, fileUrl, uploadResponse }) => {
+			filesToHandle.forEach(({ dataURL, fileId, fileName, fileUrl, uploadResponse }) => {
 				newFiles.push({
 					addedFrom: "schema",
 					dataURL,
@@ -160,7 +164,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 			});
 			handleNewFiles(newFiles, []);
 		}
-	}, [handleNewFiles, isDirty, isTouched, value]);
+	}, [handleNewFiles, isDirty, value]);
 
 	// =============================================================================
 	// EVENT HANDLERS

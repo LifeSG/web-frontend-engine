@@ -74,12 +74,13 @@ const FileUploadManager = (props: IProps) => {
 
 			setValue(
 				id,
-				uploadedFiles.map(({ dataURL, fileItem, fileUrl, uploadResponse }) => ({
+				uploadedFiles.map(({ dataURL, fileItem, fileUrl, uploadResponse, addedFrom }) => ({
 					...(upload.type === "base64" ? { dataURL } : {}),
 					fileId: fileItem.id,
 					fileName: fileItem.name,
 					fileUrl,
 					uploadResponse,
+					handledFromDefault: addedFrom === "schema",
 				})),
 				{ shouldDirty, shouldTouch: hasNotPrefilledFiles }
 			);
@@ -92,8 +93,7 @@ const FileUploadManager = (props: IProps) => {
 		if (previousValue !== undefined && value === undefined && files.length) {
 			setFiles([]);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [previousValue === undefined, value === undefined, files.length]);
+	}, [files, previousValue, setFiles, value]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
