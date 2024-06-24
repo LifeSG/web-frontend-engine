@@ -130,7 +130,7 @@ describe(UI_TYPE, () => {
 		renderComponent(
 			{},
 			{
-				button: false,
+				button: undefined,
 			}
 		);
 
