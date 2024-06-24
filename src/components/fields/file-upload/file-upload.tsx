@@ -1,5 +1,5 @@
 import { FileUpload as DSFileUpload, FileItemProps } from "@lifesg/react-design-system/file-upload";
-import { Suspense, lazy, useContext, useEffect, useRef } from "react";
+import { Suspense, lazy, useCallback, useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
@@ -22,6 +22,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		id,
 		error,
 		isDirty,
+		isTouched,
 		value,
 		schema: {
 			compressImages,
@@ -42,12 +43,34 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	const { dispatchFieldEvent } = useFieldEvent();
 	const { clearErrors, setError } = useFormContext();
 
+	const handleNewFiles = useCallback(
+		(newFiles: IFile[], oldFiles: IFile[]) => {
+			const updatedFiles = [...oldFiles];
+			const fileCount = updatedFiles.length;
+			newFiles.forEach((newFile, i) => {
+				if (!maxFilesRuleRef.current.max || fileCount + i < maxFilesRuleRef.current.max) {
+					updatedFiles.push({ ...newFile, slot: FileUploadHelper.findAvailableSlot(updatedFiles) });
+					clearErrors(id);
+				} else {
+					setError(id, {
+						type: "max",
+						message:
+							maxFilesRuleRef.current.errorMessage ||
+							ERROR_MESSAGES.UPLOAD().MAX_FILES(maxFilesRuleRef.current.max),
+					});
+				}
+			});
+			setFiles(updatedFiles);
+		},
+		[clearErrors, id, setError, setFiles]
+	);
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
 		dispatchFieldEvent("mount", id);
-	}, []);
+	}, [dispatchFieldEvent, id]);
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
@@ -126,9 +149,13 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 
 	useEffect(() => {
 		// for defaultValue
-		if (!isDirty && Array.isArray(value)) {
+		const filesToHandle = Array.isArray(value)
+			? (value as IFileUploadValue[]).filter(({ handledFromDefault }) => !handledFromDefault)
+			: [];
+
+		if (!isDirty && filesToHandle.length > 0) {
 			const newFiles: IFile[] = [];
-			(value as IFileUploadValue[]).forEach(({ dataURL, fileId, fileName, fileUrl, uploadResponse }) => {
+			filesToHandle.forEach(({ dataURL, fileId, fileName, fileUrl, uploadResponse }) => {
 				newFiles.push({
 					addedFrom: "schema",
 					dataURL,
@@ -146,8 +173,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 			});
 			handleNewFiles(newFiles, []);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isDirty]);
+	}, [handleNewFiles, isDirty, value]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -182,25 +208,6 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const handleNewFiles = (newFiles: IFile[], oldFiles: IFile[]) => {
-		const updatedFiles = [...oldFiles];
-		const fileCount = updatedFiles.length;
-		newFiles.forEach((newFile, i) => {
-			if (!maxFilesRuleRef.current.max || fileCount + i < maxFilesRuleRef.current.max) {
-				updatedFiles.push({ ...newFile, slot: FileUploadHelper.findAvailableSlot(updatedFiles) });
-				clearErrors(id);
-			} else {
-				setError(id, {
-					type: "max",
-					message:
-						maxFilesRuleRef.current.errorMessage ||
-						ERROR_MESSAGES.UPLOAD().MAX_FILES(maxFilesRuleRef.current.max),
-				});
-			}
-		});
-		setFiles(updatedFiles);
-	};
-
 	const generateAcceptedFileTypes = () =>
 		fileTypeRuleRef.current.fileType?.map((fileType) => `.${fileType}`).join(",");
 
