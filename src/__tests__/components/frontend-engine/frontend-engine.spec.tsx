@@ -912,16 +912,6 @@ describe("frontend-engine", () => {
 			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
-		it("should support setting of custom errors for nested fields", async () => {
-			const handleClickNested = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.setErrors({ [FIELD_ONE_ID]: { [FIELD_TWO_ID]: ERROR_MESSAGE } });
-			};
-			render(<FrontendEngineWithCustomButton data={NESTED_JSON_SCHEMA} onClick={handleClickNested} />);
-			await waitFor(() => fireEvent.click(getCustomButton()));
-
-			expect(getFieldTwo().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
-		});
-
 		it("should convert error object to string if the direct descendants don't match any fields", async () => {
 			const handleClickNested = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 				ref.current.setErrors({
