@@ -1,5 +1,6 @@
 import { TRenderRules } from "../../context-providers";
 import { IColumns } from "../frontend-engine";
+import { IAccordionSchema } from "./accordion";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
 import { IGridSchema } from "./grid";
@@ -45,12 +46,14 @@ export enum EElementType {
 	"LIST-ITEM" = "ListItem",
 	"ORDERED-LIST" = "List",
 	"UNORDERED-LIST" = "List",
+	ACCORDION = "Accordion",
 }
 
 /**
  * union type to represent all element schemas
  */
 export type TElementSchema<V = undefined> =
+	| IAccordionSchema<V>
 	| IAlertSchema
 	| IDividerSchema
 	| IGridSchema<V>

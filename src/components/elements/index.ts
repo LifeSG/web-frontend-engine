@@ -1,3 +1,4 @@
+export * from "./accordion";
 export * from "./alert";
 export * from "./divider";
 export * from "./grid";
