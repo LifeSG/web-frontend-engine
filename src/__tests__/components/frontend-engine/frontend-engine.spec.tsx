@@ -912,7 +912,7 @@ describe("frontend-engine", () => {
 			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 
-		it("should convert error object to string if the direct descendants don't match any fields", async () => {
+		it("should convert error object to string", async () => {
 			const handleClickNested = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 				ref.current.setErrors({
 					[FIELD_ONE_ID]: {
