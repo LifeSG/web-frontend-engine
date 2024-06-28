@@ -89,8 +89,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		formState,
 		clearErrors,
 	} = formMethods;
-	const { resetFields, setFields, setField, getFormValues } = useFormValues(formMethods);
-
+	const { resetFields, setFields, setField, getFormValues, registeredFields } = useFormValues(formMethods);
 	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
 
 	// =============================================================================
@@ -153,11 +152,9 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		[onSubmitError]
 	);
 
-	// NOTE: Wrapper component contains nested fields
 	const setErrors = (errors: TErrorPayload): void => {
 		Object.entries(errors).forEach(([key, value]) => {
-			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(sections, key);
-
+			const isValidFieldKey = registeredFields.includes(key);
 			if (!isValidFieldKey) {
 				return;
 			}
@@ -165,16 +162,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			if (Array.isArray(value)) {
 				setError(key, { type: "api", message: value[0] });
 			} else if (typeof value === "object") {
-				const fieldSchema = ObjectHelper.getNestedValueByKey(data.sections, key);
-				const childKeys = Object.keys(value);
-				const haveNestedErrors = childKeys.every(
-					(childKey) => !isEmpty(ObjectHelper.getNestedValueByKey(fieldSchema, childKey))
-				);
-				if (!haveNestedErrors) {
-					setError(key, { type: "api", message: JSON.stringify(value) });
-				} else {
-					setErrors(value as TErrorPayload);
-				}
+				setError(key, { type: "api", message: JSON.stringify(value) });
 			} else {
 				const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
 				if (!isEmpty(errorObject)) {
@@ -190,7 +178,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const setWarnings = (warningPayload: TWarningPayload) => {
 		const newWarnings: TWarningPayload = {};
 		Object.entries(warningPayload).forEach(([key, value]) => {
-			const isValidFieldKey = !!ObjectHelper.getNestedValueByKey(sections, key);
+			const isValidFieldKey = registeredFields.includes(key);
 			if (!isValidFieldKey) {
 				return;
 			}
