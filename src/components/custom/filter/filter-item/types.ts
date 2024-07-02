@@ -3,9 +3,9 @@ import { ICustomElementJsonSchema } from "../../types";
 import { TClearBehavior } from "../filter/types";
 import { IFilterItemLabel } from "../types";
 
-export interface IFilterItemSchema<V = undefined> extends ICustomElementJsonSchema<"filter-item"> {
+export interface IFilterItemSchema<V = undefined, C = undefined> extends ICustomElementJsonSchema<"filter-item"> {
 	label: string | IFilterItemLabel;
-	children: Record<string, TFrontendEngineFieldSchema<V>>;
+	children: Record<string, TFrontendEngineFieldSchema<V, C>>;
 	collapsible?: boolean | undefined;
 	showDivider?: boolean | undefined;
 	showMobileDivider?: boolean | undefined;

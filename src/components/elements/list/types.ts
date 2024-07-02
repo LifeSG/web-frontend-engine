@@ -3,20 +3,20 @@ import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-
 import { IBaseElementSchema } from "../types";
 import { IWrapperSchema } from "../wrapper";
 
-export interface IUnorderedListSchema<V = undefined>
+export interface IUnorderedListSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"unordered-list">,
 		TComponentOmitProps<UnorderedListProps, "children"> {
-	children: (string | Record<string, IListItemSchema<V>>)[];
+	children: (string | Record<string, IListItemSchema<V, C>>)[];
 }
 
-export interface IOrderedListSchema<V = undefined>
+export interface IOrderedListSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"ordered-list">,
 		TComponentOmitProps<OrderedListProps, "children"> {
-	children: (string | Record<string, IListItemSchema<V>>)[];
+	children: (string | Record<string, IListItemSchema<V, C>>)[];
 }
 
-export interface IListItemSchema<V = undefined>
+export interface IListItemSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"list-item">,
 		TComponentOmitProps<IWrapperSchema> {
-	children: string | Record<string, TFrontendEngineFieldSchema<V>>;
+	children: string | Record<string, TFrontendEngineFieldSchema<V, C>>;
 }

@@ -52,17 +52,17 @@ export enum EElementType {
 /**
  * union type to represent all element schemas
  */
-export type TElementSchema<V = undefined> =
-	| IAccordionSchema<V>
+export type TElementSchema<V = undefined, C = undefined> =
+	| IAccordionSchema<V, C>
 	| IAlertSchema
 	| IDividerSchema
-	| IGridSchema<V>
-	| IOrderedListSchema<V>
-	| ITabItemSchema<V>
-	| ITabSchema<V>
+	| IGridSchema<V, C>
+	| IOrderedListSchema<V, C>
+	| ITabItemSchema<V, C>
+	| ITabSchema<V, C>
 	| ITextSchema
-	| IUnorderedListSchema<V>
-	| IWrapperSchema<V>;
+	| IUnorderedListSchema<V, C>
+	| IWrapperSchema<V, C>;
 
 /**
  * common element schema for element schemas to extend from
