@@ -66,7 +66,7 @@ export enum EFieldType {
 /**
  * union type to represent all field schemas
  */
-export type TFieldSchema<V = undefined> =
+export type TFieldSchema<V = undefined, C = undefined> =
 	| IButtonSchema
 	| IChipsSchema<V>
 	| IContactFieldSchema<V>
@@ -91,9 +91,9 @@ export type TFieldSchema<V = undefined> =
 	| ITextFieldSchema<V>
 	| ITimeFieldSchema<V>
 	| IUnitNumberFieldSchema<V>
-	| TCheckboxGroupSchema<V>
+	| TCheckboxGroupSchema<V, C>
 	| TDateRangeFieldSchema<V>
-	| TRadioButtonGroupSchema<V>;
+	| TRadioButtonGroupSchema<V, C>;
 
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IBaseFieldSchema<T, V = undefined, U = undefined> {

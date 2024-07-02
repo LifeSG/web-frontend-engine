@@ -8,8 +8,8 @@ interface IOption {
 	disabled?: boolean | undefined;
 }
 
-interface IToggleOption extends IOption {
-	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
+interface IToggleOption<V = undefined, C = undefined> extends IOption {
+	children?: Record<string, TFrontendEngineFieldSchema<V, C>> | undefined;
 }
 
 interface IImageButtonOption extends IOption {
@@ -29,10 +29,10 @@ interface IRadioButtonDefaultSchema<V = undefined>
 		| undefined;
 }
 
-interface IRadioButtonToggleSchema<V = undefined>
+interface IRadioButtonToggleSchema<V = undefined, C = undefined>
 	extends IBaseFieldSchema<"radio", V>,
 		TComponentOmitProps<RadioButtonProps> {
-	options: IToggleOption[];
+	options: IToggleOption<V, C>[];
 	customOptions: {
 		styleType: "toggle";
 		indicator?: boolean | undefined;
@@ -50,13 +50,13 @@ interface IRadioButtonImageButtonSchema<V = undefined>
 	};
 }
 
-export type TRadioButtonGroupSchema<V = undefined> =
+export type TRadioButtonGroupSchema<V = undefined, C = undefined> =
 	| IRadioButtonDefaultSchema<V>
-	| IRadioButtonToggleSchema<V>
+	| IRadioButtonToggleSchema<V, C>
 	| IRadioButtonImageButtonSchema<V>;
 
 /** @deprecated will be removed in a future release. Use `TRadioButtonGroupSchema` instead */
-export type IRadioButtonGroupSchema<V = undefined> =
+export type IRadioButtonGroupSchema<V = undefined, C = undefined> =
 	| IRadioButtonDefaultSchema<V>
-	| IRadioButtonToggleSchema<V>
+	| IRadioButtonToggleSchema<V, C>
 	| IRadioButtonImageButtonSchema<V>;
