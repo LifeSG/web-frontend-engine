@@ -81,7 +81,7 @@ export const DefaultValue = DefaultStoryTemplate<IESignatureFieldSchema, IESigna
 ).bind({});
 DefaultValue.args = {
 	...COMMON_STORY_ARGS,
-	defaultValues: { fileId: "fileId", dataURL: signatureDataURL },
+	defaultValues: { fileId: "fileId", dataURL: signatureDataURL, fileUrl: "fileUrl" },
 	validation: [{ required: true }],
 };
 DefaultValue.argTypes = {
@@ -89,7 +89,8 @@ DefaultValue.argTypes = {
 		description: "Default value for the field, this is declared outside `sections`",
 		table: {
 			type: {
-				summary: "{ dataURL: string; uploadResponse?: unknown | undefined }",
+				summary:
+					"{ dataURL?: string | undefined; fileId: string; fileUrl: string; uploadResponse?: unknown | undefined }",
 				value: {},
 			},
 		},
@@ -142,7 +143,7 @@ export const ResetWithDefaultValues = ResetStoryTemplate<IESignatureFieldSchema,
 ).bind({});
 ResetWithDefaultValues.args = {
 	...COMMON_STORY_ARGS,
-	defaultValues: { fileId: "fileId", dataURL: signatureDataURL },
+	defaultValues: { fileId: "fileId", dataURL: signatureDataURL, fileUrl: "url" },
 };
 ResetWithDefaultValues.argTypes = DefaultValue.argTypes;
 

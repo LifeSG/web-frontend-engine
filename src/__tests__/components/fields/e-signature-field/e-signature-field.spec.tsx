@@ -114,9 +114,13 @@ describe(UI_TYPE, () => {
 			renderComponent({ upload: uploadConfig });
 			await waitFor(() => drawAndSave());
 
-			expect(uploadSpy).toHaveBeenCalledWith(uploadConfig.url, expect.any(FormData), {
-				headers: { "Content-Type": "application/json" },
-			});
+			expect(uploadSpy).toHaveBeenCalledWith(
+				uploadConfig.url,
+				expect.any(FormData),
+				expect.objectContaining({
+					headers: { "Content-Type": "application/json" },
+				})
+			);
 		});
 
 		it("should be able to upload as multipart content-type", async () => {
@@ -129,9 +133,13 @@ describe(UI_TYPE, () => {
 				await waitFor(() => drawAndSave());
 			});
 
-			expect(uploadSpy).toHaveBeenCalledWith(uploadConfig.url, expect.any(FormData), {
-				headers: { "Content-Type": "multipart/form-data" },
-			});
+			expect(uploadSpy).toHaveBeenCalledWith(
+				uploadConfig.url,
+				expect.any(FormData),
+				expect.objectContaining({
+					headers: { "Content-Type": "multipart/form-data" },
+				})
+			);
 		});
 
 		it("should show error message if upload fails", async () => {

@@ -8,7 +8,8 @@ export interface IESignatureFieldSchema<V = undefined>
 }
 
 export interface IESignatureValue {
+	dataURL?: string | undefined;
 	fileId: string;
-	dataURL: string;
+	fileUrl?: string | undefined;
 	uploadResponse?: unknown | undefined;
 }

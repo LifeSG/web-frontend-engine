@@ -57,7 +57,16 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		if (!isEmpty(upload)) {
 			try {
 				const response = await uploadFile(fileId, signatureDataURL);
-				onChange({ target: { value: { fileId, dataURL: signatureDataURL, uploadResponse: response } } });
+				onChange({
+					target: {
+						value: {
+							fileId,
+							...(upload.type === "base64" && { dataURL: signatureDataURL }),
+							fileUrl: response?.["data"]?.["fileUrl"],
+							uploadResponse: response,
+						},
+					},
+				});
 			} catch (error) {
 				setError(id, { type: "onChange", message: ERROR_MESSAGES.UPLOAD().GENERIC });
 			}
