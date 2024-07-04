@@ -8,9 +8,9 @@ export interface IOption {
 	disabled?: boolean | undefined;
 }
 
-export interface IToggleOption extends IOption {
+export interface IToggleOption<V = undefined, C = undefined> extends IOption {
 	none?: boolean | undefined;
-	children?: Record<string, TFrontendEngineFieldSchema> | undefined;
+	children?: Record<string, TFrontendEngineFieldSchema<V, C>> | undefined;
 }
 
 export type TCheckboxToggleLayoutType = "horizontal" | "vertical";
@@ -19,17 +19,13 @@ interface ICheckboxGroupDefaultSchema<V = undefined>
 	extends IBaseFieldSchema<"checkbox", V>,
 		TComponentOmitProps<CheckboxProps> {
 	options: IOption[];
-	customOptions?:
-		| {
-				styleType: "default";
-		  }
-		| undefined;
+	customOptions?: { styleType: "default" } | undefined;
 }
 
-interface ICheckboxGroupToggleSchema<V = undefined>
+interface ICheckboxGroupToggleSchema<V = undefined, C = undefined>
 	extends IBaseFieldSchema<"checkbox", V>,
 		TComponentOmitProps<CheckboxProps> {
-	options: IToggleOption[];
+	options: IToggleOption<V, C>[];
 	customOptions: {
 		styleType: "toggle";
 		indicator?: boolean | undefined;
@@ -38,7 +34,11 @@ interface ICheckboxGroupToggleSchema<V = undefined>
 	};
 }
 
-export type TCheckboxGroupSchema<V = undefined> = ICheckboxGroupDefaultSchema<V> | ICheckboxGroupToggleSchema<V>;
+export type TCheckboxGroupSchema<V = undefined, C = undefined> =
+	| ICheckboxGroupDefaultSchema<V>
+	| ICheckboxGroupToggleSchema<V, C>;
 
 /** @deprecated will be removed in a future release. Use `TCheckboxGroupSchema` instead */
-export type ICheckboxGroupSchema<V = undefined> = ICheckboxGroupDefaultSchema<V> | ICheckboxGroupToggleSchema<V>;
+export type ICheckboxGroupSchema<V = undefined, C = undefined> =
+	| ICheckboxGroupDefaultSchema<V>
+	| ICheckboxGroupToggleSchema<V, C>;

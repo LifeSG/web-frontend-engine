@@ -157,9 +157,9 @@ export interface IFrontendEngineRef
 // =============================================================================
 // contains all schema types except for sections schema
 export type TFrontendEngineFieldSchema<V = undefined, C = undefined> =
-	| TFieldSchema<V>
-	| TCustomSchema<C>
-	| TElementSchema<V>;
+	| TFieldSchema<V, C>
+	| TCustomSchema<V, C>
+	| TElementSchema<V, C>;
 
 type MobileCol = 1 | 2 | 3 | 4;
 type MobileColRange = MobileCol | 5;

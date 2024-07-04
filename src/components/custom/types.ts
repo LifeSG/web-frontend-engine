@@ -28,7 +28,11 @@ export enum ECustomFieldType {
 /**
  * union type to represent all custom elements / fields schema
  */
-export type TCustomSchema<C = undefined> = ICustomElementJsonSchema<string> | IFilterSchema | TReviewSchema | C;
+export type TCustomSchema<V = undefined, C = undefined> =
+	| ICustomElementJsonSchema<string>
+	| IFilterSchema<V, C>
+	| TReviewSchema
+	| C;
 
 /**
  * base schema for custom elements
