@@ -1,10 +1,11 @@
 import { Form } from "@lifesg/react-design-system/form";
 import isEmpty from "lodash/isEmpty";
 import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { AxiosApiClient, FileHelper, generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { Warning } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IGenericFieldProps } from "../types";
 import { IESignatureFieldSchema, IESignatureValue } from "./types";
 
@@ -24,6 +25,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	const [stateValue, setStateValue] = useState<IESignatureValue>(value);
 	const [loadingProgress, setLoadingProgress] = useState<number>(null);
 	const { setFieldValidationConfig } = useValidationConfig();
+	const { setError } = useFormContext();
 
 	// =============================================================================
 	// EFFECTS
@@ -53,8 +55,12 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	const handleChange = async (signatureDataURL: string) => {
 		const fileId = generateRandomId();
 		if (!isEmpty(upload)) {
-			const response = await uploadFile(fileId, signatureDataURL);
-			onChange({ target: { value: { fileId, dataURL: signatureDataURL, uploadResponse: response } } });
+			try {
+				const response = await uploadFile(fileId, signatureDataURL);
+				onChange({ target: { value: { fileId, dataURL: signatureDataURL, uploadResponse: response } } });
+			} catch (error) {
+				setError(id, { type: "onChange", message: ERROR_MESSAGES.UPLOAD().GENERIC });
+			}
 		} else {
 			onChange({ target: { value: { fileId, dataURL: signatureDataURL } } });
 		}

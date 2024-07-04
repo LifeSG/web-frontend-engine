@@ -4,6 +4,7 @@ import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineRef } from "../../../../components";
 import { IESignatureFieldSchema } from "../../../../components/fields";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import { AxiosApiClient, FileHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
@@ -131,6 +132,14 @@ describe(UI_TYPE, () => {
 			expect(uploadSpy).toHaveBeenCalledWith(uploadConfig.url, expect.any(FormData), {
 				headers: { "Content-Type": "multipart/form-data" },
 			});
+		});
+
+		it("should show error message if upload fails", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue({});
+			renderComponent({ upload: { url: "url", type: "base64" } });
+			await waitFor(() => drawAndSave());
+
+			expect(screen.getByText(ERROR_MESSAGES.UPLOAD().GENERIC)).toBeInTheDocument();
 		});
 	});
 
