@@ -4,6 +4,8 @@ import { IFile } from "./types";
 interface IFileUploadContext {
 	files: IFile[];
 	setFiles: Dispatch<SetStateAction<IFile[]>>;
+	currentFileIds: string[];
+	setCurrentFileIds: Dispatch<SetStateAction<string[]>>;
 }
 
 interface Props {
@@ -13,11 +15,14 @@ interface Props {
 export const FileUploadContext = createContext<IFileUploadContext>({
 	files: [],
 	setFiles: () => null,
+	currentFileIds: [],
+	setCurrentFileIds: () => null,
 });
 
 export const FileUploadProvider = ({ children }: Props) => {
 	const [files, setFiles] = useState<IFile[]>([]);
-	const values = useMemo(() => ({ files, setFiles }), [files]);
+	const [currentFileIds, setCurrentFileIds] = useState<string[]>([]);
+	const values = useMemo(() => ({ files, setFiles, currentFileIds, setCurrentFileIds }), [files, currentFileIds]);
 
 	return <FileUploadContext.Provider value={values}>{children}</FileUploadContext.Provider>;
 };
