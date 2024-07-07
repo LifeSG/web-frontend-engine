@@ -1,3 +1,4 @@
+import xor from "lodash/xor";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
@@ -40,11 +41,12 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		},
 		id,
 		isDirty,
+		isTouched,
 		value,
 		warning,
 		...otherProps
 	} = props;
-	const { images, setImages } = useContext(ImageContext);
+	const { images, setImages, currentFileIds } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const [acceptedFileTypes, setAcceptedFileTypes] = useState<TImageUploadAcceptedFileType[]>([
 		...ACCEPTED_FILE_TYPES,
@@ -65,14 +67,22 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 
 	useEffect(() => {
 		// for `defaultValue`
-		const valuesToHandle = Array.isArray(value)
-			? (value as IUploadedImage[]).filter(({ handledFromDefault }) => !handledFromDefault)
-			: [];
-		if (!isDirty && valuesToHandle.length > 0) {
+		if (!isDirty && !isTouched) {
+			const valuesToHandle = Array.isArray(value) ? (value as IUploadedImage[]) : [];
+			const valuesChanged =
+				xor(
+					valuesToHandle.map(({ fileId }) => fileId),
+					currentFileIds
+				).length > 0;
+
+			if (!valuesChanged) {
+				return;
+			}
+
 			const newImages: IImage[] = [];
-			valuesToHandle.forEach(({ fileName, dataURL, uploadResponse }, i) => {
+			valuesToHandle.forEach(({ fileId, fileName, dataURL, uploadResponse }, i) => {
 				const newImage: IImage = {
-					id: generateRandomId(),
+					id: fileId || generateRandomId(),
 					file: {} as File,
 					name: fileName,
 					dimensions: { width: 10, height: 10 },
@@ -87,7 +97,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			});
 			setImages(newImages);
 		}
-	}, [isDirty, setImages, value]);
+	}, [isDirty, isTouched, currentFileIds, setImages, value]);
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);

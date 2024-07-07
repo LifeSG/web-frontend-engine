@@ -33,7 +33,7 @@ export const ImageManager = (props: IProps) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const { accepts, compress, dimensions, editImage, id, maxSizeInKb, outputType, upload, value } = props;
-	const { images, setImages, setErrorCount } = useContext(ImageContext);
+	const { images, setImages, setErrorCount, setCurrentFileIds } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
@@ -186,13 +186,15 @@ export const ImageManager = (props: IProps) => {
 		const hasNotPrefilledImages = notPrefilledImages.length > 0;
 		const shouldDirty = hasNotPrefilledImages || gotDeleteImages;
 
+		setCurrentFileIds(uploadedImages.map(({ id }) => id));
+
 		setValue(
 			id,
-			uploadedImages.map(({ dataURL, drawingDataURL, name, uploadResponse, addedFrom }) => ({
+			uploadedImages.map(({ id, dataURL, drawingDataURL, name, uploadResponse }) => ({
+				fileId: id,
 				fileName: name,
 				dataURL: drawingDataURL || dataURL,
 				uploadResponse,
-				handledFromDefault: addedFrom === "schema",
 			})),
 			{ shouldDirty, shouldTouch: hasNotPrefilledImages }
 		);
