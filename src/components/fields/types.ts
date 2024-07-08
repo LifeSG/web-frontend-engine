@@ -1,14 +1,16 @@
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
-import { IColumns } from "../frontend-engine";
 import { IYupValidationRule, TRenderRules } from "../../context-providers";
+import { IColumns } from "../frontend-engine";
 import { IButtonSchema } from "./button";
 import { TCheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
 import { IContactFieldSchema } from "./contact-field";
 import { IDateFieldSchema } from "./date-field";
 import { TDateRangeFieldSchema } from "./date-range-field";
+import { IESignatureFieldSchema } from "./e-signature-field/types";
 import { IFileUploadSchema } from "./file-upload";
+import { IHiddenFieldSchema } from "./hidden-field/types";
 import { IHistogramSliderSchema } from "./histogram-slider";
 import { IImageUploadSchema } from "./image-upload";
 import { ILocationFieldSchema } from "./location-field";
@@ -26,7 +28,6 @@ import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./text
 import { ITextareaSchema } from "./textarea";
 import { ITimeFieldSchema } from "./time-field";
 import { IUnitNumberFieldSchema } from "./unit-number-field";
-import { IHiddenFieldSchema } from "./hidden-field/types";
 
 /**
  * field types
@@ -41,6 +42,7 @@ export enum EFieldType {
 	"DATE-FIELD" = "DateField",
 	"DATE-RANGE-FIELD" = "DateRangeField",
 	"EMAIL-FIELD" = "TextField",
+	"E-SIGNATURE-FIELD" = "ESignatureField",
 	"FILE-UPLOAD" = "FileUpload",
 	"HIDDEN-FIELD" = "HiddenField",
 	"HISTOGRAM-SLIDER" = "HistogramSlider",
@@ -72,6 +74,7 @@ export type TFieldSchema<V = undefined, C = undefined> =
 	| IContactFieldSchema<V>
 	| IDateFieldSchema<V>
 	| IEmailFieldSchema<V>
+	| IESignatureFieldSchema<V>
 	| IFileUploadSchema<V>
 	| IHiddenFieldSchema<V>
 	| IHistogramSliderSchema<V>
