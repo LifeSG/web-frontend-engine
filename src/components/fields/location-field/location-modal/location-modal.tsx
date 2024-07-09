@@ -78,10 +78,15 @@ const LocationModal = ({
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const setSinglePanelMode = (inputMode: TPanelInputMode) => {
-		if (panelInputMode === "double") return;
-		setPanelInputMode(inputMode);
-	};
+	const setSinglePanelMode = useCallback((inputMode: TPanelInputMode, onlyHandleIfStateIs?: TPanelInputMode) => {
+		setPanelInputMode((prev) => {
+			if (prev === "double" || (!!onlyHandleIfStateIs && prev !== onlyHandleIfStateIs)) {
+				return prev;
+			}
+
+			return inputMode;
+		});
+	}, []);
 
 	const getCurrentLocation = useCallback(async () => {
 		setGettingCurrentLocation(true);
@@ -323,10 +328,10 @@ const LocationModal = ({
 	 * - prefill
 	 */
 	useEffect(() => {
-		if (!isEmpty(selectedAddressInfo) && panelInputMode === "search") {
-			setSinglePanelMode("map");
+		if (!isEmpty(selectedAddressInfo)) {
+			setSinglePanelMode("map", "search");
 		}
-	}, [selectedAddressInfo, gettingCurrentLocation]);
+	}, [selectedAddressInfo, gettingCurrentLocation, setSinglePanelMode]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
