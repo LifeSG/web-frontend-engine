@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import cloneDeep from "lodash/cloneDeep";
 import isEmpty from "lodash/isEmpty";
-import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import {
@@ -90,6 +90,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		clearErrors,
 	} = formMethods;
 	const { resetFields, setFields, setField, getFormValues, registeredFields } = useFormValues(formMethods);
+	const registeredFieldsRef = useRef(registeredFields); // using ref ensures the latest values can be retrieved in setErrors and setWarnings
 	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
 
 	// =============================================================================
@@ -154,7 +155,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const setErrors = (errors: TErrorPayload): void => {
 		Object.entries(errors).forEach(([key, value]) => {
-			const isValidFieldKey = registeredFields.includes(key);
+			const isValidFieldKey = registeredFieldsRef.current.includes(key);
 			if (!isValidFieldKey) {
 				return;
 			}
@@ -178,7 +179,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const setWarnings = (warningPayload: TWarningPayload) => {
 		const newWarnings: TWarningPayload = {};
 		Object.entries(warningPayload).forEach(([key, value]) => {
-			const isValidFieldKey = registeredFields.includes(key);
+			const isValidFieldKey = registeredFieldsRef.current.includes(key);
 			if (!isValidFieldKey) {
 				return;
 			}
@@ -285,6 +286,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		setWrapInForm(wrapInForm);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [wrapInForm]);
+
+	useEffect(() => {
+		registeredFieldsRef.current = registeredFields;
+	}, [registeredFields]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
