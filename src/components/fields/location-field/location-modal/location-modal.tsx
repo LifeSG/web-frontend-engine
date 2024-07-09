@@ -1,6 +1,6 @@
 import { MediaWidths, Modal } from "@lifesg/react-design-system";
 import { isEmpty } from "lodash";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
@@ -74,8 +74,6 @@ const LocationModal = ({
 	// map picked value can be falsy/ no address found
 	// selectedAddressInfo have valid addresses from one map
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
-
-	const hasLoadedOnModalOpen = useRef(false);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -315,10 +313,7 @@ const LocationModal = ({
 				});
 			}
 		};
-		if (!hasLoadedOnModalOpen.current) {
-			recenterAndTriggerEvent();
-		}
-		hasLoadedOnModalOpen.current = true;
+		recenterAndTriggerEvent();
 	}, [dispatchFieldEvent, formValues, getCurrentLocation, id, panelInputMode, showLocationModal]);
 
 	/**
