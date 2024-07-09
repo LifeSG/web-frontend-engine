@@ -1,6 +1,6 @@
 import { MediaWidths, Modal } from "@lifesg/react-design-system";
 import { isEmpty } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
@@ -76,134 +76,6 @@ const LocationModal = ({
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
 
 	// =============================================================================
-	// HELPER FUNCTIONS
-	// =============================================================================
-	const setSinglePanelMode = useCallback((inputMode: TPanelInputMode) => {
-		setPanelInputMode((prev) => (prev === "double" ? prev : inputMode));
-	}, []);
-
-	const getCurrentLocation = useCallback(async () => {
-		setGettingCurrentLocation(true);
-
-		// TODO add documentation for how to cancel events and handle default
-		const shouldPreventDefault = !dispatchFieldEvent("get-current-location", id);
-
-		if (!shouldPreventDefault) {
-			const detail: TSetCurrentLocationDetail = {};
-
-			try {
-				detail.payload = await GeoLocationHelper.getCurrentLocation();
-			} catch (error) {
-				detail.errors = error;
-			}
-
-			dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
-			return detail.payload;
-		}
-	}, [dispatchFieldEvent, id]);
-
-	// Manually refresh network if auto refresh has any issue
-	const refreshNetwork = () => {
-		try {
-			if (navigator.onLine) {
-				setHasInternetConnectivity(true);
-			}
-		} catch (error) {
-			// silent error
-		}
-	};
-
-	const restoreFormvalues = useCallback(() => {
-		// Retain current form values
-		setSelectedAddressInfo(formValues || {});
-	}, [formValues]);
-
-	// =============================================================================
-	// EVENT HANDLERS
-	// =============================================================================
-	const handleCloseLocationModal = useCallback(() => {
-		onClose();
-	}, [onClose]);
-
-	const handleGetLocationCallback = () => {
-		setGettingCurrentLocation(false);
-		setLocationAvailable(true);
-	};
-
-	const handleApiErrors = (error?: any) => {
-		const handleError = (errorType: TErrorType["errorType"], defaultHandle: () => void) => {
-			const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>("error", id, {
-				payload: {
-					errorType,
-				},
-				errors: error,
-			});
-
-			if (shouldPreventDefault) return;
-			defaultHandle();
-		};
-
-		setGettingCurrentLocation(false);
-
-		if (error instanceof OneMapError) {
-			handleError("OneMapError", () => {
-				restoreFormvalues();
-				setShowOneMapError(true);
-			});
-
-			return;
-		}
-
-		setLocationAvailable(false);
-
-		if (
-			error instanceof GeolocationPositionErrorWrapper &&
-			error?.code?.toString() === GeolocationPositionError.TIMEOUT.toString()
-		) {
-			handleError("GetLocationTimeoutError", () => {
-				setShowGetLocationTimeoutError(true);
-			});
-			return;
-		}
-
-		handleError("GetLocationError", () => {
-			setShowGetLocationError(true);
-		});
-	};
-
-	const handleCancel = useCallback(() => {
-		restoreFormvalues();
-		handleCloseLocationModal();
-	}, [handleCloseLocationModal, restoreFormvalues]);
-
-	const handleClickConfirm = () => {
-		const shouldPreventDefault = !dispatchFieldEvent("click-confirm-location", id, selectedAddressInfo);
-		if (!shouldPreventDefault) {
-			handleConfirm();
-		}
-	};
-
-	const handleConfirm = useCallback(
-		(e?: CustomEvent | undefined) => {
-			const addressInfo = !isEmpty(e?.detail) ? e?.detail : selectedAddressInfo;
-			onConfirm(addressInfo);
-			handleCloseLocationModal();
-		},
-		[handleCloseLocationModal, onConfirm, selectedAddressInfo]
-	);
-
-	const handleCloseLocationPermissionModal = () => {
-		const shouldPreventDefault = !dispatchFieldEvent("before-hide-permission-modal", id);
-		if (!shouldPreventDefault) {
-			setShowGetLocationError(false);
-		}
-	};
-
-	const handleMapClick = (latlng: ILocationCoord) => {
-		setMapPickedLatLng(latlng);
-	};
-
-	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
@@ -254,15 +126,7 @@ const LocationModal = ({
 				removeFieldEventListener(event, id, callback);
 			});
 		};
-	}, [
-		addFieldEventListener,
-		getCurrentLocation,
-		handleCancel,
-		handleCloseLocationModal,
-		handleConfirm,
-		id,
-		removeFieldEventListener,
-	]);
+	}, []);
 
 	useEffect(() => {
 		if (!window) return;
@@ -296,7 +160,6 @@ const LocationModal = ({
 		}
 
 		const recenterAndTriggerEvent = async () => {
-			const { lat, lng } = formValues || {};
 			/**
 			 * We should only getCurrentLocation when nothing is prefilled
 			 * when formvalues are prefilled, the useEffect will recenter
@@ -304,17 +167,17 @@ const LocationModal = ({
 			 *
 			 * This is meant for first entry
 			 */
-			if (!lat && !lng) {
+			if (!formValues?.lat && !formValues?.lng) {
 				await getCurrentLocation();
 			} else {
 				dispatchFieldEvent<ILocationCoord>("get-selectable-pins", id, {
-					lat: lat,
-					lng: lng,
+					lat: formValues.lat,
+					lng: formValues.lng,
 				});
 			}
 		};
 		recenterAndTriggerEvent();
-	}, [dispatchFieldEvent, formValues, getCurrentLocation, id, panelInputMode, showLocationModal]);
+	}, [showLocationModal]);
 
 	/**
 	 * triggers when
@@ -325,7 +188,133 @@ const LocationModal = ({
 		if (!isEmpty(selectedAddressInfo) && panelInputMode === "search") {
 			setSinglePanelMode("map");
 		}
-	}, [selectedAddressInfo, gettingCurrentLocation, panelInputMode, setSinglePanelMode]);
+	}, [selectedAddressInfo, gettingCurrentLocation]);
+
+	// =============================================================================
+	// EVENT HANDLERS
+	// =============================================================================
+	const handleCloseLocationModal = () => {
+		onClose();
+	};
+
+	const handleGetLocationCallback = () => {
+		setGettingCurrentLocation(false);
+		setLocationAvailable(true);
+	};
+
+	const handleApiErrors = (error?: any) => {
+		const handleError = (errorType: TErrorType["errorType"], defaultHandle: () => void) => {
+			const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>("error", id, {
+				payload: {
+					errorType,
+				},
+				errors: error,
+			});
+
+			if (shouldPreventDefault) return;
+			defaultHandle();
+		};
+
+		setGettingCurrentLocation(false);
+
+		if (error instanceof OneMapError) {
+			handleError("OneMapError", () => {
+				restoreFormvalues();
+				setShowOneMapError(true);
+			});
+
+			return;
+		}
+
+		setLocationAvailable(false);
+
+		if (
+			error instanceof GeolocationPositionErrorWrapper &&
+			error?.code?.toString() === GeolocationPositionError.TIMEOUT.toString()
+		) {
+			handleError("GetLocationTimeoutError", () => {
+				setShowGetLocationTimeoutError(true);
+			});
+			return;
+		}
+
+		handleError("GetLocationError", () => {
+			setShowGetLocationError(true);
+		});
+	};
+
+	const handleCancel = () => {
+		restoreFormvalues();
+		handleCloseLocationModal();
+	};
+
+	const handleClickConfirm = () => {
+		const shouldPreventDefault = !dispatchFieldEvent("click-confirm-location", id, selectedAddressInfo);
+		if (!shouldPreventDefault) {
+			handleConfirm();
+		}
+	};
+
+	const handleConfirm = (e?: CustomEvent | undefined) => {
+		const addressInfo = !isEmpty(e?.detail) ? e?.detail : selectedAddressInfo;
+		onConfirm(addressInfo);
+		handleCloseLocationModal();
+	};
+
+	const handleCloseLocationPermissionModal = () => {
+		const shouldPreventDefault = !dispatchFieldEvent("before-hide-permission-modal", id);
+		if (!shouldPreventDefault) {
+			setShowGetLocationError(false);
+		}
+	};
+
+	const handleMapClick = (latlng: ILocationCoord) => {
+		setMapPickedLatLng(latlng);
+	};
+
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
+	const setSinglePanelMode = (inputMode: TPanelInputMode) => {
+		if (panelInputMode === "double") return;
+		setPanelInputMode(inputMode);
+	};
+
+	const getCurrentLocation = async () => {
+		setGettingCurrentLocation(true);
+
+		// TODO add documentation for how to cancel events and handle default
+		const shouldPreventDefault = !dispatchFieldEvent("get-current-location", id);
+
+		if (!shouldPreventDefault) {
+			const detail: TSetCurrentLocationDetail = {};
+
+			try {
+				detail.payload = await GeoLocationHelper.getCurrentLocation();
+			} catch (error) {
+				detail.errors = error;
+			}
+
+			dispatchFieldEvent<TSetCurrentLocationDetail>("set-current-location", id, detail);
+			return detail.payload;
+		}
+	};
+
+	// Manually refresh network if auto refresh has any issue
+	const refreshNetwork = () => {
+		try {
+			if (navigator.onLine) {
+				setHasInternetConnectivity(true);
+			}
+		} catch (error) {
+			// silent error
+		}
+	};
+
+	const restoreFormvalues = () => {
+		// Retain current form values
+		setSelectedAddressInfo(formValues || {});
+	};
 
 	// =============================================================================
 	// RENDER FUNCTIONS

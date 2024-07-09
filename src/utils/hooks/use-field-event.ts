@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useContext } from "react";
 import { EventContext } from "../../context-providers";
 
 /**
@@ -10,41 +10,32 @@ import { EventContext } from "../../context-providers";
 export const useFieldEvent = () => {
 	const { eventManagerRef } = useContext(EventContext);
 
-	const addFieldEventListener = useCallback(
-		<T = any>(
-			type: string,
-			id: string,
-			listener: (ev: CustomEvent<T>) => void,
-			options?: boolean | AddEventListenerOptions
-		) => {
-			eventManagerRef.current?.addEventListener(`${id}:${type}`, listener, options);
-		},
-		[eventManagerRef]
-	);
+	const addFieldEventListener = <T = any>(
+		type: string,
+		id: string,
+		listener: (ev: CustomEvent<T>) => void,
+		options?: boolean | AddEventListenerOptions
+	) => {
+		eventManagerRef.current?.addEventListener(`${id}:${type}`, listener, options);
+	};
 
-	const removeFieldEventListener = useCallback(
-		<T = any>(
-			type: string,
-			id: string,
-			listener: (ev: CustomEvent<T>) => void,
-			options?: boolean | EventListenerOptions
-		) => {
-			eventManagerRef.current?.removeEventListener(`${id}:${type}`, listener, options);
-		},
-		[eventManagerRef]
-	);
+	const removeFieldEventListener = <T = any>(
+		type: string,
+		id: string,
+		listener: (ev: CustomEvent<T>) => void,
+		options?: boolean | EventListenerOptions
+	) => {
+		eventManagerRef.current?.removeEventListener(`${id}:${type}`, listener, options);
+	};
 
 	/**
 	 * Dispatches a custom event to target and returns true if either event's cancelable attribute value is false or its preventDefault() method was not invoked, and false otherwise.
 	 */
-	const dispatchFieldEvent = useCallback(
-		<T = any>(type: string, id: string, detail?: T): boolean => {
-			return eventManagerRef.current?.dispatchEvent(
-				new CustomEvent(`${id}:${type}`, { cancelable: true, detail: { id, ...detail } })
-			);
-		},
-		[eventManagerRef]
-	);
+	const dispatchFieldEvent = <T = any>(type: string, id: string, detail?: T): boolean => {
+		return eventManagerRef.current?.dispatchEvent(
+			new CustomEvent(`${id}:${type}`, { cancelable: true, detail: { id, ...detail } })
+		);
+	};
 
 	return { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener };
 };
