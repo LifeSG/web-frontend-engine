@@ -1,6 +1,6 @@
 import { MediaWidths, Modal } from "@lifesg/react-design-system";
 import { isEmpty } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
@@ -75,6 +75,8 @@ const LocationModal = ({
 	// selectedAddressInfo have valid addresses from one map
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
 
+	const shouldCallGetSelectablePins = useRef(true);
+
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
@@ -128,6 +130,7 @@ const LocationModal = ({
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleCloseLocationModal = useCallback(() => {
+		shouldCallGetSelectablePins.current = true;
 		onClose();
 	}, [onClose]);
 
@@ -312,12 +315,13 @@ const LocationModal = ({
 			const { lat, lng } = formValues || {};
 			if (!lat && !lng) {
 				await getCurrentLocation();
-			} else {
+			} else if (shouldCallGetSelectablePins.current) {
 				dispatchFieldEvent<ILocationCoord>("get-selectable-pins", id, {
 					lat: lat,
 					lng: lng,
 				});
 			}
+			shouldCallGetSelectablePins.current = false;
 		};
 		recenterAndTriggerEvent();
 	}, [dispatchFieldEvent, formValues, getCurrentLocation, id, showLocationModal]);
