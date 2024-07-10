@@ -75,13 +75,19 @@ const LocationModal = ({
 	// selectedAddressInfo have valid addresses from one map
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
 
-	const hasLoadedOnModalOpen = useRef(false);
+	const shouldCallGetSelectablePins = useRef(true);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const setSinglePanelMode = useCallback((inputMode: TPanelInputMode) => {
-		setPanelInputMode((prev) => (prev === "double" ? prev : inputMode));
+	const setSinglePanelMode = useCallback((inputMode: TPanelInputMode, onlyHandleIfStateIs?: TPanelInputMode) => {
+		setPanelInputMode((prev) => {
+			if (prev === "double" || (!!onlyHandleIfStateIs && prev !== onlyHandleIfStateIs)) {
+				return prev;
+			}
+
+			return inputMode;
+		});
 	}, []);
 
 	const getCurrentLocation = useCallback(async () => {
@@ -124,6 +130,7 @@ const LocationModal = ({
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleCloseLocationModal = useCallback(() => {
+		shouldCallGetSelectablePins.current = true;
 		onClose();
 	}, [onClose]);
 
@@ -293,12 +300,11 @@ const LocationModal = ({
 	useEffect(() => {
 		if (!showLocationModal) {
 			// Reset to map when one single panel view
-			panelInputMode !== "double" && setPanelInputMode("map");
+			setPanelInputMode((prev) => (prev !== "double" ? "map" : prev));
 			return;
 		}
 
 		const recenterAndTriggerEvent = async () => {
-			const { lat, lng } = formValues || {};
 			/**
 			 * We should only getCurrentLocation when nothing is prefilled
 			 * when formvalues are prefilled, the useEffect will recenter
@@ -306,20 +312,19 @@ const LocationModal = ({
 			 *
 			 * This is meant for first entry
 			 */
+			const { lat, lng } = formValues || {};
 			if (!lat && !lng) {
 				await getCurrentLocation();
-			} else {
+			} else if (shouldCallGetSelectablePins.current) {
 				dispatchFieldEvent<ILocationCoord>("get-selectable-pins", id, {
 					lat: lat,
 					lng: lng,
 				});
 			}
+			shouldCallGetSelectablePins.current = false;
 		};
-		if (!hasLoadedOnModalOpen.current) {
-			recenterAndTriggerEvent();
-		}
-		hasLoadedOnModalOpen.current = true;
-	}, [dispatchFieldEvent, formValues, getCurrentLocation, id, panelInputMode, showLocationModal]);
+		recenterAndTriggerEvent();
+	}, [dispatchFieldEvent, formValues, getCurrentLocation, id, showLocationModal]);
 
 	/**
 	 * triggers when
@@ -327,10 +332,10 @@ const LocationModal = ({
 	 * - prefill
 	 */
 	useEffect(() => {
-		if (!isEmpty(selectedAddressInfo) && panelInputMode === "search") {
-			setSinglePanelMode("map");
+		if (!isEmpty(selectedAddressInfo)) {
+			setSinglePanelMode("map", "search");
 		}
-	}, [selectedAddressInfo, gettingCurrentLocation, panelInputMode, setSinglePanelMode]);
+	}, [selectedAddressInfo, gettingCurrentLocation, setSinglePanelMode]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
