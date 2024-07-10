@@ -22,7 +22,7 @@ const FileUploadManager = (props: IProps) => {
 	// CONST, STATE, REFS
 	// =============================================================================
 	const { compressImages, fileTypeRule, id, maxFileSizeRule, upload, value } = props;
-	const { files, setFiles } = useContext(FileUploadContext);
+	const { files, setFiles, setCurrentFileIds } = useContext(FileUploadContext);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
 	const sessionId = useRef<string>();
@@ -72,15 +72,16 @@ const FileUploadManager = (props: IProps) => {
 			 */
 			const shouldDirty = hasNotPrefilledFiles || gotDeleteFiles;
 
+			setCurrentFileIds(uploadedFiles.map(({ fileItem }) => fileItem.id));
+
 			setValue(
 				id,
-				uploadedFiles.map(({ dataURL, fileItem, fileUrl, uploadResponse, addedFrom }) => ({
+				uploadedFiles.map(({ dataURL, fileItem, fileUrl, uploadResponse }) => ({
 					...(upload.type === "base64" ? { dataURL } : {}),
 					fileId: fileItem.id,
 					fileName: fileItem.name,
 					fileUrl,
 					uploadResponse,
-					handledFromDefault: addedFrom === "schema",
 				})),
 				{ shouldDirty, shouldTouch: hasNotPrefilledFiles }
 			);

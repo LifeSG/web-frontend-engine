@@ -1,4 +1,5 @@
 import { FileUpload as DSFileUpload, FileItemProps } from "@lifesg/react-design-system/file-upload";
+import xor from "lodash/xor";
 import { Suspense, lazy, useCallback, useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
@@ -35,7 +36,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		},
 		warning,
 	} = props;
-	const { files, setFiles } = useContext(FileUploadContext);
+	const { files, currentFileIds, setFiles } = useContext(FileUploadContext);
 	const fileTypeRuleRef = useRef<IFileUploadValidationRule>({});
 	const maxFilesRuleRef = useRef<IYupValidationRule>({});
 	const maxFileSizeRuleRef = useRef<IFileUploadValidationRule>({});
@@ -149,11 +150,18 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 
 	useEffect(() => {
 		// for defaultValue
-		const filesToHandle = Array.isArray(value)
-			? (value as IFileUploadValue[]).filter(({ handledFromDefault }) => !handledFromDefault)
-			: [];
+		if (!isDirty && !isTouched) {
+			const filesToHandle = Array.isArray(value) ? (value as IFileUploadValue[]) : [];
+			const filesChanged =
+				xor(
+					filesToHandle.map(({ fileId }) => fileId),
+					currentFileIds
+				).length > 0;
 
-		if (!isDirty && filesToHandle.length > 0) {
+			if (!filesChanged) {
+				return;
+			}
+
 			const newFiles: IFile[] = [];
 			filesToHandle.forEach(({ dataURL, fileId, fileName, fileUrl, uploadResponse }) => {
 				newFiles.push({
@@ -173,7 +181,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 			});
 			handleNewFiles(newFiles, []);
 		}
-	}, [handleNewFiles, isDirty, value]);
+	}, [handleNewFiles, isDirty, isTouched, currentFileIds, value]);
 
 	// =============================================================================
 	// EVENT HANDLERS

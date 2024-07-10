@@ -52,10 +52,4 @@ export interface IFileUploadValue {
 	fileName: string;
 	fileUrl?: string | undefined;
 	uploadResponse?: unknown | undefined;
-	/**
-	 * for internal use only. DO NOT pass this into default schema
-	 *
-	 * this is so that the form hook can differentiate the default from current value
-	 */
-	handledFromDefault?: boolean;
 }
