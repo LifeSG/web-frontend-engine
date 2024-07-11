@@ -17,7 +17,7 @@ import {
 } from "../../types";
 import { InfiniteScrollList } from "../infinite-scroll";
 import { boldResultsWithQuery, pagination } from "./helper";
-import { LOCATION_PIN_BLACK, SEARCH_SVG } from "./location-search.data";
+import { LOCATION_PIN_BLACK, LOCATION_PIN_GREY, SEARCH_SVG } from "./location-search.data";
 import {
 	ButtonItem,
 	ButtonWrapper,
@@ -75,6 +75,7 @@ export const LocationSearch = ({
 	updateFormValues,
 	restrictLocationSelection,
 	selectablePins,
+	searchBarIcon = "search",
 }: ILocationSearchProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -112,6 +113,11 @@ export const LocationSearch = ({
 		hasGotPinLocationValue,
 		checkAndSetPinLocationAsResult,
 	} = LocationHelper;
+
+	const iconPath: Record<typeof searchBarIcon, string> = {
+		search: SEARCH_SVG,
+		"location-pin": LOCATION_PIN_GREY,
+	};
 
 	// =============================================================================
 	// EFFECTS
@@ -642,7 +648,7 @@ export const LocationSearch = ({
 						data-testid={TestHelper.generateId(id, "location-search-modal-search")}
 						disabled={!!disableSearch}
 					>
-						<SearchBarIcon src={SEARCH_SVG} alt="Search" />
+						<SearchBarIcon src={iconPath[searchBarIcon]} alt="Search" />
 					</SearchBarIconButton>
 					<SearchBarInput
 						id={TestHelper.generateId(id, "location-search-modal-input")}

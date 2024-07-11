@@ -12,6 +12,7 @@ export interface ILocationModalProps
 			| "gettingCurrentLocationFetchMessage"
 			| "disableSearch"
 			| "addressFieldPlaceholder"
+			| "searchBarIcon"
 		> {
 	id: string;
 	className: string;
