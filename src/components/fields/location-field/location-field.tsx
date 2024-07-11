@@ -41,6 +41,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			locationSelectionMode = "default",
 			disableSearch,
 			addressFieldPlaceholder,
+			searchBarIcon,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -185,6 +186,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						locationSelectionMode={locationSelectionMode}
 						disableSearch={disableSearch}
 						addressFieldPlaceholder={addressFieldPlaceholder}
+						searchBarIcon={searchBarIcon}
 					/>
 				)}
 			</Suspense>

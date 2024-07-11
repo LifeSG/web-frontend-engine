@@ -33,4 +33,5 @@ export interface ILocationSearchProps {
 	restrictLocationSelection?: boolean | undefined;
 	selectablePins: IMapPin[];
 	disableSearch?: "disabled" | "readonly" | undefined;
+	searchBarIcon?: "search" | "location-pin";
 }

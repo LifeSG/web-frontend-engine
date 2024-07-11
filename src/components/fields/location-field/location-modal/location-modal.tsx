@@ -48,6 +48,7 @@ const LocationModal = ({
 	locationSelectionMode,
 	disableSearch,
 	addressFieldPlaceholder,
+	searchBarIcon,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -473,6 +474,7 @@ const LocationModal = ({
 								selectablePins={selectablePins}
 								disableSearch={disableSearch}
 								addressFieldPlaceholder={addressFieldPlaceholder}
+								searchBarIcon={searchBarIcon}
 							/>
 							<StyledLocationPicker
 								id={id}
