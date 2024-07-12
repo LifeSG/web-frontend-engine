@@ -36,7 +36,9 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 			Yup.object()
 				.shape({
 					fileId: Yup.string().required(),
-					dataURL: Yup.string().required(),
+					dataURL: Yup.string(),
+					fileUrl: Yup.string(),
+					uploadResponse: Yup.mixed().nullable(),
 				})
 				.default(undefined),
 			validation
