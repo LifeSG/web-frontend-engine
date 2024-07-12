@@ -69,6 +69,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 				});
 			} catch (error) {
 				setError(id, { type: "onChange", message: ERROR_MESSAGES.UPLOAD().GENERIC });
+				setLoadingProgress(null);
 			}
 		} else {
 			onChange({ target: { value: { fileId, dataURL: signatureDataURL } } });
