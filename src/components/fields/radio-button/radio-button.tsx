@@ -16,7 +16,6 @@ import {
 	StyledImageButton,
 	StyledRadioButton,
 	StyledToggle,
-	ToggleSublabel,
 } from "./radio-button.styles";
 import { TRadioButtonGroupSchema } from "./types";
 
@@ -131,12 +130,13 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								checked={isRadioButtonChecked(option.value)}
 								onChange={() => handleChangeOrClick(option.value)}
 								error={!!error?.message}
-								subLabel={() =>
-									option.children ? (
-										<ToggleSublabel>
-											<Wrapper>{option.children}</Wrapper>
-										</ToggleSublabel>
-									) : null
+								compositeSection={
+									option.children
+										? {
+												children: <Wrapper>{option.children}</Wrapper>,
+												collapsible: false,
+										  }
+										: null
 								}
 							>
 								{option.label}

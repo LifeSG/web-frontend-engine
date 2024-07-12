@@ -255,11 +255,17 @@ NestedFields.args = {
 			label: "Others",
 			value: "Others",
 			children: {
-				otherInput: {
-					uiType: "textarea",
-					label: "",
-					validation: [{ required: true }, { max: 100 }],
+				wrapper: {
+					uiType: "div",
+					style: { padding: "1rem" },
 					showIf: [{ "checkbox-nested": [{ filled: true }, { includes: ["Others"] }] }],
+					children: {
+						otherInput: {
+							uiType: "textarea",
+							label: "",
+							validation: [{ required: true }, { max: 100 }],
+						},
+					},
 				},
 			},
 		},

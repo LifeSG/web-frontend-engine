@@ -9,14 +9,7 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize, Warning } from "../../shared";
-import {
-	CheckboxContainer,
-	Label,
-	StyledCheckbox,
-	StyledToggle,
-	ToggleSublabel,
-	ToggleWrapper,
-} from "./checkbox-group.styles";
+import { CheckboxContainer, Label, StyledCheckbox, StyledToggle, ToggleWrapper } from "./checkbox-group.styles";
 import { IToggleOption, TCheckboxGroupSchema } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) => {
@@ -158,12 +151,13 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
 								error={!!error?.message}
-								subLabel={() =>
-									option.children ? (
-										<ToggleSublabel>
-											<Wrapper>{option.children}</Wrapper>
-										</ToggleSublabel>
-									) : null
+								compositeSection={
+									option.children
+										? {
+												children: <Wrapper>{option.children}</Wrapper>,
+												collapsible: false,
+										  }
+										: null
 								}
 							>
 								{option.label}
