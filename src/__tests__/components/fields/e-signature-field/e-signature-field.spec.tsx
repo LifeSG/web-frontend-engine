@@ -142,12 +142,13 @@ describe(UI_TYPE, () => {
 			);
 		});
 
-		it("should show error message if upload fails", async () => {
+		it("should show error message and dismiss the loading indicator if upload fails", async () => {
 			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue({});
 			renderComponent({ upload: { url: "url", type: "base64" } });
 			await waitFor(() => drawAndSave());
 
 			expect(screen.getByText(ERROR_MESSAGES.UPLOAD().GENERIC)).toBeInTheDocument();
+			expect(screen.queryByTestId(`${COMPONENT_ID}-base-progress-bar`)).not.toBeInTheDocument();
 		});
 	});
 

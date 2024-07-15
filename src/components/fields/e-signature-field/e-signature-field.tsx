@@ -36,7 +36,9 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 			Yup.object()
 				.shape({
 					fileId: Yup.string().required(),
-					dataURL: Yup.string().required(),
+					dataURL: Yup.string(),
+					fileUrl: Yup.string(),
+					uploadResponse: Yup.mixed().nullable(),
 				})
 				.default(undefined),
 			validation
@@ -69,6 +71,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 				});
 			} catch (error) {
 				setError(id, { type: "onChange", message: ERROR_MESSAGES.UPLOAD().GENERIC });
+				setLoadingProgress(null);
 			}
 		} else {
 			onChange({ target: { value: { fileId, dataURL: signatureDataURL } } });
