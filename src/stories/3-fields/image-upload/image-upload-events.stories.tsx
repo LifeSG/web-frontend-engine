@@ -37,8 +37,8 @@ const Template = (eventName: string) =>
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
-			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);
+			currentFormRef.addFieldEventListener("image-upload", eventName as any, id, handleEvent);
+			return () => currentFormRef.removeFieldEventListener("image-upload", eventName as any, id, handleEvent);
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
 		return (
@@ -123,8 +123,9 @@ const SaveReviewImagesTemplate = (eventName: string) =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventName, id, handleSaveReviewImages);
-			return () => currentFormRef.removeFieldEventListener(eventName, id, handleSaveReviewImages);
+			currentFormRef.addFieldEventListener("image-upload", eventName as any, id, handleSaveReviewImages);
+			return () =>
+				currentFormRef.removeFieldEventListener("image-upload", eventName as any, handleSaveReviewImages);
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [handleSaveReviewImages]);
 
@@ -167,7 +168,7 @@ const ImageUploadReadyOrUploadedTemplate = (eventName: string, customMuted: bool
 				e.preventDefault();
 
 				setTimeout(() => {
-					currentFormRef.dispatchFieldEvent("update-image-status", id, {
+					currentFormRef.dispatchFieldEvent("image-upload", "update-image-status", id, {
 						id: e.detail.imageData.id,
 						updatedStatus: customMuted ? EImageStatus.ERROR_CUSTOM_MUTED : EImageStatus.ERROR_CUSTOM,
 						errorMessage: customMuted ? "custom error muted message" : "custom error message",
@@ -176,7 +177,7 @@ const ImageUploadReadyOrUploadedTemplate = (eventName: string, customMuted: bool
 			};
 
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventName, id, handleUploadReady);
+			currentFormRef.addFieldEventListener("image-upload", eventName as any, handleUploadReady);
 			return () => currentFormRef.removeFieldEventListener(eventName, id, handleUploadReady);
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);

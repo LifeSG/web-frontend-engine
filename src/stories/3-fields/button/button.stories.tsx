@@ -95,7 +95,7 @@ const Template = (id: string, eventName?: string | undefined) =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
+			currentFormRef.addFieldEventListener("button", eventName as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
