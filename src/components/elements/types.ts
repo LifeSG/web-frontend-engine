@@ -1,6 +1,6 @@
 import { TRenderRules } from "../../context-providers";
 import { IColumns } from "../frontend-engine";
-import { IAccordionSchema } from "./accordion";
+import { IAccordionSchema, TAccordionEvents } from "./accordion";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
 import { IGridSchema } from "./grid";
@@ -67,7 +67,7 @@ export type TElementSchema<V = undefined, C = undefined> =
 /**
  * intersection type to represent all field events
  */
-export type TElementEvents = any;
+export type TElementEvents = TAccordionEvents;
 
 /**
  * common element schema for element schemas to extend from
