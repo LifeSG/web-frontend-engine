@@ -1,6 +1,6 @@
 import { Modal } from "@lifesg/react-design-system/modal";
 import { CrossIcon } from "@lifesg/react-icons/cross";
-import { Suspense, lazy, useContext, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
@@ -104,52 +104,22 @@ export const ImageReview = (props: IProps) => {
 		!images.length;
 
 	// =============================================================================
-	// EFFECTS
-	// =============================================================================
-	useEffect(() => {
-		const eventsData = {
-			["trigger-save-review-images"]: handleSetImagesStatus,
-			["dismiss-review-modal"]: handleDismissReviewModal,
-		};
-
-		Object.entries(eventsData).forEach(([event, callback]) => {
-			addFieldEventListener(event, id, callback);
-		});
-
-		return () => {
-			Object.entries(eventsData).forEach(([event, callback]) => {
-				removeFieldEventListener(event, id, callback);
-			});
-		};
-	}, []);
-
-	useEffect(() => {
-		setActiveFileIndex(images.length - 1);
-	}, [images.length]);
-
-	useEffect(() => {
-		if (show) {
-			dispatchFieldEvent("show-review-modal", id);
-		} else if (previousShow) {
-			dispatchFieldEvent("hide-review-modal", id);
-		}
-	}, [show]);
-
-	// =============================================================================
 	// - REVIEW MODAL
 	// =============================================================================
-
-	const handleDismissReviewModal = (e: CustomEvent<IDismissReviewModalEvent>) => {
-		if (e.detail.removePendingImages) {
-			//remove others but keep the uploaded
-			setImages((prev) => {
-				return prev.filter(
-					({ status, addedFrom }) => status === EImageStatus.UPLOADED && addedFrom === "reviewModal"
-				);
-			});
-		}
-		onExit();
-	};
+	const handleDismissReviewModal = useCallback(
+		(e: CustomEvent<IDismissReviewModalEvent>) => {
+			if (e.detail.removePendingImages) {
+				//remove others but keep the uploaded
+				setImages((prev) => {
+					return prev.filter(
+						({ status }) => status === EImageStatus.UPLOADED || status === EImageStatus.ERROR_CUSTOM_MUTED
+					);
+				});
+			}
+			onExit();
+		},
+		[onExit, setImages]
+	);
 
 	const handleSelectFile = (selectedFiles: File[]) => {
 		if (
@@ -229,7 +199,7 @@ export const ImageReview = (props: IProps) => {
 		setActivePrompt(null);
 	};
 
-	const handleSetImagesStatus = () => {
+	const handleSetImagesStatus = useCallback(() => {
 		setImages((prev) =>
 			prev
 				.filter(({ status }) => status >= EImageStatus.NONE || status === EImageStatus.ERROR_CUSTOM_MUTED)
@@ -246,7 +216,7 @@ export const ImageReview = (props: IProps) => {
 					return editedFile;
 				})
 		);
-	};
+	}, [setImages]);
 
 	const handleSave = () => {
 		const shouldPreventDefault = !dispatchFieldEvent("save-review-images", id, { images, retry: handleSave });
@@ -311,6 +281,38 @@ export const ImageReview = (props: IProps) => {
 		setActiveColor("");
 		setEraseMode(false);
 	};
+
+	// =============================================================================
+	// EFFECTS
+	// =============================================================================
+	useEffect(() => {
+		const eventsData = {
+			["trigger-save-review-images"]: handleSetImagesStatus,
+			["dismiss-review-modal"]: handleDismissReviewModal,
+		};
+
+		Object.entries(eventsData).forEach(([event, callback]) => {
+			addFieldEventListener(event, id, callback);
+		});
+
+		return () => {
+			Object.entries(eventsData).forEach(([event, callback]) => {
+				removeFieldEventListener(event, id, callback);
+			});
+		};
+	}, [addFieldEventListener, handleDismissReviewModal, handleSetImagesStatus, id, removeFieldEventListener]);
+
+	useEffect(() => {
+		setActiveFileIndex(images.length - 1);
+	}, [images.length]);
+
+	useEffect(() => {
+		if (show) {
+			dispatchFieldEvent("show-review-modal", id);
+		} else if (previousShow) {
+			dispatchFieldEvent("hide-review-modal", id);
+		}
+	}, [show]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
