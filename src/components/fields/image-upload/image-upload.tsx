@@ -247,6 +247,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				outputType={outputType}
 				show={showReviewModal}
 				multiple={multiple}
+				capture={capture}
 			/>
 		);
 	};
