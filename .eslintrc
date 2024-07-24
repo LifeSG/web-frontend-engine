@@ -29,13 +29,6 @@
 		}
 	},
 	"rules": {
-		"indent": [
-			"warn",
-			"tab",
-			{
-				"SwitchCase": 1
-			}
-		],
 		"no-empty": "off",
 		"no-console": "off",
 		"no-debugger": "off",
