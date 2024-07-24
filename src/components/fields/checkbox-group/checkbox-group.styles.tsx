@@ -37,11 +37,8 @@ export const ToggleWrapper = styled.div<IToggleWrapperProps>`
 `;
 
 export const StyledToggle = styled(Toggle)`
-	[data-id="toggle-sublabel"] {
-		margin-top: 0;
+	[data-id="toggle-composite-children"] {
+		margin: 0;
+		padding: 0;
 	}
-`;
-
-export const ToggleSublabel = styled.div`
-	pointer-events: auto;
 `;
