@@ -127,6 +127,7 @@ export interface IComplexLabel {
 
 interface IComplexLabelHint {
 	content: string;
+	zIndex?: number | undefined;
 }
 // =============================================================================
 // FIELD PROPS
