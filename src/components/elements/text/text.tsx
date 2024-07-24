@@ -71,9 +71,10 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				);
 			});
 		} else if (typeof children === "object") {
-			return Object.entries(children).map(([id, childSchema], index) => (
-				<Text key={index} id={id} schema={childSchema} />
-			));
+			return Object.entries(children).map(([id, childSchema], index) => {
+				console.log("----a----", id, childSchema);
+				return <Text key={index} id={id} schema={childSchema} />;
+			});
 		}
 		return children;
 	};
@@ -89,7 +90,17 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}
 			>
-				<Sanitize inline sanitizeOptions={{ allowedTags: ["img", "br"], allowedAttributes: { img: ["src"] } }}>
+				<Sanitize
+					inline
+					sanitizeOptions={{
+						allowedTags: ["img", "br", "p", "span"],
+						allowedAttributes: {
+							img: ["src", "alt", "width", "height"],
+							p: ["class", "data-testid", "id"],
+							span: ["class", "data-testid", "id"],
+						},
+					}}
+				>
 					{renderText()}
 				</Sanitize>
 			</Element>

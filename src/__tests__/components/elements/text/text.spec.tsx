@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, prettyDOM, render, screen, waitFor } from "@testing-library/react";
 import { ITextSchema, TTextType } from "../../../../components/elements";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
@@ -94,6 +94,19 @@ describe(UI_TYPE, () => {
 
 	it("should be able to render a HTML string", () => {
 		renderComponent({ children: "<div>This is a HTML string</div>" });
+
+		expect(screen.getByText("This is a HTML string")).toBeInTheDocument();
+	});
+
+	it("should be able to render an image with HTML string", () => {
+		renderComponent({
+			children:
+				"<div><img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt='LifeSG logo'> <br/> This is a HTML string</div>",
+		});
+
+		const imgElement = screen.getByAltText("LifeSG logo");
+		expect(imgElement).toBeInTheDocument();
+		expect(imgElement).toHaveAttribute("src", "https://assets.life.gov.sg/lifesg/logo-lifesg.svg");
 
 		expect(screen.getByText("This is a HTML string")).toBeInTheDocument();
 	});
