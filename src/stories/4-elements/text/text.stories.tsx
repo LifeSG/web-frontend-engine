@@ -279,7 +279,14 @@ ParagraphText.args = {
 export const HTMLString = Template("text-html-string").bind({});
 HTMLString.args = {
 	uiType: "text-body",
-	children: "<p>This is a paragraph in a HTML string</p>",
+	children: "<p>his is a paragraph in a HTML string</p>",
+};
+
+export const ImageTextString = Template("image-text-string").bind({});
+ImageTextString.args = {
+	uiType: "text-body",
+	children:
+		"<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg'> <br/> <p>The image above is added via img tag and this text is rendered in a p tag</p>",
 };
 
 export const SanitizedHTMLString = Template("text-sanitized-html-string").bind({});

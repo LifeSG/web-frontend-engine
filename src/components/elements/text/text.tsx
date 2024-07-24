@@ -89,7 +89,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}
 			>
-				<Sanitize inline sanitizeOptions={{ allowedAttributes: false }}>
+				<Sanitize inline sanitizeOptions={{ allowedTags: ["img", "br"], allowedAttributes: { img: ["src"] } }}>
 					{renderText()}
 				</Sanitize>
 			</Element>
