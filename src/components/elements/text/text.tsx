@@ -8,6 +8,7 @@ import { IGenericElementProps } from "../types";
 import { TEXT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
 import styled from "styled-components";
+import sanitizeHtml from "sanitize-html";
 
 export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
@@ -72,7 +73,6 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 			});
 		} else if (typeof children === "object") {
 			return Object.entries(children).map(([id, childSchema], index) => {
-				console.log("----a----", id, childSchema);
 				return <Text key={index} id={id} schema={childSchema} />;
 			});
 		}
@@ -93,12 +93,8 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				<Sanitize
 					inline
 					sanitizeOptions={{
-						allowedTags: ["img", "br", "p", "span"],
-						allowedAttributes: {
-							img: ["src", "alt", "width", "height"],
-							p: ["class", "data-testid", "id"],
-							span: ["class", "data-testid", "id"],
-						},
+						allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+						allowedAttributes: false,
 					}}
 				>
 					{renderText()}
