@@ -8,6 +8,7 @@ import { IGenericElementProps } from "../types";
 import { TEXT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
 import styled from "styled-components";
+import sanitizeHtml from "sanitize-html";
 
 export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
@@ -89,7 +90,13 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}
 			>
-				<Sanitize inline sanitizeOptions={{ allowedAttributes: false }}>
+				<Sanitize
+					inline
+					sanitizeOptions={{
+						allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+						allowedAttributes: false,
+					}}
+				>
 					{renderText()}
 				</Sanitize>
 			</Element>

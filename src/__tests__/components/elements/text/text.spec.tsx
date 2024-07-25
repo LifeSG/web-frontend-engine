@@ -98,6 +98,19 @@ describe(UI_TYPE, () => {
 		expect(screen.getByText("This is a HTML string")).toBeInTheDocument();
 	});
 
+	it("should be able to render an image with HTML string", () => {
+		renderComponent({
+			children:
+				"<div><img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt='LifeSG logo'> This is a HTML string</div>",
+		});
+
+		const imgElement = screen.getByAltText("LifeSG logo");
+		expect(imgElement).toBeInTheDocument();
+		expect(imgElement).toHaveAttribute("src", "https://assets.life.gov.sg/lifesg/logo-lifesg.svg");
+
+		expect(screen.getByText("This is a HTML string")).toBeInTheDocument();
+	});
+
 	it("should be able to sanitize HTML string", () => {
 		renderComponent({
 			className: "text-element",
