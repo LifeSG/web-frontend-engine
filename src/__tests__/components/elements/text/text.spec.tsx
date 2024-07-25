@@ -1,4 +1,4 @@
-import { fireEvent, prettyDOM, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ITextSchema, TTextType } from "../../../../components/elements";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
@@ -101,7 +101,7 @@ describe(UI_TYPE, () => {
 	it("should be able to render an image with HTML string", () => {
 		renderComponent({
 			children:
-				"<div><img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt='LifeSG logo'> <br/> This is a HTML string</div>",
+				"<div><img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt='LifeSG logo'> This is a HTML string</div>",
 		});
 
 		const imgElement = screen.getByAltText("LifeSG logo");

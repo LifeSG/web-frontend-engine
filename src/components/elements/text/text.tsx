@@ -72,9 +72,9 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				);
 			});
 		} else if (typeof children === "object") {
-			return Object.entries(children).map(([id, childSchema], index) => {
-				return <Text key={index} id={id} schema={childSchema} />;
-			});
+			return Object.entries(children).map(([id, childSchema], index) => (
+				<Text key={index} id={id} schema={childSchema} />
+			));
 		}
 		return children;
 	};

@@ -286,7 +286,7 @@ export const ImageTextString = Template("image-text-string").bind({});
 ImageTextString.args = {
 	uiType: "text-body",
 	children:
-		"<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg'> <br/> <p>The image above is added via img tag and this text is rendered in a p tag</p>",
+		"<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg'> <p>The image above is added via img tag and this text is rendered in a p tag</p>",
 };
 
 export const SanitizedHTMLString = Template("text-sanitized-html-string").bind({});
