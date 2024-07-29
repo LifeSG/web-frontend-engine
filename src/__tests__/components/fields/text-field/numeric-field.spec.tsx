@@ -169,6 +169,39 @@ describe(UI_TYPE, () => {
 		expect(event).toBe(true);
 	});
 
+	describe("addOn", () => {
+		it("should be able to render the icon add on", async () => {
+			renderComponent({
+				customOptions: {
+					addOn: { type: "icon", icon: "TicketIcon" },
+				},
+			});
+
+			fireEvent.change(getNumericField(), { target: { value: 1 } });
+
+			const startIcon = document.querySelector("svg");
+			expect(startIcon).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "1" }));
+		});
+
+		it("should be able to render the label add on", async () => {
+			renderComponent({
+				customOptions: {
+					addOn: { type: "label", value: "$" },
+				},
+			});
+
+			fireEvent.change(getNumericField(), { target: { value: 1 } });
+
+			expect(screen.getByText("$")).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "1" }));
+		});
+	});
+
 	describe("reset", () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();

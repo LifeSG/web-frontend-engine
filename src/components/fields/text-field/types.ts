@@ -7,6 +7,7 @@ import { IBaseFieldSchema } from "../types";
 type TCustomOptions = {
 	preventCopyAndPaste?: boolean | undefined;
 	preventDragAndDrop?: boolean | undefined;
+	addOn?: TIconAddOn | TLabelAddOn | undefined;
 };
 
 type TIconAddOn = {
@@ -23,7 +24,6 @@ type TLabelAddOn = {
 };
 
 export type TCustomOptionsText = TCustomOptions & {
-	addOn?: TIconAddOn | TLabelAddOn | undefined;
 	textTransform?: "uppercase" | undefined;
 };
 

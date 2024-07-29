@@ -158,11 +158,11 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	};
 
 	const hasAddOn = () => {
-		return uiType === "text-field" && !!customOptions?.addOn;
+		return !!customOptions?.addOn;
 	};
 
 	const buildAddOn = (): AddonProps<undefined, undefined> => {
-		if (uiType !== "text-field" || !customOptions?.addOn) {
+		if (!hasAddOn()) {
 			return undefined;
 		}
 
