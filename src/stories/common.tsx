@@ -66,7 +66,8 @@ export const CommonFieldStoryProps = (uiType: string, isElement = false): ArgTyp
 				"<div>A name/description of the purpose of the form element which may include an optional sub-label and popover feature.<br>If string is provided, the entire label will be rendered.<br>If object is provided:<ul><li>mainLabel: Primary text to display.</li><li>subLabel: Secondary text to display below the mainLabel.</li><li>hint.content: Displays an info icon and brings up the content as a popover on click.</li></ul></div>",
 			table: {
 				type: {
-					summary: "string | { mainLabel: string, subLabel?: string, hint?: { content: string } }",
+					summary:
+						"string | { mainLabel: string, subLabel?: string, hint?: { content: string; zIndex?: number } }",
 				},
 			},
 		},
