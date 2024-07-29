@@ -99,7 +99,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent(defaultLabel);
+		expect(screen.getByTestId("selector")).toHaveTextContent(defaultLabel);
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
@@ -114,7 +114,7 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getSelectToggle().parentElement).toHaveAttribute("disabled");
+		expect(getSelectToggle()).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom placeholder", () => {
@@ -155,7 +155,7 @@ describe(UI_TYPE, () => {
 				);
 
 				await waitFor(() => fireEvent.click(getSelectToggle()));
-				fireEvent.click(screen.getByRole("button", { name: selected }));
+				fireEvent.click(screen.getByRole("option", { name: selected }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
@@ -194,7 +194,7 @@ describe(UI_TYPE, () => {
 				);
 
 				await waitFor(() => fireEvent.click(getSelectToggle()));
-				fireEvent.click(screen.getByRole("button", { name: selected }));
+				fireEvent.click(screen.getByRole("option", { name: selected }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
@@ -212,11 +212,11 @@ describe(UI_TYPE, () => {
 			renderComponent();
 
 			fireEvent.click(getSelectToggle());
-			fireEvent.click(screen.getByRole("button", { name: "A" }));
+			fireEvent.click(screen.getByRole("option", { name: "A" }));
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent("Select");
+			expect(screen.getByTestId("selector")).toHaveTextContent("Select");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -225,11 +225,11 @@ describe(UI_TYPE, () => {
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
 			fireEvent.click(getField("button", "A"));
-			fireEvent.click(screen.getByRole("button", { name: "B" }));
+			fireEvent.click(screen.getByRole("option", { name: "B" }));
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByTestId(`${COMPONENT_ID}-base`)).toHaveTextContent("A");
+			expect(screen.getByTestId("selector")).toHaveTextContent("A");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});
@@ -254,7 +254,7 @@ describe(UI_TYPE, () => {
 		it("should set form state as dirty if user modifies the field", async () => {
 			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 			fireEvent.click(getSelectToggle());
-			fireEvent.click(screen.getByRole("button", { name: "A" }));
+			fireEvent.click(screen.getByRole("option", { name: "A" }));
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(true);
@@ -275,7 +275,7 @@ describe(UI_TYPE, () => {
 		it("should reset and revert form dirty state to false", async () => {
 			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 			fireEvent.click(getSelectToggle());
-			fireEvent.click(screen.getByRole("button", { name: "A" }));
+			fireEvent.click(screen.getByRole("option", { name: "A" }));
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
@@ -290,7 +290,7 @@ describe(UI_TYPE, () => {
 				/>
 			);
 			fireEvent.click(getSelectToggle());
-			fireEvent.click(screen.getByRole("button", { name: "A" }));
+			fireEvent.click(screen.getByRole("option", { name: "A" }));
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 

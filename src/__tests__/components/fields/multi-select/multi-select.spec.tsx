@@ -77,15 +77,15 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 const getComponent = (): HTMLElement => {
-	return getField("button", FIELD_LABEL);
+	return screen.getByTestId("selector");
 };
 
 const getCheckboxA = (): HTMLElement => {
-	return getField("button", "A");
+	return getField("option", "A");
 };
 
 const getCheckboxB = (): HTMLElement => {
-	return getField("button", "B");
+	return getField("option", "B");
 };
 
 describe(UI_TYPE, () => {
@@ -108,7 +108,7 @@ describe(UI_TYPE, () => {
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
 		await waitFor(() => fireEvent.click(getComponent()));
-		expect(getCheckboxA().querySelector("div[aria-checked=true]")).toBeInTheDocument();
+		expect(getCheckboxA()).toHaveAttribute("aria-selected", "true");
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
@@ -125,14 +125,7 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getComponent().parentElement).toHaveAttribute("disabled");
-	});
-
-	it("should be able to support custom list style width", async () => {
-		const width = "24rem";
-		renderComponent({ listStyleWidth: width });
-		await waitFor(() => fireEvent.click(getComponent()));
-		expect(getField("list")).toHaveStyle({ width });
+		expect(getComponent()).toBeDisabled();
 	});
 
 	it("should be able to support custom placeholder", () => {
@@ -214,7 +207,7 @@ describe(UI_TYPE, () => {
 
 				await waitFor(() => fireEvent.click(getComponent()));
 
-				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
+				selected.forEach((name) => fireEvent.click(screen.getByRole("option", { name })));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
@@ -256,7 +249,7 @@ describe(UI_TYPE, () => {
 
 				await waitFor(() => fireEvent.click(getComponent()));
 
-				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
+				selected.forEach((name) => fireEvent.click(screen.getByRole("option", { name })));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toBeCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
@@ -283,8 +276,8 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText("Select")).toBeInTheDocument();
-			expect(apple.querySelector("div[aria-checked=false]")).toBeInTheDocument();
-			expect(berry.querySelector("div[aria-checked=false]")).toBeInTheDocument();
+			expect(apple).toHaveAttribute("aria-selected", "false");
+			expect(berry).toHaveAttribute("aria-selected", "false");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -301,8 +294,8 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText("1 selected")).toBeInTheDocument();
-			expect(apple.querySelector("div[aria-checked=true]")).toBeInTheDocument();
-			expect(berry.querySelector("div[aria-checked=false]")).toBeInTheDocument();
+			expect(apple).toHaveAttribute("aria-selected", "true");
+			expect(berry).toHaveAttribute("aria-selected", "false");
 			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});

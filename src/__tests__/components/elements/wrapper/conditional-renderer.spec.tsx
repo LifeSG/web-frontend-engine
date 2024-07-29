@@ -161,19 +161,19 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		await waitFor(() => fireEvent.click(getField("button", FIELD_ONE_LABEL)));
+		await waitFor(() => fireEvent.click(getField("button", "Select")));
 
 		invalid?.forEach((value: string) => {
-			fireEvent.click(screen.getByText(value).closest("button"));
+			fireEvent.click(screen.getByRole("option", { name: value }));
 		});
 		expect(getFieldTwo(true)).not.toBeInTheDocument();
 
 		// fire invalid again to deselect values
 		invalid?.forEach((value: string) => {
-			fireEvent.click(screen.getByText(value).closest("button"));
+			fireEvent.click(screen.getByRole("option", { name: value }));
 		});
 		valid?.forEach((value: string) => {
-			fireEvent.click(screen.getByText(value).closest("button"));
+			fireEvent.click(screen.getByRole("option", { name: value }));
 		});
 		expect(getFieldTwo()).toBeInTheDocument();
 	});
