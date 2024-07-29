@@ -59,14 +59,6 @@ const meta: Meta = {
 				},
 			},
 		},
-		listStyleWidth: {
-			description: "Style option: The width of the options. You can specify e.g. 100% or 12rem",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-		},
 	},
 };
 export default meta;
@@ -142,18 +134,6 @@ Searchable.args = {
 		{ label: "Cherry", value: "cherry" },
 	],
 	enableSearch: true,
-};
-
-export const CustomWidth = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-custom-width").bind({});
-CustomWidth.args = {
-	uiType: "multi-select",
-	label: "Fruits",
-	options: [
-		{ value: "Apple", label: "Apple" },
-		{ value: "Berry", label: "Berry" },
-		{ value: "Cherry", label: "Cherry" },
-	],
-	listStyleWidth: "12rem",
 };
 
 export const Placeholder = DefaultStoryTemplate<IMultiSelectSchema>("multi-select-placeholder").bind({});
