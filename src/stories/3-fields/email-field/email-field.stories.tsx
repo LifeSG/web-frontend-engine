@@ -54,11 +54,14 @@ const meta: Meta = {
 			},
 		},
 		customOptions: {
-			description:
-				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li></ul>",
+			description: `<ul>
+				<li>\`preventCopyAndPaste\` prop accept \`boolean\` and also can be \`undefined\`. If value is true then it will prevent user from copy pasting.</li><br>
+				<li>\`preventDragAndDrop\` prop accept \`boolean\` and also can be \`undefined\`. If value is true then it will prevent user from drag and drop.</li><br>
+				<li>\`addOn\` prop can be configured to display a label or icon at the start/end of the field. It is not included in the input</li><br>
+				</ul>`,
 			table: {
 				type: {
-					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean}`,
+					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean, addOn?: { type: "label", value: string, position?: "left" | "right" } | { type: "icon", value: string, position?: "left" | "right", color?: string }}`,
 				},
 			},
 			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false },
@@ -153,10 +156,28 @@ PreventCopyAndPaste.args = {
 
 export const PreventDragAndDrop = DefaultStoryTemplate<IEmailFieldSchema>("prevent-drag-and-drop").bind({});
 PreventDragAndDrop.args = {
-	label: "Textfield",
+	label: "Email",
 	uiType: "email-field",
 	customOptions: {
 		preventDragAndDrop: true,
+	},
+};
+
+export const AddOnIcon = DefaultStoryTemplate<IEmailFieldSchema>("add-on-icon").bind({});
+AddOnIcon.args = {
+	label: "Email",
+	uiType: "email-field",
+	customOptions: {
+		addOn: { type: "icon", icon: "PlusIcon", color: "#686868" },
+	},
+};
+
+export const AddOnLabel = DefaultStoryTemplate<IEmailFieldSchema>("add-on-label").bind({});
+AddOnLabel.args = {
+	label: "Email",
+	uiType: "email-field",
+	customOptions: {
+		addOn: { type: "label", value: "#" },
 	},
 };
 

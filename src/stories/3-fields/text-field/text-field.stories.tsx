@@ -54,11 +54,15 @@ const meta: Meta = {
 			},
 		},
 		customOptions: {
-			description:
-				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li><li>`textTransform` prop accept `uppercase` and also can be `undefined`. If value is set to `uppercase` then it will convert any user input to uppercase.<br>*Note: Unsetting `textTransform` at runtime does not revert existing input.</li></ul>",
+			description: `<ul>
+				<li>\`preventCopyAndPaste\` prop accept \`boolean\` and also can be \`undefined\`. If value is true then it will prevent user from copy pasting.</li><br>
+				<li>\`preventDragAndDrop\` prop accept \`boolean\` and also can be \`undefined\`. If value is true then it will prevent user from drag and drop.</li><br>
+				<li>\`textTransform\` prop accept \`uppercase\` and also can be \`undefined\`. If value is set to \`uppercase\` then it will convert any user input to uppercase.<br>*Note: Unsetting \`textTransform\` at runtime does not revert existing input.</li><br>
+				<li>\`addOn\` prop can be configured to display a label or icon at the start/end of the field. It is not included in the input</li><br>
+				</ul>`,
 			table: {
 				type: {
-					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean, textTransform?: "uppercase"}`,
+					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean, textTransform?: "uppercase", addOn?: { type: "label", value: string, position?: "left" | "right" } | { type: "icon", value: string, position?: "left" | "right", color?: string }}`,
 				},
 			},
 			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false },
@@ -159,6 +163,24 @@ Uppercase.args = {
 	uiType: "text-field",
 	customOptions: {
 		textTransform: "uppercase",
+	},
+};
+
+export const AddOnIcon = DefaultStoryTemplate<ITextFieldSchema>("add-on-icon").bind({});
+AddOnIcon.args = {
+	label: "Textfield",
+	uiType: "text-field",
+	customOptions: {
+		addOn: { type: "icon", icon: "MagnifierIcon", color: "#686868" },
+	},
+};
+
+export const AddOnLabel = DefaultStoryTemplate<ITextFieldSchema>("add-on-label").bind({});
+AddOnLabel.args = {
+	label: "Textfield",
+	uiType: "text-field",
+	customOptions: {
+		addOn: { type: "label", value: "$" },
 	},
 };
 

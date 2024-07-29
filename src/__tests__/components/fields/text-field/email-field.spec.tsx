@@ -180,6 +180,39 @@ describe(UI_TYPE, () => {
 		expect(event).toBe(true);
 	});
 
+	describe("addOn", () => {
+		it("should be able to render the icon add on", async () => {
+			renderComponent({
+				customOptions: {
+					addOn: { type: "icon", icon: "TicketIcon" },
+				},
+			});
+
+			fireEvent.change(getEmailField(), { target: { value: "john@doe.com" } });
+
+			const startIcon = document.querySelector("svg");
+			expect(startIcon).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "john@doe.com" }));
+		});
+
+		it("should be able to render the label add on", async () => {
+			renderComponent({
+				customOptions: {
+					addOn: { type: "label", value: "#" },
+				},
+			});
+
+			fireEvent.change(getEmailField(), { target: { value: "john@doe.com" } });
+
+			expect(screen.getByText("#")).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "john@doe.com" }));
+		});
+	});
+
 	describe("reset", () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();

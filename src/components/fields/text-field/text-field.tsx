@@ -1,6 +1,9 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
+import { AddonProps } from "@lifesg/react-design-system/input-group";
+import * as Icons from "@lifesg/react-icons";
 import React, { HTMLInputTypeAttribute, useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
@@ -154,12 +157,46 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		}
 	};
 
+	const hasAddOn = () => {
+		return !!customOptions?.addOn;
+	};
+
+	const buildAddOn = (): AddonProps<undefined, undefined> => {
+		if (!hasAddOn()) {
+			return undefined;
+		}
+
+		if (customOptions.addOn.type === "label") {
+			return {
+				type: "label",
+				position: customOptions.addOn.position,
+				attributes: {
+					value: customOptions.addOn.value,
+				},
+			};
+		}
+
+		if (customOptions.addOn.type === "icon") {
+			const { icon, position, color } = customOptions.addOn;
+			const Element = Icons[icon];
+			return {
+				type: "custom",
+				position: position,
+				attributes: {
+					children: <CustomIcon as={Element} $color={color} />,
+				},
+			};
+		}
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const InputElement = hasAddOn() ? Form.InputGroup : Form.Input;
+
 	return (
 		<>
-			<Form.Input
+			<InputElement
 				{...otherSchema}
 				{...otherProps}
 				{...derivedAttributes}
@@ -174,8 +211,17 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 				onChange={handleChange}
 				value={stateValue}
 				errorMessage={error?.message}
+				addon={buildAddOn()}
 			/>
 			<Warning id={id} message={warning} />
 		</>
 	);
 };
+
+interface CustomIconStyleProps {
+	$color?: string;
+}
+
+const CustomIcon = styled.div<CustomIconStyleProps>`
+	${({ $color }) => $color && `color: ${$color};`}
+`;

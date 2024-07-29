@@ -54,11 +54,14 @@ const meta: Meta = {
 			},
 		},
 		customOptions: {
-			description:
-				"<ul><li>`preventCopyAndPaste` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from copy pasting.</li><li>`preventDragAndDrop` prop accept `boolean` and also can be `undefined`. If value is true then it will prevent user from drag and drop.</li></ul>",
+			description: `<ul>
+				<li>\`preventCopyAndPaste\` prop accept \`boolean\` and also can be \`undefined\`. If value is true then it will prevent user from copy pasting.</li><br>
+				<li>\`preventDragAndDrop\` prop accept \`boolean\` and also can be \`undefined\`. If value is true then it will prevent user from drag and drop.</li><br>
+				<li>\`addOn\` prop can be configured to display a label or icon at the start/end of the field. It is not included in the input</li><br>
+				</ul>`,
 			table: {
 				type: {
-					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean}`,
+					summary: `{preventCopyAndPaste?: boolean, preventCopyPaste?: boolean, addOn?: { type: "label", value: string, position?: "left" | "right" } | { type: "icon", value: string, position?: "left" | "right", color?: string }}`,
 				},
 			},
 			defaultValue: { PreventCopyAndPaste: false, PreventDragAndDrop: false },
@@ -152,6 +155,25 @@ PreventDragAndDrop.args = {
 		preventDragAndDrop: true,
 	},
 };
+
+export const AddOnIcon = DefaultStoryTemplate<INumericFieldSchema>("add-on-icon").bind({});
+AddOnIcon.args = {
+	label: "Number",
+	uiType: "numeric-field",
+	customOptions: {
+		addOn: { type: "icon", icon: "StarFillIcon", color: "#686868", position: "right" },
+	},
+};
+
+export const AddOnLabel = DefaultStoryTemplate<INumericFieldSchema>("add-on-label").bind({});
+AddOnLabel.args = {
+	label: "Number",
+	uiType: "numeric-field",
+	customOptions: {
+		addOn: { type: "label", value: "kg", position: "right" },
+	},
+};
+
 export const Reset = ResetStoryTemplate<INumericFieldSchema>("numeric-reset").bind({});
 Reset.args = {
 	label: "Number",

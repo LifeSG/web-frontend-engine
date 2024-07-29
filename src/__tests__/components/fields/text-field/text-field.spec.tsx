@@ -179,6 +179,41 @@ describe(UI_TYPE, () => {
 		expect(getTextfield()).toHaveValue("HELLO");
 	});
 
+	describe("addOn", () => {
+		it("should be able to render the icon add on", async () => {
+			renderComponent({
+				customOptions: {
+					addOn: { type: "icon", icon: "TicketIcon" },
+				},
+			});
+
+			fireEvent.change(getTextfield(), { target: { value: "hello" } });
+
+			const startIcon = document.querySelector("svg");
+			expect(startIcon).toBeInTheDocument();
+			expect(getTextfield()).toHaveValue("hello");
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }));
+		});
+
+		it("should be able to render the label add on", async () => {
+			renderComponent({
+				customOptions: {
+					addOn: { type: "label", value: "$" },
+				},
+			});
+
+			fireEvent.change(getTextfield(), { target: { value: "hello" } });
+
+			expect(screen.getByText("$")).toBeInTheDocument();
+			expect(getTextfield()).toHaveValue("hello");
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }));
+		});
+	});
+
 	describe("reset", () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();

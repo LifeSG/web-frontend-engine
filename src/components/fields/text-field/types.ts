@@ -1,10 +1,26 @@
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
+import { InputGroupAddonPosition } from "@lifesg/react-design-system/input-group";
+import * as Icons from "@lifesg/react-icons";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 type TCustomOptions = {
 	preventCopyAndPaste?: boolean | undefined;
 	preventDragAndDrop?: boolean | undefined;
+	addOn?: TIconAddOn | TLabelAddOn | undefined;
+};
+
+type TIconAddOn = {
+	type: "icon";
+	icon: keyof typeof Icons;
+	color?: string | undefined;
+	position?: InputGroupAddonPosition | undefined;
+};
+
+type TLabelAddOn = {
+	type: "label";
+	value: string;
+	position?: InputGroupAddonPosition | undefined;
 };
 
 export type TCustomOptionsText = TCustomOptions & {
