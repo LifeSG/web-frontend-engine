@@ -142,13 +142,28 @@ describe(UI_TYPE, () => {
 			);
 		});
 
-		it("should show error message and dismiss the loading indicator if upload fails", async () => {
+		it("should show error message with retry button and dismiss the loading indicator if upload fails", async () => {
 			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue({});
 			renderComponent({ upload: { url: "url", type: "base64" } });
 			await waitFor(() => drawAndSave());
 
-			expect(screen.getByText(ERROR_MESSAGES.UPLOAD().GENERIC)).toBeInTheDocument();
+			expect(screen.getByText(ERROR_MESSAGES.ESIGNATURE.UPLOAD)).toBeInTheDocument();
+			expect(screen.getByRole("button", { name: "Please try again." })).toBeInTheDocument();
 			expect(screen.queryByTestId(`${COMPONENT_ID}-base-progress-bar`)).not.toBeInTheDocument();
+		});
+
+		it("should show refresh page alert message if upload fails for 3 consecutive times", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue({});
+			renderComponent({ upload: { url: "url", type: "base64" } });
+
+			await waitFor(() => drawAndSave());
+
+			const tryAgainButton = screen.getByRole("button", { name: "Please try again." });
+			await waitFor(() => fireEvent.click(tryAgainButton));
+			await waitFor(() => fireEvent.click(tryAgainButton));
+
+			expect(screen.getByText(ERROR_MESSAGES.ESIGNATURE.UPLOAD)).toBeInTheDocument();
+			expect(screen.getByRole("button", { name: "Please try again." })).toBeInTheDocument();
 		});
 	});
 
