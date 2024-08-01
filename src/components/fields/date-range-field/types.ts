@@ -1,8 +1,9 @@
 import { DateRangeInputProps } from "@lifesg/react-design-system/date-range-input";
-import { TComponentOmitProps } from "../../frontend-engine";
+import { IYupValidationRule, TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
-export interface IDateRangeFieldValidationRule {
+export interface IDateRangeFieldValidationRule extends IYupValidationRule {
+	dateFormat?: boolean | undefined;
 	future?: boolean | undefined;
 	past?: boolean | undefined;
 	notFuture?: boolean | undefined;
@@ -13,7 +14,7 @@ export interface IDateRangeFieldValidationRule {
 	numberOfDays?: number | undefined;
 }
 interface WeekSchema<V = undefined>
-	extends IBaseFieldSchema<"date-range-field", V, undefined>,
+	extends IBaseFieldSchema<"date-range-field", V, IDateRangeFieldValidationRule>,
 		TComponentOmitProps<DateRangeInputProps, "valueEnd"> {
 	variant: "week";
 	dateFormat?: string | undefined;
