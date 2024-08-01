@@ -37,6 +37,9 @@ export const ERROR_MESSAGES = {
 	EMAIL: {
 		INVALID: "Invalid email address",
 	},
+	ESIGNATURE: {
+		UPLOAD: "Signature not uploaded.",
+	},
 	GENERIC: {
 		INVALID: "Invalid input",
 		UNSUPPORTED: "This component is not supported by the engine",
