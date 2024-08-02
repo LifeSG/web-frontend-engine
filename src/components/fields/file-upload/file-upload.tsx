@@ -40,6 +40,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	const fileTypeRuleRef = useRef<IFileUploadValidationRule>({});
 	const maxFilesRuleRef = useRef<IYupValidationRule>({});
 	const maxFileSizeRuleRef = useRef<IFileUploadValidationRule>({});
+	const uploadRuleRef = useRef<IFileUploadValidationRule>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
 	const { clearErrors, setError } = useFormContext();
@@ -77,6 +78,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 		const acceptedFileTypeRule: IFileUploadValidationRule = validation?.find((rule) => "fileType" in rule);
 		const matchedMaxFileSizeRule: IFileUploadValidationRule = validation?.find((rule) => "maxSizeInKb" in rule);
+		const uploadRule: IFileUploadValidationRule = validation?.find((rule) => "upload" in rule && rule.upload);
 		if (acceptedFileTypeRule?.["fileType"]) {
 			fileTypeRuleRef.current = acceptedFileTypeRule;
 		} else {
@@ -87,6 +89,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		} else {
 			maxFileSizeRuleRef.current = {};
 		}
+		uploadRuleRef.current = uploadRule || {};
 
 		const lengthRule = validation?.find((rule) => "length" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
@@ -242,6 +245,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 					id={id}
 					fileTypeRule={fileTypeRuleRef.current}
 					maxFileSizeRule={maxFileSizeRuleRef.current}
+					uploadRule={uploadRuleRef.current}
 					upload={uploadOnAddingFile}
 					value={value}
 					compressImages={!!compressImages}

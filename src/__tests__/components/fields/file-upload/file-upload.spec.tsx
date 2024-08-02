@@ -251,6 +251,17 @@ describe(UI_TYPE, () => {
 				expect(screen.getAllByText(ERROR_MESSAGE).length > 0).toBeTruthy();
 			});
 		});
+
+		it("should allow customisation of the upload failed error message", async () => {
+			uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue("error");
+			await renderComponent({
+				overrideField: { validation: [{ upload: true, errorMessage: ERROR_MESSAGE }] },
+				files: [FILE_1],
+				uploadType: "base64",
+			});
+
+			expect(screen.getAllByText(ERROR_MESSAGE).length > 0).toBeTruthy();
+		});
 	});
 
 	describe("upload type", () => {

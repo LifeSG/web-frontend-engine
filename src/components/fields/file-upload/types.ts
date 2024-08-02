@@ -6,6 +6,8 @@ import { TFieldEventListener } from "../../../utils";
 export type TUploadType = "base64" | "multipart";
 
 export interface IFileUploadValidationRule extends IYupValidationRule {
+	/** for customising upload error message */
+	upload?: boolean | undefined;
 	/** accepted file types */
 	fileType?: string[] | undefined;
 	/** max acceptable file size in kb */
