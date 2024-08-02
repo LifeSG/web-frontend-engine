@@ -165,6 +165,17 @@ describe(UI_TYPE, () => {
 			expect(screen.getByText(ERROR_MESSAGES.ESIGNATURE.UPLOAD)).toBeInTheDocument();
 			expect(screen.getByRole("button", { name: "Please try again." })).toBeInTheDocument();
 		});
+
+		it("should allow customisation of the upload failed error message", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue({});
+			renderComponent({
+				upload: { url: "url", type: "base64" },
+				validation: [{ upload: true, errorMessage: ERROR_MESSAGE }],
+			});
+			await waitFor(() => drawAndSave());
+
+			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		});
 	});
 
 	describe("reset", () => {
