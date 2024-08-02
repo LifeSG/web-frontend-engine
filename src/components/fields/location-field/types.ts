@@ -1,4 +1,5 @@
 import { TFieldEventListener } from "../../../utils";
+import { IYupValidationRule } from "../../frontend-engine";
 import { IStaticMapProps } from "../../shared";
 import { IBaseFieldSchema } from "../types";
 import { ILocationInputProps } from "./location-input";
@@ -6,13 +7,18 @@ import { ILocationPickerProps, IMapPin } from "./location-modal/location-picker/
 import { ILocationSearchProps } from "./location-modal/location-search/types";
 import { ILocationModalProps } from "./location-modal/types";
 
+export interface ILocationFieldValidation extends IYupValidationRule {
+	postalCode?: boolean | undefined;
+}
+
 export interface ILocationFieldSchema<V = undefined>
-	extends IBaseFieldSchema<"location-field", V>,
+	extends IBaseFieldSchema<"location-field", V, ILocationFieldValidation>,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<
 			ILocationSearchProps,
 			| "reverseGeoCodeEndpoint"
 			| "convertLatLngToXYEndpoint"
+			// TODO: deprecate key and rely on postalCode validation rule
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
 			| "hasExplicitEdit"

@@ -223,7 +223,7 @@ interface IRenderProps {
 	overrideSchema?: TOverrideSchema;
 	withEvents?: boolean;
 	locationDetails?: TSetCurrentLocationDetail;
-	validation?: IYupValidationRule[];
+	validation?: ILocationFieldSchema["validation"];
 	eventType?: string;
 	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
@@ -1788,6 +1788,29 @@ describe("location-input-group", () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGES.LOCATION.MUST_HAVE_POSTAL_CODE)).toBeInTheDocument();
+		});
+
+		it("should allow customisation of missing postal code error message", async () => {
+			renderComponent({
+				validation: [{ required: true }, { postalCode: true, errorMessage: ERROR_MESSAGE }],
+				withEvents: false,
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: {
+							address: "Fusionopolis View",
+							lat: 1,
+							lng: 1,
+						},
+					},
+				},
+				overrideField: {
+					mustHavePostalCode: true,
+				},
+			});
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 	});
 

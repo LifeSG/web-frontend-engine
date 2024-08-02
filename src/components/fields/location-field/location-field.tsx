@@ -66,6 +66,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
+		const postalCodeRule = validation?.find((rule) => "postalCode" in rule);
 
 		setFieldValidationConfig(
 			id,
@@ -84,10 +85,14 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					if (!isRequiredRule?.required) return true;
 					return !!value && !!value.lat && !!value.lng;
 				})
-				.test("must-have-postal-code", ERROR_MESSAGES.LOCATION.MUST_HAVE_POSTAL_CODE, (value) => {
-					if (!isRequiredRule || !mustHavePostalCode) return true;
-					return LocationHelper.hasGotAddressValue(value.postalCode);
-				}),
+				.test(
+					"must-have-postal-code",
+					postalCodeRule?.errorMessage || ERROR_MESSAGES.LOCATION.MUST_HAVE_POSTAL_CODE,
+					(value) => {
+						if (!isRequiredRule || !mustHavePostalCode) return true;
+						return LocationHelper.hasGotAddressValue(value.postalCode);
+					}
+				),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
