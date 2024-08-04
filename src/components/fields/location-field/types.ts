@@ -197,7 +197,7 @@ function locationFieldEvent(
 /**
  * fired when there is an error due to:
  * - failure in calling reverse geocode endpoint
- * - failure in peforming location search via onemap
+ * - failure in performing location search via onemap
  * - `set-current-location` event contains error
  *
  * `event.preventDefault()` will prevent the error from being handled and respective error modal from being shown
@@ -208,10 +208,7 @@ function locationFieldEvent(
 	uiType: "location-field",
 	type: "error",
 	id: string,
-	listener: TFieldEventListener<{
-		payload: { errorType: TErrorType["errorType"] };
-		errors: any;
-	}>,
+	listener: TFieldEventListener<TLocationFieldErrorDetail>,
 	options?: boolean | AddEventListenerOptions | undefined
 ): void;
 function locationFieldEvent() {
