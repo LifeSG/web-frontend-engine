@@ -46,8 +46,8 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 	useEffect(() => {
 		if (eventType && eventListener) {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventType, "field", eventListener);
-			return () => currentFormRef.removeFieldEventListener(eventType, "field", eventListener);
+			currentFormRef.addFieldEventListener(UI_TYPE, eventType as any, "field", eventListener);
+			return () => currentFormRef.removeFieldEventListener(UI_TYPE, eventType as any, "field", eventListener);
 		}
 	}, [eventListener, eventType]);
 

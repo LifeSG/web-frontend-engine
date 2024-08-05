@@ -1,3 +1,4 @@
+import { TFieldEventListener } from "../../../utils";
 import { IStaticMapProps } from "../../shared";
 import { IBaseFieldSchema } from "../types";
 import { ILocationInputProps } from "./location-input";
@@ -97,3 +98,169 @@ export class GeolocationPositionErrorWrapper extends Error {
 		Object.assign(this, error);
 	}
 }
+
+// =============================================================================
+// EVENTS (fired from FEE)
+// =============================================================================
+/** fired on showing location modal */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "show-location-modal",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/** fired on dismissing location modal */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "hide-location-modal",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired on clicking edit button (edit button is only render with `hasExplicitEdit:true` and if a location is selected)
+ *
+ * `event.preventDefault()` will stop location modal from being shown
+ * */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "click-edit-button",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired immediately on clicking refresh current location button in location picker
+ *
+ * `event.preventDefault()` will prevent the search copy from being updated and stop the retrieval of current location
+ *
+ * Note: if event is prevented, dispatch `trigger-get-current-location` to resume logic
+ * */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "click-refresh-current-location",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired on attempting to get current location, after search bar copy has been updated to indicate it is getting current location
+ *
+ * `event.preventDefault()` will stop the retrieval of current location.
+ *
+ * Note: if event is prevented, dispatch `set-current-location` to set current location and resume the rest of the logic
+ * */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "get-current-location",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/** fired after determining current location, before updating search results */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "get-selectable-pins",
+	id: string,
+	listener: TFieldEventListener<ILocationCoord>,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired on confirming selected address in the location modal
+ *
+ * `event.preventDefault()` will stop the selected address from being passed into Frontend Engine and from dismissing the location modal
+ *
+ * Note: if event is prevented, dispatch `confirm-location` to confirm location and dismiss location modal
+ */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "click-confirm-location",
+	id: string,
+	listener: TFieldEventListener<ILocationFieldValues>,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired before request location permission modal is dismissed
+ *
+ * `event.preventDefault()` will stop the permission modal from being dismissed
+ *
+ * Note: if event is prevented, dispatch `hide-permission-modal` to dismiss the permission modal
+ * */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "before-hide-permission-modal",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired when there is an error due to:
+ * - failure in calling reverse geocode endpoint
+ * - failure in performing location search via onemap
+ * - `set-current-location` event contains error
+ *
+ * `event.preventDefault()` will prevent the error from being handled and respective error modal from being shown
+ *
+ *  Note: if event is prevented, dispatch `error-end` to dismiss any error modals
+ **/
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "error",
+	id: string,
+	listener: TFieldEventListener<TLocationFieldErrorDetail>,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+function locationFieldEvent() {
+	//
+}
+export type TLocationEvents = typeof locationFieldEvent;
+
+// =============================================================================
+// TRIGGERS (fired from outside FEE)
+// =============================================================================
+/** shows location modal */
+function locationFieldTrigger(
+	uiType: "location-field",
+	type: "show-location-modal",
+	id: string,
+	details: TSetCurrentLocationDetail
+): boolean;
+/** sets current location manually, this is meant to be triggered if `get-current-location` event is prevented */
+function locationFieldTrigger(
+	uiType: "location-field",
+	type: "set-current-location",
+	id: string,
+	details: TSetCurrentLocationDetail
+): boolean;
+/** dismisses error modal (if any), this is meant to be triggered if `error` event is prevented */
+function locationFieldTrigger(
+	uiType: "location-field",
+	type: "error-end",
+	id: string,
+	details: TLocationFieldErrorDetail
+): void;
+/** add pins to location picker */
+function locationFieldTrigger(
+	uiType: "location-field",
+	type: "set-selectable-pins",
+	id: string,
+	details: { pins: IMapPin[] }
+): void;
+/** passes location info to Frontend Engine and dismisses location modal. this is meant to be triggered if `click-confirm-location` event is prevented */
+function locationFieldTrigger(
+	uiType: "location-field",
+	type: "confirm-location",
+	id: string,
+	details: ILocationFieldValues
+): void;
+/** dismisses location permission request modal. this is meant to be triggered if `before-hide-permission-modal` is prevented */
+function locationFieldTrigger(uiType: "location-field", type: "hide-permission-modal", id: string): void;
+/** dismisses the location modal and discards any location selected in the modal */
+function locationFieldTrigger(uiType: "location-field", type: "dismiss-location-modal", id: string): void;
+/** initiate attempt to get current location and updates the search bar to indicate it is getting current location. this is meant to be triggered if `click-refresh-current-location` event is prevented */
+function locationFieldTrigger(uiType: "location-field", type: "trigger-get-current-location", id: string): void;
+function locationFieldTrigger() {
+	return true;
+}
+export type TLocationFieldTriggers = typeof locationFieldTrigger;

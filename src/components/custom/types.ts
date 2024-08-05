@@ -6,7 +6,7 @@ import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import type { IColumns, IYupValidationRule } from "../frontend-engine";
 import type { TRenderRules } from "../../context-providers";
 import type { IFilterSchema } from "./filter/filter/types";
-import type { TReviewSchema } from "./review";
+import type { TReviewEvents, TReviewSchema } from "./review";
 
 /**
  * custom element types
@@ -33,6 +33,11 @@ export type TCustomSchema<V = undefined, C = undefined> =
 	| IFilterSchema<V, C>
 	| TReviewSchema
 	| C;
+
+/**
+ * intersection type to represent all field events
+ */
+export type TCustomEvents = TReviewEvents;
 
 /**
  * base schema for custom elements

@@ -2,18 +2,18 @@ import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IYupValidationRule, TRenderRules } from "../../context-providers";
 import { IColumns } from "../frontend-engine";
-import { IButtonSchema } from "./button";
+import { IButtonSchema, TButtonEvents } from "./button";
 import { TCheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
 import { IContactFieldSchema } from "./contact-field";
 import { IDateFieldSchema } from "./date-field";
 import { TDateRangeFieldSchema } from "./date-range-field";
 import { IESignatureFieldSchema } from "./e-signature-field/types";
-import { IFileUploadSchema } from "./file-upload";
+import { IFileUploadSchema, TFileUploadEvents } from "./file-upload";
 import { IHiddenFieldSchema } from "./hidden-field/types";
 import { IHistogramSliderSchema } from "./histogram-slider";
-import { IImageUploadSchema } from "./image-upload";
-import { ILocationFieldSchema } from "./location-field";
+import { IImageUploadSchema, TImageUploadEvents, TImageUploadTriggers } from "./image-upload";
+import { ILocationFieldSchema, TLocationEvents, TLocationFieldTriggers } from "./location-field";
 import { IMaskedFieldSchema } from "./masked-field";
 import { IMultiSelectSchema } from "./multi-select";
 import { INestedMultiSelectSchema } from "./nested-multi-select";
@@ -97,6 +97,16 @@ export type TFieldSchema<V = undefined, C = undefined> =
 	| TCheckboxGroupSchema<V, C>
 	| TDateRangeFieldSchema<V>
 	| TRadioButtonGroupSchema<V, C>;
+
+/**
+ * intersection type to represent all field events
+ */
+export type TFieldEvents = TButtonEvents & TFileUploadEvents & TImageUploadEvents & TLocationEvents;
+
+/**
+ * intersection type to represent all field triggers
+ */
+export type TFieldTriggers = TImageUploadTriggers & TLocationFieldTriggers;
 
 // NOTE: U generic is for internal use, prevents getting overwritten by custom validation types
 export interface IBaseFieldSchema<T, V = undefined, U = undefined> {

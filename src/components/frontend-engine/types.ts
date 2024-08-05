@@ -1,11 +1,19 @@
 import { UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
-import { TCustomComponents, TCustomValidationFunction, TYupSchemaType } from "../../context-providers";
+import {
+	TAddFieldEventListener,
+	TCustomComponents,
+	TCustomValidationFunction,
+	TDispatchFieldEvent,
+	TRemoveFieldEventListener,
+	TYupSchemaType,
+} from "../../context-providers";
+import { RecursivePartial } from "../../utils";
 import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
 
-export type { IYupValidationRule, TCustomValidationFunction, TCustomComponents } from "../../context-providers";
+export type { IYupValidationRule, TCustomComponents, TCustomValidationFunction } from "../../context-providers";
 
 // =============================================================================
 // FRONTEND ENGINE
@@ -106,13 +114,8 @@ export interface IFrontendEngineRef
 		fn: TCustomValidationFunction,
 		overwrite?: boolean | undefined
 	) => void;
-	addFieldEventListener: <T = any>(
-		type: string,
-		id: string,
-		listener: (ev: CustomEvent<T>) => void,
-		options?: boolean | AddEventListenerOptions
-	) => void;
-	dispatchFieldEvent: <T = any>(type: string, id: string, detail?: T) => boolean;
+	addFieldEventListener: TAddFieldEventListener;
+	dispatchFieldEvent: TDispatchFieldEvent;
 	/**
 	 * gets form values
 	 * @param payload specify the value(s) by field id(s) to return
@@ -134,12 +137,7 @@ export interface IFrontendEngineRef
 	 */
 	validate: (name?: string | string[] | undefined) => Promise<boolean>;
 	/** adds custom validation rule */
-	removeFieldEventListener: <T = any>(
-		type: string,
-		id: string,
-		listener: (ev: CustomEvent<T>) => void,
-		options?: boolean | EventListenerOptions
-	) => void;
+	removeFieldEventListener: TRemoveFieldEventListener;
 	/** resets the form to the default state */
 	reset: UseFormReset<TFrontendEngineValues>;
 	/** allows setting of custom errors */
@@ -215,16 +213,3 @@ type UnionOptionalKeys<T = undefined> = T extends string | number | symbol
  * Omits clashing keys between native props and frontend engine
  */
 export type TComponentOmitProps<T, V = undefined> = Omit<T, UnionOptionalKeys<V>>;
-
-// =============================================================================
-// HELPERS
-// =============================================================================
-/**
- * prevents inferrence
- * https://stackoverflow.com/questions/56687668/a-way-to-disable-type-argument-inference-in-generics
- */
-export type TNoInfer<T, U> = [T][T extends U ? 0 : never];
-
-export type RecursivePartial<T> = {
-	[P in keyof T]?: RecursivePartial<T[P]>;
-};

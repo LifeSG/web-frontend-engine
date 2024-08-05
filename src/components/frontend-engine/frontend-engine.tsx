@@ -11,7 +11,7 @@ import {
 	TYupSchemaType,
 	YupHelper,
 } from "../../context-providers";
-import { ObjectHelper, TestHelper } from "../../utils";
+import { ObjectHelper, TNoInfer, TestHelper } from "../../utils";
 import {
 	useCustomComponents,
 	useFieldEvent,
@@ -27,7 +27,6 @@ import {
 	IFrontendEngineRef,
 	TErrorPayload,
 	TFrontendEngineValues,
-	TNoInfer,
 	TWarningPayload,
 } from "./types";
 

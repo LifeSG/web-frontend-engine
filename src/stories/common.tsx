@@ -6,12 +6,8 @@ import { ReactElement, Ref, forwardRef, useRef } from "react";
 import styled from "styled-components";
 import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
-import {
-	IFrontendEngineRef,
-	RecursivePartial,
-	TFrontendEngineFieldSchema,
-	TNoInfer,
-} from "../components/frontend-engine";
+import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../components/frontend-engine";
+import { RecursivePartial, TNoInfer } from "../utils";
 
 const EXCLUDED_STORY_PROPS: ArgTypes = {
 	invalid: { table: { disable: true } },

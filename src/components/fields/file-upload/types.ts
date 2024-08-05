@@ -1,6 +1,7 @@
 import { FileItemProps, FileUploadProps } from "@lifesg/react-design-system";
 import { IYupValidationRule } from "../../../context-providers";
 import { IBaseFieldSchema } from "../types";
+import { TFieldEventListener } from "../../../utils";
 
 export type TUploadType = "base64" | "multipart";
 
@@ -53,3 +54,18 @@ export interface IFileUploadValue {
 	fileUrl?: string | undefined;
 	uploadResponse?: unknown | undefined;
 }
+// =============================================================================
+// EVENTS (fired from FEE)
+// =============================================================================
+/** fired when field is mounted */
+function fileUploadEvent(
+	uiType: "file-upload",
+	type: "mount",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+function fileUploadEvent() {
+	//
+}
+export type TFileUploadEvents = typeof fileUploadEvent;

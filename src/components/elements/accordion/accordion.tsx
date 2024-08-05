@@ -26,7 +26,11 @@ export const Accordion = (props: IGenericElementProps<IAccordionSchema>) => {
 			{...otherSchema}
 			callToActionComponent={
 				button ? (
-					<Button.Default styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
+					<Button.Default
+						styleType="light"
+						type="button"
+						onClick={() => dispatchFieldEvent("accordion", "edit", id)}
+					>
 						{typeof button === "object" ? button.label : "Edit"}
 					</Button.Default>
 				) : undefined

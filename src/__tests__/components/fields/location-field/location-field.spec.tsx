@@ -13,6 +13,7 @@ import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../com
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { ERROR_SVG } from "../../../../components/fields/location-field/location-modal/location-modal.data";
 import { ErrorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
+import { IMapPin } from "../../../../components/fields/location-field/location-modal/location-picker/types";
 import { ERROR_MESSAGES, Prompt } from "../../../../components/shared";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import {
@@ -29,6 +30,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 import {
 	fetchSingleLocationByLatLngSingleReponse,
 	mock1PageFetchAddressResponse,
@@ -37,8 +39,6 @@ import {
 	mockReverseGeoCodeResponse,
 	mockStaticMapDataUri,
 } from "./mock-values";
-import { warningTestSuite } from "../../../common/tests/warnings";
-
 jest.mock("../../../../services/onemap/onemap-service.ts");
 
 window.HTMLElement.prototype.scrollTo = jest.fn; // required for .scrollTo in location-search
@@ -93,12 +93,14 @@ const FrontendEngineWithEventListener = ({
 
 		const handleAddFieldEventListener = () => {
 			addFieldEventListener(
+				UI_TYPE,
 				ELocationInputEvents.GET_CURRENT_LOCATION,
 				COMPONENT_ID,
 				setCurrentLocationSpy.mockImplementation((e) => {
 					e.preventDefault();
 
-					dispatchFieldEvent<TSetCurrentLocationDetail>(
+					dispatchFieldEvent(
+						UI_TYPE,
 						ELocationInputEvents.SET_CURRENT_LOCATION,
 						COMPONENT_ID,
 						locationDetails
@@ -106,6 +108,7 @@ const FrontendEngineWithEventListener = ({
 				})
 			);
 			addFieldEventListener(
+				UI_TYPE,
 				ELocationInputEvents.CLICK_EDIT_BUTTON,
 				COMPONENT_ID,
 				editButtonOnClickSpy.mockImplementation((e) => {
@@ -114,6 +117,7 @@ const FrontendEngineWithEventListener = ({
 				})
 			);
 			addFieldEventListener(
+				UI_TYPE,
 				ELocationInputEvents.CLICK_CONFIRM_LOCATION,
 				COMPONENT_ID,
 				confirmLocationOnClickSpy.mockImplementation((e) => {
@@ -143,8 +147,9 @@ const FrontendEngineWithEventListener = ({
 		if (eventType && eventListener) {
 			const currentFormRef = formRef.current;
 			const eventListenerWithFormRef = eventListener(currentFormRef);
-			currentFormRef.addFieldEventListener(eventType, "field", eventListenerWithFormRef);
-			return () => currentFormRef.removeFieldEventListener(eventType, "field", eventListenerWithFormRef);
+			currentFormRef.addFieldEventListener(UI_TYPE, eventType as any, "field", eventListenerWithFormRef);
+			return () =>
+				currentFormRef.removeFieldEventListener(UI_TYPE, eventType as any, "field", eventListenerWithFormRef);
 		}
 	}, [eventListener, eventType]);
 
@@ -155,7 +160,7 @@ const FrontendEngineWithEventListener = ({
 
 	const handleShowLocationModal = () => {
 		setShowEditPrompt(false);
-		formRef.current.dispatchFieldEvent(ELocationInputEvents.SHOW_MODAL, COMPONENT_ID);
+		formRef.current.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.SHOW_MODAL, COMPONENT_ID);
 	};
 
 	const handleCancelOnClick = () => {
@@ -168,7 +173,12 @@ const FrontendEngineWithEventListener = ({
 		await new Promise(() =>
 			setTimeout(() => {
 				setShowConfirmLocationPrompt(false);
-				formRef.current.dispatchFieldEvent(ELocationInputEvents.CONFIRM_LOCATION, COMPONENT_ID, e.detail);
+				formRef.current.dispatchFieldEvent(
+					UI_TYPE,
+					ELocationInputEvents.CONFIRM_LOCATION,
+					COMPONENT_ID,
+					e.detail
+				);
 			}, 3000)
 		);
 	};
@@ -832,8 +842,8 @@ describe("location-input-group", () => {
 					renderComponent({
 						eventType: getSelectablePinsEvent,
 						eventListener: (formRef) => () => {
-							formRef.dispatchFieldEvent("set-selectable-pins", COMPONENT_ID, {
-								pins: "not array",
+							formRef.dispatchFieldEvent(UI_TYPE, "set-selectable-pins", COMPONENT_ID, {
+								pins: "not array" as unknown as IMapPin[],
 							});
 						},
 						overrideSchema: {
@@ -856,7 +866,7 @@ describe("location-input-group", () => {
 					renderComponent({
 						eventType: getSelectablePinsEvent,
 						eventListener: (formRef) => () => {
-							formRef.dispatchFieldEvent("set-selectable-pins", COMPONENT_ID, {
+							formRef.dispatchFieldEvent(UI_TYPE, "set-selectable-pins", COMPONENT_ID, {
 								pins: [
 									{
 										lat: 1.21,
@@ -1984,7 +1994,7 @@ describe("location-input-group", () => {
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
 				eventListener: (formRef: IFrontendEngineRef) => (e) => {
-					formRef.dispatchFieldEvent(ELocationInputEvents.DISMISS_LOCATION_MODAL, COMPONENT_ID);
+					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.DISMISS_LOCATION_MODAL, COMPONENT_ID);
 				},
 			});
 
@@ -2014,7 +2024,7 @@ describe("location-input-group", () => {
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
 				eventListener: (formRef: IFrontendEngineRef) => (e) => {
-					formRef.dispatchFieldEvent(ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
+					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
 				},
 			});
 

@@ -1,5 +1,6 @@
 import { BoxContainerProps } from "@lifesg/react-design-system/box-container";
 import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section/types";
+import { TFieldEventListener } from "../../../utils";
 import type { IAlertSchema, ITextSchema } from "../../elements";
 import type { IWrapperSchema } from "../../elements/wrapper";
 import type { ICustomElementJsonSchema } from "../types";
@@ -70,3 +71,27 @@ export interface IReviewSchemaAccordion
 	variant: "accordion";
 	button?: false | IButtonAccordion | undefined;
 }
+
+// =============================================================================
+// EVENTS (fired from FEE)
+// =============================================================================
+/** fired when review component is mounted */
+function reviewEvent(
+	referenceKey: "review",
+	type: "mount",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/** fired on clicking edit button */
+function reviewEvent(
+	referenceKey: "review",
+	type: "edit",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+function reviewEvent() {
+	//
+}
+export type TReviewEvents = typeof reviewEvent;

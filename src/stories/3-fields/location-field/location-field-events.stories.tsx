@@ -51,8 +51,8 @@ const Template = (eventName: string) =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
-			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);
+			currentFormRef.addFieldEventListener("location-field", eventName as any, id, handleEvent);
+			return () => currentFormRef.removeFieldEventListener("location-field", eventName as any, id, handleEvent);
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
 
@@ -84,10 +84,15 @@ const EditPromptTemplate = () =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("click-edit-button", id, handleShowEditPrompt);
+			currentFormRef.addFieldEventListener("location-field", "click-edit-button", id, handleShowEditPrompt);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("click-edit-button", id, handleShowEditPrompt);
+				currentFormRef.removeFieldEventListener(
+					"location-field",
+					"click-edit-button",
+					id,
+					handleShowEditPrompt
+				);
 			};
 		}, []);
 
@@ -99,7 +104,7 @@ const EditPromptTemplate = () =>
 
 		const handleShowLocationModal = () => {
 			setShowEditPrompt(false);
-			formRef.current.dispatchFieldEvent("show-location-modal", id);
+			formRef.current.dispatchFieldEvent("location-field", "show-location-modal", id);
 		};
 
 		const handleCancelOnClick = () => {
@@ -164,10 +169,20 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 		useEffect(() => {
 			const currentFormRef = formRef.current;
 
-			currentFormRef.addFieldEventListener("get-current-location", id, handleGetCurrentLocation);
+			currentFormRef.addFieldEventListener(
+				"location-field",
+				"get-current-location",
+				id,
+				handleGetCurrentLocation
+			);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("get-current-location", id, handleGetCurrentLocation);
+				currentFormRef.removeFieldEventListener(
+					"location-field",
+					"get-current-location",
+					id,
+					handleGetCurrentLocation
+				);
 			};
 		}, []);
 
@@ -199,10 +214,20 @@ const ConfirmLocationPromptTemplate = () =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("click-confirm-location", id, handleShowConfirmLocationPrompt);
+			currentFormRef.addFieldEventListener(
+				"location-field",
+				"click-confirm-location",
+				id,
+				handleShowConfirmLocationPrompt
+			);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("click-confirm-location", id, handleShowConfirmLocationPrompt);
+				currentFormRef.removeFieldEventListener(
+					"location-field",
+					"click-confirm-location",
+					id,
+					handleShowConfirmLocationPrompt
+				);
 			};
 		}, []);
 
@@ -212,7 +237,7 @@ const ConfirmLocationPromptTemplate = () =>
 			await new Promise(() =>
 				setTimeout(() => {
 					setShowConfirmLocationPrompt(false);
-					formRef.current.dispatchFieldEvent("confirm-location", id, e.detail);
+					formRef.current.dispatchFieldEvent("location-field", "confirm-location", id, e.detail);
 				}, 3000)
 			);
 			return action("click-confirm-location")(e);
@@ -492,10 +517,10 @@ const ErrorEventsTemplate = () =>
 		useEffect(() => {
 			const currentFormRef = formRef.current;
 
-			currentFormRef.addFieldEventListener("error", id, handleShowErrorModal);
+			currentFormRef.addFieldEventListener("location-field", "error", id, handleShowErrorModal);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("error", id, handleShowErrorModal);
+				currentFormRef.removeFieldEventListener("location-field", "error", id, handleShowErrorModal);
 			};
 		}, []);
 
@@ -537,14 +562,24 @@ const StrictLocationTemplate = () =>
 
 		const handleCloseLocationModal = (e) => {
 			e.preventDefault();
-			formRef.current.dispatchFieldEvent("dismiss-location-modal", id);
+			formRef.current.dispatchFieldEvent("location-field", "dismiss-location-modal", id);
 		};
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("before-hide-permission-modal", id, handleCloseLocationModal);
+			currentFormRef.addFieldEventListener(
+				"location-field",
+				"before-hide-permission-modal",
+				id,
+				handleCloseLocationModal
+			);
 			return () =>
-				currentFormRef.removeFieldEventListener("before-hide-permission-modal", id, handleCloseLocationModal);
+				currentFormRef.removeFieldEventListener(
+					"location-field",
+					"before-hide-permission-modal",
+					id,
+					handleCloseLocationModal
+				);
 		}, []);
 
 		return (
@@ -579,14 +614,24 @@ const HidePermissionModalTemplate = () =>
 
 		const handleCloseLocationModal = (e) => {
 			e.preventDefault();
-			formRef.current.dispatchFieldEvent("hide-permission-modal", id);
+			formRef.current.dispatchFieldEvent("location-field", "hide-permission-modal", id);
 		};
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("before-hide-permission-modal", id, handleCloseLocationModal);
+			currentFormRef.addFieldEventListener(
+				"location-field",
+				"before-hide-permission-modal",
+				id,
+				handleCloseLocationModal
+			);
 			return () =>
-				currentFormRef.removeFieldEventListener("before-hide-permission-modal", id, handleCloseLocationModal);
+				currentFormRef.removeFieldEventListener(
+					"location-field",
+					"before-hide-permission-modal",
+					id,
+					handleCloseLocationModal
+				);
 		}, []);
 
 		return (
@@ -620,10 +665,10 @@ const SetSelectablePinsTemplate = () =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("get-selectable-pins", id, getPins);
+			currentFormRef.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("get-selectable-pins", id, getPins);
+				currentFormRef.removeFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 			};
 		}, []);
 
@@ -643,7 +688,7 @@ const SetSelectablePinsTemplate = () =>
 				},
 			];
 			setTimeout(() => {
-				formRef.current.dispatchFieldEvent("set-selectable-pins", id, {
+				formRef.current.dispatchFieldEvent("location-field", "set-selectable-pins", id, {
 					pins: res.map(
 						(r) =>
 							({
@@ -702,7 +747,12 @@ const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("click-refresh-current-location", id, handleShowRefreshLocationPrompt);
+			currentFormRef.addFieldEventListener(
+				"location-field",
+				"click-refresh-current-location",
+				id,
+				handleShowRefreshLocationPrompt
+			);
 
 			return () => {
 				currentFormRef.removeFieldEventListener(
@@ -744,7 +794,11 @@ const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 							id: "refresh",
 							title: "trigger getCurrentLoation",
 							onClick: () => {
-								formRef.current.dispatchFieldEvent("trigger-get-current-location", id);
+								formRef.current.dispatchFieldEvent(
+									"location-field",
+									"trigger-get-current-location",
+									id
+								);
 								setShowRefreshLocationPrompt(false);
 							},
 						},

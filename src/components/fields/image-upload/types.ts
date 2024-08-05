@@ -1,5 +1,6 @@
 import { IBaseFieldSchema } from "../types";
 import { IYupValidationRule } from "../../../context-providers";
+import { TFieldEventListener } from "../../../utils";
 
 export type TFileCapture = boolean | "user" | "environment" | undefined;
 export type TUploadMethod = "post" | "put" | "patch";
@@ -100,3 +101,99 @@ export interface IUploadedImage {
 export interface IDismissReviewModalEvent {
 	removePendingImages: boolean;
 }
+// =============================================================================
+// EVENTS (fired from FEE)
+// =============================================================================
+/** fired when field is mounted */
+function imageUploadEvent(
+	uiType: "image-upload",
+	type: "mount",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/** fired when file dialog is shown */
+function imageUploadEvent(
+	uiType: "image-upload",
+	type: "file-dialog",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired when an image is ready to be uploaded
+ *
+ * `event.preventDefault()` will stop the image from getting uploaded
+ * */
+function imageUploadEvent(
+	uiType: "image-upload",
+	type: "upload-ready",
+	id: string,
+	listener: TFieldEventListener<{ imageData: IImage }>,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/** fired when image review modal is shown */
+function imageUploadEvent(
+	uiType: "image-upload",
+	type: "show-review-modal",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/** fired on dismissing image review modal  */
+function imageUploadEvent(
+	uiType: "image-upload",
+	type: "hide-review-modal",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired on clicking save button in image review modal
+ *
+ * `event.preventDefault()` will stop all pending images from being uploaded
+ * */
+function imageUploadEvent(
+	uiType: "image-upload",
+	type: "save-review-images",
+	id: string,
+	listener: TFieldEventListener<{ images: IImage[]; retry: () => void }>,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/** fired when an image is uploaded to the url specified in `uploadOnAddingFile`
+ * */
+function imageUploadEvent(
+	uiType: "image-upload",
+	type: "uploaded",
+	id: string,
+	listener: TFieldEventListener<{ imageData: IImage }>,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+function imageUploadEvent() {
+	//
+}
+export type TImageUploadEvents = typeof imageUploadEvent;
+
+// =============================================================================
+// TRIGGERS (fired from outside FEE)
+// =============================================================================
+/** update status and error message according to id */
+function imageUploadTrigger(
+	uiType: "image-upload",
+	type: "update-image-status",
+	id: string,
+	details: IUpdateImageStatus
+): boolean;
+/** update the status of images added through the image review modal as `UPLOAD_READY` and initiates the uploading of these images */
+function imageUploadTrigger(uiType: "image-upload", type: "trigger-save-review-images", id: string): boolean;
+/** hide image review modal, with option to discard images that have not been uploaded yet */
+function imageUploadTrigger(
+	uiType: "image-upload",
+	type: "dismiss-review-modal",
+	id: string,
+	details: IDismissReviewModalEvent
+): boolean;
+function imageUploadTrigger() {
+	return true;
+}
+export type TImageUploadTriggers = typeof imageUploadTrigger;
