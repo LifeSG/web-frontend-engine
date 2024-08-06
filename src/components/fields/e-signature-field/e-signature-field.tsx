@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import isEmpty from "lodash/isEmpty";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { AxiosApiClient, FileHelper, generateRandomId } from "../../../utils";
@@ -8,7 +8,7 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IGenericFieldProps } from "../types";
 import { ESignatureWrapper, ErrorWrapper, RefreshAlert, TryAgain } from "./e-signature-field.styles";
-import { IESignatureFieldSchema, IESignatureValue } from "./types";
+import { IESignatureFieldSchema, IESignatureFieldValidationRule, IESignatureValue } from "./types";
 
 export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema>) => {
 	// =============================================================================
@@ -28,12 +28,18 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	const [uploadErrorCount, setUploadErrorCount] = useState(0);
 	const [loadingProgress, setLoadingProgress] = useState<number>(null);
 	const { setFieldValidationConfig } = useValidationConfig();
-	const { setError, clearErrors } = useFormContext();
+	const uploadRuleRef = useRef<IESignatureFieldValidationRule>(null);
+	const { clearErrors } = useFormContext();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const uploadRule = validation?.find(
+			(rule): rule is IESignatureFieldValidationRule => "upload" in rule && rule.upload
+		);
+		uploadRuleRef.current = uploadRule;
+
 		setFieldValidationConfig(
 			id,
 			Yup.object()
@@ -76,7 +82,6 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 				clearErrors(id);
 				setUploadErrorCount(0);
 			} catch (error) {
-				setError(id, { type: "onChange", message: ERROR_MESSAGES.ESIGNATURE.UPLOAD });
 				setUploadErrorCount((prevCount) => prevCount + 1);
 				setLoadingProgress(null);
 			}
@@ -117,13 +122,13 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderError = () => {
-		if (!error?.message || loadingProgress !== null) return null;
+		if ((!error?.message && !uploadErrorCount) || loadingProgress !== null) return null;
 
 		// upload error takes highest precedence
 		if (uploadErrorCount > 0) {
 			return (
 				<ErrorWrapper weight="semibold">
-					{ERROR_MESSAGES.ESIGNATURE.UPLOAD}
+					{uploadRuleRef.current?.errorMessage || ERROR_MESSAGES.ESIGNATURE.UPLOAD}
 					<TryAgain type="button" onClick={() => handleChange(signatureDataURL)}>
 						Please try again.
 					</TryAgain>

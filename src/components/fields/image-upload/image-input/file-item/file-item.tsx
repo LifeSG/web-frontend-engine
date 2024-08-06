@@ -66,10 +66,13 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				setErrorMessage(_errorMessage);
 				break;
 			}
-			case EImageStatus.ERROR_GENERIC:
+			case EImageStatus.ERROR_GENERIC: {
+				const uploadRule = validation?.find((rule) => "upload" in rule);
+				const _errorMessage = uploadRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").GENERIC;
 				setError(true);
-				setErrorMessage(ERROR_MESSAGES.UPLOAD("photo").GENERIC);
+				setErrorMessage(_errorMessage);
 				break;
+			}
 			case EImageStatus.ERROR_SIZE: {
 				const fileSizeRule = validation?.find((rule) => "maxSizeInKb" in rule);
 				const _errorMessage =

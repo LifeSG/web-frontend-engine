@@ -4,6 +4,7 @@ import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IEmailFieldSchema } from "../../../../components/fields";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
@@ -78,7 +79,7 @@ describe(UI_TYPE, () => {
 		fireEvent.change(getEmailField(), { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(screen.getByText("Invalid email address")).toBeInTheDocument();
+		expect(screen.getByText(ERROR_MESSAGES.EMAIL.INVALID)).toBeInTheDocument();
 	});
 
 	it("should support validation schema", async () => {

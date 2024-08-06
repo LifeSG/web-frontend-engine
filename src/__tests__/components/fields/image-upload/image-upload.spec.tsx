@@ -252,6 +252,17 @@ describe("image-upload", () => {
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
+
+		it("should allow customisation of the upload failed error message", async () => {
+			uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue("error");
+			await renderComponent({
+				overrideField: { validation: [{ upload: true, errorMessage: ERROR_MESSAGE }] },
+				files: [FILE_1],
+				uploadType: "input",
+			});
+
+			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		});
 	});
 
 	describe.each`

@@ -1,8 +1,9 @@
 import { DateInputProps } from "@lifesg/react-design-system/date-input";
-import { TComponentOmitProps } from "../../frontend-engine";
+import { IYupValidationRule, TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
-export interface IDateFieldValidationRule {
+export interface IDateFieldValidationRule extends IYupValidationRule {
+	dateFormat?: boolean | undefined;
 	future?: boolean | undefined;
 	past?: boolean | undefined;
 	notFuture?: boolean | undefined;

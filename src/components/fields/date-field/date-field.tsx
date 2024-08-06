@@ -40,6 +40,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const dateFormatRule = validation?.find((rule) => "dateFormat" in rule && rule.dateFormat);
 		const futureRule = validation?.find((rule) => "future" in rule);
 		const pastRule = validation?.find((rule) => "past" in rule);
 		const notFutureRule = validation?.find((rule) => "notFuture" in rule);
@@ -54,38 +55,34 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		setFieldValidationConfig(
 			id,
 			Yup.string()
-				.test("is-date", ERROR_MESSAGES.DATE.INVALID, (value) => {
+				.test("is-date", dateFormatRule?.errorMessage || ERROR_MESSAGES.DATE.INVALID, (value) => {
 					if (!value || value === "") return true;
 					if (!isValidDate(value)) return false;
 					return !!DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 				})
-				.test("future", futureRule?.["errorMessage"] || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
+				.test("future", futureRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
 					if (!isValidDate(value) || !futureRule?.["future"]) return true;
 					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 					return !!localDate?.isAfter(LocalDate.now());
 				})
-				.test("past", pastRule?.["errorMessage"] || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
+				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
 					if (!isValidDate(value) || !pastRule?.["past"]) return true;
 					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 					return !!localDate?.isBefore(LocalDate.now());
 				})
-				.test(
-					"not-future",
-					notFutureRule?.["errorMessage"] || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE,
-					(value) => {
-						if (!isValidDate(value) || !notFutureRule?.["notFuture"]) return true;
-						const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
-						return !localDate?.isAfter(LocalDate.now());
-					}
-				)
-				.test("not-past", notPastRule?.["errorMessage"] || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
+				.test("not-future", notFutureRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE, (value) => {
+					if (!isValidDate(value) || !notFutureRule?.["notFuture"]) return true;
+					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
+					return !localDate?.isAfter(LocalDate.now());
+				})
+				.test("not-past", notPastRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
 					if (!isValidDate(value) || !notPastRule?.["notPast"]) return true;
 					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 					return !localDate?.isBefore(LocalDate.now());
 				})
 				.test(
 					"min-date",
-					minDateRule?.["errorMessage"] ||
+					minDateRule?.errorMessage ||
 						ERROR_MESSAGES.DATE.MIN_DATE(
 							DateTimeHelper.formatDateTime(minDateRule?.["minDate"], "dd/MM/uuuu", "date")
 						),
@@ -97,7 +94,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 				)
 				.test(
 					"max-date",
-					maxDateRule?.["errorMessage"] ||
+					maxDateRule?.errorMessage ||
 						ERROR_MESSAGES.DATE.MAX_DATE(
 							DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date")
 						),
@@ -109,7 +106,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 				)
 				.test(
 					"excluded-dates",
-					excludedDatesRule?.["errorMessage"] || ERROR_MESSAGES.DATE.DISABLED_DATES,
+					excludedDatesRule?.errorMessage || ERROR_MESSAGES.DATE.DISABLED_DATES,
 					(value) => {
 						if (!isValidDate(value) || !excludedDatesRule) return true;
 						return !excludedDatesRule["excludedDates"].includes(value);

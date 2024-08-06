@@ -12,6 +12,7 @@ interface IProps {
 	id: string;
 	maxFileSizeRule: IFileUploadValidationRule;
 	upload: IFileUploadSchema["uploadOnAddingFile"];
+	uploadRule: IFileUploadValidationRule;
 	value: IFileUploadValue[];
 }
 
@@ -21,7 +22,7 @@ const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { compressImages, fileTypeRule, id, maxFileSizeRule, upload, value } = props;
+	const { compressImages, fileTypeRule, id, maxFileSizeRule, upload, uploadRule, value } = props;
 	const { files, setFiles, setCurrentFileIds } = useContext(FileUploadContext);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
@@ -110,7 +111,7 @@ const FileUploadManager = (props: IProps) => {
 					...file.fileItem,
 					id: file.fileItem?.id || generateRandomId(),
 					name: file.rawFile.name,
-					errorMessage: ERROR_MESSAGES.UPLOAD().GENERIC,
+					errorMessage: uploadRule?.errorMessage || ERROR_MESSAGES.UPLOAD().GENERIC,
 				},
 				status: EFileStatus.ERROR_GENERIC,
 			};

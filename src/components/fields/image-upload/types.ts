@@ -9,6 +9,8 @@ export type TImageUploadAcceptedFileType = (typeof ACCEPTED_FILE_TYPES)[number];
 export type TImageUploadOutputFileType = "jpg" | "png";
 
 export interface IImageUploadValidationRule extends IYupValidationRule {
+	/** for customising upload error message */
+	upload?: boolean | undefined;
 	/** accepted file types */
 	fileType?: TImageUploadAcceptedFileType[] | undefined;
 	/** max acceptable file size in kb */

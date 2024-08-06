@@ -22,7 +22,7 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 		value,
 		warning,
 	} = props;
-	const { setValue } = useFormContext();
+	const { setValue, setError } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>(undefined);
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -45,6 +45,9 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
+		const isBinRule = validation?.find((rule) => "bin" in rule && rule.bin);
+		const isIncrementalRule = validation?.find((rule) => "incremental" in rule && rule.incremental);
+		const isWithinRangeRule = validation?.find((rule) => "withinRange" in rule && rule.withinRange);
 
 		setFieldValidationConfig(
 			id,
@@ -54,26 +57,42 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 			})
 				.test(
 					"is-required",
-					isRequiredRule?.["errorMessage"] || ERROR_MESSAGES.COMMON.REQUIRED_OPTIONS,
+					isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.REQUIRED_OPTIONS,
 					(value) => {
 						if (!value || !isRequiredRule) return true;
 						return !isNil(value.from) && !isNil(value.to);
 					}
 				)
-				.test("is-bin", ERROR_MESSAGES.SLIDER.MUST_BE_INCREMENTAL, (value) => {
+				.test("is-bin", isBinRule?.errorMessage || ERROR_MESSAGES.SLIDER.MUST_BE_INCREMENTAL, (value) => {
 					if (!value || typeof value.from !== "number" || typeof value.to !== "number") return true;
-
 					const { from, to } = value;
-
 					const min = Math.min(...bins.map((bin) => bin.minValue));
-					const max = Math.max(...bins.map((bin) => bin.minValue)) + interval;
-
-					if (from >= to || from < min || to > max) {
-						return false;
-					}
-
 					return Number.isInteger((from - min) / interval) && Number.isInteger((to - min) / interval);
-				}),
+				})
+				.test(
+					"is-incremental",
+					isIncrementalRule?.errorMessage || ERROR_MESSAGES.SLIDER.MUST_BE_INCREMENTAL,
+					(value) => {
+						if (!value || typeof value.from !== "number" || typeof value.to !== "number") return true;
+						return value.from < value.to;
+					}
+				)
+				.test(
+					"is-within-range",
+					isWithinRangeRule?.errorMessage || ERROR_MESSAGES.SLIDER.MUST_BE_INCREMENTAL,
+					(value) => {
+						if (!value || typeof value.from !== "number" || typeof value.to !== "number") return true;
+
+						const { from, to } = value;
+						const min = Math.min(...bins.map((bin) => bin.minValue));
+						const max = Math.max(...bins.map((bin) => bin.minValue)) + interval;
+
+						if (from < min || to > max) {
+							return false;
+						}
+						return true;
+					}
+				),
 			validation
 		);
 

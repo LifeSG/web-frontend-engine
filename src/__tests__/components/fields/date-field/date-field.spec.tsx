@@ -120,6 +120,16 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("dateFormat", () => {
+		it("should support customising date format error message", async () => {
+			renderComponent(
+				{ validation: [{ dateFormat: true, errorMessage: ERROR_MESSAGE }] },
+				{ defaultValues: { [COMPONENT_ID]: "invalid" } }
+			);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage()).toBeInTheDocument();
+		});
+
 		describe.each`
 			dateFormat       | value
 			${"d MMMM uuuu"} | ${"25 January 2022"}

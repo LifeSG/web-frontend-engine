@@ -40,6 +40,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		const dateFormatRule = validation?.find((rule) => "dateFormat" in rule && rule.dateFormat);
 		const futureRule = validation?.find((rule) => "future" in rule);
 		const pastRule = validation?.find((rule) => "past" in rule);
 		const notFutureRule = validation?.find((rule) => "notFuture" in rule);
@@ -62,13 +63,13 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				})
 				.test(
 					"is-empty-string",
-					isRequiredRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.REQUIRED,
+					isRequiredRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.REQUIRED,
 					(value) => {
 						if (!value || !isRequiredRule) return true;
 						return value.from?.length > 0 && value.to?.length > 0;
 					}
 				)
-				.test("is-date", ERROR_MESSAGES.DATE_RANGE.INVALID, (value) => {
+				.test("is-date", dateFormatRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.INVALID, (value) => {
 					if (isEmpty(value?.from) || isEmpty(value?.to)) return true;
 					return (
 						isValidDate(value.from) &&
@@ -79,7 +80,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				})
 				.test(
 					"number-of-days",
-					noOfDaysRule?.["errorMessage"] ||
+					noOfDaysRule?.errorMessage ||
 						ERROR_MESSAGES.DATE_RANGE.MUST_HAVE_NUMBER_OF_DAYS(noOfDaysRule?.["numberOfDays"]),
 					(value) => {
 						if (variant === "week") return true;
@@ -90,14 +91,14 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return localDateTo.equals(localDateFrom.plusDays(noOfDaysRule?.["numberOfDays"] - 1));
 					}
 				)
-				.test("future", futureRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE, (value) => {
+				.test("future", futureRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE, (value) => {
 					if (variant === "week") return true;
 					if (!isValidDate(value.from) || !isValidDate(value.to) || !futureRule?.["future"]) return true;
 					const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 					const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
 					return !!localDateFrom?.isAfter(LocalDate.now()) && !!localDateTo?.isAfter(LocalDate.now());
 				})
-				.test("past", pastRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.MUST_BE_PAST, (value) => {
+				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.MUST_BE_PAST, (value) => {
 					if (variant === "week") return true;
 					if (!isValidDate(value.from) || !isValidDate(value.to) || !pastRule?.["past"]) return true;
 					const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
@@ -106,7 +107,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				})
 				.test(
 					"not-future",
-					notFutureRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_FUTURE,
+					notFutureRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_FUTURE,
 					(value) => {
 						if (variant === "week") return true;
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !notFutureRule?.["notFuture"])
@@ -116,21 +117,16 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return !localDateFrom?.isAfter(LocalDate.now()) && !localDateTo?.isAfter(LocalDate.now());
 					}
 				)
-				.test(
-					"not-past",
-					notPastRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_PAST,
-					(value) => {
-						if (variant === "week") return true;
-						if (!isValidDate(value.from) || !isValidDate(value.to) || !notPastRule?.["notPast"])
-							return true;
-						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
-						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						return !localDateFrom?.isBefore(LocalDate.now()) && !localDateTo?.isBefore(LocalDate.now());
-					}
-				)
+				.test("not-past", notPastRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_PAST, (value) => {
+					if (variant === "week") return true;
+					if (!isValidDate(value.from) || !isValidDate(value.to) || !notPastRule?.["notPast"]) return true;
+					const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
+					const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
+					return !localDateFrom?.isBefore(LocalDate.now()) && !localDateTo?.isBefore(LocalDate.now());
+				})
 				.test(
 					"min-date",
-					minDateRule?.["errorMessage"] ||
+					minDateRule?.errorMessage ||
 						ERROR_MESSAGES.DATE_RANGE.MIN_DATE(
 							DateTimeHelper.formatDateTime(minDateRule?.["minDate"], "dd/MM/uuuu", "date")
 						),
@@ -144,7 +140,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				)
 				.test(
 					"max-date",
-					maxDateRule?.["errorMessage"] ||
+					maxDateRule?.errorMessage ||
 						ERROR_MESSAGES.DATE_RANGE.MAX_DATE(
 							DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date")
 						),
@@ -158,7 +154,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				)
 				.test(
 					"excluded-dates",
-					excludedDatesRule?.["errorMessage"] || ERROR_MESSAGES.DATE_RANGE.DISABLED_DATES,
+					excludedDatesRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.DISABLED_DATES,
 					(value) => {
 						if (variant === "week") return true;
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !excludedDatesRule) return true;
