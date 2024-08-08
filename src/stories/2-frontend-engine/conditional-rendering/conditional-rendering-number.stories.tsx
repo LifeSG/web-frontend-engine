@@ -1,4 +1,4 @@
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { FrontendEngine } from "../../../components";
 import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
@@ -12,7 +12,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Conditional Rendering for Numbers</Title>
-					<Description>These rendering rules are for `numeric` type only.</Description>
+					<p>These rendering rules are for `numeric` type only.</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

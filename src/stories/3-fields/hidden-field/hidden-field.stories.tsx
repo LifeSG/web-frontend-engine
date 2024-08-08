@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IHiddenFieldSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
@@ -10,9 +10,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>HiddenField</Title>
-					<Description>A hidden form element that contains a value.</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>A hidden form element that contains a value.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

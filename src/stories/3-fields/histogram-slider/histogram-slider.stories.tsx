@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IHistogramSliderSchema, IHistogramSliderValue } from "../../../components/fields";
 import {
@@ -17,12 +17,11 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>HistogramSlider</Title>
-					<Description>
+					<p>
 						This component allows users to select a lower limit and upper limit from a bin of numeric data
 						values.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -36,7 +35,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {

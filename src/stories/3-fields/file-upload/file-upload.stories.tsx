@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IFileUploadSchema, IFileUploadValue } from "../../../components/fields/file-upload";
 import {
@@ -18,11 +18,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>FileUpload</Title>
-					<Description>
-						This component allows users to upload files via drag & drop or file selection.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>This component allows users to upload files via drag & drop or file selection.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -84,7 +81,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {
@@ -97,7 +94,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {
@@ -195,7 +192,6 @@ DefaultValue.argTypes = {
 			type: {
 				summary:
 					"{ dataURL?: string; fileId?: string; fileName: string; fileUrl?: string; uploadResponse?: unknown }[]",
-				value: {},
 			},
 		},
 		control: {

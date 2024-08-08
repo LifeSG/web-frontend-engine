@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { INumericFieldSchema } from "../../../components/fields";
 import {
@@ -17,14 +17,19 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>NumericField</Title>
-					<Description>A form element that contains a label, input and error message</Description>
-					<Heading>Props</Heading>
-					<Description>
-						This component also inherits the
-						[HTMLInputElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement)
+					<p>A form element that contains a label, input and error message</p>
+					<p>
+						This component also inherits the{" "}
+						<a
+							href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							HTMLInputElement
+						</a>{" "}
 						attributes.
-					</Description>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -46,7 +51,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {

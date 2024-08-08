@@ -58,8 +58,14 @@ export const CommonFieldStoryProps = (uiType: string, isElement = false): ArgTyp
 			},
 		},
 		label: {
-			description:
-				"<div>A name/description of the purpose of the form element which may include an optional sub-label and popover feature.<br>If string is provided, the entire label will be rendered.<br>If object is provided:<ul><li>mainLabel: Primary text to display.</li><li>subLabel: Secondary text to display below the mainLabel.</li><li>hint.content: Displays an info icon and brings up the content as a popover on click.</li></ul></div>",
+			description: `A name/description of the purpose of the form element which may include an optional sub-label and popover feature.<br>
+				If string is provided, the entire label will be rendered.<br>If object is provided:
+				<ul>
+					<li>mainLabel: Primary text to display.</li>
+					<li>subLabel: Secondary text to display below the mainLabel.</li>
+					<li>hint.content: Displays an info icon and brings up the content as a popover on click.</li>
+				</ul>
+			`,
 			table: {
 				type: {
 					summary:
@@ -141,8 +147,10 @@ export const CommonCustomStoryWithoutLabelProps = (referenceKey: string): ArgTyp
 
 export const COLUMNS_ARG_TYPE: ArgTypes = {
 	columns: {
-		description:
-			"Specifies the number of columns to be span across in desktop / tablet / mobile viewports. If an array is specified, the format is as such `[startCol, endCol]`.<br><br>Permitted values<br>Desktop: `1 - 12` and `1 - 13` if specifying a range.<br>Mobile: `1 - 4` and `1 - 5` if specifying a range.<br><br>Settings are applied by similar to how `@max-width` works: if `desktop` is not specified, `tablet` will be used for desktop and tablet, if `tablet` is also not specified, `mobile` will be used for all screen sizes.<br><br>If all column settings are not specified, element will span across a single column.",
+		description: `Specifies the number of columns to be span across in desktop / tablet / mobile viewports. If an array is specified, the format is as such <code>[startCol, endCol]</code>.<br><br>
+		Permitted values<br>Desktop: <code>1 - 12</code> and <code>1 - 13</code> if specifying a range.<br>Mobile: <code>1 - 4</code> and <code>1 - 5</code> if specifying a range.<br><br>
+		Settings are applied by similar to how <code>@max-width</code> works: if <code>desktop</code> is not specified, <code>tablet</code> will be used for desktop and tablet, if <code>tablet</code> is also not specified, <code>mobile</code> will be used for all screen sizes.<br><br>
+		If all column settings are not specified, element will span across a single column.`,
 		table: {
 			type: {
 				summary: `{desktop?: number, tablet?: number, mobile?: number}`,

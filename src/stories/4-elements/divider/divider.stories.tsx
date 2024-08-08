@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IDividerSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
@@ -10,11 +10,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Divider</Title>
-					<Description>
-						An element that separates or delineates contents through a single horizontal line.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>An element that separates or delineates contents through a single horizontal line.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Example" />
 				</>
 			),
@@ -50,7 +47,7 @@ const meta: Meta = {
 				type: {
 					summary: "number",
 				},
-				defaultValue: { summary: 1 },
+				defaultValue: { summary: "1" },
 			},
 		},
 		verticalMargin: {

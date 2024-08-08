@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IL1Value, INestedMultiSelectSchema, TL1OptionProps } from "../../../components/fields";
 import {
@@ -18,11 +18,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>NestedMultiSelect</Title>
-					<Description>
-						This component provides a set of options for user to select multiple preferences
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>This component provides a set of options for user to select multiple preferences</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -36,13 +33,13 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {
 				type: "boolean",
 			},
-			defaultValue: { summary: false },
+			defaultValue: { summary: "false" },
 		},
 		enableSearch: {
 			description: "When specified, it will allow a text base search for the items in the list",
@@ -61,7 +58,7 @@ const meta: Meta = {
 			description: "If specified, the default no results display will not be rendered",
 			table: {
 				type: {
-					summary: ["boolean"],
+					summary: "boolean",
 				},
 			},
 			options: [true, false],

@@ -1,6 +1,6 @@
 import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IDateFieldSchema } from "src/components/fields/date-field/types";
 import {
@@ -19,12 +19,11 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>DateField</Title>
-					<Description>
+					<p>
 						This component provides the functionality for users to input a specific date according to the
 						date format
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -38,7 +37,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",
@@ -60,7 +59,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",
@@ -72,7 +71,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",

@@ -1,4 +1,4 @@
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { FrontendEngine, IFrontendEngineProps } from "../../../components";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
@@ -12,11 +12,11 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Validation Schema</Title>
-					<Description>
+					<p>
 						These are the individual rules to define the validation logic of the field in the JSON schema.
 						They are used in the `validation` property of each field. The snippet below illustrates a
 						TEXTAREA field with `required` and `max` validation.
-					</Description>
+					</p>
 					<pre>
 						{`
 	{

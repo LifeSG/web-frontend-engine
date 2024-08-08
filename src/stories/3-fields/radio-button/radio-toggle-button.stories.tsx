@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { TRadioButtonGroupSchema } from "../../../components/fields/radio-button/types";
 import {
@@ -17,9 +17,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Radio Toggle Button</Title>
-					<Description>This component provides a set of radio toggle buttons for user to select</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>This component provides a set of radio toggle buttons for user to select</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -33,7 +32,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {

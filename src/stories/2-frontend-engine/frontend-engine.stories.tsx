@@ -2,7 +2,7 @@ import { Button } from "@lifesg/react-design-system/button";
 import { Form } from "@lifesg/react-design-system/form";
 import { Text } from "@lifesg/react-design-system/text";
 import { action } from "@storybook/addon-actions";
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
@@ -20,11 +20,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>FrontendEngine</Title>
-					<Description>
-						The main component to render a form, based on a JSON schema through the `data` prop.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>The main component to render a form, based on a JSON schema through the `data` prop.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

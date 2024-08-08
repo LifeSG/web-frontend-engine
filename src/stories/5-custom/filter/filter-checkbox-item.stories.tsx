@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IFilterCheckboxSchema } from "../../../components/custom/filter/filter-checkbox/types";
 import {
@@ -17,9 +17,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Filter Checkbox</Title>
-					<Description>Widget to select multiple options</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>Widget to select multiple options</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
