@@ -124,19 +124,30 @@ describe(UI_TYPE, () => {
 		expect(screen.queryByText(ERROR_MESSAGE)).toBeInTheDocument();
 	});
 
-	it.each`
-		validation                | invalid
-		${"from is a bin value"}  | ${{ from: 1, to: 50 }}
-		${"to is a bin value"}    | ${{ from: 10, to: 45 }}
-		${"from is less than to"} | ${{ from: 50, to: 10 }}
-		${"from is within range"} | ${{ from: 0, to: 50 }}
-		${"to is within range"}   | ${{ from: 10, to: 110 }}
-	`("should validate that $validation", async ({ invalid }) => {
-		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: invalid } });
+	describe.each`
+		validation                | rule             | invalid
+		${"from is a bin value"}  | ${"bin"}         | ${{ from: 1, to: 50 }}
+		${"to is a bin value"}    | ${"bin"}         | ${{ from: 10, to: 45 }}
+		${"from is less than to"} | ${"incremental"} | ${{ from: 50, to: 10 }}
+		${"from is within range"} | ${"withinRange"} | ${{ from: 0, to: 50 }}
+		${"to is within range"}   | ${"withinRange"} | ${{ from: 10, to: 110 }}
+	`("validate $validation", ({ rule, invalid }) => {
+		it("should perform validation", async () => {
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: invalid } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(screen.queryByText(ERROR_MESSAGES.SLIDER.MUST_BE_INCREMENTAL)).toBeInTheDocument();
+		});
 
-		expect(screen.queryByText(ERROR_MESSAGES.SLIDER.MUST_BE_INCREMENTAL)).toBeInTheDocument();
+		it("allow customizing the error message", async () => {
+			renderComponent(
+				{ validation: [{ [rule]: true, errorMessage: ERROR_MESSAGE }] },
+				{ defaultValues: { [COMPONENT_ID]: invalid } }
+			);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.queryByText(ERROR_MESSAGE)).toBeInTheDocument();
+		});
 	});
 
 	it("should be disabled if configured", async () => {
