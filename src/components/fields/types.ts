@@ -21,6 +21,7 @@ import { TRadioButtonGroupSchema } from "./radio-button";
 import { IRangeSelectSchema } from "./range-select";
 import { IResetButtonSchema } from "./reset-button";
 import { ISelectSchema } from "./select";
+import { ISelectHistogramSchema } from "./select-histogram/types";
 import { ISliderSchema } from "./slider";
 import { ISubmitButtonSchema } from "./submit-button";
 import { ISwitchSchema } from "./switch";
@@ -56,6 +57,7 @@ export enum EFieldType {
 	RADIO = "RadioButtonGroup",
 	RESET = "ResetButton",
 	SELECT = "Select",
+	"SELECT-HISTOGRAM" = "SelectHistogram",
 	SLIDER = "Slider",
 	SUBMIT = "SubmitButton",
 	SWITCH = "Switch",
@@ -87,6 +89,7 @@ export type TFieldSchema<V = undefined, C = undefined> =
 	| INumericFieldSchema<V>
 	| IResetButtonSchema
 	| ISelectSchema<V>
+	| ISelectHistogramSchema<V>
 	| ISliderSchema<V>
 	| ISubmitButtonSchema
 	| ISwitchSchema<V>
