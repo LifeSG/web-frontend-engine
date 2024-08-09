@@ -47,7 +47,7 @@ export const Length = Template.bind({});
 Length.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 has exactly 2 items selected",
 	},
 	field1: {
@@ -71,7 +71,7 @@ export const MinItems = Template.bind({});
 MinItems.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 has at least 2 items selected",
 	},
 	field1: {
@@ -95,7 +95,7 @@ export const MaxItems = Template.bind({});
 MaxItems.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 has at most 2 items selected",
 	},
 	field1: {
@@ -119,7 +119,7 @@ export const Includes = Template.bind({});
 Includes.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 includes `Apple` and `Berry`",
 	},
 	field1: {
@@ -143,7 +143,7 @@ export const Excludes = Template.bind({});
 Excludes.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 excludes `Apple` and `Berry`",
 	},
 	field1: {

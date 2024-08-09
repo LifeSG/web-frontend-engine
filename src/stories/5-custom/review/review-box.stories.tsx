@@ -128,7 +128,7 @@ CustomTopSection.args = {
 		alert: {
 			uiType: "alert",
 			type: "warning",
-			className: "margin--bottom",
+			className: "margin-bottom-1",
 			children: "Sample alert",
 		},
 	},

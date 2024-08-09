@@ -47,7 +47,7 @@ export const Min = Template.bind({});
 Min.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is at least 5",
 	},
 	field1: {
@@ -67,7 +67,7 @@ export const Max = Template.bind({});
 Max.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is at most 5",
 	},
 	field1: {
@@ -87,7 +87,7 @@ export const LessThan = Template.bind({});
 LessThan.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is less than 5",
 	},
 	field1: {
@@ -107,7 +107,7 @@ export const MoreThan = Template.bind({});
 MoreThan.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is more than 5",
 	},
 	field1: {
@@ -127,7 +127,7 @@ export const Positive = Template.bind({});
 Positive.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is positive",
 	},
 	field1: {
@@ -147,7 +147,7 @@ export const Negative = Template.bind({});
 Negative.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is negative",
 	},
 	field1: {
@@ -167,7 +167,7 @@ export const Integer = Template.bind({});
 Integer.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is an integer",
 	},
 	field1: {

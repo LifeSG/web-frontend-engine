@@ -100,7 +100,7 @@ Default.args = {
 	uiType: "alert",
 	type: "success",
 	children: "This is a success message",
-	className: "margin--bottom",
+	className: "margin-bottom-1",
 };
 
 export const Warning = Template("alert-warning").bind({});

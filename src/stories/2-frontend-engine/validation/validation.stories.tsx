@@ -1,4 +1,4 @@
-import { Stories, Title } from "@storybook/addon-docs";
+import { Source, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { FrontendEngine, IFrontendEngineProps } from "../../../components";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
@@ -17,27 +17,27 @@ const meta: Meta = {
 						They are used in the `validation` property of each field. The snippet below illustrates a
 						TEXTAREA field with `required` and `max` validation.
 					</p>
-					<pre>
-						{`
-	{
-		//...
-		"data": {
-			"fields": {
-				"name": {
-					label: "What is your name",
-					uiType: "textarea",
-					validation: [
-						{ required: true },
-						{ max: 255, errorMessage: "Maximum length of 255" },
-					],
-					chipTexts: ["John", "Doe"],
-				},
-				//...
-			}
+					<Source
+						code={`
+{
+	//...
+	"data": {
+		"fields": {
+			"name": {
+				label: "What is your name",
+				uiType: "textarea",
+				validation: [
+					{ required: true },
+					{ max: 255, errorMessage: "Maximum length of 255" },
+				],
+				chipTexts: ["John", "Doe"],
+			},
+			//...
 		}
 	}
-					`}
-					</pre>
+}
+						`}
+					/>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

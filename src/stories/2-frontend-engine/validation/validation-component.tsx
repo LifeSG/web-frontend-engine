@@ -2,6 +2,7 @@ import { Button } from "@lifesg/react-design-system/button";
 import styled from "styled-components";
 import * as Yup from "yup";
 import { IFieldYupConfig, IYupValidationRule, TYupSchemaType, YupHelper } from "../../../context-providers";
+import { Color } from "@lifesg/react-design-system/color";
 
 export interface IValidationComponentProps {
 	type: TYupSchemaType;
@@ -65,7 +66,12 @@ const StyledTable = styled.table`
 		}
 	}
 
+	// NOTE: interim solution; use syntax highlighting library in the future
 	code {
 		display: block;
+		background: ${Color.Neutral[7]};
+		padding: 0.25rem 0.5rem;
+		white-space: pre-wrap;
+		color: #d0021b;
 	}
 `;

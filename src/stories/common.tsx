@@ -174,10 +174,10 @@ export const OVERRIDES_ARG_TYPE: ArgTypes = {
 };
 
 export const SUBMIT_BUTTON_SCHEMA: Record<string, ISubmitButtonSchema> = {
-	"submit-button": { uiType: "submit", label: "Submit" },
+	"submit-button": { uiType: "submit", label: "Submit", className: "margin-bottom-1" },
 };
 export const RESET_BUTTON_SCHEMA: Record<string, IResetButtonSchema> = {
-	"reset-button": { uiType: "reset", label: "Reset" },
+	"reset-button": { uiType: "reset", label: "Reset", className: "margin-bottom-1" },
 };
 
 const MINIMUM_SIDE_PADDING = 48;

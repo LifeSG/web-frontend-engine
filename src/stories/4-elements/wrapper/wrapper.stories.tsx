@@ -110,7 +110,7 @@ StringAndField.args = {
 	children: {
 		"child-string": {
 			uiType: "h6",
-			className: "margin--bottom",
+			className: "margin-bottom-1",
 			children: "Fill in your name below",
 		},
 		"child-name": {
