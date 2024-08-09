@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IChipsSchema } from "../../../components/fields/chips";
 import {
@@ -20,17 +20,22 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Chips</Title>
-					<Description>
+					<p>
 						This component renders a list of selectable chip, with an additional configurable textarea
 						component that renders based on the selected chip.
-					</Description>
-					<Heading>Props</Heading>
-					<Description>
-						This schema also inherits the
-						[HTMLButtonElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement)
+					</p>
+					<p>
+						This schema also inherits the{" "}
+						<a
+							href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							HTMLButtonElement
+						</a>{" "}
 						attributes.
-					</Description>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -64,7 +69,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {

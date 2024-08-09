@@ -1,6 +1,6 @@
 import { Text } from "@lifesg/react-design-system";
 import { action } from "@storybook/addon-actions";
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -14,7 +14,7 @@ import { ERROR_SVG, TIMEOUT_SVG } from "../../../components/fields/location-fiel
 import { ErrorImage } from "../../../components/fields/location-field/location-modal/location-modal.styles";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { Prompt } from "../../../components/shared";
-import { Description as PDescription } from "../../../components/shared/prompt/prompt.styles";
+import { Description } from "../../../components/shared/prompt/prompt.styles";
 import { TestHelper } from "../../../utils";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-field.stories";
@@ -27,9 +27,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Events for Location field</Title>
-					<Description>
-						Custom events unique to the location field, it allows adding of event listeners to it.
-					</Description>
+					<p>Custom events unique to the location field, it allows adding of event listeners to it.</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -366,11 +364,11 @@ const ErrorEventsTemplate = () =>
 						show={true}
 						image={<ErrorImage src={ERROR_SVG} />}
 						description={
-							<PDescription weight="regular">
+							<Description weight="regular">
 								Sorry, there was a problem with the map. You&rsquo;ll not be able to enter the location
 								right now. Please try again later.
 								{hotlineContent ? renderHotlineDetails(hotlineContent) : renderUnableToSubmitReport()}
-							</PDescription>
+							</Description>
 						}
 						buttons={[
 							{
@@ -427,7 +425,7 @@ const ErrorEventsTemplate = () =>
 						show={true}
 						image={<ErrorImage src={TIMEOUT_SVG} />}
 						description={
-							<PDescription weight="regular">
+							<Description weight="regular">
 								It&rsquo;s taking longer than expected to retrieve your location. Please exit the map
 								and try again.
 								<br />
@@ -441,7 +439,7 @@ const ErrorEventsTemplate = () =>
 									{hotlineContent.number}
 								</Text.Hyperlink.Default>
 								.
-							</PDescription>
+							</Description>
 						}
 						buttons={[
 							{

@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IWrapperSchema } from "../../../components/elements/wrapper";
 import {
@@ -16,16 +16,11 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Wrapper</Title>
-					<Description>
+					<p>
 						All-purpose component to wrap fields or add copy. This can be used to group fields, layout the
 						form or add copy in between fields.
-					</Description>
-					<Heading>Props</Heading>
-					<Description>
-						This component also inherits the
-						[HTMLElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement) attributes.
-					</Description>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -115,7 +110,7 @@ StringAndField.args = {
 	children: {
 		"child-string": {
 			uiType: "h6",
-			className: "margin--bottom",
+			className: "margin-bottom-1",
 			children: "Fill in your name below",
 		},
 		"child-name": {

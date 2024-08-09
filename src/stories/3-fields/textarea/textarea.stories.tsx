@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { ITextareaSchema } from "../../../components/fields";
 import {
@@ -17,16 +17,19 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Textarea</Title>
-					<Description>
-						A form element that renders a multi-line textarea component with optional suggestion pills
-					</Description>
-					<Heading>Props</Heading>
-					<Description>
+					<p>A form element that renders a multi-line textarea component with optional suggestion pills</p>
+					<p>
 						This schema also inherits the
-						[HTMLTextAreaElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement)
+						<a
+							href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							HTMLTextAreaElement
+						</a>{" "}
 						attributes.
-					</Description>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -62,7 +65,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",
@@ -74,7 +77,7 @@ const meta: Meta = {
 				type: {
 					summary: "number",
 				},
-				defaultValue: { summary: 1 },
+				defaultValue: { summary: "1" },
 			},
 			type: { name: "number" },
 		},

@@ -1,8 +1,8 @@
 import { action } from "@storybook/addon-actions";
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { EFieldType, EImageStatus, IImage, IImageUploadSchema, IUpdateImageStatus } from "../../../components/fields";
+import { EImageStatus, IImage, IImageUploadSchema, IUpdateImageStatus } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import DefaultImageUploadConfig from "./image-upload.stories";
@@ -14,9 +14,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Events for Image Upload field</Title>
-					<Description>
-						Custom events unique to the image upload field, it allows adding of event listeners to it.
-					</Description>
+					<p>Custom events unique to the image upload field, it allows adding of event listeners to it.</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

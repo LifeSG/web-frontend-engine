@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IESignatureFieldSchema, IESignatureValue } from "../../../components/fields/e-signature-field";
 import {
@@ -18,9 +18,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>ESignatureField</Title>
-					<Description>A field that brings up a modal for user to draw his/her signature</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>A field that brings up a modal for user to draw his/her signature</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -91,7 +90,6 @@ DefaultValue.argTypes = {
 			type: {
 				summary:
 					"{ dataURL?: string | undefined; fileId: string; fileUrl: string; uploadResponse?: unknown | undefined }",
-				value: {},
 			},
 		},
 		control: {

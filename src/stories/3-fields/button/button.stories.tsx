@@ -1,6 +1,6 @@
 import * as Icons from "@lifesg/react-icons";
 import { action } from "@storybook/addon-actions";
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
@@ -14,17 +14,22 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Button</Title>
-					<Description>
+					<p>
 						A clickable component that fires a click event when activated. This component does not trigger a
 						form submission.
-					</Description>
-					<Heading>Props</Heading>
-					<Description>
-						This component also inherits the
-						[HTMLButtonElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement)
+					</p>
+					<p>
+						This component also inherits the{" "}
+						<a
+							href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							HTMLButtonElement
+						</a>{" "}
 						attributes.
-					</Description>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -39,7 +44,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",
