@@ -230,7 +230,7 @@ export const LOREM_IPSUM = (prefix: string) => {
  *
  * &lt;U&gt; generic: default value typing
  */
-export const DefaultStoryTemplate = <T, U = string>(id: string) =>
+export const DefaultStoryTemplate = <T, U = string>(id: string, hideSubmit = false) =>
 	(({ defaultValues, ...args }) => (
 		<FrontendEngine
 			data={{
@@ -239,7 +239,7 @@ export const DefaultStoryTemplate = <T, U = string>(id: string) =>
 						uiType: "section",
 						children: {
 							[id]: args as unknown as TFrontendEngineFieldSchema,
-							...SUBMIT_BUTTON_SCHEMA,
+							...(!hideSubmit ? SUBMIT_BUTTON_SCHEMA : {}),
 						},
 					},
 				},

@@ -7,6 +7,7 @@ import type { IColumns, IYupValidationRule } from "../frontend-engine";
 import type { TRenderRules } from "../../context-providers";
 import type { IFilterSchema } from "./filter/filter/types";
 import type { TReviewEvents, TReviewSchema } from "./review";
+import { ITimelineSchema } from "./timeline";
 
 /**
  * custom element types
@@ -15,6 +16,7 @@ import type { TReviewEvents, TReviewSchema } from "./review";
 export enum ECustomElementType {
 	FILTER = "Filter",
 	"FILTER-ITEM" = "FilterItem",
+	TIMELINE = "Timeline",
 	REVIEW = "Review",
 }
 
@@ -31,6 +33,7 @@ export enum ECustomFieldType {
 export type TCustomSchema<V = undefined, C = undefined> =
 	| ICustomElementJsonSchema<string>
 	| IFilterSchema<V, C>
+	| ITimelineSchema<V, C>
 	| TReviewSchema
 	| C;
 
