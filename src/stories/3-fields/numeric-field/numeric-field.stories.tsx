@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>NumericField</Title>
-					<p>A form element that contains a label, input and error message</p>
+					<p>A form element that contains a label, input and error message.</p>
 					<p>
 						This component also inherits the{" "}
 						<a

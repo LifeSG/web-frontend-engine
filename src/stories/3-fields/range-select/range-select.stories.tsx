@@ -18,7 +18,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Range Select</Title>
-					<p>This component provides a set of options for user to select</p>
+					<p>This component provides a set of options for user to select.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

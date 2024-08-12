@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Radio ImageButton Button</Title>
-					<p>This component provides a set of radio image-button buttons for user to select</p>
+					<p>This component provides a set of radio image-button buttons for user to select.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

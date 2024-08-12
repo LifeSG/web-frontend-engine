@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Slider</Title>
-					<p>This component allows users to select a value from a numeric range</p>
+					<p>This component allows users to select a value from a numeric range.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

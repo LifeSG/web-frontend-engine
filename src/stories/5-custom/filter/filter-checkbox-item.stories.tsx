@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Filter Checkbox</Title>
-					<p>Widget to select multiple options</p>
+					<p>Widget to select multiple options.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

@@ -16,7 +16,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Tab</Title>
-					<p>Organises content across multiple panels</p>
+					<p>Organises content across multiple panels.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

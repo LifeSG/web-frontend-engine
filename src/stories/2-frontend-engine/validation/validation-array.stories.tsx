@@ -11,7 +11,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Validation Schema for Arrays</Title>
-					<p>These validation rules are applicable to `array` type only.</p>
+					<p>
+						These validation rules are applicable to <code>array</code> type only.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

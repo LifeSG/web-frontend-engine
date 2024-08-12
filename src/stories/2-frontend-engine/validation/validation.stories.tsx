@@ -14,8 +14,8 @@ const meta: Meta = {
 					<Title>Validation Schema</Title>
 					<p>
 						These are the individual rules to define the validation logic of the field in the JSON schema.
-						They are used in the `validation` property of each field. The snippet below illustrates a
-						TEXTAREA field with `required` and `max` validation.
+						They are used in the <code>validation</code> property of each field. The snippet below
+						illustrates a TEXTAREA field with `required` and <code>max</code> validation.
 					</p>
 					<Source
 						code={`

@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Switch Toggle Button</Title>
-					<p>This component provides a set of switch toggle buttons for user to select</p>
+					<p>This component provides a set of switch toggle buttons for user to select.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

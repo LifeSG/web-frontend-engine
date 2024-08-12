@@ -15,7 +15,7 @@ const meta: Meta = {
 					<Title>DateRangeField</Title>
 					<p>
 						This component provides the functionality for users to input a specific date according to the
-						date format
+						date format.
 					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />

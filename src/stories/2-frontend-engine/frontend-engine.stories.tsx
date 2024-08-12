@@ -20,7 +20,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>FrontendEngine</Title>
-					<p>The main component to render a form, based on a JSON schema through the `data` prop.</p>
+					<p>
+						The main component to render a form, based on a JSON schema through the <code>data</code> prop.
+					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

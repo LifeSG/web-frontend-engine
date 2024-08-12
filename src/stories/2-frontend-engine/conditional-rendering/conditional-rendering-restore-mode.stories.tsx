@@ -58,7 +58,7 @@ const meta: Meta = {
 					<Title>Restore values</Title>
 					<p>
 						When a field&apos;s visibility is restored, the value that is populated can be configured via
-						the `restoreMode` flag.
+						the <code>restoreMode</code> flag.
 					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>

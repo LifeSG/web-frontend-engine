@@ -17,7 +17,7 @@ const meta: Meta<TCheckboxGroupSchema> = {
 			page: () => (
 				<>
 					<Title>Checkbox</Title>
-					<p>This component provides a set of checkboxes for user to select</p>
+					<p>This component provides a set of checkboxes for user to select.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

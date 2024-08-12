@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>UnitNumberField</Title>
-					<p>A form element allows user enter unit number</p>
+					<p>A form element allows user enter unit number.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

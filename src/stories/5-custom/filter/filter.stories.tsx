@@ -12,7 +12,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Filter</Title>
-					<p>Displays widgets under collapsible panels to filter data results</p>
+					<p>Displays widgets under collapsible panels to filter data results.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

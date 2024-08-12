@@ -18,7 +18,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>ContactField</Title>
-					<p>This component provides the functionality for users to input their phone numbers</p>
+					<p>This component provides the functionality for users to input their phone numbers.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

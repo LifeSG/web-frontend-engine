@@ -12,7 +12,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Conditional Rendering for Arrays</Title>
-					<p>These rendering rules are for `array` type only.</p>
+					<p>
+						These rendering rules are for <code>array</code> type only.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

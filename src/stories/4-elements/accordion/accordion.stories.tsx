@@ -13,7 +13,10 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Accordion</Title>
-					<p>Wrapping component that must be rendered as a direct descendant of `accordion` uiType.</p>
+					<p>
+						Wrapping component that must be rendered as a direct descendant of <code>accordion</code>{" "}
+						uiType.
+					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Example" />
 				</>

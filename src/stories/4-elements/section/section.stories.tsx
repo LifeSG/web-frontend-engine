@@ -10,7 +10,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Section</Title>
-					<p>Wrapping component that must be rendered as a direct descendant of `sections` uiType.</p>
+					<p>
+						Wrapping component that must be rendered as a direct descendant of <code>sections</code> uiType.
+					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Example" />
 				</>

@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Checkbox - Toggle</Title>
-					<p>This component provides a set of toggles for user to select</p>
+					<p>This component provides a set of toggles for user to select.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

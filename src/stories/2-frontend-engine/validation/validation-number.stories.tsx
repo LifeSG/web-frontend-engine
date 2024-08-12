@@ -11,7 +11,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Validation Schema for Numbers</Title>
-					<p>These validation rules are applicable to `number` type only.</p>
+					<p>
+						These validation rules are applicable to <code>number</code> type only.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

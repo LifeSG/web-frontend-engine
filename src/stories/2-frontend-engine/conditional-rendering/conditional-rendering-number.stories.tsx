@@ -12,7 +12,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Conditional Rendering for Numbers</Title>
-					<p>These rendering rules are for `numeric` type only.</p>
+					<p>
+						These rendering rules are for <code>numeric</code> type only.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

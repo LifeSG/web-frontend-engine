@@ -18,7 +18,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>NestedMultiSelect</Title>
-					<p>This component provides a set of options for user to select multiple preferences</p>
+					<p>This component provides a set of options for user to select multiple preferences.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

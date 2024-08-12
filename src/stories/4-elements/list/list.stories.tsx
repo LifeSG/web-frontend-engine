@@ -11,8 +11,8 @@ const meta: Meta = {
 				<>
 					<Title>List</Title>
 					<p>
-						This component renders a `TextList.Ol` or `TextList.Ul` component provided by the Design System
-						within a Frontend Engine generated form
+						This component renders a <code>TextList.Ol</code> or <code>TextList.Ul</code> component provided
+						by the Design System within a Frontend Engine generated form.
 					</p>
 
 					<p>
@@ -24,7 +24,7 @@ const meta: Meta = {
 						>
 							design system
 						</a>{" "}
-						for the properties of `TextList`
+						for the properties of <code>TextList</code>.
 					</p>
 					<ArgTypes of={OrderedList} />
 					<Stories includePrimary={true} title="Example" />

@@ -10,7 +10,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>ResetButton</Title>
-					<p>The primary call to action component</p>
+					<p>The primary call to action component.</p>
 					<p>
 						This component also inherits the{" "}
 						<a

@@ -11,8 +11,8 @@ const meta: Meta = {
 				<>
 					<Title>Alert</Title>
 					<p>
-						This component renders a `Alert` component provided by the Design System within a Frontend
-						Engine generated form
+						This component renders a <code>Alert</code> component provided by the Design System within a
+						Frontend Engine generated form.
 					</p>
 					<p>
 						Please refer to the{" "}
@@ -23,7 +23,7 @@ const meta: Meta = {
 						>
 							design system
 						</a>{" "}
-						for the properties of `Alert`
+						for the properties of <code>Alert</code>.
 					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Example" />

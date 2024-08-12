@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>TimeField</Title>
-					<p>A form element allows user to pick time</p>
+					<p>A form element allows user to pick time.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

@@ -18,7 +18,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>ESignatureField</Title>
-					<p>A field that brings up a modal for user to draw his/her signature</p>
+					<p>A field that brings up a modal for user to draw his/her signature.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

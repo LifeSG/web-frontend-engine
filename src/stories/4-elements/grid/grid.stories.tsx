@@ -10,7 +10,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Grid</Title>
-					<p>Renders components in grid layout</p>
+					<p>Renders components in grid layout.</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

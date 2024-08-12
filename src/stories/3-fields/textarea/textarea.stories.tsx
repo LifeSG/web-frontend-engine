@@ -17,7 +17,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Textarea</Title>
-					<p>A form element that renders a multi-line textarea component with optional suggestion pills</p>
+					<p>A form element that renders a multi-line textarea component with optional suggestion pills.</p>
 					<p>
 						This schema also inherits the
 						<a

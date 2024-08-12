@@ -11,8 +11,8 @@ const meta: Meta = {
 				<>
 					<Title>Text</Title>
 					<p>
-						This component renders a `Text` component provided by the Design System within a Frontend Engine
-						generated form
+						This component renders a <code>Text</code> component provided by the Design System within a
+						Frontend Engine generated form.
 					</p>
 
 					<p>
@@ -24,7 +24,7 @@ const meta: Meta = {
 						>
 							design system
 						</a>{" "}
-						for the properties of `Text`
+						for the properties of <code>Text</code>.
 					</p>
 					<ArgTypes of={Variants} />
 					<Stories includePrimary={true} title="Example" />

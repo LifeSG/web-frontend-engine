@@ -11,7 +11,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Validation Schema for Strings</Title>
-					<p>These validation rules are applicable to `string` type only.</p>
+					<p>
+						These validation rules are applicable to <code>string</code> type only.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

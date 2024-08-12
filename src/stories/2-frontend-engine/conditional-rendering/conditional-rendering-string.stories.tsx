@@ -12,7 +12,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Conditional Rendering for Strings</Title>
-					<p>These rendering rules are for `string` type only.</p>
+					<p>
+						These rendering rules are for <code>string</code> type only.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

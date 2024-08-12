@@ -13,9 +13,9 @@ const meta: Meta = {
 				<>
 					<Title>Conditional Rendering</Title>
 					<p>
-						Show/hide fields according to rules provided via `showIf` key. Validation schema (if any)
-						applies to fields as long as they are shown. When a field is hidden, its validation schema do
-						not apply and the value is not submitted.
+						Show/hide fields according to rules provided via <code>showIf</code> key. Validation schema (if
+						any) applies to fields as long as they are shown. When a field is hidden, its validation schema
+						do not apply and the value is not submitted.
 					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
