@@ -76,8 +76,10 @@ export const Default = DefaultStoryTemplate<ISelectHistogramSchema>("select-hist
 Default.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 };
 
 export const DefaultValue = DefaultStoryTemplate<ISelectHistogramSchema, IHistogramSliderValue>(
@@ -86,8 +88,10 @@ export const DefaultValue = DefaultStoryTemplate<ISelectHistogramSchema, IHistog
 DefaultValue.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 	defaultValues: { from: 0, to: 30 },
 };
 DefaultValue.argTypes = {
@@ -105,8 +109,10 @@ export const Disabled = DefaultStoryTemplate<ISelectHistogramSchema>("select-his
 Disabled.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 	disabled: true,
 };
 
@@ -114,8 +120,10 @@ export const Labels = DefaultStoryTemplate<ISelectHistogramSchema>("select-histo
 Labels.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 	customOptions: {
 		rangeLabelPrefix: "$",
 		rangeLabelSuffix: ".00",
@@ -126,8 +134,10 @@ export const WithValidation = DefaultStoryTemplate<ISelectHistogramSchema>("sele
 WithValidation.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 	validation: [{ required: true }],
 };
 
@@ -135,16 +145,20 @@ export const Warning = WarningStoryTemplate<ISelectHistogramSchema>("select-hist
 Warning.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 };
 
 export const Reset = ResetStoryTemplate<ISelectHistogramSchema>("select-histogram-reset").bind({});
 Reset.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 };
 
 export const ResetWithDefaultValues = ResetStoryTemplate<ISelectHistogramSchema, IHistogramSliderValue>(
@@ -153,8 +167,10 @@ export const ResetWithDefaultValues = ResetStoryTemplate<ISelectHistogramSchema,
 ResetWithDefaultValues.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 	defaultValues: { from: 0, to: 30 },
 };
 ResetWithDefaultValues.argTypes = {
@@ -172,12 +188,16 @@ export const Overrides = OverrideStoryTemplate<ISelectHistogramSchema>("select-h
 Overrides.args = {
 	uiType: "select-histogram",
 	label: "Price of fruits",
-	bins: BINS_DATA,
-	interval: 10,
+	histogramSlider: {
+		bins: BINS_DATA,
+		interval: 10,
+	},
 	overrides: {
 		label: "Overridden",
-		bins: BINS_DATA,
-		interval: 5,
+		histogramSlider: {
+			bins: BINS_DATA,
+			interval: 5,
+		},
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;

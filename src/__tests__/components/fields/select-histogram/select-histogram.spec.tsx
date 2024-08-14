@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { FormSelectHistogramSliderProps } from "@lifesg/react-design-system/form/types";
+import { FormSelectHistogramProps } from "@lifesg/react-design-system/form/types";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
@@ -34,13 +34,15 @@ const JSON_SCHEMA: IFrontendEngineData = {
 				[COMPONENT_ID]: {
 					label: "Select Histogram",
 					uiType: UI_TYPE,
-					bins: [
-						{ minValue: 10, count: 1 },
-						{ minValue: 20, count: 0 },
-						{ minValue: 30, count: 3 },
-						{ minValue: 90, count: 3 },
-					],
-					interval: 10,
+					histogramSlider: {
+						bins: [
+							{ minValue: 10, count: 1 },
+							{ minValue: 20, count: 0 },
+							{ minValue: 30, count: 3 },
+							{ minValue: 90, count: 3 },
+						],
+						interval: 10,
+					},
 				},
 				...getSubmitButtonProps(),
 				...getResetButtonProps(),
@@ -65,18 +67,18 @@ const renderComponent = (overrideField?: TOverrideField<ISelectHistogramSchema>,
 };
 
 const getSelector = (): HTMLElement => {
-	return screen.getByTestId("select-histogram-selector");
+	return screen.getByTestId("selector");
 };
 
 const changeSliderValue = (
-	sliderSpy: jest.SpyInstance<JSX.Element, [FormSelectHistogramSliderProps]>,
+	sliderSpy: jest.SpyInstance<JSX.Element, [FormSelectHistogramProps]>,
 	value: [number, number]
 ) => {
-	act(() => sliderSpy.mock.lastCall[0].histogramSlider.onChangeEnd(value));
+	act(() => sliderSpy.mock.lastCall[0].onChangeEnd(value));
 };
 
 describe(UI_TYPE, () => {
-	let sliderSpy: jest.SpyInstance<JSX.Element, [FormSelectHistogramSliderProps]>;
+	let sliderSpy: jest.SpyInstance<JSX.Element, [FormSelectHistogramProps]>;
 
 	beforeEach(() => {
 		jest.restoreAllMocks();
@@ -247,12 +249,14 @@ describe(UI_TYPE, () => {
 	warningTestSuite<ISelectHistogramSchema>({
 		label: "Select Histogram",
 		uiType: UI_TYPE,
-		bins: [
-			{ minValue: 10, count: 1 },
-			{ minValue: 20, count: 0 },
-			{ minValue: 30, count: 3 },
-			{ minValue: 90, count: 3 },
-		],
-		interval: 10,
+		histogramSlider: {
+			bins: [
+				{ minValue: 10, count: 1 },
+				{ minValue: 20, count: 0 },
+				{ minValue: 30, count: 3 },
+				{ minValue: 90, count: 3 },
+			],
+			interval: 10,
+		},
 	});
 });

@@ -18,13 +18,14 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 		formattedLabel,
 		id,
 		onChange,
-		schema: { label: _label, bins, interval, validation, disabled, readOnly, className, customOptions },
+		schema: { label: _label, validation, disabled, readOnly, className, histogramSlider, customOptions },
 		value,
 		warning,
 		...otherProps
 	} = props;
 
-	const { setValue, setError } = useFormContext();
+	const { bins, interval, renderEmptyView } = histogramSlider;
+	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>([0, 0]);
 	const { setFieldValidationConfig } = useValidationConfig();
 	// =============================================================================
@@ -123,15 +124,17 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 				data-testid={TestHelper.generateId(id, "select-histogram")}
 				label={formattedLabel}
 				errorMessage={error?.message}
+				onChangeEnd={handleChangeEnd}
+				disabled={disabled}
+				readOnly={readOnly}
+				className={className}
+				rangeLabelPrefix={customOptions?.rangeLabelPrefix}
+				rangeLabelSuffix={customOptions?.rangeLabelSuffix}
+				value={stateValue}
 				histogramSlider={{
-					onChangeEnd: handleChangeEnd,
-					value: stateValue,
 					bins,
 					interval,
-					disabled,
-					readOnly,
-					className,
-					...customOptions,
+					renderEmptyView,
 				}}
 			/>
 			<Warning id={id} message={warning} />

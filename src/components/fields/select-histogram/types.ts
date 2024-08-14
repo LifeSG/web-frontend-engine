@@ -1,12 +1,14 @@
-import { HistogramSliderProps } from "@lifesg/react-design-system/histogram-slider";
+import { SelectHistogramProps } from "@lifesg/react-design-system";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IHistogramValidationRule } from "../histogram-slider";
 import { IBaseFieldSchema } from "../types";
 
-type TCustomOptions = Pick<HistogramSliderProps, "rangeLabelPrefix" | "rangeLabelSuffix">;
+type TCustomOptions = Pick<SelectHistogramProps, "rangeLabelPrefix" | "rangeLabelSuffix">;
 
 export interface ISelectHistogramSchema<V = undefined>
 	extends IBaseFieldSchema<"select-histogram", V, IHistogramValidationRule>,
-		TComponentOmitProps<Pick<HistogramSliderProps, "className" | "disabled" | "readOnly" | "bins" | "interval">> {
+		TComponentOmitProps<
+			Pick<SelectHistogramProps, "className" | "disabled" | "readOnly" | "value" | "histogramSlider">
+		> {
 	customOptions?: TCustomOptions | undefined;
 }
