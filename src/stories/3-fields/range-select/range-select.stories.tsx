@@ -1,5 +1,5 @@
 import { InputRangeProp } from "@lifesg/react-design-system/input-range-select";
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IRangeSelectSchema } from "../../../components/fields";
 import {
@@ -18,9 +18,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Range Select</Title>
-					<Description>This component provides a set of options for user to select</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>This component provides a set of options for user to select.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -34,7 +33,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {

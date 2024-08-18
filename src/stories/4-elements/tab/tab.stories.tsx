@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { ITabSchema } from "../../../components/elements";
 import {
@@ -16,9 +16,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Tab</Title>
-					<Description>Organises content across multiple panels</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>Organises content across multiple panels.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

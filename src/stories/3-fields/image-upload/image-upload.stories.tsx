@@ -1,17 +1,12 @@
-import { Button } from "@lifesg/react-design-system/button";
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
-import { useRef } from "react";
-import { IFrontendEngineRef } from "../../../components";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
+import { Meta } from "@storybook/react";
 import { IImageUploadSchema } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
-	FrontendEngine,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
-	SUBMIT_BUTTON_SCHEMA,
 	WarningStoryTemplate,
 } from "../../common";
 import { jpgDataURL } from "./image-data-url";
@@ -23,12 +18,11 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>ImageUpload</Title>
-					<Description>
+					<p>
 						This component accepts images through drag &amp; drop / file select. It can optionally allow
 						annotation and will submit as base64 image.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -103,7 +97,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",
@@ -115,7 +109,7 @@ const meta: Meta = {
 			description: "Image format to output as.",
 			table: {
 				type: {
-					summary: ["jpg", "png"],
+					summary: "jpg, png",
 				},
 				defaultValue: { summary: "jpg" },
 			},
@@ -142,7 +136,7 @@ const meta: Meta = {
 				"Whether to open user-facing (user) or outward-facing (environment) camera when Add photos button is pressed",
 			table: {
 				type: {
-					summary: ["user", "environment"],
+					summary: "user, environment",
 				},
 				defaultValue: { summary: null },
 			},
@@ -159,7 +153,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",
@@ -194,7 +188,6 @@ DefaultValue.argTypes = {
 		table: {
 			type: {
 				summary: "{ fileName: string; dataURL: string; }[]",
-				value: {},
 			},
 		},
 		control: {
@@ -329,21 +322,7 @@ ResetWithDefaultValues.args = {
 		},
 	],
 };
-ResetWithDefaultValues.argTypes = {
-	defaultValues: {
-		description: "Default value for the field, this is declared outside `sections`",
-		table: {
-			type: {
-				summary: "{ fileName: string; dataURL: string; }[]",
-				value: {},
-			},
-		},
-		control: {
-			type: "object",
-			value: {},
-		},
-	},
-};
+ResetWithDefaultValues.argTypes = DefaultValue.argTypes;
 
 export const Overrides = OverrideStoryTemplate<IImageUploadSchema>("upload-overrides").bind({});
 Overrides.args = {

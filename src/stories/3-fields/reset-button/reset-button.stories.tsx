@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IResetButtonSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE } from "../../common";
@@ -10,14 +10,19 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>ResetButton</Title>
-					<Description>The primary call to action component</Description>
-					<Heading>Props</Heading>
-					<Description>
-						This component also inherits the
-						[HTMLButtonElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement)
+					<p>The primary call to action component.</p>
+					<p>
+						This component also inherits the{" "}
+						<a
+							href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							HTMLButtonElement
+						</a>{" "}
 						attributes.
-					</Description>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -52,7 +57,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {
@@ -65,7 +70,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {

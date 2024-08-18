@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IFilterItemSchema } from "../../../components/custom/filter/filter-item/types";
 import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
@@ -11,9 +11,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Filter Item</Title>
-					<Description>Displays widgets under collapsible panels to filter data results</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>Displays widgets under collapsible panels to filter data results.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

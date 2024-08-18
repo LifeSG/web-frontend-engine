@@ -2,7 +2,7 @@ import { Button } from "@lifesg/react-design-system/button";
 import { Form } from "@lifesg/react-design-system/form";
 import { Text } from "@lifesg/react-design-system/text";
 import { action } from "@storybook/addon-actions";
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
@@ -20,11 +20,10 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>FrontendEngine</Title>
-					<Description>
-						The main component to render a form, based on a JSON schema through the `data` prop.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>
+						The main component to render a form, based on a JSON schema through the <code>data</code> prop.
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -335,7 +334,7 @@ OnChange.args = {
 				children: {
 					explanation: {
 						uiType: "div",
-						className: "margin--bottom",
+						className: "margin-bottom-1",
 						children: "onChange is fired on mount and every time the schema of value changes",
 					},
 					...DATA.sections.section.children,
@@ -357,7 +356,7 @@ OnValueChange.args = {
 				children: {
 					explanation: {
 						uiType: "div",
-						className: "margin--bottom",
+						className: "margin-bottom-1",
 						children: "onValueChange is only fired every time a value changes",
 					},
 					...DATA.sections.section.children,
@@ -796,7 +795,7 @@ const onSubmitErrorData: IFrontendEngineData = {
 			children: {
 				explanation: {
 					uiType: "div",
-					className: "margin--bottom",
+					className: "margin-bottom-1",
 					children:
 						"This example attempts to navigate the error input's label into view when submitting a form with errors. An alterate implementation could use the :has() pseudo-class, but that may be unsupported in some browsers (Firefox).",
 				},
@@ -821,7 +820,7 @@ export const StripUnknown: StoryFn<IFrontendEngineProps> = () => {
 				children: {
 					explanation: {
 						uiType: "div",
-						className: "margin--bottom",
+						className: "margin-bottom-1",
 						children: `When stripUnknown=true, fields that are not declared in the schema will not be included in
 							the submitted values or in getValues()`,
 					},
@@ -960,7 +959,7 @@ export const RenderWithoutForm: StoryFn<IFrontendEngineProps> = () => {
 						children: {
 							intro: {
 								uiType: "div",
-								className: "margin--bottom",
+								className: "margin-bottom-1",
 								children: "These fields are not rendered within the <form> element.",
 							},
 							...DATA.sections.section.children,

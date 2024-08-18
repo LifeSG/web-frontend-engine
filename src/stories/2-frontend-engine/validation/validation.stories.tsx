@@ -1,4 +1,4 @@
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Source, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { FrontendEngine, IFrontendEngineProps } from "../../../components";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
@@ -12,32 +12,32 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Validation Schema</Title>
-					<Description>
+					<p>
 						These are the individual rules to define the validation logic of the field in the JSON schema.
-						They are used in the `validation` property of each field. The snippet below illustrates a
-						TEXTAREA field with `required` and `max` validation.
-					</Description>
-					<pre>
-						{`
-	{
-		//...
-		"data": {
-			"fields": {
-				"name": {
-					label: "What is your name",
-					uiType: "textarea",
-					validation: [
-						{ required: true },
-						{ max: 255, errorMessage: "Maximum length of 255" },
-					],
-					chipTexts: ["John", "Doe"],
-				},
-				//...
-			}
+						They are used in the <code>validation</code> property of each field. The snippet below
+						illustrates a TEXTAREA field with `required` and <code>max</code> validation.
+					</p>
+					<Source
+						code={`
+{
+	//...
+	"data": {
+		"fields": {
+			"name": {
+				label: "What is your name",
+				uiType: "textarea",
+				validation: [
+					{ required: true },
+					{ max: 255, errorMessage: "Maximum length of 255" },
+				],
+				chipTexts: ["John", "Doe"],
+			},
+			//...
 		}
 	}
-					`}
-					</pre>
+}
+						`}
+					/>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

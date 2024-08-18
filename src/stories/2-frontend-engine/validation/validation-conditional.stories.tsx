@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
 
@@ -11,9 +11,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Conditional Validation</Title>
-					<Description>
-						These validation schemas are only applicable if certain criterias are fulfilled.
-					</Description>
+					<p>These validation schemas are only applicable if certain criterias are fulfilled.</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

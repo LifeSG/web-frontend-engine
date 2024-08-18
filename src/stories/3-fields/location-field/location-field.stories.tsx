@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import {
@@ -18,13 +18,12 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Location Input</Title>
-					<Description>
+					<p>
 						A field component to select, search and view location on a map. Error handling is included.
 						Error cases covered are one map error, get current location timout, get current location error
 						and no network error.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -39,7 +38,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {

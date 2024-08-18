@@ -1,4 +1,4 @@
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { FrontendEngine } from "../../../components";
 import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
@@ -12,7 +12,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Conditional Rendering for Strings</Title>
-					<Description>These rendering rules are for `string` type only.</Description>
+					<p>
+						These rendering rules are for <code>string</code> type only.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -47,7 +49,7 @@ export const MinCharacters = Template.bind({});
 MinCharacters.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 has at least 5 characters",
 	},
 	field1: {
@@ -67,7 +69,7 @@ export const MaxCharacters = Template.bind({});
 MaxCharacters.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 has at most 5 characters",
 	},
 	field1: {
@@ -87,7 +89,7 @@ export const Matches = Template.bind({});
 Matches.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 starts with `hello`",
 	},
 	field1: {
@@ -107,7 +109,7 @@ export const Email = Template.bind({});
 Email.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is a valid email",
 	},
 	field1: {
@@ -127,7 +129,7 @@ export const Url = Template.bind({});
 Url.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is a valid url",
 	},
 	field1: {
@@ -147,7 +149,7 @@ export const Uuid = Template.bind({});
 Uuid.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is a valid uuid",
 	},
 	field1: {

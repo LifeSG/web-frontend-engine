@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IGridSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
@@ -10,13 +10,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Grid</Title>
-					<Description>Renders components in grid layout</Description>
-					<Heading>Props</Heading>
-					<Description>
-						This component also inherits the
-						[HTMLDivElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement) attributes.
-					</Description>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>Renders components in grid layout.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

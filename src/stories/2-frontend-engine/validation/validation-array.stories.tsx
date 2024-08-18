@@ -1,4 +1,4 @@
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import * as Yup from "yup";
 import { IValidationComponentProps, ValidationComponent } from "./validation-component";
@@ -11,7 +11,9 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Validation Schema for Arrays</Title>
-					<Description>These validation rules are applicable to `array` type only.</Description>
+					<p>
+						These validation rules are applicable to <code>array</code> type only.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

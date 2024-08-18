@@ -1,5 +1,5 @@
 import { action } from "@storybook/addon-actions";
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
@@ -13,11 +13,11 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Accordion</Title>
-					<Description>
-						Wrapping component that must be rendered as a direct descendant of `accordion` uiType.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>
+						Wrapping component that must be rendered as a direct descendant of <code>accordion</code>{" "}
+						uiType.
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Example" />
 				</>
 			),
@@ -48,7 +48,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: true },
+				defaultValue: { summary: "true" },
 			},
 			control: {
 				type: "boolean",
@@ -60,7 +60,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: true },
+				defaultValue: { summary: "true" },
 			},
 			control: {
 				type: "boolean",

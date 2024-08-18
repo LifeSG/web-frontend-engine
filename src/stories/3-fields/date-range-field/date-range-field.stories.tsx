@@ -1,7 +1,7 @@
 import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { InputRangeProp } from "@lifesg/react-design-system/input-range-select/types";
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { TDateRangeFieldSchema } from "src/components/fields/date-range-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate, WarningStoryTemplate } from "../../common";
@@ -13,12 +13,11 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>DateRangeField</Title>
-					<Description>
+					<p>
 						This component provides the functionality for users to input a specific date according to the
-						date format
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+						date format.
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -42,7 +41,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",
@@ -75,7 +74,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			control: {
 				type: "boolean",

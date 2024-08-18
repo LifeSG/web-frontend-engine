@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { ISectionSchema } from "../../../components/elements/section";
 import { CommonFieldStoryProps, FrontendEngine } from "../../common";
@@ -10,11 +10,10 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Section</Title>
-					<Description>
-						Wrapping component that must be rendered as a direct descendant of `sections` uiType.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>
+						Wrapping component that must be rendered as a direct descendant of <code>sections</code> uiType.
+					</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Example" />
 				</>
 			),

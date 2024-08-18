@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { ITextSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, LOREM_IPSUM } from "../../common";
@@ -10,17 +10,23 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Text</Title>
-					<Description>
-						This component renders a `Text` component provided by the Design System within a Frontend Engine
-						generated form
-					</Description>
-					<Heading>Props</Heading>
-					<Description>
-						Please refer to the [design
-						system](https://designsystem.life.gov.sg/react/index.html?path=/docs/general-text-introduction--introduction)
-						for the properties of `Text`
-					</Description>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>
+						This component renders a <code>Text</code> component provided by the Design System within a
+						Frontend Engine generated form.
+					</p>
+
+					<p>
+						Please refer to the{" "}
+						<a
+							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/general-text-introduction--introduction"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							design system
+						</a>{" "}
+						for the properties of <code>Text</code>.
+					</p>
+					<ArgTypes of={Variants} />
 					<Stories includePrimary={true} title="Example" />
 				</>
 			),
@@ -98,7 +104,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {
@@ -112,7 +118,7 @@ const meta: Meta = {
 				type: {
 					summary: "boolean",
 				},
-				defaultValue: { summary: false },
+				defaultValue: { summary: "false" },
 			},
 			options: [true, false],
 			control: {

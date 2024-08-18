@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useRef } from "react";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/frontend-engine";
@@ -56,10 +56,10 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Restore values</Title>
-					<Description>
+					<p>
 						When a field&apos;s visibility is restored, the value that is populated can be configured via
-						the `restoreMode` flag.
-					</Description>
+						the <code>restoreMode</code> flag.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),

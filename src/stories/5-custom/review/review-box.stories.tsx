@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { TReviewSchema, TReviewSchemaItem } from "../../../components/custom/review";
 import { CommonCustomStoryProps, DefaultStoryTemplate } from "../../common";
@@ -10,11 +10,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Review (Box Variant)</Title>
-					<Description>
-						Displays data fields and information in a box, this is typically used for review purposes.
-					</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>Displays data fields and information in a box, this is typically used for review purposes.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -131,7 +128,7 @@ CustomTopSection.args = {
 		alert: {
 			uiType: "alert",
 			type: "warning",
-			className: "margin--bottom",
+			className: "margin-bottom-1",
 			children: "Sample alert",
 		},
 	},

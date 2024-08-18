@@ -1,4 +1,4 @@
-import { Description, Stories, Title } from "@storybook/addon-docs";
+import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { FrontendEngine } from "../../../components";
 import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
@@ -12,11 +12,11 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Conditional Rendering</Title>
-					<Description>
-						Show/hide fields according to rules provided via `showIf` key. Validation schema (if any)
-						applies to fields as long as they are shown. When a field is hidden, its validation schema do
-						not apply and the value is not submitted.
-					</Description>
+					<p>
+						Show/hide fields according to rules provided via <code>showIf</code> key. Validation schema (if
+						any) applies to fields as long as they are shown. When a field is hidden, its validation schema
+						do not apply and the value is not submitted.
+					</p>
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -51,7 +51,7 @@ export const Filled = Template.bind({});
 Filled.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is filled",
 	},
 	field1: {
@@ -71,7 +71,7 @@ export const Empty = Template.bind({});
 Empty.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is empty",
 	},
 	field1: {
@@ -91,7 +91,7 @@ export const Equals = Template.bind({});
 Equals.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is Apple",
 	},
 	field1: {
@@ -116,7 +116,7 @@ export const NotEquals = Template.bind({});
 NotEquals.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 2 as long as field 1 is not Apple",
 	},
 	field1: {
@@ -142,7 +142,7 @@ export const Shown = Template.bind({});
 Shown.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 3 as long as field 2 is shown (requires field 1 to be filled)",
 	},
 	field1: {
@@ -166,7 +166,7 @@ export const AndConditions = Template.bind({});
 AndConditions.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 3 as long as field 1 AND 2 are filled",
 	},
 	field1: {
@@ -191,7 +191,7 @@ export const OrConditions = Template.bind({});
 OrConditions.args = {
 	intro: {
 		uiType: "div",
-		className: "margin--bottom",
+		className: "margin-bottom-1",
 		children: "Show field 3 as long as field 1 OR 2 is filled",
 	},
 	field1: {
