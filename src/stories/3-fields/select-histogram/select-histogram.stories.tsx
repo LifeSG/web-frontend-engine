@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Heading, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IHistogramSliderValue, ISelectHistogramSchema } from "../../../components/fields";
 import {
@@ -17,12 +17,12 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>SelectHistogram</Title>
-					<Description>
-						This component allows users to select a lower limit and upper limit from a bin of numeric data
-						values.
-					</Description>
+					<p>
+						This component allows to show a lower limit and upper limit from a bin of numeric data values in
+						a dropdown list.
+					</p>
 					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
 			),
@@ -43,18 +43,21 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
-		bins: {
-			description: "A list of histogram bins grouped by their lower limit",
-		},
-		interval: {
-			description: "The upper limit of each bin",
-		},
-		customOptions: {
+		histogramSlider: {
 			description:
-				"<ul><li>`showRangeLabels` specifies if max and min labels are displayed.</li><br/><li>Use `rangeLabelPrefix` and `rangeLabelSuffix` to customise the labels</li></ul>",
+				"Use `bins` and `interval` to initialize histogram slider<br><ul><li>`bins`: A list of histogram bins grouped by their lower limit</li><li>`interval`: The upper limit of each bin</li></ul>",
 			table: {
 				type: {
-					summary: `{ showRangeLabels?: boolean; rangeLabelPrefix?: string; rangeLabelSuffix?: string; }`,
+					summary: `{bins: HistogramBinProps[], interval: number}`,
+				},
+			},
+			type: { name: "object", value: {} },
+		},
+		customOptions: {
+			description: "<ul><li>Use `rangeLabelPrefix` and `rangeLabelSuffix` to customize the labels</li></ul>",
+			table: {
+				type: {
+					summary: `{  rangeLabelPrefix?: string; rangeLabelSuffix?: string; }`,
 				},
 			},
 			type: { name: "object", value: {} },

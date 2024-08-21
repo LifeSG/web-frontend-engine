@@ -23,8 +23,8 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 		warning,
 		...otherProps
 	} = props;
-
-	const { bins, interval, renderEmptyView } = histogramSlider;
+	console.log("a----", props);
+	const { bins, interval } = histogramSlider;
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>([0, 0]);
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -101,9 +101,6 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation, bins, interval]);
-	// =============================================================================
-	// HELPER FUNCTIONS
-	// =============================================================================
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -134,7 +131,6 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 				histogramSlider={{
 					bins,
 					interval,
-					renderEmptyView,
 				}}
 			/>
 			<Warning id={id} message={warning} />
