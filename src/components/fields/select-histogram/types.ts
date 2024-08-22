@@ -15,9 +15,7 @@ type TCustomOptions = Pick<SelectHistogramProps, "rangeLabelPrefix" | "rangeLabe
 
 export interface ISelectHistogramSchema<V = undefined>
 	extends IBaseFieldSchema<"select-histogram", V, ISelectHistogramValidationRule>,
-		TComponentOmitProps<
-			Pick<SelectHistogramProps, "className" | "disabled" | "readOnly" | "value" | "histogramSlider">
-		> {
+		TComponentOmitProps<Pick<SelectHistogramProps, "className" | "disabled" | "readOnly" | "value">> {
 	customOptions?: TCustomOptions | undefined;
 	histogramSlider: Pick<SelectHistogramSliderProps, "bins" | "interval">;
 }

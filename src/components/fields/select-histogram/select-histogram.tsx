@@ -23,7 +23,7 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 		warning,
 		...otherProps
 	} = props;
-	console.log("a----", props);
+
 	const { bins, interval } = histogramSlider;
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>([0, 0]);
