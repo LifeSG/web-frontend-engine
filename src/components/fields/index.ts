@@ -17,6 +17,7 @@ export * from "./radio-button";
 export * from "./range-select";
 export * from "./reset-button";
 export * from "./select";
+export * from "./select-histogram";
 export * from "./slider";
 export * from "./submit-button";
 export * from "./switch";
