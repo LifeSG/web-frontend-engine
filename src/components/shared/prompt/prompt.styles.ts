@@ -55,7 +55,7 @@ export const LabelContainer = styled.div<SizeProps>`
 	display: flex;
 	flex-direction: column;
 	text-align: center;
-	padding: 1.5rem;
+	padding: 4rem 1.5rem 1.5rem;
 
 	${MediaQuery.MinWidth.mobileL} {
 		padding: ${(props) => (props.size === "large" ? "4rem 4rem 0rem 4rem" : "1rem 1.5rem 0")};
@@ -67,5 +67,5 @@ export const Description = styled(Text.H4)`
 `;
 
 export const Title = styled(Text.H4)<SizeProps>`
-	margin-top: ${(props) => (props.size === "large" ? "0rem" : "2rem")};
+	margin-top: 0rem;
 `;
