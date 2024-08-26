@@ -1,7 +1,6 @@
 import { ChangeEvent, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
-import { TFileCapture } from "../../types";
-import { EImageStatus, IImage, ISharedImageProps } from "../../types";
+import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../../types";
 import {
 	AddImageButton,
 	BorderOverlay,
@@ -117,6 +116,7 @@ export const ImageThumbnails = (props: IProps) => {
 					accept={accepts.map((fileType) => `.${fileType}`).join(", ")}
 					onChange={handleInputChange}
 					multiple={multiple}
+					value="" // controlling the value to allow for the same file to be uploaded (by triggering on change)
 				/>
 				<AddImageButton
 					type="button"
