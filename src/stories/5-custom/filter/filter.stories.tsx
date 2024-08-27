@@ -33,6 +33,15 @@ const meta: Meta = {
 			description: "Filter button label used in mobile view.",
 			defaultValue: "Filters Mobile",
 		},
+		toggleFilterButtonStyle: {
+			description: "Filter button style type used in mobile view.",
+			table: {
+				type: {
+					summary: "default | secondary | light | link",
+				},
+				defaultValue: { summary: "light" },
+			},
+		},
 		clearButtonDisabled: {
 			description: "Toggle to disable the clear filters button",
 			control: {
@@ -147,3 +156,24 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const MobileButtonStyle = Template("wrapper-default").bind({});
+MobileButtonStyle.args = {
+	referenceKey: "filter",
+	label: "Filters Desktop",
+	toggleFilterButtonLabel: "Filters Mobile",
+	toggleFilterButtonStyle: "secondary",
+	children: {
+		filterItem1: {
+			label: "Search",
+			referenceKey: "filter-item",
+			children: {
+				name: {
+					label: "",
+					uiType: "text-field",
+					placeholder: "Enter keyword",
+				},
+			},
+		},
+	},
+};

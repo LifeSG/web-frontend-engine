@@ -1,3 +1,4 @@
+import { ButtonStyleType } from "@lifesg/react-design-system";
 import { ICustomElementJsonSchema } from "../../types";
 import { IFilterCheckboxSchema } from "../filter-checkbox/types";
 import { IFilterItemSchema } from "../filter-item/types";
@@ -5,6 +6,7 @@ import { IFilterItemSchema } from "../filter-item/types";
 export interface IFilterSchema<V = undefined, C = undefined> extends ICustomElementJsonSchema<"filter"> {
 	label?: string | undefined;
 	toggleFilterButtonLabel?: string | undefined;
+	toggleFilterButtonStyle?: ButtonStyleType | undefined;
 	children: Record<string, IFilterItemSchema<V, C> | IFilterCheckboxSchema>;
 	clearButtonDisabled?: boolean | undefined;
 }
