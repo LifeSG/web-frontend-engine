@@ -11,6 +11,7 @@ export interface IFilterCheckboxSchema<V = undefined>
 	showMobileDivider?: boolean | undefined;
 	clearBehavior?: TClearBehavior | undefined;
 	expanded?: boolean | undefined;
+	useToggleContentWidth?: boolean | undefined;
 }
 
 export interface IOption {
