@@ -1,4 +1,4 @@
-import { ArgsTable, Description, Heading, PRIMARY_STORY, Stories, Title } from "@storybook/addon-docs";
+import { ArgTypes, Heading, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { ITimelineSchema } from "../../../components/custom/timeline";
 import { CommonCustomStoryProps, DefaultStoryTemplate } from "../../common";
@@ -10,9 +10,8 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>Timeline</Title>
-					<Description>Represents the steps of a process in a chronological order.</Description>
-					<Heading>Props</Heading>
-					<ArgsTable story={PRIMARY_STORY} />
+					<p>Represents the steps of a process in a chronological order.</p>
+					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Example" />
 				</>
 			),
