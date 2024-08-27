@@ -1,4 +1,4 @@
-import { ButtonStyleType } from "@lifesg/react-design-system";
+import { ButtonStyleType } from "@lifesg/react-design-system/button";
 import { ICustomElementJsonSchema } from "../../types";
 import { IFilterCheckboxSchema } from "../filter-checkbox/types";
 import { IFilterItemSchema } from "../filter-item/types";
