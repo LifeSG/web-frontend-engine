@@ -19,7 +19,7 @@ export const Filter = (props: IGenericCustomElementProps<IFilterSchema>) => {
 
 	const {
 		id,
-		schema: { children, label, toggleFilterButtonLabel, clearButtonDisabled },
+		schema: { children, label, toggleFilterButtonLabel, toggleFilterButtonStyle, clearButtonDisabled },
 	} = props;
 
 	// =============================================================================
@@ -79,6 +79,7 @@ export const Filter = (props: IGenericCustomElementProps<IFilterSchema>) => {
 		<FilterComponent
 			data-testid={TestHelper.generateId(id, "filter")}
 			toggleFilterButtonLabel={toggleFilterButtonLabel}
+			toggleFilterButtonStyle={toggleFilterButtonStyle}
 			headerTitle={label}
 			clearButtonDisabled={clearButtonDisabled}
 			onClear={clearData}

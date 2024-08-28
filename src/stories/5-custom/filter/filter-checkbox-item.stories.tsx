@@ -97,6 +97,14 @@ const meta: Meta = {
 			},
 			defaultValue: false,
 		},
+		useToggleContentWidth: {
+			description: "Changes the minimum width of the checkbox toggle to fit its content (on mobile)",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+		},
 	},
 };
 export default meta;
@@ -296,3 +304,14 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const MobileContentWidth = Template("filter-checkbox-mobile-content-width").bind({});
+MobileContentWidth.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+	useToggleContentWidth: true,
+};
