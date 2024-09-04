@@ -5,6 +5,7 @@ import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
 import { IGridSchema } from "./grid";
 import { IOrderedListSchema, IUnorderedListSchema } from "./list";
+import { IPopoverSchema } from "./popover";
 import { ITabItemSchema, ITabSchema } from "./tab";
 import type { ITextSchema } from "./text";
 import type { IWrapperSchema } from "./wrapper";
@@ -47,6 +48,7 @@ export enum EElementType {
 	"ORDERED-LIST" = "List",
 	"UNORDERED-LIST" = "List",
 	ACCORDION = "Accordion",
+	POPOVER = "Popover",
 }
 
 /**
@@ -58,6 +60,7 @@ export type TElementSchema<V = undefined, C = undefined> =
 	| IDividerSchema
 	| IGridSchema<V, C>
 	| IOrderedListSchema<V, C>
+	| IPopoverSchema
 	| ITabItemSchema<V, C>
 	| ITabSchema<V, C>
 	| ITextSchema

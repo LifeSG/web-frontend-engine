@@ -2,13 +2,14 @@ import { Button } from "@lifesg/react-design-system/button";
 import isArray from "lodash/isArray";
 import isObject from "lodash/isObject";
 import { useEffect, useRef, useState } from "react";
+import sanitizeHtml, { IOptions } from "sanitize-html";
+import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
 import { TEXT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
-import styled from "styled-components";
-import sanitizeHtml from "sanitize-html";
+import { Wrapper } from "../wrapper";
 
 export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
@@ -58,6 +59,11 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const sanitizeOptions: IOptions = {
+		allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+		allowedAttributes: false,
+	};
+
 	const renderText = (): JSX.Element[] | JSX.Element | string[] | string => {
 		if (isArray(children)) {
 			return children.map((text, index) => {
@@ -65,18 +71,20 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 
 				return (
 					<Element key={index} id={childrenId} data-testid={getTestId(childrenId)}>
-						<Sanitize id={childrenId} inline>
+						<Sanitize id={childrenId} inline sanitizeOptions={sanitizeOptions}>
 							{text}
 						</Sanitize>
 					</Element>
 				);
 			});
 		} else if (typeof children === "object") {
-			return Object.entries(children).map(([id, childSchema], index) => (
-				<Text key={index} id={id} schema={childSchema} />
-			));
+			return <Wrapper>{children}</Wrapper>;
 		}
-		return children;
+		return (
+			<Sanitize inline sanitizeOptions={sanitizeOptions}>
+				{children}
+			</Sanitize>
+		);
 	};
 
 	return (
@@ -90,15 +98,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}
 			>
-				<Sanitize
-					inline
-					sanitizeOptions={{
-						allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-						allowedAttributes: false,
-					}}
-				>
-					{renderText()}
-				</Sanitize>
+				{renderText()}
 			</Element>
 
 			{showExpandButton && (
