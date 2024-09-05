@@ -3,8 +3,9 @@
  * these are typically components that are more opinionated and do not fit into the generic components
  */
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
-import type { IColumns, IYupValidationRule } from "../frontend-engine";
 import type { TRenderRules } from "../../context-providers";
+import type { IColumns, IYupValidationRule } from "../frontend-engine";
+import type { IArrayFieldSchema } from "./array-field";
 import type { IFilterSchema } from "./filter/filter/types";
 import type { TReviewEvents, TReviewSchema } from "./review";
 import { ITimelineSchema } from "./timeline";
@@ -24,6 +25,7 @@ export enum ECustomElementType {
  * custom fields types
  */
 export enum ECustomFieldType {
+	"ARRAY-FIELD" = "ArrayField",
 	"FILTER-CHECKBOX" = "FilterCheckbox",
 }
 
@@ -31,6 +33,7 @@ export enum ECustomFieldType {
  * union type to represent all custom elements / fields schema
  */
 export type TCustomSchema<V = undefined, C = undefined> =
+	| IArrayFieldSchema<V>
 	| ICustomElementJsonSchema<string>
 	| IFilterSchema<V, C>
 	| ITimelineSchema<V, C>
@@ -82,6 +85,7 @@ export interface IGenericCustomElementProps<T> {
 export interface IGenericCustomFieldProps<T> extends Partial<ControllerFieldState>, Partial<ControllerRenderProps> {
 	id: string;
 	schema: T;
+	warning?: string | undefined;
 }
 
 // =============================================================================
