@@ -1,10 +1,9 @@
-import { Color } from "@lifesg/react-design-system/color";
 import { PopoverTrigger } from "@lifesg/react-design-system/popover-v2";
 import * as Icons from "@lifesg/react-icons";
-import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
+import { StyledIcon, StyledText } from "./popover.styles";
 import { IPopoverSchema } from "./types";
 
 export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
@@ -23,7 +22,7 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 		if (!icon) return null;
 
 		const Element = Icons[icon];
-		return <StyledIcon as={Element} />;
+		return <StyledIcon as={Element} $standalone={!children} />;
 	};
 
 	return (
@@ -42,15 +41,3 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 		</PopoverTrigger>
 	);
 };
-
-const StyledText = styled.span`
-	color: ${Color.Primary};
-	font-weight: 600;
-`;
-
-const StyledIcon = styled.span`
-	height: 1lh; // align vertically
-	width: 1em; // scale icon with font size
-	margin-left: 0.25rem;
-	vertical-align: top;
-`;

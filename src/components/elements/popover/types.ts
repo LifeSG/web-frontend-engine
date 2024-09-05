@@ -8,7 +8,7 @@ interface IPopoverHint {
 }
 
 export interface IPopoverSchema extends IBaseElementSchema<"popover"> {
-	children: string;
+	children?: string | undefined;
 	className?: string | undefined;
 	hint: IPopoverHint;
 	icon?: keyof typeof Icons | undefined;

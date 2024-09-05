@@ -99,10 +99,17 @@ Default.args = {
 	hint: { content: "Hint" },
 };
 
-export const Icon = Template("popover-icon").bind({});
-Icon.args = {
+export const WithIcon = Template("popover-with-icon").bind({});
+WithIcon.args = {
 	uiType: "popover",
 	children: "More info",
+	icon: "ICircleFillIcon",
+	hint: { content: "Hint" },
+};
+
+export const IconOnly = Template("popover-icon-only").bind({});
+IconOnly.args = {
+	uiType: "popover",
 	icon: "ICircleFillIcon",
 	hint: { content: "Hint" },
 };
