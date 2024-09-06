@@ -1,4 +1,3 @@
-import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-hook-form";
@@ -18,16 +17,28 @@ export const ArrayFieldElement = ({ onChange, formValues, schema }: ArrayFieldEl
 	// =============================================================================
 	const formRef = useRef<IFrontendEngineRef>(null);
 	const [sectionValues, setSectionValues] = useState<TFrontendEngineValues>({});
-	const [isSectionValid, setIsSectionValid] = useState<boolean>(false);
-	const prevSectionValues = usePrevious(sectionValues);
-	const prevSectionValid = usePrevious(isSectionValid);
-	const { isSubmitting } = useFormState();
+	const [defaultValues, setDefaultValues] = useState<TFrontendEngineValues>();
+	const { isSubmitting, isDirty } = useFormState();
+	const prevIsDirty = usePrevious(isDirty);
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		if (!isDirty && prevIsDirty !== undefined && prevIsDirty !== isDirty) {
+			formRef.current?.reset();
+		}
+	}, [isDirty]);
 
 	useEffect(() => {
+		if (!isDirty) {
+			setDefaultValues(formValues);
+		}
+
+		if (isEqual(formValues, sectionValues)) {
+			return;
+		}
+
 		if (formValues) {
 			Object.entries(formValues).forEach(([key, value]) => {
 				formRef.current?.setValue(key, value);
@@ -41,20 +52,15 @@ export const ArrayFieldElement = ({ onChange, formValues, schema }: ArrayFieldEl
 		}
 	}, [isSubmitting]);
 
-	useEffect(() => {
-		if (!isEmpty(sectionValues)) {
-			if (!isEqual(prevSectionValues, sectionValues) || !isEqual(prevSectionValid, isSectionValid)) {
-				onChange(sectionValues, isSectionValid);
-			}
-		}
-	}, [sectionValues, isSectionValid]);
-
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const handleChange = (values: TFrontendEngineValues, valid = false) => {
-		setIsSectionValid(valid);
+		if (!isDirty && prevIsDirty !== undefined && prevIsDirty !== isDirty) {
+			return;
+		}
 		setSectionValues(values);
+		onChange(values, valid);
 	};
 
 	// =============================================================================
@@ -63,7 +69,7 @@ export const ArrayFieldElement = ({ onChange, formValues, schema }: ArrayFieldEl
 	return (
 		<FrontendEngine
 			ref={formRef}
-			data={{ sections: { section: { uiType: "section", children: schema } } }}
+			data={{ sections: { section: { uiType: "section", children: schema } }, defaultValues }}
 			onValueChange={handleChange}
 			wrapInForm={false}
 		/>
