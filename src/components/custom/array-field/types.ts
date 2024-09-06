@@ -3,6 +3,8 @@ import { IYupValidationRule, TFrontendEngineFieldSchema } from "../../frontend-e
 import { IBaseCustomFieldSchema } from "../types";
 
 export interface IArrayFieldValidationRule extends IYupValidationRule {
+	/** for customising error message when one section is invalid */
+	valid?: boolean | undefined;
 	// TODO: unique rule
 }
 

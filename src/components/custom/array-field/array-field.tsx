@@ -1,12 +1,13 @@
 import { Text } from "@lifesg/react-design-system/text";
 import * as Icons from "@lifesg/react-icons";
 import { BinIcon, PlusCircleFillIcon } from "@lifesg/react-icons";
+import isEmpty from "lodash/isEmpty";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { useValidationConfig } from "../../../utils/hooks";
-import { Warning } from "../../shared";
-import { TFrontendEngineValues } from "../../types";
+import { ERROR_MESSAGES, Warning } from "../../shared";
+import { IFrontendEngineRef, TFrontendEngineValues } from "../../types";
 import { IGenericCustomFieldProps } from "../types";
 import { ArrayFieldElement } from "./array-field-element";
 import { AddButton, ErrorAlert, RemoveButton, Section, SectionDivider, SectionHeader } from "./array-field.styles";
@@ -25,19 +26,25 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		warning,
 	} = props;
 	const [stateValue, setStateValue] = useState<TFrontendEngineValues[]>([{}]);
-	const [isValid, setIsValid] = useState<boolean[]>([false]);
-	const isValidRef = useRef(isValid);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const [min, setMin] = useState<number | undefined>(undefined);
 	const [max, setMax] = useState<number | undefined>(undefined);
 	const [length, setLength] = useState<number | undefined>(undefined);
 	const isInitialisedValue = useRef<boolean>(false);
 	const { setValue } = useFormContext();
+	const formRefs = useRef<IFrontendEngineRef[]>([]);
+	const stateValueRef = useRef(stateValue);
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		stateValueRef.current = stateValue;
+	}, [stateValue]);
+
+	useEffect(() => {
+		const isRequiredRule = validation?.find((rule) => "required" in rule);
+		const validRule = validation?.find((rule) => "valid" in rule);
 		const minRule = validation?.find((rule) => "min" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
@@ -50,9 +57,20 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 		setFieldValidationConfig(
 			id,
-			Yup.array().test("is-array-valid", "One or more of the sections is incomplete", () => {
-				return isValidRef.current.every((valid) => valid);
-			}),
+			Yup.array()
+				.test("is-array-valid", validRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.INVALID, () => {
+					if (!Array.isArray(value) || !validRule?.["valid"]) return true;
+					return stateValueRef.current.every((_, i) => formRefs.current[i].isValid());
+				})
+				.test(
+					"is-empty-array",
+					isRequiredRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.REQUIRED,
+					(value) => {
+						if (!value || !isRequiredRule?.required) return true;
+
+						return value.length > 0 && value.some((item) => !isEmpty(item));
+					}
+				),
 			validation
 		);
 	}, [validation]);
@@ -82,32 +100,20 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	// =============================================================================
 	const handleSectionChange =
 		(index: number) =>
-		(data: TFrontendEngineValues, valid: boolean): void => {
-			/* setting values */
+		(data: TFrontendEngineValues): void => {
 			const newSectionValue = [...stateValue];
 			newSectionValue[index] = data;
 			onChange({ target: { value: newSectionValue } });
-
-			/* setting validity */
-			setIsValid((previousIsValid) => {
-				const isSectionValid = [...previousIsValid];
-				isSectionValid[index] = valid;
-
-				isValidRef.current = isSectionValid;
-				return isSectionValid;
-			});
 		};
 
 	const handleAddSection = () => {
 		const newFormValues = [...stateValue, {}];
 		setStateValue(newFormValues);
-		setIsValid([...isValid, false]);
 	};
 
 	const handleRemoveSection = (index: number) => {
 		const updatedValues = stateValue.filter((_, i) => i !== index);
 		setStateValue(updatedValues);
-		setIsValid(isValid.filter((_, i) => i !== index));
 	};
 
 	// =============================================================================
@@ -152,6 +158,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 							)}
 						</SectionHeader>
 						<ArrayFieldElement
+							ref={(formRef) => (formRefs.current[index] = formRef)}
 							formValues={sectionValues}
 							schema={fieldSchema}
 							onChange={handleSectionChange(index)}

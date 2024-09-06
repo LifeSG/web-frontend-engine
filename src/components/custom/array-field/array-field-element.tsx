@@ -1,5 +1,5 @@
 import isEqual from "lodash/isEqual";
-import { useEffect, useRef, useState } from "react";
+import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useFormState } from "react-hook-form";
 import { usePrevious } from "../../../utils/hooks";
 import { FrontendEngine } from "../../frontend-engine";
@@ -11,7 +11,7 @@ interface ArrayFieldElementProps {
 	formValues?: TFrontendEngineValues;
 }
 
-export const ArrayFieldElement = ({ onChange, formValues, schema }: ArrayFieldElementProps) => {
+const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref: ForwardedRef<IFrontendEngineRef>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -20,6 +20,8 @@ export const ArrayFieldElement = ({ onChange, formValues, schema }: ArrayFieldEl
 	const [defaultValues, setDefaultValues] = useState<TFrontendEngineValues>();
 	const { isSubmitting, isDirty } = useFormState();
 	const prevIsDirty = usePrevious(isDirty);
+
+	useImperativeHandle<IFrontendEngineRef, IFrontendEngineRef>(ref, () => formRef.current);
 
 	// =============================================================================
 	// EFFECTS
@@ -75,3 +77,5 @@ export const ArrayFieldElement = ({ onChange, formValues, schema }: ArrayFieldEl
 		/>
 	);
 };
+
+export const ArrayFieldElement = forwardRef(Component);
