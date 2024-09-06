@@ -2,6 +2,7 @@ import { Text } from "@lifesg/react-design-system/text";
 import * as Icons from "@lifesg/react-icons";
 import { BinIcon, PlusCircleFillIcon } from "@lifesg/react-icons";
 import { useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Warning } from "../../shared";
@@ -29,6 +30,9 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const { setFieldValidationConfig } = useValidationConfig();
 	const [min, setMin] = useState<number | undefined>(undefined);
 	const [max, setMax] = useState<number | undefined>(undefined);
+	const [length, setLength] = useState<number | undefined>(undefined);
+	const isInitialisedValue = useRef<boolean>(false);
+	const { setValue } = useFormContext();
 
 	// =============================================================================
 	// EFFECTS
@@ -36,18 +40,13 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	useEffect(() => {
 		const minRule = validation?.find((rule) => "min" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
+		const lengthRule = validation?.find((rule) => "length" in rule);
 		const min = minRule?.["min"] ?? undefined;
 		const max = maxRule?.["max"] ?? undefined;
-		setMin(min);
-		setMax(max);
-
-		if (!value && min > 0 && min === max) {
-			setStateValue(
-				Array(min)
-					.fill(null)
-					.map(() => ({}))
-			);
-		}
+		const length = lengthRule?.["length"] ?? undefined;
+		setMin(min ?? length);
+		setMax(max ?? length);
+		setLength(length);
 
 		setFieldValidationConfig(
 			id,
@@ -59,20 +58,24 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	}, [validation]);
 
 	useEffect(() => {
-		if (value) {
+		if (value && isInitialisedValue.current) {
+			isInitialisedValue.current = false;
+
+			const nextValue = initValue(length || 1);
+			setStateValue(nextValue);
+			setValue(id, nextValue, { shouldDirty: false, shouldTouch: false });
+		} else if (value) {
+			isInitialisedValue.current = false;
+
 			setStateValue(value);
 		} else {
-			if (min > 0 && min === max) {
-				setStateValue(
-					Array(min)
-						.fill(null)
-						.map(() => ({}))
-				);
-			} else {
-				setStateValue([{}]);
-			}
+			isInitialisedValue.current = true;
+
+			const nextValue = initValue(length || 1);
+			setStateValue(nextValue);
+			setValue(id, nextValue, { shouldDirty: false, shouldTouch: false });
 		}
-	}, [value]);
+	}, [value, length]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -105,6 +108,15 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		const updatedValues = stateValue.filter((_, i) => i !== index);
 		setStateValue(updatedValues);
 		setIsValid(isValid.filter((_, i) => i !== index));
+	};
+
+	// =============================================================================
+	// HELPERS
+	// =============================================================================
+	const initValue = (len: number) => {
+		return Array(len)
+			.fill(null)
+			.map(() => ({}));
 	};
 
 	// =============================================================================
