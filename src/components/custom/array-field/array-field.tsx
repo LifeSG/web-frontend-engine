@@ -1,4 +1,5 @@
 import { Text } from "@lifesg/react-design-system/text";
+import * as Icons from "@lifesg/react-icons";
 import { BinIcon, PlusCircleFillIcon } from "@lifesg/react-icons";
 import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
@@ -112,17 +113,25 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const showRemoveButton = min >= 0 ? stateValue.length > min : true;
 	const showAddButton = max >= 1 ? stateValue.length < max : true;
 
+	const renderIcon = (icon: keyof typeof Icons) => {
+		const Element = Icons[icon];
+
+		return <Element />;
+	};
+
 	return (
 		<>
 			{stateValue.map((sectionValues, index) => {
+				const isLastItem = index === stateValue.length - 1;
 				return (
 					<Section key={index}>
 						<SectionHeader>
 							{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
 							{showRemoveButton && (
 								<RemoveButton
+									type="button"
 									styleType="link"
-									icon={<BinIcon />}
+									icon={removeButton?.icon ? renderIcon(removeButton.icon) : <BinIcon />}
 									danger
 									onClick={() => handleRemoveSection(index)}
 								>
@@ -135,12 +144,17 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 							schema={fieldSchema}
 							onChange={handleSectionChange(index)}
 						/>
-						<SectionDivider />
+						{!isLastItem || showAddButton ? <SectionDivider /> : null}
 					</Section>
 				);
 			})}
 			{showAddButton && (
-				<AddButton styleType="link" icon={<PlusCircleFillIcon />} onClick={handleAddSection}>
+				<AddButton
+					type="button"
+					styleType="link"
+					icon={addButton?.icon ? renderIcon(addButton.icon) : <PlusCircleFillIcon />}
+					onClick={handleAddSection}
+				>
 					{addButton?.label ?? "Add"}
 				</AddButton>
 			)}
