@@ -13,10 +13,15 @@ export interface IArrayFieldButton {
 	icon?: keyof typeof Icons | undefined;
 }
 
+export interface IArrayFieldRemoveConfirmationModal {
+	title?: string | undefined;
+}
+
 export interface IArrayFieldSchema<V = undefined>
 	extends IBaseCustomFieldSchema<"array-field", V, IArrayFieldValidationRule> {
 	fieldSchema: Record<string, TFrontendEngineFieldSchema>;
 	sectionTitle?: string | undefined;
 	addButton?: IArrayFieldButton | undefined;
 	removeButton?: IArrayFieldButton | undefined;
+	removeConfirmationModal?: IArrayFieldRemoveConfirmationModal | undefined;
 }

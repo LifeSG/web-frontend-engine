@@ -1,6 +1,7 @@
 import { Alert } from "@lifesg/react-design-system/alert";
 import { ButtonWithIcon } from "@lifesg/react-design-system/button-with-icon";
 import { Divider } from "@lifesg/react-design-system/divider";
+import { ErrorDisplay } from "@lifesg/react-design-system/error-display";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 
@@ -42,4 +43,8 @@ export const ErrorAlert = styled(Alert)`
 	&:not(:last-child) {
 		margin-bottom: 2rem;
 	}
+`;
+
+export const CustomErrorDisplay = styled(ErrorDisplay)`
+	margin-bottom: 2rem;
 `;

@@ -6,11 +6,19 @@ import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES, Warning } from "../../shared";
+import { ERROR_MESSAGES, Prompt, Warning } from "../../shared";
 import { IFrontendEngineRef, TFrontendEngineValues } from "../../types";
 import { IGenericCustomFieldProps } from "../types";
 import { ArrayFieldElement } from "./array-field-element";
-import { AddButton, ErrorAlert, RemoveButton, Section, SectionDivider, SectionHeader } from "./array-field.styles";
+import {
+	AddButton,
+	CustomErrorDisplay,
+	ErrorAlert,
+	RemoveButton,
+	Section,
+	SectionDivider,
+	SectionHeader,
+} from "./array-field.styles";
 import { IArrayFieldSchema } from "./types";
 
 export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) => {
@@ -21,11 +29,13 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		error,
 		id,
 		onChange,
-		schema: { addButton, fieldSchema, removeButton, sectionTitle, validation },
+		schema: { addButton, fieldSchema, removeButton, removeConfirmationModal, sectionTitle, validation },
 		value,
 		warning,
 	} = props;
 	const [stateValue, setStateValue] = useState<TFrontendEngineValues[]>([{}]);
+	const [showRemovePrompt, setShowRemovePrompt] = useState<boolean>(false);
+	const [indexToRemove, setIndexToRemove] = useState<number>(-1);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const [min, setMin] = useState<number | undefined>(undefined);
 	const [max, setMax] = useState<number | undefined>(undefined);
@@ -112,8 +122,18 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	};
 
 	const handleRemoveSection = (index: number) => {
-		const updatedValues = stateValue.filter((_, i) => i !== index);
+		setShowRemovePrompt(true);
+		setIndexToRemove(index);
+	};
+
+	const handleConfirmRemove = () => {
+		const updatedValues = stateValue.filter((_, i) => i !== indexToRemove);
 		setStateValue(updatedValues);
+		setShowRemovePrompt(false);
+	};
+
+	const handleCancelRemove = () => {
+		setShowRemovePrompt(false);
 	};
 
 	// =============================================================================
@@ -179,6 +199,27 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			)}
 			{error && <ErrorAlert type="error">{error.message}</ErrorAlert>}
 			<Warning id={id} message={warning} />
+			<Prompt
+				id={`${id}-remove-prompt`}
+				size="large"
+				image={<CustomErrorDisplay type="warning" title={<></>} description={<></>} />}
+				title={removeConfirmationModal?.title ?? "Remove entry?"}
+				description="The information you’ve entered will be deleted."
+				show={showRemovePrompt}
+				buttons={[
+					{
+						id: "back",
+						title: "Back",
+						buttonStyle: "secondary",
+						onClick: handleCancelRemove,
+					},
+					{
+						id: "remove",
+						title: "Remove",
+						onClick: handleConfirmRemove,
+					},
+				]}
+			/>
 		</>
 	);
 };
