@@ -1,5 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { MediaQuery } from "@lifesg/react-design-system/media";
+import { Modal } from "@lifesg/react-design-system/modal";
 import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 
@@ -8,15 +9,30 @@ interface SizeProps {
 	width?: string;
 }
 
+export const ScrollableModal = styled(Modal)`
+	height: 100%;
+	overflow-y: auto;
+`;
+
+export const GrowContainer = styled.div`
+	margin: auto;
+	padding: 5rem 1.25rem;
+	width: 100%;
+
+	${MediaQuery.MaxWidth.mobileL} {
+		padding: 1rem 1.25rem;
+	}
+`;
+
 export const Container = styled.div<SizeProps>`
 	background: white;
 	border-radius: 0.5rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	margin: 0rem 1rem;
+	margin: auto;
 	max-width: ${(props) => (props.size === "large" ? "672px" : "426px")};
-	width: ${(props) => (props.size === "large" ? "672px" : "426px")};
+	width: 100%;
 `;
 
 export const PromptImage = styled.img`
