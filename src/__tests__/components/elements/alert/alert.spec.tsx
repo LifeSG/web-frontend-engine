@@ -62,4 +62,10 @@ describe(UI_TYPE, () => {
 		expect(screen.getByText("This is a sanitized string")).toBeInTheDocument();
 		expect(document.querySelector(".alert-element").innerHTML.includes("script")).toBe(false);
 	});
+
+	it("should be able to render FEE schema children", () => {
+		renderComponent({ children: { text: { uiType: "text-body", children: "This is a schema" } } });
+
+		expect(screen.getByText("This is a schema")).toBeInTheDocument();
+	});
 });
