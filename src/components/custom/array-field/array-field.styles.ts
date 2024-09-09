@@ -8,6 +8,10 @@ import styled from "styled-components";
 export const Section = styled.div`
 	display: flex;
 	flex-direction: column;
+
+	&:not(:last-child) {
+		margin-bottom: 2rem;
+	}
 `;
 
 export const SectionHeader = styled.div`
@@ -36,7 +40,7 @@ export const AddButton = styled(ButtonWithIcon.Default)`
 `;
 
 export const SectionDivider = styled(Divider)`
-	margin: 2rem 0;
+	margin-top: 2rem;
 `;
 
 export const ErrorAlert = styled(Alert)`

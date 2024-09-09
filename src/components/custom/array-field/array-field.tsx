@@ -29,7 +29,15 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		error,
 		id,
 		onChange,
-		schema: { addButton, fieldSchema, removeButton, removeConfirmationModal, sectionTitle, validation },
+		schema: {
+			addButton,
+			fieldSchema,
+			removeButton,
+			removeConfirmationModal,
+			sectionTitle,
+			showDivider = true,
+			validation,
+		},
 		value,
 		warning,
 	} = props;
@@ -119,6 +127,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const handleAddSection = () => {
 		const newFormValues = [...stateValue, {}];
 		setStateValue(newFormValues);
+		onChange({ target: { value: newFormValues } });
 	};
 
 	const handleRemoveSection = (index: number) => {
@@ -130,6 +139,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		const updatedValues = stateValue.filter((_, i) => i !== indexToRemove);
 		setStateValue(updatedValues);
 		setShowRemovePrompt(false);
+		onChange({ target: { value: updatedValues } });
 	};
 
 	const handleCancelRemove = () => {
@@ -183,7 +193,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 							schema={fieldSchema}
 							onChange={handleSectionChange(index)}
 						/>
-						{!isLastItem || showAddButton ? <SectionDivider /> : null}
+						{showDivider && (!isLastItem || showAddButton) ? <SectionDivider /> : null}
 					</Section>
 				);
 			})}

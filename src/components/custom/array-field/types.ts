@@ -21,6 +21,7 @@ export interface IArrayFieldSchema<V = undefined>
 	extends IBaseCustomFieldSchema<"array-field", V, IArrayFieldValidationRule> {
 	fieldSchema: Record<string, TFrontendEngineFieldSchema>;
 	sectionTitle?: string | undefined;
+	showDivider?: boolean | undefined;
 	addButton?: IArrayFieldButton | undefined;
 	removeButton?: IArrayFieldButton | undefined;
 	removeConfirmationModal?: IArrayFieldRemoveConfirmationModal | undefined;
