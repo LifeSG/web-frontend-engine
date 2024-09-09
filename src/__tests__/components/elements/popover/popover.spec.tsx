@@ -68,4 +68,13 @@ describe(UI_TYPE, () => {
 		expect(screen.queryByTestId(COMPONENT_TEST_ID).innerHTML.includes("script")).toBe(false);
 		expect(screen.queryByTestId("popover").innerHTML.includes("script")).toBe(false);
 	});
+
+	it("should render icon after text if specified", async () => {
+		renderComponent({ icon: "AlbumFillIcon" });
+
+		const label = screen.getByText("Text");
+		const icon = document.querySelector("svg");
+
+		expect(label.compareDocumentPosition(icon)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+	});
 });
