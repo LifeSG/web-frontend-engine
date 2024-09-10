@@ -142,6 +142,38 @@ ReactNodeChildren.args = {
 	),
 };
 
+export const SchemaChildren = Template("alert-schema-children").bind({});
+SchemaChildren.args = {
+	uiType: "alert",
+	type: "success",
+	children: {
+		description: {
+			uiType: "text-body",
+			children: "The following fruits are provided:",
+		},
+		list: {
+			uiType: "unordered-list",
+			children: [
+				{
+					listItem1: {
+						uiType: "list-item",
+						children: "Apple",
+					},
+					listItem2: {
+						uiType: "list-item",
+						children: "Banana",
+					},
+					listItem3: {
+						uiType: "list-item",
+						children: "Cherry",
+						showIf: [{ inStock: [{ equals: true }] }],
+					},
+				},
+			],
+		},
+	},
+};
+
 export const HTMLString = Template("alert-html-string").bind({});
 HTMLString.args = {
 	uiType: "alert",
