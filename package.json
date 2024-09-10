@@ -1,6 +1,6 @@
 {
 	"name": "@lifesg/web-frontend-engine",
-	"version": "1.15.0",
+	"version": "1.16.0",
 	"description": "A frontend engine for LifeSG React apps",
 	"main": "dist/cjs/index.js",
 	"module": "dist/index.js",
@@ -130,5 +130,8 @@
 		"*.{js,jsx,ts,tsx}": [
 			"npm run lint"
 		]
+	},
+	"overrides": {
+		"micromatch": "^4.0.8"
 	}
 }
