@@ -1,5 +1,6 @@
 import { TextProps } from "@lifesg/react-design-system/text";
 import { TComponentOmitProps } from "../../frontend-engine";
+import { IPopoverSchema } from "../popover/types";
 import { IBaseElementSchema } from "../types";
 
 export type TTextType =
@@ -17,5 +18,5 @@ export type TTextType =
 	| "text-xsmall";
 
 export interface ITextSchema extends IBaseElementSchema<TTextType>, TComponentOmitProps<TextProps, "children"> {
-	children: string | string[] | Record<string, ITextSchema>;
+	children: string | string[] | Record<string, ITextSchema | IPopoverSchema>;
 }
