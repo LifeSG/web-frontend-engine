@@ -1,23 +1,26 @@
+import { Alert } from "@lifesg/react-design-system/alert";
 import { Text } from "@lifesg/react-design-system/text";
 import * as Icons from "@lifesg/react-icons";
-import { BinIcon, PlusCircleFillIcon } from "@lifesg/react-icons";
+import { PlusCircleFillIcon } from "@lifesg/react-icons";
 import isEmpty from "lodash/isEmpty";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES, Prompt, Warning } from "../../shared";
+import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { IFrontendEngineRef, TFrontendEngineValues } from "../../types";
 import { IGenericCustomFieldProps } from "../types";
 import { ArrayFieldElement } from "./array-field-element";
 import {
 	AddButton,
 	CustomErrorDisplay,
-	ErrorAlert,
+	Inset,
 	RemoveButton,
+	RemoveButtonWithIcon,
 	Section,
 	SectionDivider,
 	SectionHeader,
+	WarningAlert,
 } from "./array-field.styles";
 import { IArrayFieldSchema } from "./types";
 
@@ -34,6 +37,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			fieldSchema,
 			removeButton,
 			removeConfirmationModal,
+			sectionInset,
 			sectionTitle,
 			showDivider = true,
 			validation,
@@ -172,43 +176,58 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			{stateValue.map((sectionValues, index) => {
 				const isLastItem = index === stateValue.length - 1;
 				return (
-					<Section key={index}>
-						<SectionHeader>
-							{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
-							{showRemoveButton && (
-								<RemoveButton
-									type="button"
-									styleType="link"
-									icon={removeButton?.icon ? renderIcon(removeButton.icon) : <BinIcon />}
-									danger
-									onClick={() => handleRemoveSection(index)}
-								>
-									{removeButton?.label ?? "Remove"}
-								</RemoveButton>
-							)}
-						</SectionHeader>
-						<ArrayFieldElement
-							ref={(formRef) => (formRefs.current[index] = formRef)}
-							formValues={sectionValues}
-							schema={fieldSchema}
-							onChange={handleSectionChange(index)}
-						/>
-						{showDivider && (!isLastItem || showAddButton) ? <SectionDivider /> : null}
-					</Section>
+					<>
+						<Inset $inset={sectionInset}>
+							<Section key={index}>
+								<SectionHeader>
+									{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
+									{showRemoveButton && (
+										<RemoveButton
+											type="button"
+											styleType="light"
+											danger
+											as={removeButton?.icon ? RemoveButtonWithIcon : undefined}
+											icon={removeButton?.icon ? renderIcon(removeButton.icon) : undefined}
+											onClick={() => handleRemoveSection(index)}
+										>
+											{removeButton?.label ?? "Remove"}
+										</RemoveButton>
+									)}
+								</SectionHeader>
+								<ArrayFieldElement
+									ref={(formRef) => (formRefs.current[index] = formRef)}
+									formValues={sectionValues}
+									schema={fieldSchema}
+									onChange={handleSectionChange(index)}
+								/>
+							</Section>
+						</Inset>
+						{showDivider && !isLastItem ? <SectionDivider /> : null}
+					</>
 				);
 			})}
 			{showAddButton && (
-				<AddButton
-					type="button"
-					styleType="link"
-					icon={addButton?.icon ? renderIcon(addButton.icon) : <PlusCircleFillIcon />}
-					onClick={handleAddSection}
-				>
-					{addButton?.label ?? "Add"}
-				</AddButton>
+				<Inset $inset={sectionInset}>
+					<AddButton
+						type="button"
+						styleType="light"
+						icon={addButton?.icon ? renderIcon(addButton.icon) : <PlusCircleFillIcon />}
+						onClick={handleAddSection}
+					>
+						{addButton?.label ?? "Add"}
+					</AddButton>
+				</Inset>
 			)}
-			{error && <ErrorAlert type="error">{error.message}</ErrorAlert>}
-			<Warning id={id} message={warning} />
+			{error && (
+				<Inset $inset={sectionInset}>
+					<Alert type="error">{error.message}</Alert>
+				</Inset>
+			)}
+			{warning && (
+				<Inset $inset={sectionInset}>
+					<WarningAlert id={id} message={warning} />
+				</Inset>
+			)}
 			<Prompt
 				id={`${id}-remove-prompt`}
 				size="large"

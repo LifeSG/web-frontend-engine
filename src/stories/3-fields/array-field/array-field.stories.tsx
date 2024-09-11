@@ -45,6 +45,15 @@ const meta: Meta = {
 				},
 			},
 		},
+		sectionInset: {
+			description:
+				"The inset for each section. Accepts a number (px) or css value such as `1rem`. For layouts where the divider needs to span the full parent width",
+			table: {
+				type: {
+					summary: "number | string",
+				},
+			},
+		},
 		showDivider: {
 			description: "Specifies if a divider is rendered between each section",
 			table: {
@@ -69,13 +78,12 @@ const meta: Meta = {
 			},
 		},
 		removeButton: {
-			description: `Customisation options for the add button<br/>
+			description: `Customisation options for the remove button<br/>
 				<ul>
 					<li>\`label\` prop overrides the text</li>
-					<li>\`icon\` prop overrides the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
+					<li>\`icon\` prop sets the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
 				</ul>
 			`,
-
 			table: {
 				type: {
 					summary: "{ label?: string, icon?: string }",
@@ -164,14 +172,15 @@ FixedLength.args = {
 	validation: [{ length: 2 }],
 };
 
-export const CopyCustomisation = DefaultStoryTemplate<IArrayFieldSchema>("array-field-copy-customisation").bind({});
-CopyCustomisation.args = {
+export const Customisation = DefaultStoryTemplate<IArrayFieldSchema>("array-field-customisation").bind({});
+Customisation.args = {
 	referenceKey: "array-field",
 	sectionTitle: "New fruit",
 	fieldSchema: SCHEMA,
 	addButton: { label: "Add fruit", icon: "CalendarPlusFillIcon" },
 	removeButton: { label: "Remove fruit", icon: "CalendarCrossFillIcon" },
 	removeConfirmationModal: { title: "Remove fruit?" },
+	sectionInset: "1rem",
 };
 
 export const HideDivider = DefaultStoryTemplate<IArrayFieldSchema>("array-field-hide-divider").bind({});
