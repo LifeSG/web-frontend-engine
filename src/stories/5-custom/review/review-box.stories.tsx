@@ -78,6 +78,16 @@ const meta: Meta = {
 				},
 			},
 		},
+		background: {
+			type: { name: "boolean" },
+			description: "Specifies if a background should be rendered",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: "true" },
+			},
+		},
 	},
 };
 export default meta;
@@ -204,4 +214,12 @@ Masking.args = {
 			},
 		},
 	],
+};
+
+export const NoBackground = DefaultStoryTemplate<TReviewSchema>("review-no-background").bind({});
+NoBackground.args = {
+	referenceKey: "review",
+	items: SAMPLE_ITEMS,
+	variant: "box",
+	background: false,
 };
