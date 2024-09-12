@@ -15,7 +15,7 @@ export const Accordion = (props: IGenericElementProps<IAccordionSchema>) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const { schema, id } = props;
-	const { children, button, title, ...otherSchema } = schema;
+	const { children, button, useDefaultContentInset = true, title, ...otherSchema } = schema;
 
 	const { dispatchFieldEvent } = useFieldEvent();
 
@@ -36,11 +36,15 @@ export const Accordion = (props: IGenericElementProps<IAccordionSchema>) => {
 				) : undefined
 			}
 		>
-			<Layout.Content>
-				<Container>
-					<Wrapper id={id}>{children}</Wrapper>
-				</Container>
-			</Layout.Content>
+			{useDefaultContentInset ? (
+				<Layout.Content>
+					<Container>
+						<Wrapper id={id}>{children}</Wrapper>
+					</Container>
+				</Layout.Content>
+			) : (
+				<Wrapper id={id}>{children}</Wrapper>
+			)}
 		</BoxContainer>
 	);
 };

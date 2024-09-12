@@ -21,6 +21,7 @@ export interface IAccordionSchema<V = undefined, C = undefined>
 	expanded?: boolean | undefined;
 	displayState?: BoxContainerDisplayState | undefined;
 	title: string;
+	useDefaultContentInset?: boolean | undefined;
 }
 
 // =============================================================================

@@ -86,6 +86,19 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
+		useDefaultContentInset: {
+			description:
+				"Specifies if spacing is applied around the contents. Disable if you need to manage the spacing youself, e.g. elements need to span the component width",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: "true" },
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -242,4 +255,37 @@ DisplayState.args = {
 	displayState: "warning",
 	collapsible: false,
 	title: "Title",
+};
+
+export const NoContentInset = DefaultStoryTemplate<IAccordionSchema>("accordion-no-content-inset").bind({});
+NoContentInset.args = {
+	uiType: "accordion",
+	children: {
+		topSection: {
+			uiType: "div",
+			style: { padding: "1rem 2rem" },
+			children: {
+				text: {
+					uiType: "text-body",
+					children: "Section one",
+				},
+			},
+		},
+		divider: {
+			uiType: "divider",
+		},
+		bottomSection: {
+			uiType: "div",
+			style: { padding: "1rem 2rem" },
+			children: {
+				text: {
+					uiType: "text-body",
+					children: "Section two",
+				},
+			},
+		},
+	},
+	collapsible: false,
+	title: "Title",
+	useDefaultContentInset: false,
 };
