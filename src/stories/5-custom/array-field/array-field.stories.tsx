@@ -140,6 +140,25 @@ Default.args = {
 	fieldSchema: SCHEMA,
 };
 
+export const DefaultValue = DefaultStoryTemplate<IArrayFieldSchema, object[]>("array-field-default-value").bind({});
+DefaultValue.args = {
+	referenceKey: "array-field",
+	sectionTitle: "New fruit",
+	fieldSchema: SCHEMA,
+	defaultValues: [{ name: "Apple", colour: "Red" }, { name: "Berry" }],
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary: "object[]",
+			},
+		},
+		type: { name: "object", value: {} },
+	},
+};
+
 export const WithValidation = DefaultStoryTemplate<IArrayFieldSchema>("array-field-with-validation").bind({});
 WithValidation.args = {
 	referenceKey: "array-field",
