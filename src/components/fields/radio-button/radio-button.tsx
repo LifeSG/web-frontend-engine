@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize, Warning } from "../../shared";
@@ -69,8 +69,9 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		return stateValue === value;
 	};
 
-	const formatId = (index: number) => {
-		return `${id}-${index}`;
+	const formatId = () => {
+		const unique = generateRandomId();
+		return `${id}-${unique}`;
 	};
 
 	// =============================================================================
@@ -80,7 +81,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		return (
 			options.length > 0 &&
 			options.map((option, index) => {
-				const radioButtonId = formatId(index);
+				const radioButtonId = formatId();
 
 				return (
 					<RadioContainer className={className ? `${className}-radio-container` : undefined} key={index}>
@@ -113,7 +114,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 					$layoutType={customOptions?.layoutType ?? "horizontal"}
 				>
 					{options.map((option, index) => {
-						const radioButtonId = formatId(index);
+						const radioButtonId = formatId();
 
 						return (
 							<StyledToggle
@@ -153,7 +154,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			options.length > 0 && (
 				<FlexImageWrapper className={className ? `${className} ${className}-radio-container` : undefined}>
 					{options.map((option, index) => {
-						const radioButtonId = formatId(index);
+						const radioButtonId = formatId();
 
 						return (
 							<StyledImageButton

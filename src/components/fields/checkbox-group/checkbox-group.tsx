@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize, Warning } from "../../shared";
@@ -88,8 +88,9 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 		return stateValue.includes(value);
 	};
 
-	const formatId = (index: number): string => {
-		return `${id}-${index}`;
+	const formatId = (): string => {
+		const unique = generateRandomId();
+		return `${id}-${unique}`;
 	};
 
 	// =============================================================================
@@ -99,7 +100,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 		return (
 			options.length > 0 &&
 			options.map((option, index) => {
-				const checkboxId = formatId(index);
+				const checkboxId = formatId();
 
 				return (
 					<CheckboxContainer
@@ -135,7 +136,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 					className={className ? `${className}-checkbox-container` : undefined}
 				>
 					{options.map((option, index) => {
-						const checkboxId = formatId(index);
+						const checkboxId = formatId();
 
 						return (
 							<StyledToggle
