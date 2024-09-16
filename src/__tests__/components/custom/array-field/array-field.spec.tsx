@@ -254,6 +254,37 @@ describe(UI_TYPE, () => {
 		});
 	});
 
+	describe("length rule", () => {
+		it("should hide buttons and not show error when length rule is fulfilled", async () => {
+			renderComponent(
+				{ validation: [{ length: 2, errorMessage: ERROR_MESSAGE }] },
+				{
+					defaultValues: { [COMPONENT_ID]: [{}, {}] },
+				}
+			);
+
+			expect(getAddButton()).not.toBeInTheDocument();
+			expect(getRemoveButton(0)).not.toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+		});
+
+		it("should show error when length rule is not fulfilled", async () => {
+			renderComponent(
+				{ validation: [{ length: 2, errorMessage: ERROR_MESSAGE }] },
+				{
+					defaultValues: { [COMPONENT_ID]: [{}] },
+				}
+			);
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage()).toBeInTheDocument();
+		});
+	});
+
 	describe("reset", () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
