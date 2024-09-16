@@ -3,7 +3,7 @@ import { Text } from "@lifesg/react-design-system/text";
 import * as Icons from "@lifesg/react-icons";
 import { PlusCircleFillIcon } from "@lifesg/react-icons";
 import isEmpty from "lodash/isEmpty";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { useValidationConfig } from "../../../utils/hooks";
@@ -16,8 +16,6 @@ import {
 	CustomErrorDisplay,
 	Inset,
 	RemoveButton,
-	RemoveButtonWithIcon,
-	Section,
 	SectionDivider,
 	SectionHeader,
 	WarningAlert,
@@ -81,7 +79,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			id,
 			Yup.array()
 				.test("is-array-valid", validRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.INVALID, () => {
-					if (!Array.isArray(value) || !validRule?.["valid"]) return true;
+					if (!Array.isArray(value)) return true;
 					return stateValueRef.current.every((_, i) => formRefs.current[i].isValid());
 				})
 				.test(
@@ -176,34 +174,31 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			{stateValue.map((sectionValues, index) => {
 				const isLastItem = index === stateValue.length - 1;
 				return (
-					<>
+					<Fragment key={index}>
 						<Inset $inset={sectionInset}>
-							<Section key={index}>
-								<SectionHeader>
-									{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
-									{showRemoveButton && (
-										<RemoveButton
-											type="button"
-											styleType="light"
-											danger
-											as={removeButton?.icon ? RemoveButtonWithIcon : undefined}
-											icon={removeButton?.icon ? renderIcon(removeButton.icon) : undefined}
-											onClick={() => handleRemoveSection(index)}
-										>
-											{removeButton?.label ?? "Remove"}
-										</RemoveButton>
-									)}
-								</SectionHeader>
-								<ArrayFieldElement
-									ref={(formRef) => (formRefs.current[index] = formRef)}
-									formValues={sectionValues}
-									schema={fieldSchema}
-									onChange={handleSectionChange(index)}
-								/>
-							</Section>
+							<SectionHeader>
+								{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
+								{showRemoveButton && (
+									<RemoveButton
+										type="button"
+										styleType="light"
+										danger
+										icon={removeButton?.icon ? renderIcon(removeButton.icon) : undefined}
+										onClick={() => handleRemoveSection(index)}
+									>
+										{removeButton?.label ?? "Remove"}
+									</RemoveButton>
+								)}
+							</SectionHeader>
+							<ArrayFieldElement
+								ref={(formRef) => (formRefs.current[index] = formRef)}
+								formValues={sectionValues}
+								schema={fieldSchema}
+								onChange={handleSectionChange(index)}
+							/>
 						</Inset>
 						{showDivider && !isLastItem ? <SectionDivider /> : null}
-					</>
+					</Fragment>
 				);
 			})}
 			{showAddButton && (

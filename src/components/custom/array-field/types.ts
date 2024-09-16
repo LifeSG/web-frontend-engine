@@ -5,7 +5,6 @@ import { IBaseCustomFieldSchema } from "../types";
 export interface IArrayFieldValidationRule extends IYupValidationRule {
 	/** for customising error message when one section is invalid */
 	valid?: boolean | undefined;
-	// TODO: unique rule
 }
 
 export interface IArrayFieldButton {
@@ -19,6 +18,7 @@ export interface IArrayFieldRemoveConfirmationModal {
 
 export interface IArrayFieldSchema<V = undefined>
 	extends IBaseCustomFieldSchema<"array-field", V, IArrayFieldValidationRule> {
+	// TODO: introduce unique rule for children of fieldSchema
 	fieldSchema: Record<string, TFrontendEngineFieldSchema>;
 	sectionInset?: number | string | undefined;
 	sectionTitle?: string | undefined;

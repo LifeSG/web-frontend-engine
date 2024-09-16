@@ -1,10 +1,7 @@
-import { Alert } from "@lifesg/react-design-system/alert";
-import { Button } from "@lifesg/react-design-system/button";
 import { ButtonWithIcon } from "@lifesg/react-design-system/button-with-icon";
 import { Divider } from "@lifesg/react-design-system/divider";
 import { ErrorDisplay } from "@lifesg/react-design-system/error-display";
 import { MediaQuery } from "@lifesg/react-design-system/media";
-import { Text } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 import { Warning } from "../../shared";
 
@@ -31,11 +28,6 @@ export const Inset = styled.div<InsetStyleProps>`
 	}
 `;
 
-export const Section = styled.div`
-	display: flex;
-	flex-direction: column;
-`;
-
 export const SectionHeader = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -47,20 +39,7 @@ export const SectionHeader = styled.div`
 	}
 `;
 
-export const SectionHeaderTitle = styled(Text.Body)`
-	margin-right: auto;
-`;
-
-export const RemoveButton = styled(Button.Small)`
-	padding-left: 2rem;
-	padding-right: 2rem;
-
-	${MediaQuery.MaxWidth.mobileL} {
-		width: 100%;
-	}
-`;
-
-export const RemoveButtonWithIcon = styled(ButtonWithIcon.Small)`
+export const RemoveButton = styled(ButtonWithIcon.Small)`
 	padding-left: 2rem;
 	padding-right: 2rem;
 
