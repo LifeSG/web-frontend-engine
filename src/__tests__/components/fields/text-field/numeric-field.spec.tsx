@@ -72,6 +72,14 @@ describe(UI_TYPE, () => {
 		expect(getNumericField()).toBeInTheDocument();
 	});
 
+	it("should submit value as a number", async () => {
+		renderComponent();
+		fireEvent.change(getNumericField(), { target: { value: 1 } });
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1 }));
+	});
+
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
@@ -183,7 +191,7 @@ describe(UI_TYPE, () => {
 			expect(startIcon).toBeInTheDocument();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "1" }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1 }));
 		});
 
 		it("should be able to render the label add on", async () => {
@@ -198,7 +206,7 @@ describe(UI_TYPE, () => {
 			expect(screen.getByText("$")).toBeInTheDocument();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "1" }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1 }));
 		});
 	});
 

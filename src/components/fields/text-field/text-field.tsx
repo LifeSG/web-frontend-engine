@@ -110,8 +110,9 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-		if (uiType === "numeric-field" && !event.target.value) {
-			onChange({ target: { value: undefined } });
+		if (uiType === "numeric-field") {
+			const isNumber = !isNaN(parseFloat(event.target.value));
+			onChange({ target: { value: isNumber ? +event.target.value : undefined } });
 		} else if (schema.uiType === "text-field") {
 			caret.current = event.target.selectionEnd; // must save current caret position before mutating event.target
 
