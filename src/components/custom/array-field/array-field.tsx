@@ -79,7 +79,6 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			id,
 			Yup.array()
 				.test("is-array-valid", validRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.INVALID, () => {
-					if (!Array.isArray(value)) return true;
 					return stateValueRef.current.every((_, i) => formRefs.current[i].isValid());
 				})
 				.test(
@@ -93,6 +92,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				),
 			validation
 		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
 	useEffect(() => {
@@ -113,7 +113,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			setStateValue(nextValue);
 			setValue(id, nextValue, { shouldDirty: false, shouldTouch: false });
 		}
-	}, [value, length]);
+	}, [value, length, setValue, id]);
 
 	// =============================================================================
 	// EVENT HANDLERS
