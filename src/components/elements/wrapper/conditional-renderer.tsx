@@ -72,9 +72,10 @@ export const ConditionalRenderer = ({ id, renderRules, children, schema }: IProp
 						let yupBaseSchema = YupHelper.mapSchemaType(yupType);
 						// this is to allow empty values in Yup.number schema
 						if (yupType === "number") {
-							yupBaseSchema = yupBaseSchema
-								.nullable()
-								.transform((_, value: number) => (!isEmpty(value) ? +value : undefined));
+							yupBaseSchema = yupBaseSchema.nullable().transform((_, value: number) => {
+								const isNumber = !isNaN(parseFloat(value?.toString()));
+								return isNumber ? +value : undefined;
+							});
 						}
 						renderSchemaConfig[fieldId] = { schema: yupBaseSchema, validationRules: rules };
 					}
