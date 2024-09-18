@@ -35,6 +35,7 @@ const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref
 	useEffect(() => {
 		if (!isDirty) {
 			setDefaultValues(formValues);
+			return;
 		}
 
 		if (isEqual(formValues, sectionValues)) {

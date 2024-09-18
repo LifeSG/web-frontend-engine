@@ -176,6 +176,43 @@ describe(UI_TYPE, () => {
 
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: [{}] }));
 		});
+
+		it("should preserve states of other non-removed entries", async () => {
+			renderComponent();
+
+			fireEvent.click(getAddButton());
+			fireEvent.click(getAddButton());
+			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
+			fireEvent.change(getTextField(2), { target: { value: "World" } });
+			fireEvent.click(getRemoveButton(0));
+			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-remove"));
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: [{}, { input: "World" }] })
+			);
+			expect(getTextField(0)).toHaveValue("");
+			expect(getTextField(1)).toHaveValue("World");
+		});
+
+		it("should preserve states of other non-removed entries with default values", async () => {
+			renderComponent(undefined, {
+				defaultValues: { [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }, { [TEXT_FIELD_ID]: "World" }] },
+			});
+
+			fireEvent.click(getAddButton());
+			fireEvent.click(getRemoveButton(0));
+			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-remove"));
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({ [COMPONENT_ID]: [{ input: "World" }, {}] })
+			);
+			expect(getTextField(0)).toHaveValue("World");
+			expect(getTextField(1)).toHaveValue("");
+		});
 	});
 
 	it("should support customisation of buttons and confirmation modal", async () => {

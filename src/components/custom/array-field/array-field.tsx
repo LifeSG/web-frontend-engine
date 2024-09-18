@@ -6,6 +6,7 @@ import isEmpty from "lodash/isEmpty";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
+import { generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { IFrontendEngineRef, TFrontendEngineValues } from "../../types";
@@ -44,6 +45,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		warning,
 	} = props;
 	const [stateValue, setStateValue] = useState<TFrontendEngineValues[]>([{}]);
+	const [stateKeys, setStateKeys] = useState<string[]>(() => [generateRandomId()]);
 	const [showRemovePrompt, setShowRemovePrompt] = useState<boolean>(false);
 	const [indexToRemove, setIndexToRemove] = useState<number>(-1);
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -97,10 +99,11 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 	useEffect(() => {
 		if (value) {
-			const emptySlots = initValue(length || 1);
-			const nextValue = value.concat(emptySlots.slice(value.length));
+			const nextValue = padArray(value, length, () => ({}));
+			const nextKeys = padArray(stateKeys, nextValue.length, generateRandomId);
 
 			setStateValue(nextValue);
+			setStateKeys(nextKeys);
 
 			if (isInitialisedValue.current) {
 				isInitialisedValue.current = false;
@@ -110,9 +113,13 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			isInitialisedValue.current = true;
 
 			const nextValue = initValue(length || 1);
+			const nextKeys = nextValue.map(() => generateRandomId());
+
 			setStateValue(nextValue);
+			setStateKeys(nextKeys);
 			setValue(id, nextValue, { shouldDirty: false, shouldTouch: false });
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value, length, setValue, id]);
 
 	// =============================================================================
@@ -128,7 +135,9 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 	const handleAddSection = () => {
 		const newFormValues = [...stateValue, {}];
+		const newStateKeys = [...stateKeys, generateRandomId()];
 		setStateValue(newFormValues);
+		setStateKeys(newStateKeys);
 		onChange({ target: { value: newFormValues } });
 	};
 
@@ -139,7 +148,9 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 	const handleConfirmRemove = () => {
 		const updatedValues = stateValue.filter((_, i) => i !== indexToRemove);
+		const updatedKeys = stateKeys.filter((_, i) => i !== indexToRemove);
 		setStateValue(updatedValues);
+		setStateKeys(updatedKeys);
 		setShowRemovePrompt(false);
 		onChange({ target: { value: updatedValues } });
 	};
@@ -155,6 +166,14 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		return Array(len)
 			.fill(null)
 			.map(() => ({}));
+	};
+
+	const padArray = <T,>(arr: T[], len: number, generator: () => T) => {
+		const newArr = [...arr];
+		while (newArr.length < len) {
+			newArr.push(generator());
+		}
+		return newArr;
 	};
 
 	// =============================================================================
@@ -174,7 +193,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			{stateValue.map((sectionValues, index) => {
 				const isLastItem = index === stateValue.length - 1;
 				return (
-					<Fragment key={index}>
+					<Fragment key={stateKeys[index]}>
 						<Inset $inset={sectionInset}>
 							<SectionHeader>
 								{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
