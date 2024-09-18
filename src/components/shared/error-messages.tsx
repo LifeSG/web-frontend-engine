@@ -90,4 +90,8 @@ export const ERROR_MESSAGES = {
 	LOCATION: {
 		MUST_HAVE_POSTAL_CODE: "Selected location must have postal code.",
 	},
+	ARRAY_FIELD: {
+		INVALID: "One or more of the sections is incomplete",
+		REQUIRED: "At least one section must be filled in",
+	},
 };
