@@ -96,16 +96,16 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	}, [validation]);
 
 	useEffect(() => {
-		if (value && isInitialisedValue.current) {
-			isInitialisedValue.current = false;
+		if (value) {
+			const emptySlots = initValue(length || 1);
+			const nextValue = value.concat(emptySlots.slice(value.length));
 
-			const nextValue = initValue(length || 1);
 			setStateValue(nextValue);
-			setValue(id, nextValue, { shouldDirty: false, shouldTouch: false });
-		} else if (value) {
-			isInitialisedValue.current = false;
 
-			setStateValue(value);
+			if (isInitialisedValue.current) {
+				isInitialisedValue.current = false;
+				setValue(id, nextValue, { shouldDirty: false, shouldTouch: false });
+			}
 		} else {
 			isInitialisedValue.current = true;
 

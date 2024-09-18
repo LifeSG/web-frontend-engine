@@ -194,7 +194,7 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("min rule", () => {
-		it("should hide remove button when min items are reached", async () => {
+		it("should hide remove button but show add button when min items are reached", async () => {
 			renderComponent(
 				{ validation: [{ min: 1, errorMessage: ERROR_MESSAGE }] },
 				{
@@ -202,6 +202,7 @@ describe(UI_TYPE, () => {
 				}
 			);
 
+			expect(getAddButton()).toBeInTheDocument();
 			expect(getRemoveButton(0)).not.toBeInTheDocument();
 		});
 
@@ -229,7 +230,7 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("max rule", () => {
-		it("should hide add button when max items are reached", async () => {
+		it("should hide add button but show remove button when max items are reached", async () => {
 			renderComponent(
 				{ validation: [{ max: 1, errorMessage: ERROR_MESSAGE }] },
 				{
@@ -238,6 +239,7 @@ describe(UI_TYPE, () => {
 			);
 
 			expect(getAddButton()).not.toBeInTheDocument();
+			expect(getRemoveButton(0)).toBeInTheDocument();
 		});
 
 		it("should show error when max rule is not fulfilled", async () => {
@@ -255,16 +257,34 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("length rule", () => {
-		it("should hide buttons and not show error when length rule is fulfilled", async () => {
+		it("should show the specified number of sections and hide buttons", async () => {
+			renderComponent({ validation: [{ length: 2, errorMessage: ERROR_MESSAGE }] });
+
+			expect(screen.queryAllByText("Section title")).toHaveLength(2);
+			expect(getAddButton()).not.toBeInTheDocument();
+			expect(getRemoveButton(0)).not.toBeInTheDocument();
+		});
+
+		it("should show the specified number of sections given default value has less elements", async () => {
+			renderComponent(
+				{ validation: [{ length: 2, errorMessage: ERROR_MESSAGE }] },
+				{
+					defaultValues: { [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }] },
+				}
+			);
+
+			expect(screen.queryAllByText("Section title")).toHaveLength(2);
+			expect(getAddButton()).not.toBeInTheDocument();
+			expect(getRemoveButton(0)).not.toBeInTheDocument();
+		});
+
+		it("should not show error when length rule is fulfilled", async () => {
 			renderComponent(
 				{ validation: [{ length: 2, errorMessage: ERROR_MESSAGE }] },
 				{
 					defaultValues: { [COMPONENT_ID]: [{}, {}] },
 				}
 			);
-
-			expect(getAddButton()).not.toBeInTheDocument();
-			expect(getRemoveButton(0)).not.toBeInTheDocument();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
