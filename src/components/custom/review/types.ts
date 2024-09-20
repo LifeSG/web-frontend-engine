@@ -55,6 +55,7 @@ interface IReviewBaseSchema {
 export interface IReviewSchemaBox extends IReviewBaseSchema, ICustomElementJsonSchema<"review"> {
 	variant?: "box" | undefined;
 	description?: string | undefined;
+	background?: boolean | undefined;
 }
 
 // =========================================================================
