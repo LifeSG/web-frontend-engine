@@ -86,6 +86,17 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
+		disableContentInset: {
+			description: "Specifies if there is spacing between content and the edges of the accordion box",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -242,4 +253,28 @@ DisplayState.args = {
 	displayState: "warning",
 	collapsible: false,
 	title: "Title",
+};
+
+export const DisableContentInset = DefaultStoryTemplate<IAccordionSchema>("accordion-content-inset").bind({});
+DisableContentInset.args = {
+	uiType: "accordion",
+	children: {
+		text1: {
+			uiType: "text-body",
+			children: "Section one",
+			style: { margin: "1rem 2rem" },
+		},
+		divider: {
+			uiType: "divider",
+		},
+		text2: {
+			uiType: "text-body",
+			children: "Section two",
+			style: { margin: "1rem 2rem" },
+		},
+	},
+	button: false,
+	collapsible: false,
+	title: "Title",
+	disableContentInset: true,
 };
