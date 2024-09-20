@@ -38,6 +38,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			uploadOnAddingFile,
 			validation,
 			multiple,
+			imageReviewModalStyles,
 		},
 		id,
 		isDirty,
@@ -248,6 +249,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				show={showReviewModal}
 				multiple={multiple}
 				capture={capture}
+				imageReviewModalStyles={imageReviewModalStyles}
 			/>
 		);
 	};

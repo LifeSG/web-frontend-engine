@@ -6,9 +6,17 @@ import { Modal } from "@lifesg/react-design-system/modal";
 import { Text } from "@lifesg/react-design-system/text";
 import styled, { css } from "styled-components";
 
-export const ModalBox = styled(Modal.Box)<{ statusBarHeight: number }>`
+interface IModalBoxStyle {
+	imageReviewModalStyles?: string | undefined;
+}
+
+export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 	display: block;
 	max-height: fit-content;
+
+	${({ imageReviewModalStyles }) => {
+		if (imageReviewModalStyles) return `${imageReviewModalStyles}`;
+	}}
 
 	${MediaQuery.MinWidth.tablet} {
 		max-width: 42rem;
@@ -28,7 +36,6 @@ export const ModalBox = styled(Modal.Box)<{ statusBarHeight: number }>`
 		max-height: none;
 		margin: 0;
 		border-radius: 0;
-		${({ statusBarHeight }) => (statusBarHeight ? `padding-top: ${statusBarHeight / 16}rem;` : "")}
 	}
 `;
 

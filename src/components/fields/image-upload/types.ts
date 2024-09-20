@@ -30,6 +30,7 @@ export interface IImageUploadSchema<V = undefined>
 	dimensions?: IImageDimensions | undefined;
 	capture?: TFileCapture | undefined;
 	multiple?: boolean | undefined;
+	imageReviewModalStyles?: string | undefined;
 }
 
 export interface ISharedImageProps {
