@@ -78,6 +78,20 @@ const meta: Meta = {
 				},
 			},
 		},
+		background: {
+			description: "Specifies if a background should be rendered",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: {
+					summary: "true",
+				},
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -204,4 +218,13 @@ Masking.args = {
 			},
 		},
 	],
+};
+
+export const NoBackground = DefaultStoryTemplate<TReviewSchema>("review-no-background").bind({});
+NoBackground.args = {
+	referenceKey: "review",
+	label: "Your personal information",
+	description: "Retrieved on 27 Jun 2023",
+	items: SAMPLE_ITEMS,
+	background: false,
 };
