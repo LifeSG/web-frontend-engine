@@ -63,6 +63,7 @@ interface IProps extends ISharedImageProps {
 	show: boolean;
 	multiple?: boolean | undefined;
 	maxFilesErrorMessage?: string | undefined;
+	imageReviewModalStyles?: string | undefined;
 }
 
 export const ImageReview = (props: IProps) => {
@@ -83,6 +84,7 @@ export const ImageReview = (props: IProps) => {
 		show,
 		multiple,
 		maxFilesErrorMessage,
+		imageReviewModalStyles,
 	} = props;
 	const { images, setImages } = useContext(ImageContext);
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
@@ -473,7 +475,7 @@ export const ImageReview = (props: IProps) => {
 		>
 			<ModalBox
 				className={className ? `${className}-review-modal-box` : undefined}
-				statusBarHeight={0}
+				imageReviewModalStyles={imageReviewModalStyles}
 				showCloseButton={false}
 			>
 				{show ? (
