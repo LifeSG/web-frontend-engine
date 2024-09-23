@@ -60,16 +60,13 @@ export const Default = () => (
 									color: [{ equals: "Purple" }],
 								},
 							],
-						},
-						errorAlert: {
-							uiType: "alert",
-							type: "error",
-							children: "Apples cannot be purple",
-							showIf: [
-								{
-									error: [{ shown: true }],
+							children: {
+								errorAlert: {
+									uiType: "alert",
+									type: "error",
+									children: "Apples cannot be purple",
 								},
-							],
+							},
 						},
 						...SUBMIT_BUTTON_SCHEMA,
 					},
