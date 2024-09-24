@@ -10,7 +10,7 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize, Warning } from "../../shared";
 import { CheckboxContainer, Label, StyledCheckbox, StyledToggle, ToggleWrapper } from "./checkbox-group.styles";
-import { IToggleOption, TCheckboxGroupSchema } from "./types";
+import { ICheckboxGroupOption, IToggleOption, TCheckboxGroupSchema } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) => {
 	// =============================================================================
@@ -96,6 +96,13 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const renderLabel = (label: ICheckboxGroupOption["label"]) => {
+		if (typeof label === "string") {
+			return <Sanitize inline>{label}</Sanitize>;
+		}
+		return <Wrapper>{label}</Wrapper>;
+	};
+
 	const renderCheckboxes = () => {
 		return (
 			options.length > 0 &&
@@ -119,7 +126,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 							onChange={() => handleChange(option.value)}
 						/>
 						<Label as="label" htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
-							<Sanitize inline>{option.label}</Sanitize>
+							{renderLabel(option.label)}
 						</Label>
 					</CheckboxContainer>
 				);
@@ -161,7 +168,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 										: null
 								}
 							>
-								{option.label}
+								{renderLabel(option.label)}
 							</StyledToggle>
 						);
 					})}

@@ -8,7 +8,7 @@ import { IOrderedListSchema, IUnorderedListSchema } from "./list";
 import { IPopoverSchema } from "./popover";
 import { ITabItemSchema, ITabSchema } from "./tab";
 import type { ITextSchema } from "./text";
-import type { IWrapperSchema } from "./wrapper";
+import type { IInlineWrapperSchema, TWrapperSchema } from "./wrapper";
 
 /**
  * element types
@@ -55,17 +55,28 @@ export enum EElementType {
  * union type to represent all element schemas
  */
 export type TElementSchema<V = undefined, C = undefined> =
+	| TContainerElementSchema<V, C>
+	| TBlockElementSchema<V, C>
+	| TInlineElementSchema;
+
+/** represent element schemas that render content containers */
+export type TContainerElementSchema<V = undefined, C = undefined> =
 	| IAccordionSchema<V, C>
+	| ITabItemSchema<V, C>
+	| ITabSchema<V, C>;
+
+/** represent element schemas that render block-level ui elements */
+export type TBlockElementSchema<V = undefined, C = undefined> =
 	| IAlertSchema
 	| IDividerSchema
 	| IGridSchema<V, C>
 	| IOrderedListSchema<V, C>
-	| IPopoverSchema
-	| ITabItemSchema<V, C>
-	| ITabSchema<V, C>
 	| ITextSchema
 	| IUnorderedListSchema<V, C>
-	| IWrapperSchema<V, C>;
+	| TWrapperSchema<V, C>;
+
+/** represent element schemas that render inline ui elements */
+export type TInlineElementSchema<V = undefined, C = undefined> = IInlineWrapperSchema<V, C> | IPopoverSchema;
 
 /**
  * intersection type to represent all field events

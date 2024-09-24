@@ -30,7 +30,7 @@ const renderComponent = (
 				children: {
 					[PARENT_ID]: {
 						uiType: wrapperType,
-						children,
+						children: children as any,
 					},
 					...getSubmitButtonProps(),
 				},
