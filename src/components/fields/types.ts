@@ -9,6 +9,7 @@ import { IContactFieldSchema } from "./contact-field";
 import { IDateFieldSchema } from "./date-field";
 import { TDateRangeFieldSchema } from "./date-range-field";
 import { IESignatureFieldSchema } from "./e-signature-field/types";
+import { IErrorFieldSchema } from "./error-field";
 import { IFileUploadSchema, TFileUploadEvents } from "./file-upload";
 import { IHiddenFieldSchema } from "./hidden-field/types";
 import { IHistogramSliderSchema } from "./histogram-slider";
@@ -44,6 +45,7 @@ export enum EFieldType {
 	"DATE-RANGE-FIELD" = "DateRangeField",
 	"EMAIL-FIELD" = "TextField",
 	"E-SIGNATURE-FIELD" = "ESignatureField",
+	"ERROR-FIELD" = "ErrorField",
 	"FILE-UPLOAD" = "FileUpload",
 	"HIDDEN-FIELD" = "HiddenField",
 	"HISTOGRAM-SLIDER" = "HistogramSlider",
@@ -77,6 +79,7 @@ export type TFieldSchema<V = undefined, C = undefined> =
 	| IDateFieldSchema<V>
 	| IEmailFieldSchema<V>
 	| IESignatureFieldSchema<V>
+	| IErrorFieldSchema
 	| IFileUploadSchema<V>
 	| IHiddenFieldSchema<V>
 	| IHistogramSliderSchema<V>

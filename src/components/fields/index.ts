@@ -5,6 +5,7 @@ export * from "./contact-field";
 export * from "./date-field";
 export * from "./date-range-field";
 export * from "./e-signature-field";
+export * from "./error-field";
 export * from "./file-upload";
 export * from "./hidden-field";
 export * from "./histogram-slider";
