@@ -1,11 +1,10 @@
 import { BoxContainerProps } from "@lifesg/react-design-system/box-container";
 import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section/types";
 import { TFieldEventListener } from "../../../utils";
-import type { IAlertSchema, ITextSchema } from "../../elements";
-import type { TWrapperSchema } from "../../elements/wrapper";
+import type { TBlockElementSchema, TInlineElementSchema } from "../../elements";
 import type { ICustomElementJsonSchema } from "../types";
 
-type TReviewSectionChildren = IAlertSchema | ITextSchema | TWrapperSchema;
+type TReviewSectionChildren = TBlockElementSchema | TInlineElementSchema;
 export type TReviewSchema = IReviewSchemaAccordion | IReviewSchemaBox;
 
 /** @deprecated use TReviewSchema */
