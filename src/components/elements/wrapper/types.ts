@@ -34,7 +34,7 @@ export interface IInlineWrapperSchema<V = undefined, C = undefined>
 
 export interface IWrapperProps {
 	id?: string | undefined;
-	schema?: IWrapperSchema | undefined;
+	schema?: TWrapperSchema | undefined;
 	/** only used internally by FrontendEngine */
 	children?:
 		| Record<string, TFrontendEngineFieldSchema>

@@ -1,5 +1,5 @@
 import type { IAlertSchema, IOrderedListSchema, ITextSchema, IUnorderedListSchema } from "../../elements";
-import type { IWrapperSchema } from "../../elements/wrapper";
+import type { TWrapperSchema } from "../../elements/wrapper";
 import { IBaseFieldSchema } from "../types";
 
 export interface IErrorFieldValidationRule {
@@ -8,7 +8,7 @@ export interface IErrorFieldValidationRule {
 	errorMessage?: string | undefined;
 }
 
-type TErrorFieldChildren = IAlertSchema | ITextSchema | IWrapperSchema | IOrderedListSchema | IUnorderedListSchema;
+type TErrorFieldChildren = IAlertSchema | ITextSchema | TWrapperSchema | IOrderedListSchema | IUnorderedListSchema;
 
 export interface IErrorFieldSchema
 	extends Pick<IBaseFieldSchema<"error-field", undefined, IErrorFieldValidationRule>, "showIf" | "uiType"> {

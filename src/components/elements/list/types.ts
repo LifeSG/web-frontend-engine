@@ -1,7 +1,7 @@
 import { OrderedListProps, UnorderedListProps } from "@lifesg/react-design-system/text-list";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseElementSchema } from "../types";
-import { IWrapperSchema } from "../wrapper";
+import { TWrapperSchema } from "../wrapper";
 
 export interface IUnorderedListSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"unordered-list">,
@@ -17,6 +17,6 @@ export interface IOrderedListSchema<V = undefined, C = undefined>
 
 export interface IListItemSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"list-item">,
-		TComponentOmitProps<IWrapperSchema> {
+		TComponentOmitProps<TWrapperSchema> {
 	children: string | Record<string, TFrontendEngineFieldSchema<V, C>>;
 }
