@@ -10,8 +10,8 @@ const meta: Meta = {
 				<>
 					<Title>ErrorField</Title>
 					<p>
-						A hidden form element that forces the form to be invalid when present. Useful for validating
-						known combinations of input.
+						A form element that forces the form to be invalid when present. Useful for validating known
+						combinations of input.
 					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
@@ -24,6 +24,15 @@ const meta: Meta = {
 		columns: { table: { disable: true } },
 		label: { table: { disable: true } },
 		validation: { table: { disable: true } },
+		children: {
+			type: { name: "object", value: {} },
+			description: "The content to display, usually an error message",
+			table: {
+				type: {
+					summary: "Record<string, TErrorFieldChildren>",
+				},
+			},
+		},
 	},
 };
 export default meta;

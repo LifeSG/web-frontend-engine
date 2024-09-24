@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
@@ -89,5 +89,11 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledTimes(1);
+	});
+
+	it("render children if specified", async () => {
+		renderComponent({ children: { text: { uiType: "text-body", children: "Hello world" } } });
+
+		expect(screen.getByText("Hello world")).toBeInTheDocument();
 	});
 });
