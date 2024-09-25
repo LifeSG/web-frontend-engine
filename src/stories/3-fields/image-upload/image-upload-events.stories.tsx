@@ -61,7 +61,9 @@ const Template = (eventName: string) =>
 export const Mount = Template("mount").bind({});
 Mount.args = {
 	label: "Provide images",
-	description: "Listen for `mount` event",
+	description:
+		"Listen for `mount` event<br>" +
+		"Note: When served within webview, please use this event to request for camera permissions.",
 	uiType: "image-upload",
 };
 
