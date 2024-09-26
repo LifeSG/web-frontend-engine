@@ -1,4 +1,4 @@
-import type { TBlockElementSchema } from "../../elements";
+import type { TBlockElementSchema, TInlineElementSchema } from "../../elements";
 import { IBaseFieldSchema } from "../types";
 
 export interface IErrorFieldValidationRule {
@@ -10,5 +10,5 @@ export interface IErrorFieldValidationRule {
 export interface IErrorFieldSchema
 	extends Pick<IBaseFieldSchema<"error-field", undefined, IErrorFieldValidationRule>, "showIf" | "uiType"> {
 	validation?: [IErrorFieldValidationRule] | undefined;
-	children?: Record<string, TBlockElementSchema> | undefined;
+	children?: Record<string, TBlockElementSchema | TInlineElementSchema> | undefined;
 }

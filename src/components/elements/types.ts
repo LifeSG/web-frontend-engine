@@ -57,11 +57,13 @@ export enum EElementType {
 export type TElementSchema<V = undefined, C = undefined> =
 	| TContainerElementSchema<V, C>
 	| TBlockElementSchema<V, C>
-	| TInlineElementSchema;
+	| TInlineElementSchema
+	| TWrapperSchema<V, C>;
 
 /** represent element schemas that render content containers */
 export type TContainerElementSchema<V = undefined, C = undefined> =
 	| IAccordionSchema<V, C>
+	| IGridSchema<V, C>
 	| ITabItemSchema<V, C>
 	| ITabSchema<V, C>;
 
@@ -69,11 +71,9 @@ export type TContainerElementSchema<V = undefined, C = undefined> =
 export type TBlockElementSchema<V = undefined, C = undefined> =
 	| IAlertSchema
 	| IDividerSchema
-	| IGridSchema<V, C>
 	| IOrderedListSchema<V, C>
 	| ITextSchema
-	| IUnorderedListSchema<V, C>
-	| TWrapperSchema<V, C>;
+	| IUnorderedListSchema<V, C>;
 
 /** represent element schemas that render inline ui elements */
 export type TInlineElementSchema<V = undefined, C = undefined> = IInlineWrapperSchema<V, C> | IPopoverSchema;
