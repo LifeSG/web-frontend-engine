@@ -47,7 +47,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const {
 		className: dataClassName = null,
 		defaultValues,
-		sections,
 		id,
 		stripUnknown,
 		revalidationMode = "onChange",
@@ -315,7 +314,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 				onSubmit={reactFormHookSubmit(handleSubmit, handleSubmitError)}
 				ref={ref}
 			>
-				<Sections schema={sections} />
+				<Sections />
 			</InnerElement>
 		</FormProvider>
 	);

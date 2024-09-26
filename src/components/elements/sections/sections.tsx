@@ -1,6 +1,5 @@
 import { useFormSchema } from "../../../utils/hooks";
 import { Section } from "../section";
-import { ISectionsProps } from "./types";
 
 /**
  * this component is meant to render "pages" which consists of individual Section component
@@ -14,13 +13,12 @@ import { ISectionsProps } from "./types";
  * - render pages properly
  * - handle validation and errors in each section before navigating away
  */
-export const Sections = (props: ISectionsProps) => {
+export const Sections = () => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { schema } = props;
 	const {
-		formSchema: { overrides },
+		formSchema: { sections, overrides },
 		overrideSchema,
 	} = useFormSchema();
 
@@ -28,7 +26,7 @@ export const Sections = (props: ISectionsProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderSections = () => {
-		const overriddenSchema = overrideSchema(schema, overrides);
+		const overriddenSchema = overrideSchema(sections, overrides);
 		if (overriddenSchema) {
 			return Object.entries(overriddenSchema).map(([id, section], i) => (
 				<Section key={`section-${i}`} id={id} sectionSchema={section} />
