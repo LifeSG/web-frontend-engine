@@ -1,6 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
-import { IWrapperSchema } from "../../../components/elements/wrapper";
+import { TWrapperSchema } from "../../../components/elements/wrapper";
 import {
 	CommonFieldStoryProps,
 	FrontendEngine,
@@ -69,9 +69,9 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as StoryFn<IWrapperSchema>;
+	)) as StoryFn<TWrapperSchema>;
 
-const SectionTemplate: StoryFn<Record<string, IWrapperSchema>> = (args) => (
+const SectionTemplate: StoryFn<Record<string, TWrapperSchema>> = (args) => (
 	<FrontendEngine
 		data={{
 			sections: {
@@ -216,7 +216,7 @@ Layout.args = {
 };
 Layout.parameters = VariousElements.parameters;
 
-export const Overrides = OverrideStoryTemplate<IWrapperSchema>("wrapper-overrides", false).bind({});
+export const Overrides = OverrideStoryTemplate<TWrapperSchema>("wrapper-overrides", false).bind({});
 Overrides.args = {
 	uiType: "div",
 	children: {

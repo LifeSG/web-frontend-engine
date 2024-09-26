@@ -2,7 +2,7 @@ import { BoxContainerDisplayState, BoxContainerSubComponentTestIds } from "@life
 import { TFieldEventListener } from "../../../utils";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseElementSchema } from "../types";
-import { IWrapperSchema } from "../wrapper";
+import { TWrapperSchema } from "../wrapper";
 
 export interface IButtonAccordion {
 	label: string | undefined;
@@ -10,7 +10,7 @@ export interface IButtonAccordion {
 
 export interface IAccordionSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"accordion">,
-		TComponentOmitProps<IWrapperSchema> {
+		TComponentOmitProps<TWrapperSchema> {
 	uiType: "accordion";
 	button?: boolean | IButtonAccordion | undefined;
 	children: Record<string, TFrontendEngineFieldSchema<V, C>>;

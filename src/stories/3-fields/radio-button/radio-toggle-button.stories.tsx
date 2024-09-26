@@ -150,6 +150,30 @@ Disabled.args = {
 	disabled: true,
 };
 
+export const FormattedOptions = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-formatted-options").bind({});
+FormattedOptions.args = {
+	uiType: "radio",
+	label: "Radio Button",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{
+			label: {
+				description: { uiType: "span", children: "Apple with tooltip " },
+				tooltip: {
+					uiType: "popover",
+					icon: "QuestionmarkCircleFillIcon",
+					hint: { content: "Keeps the doctor away" },
+				},
+			},
+			value: "Apple",
+		},
+		{ label: "<strong>Bolded Berry</strong>", value: "Berry" },
+		{ label: "<em>Italicised Cherry</em>", value: "Cherry" },
+	],
+};
+
 export const WithValidation = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-with-validation").bind({});
 WithValidation.args = {
 	uiType: "radio",

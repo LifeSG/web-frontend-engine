@@ -17,7 +17,7 @@ import {
 	StyledRadioButton,
 	StyledToggle,
 } from "./radio-button.styles";
-import { TRadioButtonGroupSchema } from "./types";
+import { IRadioButtonOption, TRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
 	// =============================================================================
@@ -77,6 +77,13 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const renderLabel = (label: IRadioButtonOption["label"]) => {
+		if (typeof label === "string") {
+			return <Sanitize inline>{label}</Sanitize>;
+		}
+		return <Wrapper>{label}</Wrapper>;
+	};
+
 	const renderRadioButtons = () => {
 		return (
 			options.length > 0 &&
@@ -97,7 +104,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							onChange={() => handleChangeOrClick(option.value)}
 						/>
 						<Label as="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
-							<Sanitize inline>{option.label}</Sanitize>
+							{renderLabel(option.label)}
 						</Label>
 					</RadioContainer>
 				);
@@ -140,7 +147,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 										: null
 								}
 							>
-								{option.label}
+								{renderLabel(option.label)}
 							</StyledToggle>
 						);
 					})}

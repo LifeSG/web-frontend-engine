@@ -271,6 +271,30 @@ NestedFields.args = {
 	],
 };
 
+export const FormattedOptions = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-formatted-options").bind({});
+FormattedOptions.args = {
+	uiType: "checkbox",
+	label: "Fruits",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{
+			label: {
+				description: { uiType: "span", children: "Apple with tooltip " },
+				tooltip: {
+					uiType: "popover",
+					icon: "QuestionmarkCircleFillIcon",
+					hint: { content: "Keeps the doctor away" },
+				},
+			},
+			value: "Apple",
+		},
+		{ label: "<strong>Bolded Berry</strong>", value: "Berry" },
+		{ label: "<em>Italicised Cherry</em>", value: "Cherry" },
+	],
+};
+
 export const Reset = ResetStoryTemplate<TCheckboxGroupSchema>("checkbox-reset").bind({});
 Reset.args = {
 	uiType: "checkbox",

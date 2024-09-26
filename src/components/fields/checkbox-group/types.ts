@@ -1,14 +1,16 @@
 import { CheckboxProps } from "@lifesg/react-design-system/checkbox";
+import type { IPopoverSchema, ITextSchema } from "../../elements";
+import type { IInlineWrapperSchema } from "../../elements/wrapper";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
-export interface IOption {
-	label: string;
+export interface ICheckboxGroupOption {
+	label: string | Record<string, ITextSchema | IPopoverSchema | IInlineWrapperSchema>;
 	value: string;
 	disabled?: boolean | undefined;
 }
 
-export interface IToggleOption<V = undefined, C = undefined> extends IOption {
+export interface IToggleOption<V = undefined, C = undefined> extends ICheckboxGroupOption {
 	none?: boolean | undefined;
 	children?: Record<string, TFrontendEngineFieldSchema<V, C>> | undefined;
 }
@@ -18,7 +20,7 @@ export type TCheckboxToggleLayoutType = "horizontal" | "vertical";
 interface ICheckboxGroupDefaultSchema<V = undefined>
 	extends IBaseFieldSchema<"checkbox", V>,
 		TComponentOmitProps<CheckboxProps> {
-	options: IOption[];
+	options: ICheckboxGroupOption[];
 	customOptions?: { styleType: "default" } | undefined;
 }
 

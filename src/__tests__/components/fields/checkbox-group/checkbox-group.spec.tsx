@@ -203,6 +203,14 @@ describe(UI_TYPE, () => {
 		expect(document.querySelector(".checkbox-field").innerHTML.includes("script")).toBe(false);
 	});
 
+	it("should be able to render FEE schema in option label", () => {
+		renderComponent({
+			options: [{ label: { text: { uiType: "span", children: "Schema Label" } }, value: "Schema Label" }],
+		});
+
+		expect(screen.getByText("Schema Label")).toBeInTheDocument();
+	});
+
 	it.each`
 		displaySize  | expected
 		${"small"}   | ${"1.5rem"}

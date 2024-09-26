@@ -1,18 +1,20 @@
 import { RadioButtonProps } from "@lifesg/react-design-system/radio-button";
+import type { IPopoverSchema, ITextSchema } from "../../elements";
+import type { IInlineWrapperSchema } from "../../elements/wrapper";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
-interface IOption {
-	label: string;
+export interface IRadioButtonOption {
+	label: string | Record<string, ITextSchema | IPopoverSchema | IInlineWrapperSchema>;
 	value: string;
 	disabled?: boolean | undefined;
 }
 
-interface IToggleOption<V = undefined, C = undefined> extends IOption {
+interface IToggleOption<V = undefined, C = undefined> extends IRadioButtonOption {
 	children?: Record<string, TFrontendEngineFieldSchema<V, C>> | undefined;
 }
 
-interface IImageButtonOption extends IOption {
+interface IImageButtonOption extends IRadioButtonOption {
 	imgSrc?: string | undefined;
 }
 
@@ -21,7 +23,7 @@ export type TRadioToggleLayoutType = "horizontal" | "vertical";
 interface IRadioButtonDefaultSchema<V = undefined>
 	extends IBaseFieldSchema<"radio", V>,
 		TComponentOmitProps<RadioButtonProps> {
-	options: IOption[];
+	options: IRadioButtonOption[];
 	customOptions?:
 		| {
 				styleType: "default";

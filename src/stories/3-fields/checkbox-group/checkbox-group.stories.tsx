@@ -146,6 +146,17 @@ FormattedOptions.args = {
 		{ label: "Fruits <a href='#'>Apple with a link</a>", value: "Apple" },
 		{ label: "<strong>Bolded Berry</strong>", value: "Berry" },
 		{ label: "<em>Italicised Cherry</em>", value: "Cherry" },
+		{
+			label: {
+				description: { uiType: "span", children: "Durian with tooltip " },
+				tooltip: {
+					uiType: "popover",
+					icon: "QuestionmarkCircleFillIcon",
+					hint: { content: "A pungent fruit" },
+				},
+			},
+			value: "Durian",
+		},
 	],
 };
 

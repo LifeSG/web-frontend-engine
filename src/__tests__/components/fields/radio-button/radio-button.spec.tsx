@@ -163,6 +163,14 @@ describe(UI_TYPE, () => {
 		expect(document.querySelector(".radio-field").innerHTML.includes("script")).toBe(false);
 	});
 
+	it("should be able to render FEE schema in option label", () => {
+		renderComponent({
+			options: [{ label: { text: { uiType: "span", children: "Schema Label" } }, value: "Schema Label" }],
+		});
+
+		expect(screen.getByText("Schema Label")).toBeInTheDocument();
+	});
+
 	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                 | selected | expectedValueBeforeUpdate | expectedValueAfterUpdate

@@ -1,10 +1,10 @@
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseElementSchema } from "../types";
-import { IWrapperSchema } from "../wrapper";
+import { TWrapperSchema } from "../wrapper";
 
 export interface ISectionSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"section">,
-		TComponentOmitProps<IWrapperSchema> {
+		TComponentOmitProps<TWrapperSchema> {
 	children: Record<string, TFrontendEngineFieldSchema<V, C>>;
 	layoutType?: "default" | "grid" | "contain" | undefined;
 }
