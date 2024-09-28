@@ -5,6 +5,7 @@ import { action } from "@storybook/addon-actions";
 import highlightjs from "highlight.js";
 import json from "highlight.js/lib/languages/json";
 import "highlight.js/styles/monokai.css";
+import cloneDeep from "lodash/cloneDeep";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
@@ -118,7 +119,7 @@ export const ValidationStoryComponent = ({
 					children: {
 						field: {
 							...VALIDATION_DEMO_CONFIGS[demoFieldType],
-							validation: [{ ...rule, ...overrideRule() }],
+							validation: [{ ...cloneDeep(rule), ...overrideRule() }],
 						},
 						...overrideSchema(),
 						...SUBMIT_BUTTON_SCHEMA,
