@@ -114,6 +114,21 @@ describe(REFERENCE_KEY, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
+	it("should support default values matching initial overrides", async () => {
+		const value = "Overridden";
+		renderComponent(
+			{ options: [] },
+			{
+				defaultValues: { [COMPONENT_ID]: [value] },
+				overrides: { [COMPONENT_ID]: { options: [{ label: value, value: value }] } },
+			}
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: [value] }));
+	});
+
 	describe("update options schema", () => {
 		const CustomComponent = () => {
 			const [options, setOptions] = useState([

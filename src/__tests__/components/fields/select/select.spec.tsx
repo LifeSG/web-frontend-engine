@@ -124,6 +124,20 @@ describe(UI_TYPE, () => {
 		expect(screen.getByText(placeholder)).toBeInTheDocument();
 	});
 
+	it("should support default values matching initial overrides", async () => {
+		const value = "Overridden";
+		renderComponent(
+			{ options: [] },
+			{
+				defaultValues: { [COMPONENT_ID]: value },
+				overrides: { [COMPONENT_ID]: { options: [{ label: value, value: value }] } },
+			}
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
+	});
+
 	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                 | selected | expectedValueBeforeUpdate | expectedValueAfterUpdate

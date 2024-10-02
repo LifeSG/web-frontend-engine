@@ -227,6 +227,29 @@ describe(UI_TYPE, () => {
 		);
 	});
 
+	it("should support default values matching initial overrides", async () => {
+		renderComponent(
+			{ options: {} },
+			{
+				defaultValues: { [COMPONENT_ID]: { from: "Apple", to: "Cherry" } },
+				overrides: {
+					[COMPONENT_ID]: {
+						options: {
+							from: [{ label: "A", value: "Apple" }],
+							to: [{ label: "C", value: "Cherry" }],
+						},
+					},
+				},
+			}
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(
+			expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } })
+		);
+	});
+
 	describe("update options through overrides", () => {
 		it.each`
 			scenario                                                                        | selected      | expectedValueBeforeUpdate          | expectedValueAfterUpdate
