@@ -420,6 +420,32 @@ describe(UI_TYPE, () => {
 		});
 	});
 
+	it("should support default values matching initial overrides", async () => {
+		renderComponent(
+			{ options: [] },
+			{
+				defaultValues: { [COMPONENT_ID]: { parentKey: { childKey: "Overridden" } } },
+				overrides: {
+					[COMPONENT_ID]: {
+						options: [
+							{
+								label: "parent",
+								key: "parentKey",
+								subItems: [{ label: "child", value: "Overridden", key: "childKey" }],
+							},
+						],
+					},
+				},
+			}
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(
+			expect.objectContaining({ [COMPONENT_ID]: { parentKey: { childKey: "Overridden" } } })
+		);
+	});
+
 	describe("update options through overrides", () => {
 		it.each`
 			scenario                                                                          | selected      | expectedValueBeforeUpdate                       | expectedValueAfterUpdate
