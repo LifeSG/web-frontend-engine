@@ -92,7 +92,11 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	}, [value]);
 
 	useEffect(() => {
-		if (uiType === "text-field" && ref.current.selectionEnd !== caret.current) {
+		if (
+			uiType === "text-field" &&
+			document?.activeElement === ref.current &&
+			ref.current.selectionEnd !== caret.current
+		) {
 			// keep caret in place after uppercase, not available for 'email' & 'number' HTML input types
 			ref.current.setSelectionRange(caret.current, caret.current);
 		}
