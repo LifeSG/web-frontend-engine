@@ -12,6 +12,7 @@ export interface IRadioButtonOption {
 
 interface IToggleOption<V = undefined, C = undefined> extends IRadioButtonOption {
 	children?: Record<string, TFrontendEngineFieldSchema<V, C>> | undefined;
+	subLabel?: string | undefined;
 }
 
 interface IImageButtonOption extends IRadioButtonOption {

@@ -146,6 +146,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 										  }
 										: null
 								}
+								subLabel={!!option.subLabel && renderLabel(option.subLabel)}
 							>
 								{renderLabel(option.label)}
 							</StyledToggle>
