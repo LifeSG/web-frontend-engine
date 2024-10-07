@@ -67,6 +67,7 @@ export const Thumbnail = styled.div<{ src: string }>`
 
 export const TextBody = styled(Text.Body)`
 	flex: 1;
+	word-break: break-all;
 `;
 
 export const MobileTextBodyDetail = styled.div`

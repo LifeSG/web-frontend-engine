@@ -1,5 +1,5 @@
 import { Text } from "@lifesg/react-design-system/text";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
 import { ImageContext } from "../../image-context";
@@ -31,12 +31,23 @@ export const ImageError = (props: IProps) => {
 	const { images } = useContext(ImageContext);
 	const [errorTitle, setErrorTitle] = useState<string>();
 	const [errorDescription, setErrorDescription] = useState<JSX.Element>();
+	const [transformedFileName, setTransformedFileName] = useState<string>();
+	const errorDescriptionRef = useRef<HTMLParagraphElement>(null);
+
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
+	const setFileNameToWidth = useCallback(() => {
+		const transformed = FileHelper.truncateFileName(name, errorDescriptionRef);
+		setTransformedFileName(transformed);
+	}, [name]);
 
 	//  =============================================================================
 	// EFFECTS
 	//  =============================================================================
 	useEffect(() => {
-		const filename = <NameWrapper>{FileHelper.truncateFileName(name || "", 300)}</NameWrapper>;
+		const filename = <NameWrapper>{transformedFileName}</NameWrapper>;
+
 		switch (status) {
 			case EImageStatus.ERROR_FORMAT:
 				setErrorTitle(ERROR_MESSAGES.UPLOAD("photo").MODAL.FILE_TYPE.TITLE);
@@ -68,7 +79,29 @@ export const ImageError = (props: IProps) => {
 				break;
 			}
 		}
-	}, [accepts, images, maxFiles, maxFilesErrorMessage, maxSizeInKb, name, status]);
+	}, [accepts, images, maxFiles, maxFilesErrorMessage, maxSizeInKb, name, status, transformedFileName]);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (errorDescriptionRef.current) {
+				setFileNameToWidth();
+			}
+		};
+
+		const resizeObserver = new ResizeObserver(handleResize);
+		const currentElement = errorDescriptionRef.current;
+
+		if (currentElement) {
+			resizeObserver.observe(currentElement);
+			setFileNameToWidth();
+		}
+
+		return () => {
+			if (currentElement) {
+				resizeObserver.unobserve(currentElement);
+			}
+		};
+	}, [errorDescriptionRef, setFileNameToWidth]);
 
 	//  =============================================================================
 	// RENDER FUNCTIONS
@@ -84,7 +117,9 @@ export const ImageError = (props: IProps) => {
 				>
 					{errorTitle}
 				</BodyText>
-				<BodyText as={Text.Body}>{errorDescription}</BodyText>
+				<BodyText as={Text.Body} ref={errorDescriptionRef}>
+					{errorDescription}
+				</BodyText>
 				<OkButton
 					onClick={onClickOk}
 					id={TestHelper.generateId(id, "ok-button")}

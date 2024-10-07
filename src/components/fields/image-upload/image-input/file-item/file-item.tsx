@@ -41,11 +41,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	// HELPER FUNCTIONS
 	// =============================================================================
 	const setFileNameToWidth = useCallback(() => {
-		let widthOfElement = 0;
-		if (fileNameWrapperRef && fileNameWrapperRef.current) {
-			widthOfElement = fileNameWrapperRef.current.getBoundingClientRect().width;
-		}
-		const transformed = FileHelper.truncateFileName(fileName, widthOfElement);
+		const transformed = FileHelper.truncateFileName(fileName, fileNameWrapperRef);
 		setTransformedFileName(transformed);
 	}, [fileName]);
 
@@ -53,9 +49,26 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		window.addEventListener("resize", setFileNameToWidth);
-		return () => window.removeEventListener("resize", setFileNameToWidth);
-	}, [setFileNameToWidth]);
+		const handleResize = () => {
+			if (fileNameWrapperRef.current) {
+				setFileNameToWidth();
+			}
+		};
+
+		const resizeObserver = new ResizeObserver(handleResize);
+		const currentElement = fileNameWrapperRef.current;
+
+		if (currentElement) {
+			resizeObserver.observe(currentElement);
+			setFileNameToWidth();
+		}
+
+		return () => {
+			if (currentElement) {
+				resizeObserver.unobserve(currentElement);
+			}
+		};
+	}, [fileNameWrapperRef, setFileNameToWidth]);
 
 	useEffect(() => {
 		switch (status) {
@@ -96,10 +109,6 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [status, dataURL, file.type, maxSizeInKb]);
-
-	useEffect(() => {
-		setFileNameToWidth();
-	}, [fileNameWrapperRef, setFileNameToWidth]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
