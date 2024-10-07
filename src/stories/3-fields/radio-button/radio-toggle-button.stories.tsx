@@ -128,7 +128,6 @@ OptionsWithSubLabel.args = {
 	uiType: "radio",
 	label: {
 		mainLabel: "Fruits",
-		subLabel: "Some helpful <strong>instructions</strong>",
 	},
 	customOptions: {
 		styleType: "toggle",
