@@ -6,11 +6,11 @@ export namespace FileHelper {
 	 */
 	export const truncateFileName = (
 		fileName: string,
-		ref?: React.MutableRefObject<HTMLDivElement | HTMLParagraphElement>
+		ref?: React.MutableRefObject<HTMLDivElement | HTMLParagraphElement> | undefined
 	) => {
-		let truncateFileName = fileName;
+		let truncatedFileName = fileName;
 		let widthOfElement = 0;
-		let context;
+		let context: CanvasRenderingContext2D;
 
 		if (ref && ref.current) {
 			context = getContext(ref.current);
@@ -21,32 +21,32 @@ export namespace FileHelper {
 			const ellipsis = "...";
 			let prefix = "";
 			let suffix = "";
-			let i = 0;
-			let j = fileName.length - 1;
+			let startIndex = 0;
+			let endIndex = fileName.length - 1;
 			let current = ellipsis || "";
 			let prev = current;
 
-			while (i < j) {
-				prefix = prefix + fileName.charAt(i);
+			while (startIndex < endIndex) {
+				prefix = prefix + fileName.charAt(startIndex);
 				current = prefix + ellipsis + suffix;
 				if (context.measureText(current).width > widthOfElement) {
-					truncateFileName = prev;
+					truncatedFileName = prev;
 					break;
 				}
 				prev = current;
-				suffix = fileName.charAt(j) + suffix;
+				suffix = fileName.charAt(endIndex) + suffix;
 				current = prefix + ellipsis + suffix;
 				if (context.measureText(current).width > widthOfElement) {
-					truncateFileName = prev;
+					truncatedFileName = prev;
 					break;
 				}
 				prev = current;
-				i++;
-				j--;
+				startIndex++;
+				endIndex--;
 			}
 		}
 
-		return truncateFileName;
+		return truncatedFileName;
 	};
 
 	/**
