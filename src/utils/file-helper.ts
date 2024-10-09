@@ -4,18 +4,64 @@ export namespace FileHelper {
 	/**
 	 * truncate file name according to wrapping element width
 	 */
-	export const truncateFileName = (fileName: string, widthOfElement: number) => {
-		// every 8px increment ~= 1 char width
-		// TODO: how to better determine char width?
-		const threshold = Math.floor(widthOfElement / 8);
-		const ellipsis = "...";
-		const length = fileName.length + ellipsis.length;
-		if (length > threshold) {
-			const thresholdIndex = threshold / 2;
-			return fileName.substring(0, thresholdIndex) + ellipsis + fileName.substring(length - thresholdIndex);
+	export const truncateFileName = (
+		fileName: string,
+		ref?: React.MutableRefObject<HTMLDivElement | HTMLParagraphElement> | undefined
+	) => {
+		let truncatedFileName = fileName;
+		let widthOfElement = 0;
+		let context: CanvasRenderingContext2D;
+
+		if (ref && ref.current) {
+			context = getContext(ref.current);
+			widthOfElement = ref.current.getBoundingClientRect().width;
 		}
 
-		return fileName;
+		if (context && context.measureText(fileName).width > widthOfElement) {
+			const ellipsis = "...";
+			let prefix = "";
+			let suffix = "";
+			let startIndex = 0;
+			let endIndex = fileName.length - 1;
+			let current = ellipsis || "";
+			let prev = current;
+
+			while (startIndex < endIndex) {
+				prefix = prefix + fileName.charAt(startIndex);
+				current = prefix + ellipsis + suffix;
+				if (context.measureText(current).width > widthOfElement) {
+					truncatedFileName = prev;
+					break;
+				}
+				prev = current;
+				suffix = fileName.charAt(endIndex) + suffix;
+				current = prefix + ellipsis + suffix;
+				if (context.measureText(current).width > widthOfElement) {
+					truncatedFileName = prev;
+					break;
+				}
+				prev = current;
+				startIndex++;
+				endIndex--;
+			}
+		}
+
+		return truncatedFileName;
+	};
+
+	/**
+	 * create element and get context
+	 */
+	const getContext = (ref: HTMLDivElement | HTMLParagraphElement) => {
+		const fragment = document.createDocumentFragment();
+		const canvas = document.createElement("canvas");
+		fragment.appendChild(canvas);
+		const context = canvas.getContext("2d");
+		const computedStyles = window.getComputedStyle(ref);
+		context.font = computedStyles.font
+			? computedStyles.font
+			: `${computedStyles.fontSize}" "${computedStyles.fontFamily}`;
+		return context;
 	};
 
 	/**

@@ -42,6 +42,7 @@ export const Content = styled.div`
 
 export const BodyText = styled.div`
 	color: ${Color.Neutral[8]};
+	word-break: break-word;
 `;
 
 export const NameWrapper = styled.span`
