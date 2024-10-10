@@ -47,7 +47,7 @@ export const ERROR_MESSAGES = {
 	UPLOAD: (unit = "file", unitPlural = `${unit}s`) => ({
 		REQUIRED: `Upload at least 1 ${unit}.`,
 		MAX_FILES: (max: number) =>
-			`Upload failed. You can only upload maximum of ${max} ${max !== 1 ? unitPlural : unit}.`,
+			`Upload failed. You can only upload a maximum of ${max} ${max !== 1 ? unitPlural : unit}.`,
 		MAX_FILES_WITH_REMAINING: (remaining: number) =>
 			`Upload failed. You can only upload ${remaining} more ${
 				remaining === 1 ? unit : unitPlural
