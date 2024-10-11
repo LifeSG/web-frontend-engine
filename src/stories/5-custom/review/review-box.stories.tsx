@@ -92,6 +92,17 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		stretch: {
+			description: "Specifies if contents should stretch full width instead of the default 8 columns on desktop",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
