@@ -3,7 +3,7 @@ import { Button } from "@lifesg/react-design-system/button";
 import { UneditableSection, UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 import isEmpty from "lodash/isEmpty";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { AxiosApiClient } from "../../../utils";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
@@ -16,7 +16,6 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
-import useDeepCompareEffect from "use-deep-compare-effect";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -186,8 +185,9 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				expanded={expanded}
 				{...otherSchema}
 			>
-				<AccordionContent
+				<UneditableSection
 					background={false}
+					stretch
 					id={id}
 					items={formatItems()}
 					topSection={generateSection(topSection)}
@@ -218,11 +218,3 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 
 	return schema.variant === "accordion" ? renderAccordion(schema) : renderBox(schema);
 };
-
-const AccordionContent = styled(UneditableSection)`
-	> div[data-testid="content-container"] > ul,
-	div[data-id="top-section"],
-	div[data-id="bottom-section"] {
-		grid-column: 1 / span 12;
-	}
-`;

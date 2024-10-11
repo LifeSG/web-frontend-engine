@@ -12,8 +12,8 @@ The intention of frontend engine is to take out the heavy lifting of form develo
 
 Developers are expected to have the following packages installed:
 
--   @lifesg/react-design-system 2.7.0-canary.6
--   @lifesg/react-icons 1.2.0
+-   @lifesg/react-design-system 2.8.0-canary.3
+-   @lifesg/react-icons 1.9.0
 -   react 17.0.2 or 18
 -   react-dom 17.0.2 or 18
 -   styled-components 5.3.5

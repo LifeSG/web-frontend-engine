@@ -56,6 +56,7 @@ export interface IReviewSchemaBox extends IReviewBaseSchema, ICustomElementJsonS
 	variant?: "box" | undefined;
 	description?: string | undefined;
 	background?: boolean | undefined;
+	stretch?: boolean | undefined;
 }
 
 // =========================================================================
