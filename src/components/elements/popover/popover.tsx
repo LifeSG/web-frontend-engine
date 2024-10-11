@@ -1,9 +1,8 @@
-import { PopoverTrigger } from "@lifesg/react-design-system/popover-v2";
+import { PopoverInline } from "@lifesg/react-design-system/popover-v2";
 import * as Icons from "@lifesg/react-icons";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
-import { StyledIcon, StyledText } from "./popover.styles";
 import { IPopoverSchema } from "./types";
 
 export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
@@ -12,7 +11,13 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 	// =============================================================================
 	const {
 		id,
-		schema: { children, className, icon, hint, trigger },
+		schema: {
+			children,
+			className,
+			icon,
+			hint: { content: hintContent, ...hintProps },
+			...otherSchema
+		},
 	} = props;
 
 	// =============================================================================
@@ -22,22 +27,19 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 		if (!icon) return null;
 
 		const Element = Icons[icon];
-		return <StyledIcon as={Element} $standalone={!children} />;
+		return <Element />;
 	};
 
 	return (
-		<PopoverTrigger
+		<PopoverInline
 			id={id}
 			data-testid={TestHelper.generateId(id, "popover")}
 			className={className}
-			popoverContent={<Sanitize inline>{hint.content}</Sanitize>}
-			trigger={trigger}
-			zIndex={hint.zIndex}
-		>
-			<StyledText>
-				<Sanitize inline>{children}</Sanitize>
-				{renderIcon()}
-			</StyledText>
-		</PopoverTrigger>
+			icon={renderIcon()}
+			content={children && <Sanitize inline>{children}</Sanitize>}
+			popoverContent={<Sanitize inline>{hintContent}</Sanitize>}
+			{...hintProps}
+			{...otherSchema}
+		/>
 	);
 };

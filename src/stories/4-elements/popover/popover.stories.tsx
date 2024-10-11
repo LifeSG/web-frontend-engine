@@ -12,8 +12,20 @@ const meta: Meta = {
 				<>
 					<Title>Popover</Title>
 					<p>
-						This component renders text with an optional icon that triggers a <code>Popover</code> within a
-						Frontend Engine generated form.
+						This component renders the <code>PopoverInline</code> provided by the Design System within a
+						Frontend Engine generated form to display text or an icon that triggers a popover.
+					</p>
+
+					<p>
+						Please refer to the{" "}
+						<a
+							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/modules-popoverv2-popoverinline--docs"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							design system
+						</a>{" "}
+						for the behaviour of <code>PopoverInline</code>.
 					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Example" />
@@ -26,7 +38,6 @@ const meta: Meta = {
 		children: {
 			type: {
 				name: "string",
-				required: true,
 			},
 			description: "The content of the popover trigger",
 			table: {
@@ -52,12 +63,15 @@ const meta: Meta = {
 			description: `The popover configuration
 				<ul>
 					<li>content: Content to display in the popover.</li>
+					<li>customOffset: The popover offset.</li>
+					<li>position: The preferred popover position.</li>
 					<li>zIndex: Customises the popover z-index.</li>
 				</ul>
 			`,
 			table: {
 				type: {
-					summary: "{ content: string; zIndex?: number }",
+					summary:
+						"{ content: string; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
 				},
 			},
 		},
@@ -69,6 +83,22 @@ const meta: Meta = {
 				},
 				defaultValue: {
 					summary: "click",
+				},
+			},
+		},
+		underlineHoverStyle: {
+			description: "The underline style of the text when hovered",
+			table: {
+				type: {
+					summary: "default | underline | underline-dashed",
+				},
+			},
+		},
+		underlineStyle: {
+			description: "The underline style of the text",
+			table: {
+				type: {
+					summary: "default | underline | underline-dashed",
 				},
 			},
 		},
@@ -134,6 +164,16 @@ Hover.args = {
 	children: "More info",
 	trigger: "hover",
 	hint: { content: "Hint" },
+};
+
+export const UnderlineStyle = Template("popover-underline-style").bind({});
+UnderlineStyle.args = {
+	uiType: "popover",
+	children: "More info",
+	icon: "ICircleFillIcon",
+	hint: { content: "Hint" },
+	underlineStyle: "underline-dashed",
+	underlineHoverStyle: "underline",
 };
 
 export const InlineUsage: StoryFn = () => {
