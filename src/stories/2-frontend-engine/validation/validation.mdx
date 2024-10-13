@@ -1,0 +1,26 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Form/Validation Schema" />
+
+# Validation Schema
+
+These are the individual rules to define the validation logic of the field in the JSON schema.
+
+They are used in the `validation` array of each field. Each entry in the array takes in a validation condition like `required`, `min`, `max`, etc. and an optional `errorMessage` to display when the validation fails.
+
+For certain validation conditions, Frontend Engine will automatically apply behaviours accordingly. For example, if a text-field has max rule applied, it will be restricted to the maximum number of characters.
+
+The code snippet below illustrates a textarea field with `required` and `max` validation.
+
+```json
+{
+	//...
+	"name": {
+		"label": "What is your name",
+		"uiType": "textarea",
+		"validation": [{ "required": true }, { "max": 255, "errorMessage": "Maximum length of 255." }]
+	}
+}
+```
+
+To find out more about each validation condition, refer to the individual stories.

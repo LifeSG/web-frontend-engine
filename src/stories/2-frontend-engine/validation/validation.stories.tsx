@@ -1,4 +1,3 @@
-import { Source, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryObj } from "@storybook/react";
 import { ValidationStoryComponent } from "./validation-story-component";
 import {
@@ -13,43 +12,6 @@ import {
 const meta: Meta = {
 	title: "Form/Validation Schema",
 	component: ValidationStoryComponent,
-	parameters: {
-		docs: {
-			page: () => (
-				<>
-					<Title>Validation Schema</Title>
-					<p>
-						These are the individual rules to define the validation logic of the field in the JSON schema.
-						They are used in the <code>validation</code> property of each field. The snippet below
-						illustrates a TEXTAREA field with `required` and <code>max</code> validation.
-					</p>
-					<Source
-						code={`
-{
-	//...
-	"data": {
-		"fields": {
-			"name": {
-				label: "What is your name",
-				uiType: "textarea",
-				validation: [
-					{ required: true },
-					{ max: 255, errorMessage: "Maximum length of 255." },
-				],
-				chipTexts: ["John", "Doe"],
-			},
-			//...
-		}
-	}
-}
-						`}
-					/>
-					<Stories includePrimary={true} title="Examples" />
-				</>
-			),
-			source: { code: null },
-		},
-	},
 	argTypes: {
 		defaultField: { table: { disable: true } },
 		info: { table: { disable: true } },
@@ -62,107 +24,6 @@ const meta: Meta = {
 export default meta;
 
 type Story = StoryObj<typeof ValidationStoryComponent>;
-
-export const ConditionalExact: Story = {
-	name: "Conditional (Exact value)",
-	args: {
-		info: {
-			rule: {
-				when: {
-					field2: {
-						is: "something",
-						then: [{ required: true, errorMessage: "Required when field 2 value is `something`." }],
-						otherwise: [
-							{ empty: true, errorMessage: "Must not be filled when field 2 value is not `something`." },
-						],
-					},
-				},
-			},
-			ruleName: "when",
-			ruleDescription:
-				"Applies validation to a field when another field is equal/not equal to a specific value according to the <code>is</code> value.",
-		},
-		excludeFields: OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS,
-		overrides: [
-			{
-				for: ALL_VALIDATION_DEMO_FIELD_IDS,
-				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 2" }) },
-			},
-		],
-	},
-};
-
-export const ConditionalSchema: Story = {
-	name: "Conditional (Schema-based)",
-	args: {
-		info: {
-			rule: {
-				when: {
-					field2: {
-						is: [{ filled: true }, { min: 3 }],
-						then: [{ required: true, errorMessage: "Required when field 2 value is `something`." }],
-						otherwise: [
-							{ empty: true, errorMessage: "Must not be filled when field 2 value is not `something`." },
-						],
-					},
-				},
-			},
-			ruleName: "when",
-			ruleDescription:
-				"Applies validation to a field when another field fulfils / fails the validation schema according to the <code>is</code> value.",
-		},
-		excludeFields: OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS,
-		overrides: [
-			{
-				for: ALL_VALIDATION_DEMO_FIELD_IDS,
-				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 2" }) },
-			},
-		],
-	},
-};
-
-export const ConditionalNested: Story = {
-	name: "Conditional (Nested rule)",
-	args: {
-		info: {
-			rule: {
-				when: {
-					field2: {
-						is: [{ filled: true }],
-						then: [
-							{
-								when: {
-									field3: {
-										is: [{ filled: true }],
-										then: [
-											{
-												required: true,
-												errorMessage: "Field 1 is required if field 2 and 3 are filled.",
-											},
-										],
-									},
-								},
-							},
-						],
-					},
-				},
-			},
-			ruleName: "when",
-			ruleDescription:
-				"Validation rules can be nested to apply more complex conditions. In this example, field 1 is required when field 2 and 3 are filled.",
-		},
-		excludeFields: OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS,
-		overrides: [
-			{
-				for: ALL_VALIDATION_DEMO_FIELD_IDS,
-				schema: {
-					field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 2" }),
-					field3: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 3" }),
-				},
-			},
-		],
-	},
-};
 
 export const Email: Story = {
 	args: {
@@ -660,5 +521,106 @@ export const Uuid: Story = {
 			ruleDescription: "Indicates that the value must be a valid uuid.",
 		},
 		fields: ["maskedField", "textarea", "textField"],
+	},
+};
+
+export const ConditionalExact: Story = {
+	name: "Conditional (Exact value)",
+	args: {
+		info: {
+			rule: {
+				when: {
+					field2: {
+						is: "something",
+						then: [{ required: true, errorMessage: "Required when field 2 value is `something`." }],
+						otherwise: [
+							{ empty: true, errorMessage: "Must not be filled when field 2 value is not `something`." },
+						],
+					},
+				},
+			},
+			ruleName: "when",
+			ruleDescription:
+				"Applies validation to a field when another field is equal/not equal to a specific value according to the <code>is</code> value.",
+		},
+		excludeFields: OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS,
+		overrides: [
+			{
+				for: ALL_VALIDATION_DEMO_FIELD_IDS,
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 2" }) },
+			},
+		],
+	},
+};
+
+export const ConditionalSchema: Story = {
+	name: "Conditional (Schema-based)",
+	args: {
+		info: {
+			rule: {
+				when: {
+					field2: {
+						is: [{ filled: true }, { min: 3 }],
+						then: [{ required: true, errorMessage: "Required when field 2 value is `something`." }],
+						otherwise: [
+							{ empty: true, errorMessage: "Must not be filled when field 2 value is not `something`." },
+						],
+					},
+				},
+			},
+			ruleName: "when",
+			ruleDescription:
+				"Applies validation to a field when another field fulfils / fails the validation schema according to the <code>is</code> value.",
+		},
+		excludeFields: OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS,
+		overrides: [
+			{
+				for: ALL_VALIDATION_DEMO_FIELD_IDS,
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 2" }) },
+			},
+		],
+	},
+};
+
+export const ConditionalNested: Story = {
+	name: "Conditional (Nested rule)",
+	args: {
+		info: {
+			rule: {
+				when: {
+					field2: {
+						is: [{ filled: true }],
+						then: [
+							{
+								when: {
+									field3: {
+										is: [{ filled: true }],
+										then: [
+											{
+												required: true,
+												errorMessage: "Field 1 is required if field 2 and 3 are filled.",
+											},
+										],
+									},
+								},
+							},
+						],
+					},
+				},
+			},
+			ruleName: "when",
+			ruleDescription:
+				"Validation rules can be nested to apply more complex conditions. In this example, field 1 is required when field 2 and 3 are filled.",
+		},
+		excludeFields: OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS,
+		overrides: [
+			{
+				for: ALL_VALIDATION_DEMO_FIELD_IDS,
+				schema: {
+					field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 2" }),
+					field3: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 3" }),
+				},
+			},
+		],
 	},
 };
