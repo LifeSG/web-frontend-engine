@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import cloneDeep from "lodash/cloneDeep";
 import isEmpty from "lodash/isEmpty";
+import isEqual from "lodash/isEqual";
 import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
@@ -18,6 +19,7 @@ import {
 	useFormSchema,
 	useFormValues,
 	useFrontendEngineForm,
+	usePrevious,
 	useValidationConfig,
 	useValidationSchema,
 } from "../../utils/hooks";
@@ -90,6 +92,11 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const { resetFields, setFields, setField, getFormValues, registeredFields } = useFormValues(formMethods);
 	const registeredFieldsRef = useRef(registeredFields); // using ref ensures the latest values can be retrieved in setErrors and setWarnings
 	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
+	const previousFormValidationConfig = usePrevious(formValidationConfig);
+	const previousHardValidationSchema = usePrevious(hardValidationSchema);
+	const previousFormValues = useRef(undefined);
+	const previousFormValidity = useRef(undefined);
+	const [hasSchemaChange, setHasSchemaChange] = useState(false);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -187,6 +194,24 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		addWarnings(newWarnings);
 	};
 
+	const handleValueChange = useRef(() => {
+		// noop
+	});
+	handleValueChange.current = () => {
+		const formValues = getFormValues(undefined, stripUnknown);
+		const formValidity = checkIsFormValid();
+		// attach / fire onValueChange event only when formValidationConfig has values
+		// otherwise isValid will be returned incorrectly as true
+		if (onValueChange && Object.keys(formValidationConfig || {}).length) {
+			// memoise to prevent unnecessary calls
+			if (previousFormValidity.current !== formValidity || !isEqual(previousFormValues.current, formValues)) {
+				onValueChange(formValues, formValidity);
+			}
+		}
+		previousFormValues.current = formValues;
+		previousFormValidity.current = formValidity;
+	};
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -221,17 +246,32 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}, [checkIsFormValid, onChange, watch, formValidationConfig]);
 
 	useEffect(() => {
-		// attach / fire onValueChange event only when formValidationConfig has values
-		// otherwise isValid will be returned incorrectly as true
-		if (onValueChange && Object.keys(formValidationConfig || {}).length) {
-			const subscription = watch(() => {
-				onValueChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
-			});
-			return () => subscription.unsubscribe();
-		}
+		const subscription = watch(() => {
+			handleValueChange.current();
+		});
 
+		return () => subscription.unsubscribe();
+	}, [watch]);
+
+	useEffect(() => {
+		// when config changes due to overrides or conditional rendering, mark validity for re-evaluation
+		if (
+			previousFormValidationConfig &&
+			JSON.stringify(previousFormValidationConfig) !== JSON.stringify(formValidationConfig)
+		) {
+			setHasSchemaChange(true);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [checkIsFormValid, onValueChange, watch, formValidationConfig]);
+	}, [formValidationConfig]);
+
+	useEffect(() => {
+		// re-evaluate form validity when schema changes
+		if (hasSchemaChange && previousHardValidationSchema !== hardValidationSchema) {
+			handleValueChange.current();
+			setHasSchemaChange(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [hasSchemaChange, hardValidationSchema]);
 
 	useEffect(() => {
 		const errors = formState.errors;
