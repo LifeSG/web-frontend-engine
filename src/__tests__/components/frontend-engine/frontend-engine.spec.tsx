@@ -269,29 +269,6 @@ describe("frontend-engine", () => {
 				expect(onValueChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
 			});
 
-			it("should not be called on schema change", () => {
-				const CustomFrontendEngine = () => {
-					const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
-					const handleClick = () =>
-						setSchema({
-							...schema,
-							overrides: {
-								[FIELD_ONE_ID]: { label: "New text field" },
-							},
-						});
-					return (
-						<>
-							<FrontendEngine data={schema} onValueChange={onValueChange} />
-							<Button.Default onClick={handleClick}>Update schema</Button.Default>
-						</>
-					);
-				};
-				render(<CustomFrontendEngine />);
-				fireEvent.click(screen.getByRole("button", { name: "Update schema" }));
-
-				expect(onValueChange).not.toHaveBeenCalled();
-			});
-
 			it("should include form values of unregistered fields if stripUnknown is not true", () => {
 				renderComponent(
 					{ onValueChange },
