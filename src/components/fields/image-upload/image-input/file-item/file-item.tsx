@@ -13,6 +13,7 @@ import {
 	DesktopTextBodyDetail,
 	ErrorCustomMutedThumbnailContainer,
 	ErrorText,
+	FileNameWrapper,
 	MobileTextBodyDetail,
 	ProgressBar,
 	TextBody,
@@ -168,9 +169,8 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 						as="div"
 						id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
-						ref={fileNameWrapperRef}
 					>
-						{transformedFileName}
+						<FileNameWrapper ref={fileNameWrapperRef}>{transformedFileName}</FileNameWrapper>
 						<DesktopTextBodyDetail>{renderError()}</DesktopTextBodyDetail>
 						<MobileTextBodyDetail>{fileSize}</MobileTextBodyDetail>
 					</TextBody>
@@ -179,7 +179,6 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 					as="div"
 					id={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
-					ref={fileNameWrapperRef}
 				>
 					<MobileTextBodyDetail>{renderError()}</MobileTextBodyDetail>
 				</TextBody>
@@ -197,9 +196,8 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 					as="div"
 					id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
-					ref={fileNameWrapperRef}
 				>
-					{transformedFileName}
+					<FileNameWrapper ref={fileNameWrapperRef}>{transformedFileName}</FileNameWrapper>
 					{renderError()}
 					<MobileTextBodyDetail>{fileSize}</MobileTextBodyDetail>
 				</TextBody>
