@@ -67,6 +67,9 @@ export const Thumbnail = styled.div<{ src: string }>`
 
 export const TextBody = styled(Text.Body)`
 	flex: 1;
+`;
+
+export const FileNameWrapper = styled.div`
 	word-break: break-all;
 `;
 
