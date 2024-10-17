@@ -18,6 +18,7 @@ import {
 	useFormSchema,
 	useFormValues,
 	useFrontendEngineForm,
+	usePrevious,
 	useValidationConfig,
 	useValidationSchema,
 } from "../../utils/hooks";
@@ -90,6 +91,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const { resetFields, setFields, setField, getFormValues, registeredFields } = useFormValues(formMethods);
 	const registeredFieldsRef = useRef(registeredFields); // using ref ensures the latest values can be retrieved in setErrors and setWarnings
 	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
+	const previousFormValidationConfig = usePrevious(formValidationConfig);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -227,6 +229,13 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			const subscription = watch(() => {
 				onValueChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
 			});
+
+			// when validation changes (typically due to schema change or conditional rendering),
+			// the form validity needs to be re-evaluated so that the consumer gets the latest status
+			if (previousFormValidationConfig && previousFormValidationConfig !== formValidationConfig) {
+				onValueChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
+			}
+
 			return () => subscription.unsubscribe();
 		}
 
