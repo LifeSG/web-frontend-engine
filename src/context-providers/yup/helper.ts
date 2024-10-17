@@ -55,7 +55,7 @@ export namespace YupHelper {
 
 		const parsedFieldConfigs = { ...fieldConfigs };
 		Object.entries(parsedFieldConfigs).forEach(([id, { validationRules }]) => {
-			const [parsedFieldConfig, fieldWhenPairIds] = addSchemaToWhenRules(id, fieldConfigs, validationRules);
+			const [parsedFieldConfig, fieldWhenPairIds] = addSchemaToWhenRules(id, parsedFieldConfigs, validationRules);
 			whenPairIds.push(...fieldWhenPairIds);
 			parsedFieldConfigs[id].validationRules = parsedFieldConfig;
 		});
@@ -80,7 +80,10 @@ export namespace YupHelper {
 		fieldValidationConfig
 			?.filter((fieldValidationConfig) => "when" in fieldValidationConfig)
 			.forEach((fieldValidationConfig) => {
-				const parsedConfig = { ...fieldValidationConfig };
+				const parsedConfig = {
+					...fieldValidationConfig,
+					when: fieldValidationConfig.when ? { ...fieldValidationConfig.when } : undefined,
+				};
 				Object.keys(parsedConfig.when).forEach((whenFieldId) => {
 					// when
 					whenPairIds.push([id, whenFieldId]);
