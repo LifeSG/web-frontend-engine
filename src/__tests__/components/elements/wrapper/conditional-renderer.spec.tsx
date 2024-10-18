@@ -6,7 +6,15 @@ import {
 	TFrontendEngineFieldSchema,
 	TRestoreMode,
 } from "../../../../components/frontend-engine";
-import { ERROR_MESSAGE, FRONTEND_ENGINE_ID, getField, getSubmitButton, getSubmitButtonProps } from "../../../common";
+import {
+	ERROR_MESSAGE,
+	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
+	getField,
+	getSubmitButton,
+	getSubmitButtonProps,
+} from "../../../common";
+import { SUBMIT_BUTTON_SCHEMA } from "../../../../stories/common";
 
 const SUBMIT_FN = jest.fn();
 const FIELD_ONE_ID = "field1";
@@ -593,52 +601,82 @@ describe("conditional-renderer", () => {
 	});
 
 	describe("restore mode", () => {
+		it.each`
+			restoreMode        | dataType     | field2UiType       | field2DefaultValue     | field2UserInput       | field2ExpectedValue
+			${"none"}          | ${"string"}  | ${"text-field"}    | ${undefined}           | ${"bye"}              | ${""}
+			${"none"}          | ${"number"}  | ${"numeric-field"} | ${undefined}           | ${1}                  | ${undefined}
+			${"none"}          | ${"boolean"} | ${"switch"}        | ${undefined}           | ${true}               | ${undefined}
+			${"none"}          | ${"array"}   | ${"checkbox"}      | ${undefined}           | ${["Apple", "Berry"]} | ${[]}
+			${"default-value"} | ${"string"}  | ${"text-field"}    | ${"world"}             | ${"bye"}              | ${"world"}
+			${"default-value"} | ${"number"}  | ${"numeric-field"} | ${2}                   | ${1}                  | ${2}
+			${"default-value"} | ${"boolean"} | ${"switch"}        | ${false}               | ${true}               | ${false}
+			${"default-value"} | ${"array"}   | ${"checkbox"}      | ${["Apple", "Cherry"]} | ${["Apple", "Berry"]} | ${["Apple", "Cherry"]}
+			${"user-input"}    | ${"string"}  | ${"text-field"}    | ${undefined}           | ${"bye"}              | ${"bye"}
+			${"user-input"}    | ${"number"}  | ${"numeric-field"} | ${undefined}           | ${1}                  | ${1}
+			${"user-input"}    | ${"boolean"} | ${"switch"}        | ${undefined}           | ${true}               | ${true}
+			${"user-input"}    | ${"array"}   | ${"checkbox"}      | ${undefined}           | ${["Apple", "Berry"]} | ${["Apple", "Berry"]}
+		`(
+			"should populate $dataType-based conditionally rendered field in `$restoreMode` restoreMode",
+			async ({ restoreMode, field2UiType, field2DefaultValue, field2UserInput, field2ExpectedValue }) => {
+				render(
+					<FrontendEngineWithCustomButton
+						data={{
+							id: FRONTEND_ENGINE_ID,
+							sections: {
+								section: {
+									uiType: "section",
+									children: {
+										[FIELD_ONE_ID]: { label: FIELD_ONE_LABEL, uiType: "text-field" },
+										[FIELD_TWO_ID]: {
+											label: FIELD_TWO_LABEL,
+											uiType: field2UiType,
+											showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
+											options: [
+												{ label: "Apple", value: "Apple" },
+												{ label: "Berry", value: "Berry" },
+												{ label: "Cherry", value: "Cherry" },
+											],
+										},
+										...SUBMIT_BUTTON_SCHEMA,
+									},
+								},
+							},
+							defaultValues: { [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: field2DefaultValue },
+							restoreMode,
+						}}
+						onClick={(ref) => ref.current?.setValue(FIELD_TWO_ID, field2UserInput)}
+						onSubmit={SUBMIT_FN}
+					/>
+				);
+
+				await waitFor(() => fireEvent.click(getField("button", "Custom Button")));
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: field2UserInput })
+				);
+
+				fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() })
+				);
+
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: field2ExpectedValue })
+				);
+			}
+		);
+
 		const defaultValue = "world";
 		const userInput = "bye";
 		const uiType = "text-field";
 		const defaultValues = { [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: defaultValue };
-
-		it.each`
-			restoreMode        | expected
-			${"none"}          | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: "" }}
-			${"default-value"} | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: defaultValue }}
-			${"user-input"}    | ${{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: userInput }}
-		`("should populate conditionally rendered field in `$restoreMode` mode", async ({ restoreMode, expected }) => {
-			renderComponent(
-				{
-					[FIELD_ONE_ID]: {
-						label: FIELD_ONE_LABEL,
-						uiType,
-					},
-					[FIELD_TWO_ID]: {
-						label: FIELD_TWO_LABEL,
-						uiType,
-						showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
-					},
-				},
-				defaultValues,
-				undefined,
-				restoreMode
-			);
-
-			fireEvent.change(getFieldTwo(), { target: { value: userInput } });
-
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(
-				expect.objectContaining({ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: userInput })
-			);
-
-			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
-
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
-			expect(SUBMIT_FN).toBeCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
-
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining(expected));
-		});
 
 		it.each`
 			restoreMode        | expected
