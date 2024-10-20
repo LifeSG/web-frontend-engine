@@ -25,7 +25,7 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 	} = props;
 
 	const { bins, interval, ...sliderProps } = histogramSlider;
-	const { setValue } = useFormContext();
+	const { resetField } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>([0, 0]);
 	const { setFieldValidationConfig } = useValidationConfig();
 	// =============================================================================
@@ -38,7 +38,7 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 			const min = Math.min(...bins.map((bin) => bin.minValue));
 			const max = Math.max(...bins.map((bin) => bin.minValue)) + interval;
 
-			setValue(id, { from: min, to: max }, { shouldDirty: false });
+			resetField(id, { defaultValue: { from: min, to: max }, keepDirty: true });
 			setStateValue([min, max]);
 		} else {
 			setStateValue([value.from, value.to]);

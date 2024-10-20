@@ -17,6 +17,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
+		isDirty,
 		formattedLabel,
 		error,
 		id,
@@ -28,7 +29,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		...otherProps
 	} = props;
 
-	const { setValue } = useFormContext();
+	const { resetField, setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const prevDefaultCountry = usePrevious(defaultCountry);
 	const [countryValue, setCountryValue] = useState<TCountry>(defaultCountry);
@@ -117,21 +118,21 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// handles changes in value through reset or defaultValues
 	// adds prefix if it is not specified
 	useEffect(() => {
-		if (fixedCountry !== undefined) {
+		if (fixedCountry !== undefined && !isDirty) {
 			const { prefix, number } = PhoneHelper.getParsedPhoneNumber(value || "");
 			const prefixWithoutPlus = prefix.replace(/\+/g, "");
 			const schemaPrefix = getPrefixFromCountry(countryValue || "Singapore");
 			if (!fixedCountry || (fixedCountry && prefixWithoutPlus === schemaPrefix)) {
 				const fieldPrefix = prefix || schemaPrefix;
 				const phoneNumberWithPrefix = parseAndApplyNumber({ countryCode: fieldPrefix, number });
-				setValue(id, phoneNumberWithPrefix);
+				resetField(id, { defaultValue: phoneNumberWithPrefix, keepDirty: true });
 			} else {
 				const phoneNumberWithPrefix = parseAndApplyNumber({ countryCode: "", number: "" });
-				setValue(id, phoneNumberWithPrefix);
+				resetField(id, { defaultValue: phoneNumberWithPrefix, keepDirty: true });
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value, fixedCountry, countryValue]);
+	}, [value, isDirty, fixedCountry, countryValue]);
 
 	// =============================================================================
 	// EVENT HANDLERS
