@@ -22,7 +22,7 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 		value,
 		warning,
 	} = props;
-	const { setValue, setError } = useFormContext();
+	const { resetField } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>(undefined);
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -35,7 +35,7 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 			const min = Math.min(...bins.map((bin) => bin.minValue));
 			const max = Math.max(...bins.map((bin) => bin.minValue)) + interval;
 
-			setValue(id, { from: min, to: max }, { shouldDirty: false });
+			resetField(id, { defaultValue: { from: min, to: max }, keepDirty: true });
 			setStateValue([min, max]);
 		} else {
 			setStateValue([value.from, value.to]);
