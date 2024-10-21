@@ -81,6 +81,7 @@ export interface IImage {
 	uploadResponse?: any;
 	slot: number;
 	customErrorMessage?: string | undefined;
+	metadata?: IImageMetadata;
 }
 
 export interface IImageDimensions {
@@ -103,6 +104,12 @@ export interface IUploadedImage {
 
 export interface IDismissReviewModalEvent {
 	removePendingImages: boolean;
+}
+
+export interface IImageMetadata {
+	dateTimeOriginal: string | undefined;
+	lat: number | undefined;
+	lng: number | undefined;
 }
 // =============================================================================
 // EVENTS (fired from FEE)
