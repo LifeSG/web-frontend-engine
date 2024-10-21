@@ -2,6 +2,7 @@ import { Color } from "@lifesg/react-design-system/color";
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { TextStyleHelper } from "@lifesg/react-design-system/text";
 import isArray from "lodash/isArray";
+import isBoolean from "lodash/isBoolean";
 import isNumber from "lodash/isNumber";
 import isString from "lodash/isString";
 import { useEffect, useRef } from "react";
@@ -60,8 +61,10 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 					const value = getField(id);
 					if (isArray(value)) {
 						setField(id, []);
-					} else if (isString(value) || isNumber(value)) {
+					} else if (isString(value)) {
 						setField(id, "");
+					} else if (isNumber(value) || isBoolean(value)) {
+						setField(id, undefined);
 					}
 					break;
 				}
