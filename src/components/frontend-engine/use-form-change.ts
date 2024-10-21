@@ -2,6 +2,7 @@ import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
+import { TFormYupConfig } from "../../context-providers";
 import { useFormValues, usePrevious, useValidationConfig, useValidationSchema } from "../../utils/hooks";
 import { IFrontendEngineProps, TFrontendEngineValues } from "./types";
 
@@ -98,12 +99,15 @@ export const useFormChange = (props: IFrontendEngineProps, formMethods: UseFormR
 
 	useEffect(() => {
 		// when config changes due to overrides or conditional rendering, mark validity for re-evaluation
-		if (
-			previousFormValidationConfig &&
-			// TODO: compare validation rules directly
-			JSON.stringify(previousFormValidationConfig) !== JSON.stringify(formValidationConfig)
-		) {
-			setHasSchemaChange(true);
+		if (previousFormValidationConfig) {
+			const mapValidationRules = (config: TFormYupConfig) => {
+				return Object.entries(config).map(([fieldId, { validationRules }]) => [fieldId, validationRules]);
+			};
+			const previousValidationRules = mapValidationRules(previousFormValidationConfig);
+			const validationRules = mapValidationRules(formValidationConfig);
+			if (!isEqual(previousValidationRules, validationRules)) {
+				setHasSchemaChange(true);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formValidationConfig]);
