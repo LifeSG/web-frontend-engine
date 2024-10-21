@@ -41,6 +41,7 @@
 		"@js-joda/timezone": "^2.15.0",
 		"axios": "^1.2.2",
 		"country-code-lookup": "^0.0.20",
+		"exifreader": "^4.23.7",
 		"fabric": "^5.2.4",
 		"heic2any": "^0.0.3",
 		"leaflet": "^1.9.4",

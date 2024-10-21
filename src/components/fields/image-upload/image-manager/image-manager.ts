@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { AxiosApiClient, FileHelper, ImageHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
@@ -110,6 +110,7 @@ export const ImageManager = (props: IProps) => {
 								});
 								if (image.addedFrom !== "schema") {
 									compress ? compressImage(index, image) : convertImage(index, image);
+									extractImageMetadata(index, image);
 								}
 							} else {
 								setImages((prev) => {
@@ -190,10 +191,11 @@ export const ImageManager = (props: IProps) => {
 
 		setValue(
 			id,
-			uploadedImages.map(({ id, dataURL, drawingDataURL, name, uploadResponse }) => ({
+			uploadedImages.map(({ id, dataURL, drawingDataURL, name, metadata, uploadResponse }) => ({
 				fileId: id,
 				fileName: name,
 				dataURL: drawingDataURL || dataURL,
+				metadata,
 				uploadResponse,
 			})),
 			{ shouldDirty, shouldTouch: hasNotPrefilledImages }
@@ -399,6 +401,20 @@ export const ImageManager = (props: IProps) => {
 				return updatedImages;
 			});
 		}
+	};
+
+	const extractImageMetadata = async (index: number, iFile: IImage) => {
+		try {
+			const metadata = await ImageHelper.getMetadata(iFile.file);
+			setImages((prev) => {
+				const updatedImages = [...prev];
+				updatedImages[index] = {
+					...prev[index],
+					metadata,
+				};
+				return updatedImages;
+			});
+		} catch (error) {}
 	};
 
 	return null;
