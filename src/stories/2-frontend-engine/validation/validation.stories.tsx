@@ -570,7 +570,7 @@ export const WhenSchema: Story = {
 			},
 			ruleName: "when",
 			ruleDescription:
-				"Applies validation to a field when another field fulfils / fails the validation schema according to the <code>is</code> value.",
+				"Applies validation to a field when another field fulfils / fails the validation schema according to the <code>is</code> value. Aside from validation rules, the <code>is</code> key also accepts conditional validation rules like the `filled`.",
 		},
 		excludeFields: OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS,
 		overrides: [
