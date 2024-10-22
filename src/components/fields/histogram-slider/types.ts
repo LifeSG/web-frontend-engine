@@ -20,6 +20,8 @@ export interface IHistogramSliderValue {
 
 export interface IHistogramSliderSchema<V = undefined>
 	extends IBaseFieldSchema<"histogram-slider", V, IHistogramValidationRule>,
-		TComponentOmitProps<Pick<HistogramSliderProps, "className" | "disabled" | "readOnly" | "bins" | "interval">> {
+		TComponentOmitProps<
+			Pick<HistogramSliderProps, "className" | "disabled" | "readOnly" | "bins" | "interval" | "ariaLabels">
+		> {
 	customOptions?: TCustomOptions | undefined;
 }

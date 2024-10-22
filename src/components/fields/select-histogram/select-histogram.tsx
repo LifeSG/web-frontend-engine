@@ -24,7 +24,7 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 		...otherProps
 	} = props;
 
-	const { bins, interval } = histogramSlider;
+	const { bins, interval, ...sliderProps } = histogramSlider;
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>([0, 0]);
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -131,6 +131,7 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 				histogramSlider={{
 					bins,
 					interval,
+					...sliderProps,
 				}}
 			/>
 			<Warning id={id} message={warning} />
