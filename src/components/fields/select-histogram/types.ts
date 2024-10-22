@@ -17,5 +17,5 @@ export interface ISelectHistogramSchema<V = undefined>
 	extends IBaseFieldSchema<"select-histogram", V, ISelectHistogramValidationRule>,
 		TComponentOmitProps<Pick<SelectHistogramProps, "className" | "disabled" | "readOnly" | "value">> {
 	customOptions?: TCustomOptions | undefined;
-	histogramSlider: Pick<SelectHistogramSliderProps, "bins" | "interval">;
+	histogramSlider: Pick<SelectHistogramSliderProps, "bins" | "interval" | "ariaLabels">;
 }
