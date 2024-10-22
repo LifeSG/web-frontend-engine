@@ -41,20 +41,22 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 
 	useDeepCompareEffect(() => {
 		const newItemDetailList = schema.items.map((item: TReviewSchemaItem, i: number): IReviewItemDetails => {
+			const { value, mask, unmask, ...otherItemProps } = item;
 			const itemId = `item-${i + 1}`;
+			const itemValue = typeof value === "string" ? value : <Wrapper>{value}</Wrapper>;
 			const itemDetail: IReviewItemDetails = {
-				formattedItem: { ...item, id: itemId },
+				formattedItem: { ...otherItemProps, id: itemId, value: itemValue },
 				unmaskFailureCount: 0,
 			};
-			if ("mask" in item) {
-				const { mask, unmask, ...otherItemProps } = item;
+			if ("mask" in item && typeof value === "string") {
 				if (mask === "uinfin" || mask === "whole") {
 					itemDetail.unmask = unmask;
 					itemDetail.formattedItem = {
 						...otherItemProps,
 						id: itemId,
+						value: itemValue,
 						maskState: "masked",
-						maskRange: mask === "uinfin" ? [1, 4] : [0, item.value.length],
+						maskRange: mask === "uinfin" ? [1, 4] : [0, value.length],
 					};
 				}
 			}
