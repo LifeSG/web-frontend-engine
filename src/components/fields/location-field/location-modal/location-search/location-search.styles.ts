@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Button, Color, MediaQuery, MediaWidths, Text } from "@lifesg/react-design-system";
+import { PinFillIcon } from "@lifesg/react-icons";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
 
@@ -57,9 +58,12 @@ export const SearchBarIconButton = styled.button`
 	}
 `;
 
-export const SearchBarIcon = styled.img`
-	width: 1rem;
-	height: auto;
+export const SearchBarIconWrapper = styled.span`
+	> svg {
+		width: 1rem;
+		height: auto;
+		color: ${Color.Neutral[4]};
+	}
 `;
 
 export const SearchBarInput = styled.input`
@@ -134,8 +138,10 @@ export const ResultItem = styled.div<{ active?: boolean }>`
 	}
 `;
 
-export const ResultItemPin = styled.img`
+export const ResultItemPin = styled(PinFillIcon)`
 	width: 1rem;
+	min-width: 1rem;
+	color: ${Color.Neutral[1]};
 `;
 
 export const ButtonWrapper = styled.div<ISinglePanelStyle>`

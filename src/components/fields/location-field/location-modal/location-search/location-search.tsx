@@ -1,9 +1,12 @@
+import { PinFillIcon } from "@lifesg/react-icons";
 import { isEmpty } from "lodash";
-import { useEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
+import { OneMapService } from "../../../../../services";
 import { OneMapBoolean, OneMapError } from "../../../../../services/onemap/types";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { Prompt, Sanitize } from "../../../../shared";
+import { SearchSVGIcon } from "../../../../shared/images";
 import { LocationHelper } from "../../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
@@ -17,7 +20,6 @@ import {
 } from "../../types";
 import { InfiniteScrollList } from "../infinite-scroll";
 import { boldResultsWithQuery, pagination } from "./helper";
-import { LOCATION_PIN_BLACK, LOCATION_PIN_GREY, SEARCH_SVG } from "./location-search.data";
 import {
 	ButtonItem,
 	ButtonWrapper,
@@ -28,14 +30,13 @@ import {
 	ResultWrapper,
 	SearchBarContainer,
 	SearchBarCross,
-	SearchBarIcon,
 	SearchBarIconButton,
+	SearchBarIconWrapper,
 	SearchBarInput,
 	SearchBarModalCross,
 	SearchWrapper,
 } from "./location-search.styles";
 import { ILocationSearchProps } from "./types";
-import { OneMapService } from "../../../../../services";
 
 export const LocationSearch = ({
 	id = "location-search",
@@ -114,9 +115,9 @@ export const LocationSearch = ({
 		checkAndSetPinLocationAsResult,
 	} = LocationHelper;
 
-	const iconPath: Record<typeof searchBarIcon, string> = {
-		search: SEARCH_SVG,
-		"location-pin": LOCATION_PIN_GREY,
+	const iconPath: Record<typeof searchBarIcon, ReactElement> = {
+		search: <SearchSVGIcon />,
+		"location-pin": <PinFillIcon />,
 	};
 
 	// =============================================================================
@@ -595,7 +596,7 @@ export const LocationSearch = ({
 					selectedIndex === index ? "active" : undefined
 				)}
 			>
-				<ResultItemPin src={LOCATION_PIN_BLACK} alt="Location" />
+				<ResultItemPin />
 				<Sanitize
 					sanitizeOptions={{
 						allowedTags: ["span"],
@@ -648,7 +649,7 @@ export const LocationSearch = ({
 						data-testid={TestHelper.generateId(id, "location-search-modal-search")}
 						disabled={!!disableSearch}
 					>
-						<SearchBarIcon src={iconPath[searchBarIcon]} alt="Search" />
+						<SearchBarIconWrapper>{iconPath[searchBarIcon]}</SearchBarIconWrapper>
 					</SearchBarIconButton>
 					<SearchBarInput
 						id={TestHelper.generateId(id, "location-search-modal-input")}

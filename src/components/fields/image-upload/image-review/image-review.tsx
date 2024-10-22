@@ -19,6 +19,7 @@ import {
 	DrawIcon,
 	EditHeaderButton,
 	EraserButton,
+	EraserButtonIcon,
 	FooterSaveButton,
 	FooterSection,
 	HeaderSection,
@@ -32,8 +33,6 @@ import {
 } from "./image-review.styles";
 import { ImageThumbnails } from "./image-thumbnails";
 
-const ICON_ERASER_BLACK = "https://assets.life.gov.sg/web-frontend-engine/img/icons/eraser-black.svg";
-const ICON_ERASER_BLUE = "https://assets.life.gov.sg/web-frontend-engine/img/icons/eraser-blue.svg";
 const ICON_DELETE_DISABLED = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-delete-disabled.svg";
 const ICON_DELETE = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-delete.svg";
 const ICON_DRAW_DISABLED = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-draw-disabled.svg";
@@ -444,7 +443,7 @@ export const ImageReview = (props: IProps) => {
 						onClick={handleEraseMode}
 						active={eraseMode}
 					>
-						<ButtonIcon src={!eraseMode ? ICON_ERASER_BLACK : ICON_ERASER_BLUE} alt="" />
+						<EraserButtonIcon eraseMode={eraseMode} />
 					</EraserButton>
 					<PaletteHolder>
 						{PALETTE_COLORS.map(({ color, colorScheme, label }, i) => (

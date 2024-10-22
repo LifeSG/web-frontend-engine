@@ -4,6 +4,7 @@ import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Text } from "@lifesg/react-design-system/text";
+import { EraserIcon } from "@lifesg/react-icons";
 import styled, { css } from "styled-components";
 
 interface IModalBoxStyle {
@@ -204,6 +205,13 @@ export const EraserButton = styled.button<{ active?: boolean }>`
 		width: 2.5rem;
 		height: 2.5rem;
 	}
+`;
+
+export const EraserButtonIcon = styled(EraserIcon)<{ eraseMode: boolean }>`
+	display: block;
+	width: 100%;
+	height: 100%;
+	color: ${(props) => (props.eraseMode ? Color.Primary : Color.Neutral[3])};
 `;
 
 export const ButtonIcon = styled.img`

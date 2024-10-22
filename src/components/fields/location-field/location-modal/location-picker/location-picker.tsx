@@ -1,14 +1,17 @@
-import { MediaWidths } from "@lifesg/react-design-system";
+import { BaseTheme, Color, MediaWidths } from "@lifesg/react-design-system";
 import { Text } from "@lifesg/react-design-system/text";
+import { PinFillIcon } from "@lifesg/react-icons";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
+import ReactDOMServer from "react-dom/server";
+import { useTheme } from "styled-components";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { LocationHelper } from "../../location-helper";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
-import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE, LOCATION_PIN_BLUE } from "./location-picker.data";
+import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE } from "./location-picker.data";
 import {
 	Banner,
 	BannerWrapper,
@@ -30,7 +33,7 @@ export const LocationPicker = ({
 	panelInputMode,
 	showLocationModal,
 	selectedLocationCoord,
-	interactiveMapPinIconUrl = LOCATION_PIN_BLUE,
+	interactiveMapPinIconUrl,
 	getCurrentLocation,
 	locationAvailable,
 	gettingCurrentLocation,
@@ -43,6 +46,7 @@ export const LocationPicker = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const theme = useTheme();
 	const mapRef = useRef<L.Map>();
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
@@ -174,7 +178,12 @@ export const LocationPicker = ({
 			const isSelected = enlargeSelectedMarker
 				? target.lat === selectedLocationCoord.lat && target.lng === selectedLocationCoord.lng
 				: undefined;
-			const marker = markerFrom(target, interactiveMapPinIconUrl, isSelected).addTo(map);
+			const mapPinIcon =
+				"data:image/svg+xml;base64," +
+				btoa(
+					ReactDOMServer.renderToString(<PinFillIcon color={Color.Primary({ theme: theme || BaseTheme })} />)
+				);
+			const marker = markerFrom(target, interactiveMapPinIconUrl ?? mapPinIcon, isSelected).addTo(map);
 
 			return shouldSelectOnClick
 				? marker.on("click", () => {
