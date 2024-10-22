@@ -20,6 +20,7 @@ const ITEMS = [
 ];
 const ALERT_TOP = "test top alert";
 const ALERT_BOTTOM = "test bottom alert";
+const ALERT_ITEM = "test custom item alert";
 
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	eventType?: string | undefined;
@@ -204,7 +205,7 @@ const maskTestSuite = (variant: "box" | "accordion") => {
 	});
 };
 
-const topBottomSectionTestSuite = (variant: "box" | "accordion") => {
+const customSchemaTestSuite = (variant: "box" | "accordion") => {
 	describe("top / bottom sections", () => {
 		it("should be able to render the topSection", () => {
 			renderComponent({
@@ -242,6 +243,29 @@ const topBottomSectionTestSuite = (variant: "box" | "accordion") => {
 			expect(screen.getByText(ALERT_BOTTOM)).toBeInTheDocument();
 		});
 	});
+
+	it("should be able to render item value as schema", () => {
+		renderComponent({
+			overrideField: {
+				variant,
+				description: DESCRIPTION,
+				items: [
+					{
+						label: "Custom item label",
+						value: {
+							alertTop: {
+								uiType: "alert",
+								type: "warning",
+								children: ALERT_ITEM,
+							},
+						},
+					},
+				],
+			},
+		});
+
+		expect(screen.getByText(ALERT_ITEM)).toBeInTheDocument();
+	});
 };
 
 describe(REFERENCE_KEY, () => {
@@ -260,7 +284,7 @@ describe(REFERENCE_KEY, () => {
 		});
 
 		maskTestSuite("box");
-		topBottomSectionTestSuite("box");
+		customSchemaTestSuite("box");
 	});
 
 	describe("accordion variant", () => {
@@ -312,6 +336,6 @@ describe(REFERENCE_KEY, () => {
 		});
 
 		maskTestSuite("accordion");
-		topBottomSectionTestSuite("accordion");
+		customSchemaTestSuite("accordion");
 	});
 });
