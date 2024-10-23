@@ -269,14 +269,28 @@ describe("frontend-engine", () => {
 				expect(onValueChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
 			});
 
-			it("should not be called on schema change", () => {
+			it("should not be called when form values do not change", () => {
 				const CustomFrontendEngine = () => {
-					const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
+					const [schema, setSchema] = useState<IFrontendEngineData>(
+						merge(cloneDeep(JSON_SCHEMA), {
+							sections: {
+								section: {
+									children: {
+										element: { uiType: "alert", children: "original" },
+									},
+								},
+							},
+						})
+					);
 					const handleClick = () =>
 						setSchema({
 							...schema,
 							overrides: {
-								[FIELD_ONE_ID]: { label: "New text field" },
+								section: {
+									children: {
+										element: { children: "overridden" },
+									},
+								},
 							},
 						});
 					return (
@@ -287,9 +301,43 @@ describe("frontend-engine", () => {
 					);
 				};
 				render(<CustomFrontendEngine />);
+
 				fireEvent.click(screen.getByRole("button", { name: "Update schema" }));
 
 				expect(onValueChange).not.toHaveBeenCalled();
+			});
+
+			it("should be called on validity change", () => {
+				const CustomFrontendEngine = () => {
+					const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
+					const handleClick = () =>
+						setSchema({
+							...schema,
+							overrides: {
+								[FIELD_ONE_ID]: {
+									validation: [
+										{ required: true, errorMessage: ERROR_MESSAGE },
+										{ min: 1, errorMessage: ERROR_MESSAGE_2 },
+									],
+								},
+							},
+						});
+					return (
+						<>
+							<FrontendEngine data={schema} onValueChange={onValueChange} />
+							<Button.Default onClick={handleClick}>Update schema</Button.Default>
+						</>
+					);
+				};
+				render(<CustomFrontendEngine />);
+
+				fireEvent.change(getFieldOne(), { target: { value: "1" } });
+
+				expect(onValueChange).toHaveBeenLastCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "1" }), false);
+
+				fireEvent.click(screen.getByRole("button", { name: "Update schema" }));
+
+				expect(onValueChange).toHaveBeenLastCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "1" }), true);
 			});
 
 			it("should include form values of unregistered fields if stripUnknown is not true", () => {

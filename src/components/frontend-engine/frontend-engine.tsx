@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import cloneDeep from "lodash/cloneDeep";
 import isEmpty from "lodash/isEmpty";
-import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import {
@@ -18,7 +18,6 @@ import {
 	useFormSchema,
 	useFormValues,
 	useFrontendEngineForm,
-	useValidationConfig,
 	useValidationSchema,
 } from "../../utils/hooks";
 import { Sections } from "../elements/sections";
@@ -29,21 +28,13 @@ import {
 	TFrontendEngineValues,
 	TWarningPayload,
 } from "./types";
+import { useFormChange } from "./use-form-change";
 
 const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const {
-		data,
-		className = null,
-		components,
-		onChange,
-		onSubmit,
-		onSubmitError,
-		onValueChange,
-		wrapInForm = true,
-	} = props;
+	const { data, className = null, components, onSubmit, onSubmitError, wrapInForm = true } = props;
 	const {
 		className: dataClassName = null,
 		defaultValues,
@@ -64,7 +55,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		rebuildValidationSchema,
 		yupId,
 	} = useValidationSchema();
-	const { formValidationConfig } = useValidationConfig();
 	const formMethods = useForm({
 		mode: validationMode,
 		reValidateMode: revalidationMode,
@@ -76,20 +66,10 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		},
 	});
 	const { setFormSchema } = useFormSchema();
-	const {
-		reset,
-		watch,
-		handleSubmit: reactFormHookSubmit,
-		getValues,
-		setValue,
-		setError,
-		trigger,
-		formState,
-		clearErrors,
-	} = formMethods;
-	const { resetFields, setFields, setField, getFormValues, registeredFields } = useFormValues(formMethods);
+	const { reset, handleSubmit: reactFormHookSubmit, getValues, setValue, setError, trigger, formState } = formMethods;
+	const { resetFields, setFields, getFormValues, registeredFields } = useFormValues(formMethods);
 	const registeredFieldsRef = useRef(registeredFields); // using ref ensures the latest values can be retrieved in setErrors and setWarnings
-	const [oldFormValues, setOldFormValues] = useState<TFrontendEngineValues>({});
+	const { checkIsFormValid } = useFormChange(props, formMethods);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -127,15 +107,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		YupHelper.addCondition(type, name, fn, yupId, overwrite);
 		rebuildValidationSchema();
 	};
-
-	const checkIsFormValid = useCallback(() => {
-		try {
-			hardValidationSchema.validateSync(getValues());
-			return true;
-		} catch (error) {
-			return false;
-		}
-	}, [getValues, hardValidationSchema]);
 
 	const handleSubmit = useCallback((): void => {
 		onSubmit?.(getFormValues(undefined, stripUnknown));
@@ -193,74 +164,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	useEffect(() => {
 		setFields(getValues());
 	}, []);
-
-	useEffect(() => {
-		const subscription = watch((value, { name }) => {
-			if (name) {
-				setField(name, value[name]);
-			} else {
-				setFields(value);
-			}
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		// attach / fire onChange event only when formValidationConfig has values
-		// otherwise isValid will be returned incorrectly as true
-		if (onChange && Object.keys(formValidationConfig || {}).length) {
-			const subscription = watch(() => {
-				onChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
-			});
-			onChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
-
-			return () => subscription.unsubscribe();
-		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [checkIsFormValid, onChange, watch, formValidationConfig]);
-
-	useEffect(() => {
-		// attach / fire onValueChange event only when formValidationConfig has values
-		// otherwise isValid will be returned incorrectly as true
-		if (onValueChange && Object.keys(formValidationConfig || {}).length) {
-			const subscription = watch(() => {
-				onValueChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
-			});
-			return () => subscription.unsubscribe();
-		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [checkIsFormValid, onValueChange, watch, formValidationConfig]);
-
-	useEffect(() => {
-		const errors = formState.errors;
-
-		if (errors && !isEmpty(errors)) {
-			const subscription = watch((value) => {
-				const apiErrors = Object.fromEntries(
-					Object.entries(formState.errors).filter(([_, value]) => value.type === "api")
-				);
-				const hasApiErrors = apiErrors && !isEmpty(apiErrors);
-
-				if (hasApiErrors) {
-					Object.keys(apiErrors).forEach((key) => {
-						const oldValue = oldFormValues[key];
-						const updatedValue = value[key];
-
-						if (oldValue !== updatedValue) {
-							clearErrors(key);
-						}
-					});
-				}
-
-				setOldFormValues(value);
-			});
-
-			return () => subscription.unsubscribe();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [formState, watch]);
 
 	useDeepCompareEffectNoCheck(() => {
 		reset(cloneDeep(defaultValues));
