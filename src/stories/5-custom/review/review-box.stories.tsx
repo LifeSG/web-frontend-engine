@@ -174,6 +174,24 @@ CustomBottomSection.args = {
 	},
 };
 
+export const CustomValue = DefaultStoryTemplate<TReviewSchema>("review-custom-value").bind({});
+CustomValue.args = {
+	referenceKey: "review",
+	label: "Your personal information",
+	description: "Retrieved on 27 Jun 2023",
+	items: [
+		{
+			label: "Language spoken",
+			value: {
+				list: {
+					uiType: "unordered-list",
+					children: ["English", "Hokkien", "Tamil"],
+				},
+			},
+		},
+	],
+};
+
 export const Masking = DefaultStoryTemplate<TReviewSchema>("review-masking").bind({});
 Masking.args = {
 	referenceKey: "review",

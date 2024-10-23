@@ -18,7 +18,7 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 		formattedLabel,
 		id,
 		onChange,
-		schema: { label: _label, bins, interval, validation, disabled, readOnly, className, customOptions },
+		schema: { label: _label, bins, interval, validation, disabled, readOnly, className, ariaLabels, customOptions },
 		value,
 		warning,
 	} = props;
@@ -125,6 +125,7 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 				disabled={disabled}
 				readOnly={readOnly}
 				className={className}
+				ariaLabels={ariaLabels}
 			/>
 			<Warning id={id} message={warning} />
 		</>
