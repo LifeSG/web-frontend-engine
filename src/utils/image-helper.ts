@@ -1,4 +1,6 @@
+import ExifReader from "exifreader";
 import { FileHelper } from "./file-helper";
+import { IImageMetadata } from "../components/fields/image-upload";
 
 export namespace ImageHelper {
 	/**
@@ -121,5 +123,17 @@ export namespace ImageHelper {
 			}
 		}
 		return compressed;
+	};
+
+	export const getMetadata = async (file: File): Promise<IImageMetadata> => {
+		const metadata = await ExifReader.load(file);
+		const dateTimeOriginal = metadata["DateTimeOriginal"]?.description;
+		const longitude = Number(metadata["GPSLongitude"]?.description);
+		const latitude = Number(metadata["GPSLatitude"]?.description);
+
+		const lng = !isNaN(longitude) ? Number(longitude) : undefined;
+		const lat = !isNaN(latitude) ? Number(latitude) : undefined;
+
+		return { dateTimeOriginal, lat, lng };
 	};
 }
