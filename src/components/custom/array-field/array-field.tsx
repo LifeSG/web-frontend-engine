@@ -53,7 +53,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const [max, setMax] = useState<number | undefined>(undefined);
 	const [length, setLength] = useState<number | undefined>(undefined);
 	const isInitialisedValue = useRef<boolean>(false);
-	const { setValue } = useFormContext();
+	const { resetField, setValue } = useFormContext();
 	const formRefs = useRef<IFrontendEngineRef[]>([]);
 	const stateValueRef = useRef(stateValue);
 
@@ -117,7 +117,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 			setStateValue(nextValue);
 			setStateKeys(nextKeys);
-			setValue(id, nextValue, { shouldDirty: false, shouldTouch: false });
+			resetField(id, { defaultValue: nextValue, keepDirty: true });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value, length, setValue, id]);
