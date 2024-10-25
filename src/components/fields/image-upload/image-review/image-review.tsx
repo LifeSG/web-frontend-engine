@@ -35,8 +35,6 @@ import { ImageThumbnails } from "./image-thumbnails";
 
 const ICON_DELETE_DISABLED = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-delete-disabled.svg";
 const ICON_DELETE = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-delete.svg";
-const ICON_DRAW_DISABLED = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-draw-disabled.svg";
-const ICON_DRAW = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-draw.svg";
 const ICON_PENCIL_GREY = "https://assets.life.gov.sg/web-frontend-engine/img/icons/pencil-grey.svg";
 const ICON_PENCIL_WHITE = "https://assets.life.gov.sg/web-frontend-engine/img/icons/pencil-white.svg";
 
@@ -378,7 +376,7 @@ export const ImageReview = (props: IProps) => {
 						onClick={handleStartDrawing}
 						disabled={drawDeleteDisabled}
 					>
-						<DrawIcon src={!drawDeleteDisabled ? ICON_DRAW : ICON_DRAW_DISABLED} />
+						<DrawIcon />
 						<DrawDeleteButtonText weight="semibold" disabled={drawDeleteDisabled}>
 							Draw
 						</DrawDeleteButtonText>

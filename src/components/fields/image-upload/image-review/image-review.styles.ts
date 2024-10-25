@@ -4,7 +4,7 @@ import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Text } from "@lifesg/react-design-system/text";
-import { EraserIcon } from "@lifesg/react-icons";
+import { EraserIcon, PencilStrokeIcon } from "@lifesg/react-icons";
 import styled, { css } from "styled-components";
 
 interface IModalBoxStyle {
@@ -156,8 +156,9 @@ export const DrawDeleteButtonText = styled(Text.H6)<{ disabled: boolean }>`
 	line-height: 1.75rem;
 `;
 
-export const DrawIcon = styled.img`
-	margin: 0 0.25rem 0 -0.5rem;
+export const DrawIcon = styled(PencilStrokeIcon)`
+	color: ${Color.Primary};
+	margin-right: 0.25rem;
 `;
 
 export const DeleteIcon = styled.img`

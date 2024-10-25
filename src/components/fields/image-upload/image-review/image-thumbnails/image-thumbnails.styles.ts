@@ -92,14 +92,22 @@ export const HiddenFileSelect = styled.input`
 	display: none;
 `;
 
-export const AddImageButton = styled(IconButton)`
+export const AddImageButton = styled(IconButton)<{ borderColor: string }>`
 	padding: 0;
 	width: 3rem;
 	height: 3rem;
 	background: #fff;
+	${({ borderColor }) =>
+		`background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${borderColor.replace(
+			"#",
+			"%23"
+		)}FF' stroke-width='3' stroke-dasharray='5%2c1.55' stroke-dashoffset='5' stroke-linecap='butt'/%3e%3c/svg%3e");`}
 
-	> img {
-		width: inherit;
-		height: inherit;
+	> svg {
+		color: ${Color.Primary};
+		width: 2.2rem;
+		height: 2.2rem;
+		stroke: ${Color.Primary};
+		stroke-width: 1;
 	}
 `;

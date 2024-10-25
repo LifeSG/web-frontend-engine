@@ -1,6 +1,6 @@
 import { BaseTheme, Color, MediaWidths } from "@lifesg/react-design-system";
 import { Text } from "@lifesg/react-design-system/text";
-import { PinFillIcon } from "@lifesg/react-icons";
+import { NavigationFillIcon, NavigationIcon, PinFillIcon } from "@lifesg/react-icons";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
@@ -11,7 +11,6 @@ import { useFieldEvent } from "../../../../../utils/hooks";
 import { LocationHelper } from "../../location-helper";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
-import { CURRENT_LOCATION, CURRENT_LOCATION_UNAVAILABLE } from "./location-picker.data";
 import {
 	Banner,
 	BannerWrapper,
@@ -238,10 +237,9 @@ export const LocationPicker = ({
 					}
 				}}
 			>
-				<ButtonLocationImage
-					src={locationAvailable ? CURRENT_LOCATION : CURRENT_LOCATION_UNAVAILABLE}
-					alt={`Current location ${locationAvailable ? "available" : "unavailable"}`}
-				/>
+				<ButtonLocationImage>
+					{locationAvailable ? <NavigationFillIcon /> : <NavigationIcon />}
+				</ButtonLocationImage>
 			</ButtonLocation>
 		</LocationPickerWrapper>
 	);

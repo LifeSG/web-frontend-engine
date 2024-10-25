@@ -1,4 +1,7 @@
+import { BaseTheme, Color } from "@lifesg/react-design-system";
+import { PlusIcon } from "@lifesg/react-icons";
 import { ChangeEvent, useRef } from "react";
+import { useTheme } from "styled-components";
 import { TestHelper } from "../../../../../utils";
 import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../../types";
 import {
@@ -40,6 +43,7 @@ export const ImageThumbnails = (props: IProps) => {
 		multiple,
 	} = props;
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const theme = useTheme();
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -124,8 +128,9 @@ export const ImageThumbnails = (props: IProps) => {
 					data-testid={TestHelper.generateId(id, "add-image-button")}
 					aria-label="add image"
 					onClick={handleButtonClick}
+					borderColor={Color.Primary({ theme: theme || BaseTheme })}
 				>
-					<img alt="add" src={ADD_PLACEHOLDER_ICON} />
+					<PlusIcon />
 				</AddImageButton>
 			</>
 		);
