@@ -126,14 +126,15 @@ export namespace ImageHelper {
 	};
 
 	export const getMetadata = async (file: File): Promise<IImageMetadata> => {
-		const metadata = await ExifReader.load(file);
-		const dateTimeOriginal = metadata["DateTimeOriginal"]?.description;
-		const longitude = Number(metadata["GPSLongitude"]?.description);
-		const latitude = Number(metadata["GPSLatitude"]?.description);
+		try {
+			const metadata = await ExifReader.load(file);
+			const dateTimeOriginal = metadata["DateTimeOriginal"]?.description;
+			const longitude = Number(metadata["GPSLongitude"]?.description);
+			const latitude = Number(metadata["GPSLatitude"]?.description);
 
-		const lng = !isNaN(longitude) ? Number(longitude) : undefined;
-		const lat = !isNaN(latitude) ? Number(latitude) : undefined;
-
-		return { dateTimeOriginal, lat, lng };
+			const lng = !isNaN(longitude) ? Number(longitude) : undefined;
+			const lat = !isNaN(latitude) ? Number(latitude) : undefined;
+			return { dateTimeOriginal, lat, lng };
+		} catch {}
 	};
 }

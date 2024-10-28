@@ -110,7 +110,6 @@ export const ImageManager = (props: IProps) => {
 								});
 								if (image.addedFrom !== "schema") {
 									compress ? compressImage(index, image) : convertImage(index, image);
-									extractImageMetadata(index, image);
 								}
 							} else {
 								setImages((prev) => {
@@ -235,11 +234,13 @@ export const ImageManager = (props: IProps) => {
 					return updatedImages;
 				});
 			} else {
+				const metadata = await ImageHelper.getMetadata(image.file);
 				setImages((prev) => {
 					const updatedImages = [...prev];
 					updatedImages[index] = {
 						...prev[index],
 						dataURL,
+						metadata,
 						status: EImageStatus.CONVERTED,
 					};
 					return updatedImages;
@@ -283,12 +284,14 @@ export const ImageManager = (props: IProps) => {
 					return updatedImages;
 				});
 			} else {
+				const metadata = await ImageHelper.getMetadata(imageToCompress.file);
 				const dataURL = await FileHelper.fileToDataUrl(compressed);
 				setImages((prev) => {
 					const updatedImages = [...prev];
 					updatedImages[index] = {
 						...prev[index],
 						dataURL,
+						metadata,
 						status: EImageStatus.COMPRESSED,
 					};
 					return updatedImages;
@@ -401,20 +404,6 @@ export const ImageManager = (props: IProps) => {
 				return updatedImages;
 			});
 		}
-	};
-
-	const extractImageMetadata = async (index: number, iFile: IImage) => {
-		try {
-			const metadata = await ImageHelper.getMetadata(iFile.file);
-			setImages((prev) => {
-				const updatedImages = [...prev];
-				updatedImages[index] = {
-					...prev[index],
-					metadata,
-				};
-				return updatedImages;
-			});
-		} catch (error) {}
 	};
 
 	return null;

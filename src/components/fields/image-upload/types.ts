@@ -81,7 +81,7 @@ export interface IImage {
 	uploadResponse?: any;
 	slot: number;
 	customErrorMessage?: string | undefined;
-	metadata?: IImageMetadata;
+	metadata?: IImageMetadata | undefined;
 }
 
 export interface IImageDimensions {
