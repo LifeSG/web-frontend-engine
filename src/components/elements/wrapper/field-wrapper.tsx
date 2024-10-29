@@ -15,7 +15,7 @@ import {
 	useFormContext,
 } from "react-hook-form";
 import styled from "styled-components";
-import { useFormSchema, useFormValues, useValidationConfig } from "../../../utils/hooks";
+import { useFormSchema, useFormValues, useIsomorphicDeepLayoutEffect, useValidationConfig } from "../../../utils/hooks";
 import { IComplexLabel } from "../../fields";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { Sanitize } from "../../shared";
@@ -48,7 +48,7 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 		restoreModeRef.current = restoreMode;
 	}, [restoreMode]);
 
-	useEffect(() => {
+	useIsomorphicDeepLayoutEffect(() => {
 		setValue(id, getField(id));
 		setRegisteredFields((prev) => [...prev, id]);
 

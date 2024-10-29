@@ -600,6 +600,44 @@ describe("conditional-renderer", () => {
 		});
 	});
 
+	it("should support shown condition dependent on overrides", async () => {
+		const fields: Record<string, TFrontendEngineFieldSchema> = {
+			overridden: {
+				uiType: "div",
+				children: {},
+			},
+			wrapper: {
+				uiType: "div",
+				showIf: [{ parent: [{ shown: true }] }],
+				children: {
+					[FIELD_ONE_ID]: {
+						label: FIELD_ONE_LABEL,
+						uiType: "text-field",
+						showIf: [{ missing: [{ shown: true }] }],
+					},
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType: "text-field",
+					},
+				},
+			},
+		};
+		renderComponent(
+			fields,
+			{ [FIELD_ONE_ID]: "one", [FIELD_TWO_ID]: "two" },
+			{
+				overridden: {
+					children: {
+						parent: { uiType: "hidden-field" },
+					},
+				},
+			}
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_TWO_ID]: "two" }));
+	});
+
 	describe("restore mode", () => {
 		it.each`
 			restoreMode        | dataType     | field2UiType       | field2DefaultValue     | field2UserInput       | field2ExpectedValue
