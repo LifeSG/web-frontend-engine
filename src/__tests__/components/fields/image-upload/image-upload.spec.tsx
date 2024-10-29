@@ -21,6 +21,8 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 
+const METADATA = { dateTimeOriginal: "2009:10:10 04:09:20", lat: 22.316033333333333, lng: 114.17031666666666 };
+
 const JPG_BASE64 =
 	"data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
 const FILE_1 = new File(["file"], "test.jpg", {
@@ -82,6 +84,7 @@ interface IRenderAndPerformActionsOptions {
  */
 const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) => {
 	jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
+	jest.spyOn(ImageHelper, "getMetadata").mockResolvedValue(METADATA);
 	jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 
 	const {
@@ -1066,6 +1069,7 @@ describe("image-upload", () => {
 		beforeEach(() => {
 			formIsDirty = undefined;
 			jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
+			jest.spyOn(ImageHelper, "getMetadata").mockResolvedValue(METADATA);
 			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
 			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 		});
