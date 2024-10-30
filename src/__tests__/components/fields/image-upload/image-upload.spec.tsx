@@ -35,6 +35,7 @@ const COMPONENT_ID = "field";
 const UI_TYPE = "image-upload";
 const SUBMIT_FN = jest.fn();
 let uploadSpy: jest.SpyInstance;
+let extractMetadataSpy: jest.SpyInstance;
 
 const getSaveButton = (isQuery = false): HTMLElement => getField("button", "Save", isQuery);
 const getDragInputUploadField = (): HTMLElement => screen.getByTestId("field-drag-upload__hidden-input");
@@ -84,7 +85,6 @@ interface IRenderAndPerformActionsOptions {
  */
 const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) => {
 	jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
-	jest.spyOn(ImageHelper, "getMetadata").mockResolvedValue(METADATA);
 	jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 
 	const {
@@ -158,6 +158,7 @@ describe("image-upload", () => {
 
 		jest.spyOn(FileHelper, "truncateFileName").mockImplementation((fileName) => fileName);
 		uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ id: 1 });
+		extractMetadataSpy = jest.spyOn(ImageHelper, "getMetadata").mockResolvedValue(METADATA);
 	});
 
 	it("should be able to render the field", async () => {
@@ -479,6 +480,21 @@ describe("image-upload", () => {
 
 				expect(compressSpy).toBeCalled();
 			});
+
+			it("Should extract image metadata", async () => {
+				jest.spyOn(ImageHelper, "compressImage").mockResolvedValue(FILE_1);
+
+				await waitFor(async () => {
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
+						uploadType: inputType,
+					});
+				});
+
+				expect(extractMetadataSpy).toHaveBeenCalledTimes(1);
+				expect(extractMetadataSpy).toHaveBeenCalledWith(FILE_1);
+			});
 		});
 	});
 
@@ -620,6 +636,11 @@ describe("image-upload", () => {
 			it("should show error and disable submit button if image exceeds max size", async () => {
 				expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MODAL.MAX_FILE_SIZE.TITLE)).toBeInTheDocument();
 				expect(getSaveButton()).toBeDisabled();
+			});
+
+			it("Should extract image metadata", async () => {
+				expect(extractMetadataSpy).toHaveBeenCalledTimes(1);
+				expect(extractMetadataSpy).toHaveBeenCalledWith(FILE_1);
 			});
 		});
 
