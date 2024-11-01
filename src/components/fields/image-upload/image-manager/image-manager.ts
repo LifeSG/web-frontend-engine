@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { AxiosApiClient, FileHelper, ImageHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
@@ -190,10 +190,11 @@ export const ImageManager = (props: IProps) => {
 
 		setValue(
 			id,
-			uploadedImages.map(({ id, dataURL, drawingDataURL, name, uploadResponse }) => ({
+			uploadedImages.map(({ id, dataURL, drawingDataURL, name, metadata, uploadResponse }) => ({
 				fileId: id,
 				fileName: name,
 				dataURL: drawingDataURL || dataURL,
+				metadata,
 				uploadResponse,
 			})),
 			{ shouldDirty, shouldTouch: hasNotPrefilledImages }
@@ -233,11 +234,13 @@ export const ImageManager = (props: IProps) => {
 					return updatedImages;
 				});
 			} else {
+				const metadata = await ImageHelper.getMetadata(image.file);
 				setImages((prev) => {
 					const updatedImages = [...prev];
 					updatedImages[index] = {
 						...prev[index],
 						dataURL,
+						metadata,
 						status: EImageStatus.CONVERTED,
 					};
 					return updatedImages;
@@ -281,12 +284,14 @@ export const ImageManager = (props: IProps) => {
 					return updatedImages;
 				});
 			} else {
+				const metadata = await ImageHelper.getMetadata(imageToCompress.file);
 				const dataURL = await FileHelper.fileToDataUrl(compressed);
 				setImages((prev) => {
 					const updatedImages = [...prev];
 					updatedImages[index] = {
 						...prev[index],
 						dataURL,
+						metadata,
 						status: EImageStatus.COMPRESSED,
 					};
 					return updatedImages;
