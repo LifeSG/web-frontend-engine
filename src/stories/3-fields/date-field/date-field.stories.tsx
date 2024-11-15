@@ -77,6 +77,18 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		withinDays: {
+			description: "Validate if value is within x days from now or specific date",
+			table: {
+				type: {
+					summary: `{ numberOfDays: number; specificDate?: string | undefined; };`,
+				},
+				defaultValue: {},
+			},
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -283,4 +295,40 @@ HideInputKeyboard.args = {
 	uiType: "date-field",
 	label: "Date",
 	hideInputKeyboard: true,
+};
+
+export const WithinDays = DefaultStoryTemplate<IDateFieldSchema>("within-days").bind({});
+WithinDays.args = {
+	uiType: "date-field",
+	label: "Within Days",
+	validation: [
+		{ required: true },
+		{
+			withinDays: {
+				numberOfDays: 7,
+			},
+			errorMessage: "Within 7 days more",
+		},
+	],
+};
+
+export const WithinDaysWithSpecificDate = DefaultStoryTemplate<IDateFieldSchema>("within-days-with-specific-date").bind(
+	{}
+);
+WithinDaysWithSpecificDate.args = {
+	uiType: "date-field",
+	label: {
+		mainLabel: "Within Days",
+		subLabel: "Specific date is set 2024-11-09",
+	},
+	validation: [
+		{ required: true },
+		{
+			withinDays: {
+				numberOfDays: 10,
+				specificDate: "2024-11-09",
+			},
+			errorMessage: "Within 10 days more from 2024-11-09",
+		},
+	],
 };

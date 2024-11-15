@@ -78,6 +78,11 @@ export interface IYupConditionalValidationRule extends IYupRule {
 export interface IYupRenderRule extends IYupRule {
 	filled?: boolean | undefined;
 	shown?: boolean | undefined;
+	withinDays?: {
+		numberOfDays: number;
+		specificDate?: string | undefined;
+		dateFormat?: string;
+	};
 }
 
 export type TRenderRules = Record<string, IYupRenderRule[]>;
