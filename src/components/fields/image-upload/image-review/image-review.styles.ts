@@ -217,6 +217,8 @@ export const EraserButtonIcon = styled(EraserIcon)<{ eraseMode: boolean }>`
 
 export const ButtonIcon = styled(PencilIcon)<{ colorScheme: string }>`
 	color: ${(props) => (props.colorScheme === "light" ? Color.Neutral[3] : Color.Neutral[8])};
+	width: 100%;
+	height: 100%;
 `;
 
 export const PaletteHolder = styled.div`

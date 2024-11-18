@@ -26,7 +26,12 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 `;
 
 export const ThumbnailWarningIcon = styled(ExclamationTriangleIcon)`
-	color: ${Color.Neutral[3]};
+	color: ${Color.Neutral[4]};
+	position: absolute;
+	top: 5%;
+	left: 5%;
+	width: 90%;
+	height: 90%;
 `;
 
 const dotMoveKeyframe = keyframes`

@@ -16,7 +16,6 @@ import {
 } from "./image-thumbnails.styles";
 
 const ADD_PLACEHOLDER_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/photo-placeholder-add.svg";
-const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-grey.svg";
 
 interface IProps extends Omit<ISharedImageProps, "maxSizeInKb"> {
 	activeFileIndex: number;
