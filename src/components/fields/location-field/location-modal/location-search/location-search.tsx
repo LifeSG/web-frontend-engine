@@ -6,7 +6,6 @@ import { OneMapBoolean, OneMapError } from "../../../../../services/onemap/types
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { Prompt, Sanitize } from "../../../../shared";
-import { SearchSVGIcon } from "../../../../shared/images";
 import { LocationHelper } from "../../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
@@ -34,6 +33,7 @@ import {
 	SearchBarIconWrapper,
 	SearchBarInput,
 	SearchBarModalCross,
+	SearchIcon,
 	SearchWrapper,
 } from "./location-search.styles";
 import { ILocationSearchProps } from "./types";
@@ -116,7 +116,7 @@ export const LocationSearch = ({
 	} = LocationHelper;
 
 	const iconPath: Record<typeof searchBarIcon, ReactElement> = {
-		search: <SearchSVGIcon />,
+		search: <SearchIcon />,
 		"location-pin": <PinFillIcon />,
 	};
 

@@ -3,6 +3,7 @@ import { Button, Color, MediaQuery, MediaWidths, Text } from "@lifesg/react-desi
 import { PinFillIcon } from "@lifesg/react-icons";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
+import { MagnifierIcon } from "@lifesg/react-icons/magnifier";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
@@ -167,4 +168,8 @@ export const ButtonItem = styled(Button.Default)<{ buttonType: "cancel" | "confi
 		${({ buttonType }) => buttonType === "cancel" && `display: none`}
 		${({ buttonType }) => buttonType === "confirm" && `width: 100%`}
 	}
+`;
+
+export const SearchIcon = styled(MagnifierIcon)`
+	color: ${Color.Neutral[4]};
 `;

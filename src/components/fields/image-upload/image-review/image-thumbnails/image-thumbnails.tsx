@@ -95,7 +95,7 @@ export const ImageThumbnails = (props: IProps) => {
 						error
 					>
 						<BorderOverlay isSelected={activeFileIndex === index} />
-						<ThumbnailWarningIcon src={WARNING_ICON} />
+						<ThumbnailWarningIcon />
 					</ThumbnailItem>
 				);
 			}

@@ -33,11 +33,6 @@ import {
 } from "./image-review.styles";
 import { ImageThumbnails } from "./image-thumbnails";
 
-const ICON_DELETE_DISABLED = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-delete-disabled.svg";
-const ICON_DELETE = "https://assets.life.gov.sg/web-frontend-engine/img/icons/image-delete.svg";
-const ICON_PENCIL_GREY = "https://assets.life.gov.sg/web-frontend-engine/img/icons/pencil-grey.svg";
-const ICON_PENCIL_WHITE = "https://assets.life.gov.sg/web-frontend-engine/img/icons/pencil-white.svg";
-
 // lazy load to fix next.js SSR errors
 const ImageEditor = lazy(() => import("./image-editor"));
 
@@ -387,7 +382,7 @@ export const ImageReview = (props: IProps) => {
 						onClick={() => setActivePrompt("delete")}
 						disabled={drawDeleteDisabled}
 					>
-						<DeleteIcon src={!drawDeleteDisabled ? ICON_DELETE : ICON_DELETE_DISABLED} />
+						<DeleteIcon disabled={drawDeleteDisabled} />
 						<DrawDeleteButtonText weight="semibold" disabled={drawDeleteDisabled}>
 							Delete
 						</DrawDeleteButtonText>
@@ -453,9 +448,7 @@ export const ImageReview = (props: IProps) => {
 								key={color}
 								onClick={() => handleSelectPaletteColor(color)}
 							>
-								{activeColor === color && (
-									<ButtonIcon src={colorScheme === "light" ? ICON_PENCIL_GREY : ICON_PENCIL_WHITE} />
-								)}
+								{activeColor === color && <ButtonIcon colorScheme={colorScheme} />}
 							</Palette>
 						))}
 					</PaletteHolder>

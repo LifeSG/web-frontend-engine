@@ -1,5 +1,6 @@
 import { Color } from "@lifesg/react-design-system/color";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
+import { ExclamationTriangleIcon } from "@lifesg/react-icons";
 import styled, { keyframes } from "styled-components";
 
 export const ThumbnailsWrapper = styled.div`
@@ -24,12 +25,8 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 	background-size: cover;
 `;
 
-export const ThumbnailWarningIcon = styled.img`
-	position: absolute;
-	top: 12.5%;
-	left: 12.5%;
-	width: 75%;
-	height: 75%;
+export const ThumbnailWarningIcon = styled(ExclamationTriangleIcon)`
+	color: ${Color.Neutral[3]};
 `;
 
 const dotMoveKeyframe = keyframes`

@@ -4,7 +4,7 @@ import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Text } from "@lifesg/react-design-system/text";
-import { EraserIcon, PencilStrokeIcon } from "@lifesg/react-icons";
+import { BinIcon, EraserIcon, PencilIcon, PencilStrokeIcon } from "@lifesg/react-icons";
 import styled, { css } from "styled-components";
 
 interface IModalBoxStyle {
@@ -161,8 +161,8 @@ export const DrawIcon = styled(PencilStrokeIcon)`
 	margin-right: 0.25rem;
 `;
 
-export const DeleteIcon = styled.img`
-	margin-left: -0.1rem;
+export const DeleteIcon = styled(BinIcon)<{ disabled?: boolean }>`
+	color: ${(props) => (props.disabled ? Color.Neutral[3] : Color.Primary)};
 `;
 
 export const ImageEditorWrapper = styled.div`
@@ -215,10 +215,8 @@ export const EraserButtonIcon = styled(EraserIcon)<{ eraseMode: boolean }>`
 	color: ${(props) => (props.eraseMode ? Color.Primary : Color.Neutral[3])};
 `;
 
-export const ButtonIcon = styled.img`
-	display: block;
-	width: 100%;
-	height: 100%;
+export const ButtonIcon = styled(PencilIcon)<{ colorScheme: string }>`
+	color: ${(props) => (props.colorScheme === "light" ? Color.Neutral[3] : Color.Neutral[8])};
 `;
 
 export const PaletteHolder = styled.div`
