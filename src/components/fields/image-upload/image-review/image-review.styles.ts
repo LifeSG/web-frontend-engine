@@ -156,8 +156,8 @@ export const DrawDeleteButtonText = styled(Text.H6)<{ disabled: boolean }>`
 	line-height: 1.75rem;
 `;
 
-export const DrawIcon = styled(PencilStrokeIcon)`
-	color: ${Color.Primary};
+export const DrawIcon = styled(PencilStrokeIcon)<{ disabled?: boolean }>`
+	color: ${(props) => (props.disabled ? Color.Neutral[3] : Color.Primary)};
 	margin-right: 0.25rem;
 `;
 

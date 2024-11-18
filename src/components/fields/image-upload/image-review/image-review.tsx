@@ -371,7 +371,7 @@ export const ImageReview = (props: IProps) => {
 						onClick={handleStartDrawing}
 						disabled={drawDeleteDisabled}
 					>
-						<DrawIcon />
+						<DrawIcon disabled={drawDeleteDisabled} />
 						<DrawDeleteButtonText weight="semibold" disabled={drawDeleteDisabled}>
 							Draw
 						</DrawDeleteButtonText>
