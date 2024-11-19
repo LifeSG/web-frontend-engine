@@ -80,7 +80,7 @@ export interface IYupRenderRule extends IYupRule {
 	shown?: boolean | undefined;
 	withinDays?: {
 		numberOfDays: number;
-		specificDate?: string | undefined;
+		fromDate?: string | undefined;
 		dateFormat?: string;
 	};
 }

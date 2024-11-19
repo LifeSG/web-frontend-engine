@@ -113,27 +113,32 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 						return !excludedDatesRule["excludedDates"].includes(value);
 					}
 				)
-				.test("within-days", withinDaysRule?.errorMessage, (value) => {
-					if (!isValidDate(value) || !withinDaysRule?.["withinDays"]) return true;
-					return isWithinDays(value, withinDaysRule["withinDays"]);
-				}),
+				.test(
+					"within-days",
+					withinDaysRule?.errorMessage || ERROR_MESSAGES.DATE.WITHIN_DAYS(withinDaysRule?.["withinDays"]),
+					(value) => {
+						if (!isValidDate(value) || !withinDaysRule) return true;
+						return DateTimeHelper.checkWithinDays(value, { ...withinDaysRule["withinDays"], dateFormat });
+					}
+				),
 			validation
 		);
 
 		// set minDate / maxDate / disabledDates props
 		const withinDaysRange =
-			withinDaysRule?.["withinDays"] && calculateWithinDaysRange(withinDaysRule?.["withinDays"]);
+			withinDaysRule?.["withinDays"] &&
+			DateTimeHelper.calculateWithinDaysRange({ ...withinDaysRule["withinDays"], dateFormat });
 		const minDateProp = getLatestDate([
 			minDate,
 			futureRule?.["future"] && LocalDate.now().plusDays(1),
 			notPastRule?.["notPast"] && LocalDate.now(),
-			withinDaysRule?.["withinDays"] && withinDaysRange?.startDate,
+			withinDaysRule?.["withinDays"] && withinDaysRange.startDate,
 		]);
 		const maxDateProp = getEarliestDate([
 			maxDate,
 			pastRule?.["past"] && LocalDate.now().minusDays(1),
 			notFutureRule?.["notFuture"] && LocalDate.now(),
-			withinDaysRule?.["withinDays"] && withinDaysRange?.endDate,
+			withinDaysRule?.["withinDays"] && withinDaysRange.endDate,
 		]);
 		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
 		if (minDateProp || maxDateProp || disabledDatesProps) {
@@ -211,38 +216,6 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 
 	const isValidDate = (value: string): boolean => {
 		return value && value !== ERROR_MESSAGES.DATE.INVALID;
-	};
-
-	const calculateWithinDaysRange = (withinDays: {
-		numberOfDays: number;
-		specificDate?: string;
-	}): { startDate: LocalDate; endDate: LocalDate } => {
-		const { numberOfDays, specificDate } = withinDays;
-
-		const baseDate = specificDate
-			? DateTimeHelper.toLocalDateOrTime(specificDate, dateFormat, "date") || LocalDate.now()
-			: LocalDate.now();
-
-		if (numberOfDays >= 0) {
-			return {
-				startDate: baseDate,
-				endDate: baseDate.plusDays(numberOfDays),
-			};
-		} else {
-			return {
-				startDate: baseDate.plusDays(numberOfDays),
-				endDate: baseDate,
-			};
-		}
-	};
-
-	const isWithinDays = (value: string, withinDays: { numberOfDays: number; specificDate?: string }): boolean => {
-		const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
-		if (!localDate) return false;
-
-		const { startDate, endDate } = calculateWithinDaysRange(withinDays);
-
-		return !localDate.isBefore(startDate) && !localDate.isAfter(endDate);
 	};
 
 	// =============================================================================

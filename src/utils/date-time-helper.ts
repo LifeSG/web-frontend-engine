@@ -57,4 +57,43 @@ export namespace DateTimeHelper {
 			return undefined;
 		}
 	}
+
+	export function calculateWithinDaysRange(withinDays: {
+		numberOfDays: number;
+		fromDate?: string;
+		dateFormat?: string;
+	}): { startDate: LocalDate; endDate: LocalDate } {
+		const { numberOfDays, fromDate, dateFormat } = withinDays;
+		const baseDate = fromDate
+			? DateTimeHelper.toLocalDateOrTime(fromDate, dateFormat, "date") || LocalDate.now()
+			: LocalDate.now();
+		if (numberOfDays >= 0) {
+			return {
+				startDate: baseDate,
+				endDate: baseDate.plusDays(numberOfDays),
+			};
+		} else {
+			return {
+				startDate: baseDate.plusDays(numberOfDays),
+				endDate: baseDate,
+			};
+		}
+	}
+
+	export function checkWithinDays(
+		value: string,
+		withinDays: {
+			numberOfDays: number;
+			fromDate?: string;
+			dateFormat?: string;
+		}
+	) {
+		if (!value) return true;
+		const { dateFormat = "uuuu-MM-dd" } = withinDays;
+		const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
+		if (!localDate) return false;
+
+		const { startDate, endDate } = calculateWithinDaysRange(withinDays);
+		return !localDate.isBefore(startDate) && !localDate.isAfter(endDate);
+	}
 }

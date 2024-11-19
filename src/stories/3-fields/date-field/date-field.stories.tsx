@@ -81,7 +81,7 @@ const meta: Meta = {
 			description: "Validate if value is within x days from now or specific date",
 			table: {
 				type: {
-					summary: `{ numberOfDays: number; specificDate?: string | undefined; };`,
+					summary: `{ numberOfDays: number; fromDate?: string | undefined; };`,
 				},
 				defaultValue: {},
 			},
@@ -312,10 +312,8 @@ WithinDays.args = {
 	],
 };
 
-export const WithinDaysWithSpecificDate = DefaultStoryTemplate<IDateFieldSchema>("within-days-with-specific-date").bind(
-	{}
-);
-WithinDaysWithSpecificDate.args = {
+export const WithinDaysWithFromDate = DefaultStoryTemplate<IDateFieldSchema>("within-days-with-specific-date").bind({});
+WithinDaysWithFromDate.args = {
 	uiType: "date-field",
 	label: {
 		mainLabel: "Within Days",
@@ -326,9 +324,8 @@ WithinDaysWithSpecificDate.args = {
 		{
 			withinDays: {
 				numberOfDays: 10,
-				specificDate: "2024-11-09",
+				fromDate: "2024-11-09",
 			},
-			errorMessage: "Within 10 days more from 2024-11-09",
 		},
 	],
 };

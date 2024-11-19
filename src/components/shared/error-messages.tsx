@@ -21,6 +21,10 @@ export const ERROR_MESSAGES = {
 		MAX_DATE: (date: string) => `Date cannot be later than ${date}.`,
 		DISABLED_DATES: "Date is not allowed.",
 		INVALID: "Invalid date.",
+		WITHIN_DAYS: (numberOfDays: number, fromDate?: string | undefined) =>
+			`Within ${numberOfDays} days ${numberOfDays ? `more` : `less`} ${
+				fromDate ? `from ${fromDate}` : `from today`
+			}`,
 	},
 	DATE_RANGE: {
 		MUST_BE_FUTURE: "Dates must be in the future.",

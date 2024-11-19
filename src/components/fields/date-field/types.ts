@@ -13,7 +13,7 @@ export interface IDateFieldValidationRule extends IYupValidationRule {
 	excludedDates?: string[] | undefined;
 	withinDays?: {
 		numberOfDays: number;
-		specificDate?: string | undefined;
+		fromDate?: string | undefined;
 	};
 }
 
