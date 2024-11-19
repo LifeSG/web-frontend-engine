@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Button, Color, MediaQuery, MediaWidths, Text } from "@lifesg/react-design-system";
-import { PinFillIcon } from "@lifesg/react-icons";
+import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
 import { MagnifierIcon } from "@lifesg/react-icons/magnifier";

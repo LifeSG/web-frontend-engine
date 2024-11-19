@@ -1,6 +1,8 @@
 import { BaseTheme, Color, MediaWidths } from "@lifesg/react-design-system";
 import { Text } from "@lifesg/react-design-system/text";
-import { NavigationFillIcon, NavigationIcon, PinFillIcon } from "@lifesg/react-icons";
+import { NavigationIcon } from "@lifesg/react-icons/navigation";
+import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
+import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";

@@ -1,4 +1,4 @@
-import { PinFillIcon } from "@lifesg/react-icons";
+import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { isEmpty } from "lodash";
 import { ReactElement, useEffect, useRef, useState } from "react";
 import { OneMapService } from "../../../../../services";

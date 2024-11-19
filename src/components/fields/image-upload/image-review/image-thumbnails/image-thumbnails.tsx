@@ -1,5 +1,5 @@
-import { BaseTheme, Color } from "@lifesg/react-design-system";
-import { PlusIcon } from "@lifesg/react-icons";
+import { BaseTheme } from "@lifesg/react-design-system";
+import { PlusIcon } from "@lifesg/react-icons/plus";
 import { ChangeEvent, useRef } from "react";
 import { useTheme } from "styled-components";
 import { TestHelper } from "../../../../../utils";
@@ -127,7 +127,7 @@ export const ImageThumbnails = (props: IProps) => {
 					data-testid={TestHelper.generateId(id, "add-image-button")}
 					aria-label="add image"
 					onClick={handleButtonClick}
-					borderColor={Color.Primary({ theme: theme || BaseTheme })}
+					theme={theme || BaseTheme}
 				>
 					<PlusIcon />
 				</AddImageButton>

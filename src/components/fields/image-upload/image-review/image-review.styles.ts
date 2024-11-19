@@ -4,7 +4,10 @@ import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Text } from "@lifesg/react-design-system/text";
-import { BinIcon, EraserIcon, PencilIcon, PencilStrokeIcon } from "@lifesg/react-icons";
+import { BinIcon } from "@lifesg/react-icons/bin";
+import { EraserIcon } from "@lifesg/react-icons/eraser";
+import { PencilIcon } from "@lifesg/react-icons/pencil";
+import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import styled, { css } from "styled-components";
 
 interface IModalBoxStyle {

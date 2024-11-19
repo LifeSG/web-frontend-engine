@@ -1,7 +1,7 @@
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Text } from "@lifesg/react-design-system/text";
 import * as Icons from "@lifesg/react-icons";
-import { PlusCircleFillIcon } from "@lifesg/react-icons";
+import { PlusCircleFillIcon } from "@lifesg/react-icons/plus-circle-fill";
 import isEmpty from "lodash/isEmpty";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
