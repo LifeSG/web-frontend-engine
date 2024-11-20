@@ -79,9 +79,15 @@ export const ButtonLocation = styled.button`
 	box-shadow: 0 0.125rem 0.25rem ${Color.Neutral[1]}66;
 `;
 
-export const ButtonLocationImage = styled.img`
+export const ButtonLocationImage = styled.span`
 	width: 1.5rem;
 	height: 1.5rem;
+
+	> svg {
+		width: inherit;
+		height: inherit;
+		color: ${Color.Primary};
+	}
 `;
 
 export const BannerWrapper = styled.div`

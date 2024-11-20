@@ -1,4 +1,7 @@
+import { BaseTheme } from "@lifesg/react-design-system";
+import { PlusIcon } from "@lifesg/react-icons/plus";
 import { ChangeEvent, useRef } from "react";
+import { useTheme } from "styled-components";
 import { TestHelper } from "../../../../../utils";
 import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../../types";
 import {
@@ -13,7 +16,6 @@ import {
 } from "./image-thumbnails.styles";
 
 const ADD_PLACEHOLDER_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/photo-placeholder-add.svg";
-const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-grey.svg";
 
 interface IProps extends Omit<ISharedImageProps, "maxSizeInKb"> {
 	activeFileIndex: number;
@@ -40,6 +42,7 @@ export const ImageThumbnails = (props: IProps) => {
 		multiple,
 	} = props;
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const theme = useTheme();
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -91,7 +94,7 @@ export const ImageThumbnails = (props: IProps) => {
 						error
 					>
 						<BorderOverlay isSelected={activeFileIndex === index} />
-						<ThumbnailWarningIcon src={WARNING_ICON} />
+						<ThumbnailWarningIcon />
 					</ThumbnailItem>
 				);
 			}
@@ -124,8 +127,9 @@ export const ImageThumbnails = (props: IProps) => {
 					data-testid={TestHelper.generateId(id, "add-image-button")}
 					aria-label="add image"
 					onClick={handleButtonClick}
+					theme={theme || BaseTheme}
 				>
-					<img alt="add" src={ADD_PLACEHOLDER_ICON} />
+					<PlusIcon />
 				</AddImageButton>
 			</>
 		);

@@ -4,6 +4,10 @@ import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Text } from "@lifesg/react-design-system/text";
+import { BinIcon } from "@lifesg/react-icons/bin";
+import { EraserIcon } from "@lifesg/react-icons/eraser";
+import { PencilIcon } from "@lifesg/react-icons/pencil";
+import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import styled, { css } from "styled-components";
 
 interface IModalBoxStyle {
@@ -155,12 +159,13 @@ export const DrawDeleteButtonText = styled(Text.H6)<{ disabled: boolean }>`
 	line-height: 1.75rem;
 `;
 
-export const DrawIcon = styled.img`
-	margin: 0 0.25rem 0 -0.5rem;
+export const DrawIcon = styled(PencilStrokeIcon)<{ disabled: boolean }>`
+	color: ${(props) => (props.disabled ? Color.Neutral[3] : Color.Primary)};
+	margin-right: 0.25rem;
 `;
 
-export const DeleteIcon = styled.img`
-	margin-left: -0.1rem;
+export const DeleteIcon = styled(BinIcon)<{ disabled: boolean }>`
+	color: ${(props) => (props.disabled ? Color.Neutral[3] : Color.Primary)};
 `;
 
 export const ImageEditorWrapper = styled.div`
@@ -206,8 +211,15 @@ export const EraserButton = styled.button<{ active?: boolean }>`
 	}
 `;
 
-export const ButtonIcon = styled.img`
+export const EraserButtonIcon = styled(EraserIcon)<{ eraseMode: boolean }>`
 	display: block;
+	width: 100%;
+	height: 100%;
+	color: ${(props) => (props.eraseMode ? Color.Primary : Color.Neutral[3])};
+`;
+
+export const ButtonIcon = styled(PencilIcon)<{ colorScheme: string }>`
+	color: ${(props) => (props.colorScheme === "light" ? Color.Neutral[3] : Color.Neutral[8])};
 	width: 100%;
 	height: 100%;
 `;

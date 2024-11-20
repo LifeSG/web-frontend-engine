@@ -1,5 +1,7 @@
+import { ThemeSpec } from "@lifesg/react-design-system";
 import { Color } from "@lifesg/react-design-system/color";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
+import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import styled, { keyframes } from "styled-components";
 
 export const ThumbnailsWrapper = styled.div`
@@ -24,12 +26,13 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 	background-size: cover;
 `;
 
-export const ThumbnailWarningIcon = styled.img`
+export const ThumbnailWarningIcon = styled(ExclamationTriangleIcon)`
+	color: ${Color.Neutral[4]};
 	position: absolute;
-	top: 12.5%;
-	left: 12.5%;
-	width: 75%;
-	height: 75%;
+	top: 5%;
+	left: 5%;
+	width: 90%;
+	height: 90%;
 `;
 
 const dotMoveKeyframe = keyframes`
@@ -97,9 +100,19 @@ export const AddImageButton = styled(IconButton)`
 	width: 3rem;
 	height: 3rem;
 	background: #fff;
+	${({ theme }) => {
+		const borderColor = Color.Primary({ theme });
+		return `background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${borderColor.replace(
+			"#",
+			"%23"
+		)}FF' stroke-width='3' stroke-dasharray='5%2c1.55' stroke-dashoffset='5' stroke-linecap='butt'/%3e%3c/svg%3e");`;
+	}}
 
-	> img {
-		width: inherit;
-		height: inherit;
+	> svg {
+		color: ${Color.Primary};
+		width: 2.2rem;
+		height: 2.2rem;
+		stroke: ${Color.Primary};
+		stroke-width: 1;
 	}
 `;
