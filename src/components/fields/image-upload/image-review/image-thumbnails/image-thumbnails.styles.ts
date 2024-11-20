@@ -95,7 +95,7 @@ export const HiddenFileSelect = styled.input`
 	display: none;
 `;
 
-export const AddImageButton = styled(IconButton)<{ theme: ThemeSpec }>`
+export const AddImageButton = styled(IconButton)`
 	padding: 0;
 	width: 3rem;
 	height: 3rem;
