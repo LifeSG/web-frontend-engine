@@ -115,7 +115,9 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 				)
 				.test(
 					"within-days",
-					withinDaysRule?.errorMessage || ERROR_MESSAGES.DATE.WITHIN_DAYS(withinDaysRule?.["withinDays"]),
+					withinDaysRule?.errorMessage ||
+						(withinDaysRule?.["withinDays"] &&
+							ERROR_MESSAGES.DATE.WITHIN_DAYS(withinDaysRule?.["withinDays"])),
 					(value) => {
 						if (!isValidDate(value) || !withinDaysRule) return true;
 						return DateTimeHelper.checkWithinDays(value, { ...withinDaysRule["withinDays"], dateFormat });

@@ -211,3 +211,25 @@ OrConditions.args = {
 		validation: [{ required: true }],
 	},
 };
+
+export const WithinDaysConditions = Template.bind({});
+WithinDaysConditions.args = {
+	intro: {
+		uiType: "div",
+		className: "margin-bottom-1",
+		children: "Show field 3 as long as field 1 OR 2 is filled",
+	},
+	field1: {
+		label: "Field 1",
+		uiType: "date-field",
+		validation: [
+			{ required: true },
+			{
+				withinDays: {
+					numberOfDays: 5,
+				},
+				errorMessage: "Within 5 days more",
+			},
+		],
+	},
+};

@@ -77,18 +77,6 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
-		withinDays: {
-			description: "Validate if value is within x days from now or specific date",
-			table: {
-				type: {
-					summary: `{ numberOfDays: number; fromDate?: string | undefined; };`,
-				},
-				defaultValue: {},
-			},
-			control: {
-				type: "boolean",
-			},
-		},
 	},
 };
 export default meta;
@@ -305,9 +293,9 @@ WithinDays.args = {
 		{ required: true },
 		{
 			withinDays: {
-				numberOfDays: 7,
+				numberOfDays: 5,
 			},
-			errorMessage: "Within 7 days more",
+			errorMessage: "Within 5 days more",
 		},
 	],
 };
