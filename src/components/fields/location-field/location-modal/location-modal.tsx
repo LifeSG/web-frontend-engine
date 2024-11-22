@@ -338,6 +338,10 @@ const LocationModal = ({
 		}
 	}, [selectedAddressInfo, gettingCurrentLocation, setSinglePanelMode]);
 
+	useEffect(() => {
+		setSelectedAddressInfo(formValues || {});
+	}, [formValues]);
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
