@@ -217,10 +217,13 @@ WithinDaysConditions.args = {
 	intro: {
 		uiType: "div",
 		className: "margin-bottom-1",
-		children: "Show field 3 as long as field 1 OR 2 is filled",
+		children: "Show field 2 as long as field 1 filled",
 	},
 	field1: {
-		label: "Field 1",
+		label: {
+			mainLabel: "Field 1",
+			subLabel: "within 5 days from today",
+		},
 		uiType: "date-field",
 		validation: [
 			{ required: true },
@@ -228,8 +231,13 @@ WithinDaysConditions.args = {
 				withinDays: {
 					numberOfDays: 5,
 				},
-				errorMessage: "Within 5 days more",
 			},
 		],
+	},
+	field2: {
+		label: "Field 2",
+		uiType: "text-field",
+		showIf: [{ field1: [{ filled: true }] }],
+		validation: [{ required: true }],
 	},
 };

@@ -191,7 +191,7 @@ describe(UI_TYPE, () => {
 		${"max-date"}       | ${{ maxDate: "2022-01-02" }}                                   | ${["03", "01", "2022"]} | ${["02", "01", "2022"]}
 		${"excluded-dates"} | ${{ excludedDates: ["2022-01-02"] }}                           | ${["02", "01", "2022"]} | ${["03", "01", "2022"]}
 		${"within-days"}    | ${{ withinDays: { numberOfDays: 7 } }}                         | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"within-days"}    | ${{ withinDays: { numberOfDays: -7 } }}                        | ${["02", "01", "2022"]} | ${["24", "12", "2021"]}
+		${"within-days"}    | ${{ withinDays: { numberOfDays: -7 } }}                        | ${["02", "01", "2022"]} | ${["31", "12", "2021"]}
 		${"within-days"}    | ${{ withinDays: { numberOfDays: 5, fromDate: "2022-01-05" } }} | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
 	`("$condition validation", ({ condition, config, invalid, valid }) => {
 		beforeEach(() => {

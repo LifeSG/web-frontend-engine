@@ -1,3 +1,4 @@
+import { LocalDate } from "@js-joda/core";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import {
@@ -6,6 +7,7 @@ import {
 	TFrontendEngineFieldSchema,
 	TRestoreMode,
 } from "../../../../components/frontend-engine";
+import { SUBMIT_BUTTON_SCHEMA } from "../../../../stories/common";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -14,7 +16,6 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { SUBMIT_BUTTON_SCHEMA } from "../../../../stories/common";
 
 const SUBMIT_FN = jest.fn();
 const FIELD_ONE_ID = "field1";
@@ -59,6 +60,14 @@ const getFieldTwo = (isQuery = false): HTMLElement => {
 
 const getFieldThree = (isQuery = false): HTMLElement => {
 	return getField("textbox", FIELD_THREE_LABEL, isQuery);
+};
+
+export const changeDate = async (day: string, month: string, year: string) => {
+	fireEvent.focus(getField("textbox", "day"));
+	fireEvent.change(getField("textbox", "day"), { target: { value: day } });
+	fireEvent.change(getField("textbox", "month"), { target: { value: month } });
+	fireEvent.change(getField("textbox", "year"), { target: { value: year } });
+	await waitFor(() => fireEvent.click(screen.getByText("Done")));
 };
 
 describe("conditional-renderer", () => {
@@ -184,6 +193,47 @@ describe("conditional-renderer", () => {
 			fireEvent.click(screen.getByRole("option", { name: value }));
 		});
 		expect(getFieldTwo()).toBeInTheDocument();
+	});
+
+	describe.each`
+		condition        | config                                                         | invalid                 | valid
+		${"within-days"} | ${{ withinDays: { numberOfDays: 7 } }}                         | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"within-days"} | ${{ withinDays: { numberOfDays: -7 } }}                        | ${["02", "01", "2022"]} | ${["31", "12", "2021"]}
+		${"within-days"} | ${{ withinDays: { numberOfDays: 5, fromDate: "2022-01-05" } }} | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
+	`("$condition validation", ({ condition, config, invalid, valid }) => {
+		beforeEach(() => {
+			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
+		});
+
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		it(`should support ${condition} condition for date field conditional rendering`, async () => {
+			const uiTypeField1 = "date-field";
+			const uiTypeField2 = "text-field";
+			const fields: Record<string, TFrontendEngineFieldSchema> = {
+				[FIELD_ONE_ID]: {
+					label: FIELD_ONE_LABEL,
+					uiType: uiTypeField1,
+					validation: [config],
+				},
+				[FIELD_TWO_ID]: {
+					label: FIELD_TWO_LABEL,
+					uiType: uiTypeField2,
+					showIf: [{ [FIELD_ONE_ID]: [{ filled: true }] }],
+				},
+			};
+			renderComponent(fields);
+
+			await changeDate(invalid[0], invalid[1], invalid[2]);
+			fireEvent.click(getField("button", "Done"));
+			expect(getFieldTwo(true)).not.toBeInTheDocument();
+
+			await changeDate(valid[0], valid[1], valid[2]);
+			fireEvent.click(getField("button", "Done"));
+			expect(getFieldTwo()).toBeInTheDocument();
+		});
 	});
 
 	it("should support AND conditions", () => {
