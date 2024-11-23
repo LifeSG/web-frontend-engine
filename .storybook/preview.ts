@@ -8,7 +8,12 @@ const preview: Preview = {
 		controls: { expanded: true },
 		options: {
 			storySort: {
-				order: ["Introduction", "Form", ["Frontend Engine", "Validation Schema", "Conditional Rendering"]],
+				order: [
+					"Introduction",
+					["Getting Started", "Form Builder"],
+					"Form",
+					["Frontend Engine", "Validation Schema", "Conditional Rendering"],
+				],
 			},
 		},
 		layout: "centered",
