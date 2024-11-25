@@ -317,3 +317,26 @@ WithinDaysWithFromDate.args = {
 		},
 	],
 };
+
+export const WithinDaysWithCustomDateFormat = DefaultStoryTemplate<IDateFieldSchema>(
+	"within-days-with-custom-date-format"
+).bind({});
+WithinDaysWithCustomDateFormat.args = {
+	uiType: "date-field",
+	label: {
+		mainLabel: "Within Days",
+		subLabel: "Specific date is set 9/11/2024, date format is d/M/uuuu",
+	},
+	dateFormat: "uuuu-MM-dd",
+
+	validation: [
+		{ required: true },
+		{
+			withinDays: {
+				numberOfDays: 10,
+				fromDate: "9/11/2024",
+				dateFormat: "d/M/uuuu",
+			},
+		},
+	],
+};

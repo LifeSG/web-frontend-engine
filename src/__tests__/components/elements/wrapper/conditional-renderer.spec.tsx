@@ -195,44 +195,44 @@ describe("conditional-renderer", () => {
 		expect(getFieldTwo()).toBeInTheDocument();
 	});
 
-	describe.each`
-		condition        | config                                                         | invalid                 | valid
-		${"within-days"} | ${{ withinDays: { numberOfDays: 7 } }}                         | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"within-days"} | ${{ withinDays: { numberOfDays: -7 } }}                        | ${["02", "01", "2022"]} | ${["31", "12", "2021"]}
-		${"within-days"} | ${{ withinDays: { numberOfDays: 5, fromDate: "2022-01-05" } }} | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
-	`("$condition validation", ({ condition, config, invalid, valid }) => {
-		beforeEach(() => {
-			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
-		});
+	describe("within-days condition", () => {
+		describe.each`
+			condition                                                    | config                                                                               | invalid                 | valid
+			${"within-days (future)"}                                    | ${{ withinDays: { numberOfDays: 7 } }}                                               | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
+			${"within-days (past)"}                                      | ${{ withinDays: { numberOfDays: -7 } }}                                              | ${["02", "01", "2022"]} | ${["31", "12", "2021"]}
+			${"within-days (from specific date)"}                        | ${{ withinDays: { numberOfDays: 5, fromDate: "2022-01-05" } }}                       | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
+			${"within-days (from specific date with custom dateFormat)"} | ${{ withinDays: { numberOfDays: 5, fromDate: "5/1/2022", dateFormat: "d/M/uuuu" } }} | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
+		`("$condition validation", ({ condition, config, invalid, valid }) => {
+			beforeEach(() => {
+				jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
+			});
 
-		afterEach(() => {
-			jest.restoreAllMocks();
-		});
+			it(`should support ${condition} condition for date field conditional rendering`, async () => {
+				const uiTypeField1 = "date-field";
+				const uiTypeField2 = "text-field";
+				const fields: Record<string, TFrontendEngineFieldSchema> = {
+					[FIELD_ONE_ID]: {
+						label: FIELD_ONE_LABEL,
+						uiType: uiTypeField1,
+						dateFormat: config.withinDays.dateFormat,
+					},
+					[FIELD_TWO_ID]: {
+						label: FIELD_TWO_LABEL,
+						uiType: uiTypeField2,
+						showIf: [{ field1: [{ filled: true }, config] }],
+						validation: [{ required: true }],
+					},
+				};
+				renderComponent(fields);
 
-		it(`should support ${condition} condition for date field conditional rendering`, async () => {
-			const uiTypeField1 = "date-field";
-			const uiTypeField2 = "text-field";
-			const fields: Record<string, TFrontendEngineFieldSchema> = {
-				[FIELD_ONE_ID]: {
-					label: FIELD_ONE_LABEL,
-					uiType: uiTypeField1,
-					validation: [config],
-				},
-				[FIELD_TWO_ID]: {
-					label: FIELD_TWO_LABEL,
-					uiType: uiTypeField2,
-					showIf: [{ [FIELD_ONE_ID]: [{ filled: true }] }],
-				},
-			};
-			renderComponent(fields);
+				await changeDate(invalid[0], invalid[1], invalid[2]);
+				fireEvent.click(getField("button", "Done"));
+				expect(getFieldTwo(true)).not.toBeInTheDocument();
 
-			await changeDate(invalid[0], invalid[1], invalid[2]);
-			fireEvent.click(getField("button", "Done"));
-			expect(getFieldTwo(true)).not.toBeInTheDocument();
-
-			await changeDate(valid[0], valid[1], valid[2]);
-			fireEvent.click(getField("button", "Done"));
-			expect(getFieldTwo()).toBeInTheDocument();
+				await changeDate(valid[0], valid[1], valid[2]);
+				fireEvent.click(getField("button", "Done"));
+				expect(getFieldTwo()).toBeInTheDocument();
+			});
 		});
 	});
 

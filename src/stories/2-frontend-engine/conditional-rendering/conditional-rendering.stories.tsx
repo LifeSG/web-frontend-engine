@@ -217,27 +217,53 @@ WithinDaysConditions.args = {
 	intro: {
 		uiType: "div",
 		className: "margin-bottom-1",
-		children: "Show field 2 as long as field 1 filled",
+		children: "Show field 2 as long as field 1 is within 5 days from today",
 	},
 	field1: {
 		label: {
 			mainLabel: "Field 1",
-			subLabel: "within 5 days from today",
 		},
 		uiType: "date-field",
-		validation: [
-			{ required: true },
-			{
-				withinDays: {
-					numberOfDays: 5,
-				},
-			},
-		],
 	},
 	field2: {
 		label: "Field 2",
 		uiType: "text-field",
-		showIf: [{ field1: [{ filled: true }] }],
+		showIf: [
+			{
+				field1: [{ filled: true }, { withinDays: { numberOfDays: 5 } }],
+			},
+		],
+		validation: [{ required: true }],
+	},
+};
+
+export const WithinDaysConditionsWithCustomDateFormat = Template.bind({});
+WithinDaysConditionsWithCustomDateFormat.args = {
+	intro: {
+		uiType: "div",
+		className: "margin-bottom-1",
+		children: "Show field 2 as long as field 1 is within 5 days from today using custom date format",
+	},
+	field1: {
+		label: {
+			mainLabel: "Field 1",
+			subLabel: "Current date format is set d/M/uuuu",
+		},
+		uiType: "date-field",
+		dateFormat: "d/M/uuuu",
+		validation: [{ required: true }],
+	},
+	field2: {
+		label: {
+			mainLabel: "Field 2",
+			subLabel: "DateFormat in Field 2 need to be the same with Field 1",
+		},
+		uiType: "text-field",
+		showIf: [
+			{
+				field1: [{ filled: true }, { withinDays: { numberOfDays: 5, dateFormat: "d/M/uuuu" } }],
+			},
+		],
 		validation: [{ required: true }],
 	},
 };

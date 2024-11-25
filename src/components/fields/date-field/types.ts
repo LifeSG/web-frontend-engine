@@ -12,12 +12,12 @@ export interface IDateFieldValidationRule extends IYupValidationRule {
 	minDate?: string | undefined;
 	maxDate?: string | undefined;
 	excludedDates?: string[] | undefined;
-	withinDays?: IWithinDaysRule;
+	withinDays?: IWithinDaysRule | undefined;
 }
 
 export interface IDateFieldSchema<V = undefined>
 	extends IBaseFieldSchema<"date-field", V, IDateFieldValidationRule>,
-		TComponentOmitProps<DateInputProps, "minDate" | "maxDate" | "disabledDates" | "withinDays"> {
+		TComponentOmitProps<DateInputProps, "minDate" | "maxDate" | "disabledDates"> {
 	useCurrentDate?: boolean | undefined;
 	dateFormat?: string | undefined;
 }
