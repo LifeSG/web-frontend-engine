@@ -44,7 +44,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		value,
 		warning,
 	} = props;
-	const [stateValue, setStateValue] = useState<TFrontendEngineValues[]>([{}]);
+	const [stateValue, _setStateValue] = useState<TFrontendEngineValues[]>([{}]);
 	const [stateKeys, setStateKeys] = useState<string[]>(() => [generateRandomId()]);
 	const [showRemovePrompt, setShowRemovePrompt] = useState<boolean>(false);
 	const [indexToRemove, setIndexToRemove] = useState<number>(-1);
@@ -60,10 +60,6 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-	useEffect(() => {
-		stateValueRef.current = stateValue;
-	}, [stateValue]);
-
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 		const validRule = validation?.find((rule) => "valid" in rule);
@@ -174,6 +170,11 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			newArr.push(generator());
 		}
 		return newArr;
+	};
+
+	const setStateValue = (nextValue: TFrontendEngineValues[]) => {
+		_setStateValue(nextValue);
+		stateValueRef.current = nextValue;
 	};
 
 	// =============================================================================
