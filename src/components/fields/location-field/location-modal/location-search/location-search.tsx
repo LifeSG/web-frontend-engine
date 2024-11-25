@@ -328,6 +328,12 @@ export const LocationSearch = ({
 		}
 	}, [selectablePins]);
 
+	useEffect(() => {
+		if (selectedAddressInfo.address) {
+			setQueryString(selectedAddressInfo.address);
+		}
+	}, [selectedAddressInfo.address]);
+
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
