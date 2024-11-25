@@ -19,6 +19,7 @@ import {
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
+const VALUE_CHANGE_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "array-field";
 const TEXT_FIELD_ID = "input";
@@ -58,7 +59,7 @@ const renderComponent = (overrideField?: TOverrideField<IArrayFieldSchema>, over
 			},
 		},
 	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} onValueChange={VALUE_CHANGE_FN} />);
 };
 
 const getTextField = (index: number): HTMLElement => {
@@ -212,6 +213,34 @@ describe(UI_TYPE, () => {
 			);
 			expect(getTextField(0)).toHaveValue("World");
 			expect(getTextField(1)).toHaveValue("");
+		});
+
+		it("should become valid if invalid section was removed", async () => {
+			renderComponent({
+				fieldSchema: {
+					[TEXT_FIELD_ID]: {
+						uiType: "text-field",
+						label: TEXT_FIELD_LABEL,
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+				},
+			});
+
+			fireEvent.change(getTextField(0), { target: { value: "hello" } });
+			fireEvent.click(getAddButton());
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage(true)).toBeInTheDocument();
+			expect(VALUE_CHANGE_FN).toHaveBeenCalledWith(expect.anything(), false);
+
+			fireEvent.click(getRemoveButton(1));
+			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-remove"));
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+			expect(VALUE_CHANGE_FN).toHaveBeenCalledWith(expect.anything(), true);
 		});
 	});
 
