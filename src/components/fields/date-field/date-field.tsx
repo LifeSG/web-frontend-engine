@@ -35,7 +35,6 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	const [stateValue, setStateValue] = useState<string>(value || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [derivedProps, setDerivedProps] = useState<Pick<DateInputProps, "minDate" | "maxDate" | "disabledDates">>();
 	const { setFieldValidationConfig } = useValidationConfig();
-
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -48,7 +47,8 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		const minDateRule = validation?.find((rule) => "minDate" in rule);
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
 		const excludedDatesRule = validation?.find((rule) => "excludedDates" in rule);
-
+		const withinDaysRule = validation?.find((rule) => "withinDays" in rule);
+		// determine the min date by parsing the value with the current date format
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
 
@@ -111,20 +111,35 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 						if (!isValidDate(value) || !excludedDatesRule) return true;
 						return !excludedDatesRule["excludedDates"].includes(value);
 					}
+				)
+				.test(
+					"within-days",
+					withinDaysRule?.errorMessage ||
+						(withinDaysRule?.["withinDays"] &&
+							ERROR_MESSAGES.DATE.WITHIN_DAYS(withinDaysRule?.["withinDays"])),
+					(value) => {
+						if (!isValidDate(value) || !withinDaysRule) return true;
+						return DateTimeHelper.checkWithinDays(value, { ...withinDaysRule["withinDays"], dateFormat });
+					}
 				),
 			validation
 		);
 
 		// set minDate / maxDate / disabledDates props
+		const withinDaysRange =
+			withinDaysRule?.["withinDays"] &&
+			DateTimeHelper.calculateWithinDaysRange({ ...withinDaysRule["withinDays"], dateFormat });
 		const minDateProp = getLatestDate([
 			minDate,
 			futureRule?.["future"] && LocalDate.now().plusDays(1),
 			notPastRule?.["notPast"] && LocalDate.now(),
+			withinDaysRange?.startDate,
 		]);
 		const maxDateProp = getEarliestDate([
 			maxDate,
 			pastRule?.["past"] && LocalDate.now().minusDays(1),
 			notFutureRule?.["notFuture"] && LocalDate.now(),
+			withinDaysRange?.endDate,
 		]);
 		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
 		if (minDateProp || maxDateProp || disabledDatesProps) {

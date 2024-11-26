@@ -284,3 +284,36 @@ HideInputKeyboard.args = {
 	label: "Date",
 	hideInputKeyboard: true,
 };
+
+export const WithinDays = DefaultStoryTemplate<IDateFieldSchema>("within-days").bind({});
+WithinDays.args = {
+	uiType: "date-field",
+	label: "Within Days",
+	validation: [
+		{ required: true },
+		{
+			withinDays: {
+				numberOfDays: 5,
+			},
+			errorMessage: "Within 5 days more",
+		},
+	],
+};
+
+export const WithinDaysWithFromDate = DefaultStoryTemplate<IDateFieldSchema>("within-days-with-specific-date").bind({});
+WithinDaysWithFromDate.args = {
+	uiType: "date-field",
+	label: {
+		mainLabel: "Within Days",
+		subLabel: "Specific date is set 2024-11-09",
+	},
+	validation: [
+		{ required: true },
+		{
+			withinDays: {
+				numberOfDays: 10,
+				fromDate: "2024-11-09",
+			},
+		},
+	],
+};

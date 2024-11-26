@@ -24,6 +24,7 @@ export const YUP_CONDITIONS = [
 	"excludes",
 	"uinfin",
 	"equalsField",
+	"withinDays",
 ] as const;
 export type TYupSchemaType = (typeof YUP_TYPES)[number];
 export type TYupCondition = (typeof YUP_CONDITIONS)[number];
@@ -73,11 +74,13 @@ export interface IYupValidationRule<V = undefined, U = undefined> extends IYupRu
 
 export interface IYupConditionalValidationRule extends IYupRule {
 	filled?: boolean | undefined;
+	withinDays?: IWithinDaysRule | undefined;
 }
 
 export interface IYupRenderRule extends IYupRule {
 	filled?: boolean | undefined;
 	shown?: boolean | undefined;
+	withinDays?: IWithinDaysRule | undefined;
 }
 
 export type TRenderRules = Record<string, IYupRenderRule[]>;
@@ -90,3 +93,9 @@ export interface IFieldYupConfig {
 export type TFormYupConfig = Record<string, IFieldYupConfig>;
 
 export type TCustomValidationFunction = (value: unknown, arg: unknown, context: Yup.TestContext) => boolean;
+
+export interface IWithinDaysRule {
+	numberOfDays: number;
+	fromDate?: string | undefined;
+	dateFormat?: string | undefined;
+}
