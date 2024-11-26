@@ -61,72 +61,74 @@ describe("date-time-helper", () => {
 		expect(result).toBe(expected);
 	});
 
-	it("should calculate correct range for positive numberOfDays", () => {
-		const today = LocalDate.now();
-		const result = DateTimeHelper.calculateWithinDaysRange({
-			numberOfDays: 5,
+	describe("calculateWithinDaysRange", () => {
+		it("should calculate correct range for positive numberOfDays", () => {
+			const today = LocalDate.now();
+			const result = DateTimeHelper.calculateWithinDaysRange({
+				numberOfDays: 5,
+			});
+
+			expect(result.startDate).toEqual(today);
+			expect(result.endDate).toEqual(today.plusDays(5));
 		});
 
-		expect(result.startDate).toEqual(today);
-		expect(result.endDate).toEqual(today.plusDays(5));
-	});
+		it("should calculate correct range for negative numberOfDays", () => {
+			const today = LocalDate.now();
+			const result = DateTimeHelper.calculateWithinDaysRange({
+				numberOfDays: -5,
+			});
 
-	it("should calculate correct range for negative numberOfDays", () => {
-		const today = LocalDate.now();
-		const result = DateTimeHelper.calculateWithinDaysRange({
-			numberOfDays: -5,
+			expect(result.startDate).toEqual(today.minusDays(5));
+			expect(result.endDate).toEqual(today);
 		});
 
-		expect(result.startDate).toEqual(today.minusDays(5));
-		expect(result.endDate).toEqual(today);
-	});
+		it("should use provided fromDate when specified", () => {
+			const fromDate = "2023-06-01";
+			const result = DateTimeHelper.calculateWithinDaysRange({
+				numberOfDays: 3,
+				fromDate,
+			});
 
-	it("should use provided fromDate when specified", () => {
-		const fromDate = "2023-06-01";
-		const result = DateTimeHelper.calculateWithinDaysRange({
-			numberOfDays: 3,
-			fromDate,
+			expect(result.startDate).toEqual(LocalDate.parse(fromDate));
+			expect(result.endDate).toEqual(LocalDate.parse(fromDate).plusDays(3));
 		});
 
-		expect(result.startDate).toEqual(LocalDate.parse(fromDate));
-		expect(result.endDate).toEqual(LocalDate.parse(fromDate).plusDays(3));
-	});
+		it("should handle custom date format", () => {
+			const fromDate = "01/06/2023";
+			const customDateFormat = "dd/MM/uuuu";
+			const result = DateTimeHelper.calculateWithinDaysRange({
+				numberOfDays: 3,
+				fromDate,
+				dateFormat: customDateFormat,
+			});
 
-	it("should handle custom date format", () => {
-		const fromDate = "01/06/2023";
-		const customDateFormat = "dd/MM/uuuu";
-		const result = DateTimeHelper.calculateWithinDaysRange({
-			numberOfDays: 3,
-			fromDate,
-			dateFormat: customDateFormat,
+			expect(result.startDate).toEqual(LocalDate.parse("2023-06-01"));
+			expect(result.endDate).toEqual(LocalDate.parse("2023-06-04"));
 		});
 
-		expect(result.startDate).toEqual(LocalDate.parse("2023-06-01"));
-		expect(result.endDate).toEqual(LocalDate.parse("2023-06-04"));
-	});
+		it("should use current date if fromDate is invalid", () => {
+			const today = LocalDate.now();
+			const result = DateTimeHelper.calculateWithinDaysRange({
+				numberOfDays: 3,
+				fromDate: "invalid-date",
+			});
 
-	it("should use current date if fromDate is invalid", () => {
-		const today = LocalDate.now();
-		const result = DateTimeHelper.calculateWithinDaysRange({
-			numberOfDays: 3,
-			fromDate: "invalid-date",
+			expect(result.startDate).toEqual(today);
+			expect(result.endDate).toEqual(today.plusDays(3));
 		});
 
-		expect(result.startDate).toEqual(today);
-		expect(result.endDate).toEqual(today.plusDays(3));
-	});
+		it("should handle zero numberOfDays", () => {
+			const today = LocalDate.now();
+			const result = DateTimeHelper.calculateWithinDaysRange({
+				numberOfDays: 0,
+			});
 
-	it("should handle zero numberOfDays", () => {
-		const today = LocalDate.now();
-		const result = DateTimeHelper.calculateWithinDaysRange({
-			numberOfDays: 0,
+			expect(result.startDate).toEqual(today);
+			expect(result.endDate).toEqual(today);
 		});
-
-		expect(result.startDate).toEqual(today);
-		expect(result.endDate).toEqual(today);
 	});
 
-	describe("DateTimeHelper.checkWithinDays", () => {
+	describe("checkWithinDays", () => {
 		beforeEach(() => {
 			jest.spyOn(LocalDate, "now").mockImplementation(() => LocalDate.parse("2023-06-15"));
 		});

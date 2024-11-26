@@ -26,7 +26,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		id,
 		isDirty,
 		onChange,
-		schema: { label: _label, useCurrentDate, validation, ...otherSchema },
+		schema: { label: _label, useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, validation, ...otherSchema },
 		value,
 		warning,
 		...otherProps
@@ -34,7 +34,6 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [derivedProps, setDerivedProps] = useState<Pick<DateInputProps, "minDate" | "maxDate" | "disabledDates">>();
-	const [dateFormat, setDateFormat] = useState<string>(props.schema.dateFormat || DEFAULT_DATE_FORMAT);
 	const { setFieldValidationConfig } = useValidationConfig();
 	// =============================================================================
 	// EFFECTS
@@ -49,16 +48,9 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
 		const excludedDatesRule = validation?.find((rule) => "excludedDates" in rule);
 		const withinDaysRule = validation?.find((rule) => "withinDays" in rule);
-		// determine the current date format to use
-		let currentDateFormat = dateFormat;
-		if (withinDaysRule?.["withinDays"].dateFormat) {
-			currentDateFormat = withinDaysRule?.["withinDays"].dateFormat;
-			setDateFormat(currentDateFormat);
-		}
-
 		// determine the min date by parsing the value with the current date format
-		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], currentDateFormat, "date");
-		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], currentDateFormat, "date");
+		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
+		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
 
 		setFieldValidationConfig(
 			id,
@@ -66,26 +58,26 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 				.test("is-date", dateFormatRule?.errorMessage || ERROR_MESSAGES.DATE.INVALID, (value) => {
 					if (!value || value === "") return true;
 					if (!isValidDate(value)) return false;
-					return !!DateTimeHelper.toLocalDateOrTime(value, currentDateFormat, "date");
+					return !!DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 				})
 				.test("future", futureRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_FUTURE, (value) => {
 					if (!isValidDate(value) || !futureRule?.["future"]) return true;
-					const localDate = DateTimeHelper.toLocalDateOrTime(value, currentDateFormat, "date");
+					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 					return !!localDate?.isAfter(LocalDate.now());
 				})
 				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE.MUST_BE_PAST, (value) => {
 					if (!isValidDate(value) || !pastRule?.["past"]) return true;
-					const localDate = DateTimeHelper.toLocalDateOrTime(value, currentDateFormat, "date");
+					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 					return !!localDate?.isBefore(LocalDate.now());
 				})
 				.test("not-future", notFutureRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_FUTURE, (value) => {
 					if (!isValidDate(value) || !notFutureRule?.["notFuture"]) return true;
-					const localDate = DateTimeHelper.toLocalDateOrTime(value, currentDateFormat, "date");
+					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 					return !localDate?.isAfter(LocalDate.now());
 				})
 				.test("not-past", notPastRule?.errorMessage || ERROR_MESSAGES.DATE.CANNOT_BE_PAST, (value) => {
 					if (!isValidDate(value) || !notPastRule?.["notPast"]) return true;
-					const localDate = DateTimeHelper.toLocalDateOrTime(value, currentDateFormat, "date");
+					const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 					return !localDate?.isBefore(LocalDate.now());
 				})
 				.test(
@@ -96,7 +88,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 						),
 					(value) => {
 						if (!isValidDate(value) || !minDate) return true;
-						const localDate = DateTimeHelper.toLocalDateOrTime(value, currentDateFormat, "date");
+						const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 						return !localDate?.isBefore(minDate);
 					}
 				)
@@ -108,7 +100,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 						),
 					(value) => {
 						if (!isValidDate(value) || !maxDate) return true;
-						const localDate = DateTimeHelper.toLocalDateOrTime(value, currentDateFormat, "date");
+						const localDate = DateTimeHelper.toLocalDateOrTime(value, dateFormat, "date");
 						return !localDate?.isAfter(maxDate);
 					}
 				)
@@ -127,7 +119,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 							ERROR_MESSAGES.DATE.WITHIN_DAYS(withinDaysRule?.["withinDays"])),
 					(value) => {
 						if (!isValidDate(value) || !withinDaysRule) return true;
-						return DateTimeHelper.checkWithinDays(value, withinDaysRule["withinDays"]);
+						return DateTimeHelper.checkWithinDays(value, { ...withinDaysRule["withinDays"], dateFormat });
 					}
 				),
 			validation
@@ -135,7 +127,8 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 
 		// set minDate / maxDate / disabledDates props
 		const withinDaysRange =
-			withinDaysRule?.["withinDays"] && DateTimeHelper.calculateWithinDaysRange(withinDaysRule["withinDays"]);
+			withinDaysRule?.["withinDays"] &&
+			DateTimeHelper.calculateWithinDaysRange({ ...withinDaysRule["withinDays"], dateFormat });
 		const minDateProp = getLatestDate([
 			minDate,
 			futureRule?.["future"] && LocalDate.now().plusDays(1),

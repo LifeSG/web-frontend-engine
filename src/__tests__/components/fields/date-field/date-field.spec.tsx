@@ -235,11 +235,10 @@ describe(UI_TYPE, () => {
 	});
 
 	describe.each`
-		condition                             | config                                                           | invalid                 | valid
-		${"within-days (future)"}             | ${{ withinDays: { numberOfDays: 7 } }}                           | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"within-days (past)"}               | ${{ withinDays: { numberOfDays: -7 } }}                          | ${["02", "01", "2022"]} | ${["31", "12", "2021"]}
-		${"within-days (from specific date)"} | ${{ withinDays: { numberOfDays: 5, fromDate: "2022-01-05" } }}   | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
-		${"within-days (with custom format)"} | ${{ withinDays: { numberOfDays: 5, dateFormat: "dd/MM/uuuu" } }} | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
+		condition                             | config                                                         | invalid                 | valid
+		${"within-days (future)"}             | ${{ withinDays: { numberOfDays: 7 } }}                         | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"within-days (past)"}               | ${{ withinDays: { numberOfDays: -7 } }}                        | ${["02", "01", "2022"]} | ${["31", "12", "2021"]}
+		${"within-days (from specific date)"} | ${{ withinDays: { numberOfDays: 5, fromDate: "2022-01-05" } }} | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
 	`("$condition validation", ({ condition, config, invalid, valid }) => {
 		beforeEach(() => {
 			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
