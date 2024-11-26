@@ -293,7 +293,8 @@ export namespace YupHelper {
 
 					// from typing is only added in v1.0.0-beta.7 (https://github.com/jquense/yup/issues/1631)
 					// TODO: switch from dynamic reference once yup is updated
-					const metaYupId = testContext.options["from"][0].schema.describe().meta.yupId;
+					const fromLength = testContext.options["from"].length;
+					const metaYupId = testContext.options["from"][fromLength - 1].schema.describe().meta.yupId;
 					return customValidationMapping[metaYupId]?.[name]?.(value, arg, testContext);
 				},
 			});
