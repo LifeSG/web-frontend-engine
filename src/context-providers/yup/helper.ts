@@ -238,15 +238,20 @@ export namespace YupHelper {
 				customYupConditions.includes(k as TYupCondition)
 			)?.[0] as TYupCondition;
 			if (customRuleKey) {
-				yupSchema = (yupSchema as unknown)[customRuleKey](rule[customRuleKey], rule.errorMessage);
+				yupSchema = (yupSchema as unknown)[customRuleKey]?.(rule[customRuleKey], rule.errorMessage);
 			}
-
 			// prevent applying non-required validation for empty fields
-			yupSchema = yupSchema.transform((value) => {
-				if (value === null || value === "" || (typeof value === "object" && Object.keys(value).length === 0))
-					return undefined;
-				return value;
-			});
+			if (yupSchema) {
+				yupSchema = yupSchema.transform((value) => {
+					if (
+						value === null ||
+						value === "" ||
+						(typeof value === "object" && Object.keys(value).length === 0)
+					)
+						return undefined;
+					return value;
+				});
+			}
 		});
 
 		return yupSchema;
