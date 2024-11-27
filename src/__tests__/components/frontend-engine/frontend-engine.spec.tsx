@@ -1,6 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
+import isEqual from "lodash/isEqual";
 import merge from "lodash/merge";
 import { useRef, useState } from "react";
 import { FrontendEngine } from "../../../components";
@@ -778,27 +779,61 @@ describe("frontend-engine", () => {
 							},
 						}}
 					/>
-					<button onClick={() => onClick(formRef.current)}>Apply validation</button>
+					<button onClick={() => onClick(formRef.current)}>Apply</button>
 				</>
 			);
 		};
 
-		it("should support custom validation", async () => {
-			const handleClick = (ref: IFrontendEngineRef) => {
-				ref.addCustomValidation("string", "myCustomRule", (value) => value === "hello");
-			};
+		it.each`
+			type         | uiType                | fieldSchema        | invalid                 | valid
+			${"string"}  | ${"text-field"}       | ${{}}              | ${"hi"}                 | ${"hello"}
+			${"number"}  | ${"numeric-field"}    | ${{}}              | ${0}                    | ${1}
+			${"boolean"} | ${"switch"}           | ${{}}              | ${false}                | ${true}
+			${"array"}   | ${"multi-select"}     | ${{ options: [] }} | ${["a", "c"]}           | ${["a", "b"]}
+			${"object"}  | ${"date-range-field"} | ${{}}              | ${{ from: "", to: "" }} | ${{ from: "2024-01-01", to: "2024-01-02" }}
+		`(
+			"should support custom validation for $type-based fields",
+			async ({ type, uiType, fieldSchema, invalid, valid }) => {
+				let counter = 0;
+				const handleClick = (ref: IFrontendEngineRef) => {
+					switch (counter) {
+						case 0:
+							ref.addCustomValidation(type, "myCustomRule", (value) => isEqual(value, valid));
+							break;
+						case 1:
+							ref.setValue(FIELD_ONE_ID, invalid);
+							break;
+						case 2:
+							ref.setValue(FIELD_ONE_ID, valid);
+							break;
+					}
+					counter++;
+				};
+				render(
+					<TestComponent
+						fieldSchema={{
+							[FIELD_ONE_ID]: {
+								label: FIELD_ONE_LABEL,
+								uiType,
+								...fieldSchema,
+								validation: [{ myCustomRule: true, errorMessage: ERROR_MESSAGE }],
+							},
+						}}
+						onClick={handleClick}
+					/>
+				);
 
-			render(<TestComponent onClick={handleClick} />);
-			fireEvent.click(getField("button", "Apply validation"));
+				fireEvent.click(getField("button", "Apply"));
 
-			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(getErrorMessage()).toBeInTheDocument();
+				fireEvent.click(getField("button", "Apply"));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(getErrorMessage()).toBeInTheDocument();
 
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(getErrorMessage(true)).not.toBeInTheDocument();
-		});
+				fireEvent.click(getField("button", "Apply"));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			}
+		);
 
 		it("should support different custom validation of the same name in different instances", async () => {
 			const handleClick1 = (ref: IFrontendEngineRef) => {
@@ -824,7 +859,7 @@ describe("frontend-engine", () => {
 				</>
 			);
 
-			const applyButtons = screen.getAllByRole("button", { name: "Apply validation" });
+			const applyButtons = screen.getAllByRole("button", { name: "Apply" });
 			const submitButtons = screen.getAllByRole("button", { name: "Submit" });
 
 			applyButtons.forEach((button) => fireEvent.click(button));
@@ -851,7 +886,7 @@ describe("frontend-engine", () => {
 			};
 
 			render(<TestComponent onClick={handleClick} />);
-			fireEvent.click(getField("button", "Apply validation"));
+			fireEvent.click(getField("button", "Apply"));
 
 			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -869,7 +904,7 @@ describe("frontend-engine", () => {
 			};
 
 			render(<TestComponent onClick={handleClick} />);
-			fireEvent.click(getField("button", "Apply validation"));
+			fireEvent.click(getField("button", "Apply"));
 
 			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
