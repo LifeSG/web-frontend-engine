@@ -1,6 +1,6 @@
 import capitalize from "lodash/capitalize";
 import { ReactNode } from "react";
-import { IWithinDaysRule } from "../../context-providers";
+import { IDaysRangeRule } from "../../context-providers";
 import { FileHelper } from "../../utils/file-helper"; // import directly to avoid circular dependency
 
 export const ERROR_MESSAGES = {
@@ -22,7 +22,7 @@ export const ERROR_MESSAGES = {
 		MAX_DATE: (date: string) => `Date cannot be later than ${date}.`,
 		DISABLED_DATES: "Date is not allowed.",
 		INVALID: "Invalid date.",
-		WITHIN_DAYS: (withinDays: IWithinDaysRule) => {
+		WITHIN_DAYS: (withinDays: IDaysRangeRule) => {
 			const { numberOfDays, fromDate } = withinDays;
 			const unsignedDays = Math.abs(numberOfDays);
 			return `Date must be within ${unsignedDays} ${unsignedDays !== 1 ? "days" : "day"} ${

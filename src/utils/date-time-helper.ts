@@ -1,7 +1,7 @@
 import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { ERROR_MESSAGES } from "../components/shared/error-messages"; // import directly to avoid circular dependency
-import { IWithinDaysRule } from "../context-providers";
+import { IDaysRangeRule } from "../context-providers";
 
 export namespace DateTimeHelper {
 	// TODO: split into individual functions by type when parsing/formatting gets more complicated
@@ -59,7 +59,7 @@ export namespace DateTimeHelper {
 		}
 	}
 
-	export function calculateWithinDaysRange(withinDays: IWithinDaysRule): {
+	export function calculateWithinDaysRange(withinDays: IDaysRangeRule): {
 		startDate: LocalDate;
 		endDate: LocalDate;
 	} {
@@ -80,7 +80,7 @@ export namespace DateTimeHelper {
 		}
 	}
 
-	export function checkWithinDays(value: string, withinDays: IWithinDaysRule) {
+	export function checkWithinDays(value: string, withinDays: IDaysRangeRule) {
 		if (!value) return true;
 		const { dateFormat = "uuuu-MM-dd" } = withinDays;
 		const localDate = toLocalDateOrTime(value, dateFormat, "date");
