@@ -74,13 +74,13 @@ export interface IYupValidationRule<V = undefined, U = undefined> extends IYupRu
 
 export interface IYupConditionalValidationRule extends IYupRule {
 	filled?: boolean | undefined;
-	withinDays?: IWithinDaysRule | undefined;
 }
 
 export interface IYupRenderRule extends IYupRule {
 	filled?: boolean | undefined;
 	shown?: boolean | undefined;
 	withinDays?: IDaysRangeRule | undefined;
+	beyondDays?: IDaysRangeRule | undefined;
 }
 
 export type TRenderRules = Record<string, IYupRenderRule[]>;

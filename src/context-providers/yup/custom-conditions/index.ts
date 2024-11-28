@@ -48,3 +48,8 @@ YupHelper.addCondition("mixed", "withinDays", (value: string, withinDays: IDaysR
 	if (isEmpty(value)) return true;
 	return DateTimeHelper.checkWithinDays(value, withinDays);
 });
+
+YupHelper.addCondition("mixed", "beyondDays", (value: string, withinDays: IDaysRangeRule) => {
+	if (isEmpty(value)) return true;
+	return DateTimeHelper.checkBeyondDays(value, withinDays);
+});

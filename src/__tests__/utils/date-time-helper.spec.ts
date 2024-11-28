@@ -205,4 +205,30 @@ describe("date-time-helper", () => {
 			expect(result).toBe(false);
 		});
 	});
+
+	describe("checkBeyondDays", () => {
+		beforeEach(() => {
+			jest.spyOn(LocalDate, "now").mockImplementation(() => LocalDate.parse("2023-06-15"));
+		});
+
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		it.each`
+			scenario                       | value             | expected
+			${"no date is specified"}      | ${""}             | ${true}
+			${"invalid date is specified"} | ${"invalid-date"} | ${false}
+			${"date is before date range"} | ${"2023-09-25"}   | ${true}
+			${"date is after date range"}  | ${"2023-10-10"}   | ${true}
+			${"date is within date range"} | ${"2023-10-03"}   | ${false}
+		`("should return $expected if $scenario", ({ value, expected }) => {
+			const result = DateTimeHelper.checkBeyondDays(value, {
+				numberOfDays: 5,
+				fromDate: "2023-10-01",
+				dateFormat: "uuuu-MM-dd",
+			});
+			expect(result).toBe(expected);
+		});
+	});
 });

@@ -109,6 +109,15 @@ export namespace DateTimeHelper {
 		const localDate = toLocalDateOrTime(value, dateFormat, "date");
 		if (!localDate) return false;
 		const { startDate, endDate } = calculateWithinDaysRange(withinDays);
-		return !localDate.isBefore(startDate) && !localDate.isAfter(endDate);
+		return localDate.isAfter(startDate) && localDate.isBefore(endDate);
+	}
+
+	export function checkBeyondDays(value: string, beyondDays: IDaysRangeRule) {
+		if (!value) return true;
+		const { dateFormat = "uuuu-MM-dd" } = beyondDays;
+		const localDate = toLocalDateOrTime(value, dateFormat, "date");
+		if (!localDate) return false;
+		const { startDate, endDate } = calculateWithinDaysRange(beyondDays);
+		return localDate.isBefore(startDate) || localDate.isAfter(endDate);
 	}
 }
