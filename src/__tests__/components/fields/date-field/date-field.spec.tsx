@@ -182,14 +182,20 @@ describe(UI_TYPE, () => {
 	});
 
 	describe.each`
-		condition           | config                               | invalid                 | valid
-		${"future"}         | ${{ future: true }}                  | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"past"}           | ${{ past: true }}                    | ${["01", "01", "2022"]} | ${["12", "31", "2021"]}
-		${"non-future"}     | ${{ notFuture: true }}               | ${["02", "01", "2022"]} | ${["01", "01", "2022"]}
-		${"non-past"}       | ${{ notPast: true }}                 | ${["31", "12", "2021"]} | ${["01", "01", "2022"]}
-		${"min-date"}       | ${{ minDate: "2022-01-02" }}         | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"max-date"}       | ${{ maxDate: "2022-01-02" }}         | ${["03", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"excluded-dates"} | ${{ excludedDates: ["2022-01-02"] }} | ${["02", "01", "2022"]} | ${["03", "01", "2022"]}
+		condition                             | config                                                         | invalid                 | valid
+		${"future"}                           | ${{ future: true }}                                            | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"past"}                             | ${{ past: true }}                                              | ${["01", "01", "2022"]} | ${["12", "31", "2021"]}
+		${"non-future"}                       | ${{ notFuture: true }}                                         | ${["02", "01", "2022"]} | ${["01", "01", "2022"]}
+		${"non-past"}                         | ${{ notPast: true }}                                           | ${["31", "12", "2021"]} | ${["01", "01", "2022"]}
+		${"min-date"}                         | ${{ minDate: "2022-01-02" }}                                   | ${["01", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"max-date"}                         | ${{ maxDate: "2022-01-02" }}                                   | ${["03", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"excluded-dates"}                   | ${{ excludedDates: ["2022-01-02"] }}                           | ${["02", "01", "2022"]} | ${["03", "01", "2022"]}
+		${"within-days (future)"}             | ${{ withinDays: { numberOfDays: 7 } }}                         | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
+		${"within-days (past)"}               | ${{ withinDays: { numberOfDays: -7 } }}                        | ${["24", "12", "2021"]} | ${["31", "12", "2021"]}
+		${"within-days (from specific date)"} | ${{ withinDays: { numberOfDays: 5, fromDate: "2022-01-05" } }} | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
+		${"beyond-days (future)"}             | ${{ beyondDays: { numberOfDays: 7 } }}                         | ${["02", "01", "2022"]} | ${["09", "01", "2022"]}
+		${"beyond-days (past)"}               | ${{ beyondDays: { numberOfDays: -7 } }}                        | ${["31", "12", "2021"]} | ${["24", "12", "2021"]}
+		${"beyond-days (from specific date)"} | ${{ beyondDays: { numberOfDays: 5, fromDate: "2022-01-05" } }} | ${["06", "01", "2022"]} | ${["11", "01", "2022"]}
 	`("$condition validation", ({ condition, config, invalid, valid }) => {
 		beforeEach(() => {
 			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
@@ -231,45 +237,6 @@ describe(UI_TYPE, () => {
 			await changeDate(valid[0], valid[1], valid[2]);
 
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
-		});
-	});
-
-	describe.each`
-		condition                             | config                                                         | invalid                 | valid
-		${"within-days (future)"}             | ${{ withinDays: { numberOfDays: 7 } }}                         | ${["09", "01", "2022"]} | ${["02", "01", "2022"]}
-		${"within-days (past)"}               | ${{ withinDays: { numberOfDays: -7 } }}                        | ${["02", "01", "2022"]} | ${["31", "12", "2021"]}
-		${"within-days (from specific date)"} | ${{ withinDays: { numberOfDays: 5, fromDate: "2022-01-05" } }} | ${["01", "01", "2022"]} | ${["06", "01", "2022"]}
-	`("$condition validation", ({ condition, config, invalid, valid }) => {
-		beforeEach(() => {
-			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
-		});
-
-		afterEach(() => {
-			jest.restoreAllMocks();
-			SUBMIT_FN.mockClear();
-		});
-
-		it(`should not accept invalid input values for ${condition} dates`, async () => {
-			renderComponent({ validation: [config] });
-
-			await changeDate(invalid[0], invalid[1], invalid[2]);
-			fireEvent.click(screen.getByText("Done"));
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
-		});
-
-		it(`should accept valid input values for ${condition} dates`, async () => {
-			renderComponent({ validation: [config] });
-
-			await changeDate(valid[0], valid[1], valid[2]);
-			fireEvent.click(screen.getByText("Done"));
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			let validDate = `${valid[2]}-${valid[1]}-${valid[0]}`;
-			if (config.withinDays.dateFormat) {
-				validDate = `${valid[0]}/${valid[1]}/${valid[2]}`;
-			}
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: validDate }));
 		});
 	});
 

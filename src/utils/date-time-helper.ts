@@ -80,6 +80,29 @@ export namespace DateTimeHelper {
 		}
 	}
 
+	export function calculateDisabledBeyondDaysDates(beyondDays: IDaysRangeRule): string[] {
+		const { numberOfDays, fromDate, dateFormat = "uuuu-MM-dd" } = beyondDays;
+		const baseDate = fromDate
+			? toLocalDateOrTime(fromDate, dateFormat, "date") || LocalDate.now()
+			: LocalDate.now();
+		const dateFormatter = DateTimeFormatter.ofPattern(dateFormat)
+			.withResolverStyle(ResolverStyle.STRICT)
+			.withLocale(Locale.ENGLISH);
+		if (numberOfDays >= 0) {
+			return Array((numberOfDays || 0) + 1)
+				.fill("")
+				.map((_, i) => {
+					return baseDate.plusDays(i).format(dateFormatter);
+				});
+		} else {
+			return Array((Math.abs(numberOfDays) || 0) + 1)
+				.fill("")
+				.map((_, i) => {
+					return baseDate.minusDays(i).format(dateFormatter);
+				});
+		}
+	}
+
 	export function checkWithinDays(value: string, withinDays: IDaysRangeRule) {
 		if (!value) return true;
 		const { dateFormat = "uuuu-MM-dd" } = withinDays;

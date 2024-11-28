@@ -29,6 +29,13 @@ export const ERROR_MESSAGES = {
 				numberOfDays > 0 ? "from" : "prior to"
 			} ${fromDate ? ` ${fromDate}` : " today"}.`;
 		},
+		BEYOND_DAYS: (beyondDays: IDaysRangeRule) => {
+			const { numberOfDays, fromDate } = beyondDays;
+			const unsignedDays = Math.abs(numberOfDays);
+			return `Date must be beyond ${unsignedDays} ${unsignedDays !== 1 ? "days" : "day"} ${
+				numberOfDays > 0 ? "from" : "prior to"
+			} ${fromDate ? ` ${fromDate}` : " today"}.`;
+		},
 	},
 	DATE_RANGE: {
 		MUST_BE_FUTURE: "Dates must be in the future.",
