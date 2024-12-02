@@ -138,7 +138,7 @@ export namespace FileHelper {
 		const [fileInfo] = getFileInfo(bytes);
 		return {
 			mime: fileInfo?.mime,
-			ext: fileInfo?.extension,
+			ext: fileInfo?.extension === "jpeg" ? "jpg" : fileInfo?.extension,
 		};
 	};
 
