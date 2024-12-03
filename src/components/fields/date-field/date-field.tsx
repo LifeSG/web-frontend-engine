@@ -158,7 +158,6 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 				? DateTimeHelper.calculateDisabledBeyondDaysDates({ ...beyondDaysRule?.["beyondDays"], dateFormat })
 				: []),
 		];
-		console.log(disabledDatesProps);
 		if (minDateProp || maxDateProp || disabledDatesProps) {
 			setDerivedProps((props) => ({
 				...props,
