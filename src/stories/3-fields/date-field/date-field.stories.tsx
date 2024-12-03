@@ -305,14 +305,50 @@ WithinDaysWithFromDate.args = {
 	uiType: "date-field",
 	label: {
 		mainLabel: "Within Days",
-		subLabel: "Specific date is set 2024-11-09",
+		subLabel: `Must be within 10 days from ${LocalDate.now().minusMonths(1).toString()}`,
 	},
 	validation: [
 		{ required: true },
 		{
 			withinDays: {
 				numberOfDays: 10,
-				fromDate: "2024-11-09",
+				fromDate: LocalDate.now().minusMonths(1).toString(),
+			},
+		},
+	],
+};
+
+export const BeyondDays = DefaultStoryTemplate<IDateFieldSchema>("beyond-days").bind({});
+BeyondDays.args = {
+	uiType: "date-field",
+	label: {
+		mainLabel: "Beyond Days",
+		subLabel: "Cannot select within 5 days from today",
+	},
+	validation: [
+		{ required: true },
+		{
+			beyondDays: {
+				numberOfDays: 5,
+			},
+			errorMessage: "Must be more than 5 days after today",
+		},
+	],
+};
+
+export const BeyondDaysFromDate = DefaultStoryTemplate<IDateFieldSchema>("beyond-days-with-specific-date").bind({});
+BeyondDaysFromDate.args = {
+	uiType: "date-field",
+	label: {
+		mainLabel: "Beyond Days",
+		subLabel: `Cannot select within 10 days after ${LocalDate.now().minusMonths(1).toString()}`,
+	},
+	validation: [
+		{ required: true },
+		{
+			beyondDays: {
+				numberOfDays: 10,
+				fromDate: LocalDate.now().minusMonths(1).toString(),
 			},
 		},
 	],

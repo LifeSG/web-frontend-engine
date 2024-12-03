@@ -1,5 +1,6 @@
 import { LocalDate } from "@js-joda/core";
 import { ERROR_MESSAGES } from "../../components/shared";
+import { IDaysRangeRule } from "../../context-providers";
 import { DateTimeHelper } from "../../utils";
 
 describe("date-time-helper", () => {
@@ -128,6 +129,59 @@ describe("date-time-helper", () => {
 		});
 	});
 
+	describe("calculateDisabledBeyondDaysDates", () => {
+		beforeEach(() => {
+			jest.spyOn(LocalDate, "now").mockImplementation(() => LocalDate.parse("2023-06-15"));
+		});
+
+		it.each`
+			scenario                       | numberOfDays | expectedResults                                             | fromDate
+			${"beyond today"}              | ${3}         | ${["2023-06-15", "2023-06-16", "2023-06-17", "2023-06-18"]} | ${undefined}
+			${"before today"}              | ${-3}        | ${["2023-06-15", "2023-06-14", "2023-06-13", "2023-06-12"]} | ${undefined}
+			${"beyond the reference date"} | ${3}         | ${["2023-05-15", "2023-05-16", "2023-05-17", "2023-05-18"]} | ${"2023-05-15"}
+			${"before the reference date"} | ${-3}        | ${["2023-05-15", "2023-05-14", "2023-05-13", "2023-05-12"]} | ${"2023-05-15"}
+		`(
+			"should return dates $scenario based of the number of days specified",
+			({ numberOfDays, fromDate, expectedResults }) => {
+				const beyondDays: IDaysRangeRule = {
+					numberOfDays,
+					fromDate,
+					dateFormat: "uuuu-MM-dd",
+				};
+
+				const result = DateTimeHelper.calculateDisabledBeyondDaysDates(beyondDays);
+
+				expect(result).toEqual(expectedResults);
+			}
+		);
+
+		it("should handle custom date formats", () => {
+			const beyondDays: IDaysRangeRule = {
+				numberOfDays: 2,
+				fromDate: "01/10/2023",
+				dateFormat: "dd/MM/uuuu",
+			};
+
+			const result = DateTimeHelper.calculateDisabledBeyondDaysDates(beyondDays);
+
+			// Expected dates with custom date format
+			const expectedDates = ["01/10/2023", "02/10/2023", "03/10/2023"];
+
+			expect(result).toEqual(expectedDates);
+		});
+
+		it("should return only today's date if numberOfDays is 0", () => {
+			const beyondDays: IDaysRangeRule = {
+				numberOfDays: 0,
+				fromDate: "2023-10-01",
+				dateFormat: "uuuu-MM-dd",
+			};
+			const result = DateTimeHelper.calculateDisabledBeyondDaysDates(beyondDays);
+
+			expect(result).toEqual(["2023-10-01"]);
+		});
+	});
+
 	describe("checkWithinDays", () => {
 		beforeEach(() => {
 			jest.spyOn(LocalDate, "now").mockImplementation(() => LocalDate.parse("2023-06-15"));
@@ -149,6 +203,32 @@ describe("date-time-helper", () => {
 				numberOfDays: 5,
 			});
 			expect(result).toBe(false);
+		});
+	});
+
+	describe("checkBeyondDays", () => {
+		beforeEach(() => {
+			jest.spyOn(LocalDate, "now").mockImplementation(() => LocalDate.parse("2023-06-15"));
+		});
+
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		it.each`
+			scenario                       | value             | expected
+			${"no date is specified"}      | ${""}             | ${true}
+			${"invalid date is specified"} | ${"invalid-date"} | ${false}
+			${"date is before date range"} | ${"2023-09-25"}   | ${true}
+			${"date is after date range"}  | ${"2023-10-10"}   | ${true}
+			${"date is within date range"} | ${"2023-10-03"}   | ${false}
+		`("should return $expected if $scenario", ({ value, expected }) => {
+			const result = DateTimeHelper.checkBeyondDays(value, {
+				numberOfDays: 5,
+				fromDate: "2023-10-01",
+				dateFormat: "uuuu-MM-dd",
+			});
+			expect(result).toBe(expected);
 		});
 	});
 });

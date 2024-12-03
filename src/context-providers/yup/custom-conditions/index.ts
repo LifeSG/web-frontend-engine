@@ -6,7 +6,7 @@ import isNumber from "lodash/isNumber";
 import { YupHelper } from "../helper";
 import "./uinfin";
 import { DateTimeHelper } from "../../../utils";
-import { IWithinDaysRule } from "../types";
+import { IDaysRangeRule } from "../types";
 
 /**
  * empty check that is applicable to numbers too
@@ -44,7 +44,12 @@ YupHelper.addCondition("mixed", "equalsField", (values: unknown[], matches: unkn
 	}
 });
 
-YupHelper.addCondition("mixed", "withinDays", (value: string, withinDays: IWithinDaysRule) => {
+YupHelper.addCondition("mixed", "withinDays", (value: string, withinDays: IDaysRangeRule) => {
 	if (isEmpty(value)) return true;
 	return DateTimeHelper.checkWithinDays(value, withinDays);
+});
+
+YupHelper.addCondition("mixed", "beyondDays", (value: string, beyondDays: IDaysRangeRule) => {
+	if (isEmpty(value)) return true;
+	return DateTimeHelper.checkBeyondDays(value, beyondDays);
 });

@@ -74,13 +74,13 @@ export interface IYupValidationRule<V = undefined, U = undefined> extends IYupRu
 
 export interface IYupConditionalValidationRule extends IYupRule {
 	filled?: boolean | undefined;
-	withinDays?: IWithinDaysRule | undefined;
 }
 
 export interface IYupRenderRule extends IYupRule {
 	filled?: boolean | undefined;
 	shown?: boolean | undefined;
-	withinDays?: IWithinDaysRule | undefined;
+	withinDays?: IDaysRangeRule | undefined;
+	beyondDays?: IDaysRangeRule | undefined;
 }
 
 export type TRenderRules = Record<string, IYupRenderRule[]>;
@@ -94,7 +94,7 @@ export type TFormYupConfig = Record<string, IFieldYupConfig>;
 
 export type TCustomValidationFunction = (value: unknown, arg: unknown, context: Yup.TestContext) => boolean;
 
-export interface IWithinDaysRule {
+export interface IDaysRangeRule {
 	numberOfDays: number;
 	fromDate?: string | undefined;
 	dateFormat?: string | undefined;

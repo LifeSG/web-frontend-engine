@@ -1,7 +1,7 @@
 import { DateInputProps } from "@lifesg/react-design-system/date-input";
 import { IYupValidationRule, TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
-import { IWithinDaysRule } from "../../../context-providers";
+import { IDaysRangeRule } from "../../../context-providers";
 
 export interface IDateFieldValidationRule extends IYupValidationRule {
 	dateFormat?: boolean | undefined;
@@ -12,7 +12,8 @@ export interface IDateFieldValidationRule extends IYupValidationRule {
 	minDate?: string | undefined;
 	maxDate?: string | undefined;
 	excludedDates?: string[] | undefined;
-	withinDays?: Omit<IWithinDaysRule, "dateFormat"> | undefined;
+	withinDays?: Omit<IDaysRangeRule, "dateFormat"> | undefined;
+	beyondDays?: Omit<IDaysRangeRule, "dateFormat"> | undefined;
 }
 
 export interface IDateFieldSchema<V = undefined>

@@ -48,6 +48,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		const maxDateRule = validation?.find((rule) => "maxDate" in rule);
 		const excludedDatesRule = validation?.find((rule) => "excludedDates" in rule);
 		const withinDaysRule = validation?.find((rule) => "withinDays" in rule);
+		const beyondDaysRule = validation?.find((rule) => "beyondDays" in rule);
 		// determine the min date by parsing the value with the current date format
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
@@ -121,6 +122,16 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 						if (!isValidDate(value) || !withinDaysRule) return true;
 						return DateTimeHelper.checkWithinDays(value, { ...withinDaysRule["withinDays"], dateFormat });
 					}
+				)
+				.test(
+					"beyond-days",
+					beyondDaysRule?.errorMessage ||
+						(beyondDaysRule?.["beyondDays"] &&
+							ERROR_MESSAGES.DATE.BEYOND_DAYS(beyondDaysRule?.["beyondDays"])),
+					(value) => {
+						if (!isValidDate(value) || !beyondDaysRule) return true;
+						return DateTimeHelper.checkBeyondDays(value, { ...beyondDaysRule["beyondDays"], dateFormat });
+					}
 				),
 			validation
 		);
@@ -141,7 +152,12 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 			notFutureRule?.["notFuture"] && LocalDate.now(),
 			withinDaysRange?.endDate,
 		]);
-		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
+		const disabledDatesProps = [
+			...(excludedDatesRule?.["excludedDates"] || []),
+			...(beyondDaysRule?.["beyondDays"]
+				? DateTimeHelper.calculateDisabledBeyondDaysDates({ ...beyondDaysRule?.["beyondDays"], dateFormat })
+				: []),
+		];
 		if (minDateProp || maxDateProp || disabledDatesProps) {
 			setDerivedProps((props) => ({
 				...props,
