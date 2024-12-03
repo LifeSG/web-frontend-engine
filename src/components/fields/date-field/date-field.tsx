@@ -154,8 +154,11 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		]);
 		const disabledDatesProps = [
 			...(excludedDatesRule?.["excludedDates"] || []),
-			...DateTimeHelper.calculateDisabledBeyondDaysDates({ ...beyondDaysRule?.["beyondDays"], dateFormat }),
+			...(beyondDaysRule?.["beyondDays"]
+				? DateTimeHelper.calculateDisabledBeyondDaysDates({ ...beyondDaysRule?.["beyondDays"], dateFormat })
+				: []),
 		];
+		console.log(disabledDatesProps);
 		if (minDateProp || maxDateProp || disabledDatesProps) {
 			setDerivedProps((props) => ({
 				...props,
