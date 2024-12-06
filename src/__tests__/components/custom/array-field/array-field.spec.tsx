@@ -183,8 +183,9 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getAddButton());
 			fireEvent.click(getAddButton());
-			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
-			fireEvent.change(getTextField(2), { target: { value: "World" } });
+
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
+			await waitFor(() => fireEvent.change(getTextField(2), { target: { value: "World" } }));
 			fireEvent.click(getRemoveButton(0));
 			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-remove"));
 
@@ -226,7 +227,7 @@ describe(UI_TYPE, () => {
 				},
 			});
 
-			fireEvent.change(getTextField(0), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "hello" } }));
 			fireEvent.click(getAddButton());
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -285,10 +286,9 @@ describe(UI_TYPE, () => {
 		it("should not show error when min rule is fulfilled", async () => {
 			renderComponent({ validation: [{ min: 2, errorMessage: ERROR_MESSAGE }] });
 
-			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
 			fireEvent.click(getAddButton());
-			fireEvent.change(getTextField(1), { target: { value: "World" } });
-
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "World" } }));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
@@ -375,7 +375,7 @@ describe(UI_TYPE, () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
 
-			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
 
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -387,9 +387,9 @@ describe(UI_TYPE, () => {
 		it("should clear selection on reset and remove added items", async () => {
 			renderComponent();
 
-			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
 			fireEvent.click(getAddButton());
-			fireEvent.change(getTextField(1), { target: { value: "World" } });
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "World" } }));
 
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -404,7 +404,7 @@ describe(UI_TYPE, () => {
 			});
 
 			fireEvent.click(getAddButton());
-			fireEvent.change(getTextField(1), { target: { value: "World" } });
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "World" } }));
 
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -433,10 +433,10 @@ describe(UI_TYPE, () => {
 			expect(formIsDirty).toBe(false);
 		});
 
-		it("should set form state as dirty if user modifies the field", () => {
+		it("should set form state as dirty if user modifies the field", async () => {
 			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 
-			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(true);
@@ -458,17 +458,17 @@ describe(UI_TYPE, () => {
 			expect(formIsDirty).toBe(false);
 		});
 
-		it("should reset and revert form dirty state to false", () => {
+		it("should reset and revert form dirty state to false", async () => {
 			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
 
-			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
 			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Custom Button" })));
 
 			expect(formIsDirty).toBe(false);
 		});
 
-		it("should reset to default value without setting form state as dirty", () => {
+		it("should reset to default value without setting form state as dirty", async () => {
 			render(
 				<FrontendEngineWithCustomButton
 					data={{
@@ -479,7 +479,7 @@ describe(UI_TYPE, () => {
 				/>
 			);
 
-			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
