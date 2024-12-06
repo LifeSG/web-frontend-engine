@@ -47,7 +47,7 @@ export const SchemaView = ({ schema, onChange, formBuilderRef }: IProps) => {
 	const onSubmit = () => {
 		let newSchema: ISchemaProps;
 		try {
-			newSchema = JSON.parse(stringifiedSchema);
+			newSchema = { schema: JSON.parse(stringifiedSchema), prefill: null };
 			formBuilderRef.current.parseSchema(newSchema);
 
 			setHasError(false);
