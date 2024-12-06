@@ -16,7 +16,7 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const REFERENCE_KEY = "filter-item";
 const TEXTFIELD_LABEL = "Name";
-const renderComponent = (
+const renderComponent = async (
 	overrideField?: TOverrideField<ITextFieldSchema>,
 	overrideFilterItem?: TOverrideField<IFilterItemSchema>,
 	overrideSchema?: TOverrideSchema
@@ -51,7 +51,7 @@ const renderComponent = (
 		},
 		...overrideSchema,
 	};
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+	await waitFor(() => render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />));
 };
 
 const getTextfield = (): HTMLElement => {
@@ -64,13 +64,13 @@ describe(REFERENCE_KEY, () => {
 		jest.restoreAllMocks();
 	});
 
-	it("should be able to render text field", () => {
-		renderComponent();
+	it("should be able to render text field", async () => {
+		await renderComponent();
 	});
 
 	it("should support default value", async () => {
 		const defaultValue = "John Doe";
-		renderComponent(undefined, undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+		await renderComponent(undefined, undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 		// switching to use get all by display value, as filter-item will render two fields for desktop and mobile
 		expect(screen.getAllByDisplayValue(defaultValue)[0]).toBeInTheDocument();
 
@@ -78,8 +78,8 @@ describe(REFERENCE_KEY, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
-	it("should pass other props into the field", () => {
-		renderComponent({
+	it("should pass other props into the field", async () => {
+		await renderComponent({
 			placeholder: "placeholder",
 			readOnly: true,
 			disabled: true,
@@ -90,8 +90,8 @@ describe(REFERENCE_KEY, () => {
 		expect(getTextfield()).toBeDisabled();
 	});
 
-	it("should be able to render hint", () => {
-		renderComponent({
+	it("should be able to render hint", async () => {
+		await renderComponent({
 			label: {
 				mainLabel: "Main label",
 				hint: { content: "Hint" },
@@ -104,8 +104,7 @@ describe(REFERENCE_KEY, () => {
 	});
 
 	it("should support validation schema", async () => {
-		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
-
+		await renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(screen.getAllByText(ERROR_MESSAGE)[0]).toBeInTheDocument();
@@ -122,7 +121,7 @@ describe(REFERENCE_KEY, () => {
 			${"revert to default value if clearBehavior=revert"} | ${"revert"}   | ${defaultValue}
 			${"not update value if clearBehavior=retain"}        | ${"retain"}   | ${changedValue}
 		`("it should $scenario", async ({ clearBehavior, expectedValue }) => {
-			renderComponent(undefined, { clearBehavior }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+			await renderComponent(undefined, { clearBehavior }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 			fireEvent.change(screen.getByLabelText(TEXTFIELD_LABEL), { target: { value: changedValue } });
 			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Clear" })));
 
@@ -131,15 +130,15 @@ describe(REFERENCE_KEY, () => {
 	});
 
 	describe("expanded (controlled component)", () => {
-		it("should be expanded when expanded is true", () => {
-			renderComponent(undefined, {
+		it("should be expanded when expanded is true", async () => {
+			await renderComponent(undefined, {
 				expanded: true,
 			});
 			//This is checking for the chevron
 			expect(screen.getByLabelText("Collapse")).toBeVisible();
 		});
-		it("should be expanded when override expanded is true", () => {
-			renderComponent(undefined, undefined, {
+		it("should be expanded when override expanded is true", async () => {
+			await renderComponent(undefined, undefined, {
 				overrides: {
 					filterItem1: {
 						expanded: true,
@@ -150,14 +149,14 @@ describe(REFERENCE_KEY, () => {
 			expect(screen.getByLabelText("Collapse")).toBeVisible();
 		});
 
-		it("should be collapsed when expanded is false", () => {
-			renderComponent();
+		it("should be collapsed when expanded is false", async () => {
+			await renderComponent();
 			//This is checking for the chevron
 			expect(screen.getByLabelText("Expand")).toBeVisible();
 		});
 
-		it("should be collapsed when override expanded is false", () => {
-			renderComponent(
+		it("should be collapsed when override expanded is false", async () => {
+			await renderComponent(
 				undefined,
 				{
 					expanded: true,

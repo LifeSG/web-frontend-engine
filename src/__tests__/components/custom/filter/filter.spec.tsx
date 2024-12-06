@@ -61,9 +61,9 @@ describe(REFERENCE_KEY, () => {
 			});
 		});
 
-		it("should be able to render child filter items and child fields", () => {
+		it("should be able to render child filter items and child fields", async () => {
 			renderComponent();
-			expect(screen.getByRole("heading", { name: "Filters" })).toBeInTheDocument();
+			await waitFor(() => expect(screen.getByRole("heading", { name: "Filters" })).toBeInTheDocument());
 		});
 
 		it("should clear form when when clicked on clear button", async () => {

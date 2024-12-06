@@ -87,7 +87,7 @@ describe("conditional-renderer", () => {
 		${"email"}     | ${{ email: true }}           | ${"hello"} | ${"john@doe.tld"}
 		${"url"}       | ${{ url: true }}             | ${"hello"} | ${"https://domain.tld"}
 		${"uuid"}      | ${{ uuid: true }}            | ${"hello"} | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"}
-	`("should support $condition condition for string conditional rendering", ({ config, invalid, valid }) => {
+	`("should support $condition condition for string conditional rendering", async ({ config, invalid, valid }) => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[FIELD_ONE_ID]: {
@@ -102,10 +102,10 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(getFieldOne(), { target: { value: invalid } });
+		await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: invalid } }));
 		expect(getFieldTwo(true)).not.toBeInTheDocument();
 
-		fireEvent.change(getFieldOne(), { target: { value: valid } });
+		await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: valid } }));
 		expect(getFieldTwo()).toBeInTheDocument();
 	});
 
@@ -122,7 +122,7 @@ describe("conditional-renderer", () => {
 		${"positive"}  | ${{ positive: true }} | ${-1}   | ${1}
 		${"negative"}  | ${{ negative: true }} | ${1}    | ${-1}
 		${"integer"}   | ${{ integer: true }}  | ${1.1}  | ${1}
-	`("should support $condition condition for number conditional rendering", ({ config, invalid, valid }) => {
+	`("should support $condition condition for number conditional rendering", async ({ config, invalid, valid }) => {
 		const uiType = "numeric-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[FIELD_ONE_ID]: {
@@ -137,10 +137,10 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		fireEvent.change(getField("spinbutton", FIELD_ONE_LABEL), { target: { value: invalid } });
+		await waitFor(() => fireEvent.change(getField("spinbutton", FIELD_ONE_LABEL), { target: { value: invalid } }));
 		expect(getField("spinbutton", FIELD_TWO_LABEL, true)).not.toBeInTheDocument();
 
-		fireEvent.change(getField("spinbutton", FIELD_ONE_LABEL), { target: { value: valid } });
+		await waitFor(() => fireEvent.change(getField("spinbutton", FIELD_ONE_LABEL), { target: { value: valid } }));
 		expect(getField("spinbutton", FIELD_TWO_LABEL)).toBeInTheDocument();
 	});
 
@@ -183,7 +183,7 @@ describe("conditional-renderer", () => {
 		invalid?.forEach((value: string) => {
 			fireEvent.click(screen.getByRole("option", { name: value }));
 		});
-		expect(getFieldTwo(true)).not.toBeInTheDocument();
+		await waitFor(() => expect(getFieldTwo(true)).not.toBeInTheDocument());
 
 		// fire invalid again to deselect values
 		invalid?.forEach((value: string) => {
@@ -192,7 +192,7 @@ describe("conditional-renderer", () => {
 		valid?.forEach((value: string) => {
 			fireEvent.click(screen.getByRole("option", { name: value }));
 		});
-		expect(getFieldTwo()).toBeInTheDocument();
+		await waitFor(() => expect(getFieldTwo()).toBeInTheDocument());
 	});
 
 	it.each`
@@ -231,7 +231,7 @@ describe("conditional-renderer", () => {
 		expect(getFieldTwo()).toBeInTheDocument();
 	});
 
-	it("should support AND conditions", () => {
+	it("should support AND conditions", async () => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[FIELD_ONE_ID]: {
@@ -252,14 +252,14 @@ describe("conditional-renderer", () => {
 
 		expect(getFieldThree(true)).not.toBeInTheDocument();
 
-		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "hello" } }));
 		expect(getFieldThree(true)).not.toBeInTheDocument();
 
-		fireEvent.change(getFieldTwo(), { target: { value: "hello" } });
+		await waitFor(() => fireEvent.change(getFieldTwo(), { target: { value: "hello" } }));
 		expect(getFieldThree()).toBeInTheDocument();
 	});
 
-	it("should support OR conditions", () => {
+	it("should support OR conditions", async () => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[FIELD_ONE_ID]: {
@@ -280,15 +280,15 @@ describe("conditional-renderer", () => {
 
 		expect(getFieldThree(true)).not.toBeInTheDocument();
 
-		fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+		await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "hello" } }));
 		expect(getFieldThree()).toBeInTheDocument();
 
 		fireEvent.change(getFieldOne(), { target: { value: null } });
-		fireEvent.change(getFieldTwo(), { target: { value: "hello" } });
+		await waitFor(() => fireEvent.change(getFieldTwo(), { target: { value: "hello" } }));
 		expect(getFieldThree()).toBeInTheDocument();
 	});
 
-	it("should render conditional field if form is prefilled with matching value", () => {
+	it("should render conditional field if form is prefilled with matching value", async () => {
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
 			[FIELD_ONE_ID]: {
 				label: FIELD_ONE_LABEL,
@@ -307,7 +307,7 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields, { [FIELD_ONE_ID]: "hello" });
 
-		expect(getFieldTwo()).toBeInTheDocument();
+		await waitFor(() => expect(getFieldTwo()).toBeInTheDocument());
 	});
 
 	it("should remove validation schema for fields that are conditionally hidden", async () => {
@@ -461,7 +461,7 @@ describe("conditional-renderer", () => {
 	});
 
 	describe("shown condition", () => {
-		it("should support shown condition", () => {
+		it("should support shown condition", async () => {
 			const uiType = "text-field";
 			const fields: Record<string, TFrontendEngineFieldSchema> = {
 				[FIELD_ONE_ID]: {
@@ -481,16 +481,16 @@ describe("conditional-renderer", () => {
 			};
 			renderComponent(fields);
 
-			fireEvent.change(getFieldOne(), { target: { value: "show" } });
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "show" } }));
 			expect(getFieldTwo()).toBeInTheDocument();
 			expect(getFieldThree()).toBeInTheDocument();
 
-			fireEvent.change(getFieldOne(), { target: { value: "hide" } });
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "hide" } }));
 			expect(getFieldTwo(true)).not.toBeInTheDocument();
 			expect(getFieldThree(true)).not.toBeInTheDocument();
 		});
 
-		it("should support shown condition as one of the conditional rendering rules", () => {
+		it("should support shown condition as one of the conditional rendering rules", async () => {
 			const uiType = "text-field";
 			const fields: Record<string, TFrontendEngineFieldSchema> = {
 				[FIELD_ONE_ID]: {
@@ -511,16 +511,16 @@ describe("conditional-renderer", () => {
 			renderComponent(fields);
 
 			fireEvent.change(getFieldOne(), { target: { value: "show" } });
-			fireEvent.change(getFieldTwo(), { target: { value: "val" } });
+			await waitFor(() => fireEvent.change(getFieldTwo(), { target: { value: "val" } }));
 			expect(getFieldTwo()).toBeInTheDocument();
 			expect(getFieldThree()).toBeInTheDocument();
 
-			fireEvent.change(getFieldOne(), { target: { value: "hide" } });
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "hide" } }));
 			expect(getFieldTwo(true)).not.toBeInTheDocument();
 			expect(getFieldThree(true)).not.toBeInTheDocument();
 		});
 
-		it("should support shown conditions declared out of order", () => {
+		it("should support shown conditions declared out of order", async () => {
 			const uiType = "text-field";
 			const fields: Record<string, TFrontendEngineFieldSchema> = {
 				[FIELD_THREE_ID]: {
@@ -540,11 +540,11 @@ describe("conditional-renderer", () => {
 			};
 			renderComponent(fields);
 
-			fireEvent.change(getFieldOne(), { target: { value: "show" } });
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "show" } }));
 			expect(getFieldTwo()).toBeInTheDocument();
 			expect(getFieldThree()).toBeInTheDocument();
 
-			fireEvent.change(getFieldOne(), { target: { value: "hide" } });
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "hide" } }));
 			expect(getFieldTwo(true)).not.toBeInTheDocument();
 			expect(getFieldThree(true)).not.toBeInTheDocument();
 		});
@@ -571,7 +571,7 @@ describe("conditional-renderer", () => {
 	describe("overrides", () => {
 		const uiType = "text-field";
 
-		it("should allow overriding of conditionally rendered components", () => {
+		it("should allow overriding of conditionally rendered components", async () => {
 			renderComponent(
 				{
 					[FIELD_ONE_ID]: {
@@ -591,7 +591,7 @@ describe("conditional-renderer", () => {
 					},
 				}
 			);
-			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "hello" } }));
 
 			expect(getFieldTwo()).toBeDisabled();
 		});
@@ -619,7 +619,7 @@ describe("conditional-renderer", () => {
 			expect(getFieldTwo(true)).not.toBeInTheDocument();
 		});
 
-		it("should allow overriding of conditional rendering rules", () => {
+		it("should allow overriding of conditional rendering rules", async () => {
 			renderComponent(
 				{
 					[FIELD_ONE_ID]: {
@@ -639,7 +639,7 @@ describe("conditional-renderer", () => {
 					},
 				}
 			);
-			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "hi" } }));
 
 			expect(getFieldTwo()).toBeInTheDocument();
 		});

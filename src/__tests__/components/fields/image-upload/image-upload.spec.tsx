@@ -492,7 +492,7 @@ describe("image-upload", () => {
 					});
 				});
 
-				expect(extractMetadataSpy).toHaveBeenCalledTimes(1);
+				await waitFor(() => expect(extractMetadataSpy).toHaveBeenCalledTimes(1));
 				expect(extractMetadataSpy).toHaveBeenCalledWith(FILE_1);
 			});
 		});
@@ -931,7 +931,7 @@ describe("image-upload", () => {
 				onClick: handleClick,
 			});
 
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Custom Button" })));
 
 			expect(saveReviewImageFn).toBeCalled();
 		});

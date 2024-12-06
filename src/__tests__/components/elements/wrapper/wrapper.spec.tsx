@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { FrontendEngine } from "../../../../components";
 import { TWrapperType } from "../../../../components/elements/wrapper";
 import { IFrontendEngineData, TFrontendEngineFieldSchema } from "../../../../components/frontend-engine";
@@ -41,10 +41,10 @@ const renderComponent = (
 };
 
 describe("wrapper", () => {
-	it("should be able to render other fields as children", () => {
+	it("should be able to render other fields as children", async () => {
 		renderComponent();
 
-		expect(screen.getByTestId(CHILD_TEST_ID)).toBeInTheDocument();
+		await waitFor(() => expect(screen.getByTestId(CHILD_TEST_ID)).toBeInTheDocument());
 		expect(screen.getByTestId(CHILD_TEST_ID).tagName).toBe("INPUT");
 	});
 
@@ -65,7 +65,7 @@ describe("wrapper", () => {
 		expect(screen.getByText(ERROR_MESSAGES.GENERIC.UNSUPPORTED)).toBeInTheDocument();
 	});
 
-	it("should be able to render nested children", () => {
+	it("should be able to render nested children", async () => {
 		const nestedId = "nested";
 		const nestedTestId = TestHelper.generateId(nestedId, PARENT_FIELD_TYPE);
 		renderComponent(undefined, {
@@ -80,7 +80,7 @@ describe("wrapper", () => {
 			},
 		});
 
-		expect(screen.getByTestId(nestedTestId)).toBeInTheDocument();
+		await waitFor(() => expect(screen.getByTestId(nestedTestId)).toBeInTheDocument());
 		expect(screen.getByTestId(CHILD_TEST_ID)).toBeInTheDocument();
 		expect(screen.getByTestId(CHILD_TEST_ID).tagName).toBe("INPUT");
 	});
