@@ -58,11 +58,14 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					height: fabricBackground.current.getScaledHeight(),
 					width: fabricBackground.current.getScaledWidth(),
 				}) || "";
-			const filesize = FileHelper.getFilesizeFromBase64(dataURL);
 
 			const reducedQuality = quality - 0.05;
 			if (reducedQuality < 0) return dataURL;
-			if (limit && filesize > limit) return toDataURLWithLimit(limit, reducedQuality);
+
+			const filesizeInB = FileHelper.getFilesizeFromBase64(dataURL);
+			const maxSizeInB = limit * 1024;
+			if (maxSizeInB && filesizeInB > maxSizeInB) return toDataURLWithLimit(limit, reducedQuality);
+
 			return dataURL;
 		}
 		return "";

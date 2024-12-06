@@ -85,7 +85,7 @@ export namespace FileHelper {
 	};
 
 	/**
-	 * estimate filesize from base64 string
+	 * estimate filesize (in terms of bytes) from base64 string
 	 * https://stackoverflow.com/questions/53228948/how-to-get-image-file-size-from-base-64-string-in-javascript#answer-53229045
 	 */
 	export const getFilesizeFromBase64 = (base64: string): number => {
