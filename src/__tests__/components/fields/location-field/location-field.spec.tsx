@@ -774,7 +774,8 @@ describe("location-input-group", () => {
 					expect(confirmLocationOnClickSpy).toBeCalled();
 					expect(getConfirmLocationModal()).toBeInTheDocument();
 				});
-				jest.advanceTimersByTime(3500);
+				act(() => jest.advanceTimersByTime(3500));
+
 				await waitFor(() => {
 					expect(getConfirmLocationModal(true)).not.toBeInTheDocument();
 					expect(getLocationModal(true)).not.toBeInTheDocument();
