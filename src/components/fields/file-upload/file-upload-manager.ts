@@ -324,7 +324,7 @@ const FileUploadManager = (props: IProps) => {
 		} catch (err) {
 			dispatchFieldEvent<TUploadErrorDetail>("upload-error", id, {
 				fileId: fileToUpload.fileItem.id,
-				errorData: (err as AxiosError)?.response.data,
+				errorData: (err as AxiosError)?.response?.data,
 			});
 
 			throw err;

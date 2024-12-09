@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { AxiosRequestConfig } from "axios";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
@@ -31,6 +32,7 @@ const FILE_2 = new File(["file"], "test2.jpg", {
 const COMPONENT_ID = "field";
 const UI_TYPE = "file-upload";
 const SUBMIT_FN = jest.fn();
+const UPLOAD_URL = "test";
 let uploadSpy: jest.SpyInstance;
 
 const getDragInputUploadField = (): HTMLElement => screen.getByTestId("dropzone-input");
@@ -39,9 +41,10 @@ const getCustomButton = (): HTMLElement => screen.getByRole("button", { name: "C
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	eventType: string;
 	eventListener: (this: Element, ev: Event) => void;
+	onClick?: (ref: React.MutableRefObject<IFrontendEngineRef>) => void;
 }
 const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
-	const { eventType, eventListener, ...otherProps } = props;
+	const { eventType, eventListener, onClick, ...otherProps } = props;
 	const formRef = useRef<IFrontendEngineRef>();
 	useEffect(() => {
 		if (eventType && eventListener) {
@@ -51,7 +54,14 @@ const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 		}
 	}, [eventListener, eventType]);
 
-	return <FrontendEngine {...otherProps} ref={formRef} />;
+	return (
+		<>
+			<FrontendEngine {...otherProps} ref={formRef} />
+			<button type="button" onClick={() => onClick(formRef)}>
+				Custom Button
+			</button>
+		</>
+	);
 };
 
 interface IRenderAndPerformActionsOptions {
@@ -60,8 +70,10 @@ interface IRenderAndPerformActionsOptions {
 	files?: { name: string; type: string }[] | undefined;
 	inputType?: "input" | "drag & drop" | undefined;
 	uploadType?: TUploadType | undefined;
+	headers?: AxiosRequestConfig["headers"];
 	eventType?: string | undefined;
 	eventListener?: ((this: Element, ev: Event) => unknown) | undefined;
+	onClick?: (ref: React.MutableRefObject<IFrontendEngineRef>) => void;
 }
 
 /**
@@ -81,6 +93,8 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		files = [],
 		inputType = "input",
 		uploadType = "base64",
+		headers = {},
+		onClick,
 	} = options;
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
@@ -93,7 +107,8 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 						uiType: UI_TYPE,
 						uploadOnAddingFile: {
 							type: uploadType,
-							url: "test",
+							url: UPLOAD_URL,
+							headers,
 						},
 						...overrideField,
 					},
@@ -110,6 +125,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 			onSubmit={SUBMIT_FN}
 			eventType={eventType}
 			eventListener={eventListener}
+			onClick={onClick}
 		/>
 	);
 
@@ -261,6 +277,34 @@ describe(UI_TYPE, () => {
 			});
 
 			expect(screen.getAllByText(ERROR_MESSAGE).length > 0).toBeTruthy();
+		});
+	});
+
+	describe("upload", () => {
+		it("should upload with additional headers", async () => {
+			const mockUploadResponse = { data: { hello: "world" } };
+			const mockHeaders = {
+				reqHeader1: "header1",
+				reqHeader2: "header2",
+			};
+			uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue(mockUploadResponse);
+			await renderComponent({
+				files: [FILE_1, FILE_2],
+				uploadType: "base64",
+				headers: mockHeaders,
+			});
+			expect(uploadSpy).toHaveBeenNthCalledWith(
+				1,
+				UPLOAD_URL,
+				expect.anything(),
+				expect.objectContaining({ headers: expect.objectContaining(mockHeaders) })
+			);
+			expect(uploadSpy).toHaveBeenNthCalledWith(
+				2,
+				UPLOAD_URL,
+				expect.anything(),
+				expect.objectContaining({ headers: expect.objectContaining(mockHeaders) })
+			);
 		});
 	});
 
@@ -560,6 +604,48 @@ describe(UI_TYPE, () => {
 			await renderComponent({ eventType: "mount", eventListener: handleMount });
 			expect(handleMount).toHaveBeenCalled();
 		});
+
+		it("should fire upload-error event on upload error", async () => {
+			const mockError = { response: { data: "error data" } };
+			let detail = undefined;
+			const handleUploadError = jest.fn((e) => (detail = e.detail));
+
+			uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValueOnce(mockError);
+			await renderComponent({
+				files: [FILE_1],
+				uploadType: "base64",
+				eventType: "upload-error",
+				eventListener: handleUploadError,
+			});
+			expect(handleUploadError).toHaveBeenCalledTimes(1);
+			expect(detail).toEqual({
+				id: COMPONENT_ID,
+				fileId: expect.anything(),
+				errorData: mockError.response.data,
+			});
+		});
+
+		it("should be able to set file error with set-file-error trigger event", async () => {
+			const mockErrorMessage = "new error message";
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.dispatchFieldEvent(UI_TYPE, "set-file-error", COMPONENT_ID, {
+					fileId: FILE_1.name,
+					errorMessage: mockErrorMessage,
+				});
+			};
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ dataURL: JPG_BASE64, fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+				onClick: handleClick,
+			});
+
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(screen.getAllByText(mockErrorMessage).length).toBe(2);
+		});
 	});
 
 	describe("reset", () => {
@@ -632,7 +718,7 @@ describe(UI_TYPE, () => {
 										uiType: "file-upload",
 										uploadOnAddingFile: {
 											type: "base64",
-											url: "test",
+											url: UPLOAD_URL,
 										},
 									},
 									...getSubmitButtonProps(),
@@ -681,7 +767,7 @@ describe(UI_TYPE, () => {
 							uiType: UI_TYPE,
 							uploadOnAddingFile: {
 								type: "base64",
-								url: "test",
+								url: UPLOAD_URL,
 							},
 						},
 						...getSubmitButtonProps(),
