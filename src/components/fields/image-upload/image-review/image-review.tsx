@@ -312,7 +312,7 @@ export const ImageReview = (props: IProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderHeader = () => (
-		<HeaderSection className={className ? `${className}-header` : undefined} drawActive={drawActive}>
+		<HeaderSection className={className ? `${className}-header` : undefined} $drawActive={drawActive}>
 			{!drawActive ? (
 				<>
 					<ReviewCloseButton
@@ -371,8 +371,8 @@ export const ImageReview = (props: IProps) => {
 						onClick={handleStartDrawing}
 						disabled={drawDeleteDisabled}
 					>
-						<DrawIcon disabled={drawDeleteDisabled} />
-						<DrawDeleteButtonText weight="semibold" disabled={drawDeleteDisabled}>
+						<DrawIcon $disabled={drawDeleteDisabled} />
+						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
 							Draw
 						</DrawDeleteButtonText>
 					</DrawDeleteButton>
@@ -382,8 +382,8 @@ export const ImageReview = (props: IProps) => {
 						onClick={() => setActivePrompt("delete")}
 						disabled={drawDeleteDisabled}
 					>
-						<DeleteIcon disabled={drawDeleteDisabled} />
-						<DrawDeleteButtonText weight="semibold" disabled={drawDeleteDisabled}>
+						<DeleteIcon $disabled={drawDeleteDisabled} />
+						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
 							Delete
 						</DrawDeleteButtonText>
 					</DrawDeleteButton>
@@ -434,21 +434,20 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "eraser-button")}
 						aria-label="eraser"
 						onClick={handleEraseMode}
-						active={eraseMode}
 					>
-						<EraserButtonIcon eraseMode={eraseMode} />
+						<EraserButtonIcon $eraseMode={eraseMode} />
 					</EraserButton>
 					<PaletteHolder>
 						{PALETTE_COLORS.map(({ color, colorScheme, label }, i) => (
 							<Palette
 								id={TestHelper.generateId(id, `palette-color-${i}`)}
 								aria-label={`${label} brush`}
-								color={color}
-								colorScheme={colorScheme}
+								$color={color}
+								$colorScheme={colorScheme}
 								key={color}
 								onClick={() => handleSelectPaletteColor(color)}
 							>
-								{activeColor === color && <ButtonIcon colorScheme={colorScheme} />}
+								{activeColor === color && <ButtonIcon $colorScheme={colorScheme} />}
 							</Palette>
 						))}
 					</PaletteHolder>
