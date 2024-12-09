@@ -1,10 +1,18 @@
+import { AxiosError } from "axios";
 import { useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { AxiosApiClient, FileHelper, ImageHelper, generateRandomId } from "../../../utils";
-import { usePrevious } from "../../../utils/hooks";
+import { useFieldEvent, usePrevious } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
 import { FileUploadContext } from "./file-upload-context";
-import { EFileStatus, IFile, IFileUploadSchema, IFileUploadValidationRule, IFileUploadValue } from "./types";
+import {
+	EFileStatus,
+	IFile,
+	IFileUploadSchema,
+	IFileUploadValidationRule,
+	IFileUploadValue,
+	TUploadErrorDetail,
+} from "./types";
 
 interface IProps {
 	compressImages: boolean;
@@ -26,6 +34,7 @@ const FileUploadManager = (props: IProps) => {
 	const { files, setFiles, setCurrentFileIds } = useContext(FileUploadContext);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
+	const { dispatchFieldEvent } = useFieldEvent();
 	const sessionId = useRef<string>();
 
 	// =============================================================================
@@ -270,45 +279,55 @@ const FileUploadManager = (props: IProps) => {
 		} else if (upload.type === "multipart") {
 			formData.append("file", fileToUpload.rawFile, fileToUpload.fileItem?.name);
 		}
-		const response = await new AxiosApiClient("", undefined, undefined, true).post(upload.url, formData, {
-			headers: {
-				"Content-Type": upload.type === "base64" ? "application/json" : "multipart/form-data",
-			},
-			onUploadProgress: (progressEvent) => {
-				const { loaded, total } = progressEvent;
-				setFiles((prev) => {
-					if (!prev[index]) return prev;
-					const updatedFiles = [...prev];
-					updatedFiles[index] = {
-						...prev[index],
-						fileItem: {
-							...prev[index].fileItem,
-							progress: loaded / total,
-						},
-					};
 
-					return updatedFiles;
-				});
-			},
-		});
-
-		const thumbnailImageDataUrl = await generateThumbnail(fileToUpload);
-		setFiles((prev) => {
-			if (!prev[index]) return prev;
-			const updatedFiles = [...prev];
-			updatedFiles[index] = {
-				...prev[index],
-				fileItem: {
-					...prev[index].fileItem,
-					progress: 1,
-					thumbnailImageDataUrl,
+		try {
+			const response = await new AxiosApiClient("", undefined, undefined, true).post(upload.url, formData, {
+				headers: {
+					"Content-Type": upload.type === "base64" ? "application/json" : "multipart/form-data",
 				},
-				fileUrl: response?.["data"]?.["fileUrl"],
-				status: EFileStatus.UPLOADED,
-				uploadResponse: response,
-			};
-			return updatedFiles;
-		});
+				onUploadProgress: (progressEvent) => {
+					const { loaded, total } = progressEvent;
+					setFiles((prev) => {
+						if (!prev[index]) return prev;
+						const updatedFiles = [...prev];
+						updatedFiles[index] = {
+							...prev[index],
+							fileItem: {
+								...prev[index].fileItem,
+								progress: loaded / total,
+							},
+						};
+
+						return updatedFiles;
+					});
+				},
+			});
+
+			const thumbnailImageDataUrl = await generateThumbnail(fileToUpload);
+			setFiles((prev) => {
+				if (!prev[index]) return prev;
+				const updatedFiles = [...prev];
+				updatedFiles[index] = {
+					...prev[index],
+					fileItem: {
+						...prev[index].fileItem,
+						progress: 1,
+						thumbnailImageDataUrl,
+					},
+					fileUrl: response?.["data"]?.["fileUrl"],
+					status: EFileStatus.UPLOADED,
+					uploadResponse: response,
+				};
+				return updatedFiles;
+			});
+		} catch (err) {
+			dispatchFieldEvent<TUploadErrorDetail>("upload-error", id, {
+				fileId: fileToUpload.fileItem.id,
+				errorData: (err as AxiosError)?.response.data,
+			});
+
+			throw err;
+		}
 	};
 
 	const deleteFile = (index: number) => {

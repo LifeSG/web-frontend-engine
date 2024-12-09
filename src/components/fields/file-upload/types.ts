@@ -56,6 +56,11 @@ export interface IFileUploadValue {
 	fileUrl?: string | undefined;
 	uploadResponse?: unknown | undefined;
 }
+
+export type TUploadErrorDetail = {
+	fileId: string;
+	errorData: unknown;
+};
 // =============================================================================
 // EVENTS (fired from FEE)
 // =============================================================================
@@ -65,6 +70,14 @@ function fileUploadEvent(
 	type: "mount",
 	id: string,
 	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/** fired when file upload throws error */
+function fileUploadEvent(
+	uiType: "file-upload",
+	type: "upload-error",
+	id: string,
+	listener: TFieldEventListener<TUploadErrorDetail>,
 	options?: boolean | AddEventListenerOptions | undefined
 ): void;
 function fileUploadEvent() {
