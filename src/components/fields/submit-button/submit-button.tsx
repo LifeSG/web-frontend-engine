@@ -31,14 +31,16 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 	}, []);
 
 	useDeepCompareEffect(() => {
-		if (disabled === "invalid-form") {
-			try {
-				hardValidationSchema.validateSync(formValues);
-				setIsDisabled(false);
-			} catch (error) {
-				setIsDisabled(true);
+		(async () => {
+			if (disabled === "invalid-form") {
+				try {
+					await hardValidationSchema.validate(formValues);
+					setIsDisabled(false);
+				} catch (error) {
+					setIsDisabled(true);
+				}
 			}
-		}
+		})();
 	}, [formValues, hardValidationSchema]);
 
 	// =============================================================================
