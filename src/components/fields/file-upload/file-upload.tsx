@@ -255,7 +255,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				{...otherSchema}
 				accept={generateAcceptedFileTypes()}
 				description={renderHtmlText(description)}
-				errorMessage={error?.message}
+				errorMessage={renderHtmlText(error?.message)}
 				fileItems={convertToFileItems()}
 				id={id}
 				maxFiles={maxFilesRuleRef.current.max}
