@@ -10,7 +10,14 @@ import { IYupValidationRule } from "../../frontend-engine";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
 import { FileUploadContext, FileUploadProvider } from "./file-upload-context";
 import { FileUploadHelper } from "./file-upload-helper";
-import { EFileStatus, IFile, IFileUploadSchema, IFileUploadValidationRule, IFileUploadValue } from "./types";
+import {
+	EFileStatus,
+	IFile,
+	IFileUploadSchema,
+	IFileUploadValidationRule,
+	IFileUploadValue,
+	TSetFileErrorDetail,
+} from "./types";
 
 // lazy load to fix next.js SSR errors
 const FileUploadManager = lazy(() => import("./file-upload-manager"));
@@ -42,7 +49,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	const maxFileSizeRuleRef = useRef<IFileUploadValidationRule>({});
 	const uploadRuleRef = useRef<IFileUploadValidationRule>({});
 	const { setFieldValidationConfig } = useValidationConfig();
-	const { dispatchFieldEvent } = useFieldEvent();
+	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	const { clearErrors, setError } = useFormContext();
 
 	const handleNewFiles = useCallback(
@@ -67,12 +74,36 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		[clearErrors, id, setError, setFiles]
 	);
 
+	const handleSetFileError = useCallback(
+		({ detail }: CustomEvent<TSetFileErrorDetail>) => {
+			const { fileId, errorMessage } = detail;
+			setFiles(
+				files.map((file) => {
+					if (file.fileItem.id !== fileId) return file;
+					else {
+						return {
+							...file,
+							fileItem: { ...file.fileItem, errorMessage },
+						};
+					}
+				})
+			);
+		},
+		[files, setFiles]
+	);
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
 		dispatchFieldEvent("mount", id);
 	}, [dispatchFieldEvent, id]);
+
+	useEffect(() => {
+		addFieldEventListener("set-file-error", id, handleSetFileError);
+
+		return () => removeFieldEventListener("set-file-error", id, handleSetFileError);
+	}, [addFieldEventListener, handleSetFileError, id, removeFieldEventListener]);
 
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
