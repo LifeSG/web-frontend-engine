@@ -117,10 +117,10 @@ const meta: Meta = {
 		uploadOnAddingFile: {
 			type: { name: "object", value: {} },
 			description:
-				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li></ul>",
+				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li></ul>",
 			table: {
 				type: {
-					summary: "{ type: base64|multipart, url: string }",
+					summary: '{ type: base64|multipart, url: string, headers?: AxiosRequestConfig["headers"]}',
 				},
 				defaultValue: { summary: null },
 			},
