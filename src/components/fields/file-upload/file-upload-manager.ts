@@ -284,6 +284,7 @@ const FileUploadManager = (props: IProps) => {
 			const response = await new AxiosApiClient("", undefined, undefined, true).post(upload.url, formData, {
 				headers: {
 					"Content-Type": upload.type === "base64" ? "application/json" : "multipart/form-data",
+					...upload.headers,
 				},
 				onUploadProgress: (progressEvent) => {
 					const { loaded, total } = progressEvent;

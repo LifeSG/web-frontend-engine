@@ -1,7 +1,8 @@
 import { FileItemProps, FileUploadProps } from "@lifesg/react-design-system";
+import { AxiosRequestConfig } from "axios";
 import { IYupValidationRule } from "../../../context-providers";
-import { IBaseFieldSchema } from "../types";
 import { TFieldEventListener } from "../../../utils";
+import { IBaseFieldSchema } from "../types";
 
 export type TUploadType = "base64" | "multipart";
 
@@ -20,7 +21,7 @@ export interface IFileUploadSchema<V = undefined>
 	className?: string | undefined;
 	description?: string | undefined;
 	label: string;
-	uploadOnAddingFile: { type: TUploadType; url: string };
+	uploadOnAddingFile: { type: TUploadType; url: string; headers?: AxiosRequestConfig["headers"] };
 	warning?: string | undefined;
 	compressImages?: boolean | undefined;
 }
