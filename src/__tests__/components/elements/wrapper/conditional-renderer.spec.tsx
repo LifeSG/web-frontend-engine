@@ -756,6 +756,80 @@ describe("conditional-renderer", () => {
 			}
 		);
 
+		it.each`
+			restoreMode        | field2DefaultValue | field2UserInput | field2ExpectedValue
+			${"none"}          | ${undefined}       | ${"bye"}        | ${""}
+			${"default-value"} | ${"world"}         | ${"bye"}        | ${"world"}
+			${"user-input"}    | ${undefined}       | ${"bye"}        | ${"bye"}
+		`(
+			"should populate array-field conditionally rendered sub-field in `$restoreMode` restoreMode",
+			async ({ restoreMode, field2DefaultValue, field2UserInput, field2ExpectedValue }) => {
+				const ARRAY_FIELD_ID = "array";
+				render(
+					<FrontendEngineWithCustomButton
+						data={{
+							id: FRONTEND_ENGINE_ID,
+							sections: {
+								section: {
+									uiType: "section",
+									children: {
+										[ARRAY_FIELD_ID]: {
+											referenceKey: "array-field",
+											validation: [{ length: 1 }],
+											fieldSchema: {
+												[FIELD_ONE_ID]: { label: FIELD_ONE_LABEL, uiType: "text-field" },
+												[FIELD_TWO_ID]: {
+													label: FIELD_TWO_LABEL,
+													uiType: "text-field",
+													showIf: [{ [FIELD_ONE_ID]: [{ min: 5 }] }],
+												},
+											},
+										},
+										...SUBMIT_BUTTON_SCHEMA,
+									},
+								},
+							},
+							defaultValues: {
+								[ARRAY_FIELD_ID]: [{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: field2DefaultValue }],
+							},
+							restoreMode,
+						}}
+						onClick={(ref) =>
+							ref.current?.setValue(ARRAY_FIELD_ID, [
+								{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: field2UserInput },
+							])
+						}
+						onSubmit={SUBMIT_FN}
+					/>
+				);
+
+				await waitFor(() => fireEvent.click(getField("button", "Custom Button")));
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+					expect.objectContaining({
+						[ARRAY_FIELD_ID]: [{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: field2UserInput }],
+					})
+				);
+
+				fireEvent.change(getFieldOne(), { target: { value: "hi" } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenLastCalledWith(
+					expect.objectContaining({ [ARRAY_FIELD_ID]: [{ [FIELD_ONE_ID]: "hi" }] })
+				);
+
+				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						[ARRAY_FIELD_ID]: [{ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: field2ExpectedValue }],
+					})
+				);
+			}
+		);
+
 		const defaultValue = "world";
 		const userInput = "bye";
 		const uiType = "text-field";
