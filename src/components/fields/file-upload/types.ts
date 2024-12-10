@@ -2,6 +2,7 @@ import { FileItemProps, FileUploadProps } from "@lifesg/react-design-system";
 import { AxiosRequestConfig } from "axios";
 import { IYupValidationRule } from "../../../context-providers";
 import { TFieldEventListener } from "../../../utils";
+import { TErrorMessage } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 export type TUploadType = "base64" | "multipart";
@@ -57,6 +58,18 @@ export interface IFileUploadValue {
 	fileUrl?: string | undefined;
 	uploadResponse?: unknown | undefined;
 }
+
+type Implements<T, U extends T> = U;
+
+export type TFileUploadErrorObject = {
+	message?: string;
+	fileErrors?: {
+		[fileId: string]: string;
+	};
+};
+
+// Implements<T> ensures `TFileUploadErrorMessage` conforms to `TErrorMessage`
+export type TFileUploadErrorMessage = Implements<TErrorMessage, string | TFileUploadErrorObject>;
 
 export type TUploadErrorDetail = {
 	fileId: string;
