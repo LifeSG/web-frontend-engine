@@ -487,6 +487,102 @@ describe(UI_TYPE, () => {
 		});
 	});
 
+	describe("form config", () => {
+		it("should include form values of unregistered fields if stripUnknown is not true", async () => {
+			const mockOnSubmit = jest.fn();
+			render(
+				<FrontendEngine
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[COMPONENT_ID]: {
+										referenceKey: UI_TYPE,
+										sectionTitle: "Section title",
+										fieldSchema: {
+											field1: {
+												uiType: "text-field",
+												label: "Field 1",
+											},
+										},
+										validation: [{ length: 1 }],
+									},
+									...getSubmitButtonProps(),
+								},
+							},
+						},
+						stripUnknown: false,
+						defaultValues: {
+							[COMPONENT_ID]: [{ nonExistentField: "hello world" }],
+						},
+					}}
+					onSubmit={mockOnSubmit}
+				/>
+			);
+
+			fireEvent.change(screen.getByRole("textbox"), { target: { value: "hello" } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(mockOnSubmit).toHaveBeenLastCalledWith({
+				field: [
+					{
+						field1: "hello",
+						nonExistentField: "hello world",
+					},
+				],
+			});
+		});
+
+		it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
+			const mockOnSubmit = jest.fn();
+			render(
+				<FrontendEngine
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[COMPONENT_ID]: {
+										referenceKey: UI_TYPE,
+										sectionTitle: "Section title",
+										fieldSchema: {
+											field1: {
+												uiType: "text-field",
+												label: "Field 1",
+												showIf: [{ field2: [{ empty: true }] }],
+											},
+										},
+										validation: [{ length: 1 }],
+									},
+									...getSubmitButtonProps(),
+								},
+							},
+						},
+						stripUnknown: true,
+						defaultValues: {
+							[COMPONENT_ID]: [{ nonExistentField: "hello world" }],
+						},
+					}}
+					onSubmit={mockOnSubmit}
+				/>
+			);
+
+			fireEvent.change(screen.getByRole("textbox"), { target: { value: "hello" } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(mockOnSubmit).toHaveBeenLastCalledWith({
+				field: [
+					{
+						field1: "hello",
+					},
+				],
+			});
+		});
+	});
+
 	warningTestSuite<IArrayFieldSchema>({
 		referenceKey: UI_TYPE,
 		fieldSchema: {
