@@ -624,28 +624,6 @@ describe(UI_TYPE, () => {
 				errorData: mockError.response.data,
 			});
 		});
-
-		it("should be able to set file error with set-file-error trigger event", async () => {
-			const mockErrorMessage = "new error message";
-			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.dispatchFieldEvent(UI_TYPE, "set-file-error", COMPONENT_ID, {
-					fileId: FILE_1.name,
-					errorMessage: mockErrorMessage,
-				});
-			};
-			await renderComponent({
-				overrideSchema: {
-					defaultValues: {
-						[COMPONENT_ID]: [{ dataURL: JPG_BASE64, fileId: FILE_1.name, fileName: FILE_1.name }],
-					},
-				},
-				onClick: handleClick,
-			});
-
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(screen.getAllByText(mockErrorMessage).length).toBe(2);
-		});
 	});
 
 	describe("reset", () => {

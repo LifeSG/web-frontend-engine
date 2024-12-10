@@ -63,7 +63,6 @@ export type TUploadErrorDetail = {
 	errorData: unknown;
 };
 
-export type TSetFileErrorDetail = { fileId: string; errorMessage: string };
 // =============================================================================
 // EVENTS (fired from FEE)
 // =============================================================================
@@ -87,18 +86,3 @@ function fileUploadEvent() {
 	//
 }
 export type TFileUploadEvents = typeof fileUploadEvent;
-
-// =============================================================================
-// TRIGGERS (fired from outside FEE)
-// =============================================================================
-/** set the error message for specific file */
-function fileUploadTrigger(
-	uiType: "file-upload",
-	type: "set-file-error",
-	id: string,
-	details: TSetFileErrorDetail
-): boolean;
-function fileUploadTrigger() {
-	return true;
-}
-export type TFileUploadTriggers = typeof fileUploadTrigger;
