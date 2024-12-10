@@ -95,6 +95,10 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 	useEffect(() => {
 		if (value) {
+			if (value === stateValue) {
+				// triggered from form change, no need to handle again as it may override the form unintentionally
+				return;
+			}
 			const nextValue = padArray(value, length, () => ({}));
 			const nextKeys = padArray(stateKeys, nextValue.length, generateRandomId);
 
@@ -126,6 +130,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		(data: TFrontendEngineValues): void => {
 			const newSectionValue = [...stateValue];
 			newSectionValue[index] = data;
+			setStateValue(newSectionValue);
 			onChange({ target: { value: newSectionValue } });
 		};
 

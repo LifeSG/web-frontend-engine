@@ -1,7 +1,7 @@
 import isEqual from "lodash/isEqual";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useFormState } from "react-hook-form";
-import { usePrevious } from "../../../utils/hooks";
+import { useFormSchema, usePrevious } from "../../../utils/hooks";
 import { FrontendEngine } from "../../frontend-engine";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema, TFrontendEngineValues } from "../../types";
 
@@ -19,6 +19,9 @@ const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref
 	const [sectionValues, setSectionValues] = useState<TFrontendEngineValues>({});
 	const [defaultValues, setDefaultValues] = useState<TFrontendEngineValues>();
 	const { isSubmitting, isDirty } = useFormState();
+	const {
+		formSchema: { restoreMode, revalidationMode, validationMode, stripUnknown },
+	} = useFormSchema();
 	const prevIsDirty = usePrevious(isDirty);
 
 	useImperativeHandle<IFrontendEngineRef, IFrontendEngineRef>(ref, () => formRef.current);
@@ -72,7 +75,14 @@ const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref
 	return (
 		<FrontendEngine
 			ref={formRef}
-			data={{ sections: { section: { uiType: "section", children: schema } }, defaultValues }}
+			data={{
+				sections: { section: { uiType: "section", children: schema } },
+				defaultValues,
+				restoreMode,
+				revalidationMode,
+				validationMode,
+				stripUnknown,
+			}}
 			onValueChange={handleChange}
 			wrapInForm={false}
 		/>
