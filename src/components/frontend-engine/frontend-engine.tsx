@@ -134,13 +134,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			} else if (typeof value === "object") {
 				setError(key, { type: "api", message: JSON.stringify(value) });
 			} else {
-				const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
-				if (!isEmpty(errorObject)) {
-					const errorMessage = Object.values(errorObject)[0];
-					const fieldKey = Object.keys(errorObject)[0];
-
-					setError(fieldKey, { type: "api", message: errorMessage as string });
-				}
+				setError(key, { type: "api", message: value });
 			}
 		});
 	};
