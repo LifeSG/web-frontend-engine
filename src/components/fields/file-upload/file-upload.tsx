@@ -1,6 +1,6 @@
 import { FileUpload as DSFileUpload, FileItemProps } from "@lifesg/react-design-system/file-upload";
 import xor from "lodash/xor";
-import { Suspense, lazy, useCallback, useContext, useEffect, useRef } from "react";
+import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
@@ -10,7 +10,14 @@ import { IYupValidationRule } from "../../frontend-engine";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
 import { FileUploadContext, FileUploadProvider } from "./file-upload-context";
 import { FileUploadHelper } from "./file-upload-helper";
-import { EFileStatus, IFile, IFileUploadSchema, IFileUploadValidationRule, IFileUploadValue } from "./types";
+import {
+	EFileStatus,
+	IFile,
+	IFileUploadSchema,
+	IFileUploadValidationRule,
+	IFileUploadValue,
+	TFileUploadErrorObject,
+} from "./types";
 
 // lazy load to fix next.js SSR errors
 const FileUploadManager = lazy(() => import("./file-upload-manager"));
@@ -44,6 +51,8 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
 	const { clearErrors, setError } = useFormContext();
+	const [fieldError, setFieldError] = useState<string | undefined>();
+	const filesRef = useRef<IFile[]>(files);
 
 	const handleNewFiles = useCallback(
 		(newFiles: IFile[], oldFiles: IFile[]) => {
@@ -70,6 +79,10 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		filesRef.current = files;
+	}, [files]);
+
 	useEffect(() => {
 		dispatchFieldEvent("mount", id);
 	}, [dispatchFieldEvent, id]);
@@ -186,6 +199,38 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		}
 	}, [handleNewFiles, isDirty, isTouched, currentFileIds, value]);
 
+	useEffect(() => {
+		if (!error?.message) {
+			setFieldError(undefined);
+			return;
+		}
+
+		try {
+			const { message, fileErrors } = JSON.parse(error.message) as TFileUploadErrorObject;
+
+			if (fileErrors) {
+				setFiles(
+					filesRef.current.map((file) => {
+						const errorMessage = fileErrors[file.fileItem.id];
+
+						if (!errorMessage) return file;
+
+						return {
+							...file,
+							fileItem: { ...file.fileItem, errorMessage },
+						};
+					})
+				);
+			}
+
+			if (message) {
+				setFieldError(message);
+			}
+		} catch (e) {
+			setFieldError(error.message);
+		}
+	}, [error?.message, setFiles]);
+
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
@@ -255,7 +300,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				{...otherSchema}
 				accept={generateAcceptedFileTypes()}
 				description={renderHtmlText(description)}
-				errorMessage={error?.message}
+				errorMessage={renderHtmlText(fieldError)}
 				fileItems={convertToFileItems()}
 				id={id}
 				maxFiles={maxFilesRuleRef.current.max}
