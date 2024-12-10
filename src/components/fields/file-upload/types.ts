@@ -62,10 +62,12 @@ export interface IFileUploadValue {
 type Implements<T, U extends T> = U;
 
 export type TFileUploadErrorObject = {
-	message?: string;
-	fileErrors?: {
-		[fileId: string]: string;
-	};
+	message?: string | undefined;
+	fileErrors?:
+		| {
+				[fileId: string]: string;
+		  }
+		| undefined;
 };
 
 // Implements<T> ensures `TFileUploadErrorMessage` conforms to `TErrorMessage`
