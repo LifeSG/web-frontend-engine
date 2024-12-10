@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from "axios";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
-import { IFileUploadSchema, TUploadType } from "../../../../components/fields";
+import { IFileUploadSchema, TFileUploadErrorMessage, TUploadType } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
@@ -726,6 +726,103 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.queryByText(warningMessage)).not.toBeInTheDocument();
+		});
+	});
+
+	describe("error", () => {
+		it("should be able to set field error via setErrors()", async () => {
+			const error = "field error";
+			await renderComponent({ onClick: (ref) => ref.current.setErrors({ [COMPONENT_ID]: error }) });
+			fireEvent.click(getCustomButton());
+
+			expect(screen.getByText(error)).toBeInTheDocument();
+		});
+
+		it("should be able to clear field error via setErrors", async () => {
+			await renderComponent({
+				overrideField: {
+					validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+				},
+				onClick: (ref) => ref.current.setErrors({ [COMPONENT_ID]: undefined }),
+			});
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+			fireEvent.click(getCustomButton());
+			expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
+		});
+
+		it("should set field and individual file errors via setErrors()", async () => {
+			const fileError1 = "file error 1";
+			const fileError2 = "file error 2";
+			await renderComponent({
+				files: [FILE_1, FILE_2],
+				onClick: (ref) => {
+					const files = ref.current.getValues()[COMPONENT_ID];
+
+					const errors: TFileUploadErrorMessage = {
+						message: ERROR_MESSAGE,
+						fileErrors: {
+							[files[0].fileId]: fileError1,
+							[files[1].fileId]: fileError2,
+						},
+					};
+
+					ref.current.setErrors({ [COMPONENT_ID]: errors });
+				},
+			});
+			fireEvent.click(getCustomButton());
+
+			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+			expect(screen.getAllByText(fileError1).length > 0).toBeTruthy();
+			expect(screen.getAllByText(fileError2).length > 0).toBeTruthy();
+		});
+
+		it("should set field error while keeping existing file errors", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValueOnce("error");
+			await renderComponent({
+				files: [FILE_1],
+				onClick: (ref) => {
+					const errors: TFileUploadErrorMessage = {
+						message: ERROR_MESSAGE,
+					};
+
+					ref.current.setErrors({ [COMPONENT_ID]: errors });
+				},
+			});
+			fireEvent.click(getCustomButton());
+
+			expect(screen.getAllByText(ERROR_MESSAGES.UPLOAD().GENERIC).length > 0).toBeTruthy();
+			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		});
+
+		it("should set specific file error while keeping existing field error and other file errors", async () => {
+			const fileError1 = "file error 1";
+
+			jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValueOnce("error");
+			await renderComponent({
+				files: [FILE_1, FILE_2],
+				overrideField: {
+					validation: [{ length: 5, errorMessage: ERROR_MESSAGE }],
+				},
+				onClick: (ref) => {
+					const files = ref.current.getValues()[COMPONENT_ID];
+
+					const errors: TFileUploadErrorMessage = {
+						fileErrors: {
+							[files[0].fileId]: fileError1,
+						},
+					};
+
+					ref.current.setErrors({ [COMPONENT_ID]: errors });
+				},
+			});
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			fireEvent.click(getCustomButton());
+
+			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+			expect(screen.getAllByText(ERROR_MESSAGES.UPLOAD().GENERIC).length > 0).toBeTruthy();
+			expect(screen.getAllByText(fileError1).length > 0).toBeTruthy();
 		});
 	});
 
