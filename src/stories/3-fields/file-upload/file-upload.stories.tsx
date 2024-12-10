@@ -1,12 +1,17 @@
+import { Button } from "@lifesg/react-design-system/button";
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
-import { IFileUploadSchema, IFileUploadValue } from "../../../components/fields/file-upload";
+import { Meta, StoryFn } from "@storybook/react";
+import { useRef } from "react";
+import { IFileUploadSchema, IFileUploadValue, TFileUploadErrorMessage } from "../../../components/fields/file-upload";
+import { IFrontendEngineRef } from "../../../components/frontend-engine/types";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
+	FrontendEngine,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
 	WarningStoryTemplate,
 } from "../../common";
 import { jpgDataURL } from "../image-upload/image-data-url";
@@ -117,10 +122,10 @@ const meta: Meta = {
 		uploadOnAddingFile: {
 			type: { name: "object", value: {} },
 			description:
-				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li></ul>",
+				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li></ul>",
 			table: {
 				type: {
-					summary: "{ type: base64|multipart, url: string }",
+					summary: '{ type: base64|multipart, url: string, headers?: AxiosRequestConfig["headers"]}',
 				},
 				defaultValue: { summary: null },
 			},
@@ -210,6 +215,69 @@ WithValidation.args = {
 export const Warning = WarningStoryTemplate<IFileUploadSchema>("upload-with-warning").bind({});
 Warning.args = {
 	...COMMON_STORY_ARGS,
+};
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const CustomErrorTemplate = () =>
+	((args) => {
+		const id = `file-upload-with-custom-error`;
+		const formRef = useRef<IFrontendEngineRef>();
+		const handleSetCustomErrors = () => {
+			const error: TFileUploadErrorMessage = {
+				message: "Custom error message <strong>with bold text</strong>",
+			};
+			const files = formRef.current.getValues()[id] as IFileUploadValue[];
+
+			if (files && files.length > 0) {
+				error.fileErrors = {};
+
+				files.forEach((file, index) => {
+					error.fileErrors[file.fileId] = `Custom error message per file (${index})`;
+				});
+			}
+
+			formRef.current.setErrors({ [id]: error });
+		};
+
+		return (
+			<>
+				<FrontendEngine
+					ref={formRef}
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[id]: args,
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					}}
+				/>
+				<Button.Default onClick={handleSetCustomErrors} style={{ marginTop: "2rem" }}>
+					Set custom errors
+				</Button.Default>
+			</>
+		);
+	}) as StoryFn<IFileUploadSchema>;
+
+export const CustomError = CustomErrorTemplate().bind({});
+CustomError.args = {
+	...COMMON_STORY_ARGS,
+	description: `
+	Set custom error using <em>TFileUploadErrorMessage</em>
+	<ul>
+		<li>Using <em>string</em> - sets field main field error</li>
+		<li>
+			Using <em>TFileUploadErrorObject</em> - sets both main field error and individual file errors
+			<ul>
+				<li><em>message</em>: main field error</li>
+				<li><em>fileErrors</em>: record of individual file errors (key = file ID)</li>
+			</ul>
+		</li>
+	</ul>
+	`,
 };
 
 export const AcceptedFileTypes = DefaultStoryTemplate<IFileUploadSchema>("upload-file-type").bind({});

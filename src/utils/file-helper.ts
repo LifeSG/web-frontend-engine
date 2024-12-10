@@ -1,4 +1,4 @@
-import getFileInfo from "magic-bytes.js";
+import { fileTypeFromBlob } from "file-type";
 
 export namespace FileHelper {
 	/**
@@ -133,13 +133,18 @@ export namespace FileHelper {
 	 * reliably derive file type by checking magic number of the buffer
 	 */
 	export const getType = async (file: Blob | File) => {
-		const arrayBuffer = await file.arrayBuffer();
-		const bytes = new Uint8Array(arrayBuffer);
-		const [fileInfo] = getFileInfo(bytes);
-		return {
-			mime: fileInfo?.mime,
-			ext: fileInfo?.extension === "jpeg" ? "jpg" : fileInfo?.extension,
-		};
+		const result = await fileTypeFromBlob(file);
+
+		// default to what is provided by the file as it is not possible to determine file type for text-based file formats
+		if (!result && file.type.startsWith("text")) {
+			const fileName = (file as File).name || ".txt";
+			return {
+				mime: file.type,
+				ext: fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length),
+			};
+		}
+
+		return result;
 	};
 
 	/**
