@@ -62,6 +62,9 @@ export const useValidationSchema = () => {
 	const performSoftValidation = (schema: Yup.ObjectSchema<ObjectShape>, data: TFrontendEngineValues): void => {
 		schema
 			.validate(data, { abortEarly: false })
+			.then(() => {
+				setWarnings({});
+			})
 			.catch((error) => {
 				const validationError = error as Yup.ValidationError;
 
@@ -75,9 +78,6 @@ export const useValidationSchema = () => {
 				}, {});
 
 				setWarnings(updatedWarnings);
-			})
-			.then(() => {
-				setWarnings({});
 			});
 	};
 
