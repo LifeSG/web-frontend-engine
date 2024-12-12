@@ -15,6 +15,7 @@ import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	flushPromise,
 	getErrorMessage,
 	getField,
 	getSubmitButton,
@@ -145,20 +146,22 @@ describe("frontend-engine", () => {
 
 		describe("onChange", () => {
 			const onChange = jest.fn();
-			it("should be called on mount", () => {
+			it("should be called on mount", async () => {
 				renderComponent({ onChange, wrapInForm });
 
-				expect(onChange).toHaveBeenCalled();
+				await waitFor(() => expect(onChange).toHaveBeenCalled());
 			});
 
-			it("should be called on value change", () => {
+			it("should be called on value change", async () => {
 				renderComponent({ onChange, wrapInForm });
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 
-				expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
+				await waitFor(() =>
+					expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true)
+				);
 			});
 
-			it("should be called on schema change", () => {
+			it("should be called on schema change", async () => {
 				const CustomFrontendEngine = () => {
 					const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
 					const handleClick = () =>
@@ -179,10 +182,10 @@ describe("frontend-engine", () => {
 				render(<CustomFrontendEngine />);
 				fireEvent.click(screen.getByRole("button", { name: "Update schema" }));
 
-				expect(onChange).toHaveBeenCalled();
+				await waitFor(() => expect(onChange).toHaveBeenCalled());
 			});
 
-			it("should return the correct validity when form is prefilled with valid values", () => {
+			it("should return the correct validity when form is prefilled with valid values", async () => {
 				renderComponent(
 					{ onChange },
 					{
@@ -202,10 +205,12 @@ describe("frontend-engine", () => {
 					}
 				);
 
-				expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), true);
+				await waitFor(() =>
+					expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), true)
+				);
 			});
 
-			it("should return the correct validity when form is prefilled with invalid values", () => {
+			it("should return the correct validity when form is prefilled with invalid values", async () => {
 				renderComponent(
 					{ onChange },
 					{
@@ -225,13 +230,16 @@ describe("frontend-engine", () => {
 					}
 				);
 
-				expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false);
+				await waitFor(() =>
+					expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "a" }), false)
+				);
 			});
 
-			it("should include form values of unregistered fields if stripUnknown is not true", () => {
+			it("should include form values of unregistered fields if stripUnknown is not true", async () => {
 				renderComponent({ onChange }, { ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } });
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 
+				await flushPromise();
 				const finalOnChangeCall = onChange.mock.lastCall[0];
 				expect(finalOnChangeCall).toEqual({
 					[FIELD_ONE_ID]: "hello",
@@ -240,13 +248,14 @@ describe("frontend-engine", () => {
 				});
 			});
 
-			it("should exclude form values of unregistered fields if stripUnknown is true", () => {
+			it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
 				renderComponent(
 					{ onChange },
 					{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }
 				);
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 
+				await waitFor(() => expect(onChange).toHaveBeenCalled());
 				const finalOnChangeCall = onChange.mock.lastCall[0];
 				expect(finalOnChangeCall).toEqual({
 					[FIELD_ONE_ID]: "hello",
@@ -257,20 +266,26 @@ describe("frontend-engine", () => {
 
 		describe("onValueChange", () => {
 			const onValueChange = jest.fn();
-			it("should not be called on mount", () => {
+			it("should not be called on mount", async () => {
 				renderComponent({ onValueChange, wrapInForm });
+				await flushPromise();
 
 				expect(onValueChange).not.toHaveBeenCalled();
 			});
 
-			it("should be called on value change", () => {
+			it("should be called on value change", async () => {
 				renderComponent({ onValueChange, wrapInForm });
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 
-				expect(onValueChange).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }), true);
+				await waitFor(() =>
+					expect(onValueChange).toHaveBeenCalledWith(
+						expect.objectContaining({ [FIELD_ONE_ID]: "hello" }),
+						true
+					)
+				);
 			});
 
-			it("should not be called when form values do not change", () => {
+			it("should not be called when form values do not change", async () => {
 				const CustomFrontendEngine = () => {
 					const [schema, setSchema] = useState<IFrontendEngineData>(
 						merge(cloneDeep(JSON_SCHEMA), {
@@ -302,13 +317,13 @@ describe("frontend-engine", () => {
 					);
 				};
 				render(<CustomFrontendEngine />);
-
 				fireEvent.click(screen.getByRole("button", { name: "Update schema" }));
+				await flushPromise();
 
 				expect(onValueChange).not.toHaveBeenCalled();
 			});
 
-			it("should be called on validity change", () => {
+			it("should be called on validity change", async () => {
 				const CustomFrontendEngine = () => {
 					const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
 					const handleClick = () =>
@@ -331,22 +346,32 @@ describe("frontend-engine", () => {
 					);
 				};
 				render(<CustomFrontendEngine />);
-
 				fireEvent.change(getFieldOne(), { target: { value: "1" } });
 
-				expect(onValueChange).toHaveBeenLastCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "1" }), false);
+				await waitFor(() =>
+					expect(onValueChange).toHaveBeenLastCalledWith(
+						expect.objectContaining({ [FIELD_ONE_ID]: "1" }),
+						false
+					)
+				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update schema" }));
 
-				expect(onValueChange).toHaveBeenLastCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "1" }), true);
+				await waitFor(() =>
+					expect(onValueChange).toHaveBeenLastCalledWith(
+						expect.objectContaining({ [FIELD_ONE_ID]: "1" }),
+						true
+					)
+				);
 			});
 
-			it("should include form values of unregistered fields if stripUnknown is not true", () => {
+			it("should include form values of unregistered fields if stripUnknown is not true", async () => {
 				renderComponent(
 					{ onValueChange },
 					{ ...JSON_SCHEMA, defaultValues: { nonExistentField: "hello world" } }
 				);
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				await flushPromise();
 
 				const finalOnChangeCall = onValueChange.mock.lastCall[0];
 				expect(finalOnChangeCall).toEqual({
@@ -356,12 +381,13 @@ describe("frontend-engine", () => {
 				});
 			});
 
-			it("should exclude form values of unregistered fields if stripUnknown is true", () => {
+			it("should exclude form values of unregistered fields if stripUnknown is true", async () => {
 				renderComponent(
 					{ onValueChange },
 					{ ...JSON_SCHEMA, stripUnknown: true, defaultValues: { nonExistentField: "hello world" } }
 				);
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+				await flushPromise();
 
 				const finalOnChangeCall = onValueChange.mock.lastCall[0];
 				expect(finalOnChangeCall).toEqual({

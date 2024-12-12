@@ -46,13 +46,13 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 // =============================================================================
 // HEADER
 // =============================================================================
-export const HeaderSection = styled.div<{ drawActive?: boolean }>`
+export const HeaderSection = styled.div<{ $drawActive?: boolean }>`
 	display: flex;
 	height: 2.75rem;
 	text-align: center;
 	align-items: center;
 	flex-shrink: 0;
-	${({ drawActive }) => (drawActive ? "justify-content: space-between;" : "")}
+	${({ $drawActive }) => ($drawActive ? "justify-content: space-between;" : "")}
 `;
 
 export const ReviewCloseButton = styled(IconButton)`
@@ -154,18 +154,18 @@ export const DrawDeleteButton = styled(IconButton)`
 	}
 `;
 
-export const DrawDeleteButtonText = styled(Text.H6)<{ disabled: boolean }>`
-	color: ${(props) => (props.disabled ? Color.Neutral[3] : Color.Primary)};
+export const DrawDeleteButtonText = styled(Text.H6)<{ $disabled: boolean }>`
+	color: ${(props) => (props.$disabled ? Color.Neutral[3] : Color.Primary)};
 	line-height: 1.75rem;
 `;
 
-export const DrawIcon = styled(PencilStrokeIcon)<{ disabled: boolean }>`
-	color: ${(props) => (props.disabled ? Color.Neutral[3] : Color.Primary)};
+export const DrawIcon = styled(PencilStrokeIcon)<{ $disabled: boolean }>`
+	color: ${(props) => (props.$disabled ? Color.Neutral[3] : Color.Primary)};
 	margin-right: 0.25rem;
 `;
 
-export const DeleteIcon = styled(BinIcon)<{ disabled: boolean }>`
-	color: ${(props) => (props.disabled ? Color.Neutral[3] : Color.Primary)};
+export const DeleteIcon = styled(BinIcon)<{ $disabled: boolean }>`
+	color: ${(props) => (props.$disabled ? Color.Neutral[3] : Color.Primary)};
 `;
 
 export const ImageEditorWrapper = styled.div`
@@ -199,7 +199,7 @@ export const FooterSaveButton = styled(Button.Default)`
 	max-width: 7.125rem;
 `;
 
-export const EraserButton = styled.button<{ active?: boolean }>`
+export const EraserButton = styled.button`
 	${ButtonBase}
 	padding: 0;
 	width: 3rem;
@@ -211,15 +211,15 @@ export const EraserButton = styled.button<{ active?: boolean }>`
 	}
 `;
 
-export const EraserButtonIcon = styled(EraserIcon)<{ eraseMode: boolean }>`
+export const EraserButtonIcon = styled(EraserIcon)<{ $eraseMode: boolean }>`
 	display: block;
 	width: 100%;
 	height: 100%;
-	color: ${(props) => (props.eraseMode ? Color.Primary : Color.Neutral[3])};
+	color: ${(props) => (props.$eraseMode ? Color.Primary : Color.Neutral[3])};
 `;
 
-export const ButtonIcon = styled(PencilIcon)<{ colorScheme: string }>`
-	color: ${(props) => (props.colorScheme === "light" ? Color.Neutral[3] : Color.Neutral[8])};
+export const ButtonIcon = styled(PencilIcon)<{ $colorScheme: string }>`
+	color: ${(props) => (props.$colorScheme === "light" ? Color.Neutral[3] : Color.Neutral[8])};
 	width: 100%;
 	height: 100%;
 `;
@@ -230,13 +230,13 @@ export const PaletteHolder = styled.div`
 	flex-direction: flex-end;
 `;
 
-export const Palette = styled.button<{ color: string; colorScheme?: string }>`
+export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
 	width: 3rem;
 	height: 3rem;
 	border-radius: 0.25rem;
 	padding: 0.75rem;
-	background-color: ${({ color }) => color};
-	border: solid 1px ${({ color, colorScheme }) => (colorScheme === "light" ? "#979797" : color)};
+	background-color: ${({ $color }) => $color};
+	border: solid 1px ${({ $color, $colorScheme }) => ($colorScheme === "light" ? "#979797" : $color)};
 	cursor: pointer;
 
 	${MediaQuery.MaxWidth.mobileL} {

@@ -60,23 +60,25 @@ export const useValidationSchema = () => {
 	 * @param data user input data
 	 */
 	const performSoftValidation = (schema: Yup.ObjectSchema<ObjectShape>, data: TFrontendEngineValues): void => {
-		try {
-			schema.validateSync(data, { abortEarly: false });
-			setWarnings({});
-		} catch (error) {
-			const validationError = error as Yup.ValidationError;
+		schema
+			.validate(data, { abortEarly: false })
+			.then(() => {
+				setWarnings({});
+			})
+			.catch((error) => {
+				const validationError = error as Yup.ValidationError;
 
-			if (isEmpty(validationError)) {
-				return;
-			}
-			const updatedWarnings = validationError.inner.reduce((acc, value) => {
-				acc[value.path] = value.message;
+				if (isEmpty(validationError)) {
+					return;
+				}
+				const updatedWarnings = validationError.inner.reduce((acc, value) => {
+					acc[value.path] = value.message;
 
-				return acc;
-			}, {});
+					return acc;
+				}, {});
 
-			setWarnings(updatedWarnings);
-		}
+				setWarnings(updatedWarnings);
+			});
 	};
 
 	const addWarnings = (warningPayload: TWarningPayload) => {

@@ -40,7 +40,7 @@ const getTextfield = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
 };
 
-describe("submit", () => {
+describe("submit-button", () => {
 	it("should submit the form on press", async () => {
 		renderComponent();
 		fireEvent.change(getTextfield(), { target: { value: "hello" } });
@@ -57,14 +57,14 @@ describe("submit", () => {
 
 	it("should be disabled if disabled=invalid-form and form is invalid", async () => {
 		renderComponent({ disabled: "invalid-form" });
-		expect(getSubmitButton()).toBeDisabled();
+		await waitFor(() => expect(getSubmitButton()).toBeDisabled());
 
 		fireEvent.change(getTextfield(), { target: { value: "hello" } });
-		expect(getSubmitButton()).not.toBeDisabled();
+		await waitFor(() => expect(getSubmitButton()).toBeEnabled());
 	});
 
 	it("should not be disabled if disabled=invalid-form and form is prefilled with valid values", async () => {
 		renderComponent({ disabled: "invalid-form" }, { [COMPONENT_ID]: "hello world" });
-		expect(getSubmitButton()).toBeEnabled();
+		await waitFor(() => expect(getSubmitButton()).toBeEnabled());
 	});
 });

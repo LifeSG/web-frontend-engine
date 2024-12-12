@@ -33,21 +33,37 @@ export const useFormChange = (props: IFrontendEngineProps, formMethods: UseFormR
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
-	const checkIsFormValid = useCallback(() => {
-		try {
-			hardValidationSchema.validateSync(getValues());
-			return true;
-		} catch (error) {
-			return false;
-		}
-	}, [getValues, hardValidationSchema]);
+	type TCheckIsFormValidSync = (isAsync?: false | undefined) => boolean;
+	type TCheckIsFormValidAsync = (isAsync: true) => Promise<boolean>;
+	type TCheckIsFormValid = TCheckIsFormValidSync & TCheckIsFormValidAsync;
+	const checkIsFormValid: TCheckIsFormValid = useCallback<TCheckIsFormValid>(
+		(isAsync = false): any => {
+			if (!isAsync) {
+				try {
+					hardValidationSchema.validateSync(getValues());
+					return true;
+				} catch (error) {
+					return false;
+				}
+			}
+			return (async () => {
+				try {
+					await hardValidationSchema.validate(getValues());
+					return true;
+				} catch (error) {
+					return false;
+				}
+			})();
+		},
+		[getValues, hardValidationSchema]
+	);
 
-	const handleValueChange = useRef(() => {
+	const handleValueChange = useRef(async () => {
 		// noop
 	});
-	handleValueChange.current = () => {
+	handleValueChange.current = async () => {
 		const formValues = getFormValues(undefined, stripUnknown);
-		const formValidity = checkIsFormValid();
+		const formValidity = await checkIsFormValid(true);
 		// attach / fire onValueChange event only when formValidationConfig has values
 		// otherwise isValid will be returned incorrectly as true
 		if (onValueChange && Object.keys(formValidationConfig || {}).length) {
@@ -78,10 +94,11 @@ export const useFormChange = (props: IFrontendEngineProps, formMethods: UseFormR
 		// attach / fire onChange event only when formValidationConfig has values
 		// otherwise isValid will be returned incorrectly as true
 		if (onChange && Object.keys(formValidationConfig || {}).length) {
-			const subscription = watch(() => {
-				onChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
+			const subscription = watch(async () => {
+				const isValid = await checkIsFormValid(true);
+				onChange(getFormValues(undefined, stripUnknown), isValid);
 			});
-			onChange(getFormValues(undefined, stripUnknown), checkIsFormValid());
+			checkIsFormValid(true).then((isValid) => onChange(getFormValues(undefined, stripUnknown), isValid));
 
 			return () => subscription.unsubscribe();
 		}
@@ -90,8 +107,8 @@ export const useFormChange = (props: IFrontendEngineProps, formMethods: UseFormR
 	}, [checkIsFormValid, onChange, watch, formValidationConfig]);
 
 	useEffect(() => {
-		const subscription = watch(() => {
-			handleValueChange.current();
+		const subscription = watch(async () => {
+			await handleValueChange.current();
 		});
 
 		return () => subscription.unsubscribe();
@@ -115,8 +132,7 @@ export const useFormChange = (props: IFrontendEngineProps, formMethods: UseFormR
 	useEffect(() => {
 		// re-evaluate form validity when schema changes
 		if (hasSchemaChange && previousHardValidationSchema !== hardValidationSchema) {
-			handleValueChange.current();
-			setHasSchemaChange(false);
+			handleValueChange.current().then(() => setHasSchemaChange(false));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [hasSchemaChange, hardValidationSchema]);
