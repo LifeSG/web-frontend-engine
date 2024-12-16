@@ -37,6 +37,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		// ensure default value is passed to react-hook-form on mount
 		// this is used in conjunction with chips + textarea field
 		setValue(id, value);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -98,13 +99,13 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 
 	return (
 		<>
-			<Form.CustomField label={formattedLabel} id={id} errorMessage={error?.message}>
+			<Form.CustomField id={id} label={formattedLabel}>
 				<Wrapper chipPosition={chipPosition}>
 					{renderChips()}
 					<StyledTextarea
 						{...otherSchema}
 						{...otherProps}
-						id={id + "-base"}
+						id={id}
 						data-testid={TestHelper.generateId(id, "textarea")}
 						className={className}
 						name={name}
@@ -113,7 +114,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 						resizable={resizable}
 						onChange={handleChange}
 						value={stateValue}
-						error={!!error?.message}
+						errorMessage={error?.message}
 					/>
 				</Wrapper>
 			</Form.CustomField>
