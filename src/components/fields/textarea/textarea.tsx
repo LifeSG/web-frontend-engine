@@ -97,23 +97,9 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		);
 	};
 
-	const renderLabel = () => {
-		const baseId = `${id}-base`;
-		if (typeof formattedLabel === "string") {
-			return <Form.Label htmlFor={baseId}>{formattedLabel}</Form.Label>;
-		} else {
-			return (
-				<Form.Label {...formattedLabel} htmlFor={baseId}>
-					{formattedLabel?.children}
-				</Form.Label>
-			);
-		}
-	};
-
 	return (
 		<>
-			<Form.CustomField id={id}>
-				{renderLabel()}
+			<Form.CustomField id={id} label={formattedLabel}>
 				<Wrapper chipPosition={chipPosition}>
 					{renderChips()}
 					<StyledTextarea
