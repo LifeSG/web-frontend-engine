@@ -99,27 +99,24 @@ export namespace DateTimeHelper {
 		}
 	}
 
-	export function calculateDisabledBeyondDaysDates(beyondDays: IDaysRangeRule): string[] {
+	export function calculateDisabledBeyondDaysRange(beyondDays: IDaysRangeRule) {
 		const { numberOfDays, fromDate, dateFormat = "uuuu-MM-dd" } = beyondDays;
 		const baseDate = fromDate
 			? toLocalDateOrTime(fromDate, dateFormat, "date") || LocalDate.now()
 			: LocalDate.now();
-		const dateFormatter = DateTimeFormatter.ofPattern(dateFormat)
-			.withResolverStyle(ResolverStyle.STRICT)
-			.withLocale(Locale.ENGLISH);
+
+		const dates = {
+			startDate: undefined,
+			endDate: undefined,
+		};
+
 		if (numberOfDays >= 0) {
-			return Array((numberOfDays || 0) + 1)
-				.fill("")
-				.map((_, i) => {
-					return baseDate.plusDays(i).format(dateFormatter);
-				});
+			dates.startDate = baseDate.plusDays(numberOfDays + 1);
 		} else {
-			return Array((Math.abs(numberOfDays) || 0) + 1)
-				.fill("")
-				.map((_, i) => {
-					return baseDate.minusDays(i).format(dateFormatter);
-				});
+			dates.endDate = baseDate.plusDays(numberOfDays - 1);
 		}
+
+		return dates;
 	}
 
 	export function checkWithinDays(value: string, withinDays: IWithinDaysRangeRule) {

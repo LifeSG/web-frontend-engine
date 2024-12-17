@@ -140,24 +140,25 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		const withinDaysRange =
 			withinDaysRule?.["withinDays"] &&
 			DateTimeHelper.calculateDisabledWithinDaysRange({ ...withinDaysRule["withinDays"], dateFormat });
+		const beyondDaysRange =
+			beyondDaysRule?.["beyondDays"] &&
+			DateTimeHelper.calculateDisabledBeyondDaysRange({ ...beyondDaysRule["beyondDays"], dateFormat });
+
 		const minDateProp = getLatestDate([
 			minDate,
 			futureRule?.["future"] && LocalDate.now().plusDays(1),
 			notPastRule?.["notPast"] && LocalDate.now(),
 			withinDaysRange?.startDate,
+			beyondDaysRange?.startDate,
 		]);
 		const maxDateProp = getEarliestDate([
 			maxDate,
 			pastRule?.["past"] && LocalDate.now().minusDays(1),
 			notFutureRule?.["notFuture"] && LocalDate.now(),
 			withinDaysRange?.endDate,
+			beyondDaysRange?.endDate,
 		]);
-		const disabledDatesProps = [
-			...(excludedDatesRule?.["excludedDates"] || []),
-			...(beyondDaysRule?.["beyondDays"]
-				? DateTimeHelper.calculateDisabledBeyondDaysDates({ ...beyondDaysRule?.["beyondDays"], dateFormat })
-				: []),
-		];
+		const disabledDatesProps = [...(excludedDatesRule?.["excludedDates"] || [])];
 		if (minDateProp || maxDateProp || disabledDatesProps) {
 			setDerivedProps((props) => ({
 				...props,

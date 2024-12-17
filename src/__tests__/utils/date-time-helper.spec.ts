@@ -179,11 +179,11 @@ describe("date-time-helper", () => {
 		});
 
 		it.each`
-			scenario                       | numberOfDays | expectedResults                                             | fromDate
-			${"beyond today"}              | ${3}         | ${["2023-06-15", "2023-06-16", "2023-06-17", "2023-06-18"]} | ${undefined}
-			${"before today"}              | ${-3}        | ${["2023-06-15", "2023-06-14", "2023-06-13", "2023-06-12"]} | ${undefined}
-			${"beyond the reference date"} | ${3}         | ${["2023-05-15", "2023-05-16", "2023-05-17", "2023-05-18"]} | ${"2023-05-15"}
-			${"before the reference date"} | ${-3}        | ${["2023-05-15", "2023-05-14", "2023-05-13", "2023-05-12"]} | ${"2023-05-15"}
+			scenario                       | numberOfDays | expectedResults                                                     | fromDate
+			${"beyond today"}              | ${3}         | ${{ startDate: LocalDate.parse("2023-06-19"), endDate: undefined }} | ${undefined}
+			${"before today"}              | ${-3}        | ${{ startDate: undefined, endDate: LocalDate.parse("2023-06-11") }} | ${undefined}
+			${"beyond the reference date"} | ${3}         | ${{ startDate: LocalDate.parse("2023-05-19"), endDate: undefined }} | ${"2023-05-15"}
+			${"before the reference date"} | ${-3}        | ${{ startDate: undefined, endDate: LocalDate.parse("2023-05-11") }} | ${"2023-05-15"}
 		`(
 			"should return dates $scenario based of the number of days specified",
 			({ numberOfDays, fromDate, expectedResults }) => {
@@ -193,7 +193,7 @@ describe("date-time-helper", () => {
 					dateFormat: "uuuu-MM-dd",
 				};
 
-				const result = DateTimeHelper.calculateDisabledBeyondDaysDates(beyondDays);
+				const result = DateTimeHelper.calculateDisabledBeyondDaysRange(beyondDays);
 
 				expect(result).toEqual(expectedResults);
 			}
@@ -206,23 +206,18 @@ describe("date-time-helper", () => {
 				dateFormat: "dd/MM/uuuu",
 			};
 
-			const result = DateTimeHelper.calculateDisabledBeyondDaysDates(beyondDays);
-
-			// Expected dates with custom date format
-			const expectedDates = ["01/10/2023", "02/10/2023", "03/10/2023"];
-
-			expect(result).toEqual(expectedDates);
+			const result = DateTimeHelper.calculateDisabledBeyondDaysRange(beyondDays);
+			expect(result).toEqual({ startDate: LocalDate.parse("2023-10-04"), endDate: undefined });
 		});
 
-		it("should return only today's date if numberOfDays is 0", () => {
+		it("should return next day if numberOfDays is 0", () => {
 			const beyondDays: IDaysRangeRule = {
 				numberOfDays: 0,
 				fromDate: "2023-10-01",
 				dateFormat: "uuuu-MM-dd",
 			};
-			const result = DateTimeHelper.calculateDisabledBeyondDaysDates(beyondDays);
-
-			expect(result).toEqual(["2023-10-01"]);
+			const result = DateTimeHelper.calculateDisabledBeyondDaysRange(beyondDays);
+			expect(result).toEqual({ startDate: LocalDate.parse("2023-10-02"), endDate: undefined });
 		});
 	});
 
