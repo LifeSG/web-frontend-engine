@@ -1,7 +1,7 @@
 import { DateTimeFormatter, LocalDate, LocalDateTime, LocalTime, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { ERROR_MESSAGES } from "../components/shared/error-messages"; // import directly to avoid circular dependency
-import { IDaysRangeRule } from "../context-providers";
+import { IDaysRangeRule, IWithinDaysRangeRule } from "../context-providers";
 
 export namespace DateTimeHelper {
 	// TODO: split into individual functions by type when parsing/formatting gets more complicated
@@ -59,7 +59,7 @@ export namespace DateTimeHelper {
 		}
 	}
 
-	export function calculateWithinDaysRange(withinDays: IDaysRangeRule): {
+	export function calculateWithinDaysRange(withinDays: IWithinDaysRangeRule): {
 		startDate: LocalDate;
 		endDate: LocalDate;
 	} {
@@ -76,6 +76,25 @@ export namespace DateTimeHelper {
 			return {
 				startDate: baseDate.plusDays(numberOfDays),
 				endDate: baseDate,
+			};
+		}
+	}
+
+	export function calculateDisabledWithinDaysRange(withinDays: IWithinDaysRangeRule): {
+		startDate: LocalDate;
+		endDate: LocalDate;
+	} {
+		const { numberOfDays, inclusive } = withinDays;
+		const { startDate, endDate } = calculateWithinDaysRange(withinDays);
+		if (numberOfDays >= 0) {
+			return {
+				startDate: inclusive ? startDate : startDate.plusDays(1),
+				endDate: endDate,
+			};
+		} else {
+			return {
+				startDate: startDate,
+				endDate: inclusive ? endDate : endDate.minusDays(1),
 			};
 		}
 	}
@@ -103,13 +122,23 @@ export namespace DateTimeHelper {
 		}
 	}
 
-	export function checkWithinDays(value: string, withinDays: IDaysRangeRule) {
+	export function checkWithinDays(value: string, withinDays: IWithinDaysRangeRule) {
 		if (!value) return true;
 		const { dateFormat = "uuuu-MM-dd" } = withinDays;
 		const localDate = toLocalDateOrTime(value, dateFormat, "date");
 		if (!localDate) return false;
 		const { startDate, endDate } = calculateWithinDaysRange(withinDays);
-		return localDate.isAfter(startDate) && localDate.isBefore(endDate);
+
+		const { numberOfDays, inclusive } = withinDays;
+		if (numberOfDays >= 0) {
+			const actualStart = inclusive ? startDate.minusDays(1) : startDate;
+			const actualEnd = endDate.plusDays(1);
+			return localDate.isAfter(actualStart) && localDate.isBefore(actualEnd);
+		} else {
+			const actualStart = startDate.minusDays(1);
+			const actualEnd = inclusive ? endDate.plusDays(1) : endDate;
+			return localDate.isAfter(actualStart) && localDate.isBefore(actualEnd);
+		}
 	}
 
 	export function checkBeyondDays(value: string, beyondDays: IDaysRangeRule) {

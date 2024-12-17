@@ -129,6 +129,50 @@ describe("date-time-helper", () => {
 		});
 	});
 
+	describe("calculateDisabledWithinDaysRange", () => {
+		it("should calculate correct range for positive numberOfDays", () => {
+			const today = LocalDate.now();
+			const result = DateTimeHelper.calculateDisabledWithinDaysRange({
+				numberOfDays: 5,
+			});
+
+			expect(result.startDate).toEqual(today.plusDays(1));
+			expect(result.endDate).toEqual(today.plusDays(5));
+		});
+
+		it("should calculate correct range for positive numberOfDays (inclusive)", () => {
+			const today = LocalDate.now();
+			const result = DateTimeHelper.calculateDisabledWithinDaysRange({
+				numberOfDays: 5,
+				inclusive: true,
+			});
+
+			expect(result.startDate).toEqual(today);
+			expect(result.endDate).toEqual(today.plusDays(5));
+		});
+
+		it("should calculate correct range for negative numberOfDays", () => {
+			const today = LocalDate.now();
+			const result = DateTimeHelper.calculateDisabledWithinDaysRange({
+				numberOfDays: -5,
+			});
+
+			expect(result.startDate).toEqual(today.minusDays(5));
+			expect(result.endDate).toEqual(today.minusDays(1));
+		});
+
+		it("should calculate correct range for negative numberOfDays (inclusive)", () => {
+			const today = LocalDate.now();
+			const result = DateTimeHelper.calculateDisabledWithinDaysRange({
+				numberOfDays: -5,
+				inclusive: true,
+			});
+
+			expect(result.startDate).toEqual(today.minusDays(5));
+			expect(result.endDate).toEqual(today);
+		});
+	});
+
 	describe("calculateDisabledBeyondDaysDates", () => {
 		beforeEach(() => {
 			jest.spyOn(LocalDate, "now").mockImplementation(() => LocalDate.parse("2023-06-15"));
@@ -191,18 +235,50 @@ describe("date-time-helper", () => {
 			jest.restoreAllMocks();
 		});
 
-		it("should return true for a date within the specified positive range", () => {
-			const result = DateTimeHelper.checkWithinDays("2023-06-17", {
+		it.each`
+			scenario                       | value             | expected
+			${"no date is specified"}      | ${""}             | ${true}
+			${"invalid date is specified"} | ${"invalid-date"} | ${false}
+			${"date is before date range"} | ${"2023-06-14"}   | ${false}
+			${"date is after date range"}  | ${"2023-06-21"}   | ${false}
+			${"date is current day"}       | ${"2023-06-15"}   | ${false}
+			${"date is within date range"} | ${"2023-06-20"}   | ${true}
+		`("should return $expected if $scenario for positive days", ({ value, expected }) => {
+			const result = DateTimeHelper.checkWithinDays(value, {
 				numberOfDays: 5,
+			});
+			expect(result).toBe(expected);
+		});
+
+		it("should return true for current day if inclusive for positive days", () => {
+			const result = DateTimeHelper.checkWithinDays("2023-06-15", {
+				numberOfDays: 5,
+				inclusive: true,
 			});
 			expect(result).toBe(true);
 		});
 
-		it("should return false for a date outside the specified positive range", () => {
-			const result = DateTimeHelper.checkWithinDays("2023-06-21", {
-				numberOfDays: 5,
+		it.each`
+			scenario                       | value             | expected
+			${"no date is specified"}      | ${""}             | ${true}
+			${"invalid date is specified"} | ${"invalid-date"} | ${false}
+			${"date is before date range"} | ${"2023-06-09"}   | ${false}
+			${"date is after date range"}  | ${"2023-06-16"}   | ${false}
+			${"date is current day"}       | ${"2023-06-15"}   | ${false}
+			${"date is within date range"} | ${"2023-06-10"}   | ${true}
+		`("should return $expected if $scenario for negative days", ({ value, expected }) => {
+			const result = DateTimeHelper.checkWithinDays(value, {
+				numberOfDays: -5,
 			});
-			expect(result).toBe(false);
+			expect(result).toBe(expected);
+		});
+
+		it("should return true for current day if inclusive for negative days", () => {
+			const result = DateTimeHelper.checkWithinDays("2023-06-15", {
+				numberOfDays: -5,
+				inclusive: true,
+			});
+			expect(result).toBe(true);
 		});
 	});
 

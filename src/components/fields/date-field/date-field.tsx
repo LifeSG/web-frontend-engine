@@ -139,7 +139,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		// set minDate / maxDate / disabledDates props
 		const withinDaysRange =
 			withinDaysRule?.["withinDays"] &&
-			DateTimeHelper.calculateWithinDaysRange({ ...withinDaysRule["withinDays"], dateFormat });
+			DateTimeHelper.calculateDisabledWithinDaysRange({ ...withinDaysRule["withinDays"], dateFormat });
 		const minDateProp = getLatestDate([
 			minDate,
 			futureRule?.["future"] && LocalDate.now().plusDays(1),

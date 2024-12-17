@@ -79,7 +79,7 @@ export interface IYupConditionalValidationRule extends IYupRule {
 export interface IYupRenderRule extends IYupRule {
 	filled?: boolean | undefined;
 	shown?: boolean | undefined;
-	withinDays?: IDaysRangeRule | undefined;
+	withinDays?: IWithinDaysRangeRule | undefined;
 	beyondDays?: IDaysRangeRule | undefined;
 }
 
@@ -98,4 +98,9 @@ export interface IDaysRangeRule {
 	numberOfDays: number;
 	fromDate?: string | undefined;
 	dateFormat?: string | undefined;
+}
+
+export interface IWithinDaysRangeRule extends IDaysRangeRule {
+	/** inclusive of today (or `fromDate` if specified). defaults to false, meaning today will fail validation */
+	inclusive?: boolean;
 }

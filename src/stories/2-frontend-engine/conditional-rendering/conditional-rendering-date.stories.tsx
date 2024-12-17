@@ -134,7 +134,7 @@ BeyondDays.args = {
 	intro: {
 		uiType: "div",
 		className: "margin-bottom-1",
-		children: "Show field 2 as long as field 1 is not within 5 days after today",
+		children: "Show field 2 as long as field 1 is not beyond 5 days after today",
 	},
 	field1: {
 		label: {
@@ -159,7 +159,7 @@ BeyondDaysFromDate.args = {
 	intro: {
 		uiType: "div",
 		className: "margin-bottom-1",
-		children: `Show field 2 as long as field 1 is not within 5 days after ${LocalDate.now()
+		children: `Show field 2 as long as field 1 is not beyond 5 days after ${LocalDate.now()
 			.minusMonths(1)
 			.toString()}`,
 	},
@@ -189,7 +189,7 @@ BeyondDaysDateFormat.args = {
 	intro: {
 		uiType: "div",
 		className: "margin-bottom-1",
-		children: "Show field 2 as long as field 1 is not within 5 days from today using custom date format",
+		children: "Show field 2 as long as field 1 is not beyond 5 days from today using custom date format",
 	},
 	field1: {
 		label: {
