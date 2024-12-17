@@ -219,9 +219,9 @@ describe("date-time-helper", () => {
 			scenario                       | value             | expected
 			${"no date is specified"}      | ${""}             | ${true}
 			${"invalid date is specified"} | ${"invalid-date"} | ${false}
-			${"date is before date range"} | ${"2023-09-25"}   | ${true}
-			${"date is after date range"}  | ${"2023-10-10"}   | ${true}
-			${"date is within date range"} | ${"2023-10-03"}   | ${false}
+			${"date is before date range"} | ${"2023-09-25"}   | ${false}
+			${"date is after date range"}  | ${"2023-10-07"}   | ${true}
+			${"date is within date range"} | ${"2023-10-06"}   | ${false}
 		`("should return $expected if $scenario", ({ value, expected }) => {
 			const result = DateTimeHelper.checkBeyondDays(value, {
 				numberOfDays: 5,

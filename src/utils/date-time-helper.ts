@@ -117,7 +117,16 @@ export namespace DateTimeHelper {
 		const { dateFormat = "uuuu-MM-dd" } = beyondDays;
 		const localDate = toLocalDateOrTime(value, dateFormat, "date");
 		if (!localDate) return false;
-		const { startDate, endDate } = calculateWithinDaysRange(beyondDays);
-		return localDate.isBefore(startDate) || localDate.isAfter(endDate);
+
+		const { numberOfDays, fromDate } = beyondDays;
+		const baseDate = fromDate
+			? toLocalDateOrTime(fromDate, dateFormat, "date") || LocalDate.now()
+			: LocalDate.now();
+
+		if (numberOfDays >= 0) {
+			return localDate.isAfter(baseDate.plusDays(numberOfDays));
+		} else {
+			return localDate.isBefore(baseDate.plusDays(numberOfDays));
+		}
 	}
 }
