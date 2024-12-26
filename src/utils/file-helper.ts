@@ -1,4 +1,4 @@
-import { fileTypeFromBlob } from "file-type";
+import { fileTypeFromBuffer } from "file-type";
 
 export namespace FileHelper {
 	/**
@@ -133,7 +133,8 @@ export namespace FileHelper {
 	 * reliably derive file type by checking magic number of the buffer
 	 */
 	export const getType = async (file: Blob | File) => {
-		const result = await fileTypeFromBlob(file);
+		const buffer = await file.arrayBuffer();
+		const result = await fileTypeFromBuffer(buffer);
 
 		// default to what is provided by the file as it is not possible to determine file type for text-based file formats
 		if (!result && file.type.startsWith("text")) {
