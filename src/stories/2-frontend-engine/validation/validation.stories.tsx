@@ -282,7 +282,7 @@ export const Length: Story = {
 export const LessThan: Story = {
 	args: {
 		info: {
-			rule: { lessThan: 5, errorMessage: "Less than 5." },
+			rule: { lessThan: 5, errorMessage: "Must be less than 5." },
 			ruleName: "lessThan",
 			ruleDescription: "Indicates that the value must be less than the specified number.",
 		},
@@ -358,7 +358,7 @@ export const Min: Story = {
 export const MoreThan: Story = {
 	args: {
 		info: {
-			rule: { moreThan: 5, errorMessage: "More than 5." },
+			rule: { moreThan: 5, errorMessage: "Must be more than 5." },
 			ruleName: "moreThan",
 			ruleDescription: "Indicates that the value must be more than the specified number.",
 		},
