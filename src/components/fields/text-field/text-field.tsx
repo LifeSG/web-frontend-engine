@@ -26,6 +26,8 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	const ref = useRef<HTMLInputElement>(null);
 	const caret = useRef<number>(0);
 
+	console.log("[text field] error", error);
+
 	// ================================================
 	// EFFECTS
 	// ================================================

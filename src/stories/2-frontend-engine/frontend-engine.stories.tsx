@@ -670,13 +670,7 @@ AddCustomValidation.parameters = {
 export const SetCustomErrors: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {
-		try {
-			throw {
-				name: "API error",
-			};
-		} catch (error) {
-			ref.current.setErrors(error);
-		}
+		ref.current.setErrors({ field: [null, { nested: [{ input: "off i go" }] }] });
 	};
 
 	return (
@@ -687,15 +681,35 @@ export const SetCustomErrors: StoryFn<IFrontendEngineProps> = () => {
 						section: {
 							uiType: "section",
 							children: {
-								name: {
-									label: "What is your name",
-									uiType: "text-field",
+								field: {
+									referenceKey: "array-field",
+									sectionTitle: "meh",
+									validation: [{ length: 1 }],
+									fieldSchema: {
+										nested: {
+											referenceKey: "array-field",
+											sectionTitle: "dynamic",
+											fieldSchema: {
+												input: {
+													label: "input",
+													uiType: "text-field",
+													validation: [{ required: true }],
+												},
+											},
+										},
+										input2: {
+											label: "input2",
+											uiType: "text-field",
+											validation: [{ required: true }],
+										},
+									},
 								},
 								...SUBMIT_BUTTON_SCHEMA,
 							},
 						},
 					},
 					validationMode: "onSubmit",
+					defaultValues: { field: [{ nested: [{ input: "hi" }] }, { nested: [{ input: "bye" }] }] },
 				}}
 				ref={ref}
 			/>

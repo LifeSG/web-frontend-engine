@@ -9,9 +9,13 @@ interface ArrayFieldElementProps {
 	onChange: (data: TFrontendEngineValues, isFormValid: boolean) => void;
 	schema: Record<string, TFrontendEngineFieldSchema>;
 	formValues?: TFrontendEngineValues;
+	error?: any;
 }
 
-const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref: ForwardedRef<IFrontendEngineRef>) => {
+const Component = (
+	{ onChange, formValues, schema, error }: ArrayFieldElementProps,
+	ref: ForwardedRef<IFrontendEngineRef>
+) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -31,6 +35,13 @@ const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref
 			formRef.current?.reset();
 		}
 	}, [isDirty]);
+
+	useEffect(() => {
+		if (error) {
+			console.log("@@@ error", error);
+			formRef.current.setErrors(error);
+		}
+	}, [error]);
 
 	useEffect(() => {
 		if (!isDirty) {

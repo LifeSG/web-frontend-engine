@@ -2,6 +2,7 @@ import { Alert } from "@lifesg/react-design-system/alert";
 import { Text } from "@lifesg/react-design-system/text";
 import * as Icons from "@lifesg/react-icons";
 import { PlusCircleFillIcon } from "@lifesg/react-icons";
+import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -56,6 +57,8 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const { resetField, setValue } = useFormContext();
 	const formRefs = useRef<IFrontendEngineRef[]>([]);
 	const stateValueRef = useRef(stateValue);
+
+	const errorObj = error?.type === "api" ? JSON.parse(error.message) : undefined;
 
 	// =============================================================================
 	// EFFECTS
@@ -214,6 +217,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 								formValues={sectionValues}
 								schema={fieldSchema}
 								onChange={handleSectionChange(index)}
+								error={get(errorObj, index)}
 							/>
 						</Inset>
 						{showDivider && !isLastItem ? <SectionDivider /> : null}
@@ -232,7 +236,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 					</AddButton>
 				</Inset>
 			)}
-			{error && (
+			{error && !errorObj && (
 				<Inset $inset={sectionInset}>
 					<Alert type="error">{error.message}</Alert>
 				</Inset>

@@ -26,7 +26,6 @@ export const LocationInput = (props: ILocationInputProps) => {
 			id={TestHelper.generateId(id, "location-input")}
 			data-testid={TestHelper.generateId(id, "location-input")}
 			className={`${className}-location-input`}
-			role="button"
 			label={label}
 			addon={{
 				type: "custom",

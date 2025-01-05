@@ -124,24 +124,25 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const setErrors = (errors: TErrorPayload): void => {
 		Object.entries(errors).forEach(([key, value]) => {
-			const isValidFieldKey = registeredFieldsRef.current.includes(key);
-			if (!isValidFieldKey) {
-				return;
-			}
+			setError(key, { type: "api", message: JSON.stringify(value) });
+			// const isValidFieldKey = registeredFieldsRef.current.includes(key);
+			// if (!isValidFieldKey) {
+			// 	return;
+			// }
 
-			if (Array.isArray(value)) {
-				setError(key, { type: "api", message: value[0] });
-			} else if (typeof value === "object") {
-				setError(key, { type: "api", message: JSON.stringify(value) });
-			} else {
-				const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
-				if (!isEmpty(errorObject)) {
-					const errorMessage = Object.values(errorObject)[0];
-					const fieldKey = Object.keys(errorObject)[0];
+			// if (Array.isArray(value)) {
+			// 	setError(key, { type: "api", message: value[0] });
+			// } else if (typeof value === "object") {
+			// 	setError(key, { type: "api", message: JSON.stringify(value) });
+			// } else {
+			// 	const errorObject = ObjectHelper.getNestedValueByKey(errors, key);
+			// 	if (!isEmpty(errorObject)) {
+			// 		const errorMessage = Object.values(errorObject)[0];
+			// 		const fieldKey = Object.keys(errorObject)[0];
 
-					setError(fieldKey, { type: "api", message: errorMessage as string });
-				}
-			}
+			// 		setError(fieldKey, { type: "api", message: errorMessage as string });
+			// 	}
+			// }
 		});
 	};
 
