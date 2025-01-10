@@ -67,10 +67,11 @@ const meta: Meta = {
 			},
 		},
 		title: {
-			description: "A name of the purpose of the element",
+			description:
+				"A name of the purpose of the element. Also accepts <code>Text</code>, <code>Popover</code> or <code>span</code> schemas",
 			table: {
 				type: {
-					summary: "string",
+					summary: "string | ITextSchema | IPopoverSchema | IInlineWrapperSchema",
 				},
 			},
 		},
@@ -152,6 +153,44 @@ Default.args = {
 	collapsible: true,
 	expanded: true,
 	title: "Title",
+};
+
+export const CustomTitle = DefaultStoryTemplate<IAccordionSchema>("accordion-default").bind({});
+CustomTitle.args = {
+	uiType: "accordion",
+	children: {
+		text: {
+			uiType: "text-field",
+			label: "Text",
+			validation: [{ required: true }],
+		},
+		text2: {
+			uiType: "text-field",
+			label: "Text 2",
+			validation: [{ required: true }],
+		},
+	},
+	button: false,
+	collapsible: true,
+	expanded: true,
+	title: {
+		text: {
+			uiType: "text-h4",
+			weight: "semibold",
+			children: "Custom&nbsp;",
+		},
+		span: {
+			uiType: "span",
+			children: "title",
+		},
+		popover: {
+			hint: {
+				content: "this is a custom title",
+			},
+			icon: "ICircleFillIcon",
+			uiType: "popover",
+		},
+	},
 };
 
 export const Collapsible = DefaultStoryTemplate<IAccordionSchema>("accordion-collapsible").bind({});

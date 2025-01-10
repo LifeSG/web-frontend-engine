@@ -97,9 +97,48 @@ describe(UI_TYPE, () => {
 		expect(screen.getByText(CUSTOM_LABEL)).toBeInTheDocument();
 	});
 
-	it("should render the title correctly", () => {
+	it("should render the title string correctly", () => {
 		renderComponent({});
-		expect(screen.getByText(ACCORDION_TITLE)).toBeInTheDocument();
+		const element = screen.getByText(ACCORDION_TITLE);
+		expect(element).toBeInTheDocument();
+		expect(element.tagName).toBe("H3");
+	});
+
+	it("should render the title schema correctly", () => {
+		const SPAN_TITLE = "span title";
+		renderComponent(
+			{},
+			{
+				title: {
+					text: {
+						uiType: "text-h4",
+						children: ACCORDION_TITLE,
+					},
+					span: {
+						uiType: "span",
+						children: SPAN_TITLE,
+					},
+					popover: {
+						hint: {
+							content: "this is a custom title",
+						},
+						icon: "ICircleFillIcon",
+						uiType: "popover",
+					},
+				},
+			}
+		);
+		const element = screen.getByText(ACCORDION_TITLE);
+		expect(element).toBeInTheDocument();
+		expect(element.tagName).toBe("SPAN");
+		expect(element.parentElement.tagName).toBe("H4");
+
+		const spanElement = screen.getByText(SPAN_TITLE);
+		expect(spanElement).toBeInTheDocument();
+		expect(spanElement.tagName).toBe("SPAN");
+		expect(spanElement.parentElement.tagName).toBe("H3");
+
+		expect(screen.queryByTestId("popover__popover")).toBeInTheDocument();
 	});
 
 	it("should render the default button if button is true", () => {

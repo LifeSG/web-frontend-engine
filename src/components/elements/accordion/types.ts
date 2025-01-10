@@ -1,8 +1,10 @@
 import { BoxContainerDisplayState, BoxContainerSubComponentTestIds } from "@lifesg/react-design-system/box-container";
 import { TFieldEventListener } from "../../../utils";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { IPopoverSchema } from "../popover/types";
+import { ITextSchema } from "../text/types";
 import { IBaseElementSchema } from "../types";
-import { TWrapperSchema } from "../wrapper";
+import { IInlineWrapperSchema, TWrapperSchema } from "../wrapper";
 
 export interface IButtonAccordion {
 	label: string | undefined;
@@ -10,7 +12,7 @@ export interface IButtonAccordion {
 
 export interface IAccordionSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"accordion">,
-		TComponentOmitProps<TWrapperSchema> {
+		TComponentOmitProps<TWrapperSchema, "title"> {
 	uiType: "accordion";
 	button?: boolean | IButtonAccordion | undefined;
 	children: Record<string, TFrontendEngineFieldSchema<V, C>>;
@@ -20,7 +22,7 @@ export interface IAccordionSchema<V = undefined, C = undefined>
 	collapsible?: boolean | undefined;
 	expanded?: boolean | undefined;
 	displayState?: BoxContainerDisplayState | undefined;
-	title: string;
+	title: string | Record<string, ITextSchema | IPopoverSchema | IInlineWrapperSchema<V, C>>;
 	disableContentInset?: boolean | undefined;
 }
 

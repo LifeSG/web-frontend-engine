@@ -22,7 +22,7 @@ export const Accordion = (props: IGenericElementProps<IAccordionSchema>) => {
 	return (
 		<BoxContainer
 			id={id}
-			title={title}
+			title={typeof title === "string" ? title : <Wrapper>{title}</Wrapper>}
 			{...otherSchema}
 			callToActionComponent={
 				button ? (
