@@ -29,7 +29,7 @@ export const Subtitle = styled(Text.Body)<SubtitleProps>`
 export const Content = styled.div`
 	${TextStyleHelper.getTextStyle("BodySmall", "regular")}
 	margin-bottom: 1.5rem;
-	color: ${Color.Neutral[4]};
+	color: ${Color.Neutral[3]};
 `;
 
 export const UploadWrapper = styled.div`
