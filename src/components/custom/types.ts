@@ -7,6 +7,7 @@ import type { TRenderRules } from "../../context-providers";
 import type { IColumns, IYupValidationRule } from "../frontend-engine";
 import type { IArrayFieldSchema } from "./array-field";
 import type { IFilterSchema } from "./filter/filter/types";
+import type { IIframeSchema } from "./iframe";
 import type { TReviewEvents, TReviewSchema } from "./review";
 import { ITimelineSchema } from "./timeline";
 
@@ -27,6 +28,7 @@ export enum ECustomElementType {
 export enum ECustomFieldType {
 	"ARRAY-FIELD" = "ArrayField",
 	"FILTER-CHECKBOX" = "FilterCheckbox",
+	IFRAME = "Iframe",
 }
 
 /**
@@ -36,6 +38,7 @@ export type TCustomSchema<V = undefined, C = undefined> =
 	| IArrayFieldSchema<V>
 	| ICustomElementJsonSchema<string>
 	| IFilterSchema<V, C>
+	| IIframeSchema
 	| ITimelineSchema<V, C>
 	| TReviewSchema
 	| C;
