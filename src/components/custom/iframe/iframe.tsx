@@ -13,7 +13,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	const {
 		error,
 		id,
-		schema: { "data-testid": testId, src, validationTimeout = 2000 },
+		schema: { "data-testid": testId, src, validationTimeout = 2000, ...otherSchema },
 		value,
 	} = props;
 	const formContext = useFormContext();
@@ -139,6 +139,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	return (
 		<FluidIframe
+			{...otherSchema}
 			ref={iframeRef}
 			src={src}
 			id={id}

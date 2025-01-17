@@ -1,6 +1,8 @@
 import { ICustomElementJsonSchema } from "../types";
 
-export interface IIframeSchema extends ICustomElementJsonSchema<"iframe">, HTMLIFrameElement {
+export interface IIframeSchema
+	extends ICustomElementJsonSchema<"iframe">,
+		React.IframeHTMLAttributes<HTMLIFrameElement> {
 	src: string;
 	/** defaults to 2000, set -1 to skip validation */
 	validationTimeout?: number | undefined;
