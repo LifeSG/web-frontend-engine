@@ -1,7 +1,7 @@
-import { ICustomElementJsonSchema } from "../types";
+import { IBaseCustomFieldSchema } from "../types";
 
 export interface IIframeSchema
-	extends ICustomElementJsonSchema<"iframe">,
+	extends Omit<IBaseCustomFieldSchema<"iframe">, "validation">,
 		React.IframeHTMLAttributes<HTMLIFrameElement> {
 	src: string;
 	/** defaults to 2000, set -1 to skip validation */
