@@ -1,5 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { useCallback, useEffect, useState } from "react";
+import { FieldError } from "react-hook-form";
 import { EPostMessageEvent } from "../../../../components/custom";
 import { useIframeMessage } from "../../../../utils/hooks";
 
@@ -20,7 +21,7 @@ export const ChildDefault = () => {
 	// =========================================================================
 	// POSTMESSAGE HANDLERS
 	// =========================================================================
-	useIframeMessage(
+	useIframeMessage<{ error: FieldError; id: string; value: string }>(
 		EPostMessageEvent.SYNC,
 		useCallback((e) => {
 			setStateValue(e.data.payload.value ?? "");

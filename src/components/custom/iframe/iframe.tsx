@@ -65,7 +65,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 		}, [error, id, value])
 	);
 
-	useIframeMessage(
+	useIframeMessage<{ width?: number | undefined; height?: number | undefined }>(
 		EPostMessageEvent.RESIZE,
 		useCallback((e) => {
 			setDimensions({
@@ -75,7 +75,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 		}, [])
 	);
 
-	useIframeMessage(
+	useIframeMessage<unknown>(
 		EPostMessageEvent.SET_VALUE,
 		useCallback((e) => {
 			formContext.setValue(id, e.data.payload, { shouldDirty: true });
@@ -83,7 +83,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 		}, [])
 	);
 
-	useIframeMessage(
+	useIframeMessage<boolean>(
 		EPostMessageEvent.VALIDATION_RESULT,
 		useCallback((e) => {
 			if (e.data.payload) {

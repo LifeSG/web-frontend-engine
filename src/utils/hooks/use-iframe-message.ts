@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 
-type MessageHandler = (event: MessageEvent) => void;
-export const useIframeMessage = (eventType: string, handler: MessageHandler) => {
+type MessageHandler<T = any> = (event: MessageEvent<{ payload: T }>) => void;
+
+export const useIframeMessage = <T>(eventType: string, handler: MessageHandler<T>) => {
 	useEffect(() => {
 		const eventHandler = (event: MessageEvent) => {
 			if (event.data.type === eventType) {
