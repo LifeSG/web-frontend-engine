@@ -33,7 +33,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 		setFieldValidationConfig(
 			id,
 			Yup.mixed().test("validation", async (value, context) => {
-				if (validationTimeout > 0) {
+				if (validationTimeout >= 0) {
 					// abortEarly is undefined (true) by default
 					// on submit, it is set to false
 					// we determine a submit action through that flag
