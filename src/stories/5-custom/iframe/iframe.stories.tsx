@@ -60,7 +60,7 @@ Default.args = {
 };
 export const DefaultChild: StoryObj = {
 	render: () => <ChildDefault />,
-	tags: ["!dev"],
+	tags: ["!autodocs", "!dev"],
 };
 
 export const Validation = DefaultStoryTemplate<IIframeSchema>("iframe-validation").bind({});
@@ -68,9 +68,10 @@ Validation.args = {
 	referenceKey: "iframe",
 	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--validation-child`,
 };
+Validation.tags = ["!autodocs"];
 export const ValidationChild: StoryObj = {
 	render: () => <ChildValidation />,
-	tags: ["!dev"],
+	tags: ["!autodocs", "!dev"],
 };
 
 export const Resize = DefaultStoryTemplate<IIframeSchema>("iframe-resize", true).bind({});
@@ -79,9 +80,10 @@ Resize.args = {
 	validationTimeout: -1,
 	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--resize-child`,
 };
+Resize.tags = ["!autodocs"];
 export const ResizeChild: StoryObj = {
 	render: () => <ChildResize />,
-	tags: ["!dev"],
+	tags: ["!autodocs", "!dev"],
 };
 
 export const DetectSubmission = DefaultStoryTemplate<IIframeSchema>("iframe-submission").bind({});
@@ -89,9 +91,10 @@ DetectSubmission.args = {
 	referenceKey: "iframe",
 	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--detect-submission-child`,
 };
+DetectSubmission.tags = ["!autodocs"];
 export const DetectSubmissionChild: StoryObj = {
 	render: () => <ChildValidateSubmission />,
-	tags: ["!dev"],
+	tags: ["!autodocs", "!dev"],
 };
 
 export const DefaultValue = DefaultStoryTemplate<IIframeSchema>("iframe-default-value").bind({});
@@ -101,6 +104,7 @@ DefaultValue.args = {
 	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--default-child`,
 	defaultValues: "hello world",
 };
+DefaultValue.tags = ["!autodocs"];
 
 export const Reset = ResetStoryTemplate<IIframeSchema>("iframe-reset").bind({});
 Reset.args = {
@@ -108,6 +112,7 @@ Reset.args = {
 	validationTimeout: -1,
 	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--default-child`,
 };
+Reset.tags = ["!autodocs"];
 
 export const ResetWithDefaultValues = ResetStoryTemplate<IIframeSchema>("iframe-reset").bind({});
 ResetWithDefaultValues.args = {
@@ -116,6 +121,7 @@ ResetWithDefaultValues.args = {
 	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--default-child`,
 	defaultValues: "hello world",
 };
+ResetWithDefaultValues.tags = ["!autodocs"];
 
 export const Overrides = OverrideStoryTemplate<IIframeSchema>("iframe-overrides").bind({});
 Overrides.args = {
@@ -126,4 +132,5 @@ Overrides.args = {
 		validationTimeout: 2000,
 	},
 };
+Overrides.tags = ["!autodocs"];
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
