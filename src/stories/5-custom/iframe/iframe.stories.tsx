@@ -127,9 +127,10 @@ export const Overrides = OverrideStoryTemplate<IIframeSchema>("iframe-overrides"
 Overrides.args = {
 	referenceKey: "iframe",
 	validationTimeout: -1,
-	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--validation-child`,
+	style: { border: "1px solid blue" },
+	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--default-child`,
 	overrides: {
-		validationTimeout: 2000,
+		style: { border: "1px solid red" },
 	},
 };
 Overrides.tags = ["!autodocs"];
