@@ -128,14 +128,14 @@ describe(UI_TYPE, () => {
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: "+65 91234567" } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "+65 91234567" }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "+65 91234567" }));
 		});
 
 		it("should prepend country code if not specified in defaultValues", async () => {
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: "91234567" } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "+65 91234567" }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "+65 91234567" }));
 		});
 
 		it("should switch country if another country code is specified in defaultValues", async () => {
@@ -165,7 +165,7 @@ describe(UI_TYPE, () => {
 			);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "" }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "" }));
 		});
 	});
 
@@ -175,7 +175,7 @@ describe(UI_TYPE, () => {
 		fireEvent.change(getContactField(), { target: { value: contactNumber } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` }));
 	});
 
 	describe("it should be able to verify Singapore numbers", () => {
@@ -184,7 +184,7 @@ describe(UI_TYPE, () => {
 			renderComponent({ validation: [{ contactNumber: { singaporeNumber: "default" } }] });
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` }));
 		});
 		it("+65 12345678 should be an invalid number", async () => {
 			const contactNumber = "12345678";
@@ -240,7 +240,7 @@ describe(UI_TYPE, () => {
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+81 ${contactNumber}` }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+81 ${contactNumber}` }));
 		});
 
 		it("+81 12-345-678 should be an invalid number", async () => {
@@ -275,7 +275,7 @@ describe(UI_TYPE, () => {
 			fireEvent.change(getContactField(), { target: { value: contactNumber } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+33 ${contactNumber}` }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+33 ${contactNumber}` }));
 		});
 
 		it("should fix the country selection if there is singaporeNumber validation", async () => {
@@ -355,7 +355,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(getContactField()).toHaveValue("");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "" }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "" }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -367,7 +367,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(getContactField()).toHaveValue("9123 4567");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
 
