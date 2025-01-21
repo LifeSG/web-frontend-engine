@@ -29,7 +29,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		...otherProps
 	} = props;
 
-	const { resetField, setValue } = useFormContext();
+	const { resetField } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const prevDefaultCountry = usePrevious(defaultCountry);
 	const [countryValue, setCountryValue] = useState<TCountry>(defaultCountry);
@@ -64,17 +64,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 			Yup.string()
 				.test("singaporeNumber", errorMessage || ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER, (value) => {
 					if (!value || !singaporeRule) return true;
-
-					switch (singaporeRule) {
-						case "default":
-							return PhoneHelper.isSingaporeNumber(value, true) || PhoneHelper.isSingaporeNumber(value);
-						case "house":
-							return PhoneHelper.isSingaporeNumber(value, true);
-						case "mobile":
-							return PhoneHelper.isSingaporeNumber(value);
-						default:
-							break;
-					}
+					return PhoneHelper.isSingaporeNumber(value, singaporeRule);
 				})
 				.test(
 					"internationalNumber",
