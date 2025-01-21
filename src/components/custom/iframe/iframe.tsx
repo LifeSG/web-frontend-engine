@@ -108,7 +108,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 			clearAsyncValidation();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validationTimeout]);
+	}, [asyncValidation, validationTimeout]);
 
 	useEffect(() => {
 		iframePostMessage({ type: EPostMessageEvent.SYNC, payload: { error, id, value } });
