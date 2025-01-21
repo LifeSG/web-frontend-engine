@@ -5,6 +5,7 @@ export * from "./use-form-schema";
 export * from "./use-form-values";
 export * from "./use-frontend-engine-component";
 export * from "./use-frontend-engine-form";
+export * from "./use-iframe-message";
 export * from "./use-previous";
 export * from "./use-validation-config";
 export * from "./use-validation-schema";
