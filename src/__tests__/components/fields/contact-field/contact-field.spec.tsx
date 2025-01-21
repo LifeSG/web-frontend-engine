@@ -195,24 +195,31 @@ describe(UI_TYPE, () => {
 		});
 		it.each`
 			validationType | contactNumber | expected
+			${"default"}   | ${"37661234"} | ${"+65 37661234"}
+			${"default"}   | ${"67661234"} | ${"+65 67661234"}
+			${"default"}   | ${"87661234"} | ${"+65 87661234"}
+			${"default"}   | ${"97661234"} | ${"+65 97661234"}
 			${"house"}     | ${"67661234"} | ${"+65 67661234"}
+			${"house"}     | ${"37661234"} | ${"error"}
+			${"house"}     | ${"88123456"} | ${"error"}
 			${"house"}     | ${"98123456"} | ${"error"}
+			${"mobile"}    | ${"88123456"} | ${"+65 88123456"}
 			${"mobile"}    | ${"98123456"} | ${"+65 98123456"}
+			${"mobile"}    | ${"37661234"} | ${"error"}
 			${"mobile"}    | ${"67661234"} | ${"error"}
 		`(
 			"$contactNumber ($validationType number) should return $expected",
 			async ({ validationType, contactNumber, expected }) => {
-				const isHouseValidation = validationType === "house";
-				const singaporeRule: TSingaporeNumberRule = isHouseValidation ? "house" : "mobile";
 				renderComponent({
-					validation: [{ contactNumber: { singaporeNumber: singaporeRule } }],
+					validation: [{ contactNumber: { singaporeNumber: validationType } }],
 				});
 				fireEvent.change(getContactField(), { target: { value: contactNumber } });
 				await waitFor(() => fireEvent.click(getSubmitButton()));
+
 				if (expected === "error") {
 					expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER)).toBeInTheDocument();
 				} else {
-					expect(SUBMIT_FN).toBeCalledWith(
+					expect(SUBMIT_FN).toHaveBeenCalledWith(
 						expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` })
 					);
 				}

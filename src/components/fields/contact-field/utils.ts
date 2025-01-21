@@ -3,6 +3,7 @@ import { CountryCode, parsePhoneNumber } from "libphonenumber-js";
 import { IParsedPhoneNumber } from "./types";
 
 const SINGAPORE_PHONE_NUMBER_REGEX = /^(?!\+?6599)(?!^\+65\d{6}$)^(?:\+?(?:65)?([9,8,6,3]{1}\d{7}))$/;
+const SINGAPORE_HOME_NUMBER_REGEX = /^(?!^\+65\d{6}$)^(?:\+?(?:65)?(6{1}\d{7}))$/;
 const SINGAPORE_MOBILE_NUMBER_REGEX = /^(?!\+?6599)(?!^\+65\d{6}$)^(?:\+?(?:65)?([9,8]{1}\d{7}))$/;
 
 export namespace PhoneHelper {
@@ -16,18 +17,26 @@ export namespace PhoneHelper {
 		};
 	};
 
-	export const isSingaporeNumber = (value: string, validateHomeNumber = false): boolean => {
+	export const isSingaporeNumber = (
+		value: string,
+		validateMode: "default" | "house" | "mobile" = "default"
+	): boolean => {
 		try {
 			const { number } = getParsedPhoneNumber(value);
 			const phoneNumber = parsePhoneNumber(value, "SG");
 			const isNumberValid = phoneNumber.isValid();
 			const isMobileNumber = SINGAPORE_MOBILE_NUMBER_REGEX.test(number);
+			const isHomeNumber = SINGAPORE_HOME_NUMBER_REGEX.test(number);
 			const isPhoneNumber = SINGAPORE_PHONE_NUMBER_REGEX.test(number);
 
-			if (validateHomeNumber) {
-				return isNumberValid && isPhoneNumber && !isMobileNumber;
+			switch (validateMode) {
+				case "house":
+					return isNumberValid && isHomeNumber;
+				case "mobile":
+					return isNumberValid && isMobileNumber;
+				default:
+					return isNumberValid && isPhoneNumber;
 			}
-			return isNumberValid && isPhoneNumber && isMobileNumber;
 		} catch (error) {
 			return false;
 		}
