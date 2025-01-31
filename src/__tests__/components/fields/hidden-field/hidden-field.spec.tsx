@@ -105,6 +105,23 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).not.toHaveBeenCalled();
 	});
 
+	it("should support setting of value from the schema", async () => {
+		renderComponent({ valueType: "number", value: 0 });
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 0 }));
+	});
+
+	it("should not let default value override the schema value", async () => {
+		const defaultValue = true;
+		renderComponent({ valueType: "boolean", value: false }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: false }));
+	});
+
 	describe("dirty state", () => {
 		let formIsDirty: boolean;
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
@@ -143,6 +160,22 @@ describe(UI_TYPE, () => {
 			);
 			fireEvent.change(getHiddenField(), { target: { value: "world" } });
 			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should mount with schema value without setting field state as dirty", () => {
+			const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), {
+				sections: {
+					section: {
+						children: {
+							[COMPONENT_ID]: { valueType: "string", value: "hello" },
+						},
+					},
+				},
+			});
+			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(false);

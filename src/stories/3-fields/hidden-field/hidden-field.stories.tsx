@@ -1,6 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
-import { IHiddenFieldSchema } from "../../../components/fields";
+import { THiddenFieldSchema } from "../../../components/fields";
 import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
 
 const meta: Meta = {
@@ -41,12 +41,12 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = DefaultStoryTemplate<IHiddenFieldSchema>("hidden-default").bind({});
+export const Default = DefaultStoryTemplate<THiddenFieldSchema>("hidden-default").bind({});
 Default.args = {
 	uiType: "hidden-field",
 };
 
-export const DefaultValue = DefaultStoryTemplate<IHiddenFieldSchema>("hidden-default-value").bind({});
+export const DefaultValue = DefaultStoryTemplate<THiddenFieldSchema>("hidden-default-value").bind({});
 DefaultValue.args = {
 	uiType: "hidden-field",
 	defaultValues: "This is the default value",
@@ -62,7 +62,7 @@ DefaultValue.argTypes = {
 	},
 };
 
-export const NumericValue = DefaultStoryTemplate<IHiddenFieldSchema, number>("hidden-numeric-value").bind({});
+export const NumericValue = DefaultStoryTemplate<THiddenFieldSchema, number>("hidden-numeric-value").bind({});
 NumericValue.args = {
 	uiType: "hidden-field",
 	valueType: "number",
@@ -74,7 +74,7 @@ NumericValue.argTypes = {
 	},
 };
 
-export const BooleanValue = DefaultStoryTemplate<IHiddenFieldSchema, boolean>("hidden-boolean-value").bind({});
+export const BooleanValue = DefaultStoryTemplate<THiddenFieldSchema, boolean>("hidden-boolean-value").bind({});
 BooleanValue.args = {
 	uiType: "hidden-field",
 	valueType: "boolean",
@@ -86,7 +86,20 @@ BooleanValue.argTypes = {
 	},
 };
 
-export const Validation = DefaultStoryTemplate<IHiddenFieldSchema>("hidden-validation").bind({});
+export const SchemaValue = DefaultStoryTemplate<THiddenFieldSchema, string>("schema-value").bind({});
+SchemaValue.args = {
+	uiType: "hidden-field",
+	valueType: "string",
+	value: "unchanged",
+	defaultValues: "edited",
+};
+SchemaValue.argTypes = {
+	defaultValues: {
+		table: { disable: true },
+	},
+};
+
+export const Validation = DefaultStoryTemplate<THiddenFieldSchema>("hidden-validation").bind({});
 Validation.args = {
 	uiType: "hidden-field",
 	validation: [{ required: true }],
