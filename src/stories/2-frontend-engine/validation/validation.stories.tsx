@@ -194,6 +194,108 @@ export const EqualsField: Story = {
 	},
 };
 
+export const NotEqualsField: Story = {
+	args: {
+		info: {
+			rule: { notEqualsField: "field2", errorMessage: "Must not be equal to field 2." },
+			ruleName: "notEqualsField",
+			ruleDescription: "Indicates that a field must not be equal to the value of another field.",
+		},
+		excludeFields: ["esignatureField", "fileUploadField", "imageUpload"],
+		overrides: [
+			{
+				for: ["maskedField", "radio", "select", "textarea", "textField"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.textField }, { label: "Field 2" }) },
+				defaultValues: { field2: "apple" },
+			},
+			{
+				for: NUMERIC_BASED_VALIDATION_DEMO_FIELD_IDS,
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.numericField }, { label: "Field 2" }) },
+				defaultValues: { field2: 10 },
+			},
+			{
+				for: ARRAY_BASED_VALIDATION_DEMO_FIELD_IDS,
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.checkbox }, { label: "Field 2" }) },
+				defaultValues: { field2: ["apple", "berry"] },
+			},
+			{
+				for: ["contactField"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.contactField }, { label: "Field 2" }) },
+				defaultValues: { field2: "91234567" },
+			},
+			{
+				for: ["dateField"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.dateField }, { label: "Field 2" }) },
+				defaultValues: { field2: "2024-01-01" },
+			},
+			{
+				for: ["dateRangeField"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.dateRangeField }, { label: "Field 2" }) },
+				defaultValues: { field2: { from: "2024-01-01", to: "2024-01-15" } },
+			},
+			{
+				for: ["emailField"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.emailField }, { label: "Field 2" }) },
+				defaultValues: { field2: "default@domain.tld" },
+			},
+			{
+				for: ["histogramSlider"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.histogramSlider }, { label: "Field 2" }) },
+				defaultValues: { field2: { from: 10, to: 20 } },
+			},
+			{
+				for: ["locationField"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.locationField }, { label: "Field 2" }) },
+				defaultValues: {
+					field2: {
+						address: "1 FUSIONOPOLIS VIEW ECLIPSE SINGAPORE 138577",
+						blockNo: "1",
+						building: "ECLIPSE",
+						lat: 1.299941797074924,
+						lng: 103.78940434971592,
+						postalCode: "138577",
+						roadName: "FUSIONOPOLIS VIEW",
+						x: 23112.7395757,
+						y: 31366.5202628,
+					},
+				},
+			},
+			{
+				for: ["nestedMultiSelect"],
+				schema: {
+					field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.nestedMultiSelect }, { label: "Field 2" }),
+				},
+				defaultValues: { field2: ["honeydew", "blueberry"] },
+			},
+			{
+				for: ["rangeSelect"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.rangeSelect }, { label: "Field 2" }) },
+				defaultValues: { field2: { from: "North", to: "West" } },
+			},
+			{
+				for: ["selectHistogram"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.selectHistogram }, { label: "Field 2" }) },
+				defaultValues: { field2: { from: 10, to: 100 } },
+			},
+			{
+				for: ["switch"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.switch }, { label: "Field 2" }) },
+				defaultValues: { field2: true },
+			},
+			{
+				for: ["timeField"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.timeField }, { label: "Field 2" }) },
+				defaultValues: { field2: "12:00PM" },
+			},
+			{
+				for: ["unitNumberField"],
+				schema: { field2: Object.assign({ ...VALIDATION_DEMO_CONFIGS.unitNumberField }, { label: "Field 2" }) },
+				defaultValues: { field2: "01-23" },
+			},
+		],
+	},
+};
+
 export const ExcludesArray: Story = {
 	name: "Excludes (Array)",
 	args: {

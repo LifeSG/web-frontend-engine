@@ -44,11 +44,27 @@ YupHelper.addCondition("array", "excludes", (values: unknown[], matches: unknown
 YupHelper.addCondition("mixed", "equalsField", (values: unknown[], matches: unknown | unknown[], fn) => {
 	switch (typeof values) {
 		case "object":
-			return Array.isArray(values) && Array.isArray(fn.parent[`${matches}`])
-				? isEqual(values?.sort(), fn.parent[`${matches}`]?.sort())
-				: isEqual(values, fn.parent[`${matches}`]);
+			if (Array.isArray(values) && Array.isArray(fn.parent[`${matches}`])) {
+				const a = [...values].sort();
+				const b = [...fn.parent[`${matches}`]].sort();
+				return isEqual(a, b);
+			}
+			return isEqual(values, fn.parent[`${matches}`]);
 		default:
 			return isEqual(values, fn.parent[`${matches}`]);
+	}
+});
+YupHelper.addCondition("mixed", "notEqualsField", (values: unknown[], matches: unknown | unknown[], fn) => {
+	switch (typeof values) {
+		case "object":
+			if (Array.isArray(values) && Array.isArray(fn.parent[`${matches}`])) {
+				const a = [...values].sort();
+				const b = [...fn.parent[`${matches}`]].sort();
+				return !isEqual(a, b);
+			}
+			return !isEqual(values, fn.parent[`${matches}`]);
+		default:
+			return !isEqual(values, fn.parent[`${matches}`]);
 	}
 });
 

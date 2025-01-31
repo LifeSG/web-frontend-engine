@@ -232,6 +232,30 @@ describe("YupHelper", () => {
 			).toBe(ERROR_MESSAGE);
 		});
 
+		it.each`
+			type         | condition           | value                   | valid                   | invalid
+			${"string"}  | ${"notEqualsField"} | ${"hello"}              | ${"bye"}                | ${"hello"}
+			${"number"}  | ${"notEqualsField"} | ${0}                    | ${1}                    | ${0}
+			${"boolean"} | ${"notEqualsField"} | ${false}                | ${true}                 | ${false}
+			${"array"}   | ${"notEqualsField"} | ${["Berry", "Apple"]}   | ${["Apple"]}            | ${["Apple", "Berry"]}
+			${"object"}  | ${"notEqualsField"} | ${{ fruit: ["Berry"] }} | ${{ fruit: ["Apple"] }} | ${{ fruit: ["Berry"] }}
+		`("should support $condition condition for Yup $type type", ({ type, value, valid, invalid }) => {
+			const schema = YupHelper.buildSchema({
+				field1: { schema: YupHelper.mapSchemaType(type), validationRules: [] },
+				field2: {
+					schema: YupHelper.mapSchemaType(type),
+					validationRules: [{ notEqualsField: "field1", errorMessage: ERROR_MESSAGE }],
+				},
+			});
+
+			expect(() => schema.validateSync({ field1: value, field2: valid })).not.toThrowError();
+			expect(
+				TestHelper.getError(() =>
+					schema.validateSync({ field1: value, field2: invalid }, { abortEarly: false })
+				).message
+			).toBe(ERROR_MESSAGE);
+		});
+
 		const generateConditionalSchema = (type: TYupSchemaType, is: any, sourceFieldType: TYupSchemaType) =>
 			Yup.object().shape({
 				field1: YupHelper.mapRules(YupHelper.mapSchemaType(type), [
