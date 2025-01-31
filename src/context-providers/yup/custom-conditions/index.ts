@@ -17,6 +17,14 @@ YupHelper.addCondition("mixed", "filled", (value) => !isEmptyValue(value));
 YupHelper.addCondition("mixed", "empty", (value) => isEmptyValue(value));
 YupHelper.addCondition("mixed", "equals", (value, match) => !isEmptyValue(value) && isEqual(value, match));
 YupHelper.addCondition("mixed", "notEquals", (value, match) => !isEmptyValue(value) && !isEqual(value, match));
+YupHelper.addCondition("string", "notMatches", (value: string, regex: string) => {
+	if (isEmptyValue(value)) {
+		return true;
+	}
+	const matches = regex.match(/\/(.*)\/([a-z]+)?/);
+	const parsedRegex = new RegExp(matches[1], matches[2]);
+	return !parsedRegex.test(value);
+});
 YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
 	if (!values?.length) return true;
 	if (!Array.isArray(matches)) {

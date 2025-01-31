@@ -436,7 +436,8 @@ export const Positive: Story = {
 	},
 };
 
-export const Regex: Story = {
+export const Matches: Story = {
+	name: "Matches (Regex)",
 	args: {
 		info: {
 			rule: { matches: "/^(hello)/", errorMessage: "Need to begin with `hello`" },
@@ -464,6 +465,40 @@ export const Regex: Story = {
 			{
 				for: ["unitNumberField"],
 				rule: { matches: "/^01/", errorMessage: "Must be at 1st floor." },
+			},
+		],
+	},
+};
+
+export const NotMatches: Story = {
+	name: "Not Matches (Regex)",
+	args: {
+		info: {
+			rule: { notMatches: "/^(hello)/", errorMessage: "Cannot start with `hello`" },
+			ruleName: "notMatches",
+			ruleDescription: "Indicates that the value must not match the specified regular expression.",
+		},
+		fields: STRING_BASED_VALIDATION_DEMO_FIELD_IDS,
+		overrides: [
+			{
+				for: ["contactField"],
+				rule: { notMatches: "/^\\+65 9123/", errorMessage: "Must not begin with 9123." },
+			},
+			{
+				for: ["dateField"],
+				rule: { notMatches: "/^\\d{4}\\-(01)\\-\\d{2}/", errorMessage: "Must not be in January." },
+			},
+			{
+				for: ["radio", "select"],
+				rule: { notMatches: "/r/gi", errorMessage: "Selection must not contain `r`." },
+			},
+			{
+				for: ["timeField"],
+				rule: { notMatches: "/^12/", errorMessage: "Must not be at 12." },
+			},
+			{
+				for: ["unitNumberField"],
+				rule: { notMatches: "/^01/", errorMessage: "Must not be at 1st floor." },
 			},
 		],
 	},

@@ -76,17 +76,18 @@ describe("conditional-renderer", () => {
 	});
 
 	it.each`
-		condition      | config                       | invalid    | valid
-		${"filled"}    | ${{ filled: true }}          | ${null}    | ${"hello"}
-		${"empty"}     | ${{ empty: true }}           | ${"hello"} | ${null}
-		${"equals"}    | ${{ equals: "hello" }}       | ${"hi"}    | ${"hello"}
-		${"notEquals"} | ${{ notEquals: "hello" }}    | ${"hello"} | ${"hi"}
-		${"min"}       | ${{ min: 4 }}                | ${"hi"}    | ${"hello"}
-		${"max"}       | ${{ max: 4 }}                | ${"hello"} | ${"hi"}
-		${"matches"}   | ${{ matches: "/^(hello)/" }} | ${"hi"}    | ${"hello"}
-		${"email"}     | ${{ email: true }}           | ${"hello"} | ${"john@doe.tld"}
-		${"url"}       | ${{ url: true }}             | ${"hello"} | ${"https://domain.tld"}
-		${"uuid"}      | ${{ uuid: true }}            | ${"hello"} | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"}
+		condition       | config                          | invalid    | valid
+		${"filled"}     | ${{ filled: true }}             | ${null}    | ${"hello"}
+		${"empty"}      | ${{ empty: true }}              | ${"hello"} | ${null}
+		${"equals"}     | ${{ equals: "hello" }}          | ${"hi"}    | ${"hello"}
+		${"notEquals"}  | ${{ notEquals: "hello" }}       | ${"hello"} | ${"hi"}
+		${"min"}        | ${{ min: 4 }}                   | ${"hi"}    | ${"hello"}
+		${"max"}        | ${{ max: 4 }}                   | ${"hello"} | ${"hi"}
+		${"matches"}    | ${{ matches: "/^(hello)/" }}    | ${"hi"}    | ${"hello"}
+		${"notMatches"} | ${{ notMatches: "/^(hello)/" }} | ${"hello"} | ${"hi"}
+		${"email"}      | ${{ email: true }}              | ${"hello"} | ${"john@doe.tld"}
+		${"url"}        | ${{ url: true }}                | ${"hello"} | ${"https://domain.tld"}
+		${"uuid"}       | ${{ uuid: true }}               | ${"hello"} | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"}
 	`("should support $condition condition for string conditional rendering", async ({ config, invalid, valid }) => {
 		const uiType = "text-field";
 		const fields: Record<string, TFrontendEngineFieldSchema> = {
