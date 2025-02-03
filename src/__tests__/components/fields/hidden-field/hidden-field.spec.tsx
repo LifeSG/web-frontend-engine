@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
-import { IHiddenFieldSchema } from "../../../../components/fields";
+import { THiddenFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
@@ -34,7 +34,7 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-const renderComponent = (overrideField?: Partial<IHiddenFieldSchema> | undefined, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (overrideField?: Partial<THiddenFieldSchema> | undefined, overrideSchema?: TOverrideSchema) => {
 	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
 	merge(json, {
 		sections: {
@@ -122,6 +122,32 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: false }));
 	});
 
+	it("should not let setValue override the schema value", async () => {
+		const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), {
+			sections: {
+				section: {
+					children: {
+						[COMPONENT_ID]: { valueType: "string", value: "hello" },
+					},
+				},
+			},
+		});
+		render(
+			<FrontendEngineWithCustomButton
+				data={json}
+				onSubmit={SUBMIT_FN}
+				onClick={(ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.setValue(COMPONENT_ID, "bye");
+				}}
+			/>
+		);
+
+		fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }));
+	});
+
 	describe("dirty state", () => {
 		let formIsDirty: boolean;
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
@@ -179,6 +205,17 @@ describe(UI_TYPE, () => {
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(false);
+		});
+	});
+
+	describe("reset", () => {
+		it("should revert to schema value on reset", async () => {
+			renderComponent({ valueType: "string", value: "hello" }, { defaultValues: { [COMPONENT_ID]: "bye" } });
+
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }));
 		});
 	});
 });
