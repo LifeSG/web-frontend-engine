@@ -34,6 +34,7 @@ interface IYupRule {
 	min?: number | undefined;
 	max?: number | undefined;
 	matches?: string | undefined;
+	notMatches?: string | undefined;
 	email?: boolean | undefined;
 	url?: boolean | undefined;
 	uuid?: boolean | undefined;
@@ -48,7 +49,8 @@ interface IYupRule {
 	includes?: unknown | undefined;
 	excludes?: unknown | undefined;
 	uinfin?: boolean | undefined;
-	equalsField?: unknown | undefined;
+	equalsField?: string | undefined;
+	notEqualsField?: string | undefined;
 }
 
 /**

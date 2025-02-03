@@ -105,6 +105,26 @@ Matches.args = {
 	},
 };
 
+export const NotMatches = Template.bind({});
+NotMatches.args = {
+	intro: {
+		uiType: "div",
+		className: "margin-bottom-1",
+		children: "Show field 2 as long as field 1 does not start with `hello`",
+	},
+	field1: {
+		label: "Field 1",
+		uiType: "text-field",
+		validation: [{ required: true }],
+	},
+	field2: {
+		label: "Field 2",
+		uiType: "text-field",
+		showIf: [{ field1: [{ filled: true }, { notMatches: "/^(hello)/" }] }],
+		validation: [{ required: true }],
+	},
+};
+
 export const Email = Template.bind({});
 Email.args = {
 	intro: {

@@ -17,6 +17,14 @@ YupHelper.addCondition("mixed", "filled", (value) => !isEmptyValue(value));
 YupHelper.addCondition("mixed", "empty", (value) => isEmptyValue(value));
 YupHelper.addCondition("mixed", "equals", (value, match) => !isEmptyValue(value) && isEqual(value, match));
 YupHelper.addCondition("mixed", "notEquals", (value, match) => !isEmptyValue(value) && !isEqual(value, match));
+YupHelper.addCondition("string", "notMatches", (value: string, regex: string) => {
+	if (isEmptyValue(value)) {
+		return true;
+	}
+	const matches = regex.match(/\/(.*)\/([a-z]+)?/);
+	const parsedRegex = new RegExp(matches[1], matches[2]);
+	return !parsedRegex.test(value);
+});
 YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
 	if (!values?.length) return true;
 	if (!Array.isArray(matches)) {
@@ -36,11 +44,27 @@ YupHelper.addCondition("array", "excludes", (values: unknown[], matches: unknown
 YupHelper.addCondition("mixed", "equalsField", (values: unknown[], matches: unknown | unknown[], fn) => {
 	switch (typeof values) {
 		case "object":
-			return Array.isArray(values) && Array.isArray(fn.parent[`${matches}`])
-				? isEqual(values?.sort(), fn.parent[`${matches}`]?.sort())
-				: isEqual(values, fn.parent[`${matches}`]);
+			if (Array.isArray(values) && Array.isArray(fn.parent[`${matches}`])) {
+				const a = [...values].sort();
+				const b = [...fn.parent[`${matches}`]].sort();
+				return isEqual(a, b);
+			}
+			return isEqual(values, fn.parent[`${matches}`]);
 		default:
 			return isEqual(values, fn.parent[`${matches}`]);
+	}
+});
+YupHelper.addCondition("mixed", "notEqualsField", (values: unknown[], matches: unknown | unknown[], fn) => {
+	switch (typeof values) {
+		case "object":
+			if (Array.isArray(values) && Array.isArray(fn.parent[`${matches}`])) {
+				const a = [...values].sort();
+				const b = [...fn.parent[`${matches}`]].sort();
+				return !isEqual(a, b);
+			}
+			return !isEqual(values, fn.parent[`${matches}`]);
+		default:
+			return !isEqual(values, fn.parent[`${matches}`]);
 	}
 });
 
