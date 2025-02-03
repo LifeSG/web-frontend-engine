@@ -3,7 +3,7 @@ import { IBaseFieldSchema } from "../types";
 
 export interface IHiddenFieldValidationRule extends IYupValidationRule {
 	/** for customising error message when submitted value does not match schema value */
-	matchesSchema?: boolean | undefined;
+	equalsSchemaValue?: boolean | undefined;
 }
 
 type TStringField = {
