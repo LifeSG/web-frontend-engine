@@ -122,6 +122,15 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: false }));
 	});
 
+	it("should set value to null if valueType=null", async () => {
+		const defaultValue = true;
+		renderComponent({ valueType: "null" }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: null }));
+	});
+
 	it("should not let setValue override the schema value", async () => {
 		const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), {
 			sections: {
@@ -216,6 +225,15 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }));
+		});
+
+		it("should revert to null if valueType=null on reset", async () => {
+			renderComponent({ valueType: "null" }, { defaultValues: { [COMPONENT_ID]: "bye" } });
+
+			fireEvent.click(getResetButton());
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: null }));
 		});
 	});
 });

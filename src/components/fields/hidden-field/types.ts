@@ -21,12 +21,17 @@ type TBooleanField = {
 	value?: boolean | undefined;
 };
 
+type TNullField = {
+	valueType: "null";
+	value?: null | undefined;
+};
+
 type TNoValueField = {
 	valueType?: never | undefined;
 	value?: never | undefined;
 };
 
-type TFieldType = TStringField | TNumberField | TBooleanField | TNoValueField;
+type TFieldType = TStringField | TNumberField | TBooleanField | TNullField | TNoValueField;
 
 export type THiddenFieldSchema<V = undefined> = Pick<
 	IBaseFieldSchema<"hidden-field", V, IHiddenFieldValidationRule>,

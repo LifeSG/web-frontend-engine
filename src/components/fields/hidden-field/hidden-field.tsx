@@ -27,6 +27,9 @@ export const HiddenField = (props: IGenericFieldProps<THiddenFieldSchema>) => {
 	useEffect(() => {
 		let baseYupSchema: Yup.AnySchema;
 		switch (valueType) {
+			case "null":
+				baseYupSchema = Yup.mixed();
+				break;
 			case "number":
 				baseYupSchema = Yup.number();
 				break;
@@ -42,10 +45,12 @@ export const HiddenField = (props: IGenericFieldProps<THiddenFieldSchema>) => {
 	}, [validation, valueType]);
 
 	useEffect(() => {
-		if (!isNil(schemaValue) && value !== schemaValue) {
+		if (valueType === "null" && value !== null) {
+			setValue(id, null);
+		} else if (!isNil(schemaValue) && value !== schemaValue) {
 			setValue(id, schemaValue);
 		}
-	}, [setValue, id, schemaValue, value]);
+	}, [setValue, id, valueType, schemaValue, value]);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
@@ -59,7 +64,7 @@ export const HiddenField = (props: IGenericFieldProps<THiddenFieldSchema>) => {
 			id={id}
 			data-testid={id}
 			name={name}
-			value={schemaValue ?? value}
+			value={schemaValue ?? value ?? ""}
 		/>
 	);
 };
