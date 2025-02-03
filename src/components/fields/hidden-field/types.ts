@@ -6,33 +6,33 @@ export interface IHiddenFieldValidationRule extends IYupValidationRule {
 	matchesSchema?: boolean | undefined;
 }
 
-type StringField = {
+type TStringField = {
 	valueType: "string";
-	value?: string;
+	value?: string | undefined;
 };
 
-type NumberField = {
+type TNumberField = {
 	valueType: "number";
-	value?: number;
+	value?: number | undefined;
 };
 
-type BooleanField = {
+type TBooleanField = {
 	valueType: "boolean";
-	value?: boolean;
+	value?: boolean | undefined;
 };
 
-type NoValueField = {
+type TNoValueField = {
 	valueType?: never | undefined;
 	value?: never | undefined;
 };
 
-type FieldType = StringField | NumberField | BooleanField | NoValueField;
+type TFieldType = TStringField | TNumberField | TBooleanField | TNoValueField;
 
 export type THiddenFieldSchema<V = undefined> = Pick<
 	IBaseFieldSchema<"hidden-field", V, IHiddenFieldValidationRule>,
 	"showIf" | "validation" | "uiType"
 > &
-	FieldType;
+	TFieldType;
 
 /** @deprecated use THiddenFieldSchema */
 export type IHiddenFieldSchema<V = undefined> = THiddenFieldSchema<V>;
