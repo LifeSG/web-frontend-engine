@@ -1,10 +1,12 @@
+import isNil from "lodash/isNil";
 import { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IHiddenFieldSchema } from "./types";
+import { THiddenFieldSchema } from "./types";
 
-export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
+export const HiddenField = (props: IGenericFieldProps<THiddenFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -13,10 +15,11 @@ export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
 		name,
 		onBlur,
 		onChange,
-		schema: { showIf: _showIf, uiType: _uiType, validation, valueType, ...otherSchema },
+		schema: { showIf: _showIf, uiType: _uiType, validation, valueType, value: schemaValue, ...otherSchema },
 		value,
 	} = props;
 	const { setFieldValidationConfig } = useValidationConfig();
+	const { setValue } = useFormContext();
 
 	// =============================================================================
 	// EFFECTS
@@ -24,6 +27,9 @@ export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
 	useEffect(() => {
 		let baseYupSchema: Yup.AnySchema;
 		switch (valueType) {
+			case "null":
+				baseYupSchema = Yup.mixed();
+				break;
 			case "number":
 				baseYupSchema = Yup.number();
 				break;
@@ -38,6 +44,14 @@ export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation, valueType]);
 
+	useEffect(() => {
+		if (valueType === "null" && value !== null) {
+			setValue(id, null);
+		} else if (!isNil(schemaValue) && value !== schemaValue) {
+			setValue(id, schemaValue);
+		}
+	}, [setValue, id, valueType, schemaValue, value]);
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -50,7 +64,7 @@ export const HiddenField = (props: IGenericFieldProps<IHiddenFieldSchema>) => {
 			id={id}
 			data-testid={id}
 			name={name}
-			value={value}
+			value={schemaValue ?? value ?? ""}
 		/>
 	);
 };
