@@ -13,6 +13,7 @@ export interface ICheckboxGroupOption {
 export interface IToggleOption<V = undefined, C = undefined> extends ICheckboxGroupOption {
 	none?: boolean | undefined;
 	children?: Record<string, TFrontendEngineFieldSchema<V, C>> | undefined;
+	subLabel?: string | undefined;
 }
 
 export type TCheckboxToggleLayoutType = "horizontal" | "vertical";

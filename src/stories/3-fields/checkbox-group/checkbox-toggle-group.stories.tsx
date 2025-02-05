@@ -55,7 +55,7 @@ const meta: Meta = {
 			table: {
 				type: {
 					summary:
-						"{label: string, value: string, disabled?: boolean, none?: boolean; children?: Record<string, TFrontendEngineFieldSchema>}[]",
+						"{label: string, value: string, disabled?: boolean, none?: boolean; children?: Record<string, TFrontendEngineFieldSchema>}[]; subLabel?: string",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -355,3 +355,17 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const OptionsWithSubLabel = DefaultStoryTemplate<TCheckboxGroupSchema>("checkbox-with-sub-label").bind({});
+OptionsWithSubLabel.args = {
+	uiType: "checkbox",
+	label: "Checkbox",
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ value: "Apple", label: "Apple", subLabel: "Keeps the <strong>doctor</strong> away" },
+		{ value: "Berry", label: "Berry", subLabel: "<i>Berry</i> nutritious, good for you" },
+		{ value: "Cherry", label: "Cherry", subLabel: "Pick<br>The cherry on top" },
+	],
+};
