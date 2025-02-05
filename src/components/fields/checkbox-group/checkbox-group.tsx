@@ -167,6 +167,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 										  }
 										: null
 								}
+								subLabel={!!option.subLabel && renderLabel(option.subLabel)}
 							>
 								{renderLabel(option.label)}
 							</StyledToggle>
