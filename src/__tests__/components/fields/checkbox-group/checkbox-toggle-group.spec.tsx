@@ -210,7 +210,7 @@ describe("checkbox toggle group", () => {
 		expect(screen.getByText("Schema Label")).toBeInTheDocument();
 	});
 
-	fit("should be able to render option subLabel", () => {
+	it("should be able to render option subLabel", () => {
 		renderComponent({
 			options: [
 				{ label: "A", value: "Apple", subLabel: "Keeps the doctor away" },
