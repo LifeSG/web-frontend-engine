@@ -210,6 +210,18 @@ describe("checkbox toggle group", () => {
 		expect(screen.getByText("Schema Label")).toBeInTheDocument();
 	});
 
+	it("should be able to render option subLabel", () => {
+		renderComponent({
+			options: [
+				{ label: "A", value: "Apple", subLabel: "Keeps the doctor away" },
+				{ label: "B", value: "Berry", subLabel: "Berry nutritious, good for you" },
+			],
+		});
+
+		expect(screen.getByText("Keeps the doctor away")).toBeInTheDocument();
+		expect(screen.getByText("Berry nutritious, good for you")).toBeInTheDocument();
+	});
+
 	describe("update options through schema", () => {
 		it.each`
 			scenario                                                                             | selected      | expectedValueBeforeUpdate | expectedValueAfterUpdate
