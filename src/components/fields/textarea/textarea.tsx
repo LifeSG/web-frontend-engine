@@ -61,6 +61,12 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		onChange(event);
 	};
 
+	const onBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+		if (event.relatedTarget === null) {
+			event.target.focus();
+		}
+	};
+
 	const handleChipOnClick = (text: string) => () => {
 		const curLength = (stateValue as string)?.length || 0;
 		if (maxLength && curLength >= maxLength) {
@@ -113,6 +119,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 						rows={rows}
 						resizable={resizable}
 						onChange={handleChange}
+						onBlur={onBlur}
 						value={stateValue}
 						errorMessage={error?.message}
 					/>
