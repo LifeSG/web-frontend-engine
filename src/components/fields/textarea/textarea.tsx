@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { kebabCase } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
@@ -29,6 +29,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
 	const [maxLength, setMaxLength] = useState<number>();
 	const { setFieldValidationConfig } = useValidationConfig();
+	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
 	// =============================================================================
 	// EFFECTS
@@ -73,6 +74,10 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 				value: newValue,
 			},
 		});
+
+		if (textAreaRef.current) {
+			textAreaRef.current.focus();
+		}
 	};
 
 	// =============================================================================
@@ -103,6 +108,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 				<Wrapper chipPosition={chipPosition}>
 					{renderChips()}
 					<StyledTextarea
+						ref={textAreaRef}
 						{...otherSchema}
 						{...otherProps}
 						id={id}
