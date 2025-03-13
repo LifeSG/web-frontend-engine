@@ -8,6 +8,7 @@ import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
+import { TErrorMessage } from "../../frontend-engine";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { IFrontendEngineRef, TFrontendEngineValues } from "../../types";
 import { IGenericCustomFieldProps } from "../types";
@@ -56,6 +57,8 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const { resetField, setValue } = useFormContext();
 	const formRefs = useRef<IFrontendEngineRef[]>([]);
 	const stateValueRef = useRef(stateValue);
+	const [customFieldError, setCustomFieldError] = useState<TErrorMessage[] | undefined>(undefined);
+	const [arrayFieldErrorMessage, setArrayFieldErrorMessage] = useState<string | undefined>(undefined);
 
 	// =============================================================================
 	// EFFECTS
@@ -121,6 +124,17 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value, length, setValue, id]);
+
+	useEffect(() => {
+		try {
+			const errorData = JSON.parse(error?.message);
+			// set custom error for each field of array
+			errorData.customFieldError && setCustomFieldError(errorData.customFieldError);
+			errorData.errorMessage && setArrayFieldErrorMessage(errorData.errorMessage);
+		} catch (e) {
+			setArrayFieldErrorMessage(error?.message);
+		}
+	}, [error]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -220,6 +234,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 								formValues={sectionValues}
 								schema={fieldSchema}
 								onChange={handleSectionChange(index)}
+								error={customFieldError?.[index]}
 							/>
 						</Inset>
 						{showDivider && !isLastItem ? <SectionDivider /> : null}
@@ -238,9 +253,9 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 					</AddButton>
 				</Inset>
 			)}
-			{error && (
+			{arrayFieldErrorMessage && (
 				<Inset $inset={sectionInset}>
-					<Alert type="error">{error.message}</Alert>
+					<Alert type="error">{arrayFieldErrorMessage}</Alert>
 				</Inset>
 			)}
 			{warning && (

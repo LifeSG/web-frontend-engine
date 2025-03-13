@@ -4,6 +4,7 @@ import { IArrayFieldSchema } from "../../../components/custom";
 import { TFrontendEngineFieldSchema } from "../../../components/types";
 import {
 	CommonCustomStoryWithoutLabelProps,
+	CustomErrorStoryTemplate,
 	DefaultStoryTemplate,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
@@ -133,6 +134,58 @@ const SCHEMA: Record<string, TFrontendEngineFieldSchema> = {
 	},
 };
 
+const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
+	grid: {
+		uiType: "grid",
+		style: { marginTop: 16, marginBottom: 16 },
+		children: {
+			description: {
+				uiType: "text-body",
+				children: "This array field has custom error apply for the first and the third element",
+				columns: { mobile: 4, tablet: 8, desktop: 12 },
+			},
+			name: {
+				uiType: "text-field",
+				label: "Name",
+				columns: { mobile: 4, tablet: 8, desktop: 12 },
+				validation: [{ required: true }],
+			},
+			color: {
+				uiType: "select",
+				label: "Color",
+				options: [{ label: "Red", value: "Red" }],
+				columns: { mobile: 4, tablet: 4, desktop: 6 },
+			},
+			testArray: {
+				referenceKey: "array-field",
+				sectionTitle: "Nested array",
+				columns: { mobile: 4, tablet: 8, desktop: 12 },
+				fieldSchema: {
+					grid: {
+						uiType: "grid",
+						style: { marginTop: 16, marginBottom: 16 },
+						children: {
+							name: {
+								uiType: "text-field",
+								label: "Name",
+								columns: { mobile: 4, tablet: 8, desktop: 12 },
+								validation: [{ required: true }],
+							},
+							color: {
+								uiType: "select",
+								label: "Color",
+								options: [{ label: "Red", value: "Red" }],
+								columns: { mobile: 4, tablet: 4, desktop: 6 },
+							},
+						},
+					},
+				},
+				validation: [{ max: 1, min: 1 }],
+			},
+		},
+	},
+};
+
 export const Default = DefaultStoryTemplate<IArrayFieldSchema>("array-field-default").bind({});
 Default.args = {
 	referenceKey: "array-field",
@@ -254,3 +307,13 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const CustomError = CustomErrorStoryTemplate<IArrayFieldSchema>("array-field-custom-error").bind({});
+CustomError.args = {
+	referenceKey: "array-field",
+	sectionTitle: "New fruit",
+	fieldSchema: SCHEMA_NESTED_ARRAY,
+	overrides: {
+		sectionTitle: "Custom Error",
+	},
+};

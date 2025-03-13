@@ -17,6 +17,8 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { warningTestSuite } from "../../../common/tests/warnings";
+import { Button } from "@lifesg/react-design-system";
+import { useRef } from "react";
 
 const SUBMIT_FN = jest.fn();
 const VALUE_CHANGE_FN = jest.fn();
@@ -74,6 +76,29 @@ const getAddButton = (): HTMLElement => {
 const getRemoveButton = (index: number): HTMLElement => {
 	const els = screen.queryAllByRole("button", { name: "Remove" });
 	return els[index] ?? null;
+};
+
+interface ArrayFieldCustomErrorComponentProps {
+	throwError: () => void;
+}
+
+const ArrayFieldCustomErrorComponent = ({ throwError }: ArrayFieldCustomErrorComponentProps) => {
+	const formRef = useRef<IFrontendEngineRef>();
+	const handleTriggeredError = () => {
+		try {
+			throwError();
+		} catch (error) {
+			formRef.current.setErrors(error);
+		}
+	};
+	return (
+		<>
+			<FrontendEngine ref={formRef} data={JSON_SCHEMA} onSubmit={SUBMIT_FN} onValueChange={VALUE_CHANGE_FN} />
+			<Button.Default onClick={handleTriggeredError} style={{ marginTop: "2rem" }}>
+				Triggered error message
+			</Button.Default>
+		</>
+	);
 };
 
 describe(UI_TYPE, () => {
@@ -580,6 +605,54 @@ describe(UI_TYPE, () => {
 					},
 				],
 			});
+		});
+	});
+
+	describe.only("custom error", () => {
+		it("should still display normal error", async () => {
+			const throwError = () => {
+				throw {
+					[COMPONENT_ID]: "Array field error message",
+				};
+			};
+			render(<ArrayFieldCustomErrorComponent throwError={throwError} />);
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Triggered error message" })));
+			expect(screen.getByText("Array field error message")).toBeInTheDocument();
+		});
+
+		it("should display custom field error", async () => {
+			const throwError = () => {
+				throw {
+					[COMPONENT_ID]: {
+						customFieldError: [
+							{
+								[TEXT_FIELD_ID]: "Custom error field",
+							},
+						],
+					},
+				};
+			};
+			render(<ArrayFieldCustomErrorComponent throwError={throwError} />);
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Triggered error message" })));
+			expect(screen.getByText("Custom error field")).toBeInTheDocument();
+		});
+		it("should display both normal error and custom field error", async () => {
+			const throwError = () => {
+				throw {
+					[COMPONENT_ID]: {
+						customFieldError: [
+							{
+								[TEXT_FIELD_ID]: "Custom error field",
+							},
+						],
+						errorMessage: "Array field error message",
+					},
+				};
+			};
+			render(<ArrayFieldCustomErrorComponent throwError={throwError} />);
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Triggered error message" })));
+			expect(screen.getByText("Custom error field")).toBeInTheDocument();
+			expect(screen.getByText("Array field error message")).toBeInTheDocument();
 		});
 	});
 
