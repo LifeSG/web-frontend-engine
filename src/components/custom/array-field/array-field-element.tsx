@@ -2,14 +2,14 @@ import isEqual from "lodash/isEqual";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useFormState } from "react-hook-form";
 import { useFormSchema, usePrevious } from "../../../utils/hooks";
-import { FrontendEngine, TErrorMessage } from "../../frontend-engine";
+import { FrontendEngine, TErrorPayload } from "../../frontend-engine";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema, TFrontendEngineValues } from "../../types";
 
 interface ArrayFieldElementProps {
 	onChange: (data: TFrontendEngineValues, isFormValid: boolean) => void;
 	schema: Record<string, TFrontendEngineFieldSchema>;
 	formValues?: TFrontendEngineValues;
-	error?: TErrorMessage;
+	error?: TErrorPayload;
 }
 
 const Component = (
@@ -62,10 +62,7 @@ const Component = (
 	}, [isSubmitting]);
 
 	useEffect(() => {
-		error &&
-			Object.keys(error).forEach((key) => {
-				formRef.current?.setErrors({ [key]: error[key] });
-			});
+		error && formRef.current?.setErrors(error);
 	}, [error]);
 
 	// =============================================================================

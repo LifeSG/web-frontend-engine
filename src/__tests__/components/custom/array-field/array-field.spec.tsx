@@ -26,6 +26,10 @@ const COMPONENT_ID = "field";
 const UI_TYPE = "array-field";
 const TEXT_FIELD_ID = "input";
 const TEXT_FIELD_LABEL = "TextField";
+const CUSTOM_BUTTON_LABEL = "Custom Button";
+const NESTED_ARRAY_FIELD_ID = "nested-array-field";
+const NESTED_TEXT_FIELD_ID = "nestedInput";
+const NESTED_TEXT_FIELD_LABEL = "NestedTextField";
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
@@ -40,6 +44,39 @@ const JSON_SCHEMA: IFrontendEngineData = {
 						[TEXT_FIELD_ID]: {
 							uiType: "text-field",
 							label: TEXT_FIELD_LABEL,
+						},
+					},
+				},
+				...getSubmitButtonProps(),
+				...getResetButtonProps(),
+			},
+		},
+	},
+};
+
+const JSON_SCHEMA_WITH_NESTED_ARRAY: IFrontendEngineData = {
+	id: FRONTEND_ENGINE_ID,
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				[COMPONENT_ID]: {
+					referenceKey: UI_TYPE,
+					sectionTitle: "Section title",
+					fieldSchema: {
+						[TEXT_FIELD_ID]: {
+							uiType: "text-field",
+							label: TEXT_FIELD_LABEL,
+						},
+						[NESTED_ARRAY_FIELD_ID]: {
+							referenceKey: UI_TYPE,
+							sectionTitle: "Nested array",
+							fieldSchema: {
+								[NESTED_TEXT_FIELD_ID]: {
+									uiType: "text-field",
+									label: NESTED_TEXT_FIELD_LABEL,
+								},
+							},
 						},
 					},
 				},
@@ -78,28 +115,13 @@ const getRemoveButton = (index: number): HTMLElement => {
 	return els[index] ?? null;
 };
 
+const getCustomButton = (): HTMLElement => {
+	return screen.getByRole("button", { name: CUSTOM_BUTTON_LABEL });
+};
+
 interface ArrayFieldCustomErrorComponentProps {
 	throwError: () => void;
 }
-
-const ArrayFieldCustomErrorComponent = ({ throwError }: ArrayFieldCustomErrorComponentProps) => {
-	const formRef = useRef<IFrontendEngineRef>();
-	const handleTriggeredError = () => {
-		try {
-			throwError();
-		} catch (error) {
-			formRef.current.setErrors(error);
-		}
-	};
-	return (
-		<>
-			<FrontendEngine ref={formRef} data={JSON_SCHEMA} onSubmit={SUBMIT_FN} onValueChange={VALUE_CHANGE_FN} />
-			<Button.Default onClick={handleTriggeredError} style={{ marginTop: "2rem" }}>
-				Triggered error message
-			</Button.Default>
-		</>
-	);
-};
 
 describe(UI_TYPE, () => {
 	beforeEach(() => {
@@ -608,51 +630,97 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe.only("custom error", () => {
-		it("should still display normal error", async () => {
-			const throwError = () => {
-				throw {
-					[COMPONENT_ID]: "Array field error message",
-				};
+	describe("custom error", () => {
+		it("should be able to display non-field-level error message", async () => {
+			const handleTriggeredError = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				try {
+					throw {
+						[COMPONENT_ID]: "Array field error message",
+					};
+				} catch (error) {
+					ref.current.setErrors(error);
+				}
 			};
-			render(<ArrayFieldCustomErrorComponent throwError={throwError} />);
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Triggered error message" })));
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleTriggeredError} />);
+			await waitFor(() => fireEvent.click(getCustomButton()));
 			expect(screen.getByText("Array field error message")).toBeInTheDocument();
 		});
 
-		it("should display custom field error", async () => {
-			const throwError = () => {
-				throw {
-					[COMPONENT_ID]: {
-						customFieldError: [
-							{
-								[TEXT_FIELD_ID]: "Custom error field",
-							},
-						],
-					},
-				};
+		it("should be able to display field-level error", async () => {
+			const handleTriggeredError = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				try {
+					throw {
+						[COMPONENT_ID]: {
+							fields: [
+								{
+									[TEXT_FIELD_ID]: "Custom error field",
+								},
+							],
+						},
+					};
+				} catch (error) {
+					ref.current.setErrors(error);
+				}
 			};
-			render(<ArrayFieldCustomErrorComponent throwError={throwError} />);
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Triggered error message" })));
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleTriggeredError} />);
+			await waitFor(() => fireEvent.click(getCustomButton()));
 			expect(screen.getByText("Custom error field")).toBeInTheDocument();
 		});
-		it("should display both normal error and custom field error", async () => {
-			const throwError = () => {
-				throw {
-					[COMPONENT_ID]: {
-						customFieldError: [
-							{
-								[TEXT_FIELD_ID]: "Custom error field",
-							},
-						],
-						errorMessage: "Array field error message",
-					},
-				};
+		it("should be able to display both normal and field-level errors", async () => {
+			const handleTriggeredError = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				try {
+					throw {
+						[COMPONENT_ID]: {
+							fields: [
+								{
+									[TEXT_FIELD_ID]: "Custom error field",
+								},
+							],
+							errorMessage: "Array field error message",
+						},
+					};
+				} catch (error) {
+					ref.current.setErrors(error);
+				}
 			};
-			render(<ArrayFieldCustomErrorComponent throwError={throwError} />);
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Triggered error message" })));
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleTriggeredError} />);
+			await waitFor(() => fireEvent.click(getCustomButton()));
 			expect(screen.getByText("Custom error field")).toBeInTheDocument();
 			expect(screen.getByText("Array field error message")).toBeInTheDocument();
+		});
+		it("should be able to display both normal and field-level errors with nested array", async () => {
+			const handleTriggeredError = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				try {
+					throw {
+						[COMPONENT_ID]: {
+							fields: [
+								{
+									[TEXT_FIELD_ID]: "Custom error field",
+									[NESTED_ARRAY_FIELD_ID]: {
+										fields: [
+											{
+												[NESTED_TEXT_FIELD_ID]: "Nested custom error field",
+											},
+										],
+										errorMessage: "Nested array field error message",
+									},
+								},
+							],
+							errorMessage: "Array field error message",
+						},
+					};
+				} catch (error) {
+					ref.current.setErrors(error);
+				}
+			};
+			render(
+				<FrontendEngineWithCustomButton data={JSON_SCHEMA_WITH_NESTED_ARRAY} onClick={handleTriggeredError} />
+			);
+			await waitFor(() => fireEvent.click(getCustomButton()));
+			expect(screen.getByText("Custom error field")).toBeInTheDocument();
+			expect(screen.getByText("Array field error message")).toBeInTheDocument();
+			expect(screen.getByText("Nested custom error field")).toBeInTheDocument();
+			expect(screen.getByText("Nested array field error message")).toBeInTheDocument();
 		});
 	});
 

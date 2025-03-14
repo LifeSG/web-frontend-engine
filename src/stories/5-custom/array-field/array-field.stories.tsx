@@ -1,16 +1,20 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import { IArrayFieldSchema } from "../../../components/custom";
-import { TFrontendEngineFieldSchema } from "../../../components/types";
+import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../../../components/types";
 import {
 	CommonCustomStoryWithoutLabelProps,
-	CustomErrorStoryTemplate,
 	DefaultStoryTemplate,
+	FrontendEngine,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
 	WarningStoryTemplate,
 } from "../../common";
+import { ReactElement, useRef } from "react";
+import { Button } from "@lifesg/react-design-system";
+import { RecursivePartial } from "../../../utils";
 
 const meta: Meta = {
 	title: "Custom/ArrayField",
@@ -308,7 +312,77 @@ Overrides.args = {
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
-export const CustomError = CustomErrorStoryTemplate<IArrayFieldSchema>("array-field-custom-error").bind({});
+const CustomErrorStory = <T,>(id: string, showSubmitButton = true) =>
+	(({ overrides, ...args }) => {
+		const formRef = useRef<IFrontendEngineRef>();
+		const handleTriggeredError = () => {
+			try {
+				throw {
+					[id]: {
+						fields: [
+							{
+								name: "Custom error",
+								color: "Custom error",
+								testArray: {
+									fields: [
+										{
+											name: "Nested custom error",
+											color: "Nested custom error",
+										},
+									],
+									errorMessage: "Nested array field error message",
+								},
+							},
+							undefined,
+							{
+								name: "Custom error",
+								color: "Custom error",
+								testArray: {
+									fields: [
+										{
+											name: "Nested custom error",
+											color: "Nested custom error",
+										},
+									],
+								},
+							},
+						],
+						errorMessage: "Array field error message",
+					},
+				};
+			} catch (error) {
+				formRef.current.setErrors(error);
+			}
+		};
+		return (
+			<>
+				<FrontendEngine
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[id]: args as unknown as TFrontendEngineFieldSchema,
+									...(showSubmitButton && { ...SUBMIT_BUTTON_SCHEMA }),
+								},
+							},
+						},
+						...(!!overrides && {
+							overrides: {
+								[id]: overrides,
+							},
+						}),
+					}}
+					ref={formRef}
+				/>
+				<Button.Default onClick={handleTriggeredError} style={{ marginTop: "2rem" }}>
+					Triggered error message
+				</Button.Default>
+			</>
+		);
+	}) as StoryFn<(args: T & { overrides?: RecursivePartial<T> | undefined }) => ReactElement>;
+
+export const CustomError = CustomErrorStory<IArrayFieldSchema>("array-field-custom-error").bind({});
 CustomError.args = {
 	referenceKey: "array-field",
 	sectionTitle: "New fruit",
