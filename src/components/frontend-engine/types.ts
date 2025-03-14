@@ -142,6 +142,8 @@ export interface IFrontendEngineRef
 	reset: UseFormReset<TFrontendEngineValues>;
 	/** allows setting of custom errors */
 	setErrors: (errors: TErrorPayload) => void;
+	/** clear form errors */
+	clearErrors: (error?: string | string[] | undefined) => void;
 	/** allows setting of custom warnings */
 	setWarnings: (warnings: TWarningPayload) => void;
 	/** sets field value by id */

@@ -66,7 +66,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		},
 	});
 	const { setFormSchema } = useFormSchema();
-	const { reset, handleSubmit: reactFormHookSubmit, getValues, setValue, setError, trigger, formState } = formMethods;
+	const {
+		reset,
+		handleSubmit: reactFormHookSubmit,
+		getValues,
+		setValue,
+		setError,
+		trigger,
+		formState,
+		clearErrors,
+	} = formMethods;
 	const { resetFields, setFields, getFormValues, registeredFields } = useFormValues(formMethods);
 	const registeredFieldsRef = useRef(registeredFields); // using ref ensures the latest values can be retrieved in setErrors and setWarnings
 	const { checkIsFormValid } = useFormChange(props, formMethods);
@@ -93,6 +102,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			}
 		},
 		setErrors,
+		clearErrors,
 		setWarnings,
 		setValue,
 		submit: reactFormHookSubmit(handleSubmit, handleSubmitError),

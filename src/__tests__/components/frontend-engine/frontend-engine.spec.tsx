@@ -1062,6 +1062,18 @@ describe("frontend-engine", () => {
 		});
 	});
 
+	describe("clearErrors", () => {
+		it("should support clear all the errors", async () => {
+			const handleClickDefault = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.setErrors({ [FIELD_ONE_ID]: ERROR_MESSAGE });
+			};
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClickDefault} />);
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
+		});
+	});
+
 	describe("setWarnings", () => {
 		it("should support setting of warnings", async () => {
 			const handleSetWarnings = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
