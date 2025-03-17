@@ -710,7 +710,7 @@ SetCustomErrors.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
-export const ClearErros: StoryFn<IFrontendEngineProps> = () => {
+export const ClearErrors: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleTriggerError = () => {
 		try {
@@ -771,7 +771,7 @@ export const ClearErros: StoryFn<IFrontendEngineProps> = () => {
 		</>
 	);
 };
-SetCustomErrors.parameters = {
+ClearErrors.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 

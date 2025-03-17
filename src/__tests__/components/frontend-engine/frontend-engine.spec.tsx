@@ -30,6 +30,9 @@ const FIELD_TWO_LABEL = "Field 2";
 const CUSTOM_BUTTON_LABEL = "Custom Button";
 const COMPONENT_TEST_ID = TestHelper.generateId(FRONTEND_ENGINE_ID, "frontend-engine");
 const ERROR_MESSAGE_2 = "error message 2";
+const FIELD_THREE_ID = "field3";
+const FIELD_THREE_LABEL = "Field 3";
+const ERROR_MESSAGE_3 = "error message 3";
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
@@ -85,6 +88,11 @@ const MULTI_FIELD_SCHEMA = merge(cloneDeep(JSON_SCHEMA), {
 					label: FIELD_TWO_LABEL,
 					uiType: UI_TYPE,
 					validation: [{ required: true, errorMessage: ERROR_MESSAGE_2 }],
+				},
+				[FIELD_THREE_ID]: {
+					label: FIELD_THREE_LABEL,
+					uiType: UI_TYPE,
+					validation: [{ required: true, errorMessage: ERROR_MESSAGE_3 }],
 				},
 			},
 		},
@@ -1063,49 +1071,47 @@ describe("frontend-engine", () => {
 	});
 
 	describe("clearErrors", () => {
-		it("should support clear all the errors", async () => {
-			const handleClickDefault = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.clearErrors();
-			};
-			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClickDefault} />);
+		it.each([
+			{
+				scenario: "clear all errors",
+				clearErrors: (ref: React.MutableRefObject<IFrontendEngineRef>) => ref.current.clearErrors(),
+				expectedErrors: [false, false, false],
+			},
+			{
+				scenario: "clear individual error",
+				clearErrors: (ref: React.MutableRefObject<IFrontendEngineRef>) => ref.current.clearErrors(FIELD_ONE_ID),
+				expectedErrors: [false, true, true],
+			},
+			{
+				scenario: "clear multiple errors",
+				clearErrors: (ref: React.MutableRefObject<IFrontendEngineRef>) =>
+					ref.current.clearErrors([FIELD_ONE_ID, FIELD_THREE_ID]),
+				expectedErrors: [false, true, false],
+			},
+		])("should be able to $scenario", async ({ clearErrors, expectedErrors }) => {
+			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={clearErrors} />);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(getErrorMessage()).toBeInTheDocument();
 			expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
+			expect(getErrorMessage(false, ERROR_MESSAGE_3)).toBeInTheDocument();
 
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
-			expect(getErrorMessage(true)).not.toBeInTheDocument();
-			expect(getErrorMessage(true, ERROR_MESSAGE_2)).not.toBeInTheDocument();
-		});
-
-		it("should support clear individual error", async () => {
-			const handleClickDefault = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.clearErrors(FIELD_ONE_ID);
-			};
-			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClickDefault} />);
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(getErrorMessage()).toBeInTheDocument();
-			expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
-
-			await waitFor(() => fireEvent.click(getCustomButton()));
-
-			expect(getErrorMessage(true)).not.toBeInTheDocument();
-			expect(getErrorMessage(true, ERROR_MESSAGE_2)).toBeInTheDocument();
-		});
-
-		it("should support clear multiple errors", async () => {
-			const handleClickDefault = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.clearErrors([FIELD_ONE_ID, FIELD_TWO_ID]);
-			};
-			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClickDefault} />);
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(getErrorMessage()).toBeInTheDocument();
-			expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
-
-			await waitFor(() => fireEvent.click(getCustomButton()));
-
-			expect(getErrorMessage(true)).not.toBeInTheDocument();
-			expect(getErrorMessage(true, ERROR_MESSAGE_2)).not.toBeInTheDocument();
+			if (expectedErrors[0]) {
+				expect(getErrorMessage()).toBeInTheDocument();
+			} else {
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			}
+			if (expectedErrors[1]) {
+				expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
+			} else {
+				expect(getErrorMessage(true, ERROR_MESSAGE_2)).not.toBeInTheDocument();
+			}
+			if (expectedErrors[2]) {
+				expect(getErrorMessage(false, ERROR_MESSAGE_3)).toBeInTheDocument();
+			} else {
+				expect(getErrorMessage(true, ERROR_MESSAGE_3)).not.toBeInTheDocument();
+			}
 		});
 	});
 
