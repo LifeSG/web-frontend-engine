@@ -1065,12 +1065,47 @@ describe("frontend-engine", () => {
 	describe("clearErrors", () => {
 		it("should support clear all the errors", async () => {
 			const handleClickDefault = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				ref.current.setErrors({ [FIELD_ONE_ID]: ERROR_MESSAGE });
+				ref.current.clearErrors();
 			};
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClickDefault} />);
+			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClickDefault} />);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+			expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
+
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
-			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+			expect(getErrorMessage(true, ERROR_MESSAGE_2)).not.toBeInTheDocument();
+		});
+
+		it("should support clear individual error", async () => {
+			const handleClickDefault = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.clearErrors(FIELD_ONE_ID);
+			};
+			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClickDefault} />);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+			expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+			expect(getErrorMessage(true, ERROR_MESSAGE_2)).toBeInTheDocument();
+		});
+
+		it("should support clear multiple errors", async () => {
+			const handleClickDefault = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.clearErrors([FIELD_ONE_ID, FIELD_TWO_ID]);
+			};
+			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={handleClickDefault} />);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+			expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(getErrorMessage(true)).not.toBeInTheDocument();
+			expect(getErrorMessage(true, ERROR_MESSAGE_2)).not.toBeInTheDocument();
 		});
 	});
 

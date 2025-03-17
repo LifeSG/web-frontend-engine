@@ -58,11 +58,11 @@ export const getField = (
 	return screen.getByRole(role, options);
 };
 
-export const getErrorMessage = (isQuery = false): HTMLElement => {
+export const getErrorMessage = (isQuery = false, errorMessage = ERROR_MESSAGE): HTMLElement => {
 	if (isQuery) {
-		return screen.queryByText(ERROR_MESSAGE);
+		return screen.queryByText(errorMessage);
 	}
-	return screen.getByText(ERROR_MESSAGE);
+	return screen.getByText(errorMessage);
 };
 
 export const flushPromise = (delay = 0) => new Promise((resolve) => setTimeout(resolve, delay));
