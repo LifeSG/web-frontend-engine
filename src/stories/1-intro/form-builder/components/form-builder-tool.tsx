@@ -8,6 +8,7 @@ import { Unstyled } from "@storybook/blocks";
 import { useRef, useState } from "react";
 import { ContentWrapper, FrontendEnginePreview, ModeButton, Toolbar, Wrapper } from "./form-builder-tool.styles";
 import { SchemaView } from "./schema-view";
+import { IFrontendEngineData } from "../../../../components";
 
 export type TFormBuilderMode = "form-builder" | "preview" | "schema";
 
@@ -80,7 +81,7 @@ export const FormBuilderTool = () => {
 		return (
 			<ContentWrapper $flexbox={true}>
 				<Text.H2>Generate Form</Text.H2>
-				{formBuilderOutput && <FrontendEnginePreview data={formBuilderOutput.schema} />}
+				{formBuilderOutput && <FrontendEnginePreview data={formBuilderOutput.schema as IFrontendEngineData} />}
 			</ContentWrapper>
 		);
 	};
@@ -90,7 +91,7 @@ export const FormBuilderTool = () => {
 		return (
 			<ContentWrapper $flexbox={true}>
 				<SchemaView
-					schema={formBuilderOutput.schema}
+					schema={formBuilderOutput.schema as IFrontendEngineData}
 					onChange={setFormBuilderOutput}
 					formBuilderRef={formBuilderRef}
 				/>

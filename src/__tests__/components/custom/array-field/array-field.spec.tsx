@@ -17,8 +17,6 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { warningTestSuite } from "../../../common/tests/warnings";
-import { Button } from "@lifesg/react-design-system";
-import { useRef } from "react";
 
 const SUBMIT_FN = jest.fn();
 const VALUE_CHANGE_FN = jest.fn();
@@ -118,10 +116,6 @@ const getRemoveButton = (index: number): HTMLElement => {
 const getCustomButton = (): HTMLElement => {
 	return screen.getByRole("button", { name: CUSTOM_BUTTON_LABEL });
 };
-
-interface ArrayFieldCustomErrorComponentProps {
-	throwError: () => void;
-}
 
 describe(UI_TYPE, () => {
 	beforeEach(() => {
