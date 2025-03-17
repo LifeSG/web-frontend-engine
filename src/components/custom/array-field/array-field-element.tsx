@@ -2,16 +2,20 @@ import isEqual from "lodash/isEqual";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useFormState } from "react-hook-form";
 import { useFormSchema, usePrevious } from "../../../utils/hooks";
-import { FrontendEngine } from "../../frontend-engine";
+import { FrontendEngine, TErrorPayload } from "../../frontend-engine";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema, TFrontendEngineValues } from "../../types";
 
 interface ArrayFieldElementProps {
 	onChange: (data: TFrontendEngineValues, isFormValid: boolean) => void;
 	schema: Record<string, TFrontendEngineFieldSchema>;
 	formValues?: TFrontendEngineValues;
+	error?: TErrorPayload;
 }
 
-const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref: ForwardedRef<IFrontendEngineRef>) => {
+const Component = (
+	{ onChange, formValues, schema, error }: ArrayFieldElementProps,
+	ref: ForwardedRef<IFrontendEngineRef>
+) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
@@ -25,7 +29,6 @@ const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref
 	const prevIsDirty = usePrevious(isDirty);
 
 	useImperativeHandle<IFrontendEngineRef, IFrontendEngineRef>(ref, () => formRef.current);
-
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -57,6 +60,10 @@ const Component = ({ onChange, formValues, schema }: ArrayFieldElementProps, ref
 			formRef.current?.validate();
 		}
 	}, [isSubmitting]);
+
+	useEffect(() => {
+		error && formRef.current?.setErrors(error);
+	}, [error]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
