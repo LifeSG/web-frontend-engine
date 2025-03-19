@@ -145,7 +145,10 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 		children: {
 			description: {
 				uiType: "text-body",
-				children: "This array field has custom error apply for the first and the third element",
+				children: [
+					"This array field has custom error apply for the first and the third element.",
+					"Nested array in the first element has the custom error for the first and third entries.",
+				],
 				columns: { mobile: 4, tablet: 8, desktop: 12 },
 			},
 			name: {
@@ -184,7 +187,6 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 						},
 					},
 				},
-				validation: [{ max: 1, min: 1 }],
 			},
 		},
 	},
@@ -326,6 +328,11 @@ const CustomErrorStory = <T,>(id: string, showSubmitButton = true) =>
 								color: "Custom error",
 								testArray: {
 									fields: [
+										{
+											name: "Nested custom error",
+											color: "Nested custom error",
+										},
+										undefined,
 										{
 											name: "Nested custom error",
 											color: "Nested custom error",
