@@ -1071,24 +1071,15 @@ describe("frontend-engine", () => {
 	});
 
 	describe("clearErrors", () => {
-		it.each([
-			{
-				scenario: "clear all errors",
-				clearErrors: (ref: React.MutableRefObject<IFrontendEngineRef>) => ref.current.clearErrors(),
-				expectedErrors: [false, false, false],
-			},
-			{
-				scenario: "clear individual error",
-				clearErrors: (ref: React.MutableRefObject<IFrontendEngineRef>) => ref.current.clearErrors(FIELD_ONE_ID),
-				expectedErrors: [false, true, true],
-			},
-			{
-				scenario: "clear multiple errors",
-				clearErrors: (ref: React.MutableRefObject<IFrontendEngineRef>) =>
-					ref.current.clearErrors([FIELD_ONE_ID, FIELD_THREE_ID]),
-				expectedErrors: [false, true, false],
-			},
-		])("should be able to $scenario", async ({ clearErrors, expectedErrors }) => {
+		it.each`
+			scenario                    | fieldErrorsToClear                | expectedErrors
+			${"clear all errors"}       | ${undefined}                      | ${[false, false, false]}
+			${"clear individual error"} | ${FIELD_ONE_ID}                   | ${[false, true, true]}
+			${"clear all errors"}       | ${[FIELD_ONE_ID, FIELD_THREE_ID]} | ${[false, true, false]}
+		`("should be able to $scenario", async ({ fieldErrorsToClear, expectedErrors }) => {
+			const clearErrors = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.clearErrors(fieldErrorsToClear);
+			};
 			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={clearErrors} />);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(getErrorMessage()).toBeInTheDocument();
@@ -1097,21 +1088,9 @@ describe("frontend-engine", () => {
 
 			await waitFor(() => fireEvent.click(getCustomButton()));
 
-			if (expectedErrors[0]) {
-				expect(getErrorMessage()).toBeInTheDocument();
-			} else {
-				expect(getErrorMessage(true)).not.toBeInTheDocument();
-			}
-			if (expectedErrors[1]) {
-				expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
-			} else {
-				expect(getErrorMessage(true, ERROR_MESSAGE_2)).not.toBeInTheDocument();
-			}
-			if (expectedErrors[2]) {
-				expect(getErrorMessage(false, ERROR_MESSAGE_3)).toBeInTheDocument();
-			} else {
-				expect(getErrorMessage(true, ERROR_MESSAGE_3)).not.toBeInTheDocument();
-			}
+			expect(!!getErrorMessage(true)).toBe(expectedErrors[0]);
+			expect(!!getErrorMessage(true, ERROR_MESSAGE_2)).toBe(expectedErrors[1]);
+			expect(!!getErrorMessage(true, ERROR_MESSAGE_3)).toBe(expectedErrors[2]);
 		});
 	});
 
