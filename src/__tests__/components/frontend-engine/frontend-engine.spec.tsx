@@ -1075,7 +1075,7 @@ describe("frontend-engine", () => {
 			scenario                    | fieldErrorsToClear                | expectedErrors
 			${"clear all errors"}       | ${undefined}                      | ${[false, false, false]}
 			${"clear individual error"} | ${FIELD_ONE_ID}                   | ${[false, true, true]}
-			${"clear all errors"}       | ${[FIELD_ONE_ID, FIELD_THREE_ID]} | ${[false, true, false]}
+			${"clear multiple errors"}  | ${[FIELD_ONE_ID, FIELD_THREE_ID]} | ${[false, true, false]}
 		`("should be able to $scenario", async ({ fieldErrorsToClear, expectedErrors }) => {
 			const clearErrors = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 				ref.current.clearErrors(fieldErrorsToClear);
