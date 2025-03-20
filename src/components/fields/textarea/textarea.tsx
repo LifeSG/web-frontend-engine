@@ -23,6 +23,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		schema: { className, chipTexts, chipPosition, rows = 1, resizable, label: _label, validation, ...otherSchema },
 		value,
 		warning,
+		onBlur,
 		...otherProps
 	} = props;
 	const { setValue } = useFormContext();
@@ -63,6 +64,10 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	const handleChipOnClick = (text: string) => () => {
+		if (textAreaRef.current) {
+			textAreaRef.current.focus();
+		}
+
 		const curLength = (stateValue as string)?.length || 0;
 		if (maxLength && curLength >= maxLength) {
 			return;
@@ -74,10 +79,13 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 				value: newValue,
 			},
 		});
+	};
 
-		if (textAreaRef.current) {
-			textAreaRef.current.focus();
+	const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+		if (event.relatedTarget?.closest(".chip-container")) {
+			return;
 		}
+		onBlur();
 	};
 
 	// =============================================================================
@@ -86,7 +94,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	const renderChips = () => {
 		return (
 			chipTexts?.length && (
-				<ChipContainer $chipPosition={chipPosition}>
+				<ChipContainer className="chip-container" $chipPosition={chipPosition}>
 					{chipTexts.map((text, index) => (
 						<Chip
 							key={text}
@@ -121,6 +129,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 						onChange={handleChange}
 						value={stateValue}
 						errorMessage={error?.message}
+						onBlur={handleBlur}
 					/>
 				</Wrapper>
 			</Form.CustomField>
