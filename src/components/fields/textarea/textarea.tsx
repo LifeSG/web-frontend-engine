@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { kebabCase } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { TestHelper } from "../../../utils";
@@ -23,12 +23,14 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		schema: { className, chipTexts, chipPosition, rows = 1, resizable, label: _label, validation, ...otherSchema },
 		value,
 		warning,
+		onBlur,
 		...otherProps
 	} = props;
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
 	const [maxLength, setMaxLength] = useState<number>();
 	const { setFieldValidationConfig } = useValidationConfig();
+	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
 	// =============================================================================
 	// EFFECTS
@@ -62,6 +64,10 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	const handleChipOnClick = (text: string) => () => {
+		if (textAreaRef.current) {
+			textAreaRef.current.focus();
+		}
+
 		const curLength = (stateValue as string)?.length || 0;
 		if (maxLength && curLength >= maxLength) {
 			return;
@@ -75,13 +81,20 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 		});
 	};
 
+	const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
+		if (event.relatedTarget?.closest(".chip-container")) {
+			return;
+		}
+		onBlur();
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderChips = () => {
 		return (
 			chipTexts?.length && (
-				<ChipContainer $chipPosition={chipPosition}>
+				<ChipContainer className="chip-container" $chipPosition={chipPosition}>
 					{chipTexts.map((text, index) => (
 						<Chip
 							key={text}
@@ -103,6 +116,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 				<Wrapper chipPosition={chipPosition}>
 					{renderChips()}
 					<StyledTextarea
+						ref={textAreaRef}
 						{...otherSchema}
 						{...otherProps}
 						id={id}
@@ -115,6 +129,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 						onChange={handleChange}
 						value={stateValue}
 						errorMessage={error?.message}
+						onBlur={handleBlur}
 					/>
 				</Wrapper>
 			</Form.CustomField>
