@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import cloneDeep from "lodash/cloneDeep";
-import isEmpty from "lodash/isEmpty";
 import { ReactElement, Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
@@ -11,7 +10,7 @@ import {
 	TYupSchemaType,
 	YupHelper,
 } from "../../context-providers";
-import { ObjectHelper, TNoInfer, TestHelper } from "../../utils";
+import { TNoInfer, TestHelper } from "../../utils";
 import {
 	useCustomComponents,
 	useFieldEvent,
@@ -66,7 +65,16 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		},
 	});
 	const { setFormSchema } = useFormSchema();
-	const { reset, handleSubmit: reactFormHookSubmit, getValues, setValue, setError, trigger, formState } = formMethods;
+	const {
+		reset,
+		handleSubmit: reactFormHookSubmit,
+		getValues,
+		setValue,
+		setError,
+		trigger,
+		formState,
+		clearErrors,
+	} = formMethods;
 	const { resetFields, setFields, getFormValues, registeredFields } = useFormValues(formMethods);
 	const registeredFieldsRef = useRef(registeredFields); // using ref ensures the latest values can be retrieved in setErrors and setWarnings
 	const { checkIsFormValid } = useFormChange(props, formMethods);
@@ -93,6 +101,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 			}
 		},
 		setErrors,
+		clearErrors,
 		setWarnings,
 		setValue,
 		submit: reactFormHookSubmit(handleSubmit, handleSubmitError),
