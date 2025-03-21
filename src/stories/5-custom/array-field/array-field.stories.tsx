@@ -141,7 +141,7 @@ const SCHEMA: Record<string, TFrontendEngineFieldSchema> = {
 const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 	grid: {
 		uiType: "grid",
-		style: { marginTop: 16, marginBottom: 16, border: "2px solid black", padding: 16 },
+		style: { marginTop: 16, marginBottom: 16 },
 		children: {
 			description: {
 				uiType: "text-body",
