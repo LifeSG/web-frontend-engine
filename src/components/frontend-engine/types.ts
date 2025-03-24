@@ -1,4 +1,4 @@
-import { UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
+import { UseFormClearErrors, UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
 import {
 	TAddFieldEventListener,
 	TCustomComponents,
@@ -142,6 +142,8 @@ export interface IFrontendEngineRef
 	reset: UseFormReset<TFrontendEngineValues>;
 	/** allows setting of custom errors */
 	setErrors: (errors: TErrorPayload) => void;
+	/** clear form errors */
+	clearErrors: UseFormClearErrors<TFrontendEngineValues>;
 	/** allows setting of custom warnings */
 	setWarnings: (warnings: TWarningPayload) => void;
 	/** sets field value by id */

@@ -145,7 +145,10 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 		children: {
 			description: {
 				uiType: "text-body",
-				children: "This array field has custom error apply for the first and the third element",
+				children: [
+					"This array field has custom error apply for the first and the third element.",
+					"Nested array in the first element has the custom error for the first and third entries.",
+				],
 				columns: { mobile: 4, tablet: 8, desktop: 12 },
 			},
 			name: {
@@ -154,37 +157,54 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 				columns: { mobile: 4, tablet: 8, desktop: 12 },
 				validation: [{ required: true }],
 			},
-			color: {
-				uiType: "select",
-				label: "Color",
-				options: [{ label: "Red", value: "Red" }],
+			email: {
+				uiType: "email-field",
+				label: "Email",
 				columns: { mobile: 4, tablet: 4, desktop: 6 },
 			},
-			testArray: {
-				referenceKey: "array-field",
-				sectionTitle: "Nested array",
+			uinfin: {
+				uiType: "masked-field",
+				label: "Uinfin",
+				columns: { mobile: 4, tablet: 4, desktop: 6 },
+			},
+			wrapper: {
+				uiType: "div",
+				style: {
+					padding: "1rem",
+					borderRadius: 4,
+					border: `1px solid #E0E4E5`,
+				},
 				columns: { mobile: 4, tablet: 8, desktop: 12 },
-				fieldSchema: {
-					grid: {
-						uiType: "grid",
-						style: { marginTop: 16, marginBottom: 16 },
-						children: {
-							name: {
-								uiType: "text-field",
-								label: "Name",
-								columns: { mobile: 4, tablet: 8, desktop: 12 },
-								validation: [{ required: true }],
-							},
-							color: {
-								uiType: "select",
-								label: "Color",
-								options: [{ label: "Red", value: "Red" }],
-								columns: { mobile: 4, tablet: 4, desktop: 6 },
+				children: {
+					testArray: {
+						referenceKey: "array-field",
+						sectionTitle: "Nested array",
+						columns: { mobile: 4, tablet: 8, desktop: 12 },
+						fieldSchema: {
+							grid: {
+								uiType: "grid",
+								children: {
+									childName: {
+										uiType: "text-field",
+										label: "Child name",
+										columns: { mobile: 4, tablet: 8, desktop: 12 },
+										validation: [{ required: true }],
+									},
+									childEmail: {
+										uiType: "email-field",
+										label: "Child email",
+										columns: { mobile: 4, tablet: 4, desktop: 6 },
+									},
+									childUinfin: {
+										uiType: "masked-field",
+										label: "Child uinfin",
+										columns: { mobile: 4, tablet: 4, desktop: 6 },
+									},
+								},
 							},
 						},
 					},
 				},
-				validation: [{ max: 1, min: 1 }],
 			},
 		},
 	},
@@ -323,12 +343,20 @@ const CustomErrorStory = <T,>(id: string, showSubmitButton = true) =>
 						fields: [
 							{
 								name: "Custom error",
-								color: "Custom error",
+								email: "Custom error",
+								uinfin: "Custom error",
 								testArray: {
 									fields: [
 										{
-											name: "Nested custom error",
-											color: "Nested custom error",
+											childName: "Custom error",
+											childEmail: "Custom error",
+											childUinfin: "Custom error",
+										},
+										undefined,
+										{
+											childName: "Custom error",
+											childEmail: "Custom error",
+											childUinfin: "Custom error",
 										},
 									],
 									errorMessage: "Nested array field error message",
@@ -337,12 +365,14 @@ const CustomErrorStory = <T,>(id: string, showSubmitButton = true) =>
 							undefined,
 							{
 								name: "Custom error",
-								color: "Custom error",
+								email: "Custom error",
+								uinfin: "Custom error",
 								testArray: {
 									fields: [
 										{
-											name: "Nested custom error",
-											color: "Nested custom error",
+											childName: "Custom error",
+											childEmail: "Custom error",
+											childUinfin: "Custom error",
 										},
 									],
 								},

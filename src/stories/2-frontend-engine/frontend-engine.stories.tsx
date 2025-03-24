@@ -710,6 +710,71 @@ SetCustomErrors.parameters = {
 	controls: { hideNoControlsWarning: true },
 };
 
+export const ClearErrors: StoryFn<IFrontendEngineProps> = () => {
+	const ref = useRef<IFrontendEngineRef>();
+	const handleTriggerError = () => {
+		try {
+			throw {
+				field1: "API error",
+				field2: "API error",
+				field3: "API error",
+			};
+		} catch (error) {
+			ref.current.setErrors(error);
+		}
+	};
+
+	return (
+		<>
+			<FrontendEngine
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								field1: {
+									label: "Field 1",
+									uiType: "text-field",
+								},
+								field2: {
+									label: "Field 2",
+									uiType: "text-field",
+								},
+								field3: {
+									label: "Field 3",
+									uiType: "text-field",
+								},
+								...SUBMIT_BUTTON_SCHEMA,
+							},
+						},
+					},
+					validationMode: "onSubmit",
+				}}
+				ref={ref}
+			/>
+			<br />
+			<Button.Default styleType="secondary" onClick={handleTriggerError}>
+				Trigger API error upon click
+			</Button.Default>
+			<br />
+			<Button.Default styleType="secondary" onClick={() => ref.current.clearErrors("field1")}>
+				Clear field 1 error
+			</Button.Default>
+			<br />
+			<Button.Default styleType="secondary" onClick={() => ref.current.clearErrors(["field1", "field2"])}>
+				Clear field 1 and field 2 errors
+			</Button.Default>
+			<br />
+			<Button.Default styleType="secondary" onClick={() => ref.current.clearErrors()}>
+				Clear all errors
+			</Button.Default>
+		</>
+	);
+};
+ClearErrors.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+
 export const SetWarnings: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 	const handleClick = () => {

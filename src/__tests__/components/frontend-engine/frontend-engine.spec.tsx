@@ -30,6 +30,9 @@ const FIELD_TWO_LABEL = "Field 2";
 const CUSTOM_BUTTON_LABEL = "Custom Button";
 const COMPONENT_TEST_ID = TestHelper.generateId(FRONTEND_ENGINE_ID, "frontend-engine");
 const ERROR_MESSAGE_2 = "error message 2";
+const FIELD_THREE_ID = "field3";
+const FIELD_THREE_LABEL = "Field 3";
+const ERROR_MESSAGE_3 = "error message 3";
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
@@ -85,6 +88,11 @@ const MULTI_FIELD_SCHEMA = merge(cloneDeep(JSON_SCHEMA), {
 					label: FIELD_TWO_LABEL,
 					uiType: UI_TYPE,
 					validation: [{ required: true, errorMessage: ERROR_MESSAGE_2 }],
+				},
+				[FIELD_THREE_ID]: {
+					label: FIELD_THREE_LABEL,
+					uiType: UI_TYPE,
+					validation: [{ required: true, errorMessage: ERROR_MESSAGE_3 }],
 				},
 			},
 		},
@@ -1059,6 +1067,30 @@ describe("frontend-engine", () => {
 
 				expect(getErrorMessage(true)).not.toBeInTheDocument();
 			});
+		});
+	});
+
+	describe("clearErrors", () => {
+		it.each`
+			scenario                    | fieldErrorsToClear                | expectedErrors
+			${"clear all errors"}       | ${undefined}                      | ${[false, false, false]}
+			${"clear individual error"} | ${FIELD_ONE_ID}                   | ${[false, true, true]}
+			${"clear multiple errors"}  | ${[FIELD_ONE_ID, FIELD_THREE_ID]} | ${[false, true, false]}
+		`("should be able to $scenario", async ({ fieldErrorsToClear, expectedErrors }) => {
+			const clearErrors = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.clearErrors(fieldErrorsToClear);
+			};
+			render(<FrontendEngineWithCustomButton data={MULTI_FIELD_SCHEMA} onClick={clearErrors} />);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			expect(getErrorMessage()).toBeInTheDocument();
+			expect(getErrorMessage(false, ERROR_MESSAGE_2)).toBeInTheDocument();
+			expect(getErrorMessage(false, ERROR_MESSAGE_3)).toBeInTheDocument();
+
+			await waitFor(() => fireEvent.click(getCustomButton()));
+
+			expect(!!getErrorMessage(true)).toBe(expectedErrors[0]);
+			expect(!!getErrorMessage(true, ERROR_MESSAGE_2)).toBe(expectedErrors[1]);
+			expect(!!getErrorMessage(true, ERROR_MESSAGE_3)).toBe(expectedErrors[2]);
 		});
 	});
 
