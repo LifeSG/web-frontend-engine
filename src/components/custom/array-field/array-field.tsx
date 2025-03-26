@@ -1,5 +1,5 @@
 import { Alert } from "@lifesg/react-design-system/alert";
-import { Text } from "@lifesg/react-design-system/text";
+import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import * as Icons from "@lifesg/react-icons";
 import { PlusCircleFillIcon } from "@lifesg/react-icons/plus-circle-fill";
 import isEmpty from "lodash/isEmpty";
@@ -216,7 +216,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 					<Fragment key={stateKeys[index]}>
 						<Inset $inset={sectionInset}>
 							<SectionHeader>
-								{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
+								{sectionTitle && <V2_Text.Body weight="bold">{sectionTitle}</V2_Text.Body>}
 								{showRemoveButton && (
 									<RemoveButton
 										type="button"

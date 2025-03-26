@@ -1,4 +1,4 @@
-import { Text } from "@lifesg/react-design-system/text";
+import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import { EyeIcon } from "@lifesg/react-icons/eye";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { TabletIcon } from "@lifesg/react-icons/tablet";
@@ -80,7 +80,7 @@ export const FormBuilderTool = () => {
 		if (formBuilderMode !== "preview") return;
 		return (
 			<ContentWrapper $flexbox={true}>
-				<Text.H2>Generate Form</Text.H2>
+				<V2_Text.H2>Generate Form</V2_Text.H2>
 				{formBuilderOutput && <FrontendEnginePreview data={formBuilderOutput.schema as IFrontendEngineData} />}
 			</ContentWrapper>
 		);

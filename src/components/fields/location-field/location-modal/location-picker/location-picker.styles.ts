@@ -1,6 +1,6 @@
 import { Card } from "@lifesg/react-design-system";
-import { Color } from "@lifesg/react-design-system/color";
-import { MediaQuery } from "@lifesg/react-design-system/media";
+import { V2_Color } from "@lifesg/react-design-system/v2_color";
+import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
 import styled from "styled-components";
 
 export const LocationPickerWrapper = styled.div`
@@ -29,7 +29,7 @@ export const LeafletWrapper = styled.div`
 			&.leaflet-bar {
 				border-radius: 1.25rem;
 				overflow: hidden;
-				box-shadow: 0 0.125rem 0.25rem ${Color.Neutral[1]}66;
+				box-shadow: 0 0.125rem 0.25rem ${V2_Color.Neutral[1]}66;
 			}
 
 			&.leaflet-bar a {
@@ -38,11 +38,11 @@ export const LeafletWrapper = styled.div`
 				justify-content: center;
 				width: 100%;
 				height: 50%;
-				color: ${Color.Primary};
+				color: ${V2_Color.Primary};
 				font-weight: bold;
 
 				&.leaflet-control-zoom-in {
-					border-bottom-color: ${Color.Neutral[5]};
+					border-bottom-color: ${V2_Color.Neutral[5]};
 				}
 			}
 		}
@@ -74,9 +74,9 @@ export const ButtonLocation = styled.button`
 	border: 0;
 	border-radius: 50%;
 	padding: 0;
-	background: ${Color.Neutral[8]};
+	background: ${V2_Color.Neutral[8]};
 	cursor: pointer;
-	box-shadow: 0 0.125rem 0.25rem ${Color.Neutral[1]}66;
+	box-shadow: 0 0.125rem 0.25rem ${V2_Color.Neutral[1]}66;
 `;
 
 export const ButtonLocationImage = styled.span`
@@ -86,7 +86,7 @@ export const ButtonLocationImage = styled.span`
 	> svg {
 		width: inherit;
 		height: inherit;
-		color: ${Color.Primary};
+		color: ${V2_Color.Primary};
 	}
 `;
 
@@ -96,7 +96,7 @@ export const BannerWrapper = styled.div`
 	width: 100%;
 	padding: 2rem 1.5rem;
 
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		padding: 1rem 1.25rem;
 	}
 `;

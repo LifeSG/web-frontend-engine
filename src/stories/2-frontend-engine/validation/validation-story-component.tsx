@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { Layout } from "@lifesg/react-design-system/layout";
-import { Text } from "@lifesg/react-design-system/text";
+import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
+import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import { action } from "@storybook/addon-actions";
 import highlightjs from "highlight.js";
 import json from "highlight.js/lib/languages/json";
@@ -131,10 +131,10 @@ export const ValidationStoryComponent = ({
 	// =============================================================================
 	return (
 		<Wrapper>
-			<Layout.Content type="grid">
-				<Layout.ColDiv desktopCols={12} tabletCols={8} mobileCols={4}>
+			<V2_Layout.Content type="grid">
+				<V2_Layout.ColDiv desktopCols={12} tabletCols={8} mobileCols={4}>
 					<Section>
-						<Text.H3>{ruleName}</Text.H3>
+						<V2_Text.H3>{ruleName}</V2_Text.H3>
 						<Sanitize>{ruleDescription}</Sanitize>
 						<pre>
 							<code ref={ruleSnippet} key={demoFieldType} className="json">
@@ -142,10 +142,10 @@ export const ValidationStoryComponent = ({
 							</code>
 						</pre>
 					</Section>
-				</Layout.ColDiv>
-				<Layout.ColDiv desktopCols={6} tabletCols={8}>
+				</V2_Layout.ColDiv>
+				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
 					<Section>
-						<Text.H5>Sample schema</Text.H5>
+						<V2_Text.H5>Sample schema</V2_Text.H5>
 						<div>
 							<Form.Select
 								options={fieldOptions}
@@ -164,10 +164,10 @@ export const ValidationStoryComponent = ({
 							</code>
 						</pre>
 					</Section>
-				</Layout.ColDiv>
-				<Layout.ColDiv desktopCols={6} tabletCols={8}>
+				</V2_Layout.ColDiv>
+				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
 					<Section>
-						<Text.H5>Preview</Text.H5>
+						<V2_Text.H5>Preview</V2_Text.H5>
 						<p>Submit form to preview validation</p>
 						<FrontendEngine
 							key={demoFieldType}
@@ -176,8 +176,8 @@ export const ValidationStoryComponent = ({
 							data={generateSchema() as IFrontendEngineData}
 						/>
 					</Section>
-				</Layout.ColDiv>
-			</Layout.Content>
+				</V2_Layout.ColDiv>
+			</V2_Layout.Content>
 		</Wrapper>
 	);
 };

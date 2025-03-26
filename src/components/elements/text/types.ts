@@ -1,4 +1,4 @@
-import { TextProps } from "@lifesg/react-design-system/text";
+import { V2_TextProps } from "@lifesg/react-design-system/v2_text";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseElementSchema, TInlineElementSchema } from "../types";
 
@@ -16,6 +16,6 @@ export type TTextType =
 	| "text-bodysmall"
 	| "text-xsmall";
 
-export interface ITextSchema extends IBaseElementSchema<TTextType>, TComponentOmitProps<TextProps, "children"> {
+export interface ITextSchema extends IBaseElementSchema<TTextType>, TComponentOmitProps<V2_TextProps, "children"> {
 	children: string | string[] | Record<string, ITextSchema | TInlineElementSchema>;
 }

@@ -1,4 +1,4 @@
-import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
+import { V2_MediaQuery, V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import styled from "styled-components";
 import { TPanelInputMode } from "../types";
@@ -25,13 +25,13 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		if (locationModalStyles) return `${locationModalStyles}`;
 	}}
 
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		flex-direction: column;
 		height: 90%;
 		max-height: 90%;
 	}
 
-	${MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		height: 100%;
 		width: 100%;
 		flex-direction: column;
@@ -44,7 +44,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 export const StyledLocationPicker = styled(LocationPicker)<ISinglePanelStyle>`
 	width: 48.89%;
 
-	${MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? "none" : "block")};
 		position: relative;
 		left: 0;
@@ -60,7 +60,7 @@ export const ErrorImage = styled.img`
 	width: 10.5rem;
 	height: 8rem;
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${V2_MediaQuery.MaxWidth.mobileL} {
 		margin-top: 2.5rem;
 	}
 `;

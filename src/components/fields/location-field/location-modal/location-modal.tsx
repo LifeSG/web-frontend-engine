@@ -1,4 +1,4 @@
-import { MediaWidths, Modal } from "@lifesg/react-design-system";
+import { V2_MediaWidths, Modal } from "@lifesg/react-design-system";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
@@ -277,7 +277,7 @@ const LocationModal = ({
 	useEffect(() => {
 		if (!window) return;
 
-		const mql = matchMedia(`(max-width: ${MediaWidths.tablet}px)`);
+		const mql = matchMedia(`(max-width: ${V2_MediaWidths.tablet}px)`);
 		setPanelInputMode(mql.matches ? "map" : "double");
 
 		const handleHasInternetConnectivity = () => setHasInternetConnectivity(true);

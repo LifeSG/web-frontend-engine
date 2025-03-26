@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
-import { Color } from "@lifesg/react-design-system/color";
+import { V2_Color } from "@lifesg/react-design-system/v2_color";
 import { Textarea } from "@lifesg/react-design-system/input-textarea";
 import { FrontendEngine } from "../../../common";
 
@@ -62,13 +62,13 @@ export const Toolbar = styled.div`
 	z-index: 1;
 	gap: 2rem;
 	padding: 1rem;
-	background-color: ${Color.Accent.Light[5]};
+	background-color: ${V2_Color.Accent.Light[5]};
 	box-sizing: border-box;
 `;
 
 export const ModeButton = styled.button<IModeButtonProps>`
-	background: ${({ $active }) => ($active ? Color.Accent.Light[4] : "transparent")};
-	color: ${Color.Primary};
+	background: ${({ $active }) => ($active ? V2_Color.Accent.Light[4] : "transparent")};
+	color: ${V2_Color.Primary};
 	display: grid;
 	cursor: pointer;
 	border: none;
@@ -77,11 +77,11 @@ export const ModeButton = styled.button<IModeButtonProps>`
 	align-self: center;
 
 	:hover {
-		background: ${Color.Accent.Light[4]};
+		background: ${V2_Color.Accent.Light[4]};
 	}
 
 	:focus {
-		outline-color: ${Color.Primary};
+		outline-color: ${V2_Color.Primary};
 	}
 
 	svg {
@@ -111,7 +111,7 @@ export const SchemaEditor = styled(Textarea)`
 	width: 100%;
 	overflow: auto;
 	padding: 1rem;
-	border: 1px solid ${Color.Neutral[5]};
+	border: 1px solid ${V2_Color.Neutral[5]};
 	border-radius: 4px;
 `;
 
