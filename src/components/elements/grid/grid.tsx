@@ -1,4 +1,4 @@
-import { Layout } from "@lifesg/react-design-system/layout";
+import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
 import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { IGenericCustomElementProps } from "../../custom";
@@ -26,7 +26,7 @@ export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 	);
 };
 
-const GridContainer = styled(Layout.Container)`
+const GridContainer = styled(V2_Layout.Container)`
 	padding: 0;
 	gap: 2rem;
 	&:not(:last-child) {

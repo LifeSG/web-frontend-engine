@@ -1,6 +1,6 @@
 import { BoxContainer } from "@lifesg/react-design-system/box-container";
 import { Button } from "@lifesg/react-design-system/button";
-import { Layout } from "@lifesg/react-design-system/layout";
+import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
 import { useFieldEvent } from "../../../utils/hooks";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
@@ -39,11 +39,11 @@ export const Accordion = (props: IGenericElementProps<IAccordionSchema>) => {
 			{disableContentInset ? (
 				<Wrapper id={id}>{children}</Wrapper>
 			) : (
-				<Layout.Content>
+				<V2_Layout.Content>
 					<Container>
 						<Wrapper id={id}>{children}</Wrapper>
 					</Container>
-				</Layout.Content>
+				</V2_Layout.Content>
 			)}
 		</BoxContainer>
 	);

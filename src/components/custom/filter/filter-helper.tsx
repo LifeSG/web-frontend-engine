@@ -1,4 +1,4 @@
-import { Color } from "@lifesg/react-design-system/color";
+import { V2_Color } from "@lifesg/react-design-system/v2_color";
 import { FormLabelAddonProps } from "@lifesg/react-design-system/form/types";
 import styled from "styled-components";
 import { Sanitize } from "../../shared";
@@ -32,6 +32,6 @@ export namespace FilterHelper {
 
 const StyledHint = styled(Sanitize)`
 	&.label-hint {
-		color: ${Color.Neutral[1]};
+		color: ${V2_Color.Neutral[1]};
 	}
 `;

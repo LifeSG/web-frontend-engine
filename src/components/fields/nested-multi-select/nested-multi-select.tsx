@@ -20,6 +20,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		value,
 		formattedLabel,
 		onChange,
+		onBlur,
 		error,
 		warning,
 		...otherProps
@@ -147,6 +148,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 				label={formattedLabel}
 				options={options as L1OptionProps<string, string, string>[]}
 				onSelectOptions={handleChange}
+				onBlur={onBlur}
 				selectedKeyPaths={keyPaths}
 				errorMessage={error?.message}
 			/>

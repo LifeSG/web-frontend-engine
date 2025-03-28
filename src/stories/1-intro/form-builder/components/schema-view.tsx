@@ -1,4 +1,4 @@
-import { Text } from "@lifesg/react-design-system/text";
+import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import { IFormBuilderMethods } from "@lifesg/web-form-builder";
 import { ISchemaProps } from "@lifesg/web-form-builder/translator";
 import { useEffect, useState } from "react";
@@ -97,7 +97,7 @@ export const SchemaView = ({ schema, onChange, formBuilderRef }: IProps) => {
 
 	return (
 		<>
-			<Text.H2>Generate Schema</Text.H2>
+			<V2_Text.H2>Generate Schema</V2_Text.H2>
 			{renderActionPanel()}
 			<SchemaEditorWrapper>
 				<SchemaEditor value={stringifiedSchema} onChange={handleSchemaChange} />

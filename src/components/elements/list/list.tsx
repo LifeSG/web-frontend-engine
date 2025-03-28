@@ -1,4 +1,4 @@
-import { TextList as DSTextList } from "@lifesg/react-design-system/text-list";
+import { V2_TextList as DSTextList } from "@lifesg/react-design-system/v2_text-list";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";

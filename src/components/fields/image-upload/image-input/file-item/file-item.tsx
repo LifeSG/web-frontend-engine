@@ -1,4 +1,4 @@
-import { Text } from "@lifesg/react-design-system/text";
+import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
@@ -215,12 +215,12 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 			<>
 				<CellInfo>{renderCellInfoDetails()}</CellInfo>
 				<CellFileSize>
-					<Text.Body
+					<V2_Text.Body
 						id={TestHelper.generateId(`${id}-${index + 1}`, "file-size")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-size")}
 					>
 						{fileSize}
-					</Text.Body>
+					</V2_Text.Body>
 				</CellFileSize>
 				{renderDetails()}
 			</>

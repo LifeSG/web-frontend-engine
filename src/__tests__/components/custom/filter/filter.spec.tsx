@@ -63,7 +63,8 @@ describe(REFERENCE_KEY, () => {
 
 		it("should be able to render child filter items and child fields", async () => {
 			renderComponent();
-			await waitFor(() => expect(screen.getByRole("heading", { name: "Filters" })).toBeInTheDocument());
+			await waitFor(() => expect(screen.getByText("Filters")).toBeInTheDocument());
+			expect(screen.getByLabelText(TEXTFIELD_LABEL)).toBeInTheDocument();
 		});
 
 		it("should clear form when when clicked on clear button", async () => {

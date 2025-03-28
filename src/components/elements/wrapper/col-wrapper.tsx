@@ -1,4 +1,4 @@
-import { Layout } from "@lifesg/react-design-system/layout";
+import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
 import React from "react";
 import { TestHelper } from "../../../utils";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
@@ -15,7 +15,7 @@ export const ColWrapper = ({ id, children, childSchema }: IProps) => {
 	if ("columns" in childSchema) {
 		const { desktop, tablet, mobile, ...rest } = childSchema.columns || {};
 		return (
-			<Layout.ColDiv
+			<V2_Layout.ColDiv
 				data-testid={TestHelper.generateId(id, "grid_item")}
 				desktopCols={desktop ?? 12}
 				tabletCols={tablet}
@@ -23,7 +23,7 @@ export const ColWrapper = ({ id, children, childSchema }: IProps) => {
 				{...rest}
 			>
 				{children}
-			</Layout.ColDiv>
+			</V2_Layout.ColDiv>
 		);
 	}
 	return <>{children}</>;

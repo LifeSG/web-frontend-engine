@@ -289,14 +289,6 @@ Searchable.args = {
 	enableSearch: true,
 };
 
-export const CustomWidth = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-custom-width").bind({});
-CustomWidth.args = {
-	uiType: "nested-multi-select",
-	label: "Fruits",
-	options: options,
-	listStyleWidth: "22rem",
-};
-
 export const Placeholder = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-placeholder").bind({});
 Placeholder.args = {
 	uiType: "nested-multi-select",

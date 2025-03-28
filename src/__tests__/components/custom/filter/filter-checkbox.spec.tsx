@@ -52,8 +52,8 @@ const renderComponent = (overrideField?: TOverrideField<IFilterCheckboxSchema>, 
 const getCheckboxes = (): HTMLElement[] => {
 	return screen
 		.getAllByRole("checkbox")
-		.filter((el) => el.getAttribute("data-testid") !== "toggle-label")
-		.filter(Boolean);
+		.filter((el) => el.getAttribute("data-testid") === "checkbox")
+		.map((el) => el.closest("label"));
 };
 
 const getCheckboxByVal = (val: string) => {

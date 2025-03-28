@@ -36,7 +36,6 @@ export type TNestedMultiSelectProps = Pick<
 	| "disabled"
 	| "enableSearch"
 	| "hideNoResultsDisplay"
-	| "listStyleWidth"
 	| "mode"
 	| "optionTruncationType"
 	| "placeholder"
