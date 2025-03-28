@@ -99,23 +99,25 @@ export const FormBuilderTool = () => {
 		);
 	};
 
-	return (
-		<Unstyled>
-			<Wrapper>
-				{renderToolbar()}
-				<ContentWrapper $hidden={formBuilderMode !== "form-builder"}>
-					<FormBuilder
-						ref={formBuilderRef}
-						offset={5.1}
-						config={{
-							attributes: { prefill: { shouldShow: false } },
-							panels: { pages: { shouldShow: false } },
-						}}
-					/>
-				</ContentWrapper>
-				{renderPreview()}
-				{renderSchemaPreview()}
-			</Wrapper>
-		</Unstyled>
-	);
+	return <></>;
+
+	// return (
+	// 	<Unstyled>
+	// 		<Wrapper>
+	// 			{renderToolbar()}
+	// 			<ContentWrapper $hidden={formBuilderMode !== "form-builder"}>
+	// 				<FormBuilder
+	// 					ref={formBuilderRef}
+	// 					offset={5.1}
+	// 					config={{
+	// 						attributes: { prefill: { shouldShow: false } },
+	// 						panels: { pages: { shouldShow: false } },
+	// 					}}
+	// 				/>
+	// 			</ContentWrapper>
+	// 			{renderPreview()}
+	// 			{renderSchemaPreview()}
+	// 		</Wrapper>
+	// 	</Unstyled>
+	// );
 };
