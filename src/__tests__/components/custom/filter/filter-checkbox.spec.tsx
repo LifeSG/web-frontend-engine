@@ -81,7 +81,7 @@ describe(REFERENCE_KEY, () => {
 			const checkBox = getCheckboxByVal(val);
 			expect(checkBox.checked).toBeTruthy();
 		});
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
 	it("should be able to render hint", () => {
@@ -103,15 +103,15 @@ describe(REFERENCE_KEY, () => {
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
 	it("should support default values matching initial overrides", async () => {
@@ -191,13 +191,15 @@ describe(REFERENCE_KEY, () => {
 
 				selected.forEach((value) => fireEvent.click(getCheckboxByVal(value)));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
+				);
 			}
 		);
 	});
@@ -218,11 +220,11 @@ describe(REFERENCE_KEY, () => {
 			const checkboxes = getCheckboxes();
 			await waitFor(() => fireEvent.click(checkboxes[1]));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: changedValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: changedValue }));
 
 			fireEvent.click(screen.getByRole("button", { name: "Clear" }));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValue }));
 		});
 	});
 
