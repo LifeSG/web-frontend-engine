@@ -1,7 +1,7 @@
-import { Color } from "@lifesg/react-design-system/color";
+import { V2_Color } from "@lifesg/react-design-system/v2_color";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
-import { MediaQuery } from "@lifesg/react-design-system/media";
-import { Text } from "@lifesg/react-design-system/text";
+import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
+import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import styled from "styled-components";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
@@ -10,13 +10,15 @@ export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }
 	align-items: center;
 	gap: 0.5rem;
 	border: ${(props) =>
-		props.isError ? `1px solid ${Color.Validation.Red.Border(props)}` : `1px solid ${Color.Neutral[5](props)}`};
+		props.isError
+			? `1px solid ${V2_Color.Validation.Red.Border(props)}`
+			: `1px solid ${V2_Color.Neutral[5](props)}`};
 	border-radius: 4px;
-	background-color: ${(props) => (props.isError ? "rgb(253, 247, 247)" : `${Color.Accent.Light[6](props)}`)};
+	background-color: ${(props) => (props.isError ? "rgb(253, 247, 247)" : `${V2_Color.Accent.Light[6](props)}`)};
 	min-height: 3.5rem;
 	margin-bottom: 1rem;
 	padding: 1rem 2rem;
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		padding: 1rem;
 	}
 `;
@@ -31,7 +33,7 @@ export const CellInfo = styled.div`
 export const CellFileSize = styled.div`
 	width: 4.24rem;
 
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		display: none;
 	}
 `;
@@ -41,7 +43,7 @@ export const CellProgressBar = styled.div`
 	justify-content: flex-end;
 	width: 19.15%;
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${V2_MediaQuery.MaxWidth.mobileL} {
 		width: 100%;
 	}
 `;
@@ -60,12 +62,12 @@ export const Thumbnail = styled.div<{ src: string }>`
 	overflow: hidden;
 	border-radius: 0.25rem;
 
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		margin-right: 1rem;
 	}
 `;
 
-export const TextBody = styled(Text.Body)`
+export const TextBody = styled(V2_Text.Body)`
 	flex: 1;
 `;
 
@@ -75,14 +77,14 @@ export const FileNameWrapper = styled.div`
 
 export const MobileTextBodyDetail = styled.div`
 	display: none;
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		display: block;
 	}
 `;
 
 export const DesktopTextBodyDetail = styled.div`
 	display: block;
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		display: none;
 	}
 `;
@@ -92,7 +94,7 @@ export const ProgressBar = styled.progress`
 	flex: 1;
 	height: 0.63rem;
 
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		max-width: none;
 	}
 
@@ -112,12 +114,12 @@ export const ProgressBar = styled.progress`
 	&[value]::-webkit-progress-value {
 		height: 100%;
 		border-radius: 1.25rem;
-		background-color: ${Color.Accent.Light[1]};
+		background-color: ${V2_Color.Accent.Light[1]};
 	}
 `;
 
-export const ErrorText = styled(Text.H6)`
-	color: ${Color.Validation.Red.Text};
+export const ErrorText = styled(V2_Text.H6)`
+	color: ${V2_Color.Validation.Red.Text};
 	width: 100%;
 `;
 
@@ -126,7 +128,7 @@ export const DeleteButton = styled(IconButton)`
 	// additional 0.5 negative marginRight because the image itself has padding already
 	background-color: transparent;
 	outline-style: none;
-	color: ${Color.Neutral[3]};
+	color: ${V2_Color.Neutral[3]};
 
 	svg {
 		height: 1.875rem;

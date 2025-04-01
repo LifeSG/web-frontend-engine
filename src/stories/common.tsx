@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
+import { V2_MediaQuery, V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { action } from "@storybook/addon-actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef, useRef } from "react";
@@ -185,31 +185,31 @@ const SIDEBAR_WIDTH = 210;
 const SPACER = 550;
 
 const StyledForm = styled(OriginalFrontendEngine)`
-	width: calc(${MediaWidths.desktopL}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+	width: calc(${V2_MediaWidths.desktopL}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	max-width: 820px;
 
-	${MediaQuery.MaxWidth.desktopM} {
+	${V2_MediaQuery.MaxWidth.desktopM} {
 		min-width: 500px;
-		width: calc(${MediaWidths.desktopM}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+		width: calc(${V2_MediaWidths.desktopM}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		min-width: 400px;
-		width: calc(${MediaWidths.tablet}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+		width: calc(${V2_MediaWidths.tablet}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${V2_MediaQuery.MaxWidth.mobileL} {
 		min-width: 350px;
-		width: calc(${MediaWidths.mobileL}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
+		width: calc(${V2_MediaWidths.mobileL}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
 	}
 
-	${MediaQuery.MaxWidth.mobileM} {
+	${V2_MediaQuery.MaxWidth.mobileM} {
 		min-width: 0;
-		width: calc(${MediaWidths.mobileM}px - ${MINIMUM_SIDE_PADDING}px);
+		width: calc(${V2_MediaWidths.mobileM}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 
-	${MediaQuery.MaxWidth.mobileS} {
-		width: calc(${MediaWidths.mobileS}px - ${MINIMUM_SIDE_PADDING}px);
+	${V2_MediaQuery.MaxWidth.mobileS} {
+		width: calc(${V2_MediaWidths.mobileS}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 `;
 

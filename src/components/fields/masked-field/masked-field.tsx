@@ -24,7 +24,7 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		...otherProps
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string | number>(value || "");
+	const [stateValue, setStateValue] = useState<string>(value || "");
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 

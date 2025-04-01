@@ -1,4 +1,4 @@
-import { MediaWidths } from "@lifesg/react-design-system/media";
+import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { useEffect, useRef, useState } from "react";
 import { IColor } from "../../../services/onemap/types";
 import { TestHelper } from "../../../utils";
@@ -55,7 +55,7 @@ export const StaticMap = ({
 
 	const reloadImage = () => {
 		if (!lat || !lng) return;
-		const newIsMobile = window.matchMedia(`(max-width: ${MediaWidths.mobileL}px)`).matches;
+		const newIsMobile = window.matchMedia(`(max-width: ${V2_MediaWidths.mobileL}px)`).matches;
 		if (
 			isMobile.current !== newIsMobile ||
 			renderedCenter.current[0] !== lat ||

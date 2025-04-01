@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Button } from "@lifesg/react-design-system/button";
-import { Color } from "@lifesg/react-design-system/color";
-import { MediaWidths } from "@lifesg/react-design-system/media";
+import { V2_Color } from "@lifesg/react-design-system/v2_color";
+import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 
 export const Wrapper = styled.div`
 	position: absolute;
@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
 	padding: 2.5rem;
 	text-align: center;
 
-	@media (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	@media (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		flex-direction: row;
 	}
 `;
@@ -28,7 +28,7 @@ export const ErrorIcon = styled.img`
 	height: auto;
 	margin-bottom: 2rem;
 
-	@media (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	@media (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		margin: 0 2rem 0 0;
 	}
 `;
@@ -41,7 +41,7 @@ export const Content = styled.div`
 `;
 
 export const BodyText = styled.div`
-	color: ${Color.Neutral[8]};
+	color: ${V2_Color.Neutral[8]};
 	word-break: break-word;
 `;
 
@@ -55,7 +55,7 @@ export const OkButton = styled(Button.Default)`
 	max-width: 16rem;
 	margin-top: 2rem;
 
-	@media (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	@media (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		margin-top: 0.5rem;
 	}
 `;

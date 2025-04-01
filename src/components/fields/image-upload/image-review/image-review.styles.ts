@@ -1,9 +1,9 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { Color } from "@lifesg/react-design-system/color";
+import { V2_Color } from "@lifesg/react-design-system/v2_color";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
-import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
+import { V2_MediaQuery, V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { Modal } from "@lifesg/react-design-system/modal";
-import { Text } from "@lifesg/react-design-system/text";
+import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import { BinIcon } from "@lifesg/react-icons/bin";
 import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
@@ -22,15 +22,15 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		if (imageReviewModalStyles) return `${imageReviewModalStyles}`;
 	}}
 
-	${MediaQuery.MinWidth.tablet} {
+	${V2_MediaQuery.MinWidth.tablet} {
 		max-width: 42rem;
 		width: 100%;
 	}
-	${MediaQuery.MaxWidth.tablet} {
+	${V2_MediaQuery.MaxWidth.tablet} {
 		margin: 0 1.25rem;
 	}
 
-	${MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -63,17 +63,17 @@ export const ReviewCloseButton = styled(IconButton)`
 	outline-style: none;
 	> svg {
 		font-size: 2rem;
-		color: ${Color.Primary};
+		color: ${V2_Color.Primary};
 	}
 
-	${MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		height: 2.25rem;
 	}
 `;
 
-export const ReviewTitle = styled(Text.H5)`
+export const ReviewTitle = styled(V2_Text.H5)`
 	font-weight: 600;
-	color: ${Color.Primary};
+	color: ${V2_Color.Primary};
 	margin: 0 auto;
 `;
 
@@ -88,7 +88,7 @@ const ButtonBase = css`
 export const EditHeaderButton = styled.button`
 	${ButtonBase}
 	display: flex;
-	color: ${Color.Primary};
+	color: ${V2_Color.Primary};
 	font-size: 1rem;
 	padding: 0 1.5rem;
 	font-weight: 600;
@@ -105,12 +105,12 @@ export const ContentSection = styled.div`
 	background-color: black;
 	overflow: hidden;
 	height: 31.25rem;
-	${MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		height: 100%;
 	}
 `;
 
-export const LoadingPreviewText = styled(Text.H4)`
+export const LoadingPreviewText = styled(V2_Text.H4)`
 	color: white;
 `;
 
@@ -122,7 +122,7 @@ export const DrawDeleteButtonWrapper = styled.div`
 	flex-direction: column;
 	justify-content: flex-end;
 
-	${MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		right: 1.25rem;
 	}
 `;
@@ -132,7 +132,7 @@ export const DrawDeleteButton = styled(IconButton)`
 	width: 5.4375rem;
 	height: 2.5rem;
 	background-color: white;
-	box-shadow: 0 0.125rem 0.25rem ${Color.Neutral[3]}80;
+	box-shadow: 0 0.125rem 0.25rem ${V2_Color.Neutral[3]}80;
 	border-radius: 1.25rem;
 
 	&:first-child {
@@ -146,26 +146,26 @@ export const DrawDeleteButton = styled(IconButton)`
 
 	&:hover,
 	&:disabled {
-		background-color: ${Color.Neutral[6]};
+		background-color: ${V2_Color.Neutral[6]};
 	}
 
 	&:selected {
-		background-color: ${Color.Accent.Light[5]};
+		background-color: ${V2_Color.Accent.Light[5]};
 	}
 `;
 
-export const DrawDeleteButtonText = styled(Text.H6)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Color.Neutral[3] : Color.Primary)};
+export const DrawDeleteButtonText = styled(V2_Text.H6)<{ $disabled: boolean }>`
+	color: ${(props) => (props.$disabled ? V2_Color.Neutral[3] : V2_Color.Primary)};
 	line-height: 1.75rem;
 `;
 
 export const DrawIcon = styled(PencilStrokeIcon)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Color.Neutral[3] : Color.Primary)};
+	color: ${(props) => (props.$disabled ? V2_Color.Neutral[3] : V2_Color.Primary)};
 	margin-right: 0.25rem;
 `;
 
 export const DeleteIcon = styled(BinIcon)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Color.Neutral[3] : Color.Primary)};
+	color: ${(props) => (props.$disabled ? V2_Color.Neutral[3] : V2_Color.Primary)};
 `;
 
 export const ImageEditorWrapper = styled.div`
@@ -185,7 +185,7 @@ export const FooterSection = styled.div`
 	align-items: center;
 	margin: 1rem 1.5rem 1rem 1.5rem;
 
-	${MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		margin: 0 1.25rem;
 		height: 6.5rem;
 		max-height: 6.5rem;
@@ -205,7 +205,7 @@ export const EraserButton = styled.button`
 	width: 3rem;
 	height: 3rem;
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${V2_MediaQuery.MaxWidth.mobileL} {
 		width: 2.5rem;
 		height: 2.5rem;
 	}
@@ -215,11 +215,11 @@ export const EraserButtonIcon = styled(EraserIcon)<{ $eraseMode: boolean }>`
 	display: block;
 	width: 100%;
 	height: 100%;
-	color: ${(props) => (props.$eraseMode ? Color.Primary : Color.Neutral[3])};
+	color: ${(props) => (props.$eraseMode ? V2_Color.Primary : V2_Color.Neutral[3])};
 `;
 
 export const ButtonIcon = styled(PencilIcon)<{ $colorScheme: string }>`
-	color: ${(props) => (props.$colorScheme === "light" ? Color.Neutral[3] : Color.Neutral[8])};
+	color: ${(props) => (props.$colorScheme === "light" ? V2_Color.Neutral[3] : V2_Color.Neutral[8])};
 	width: 100%;
 	height: 100%;
 `;
@@ -239,7 +239,7 @@ export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
 	border: solid 1px ${({ $color, $colorScheme }) => ($colorScheme === "light" ? "#979797" : $color)};
 	cursor: pointer;
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${V2_MediaQuery.MaxWidth.mobileL} {
 		width: 2.5rem;
 		height: 2.5rem;
 		margin-left: 0.25rem;

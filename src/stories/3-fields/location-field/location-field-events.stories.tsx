@@ -1,4 +1,4 @@
-import { Text } from "@lifesg/react-design-system";
+import { V2_Text } from "@lifesg/react-design-system";
 import { action } from "@storybook/addon-actions";
 import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
@@ -339,14 +339,14 @@ const ErrorEventsTemplate = () =>
 				<>
 					<br />
 					<br />
-					Alternatively, you can call the&nbsp;
-					<Text.Body inline weight="semibold">
+					Alternatively, you can call the
+					<V2_Text.Body inline weight="semibold">
 						{name} hotline&nbsp;
-					</Text.Body>
-					at&nbsp;
-					<Text.Hyperlink.Default weight="semibold" href={`tel:${number}`}>
+					</V2_Text.Body>
+					at
+					<V2_Text.Hyperlink.Default weight="semibold" href={`tel:${number}`}>
 						{number}
-					</Text.Hyperlink.Default>
+					</V2_Text.Hyperlink.Default>
 					.
 				</>
 			);
@@ -431,13 +431,13 @@ const ErrorEventsTemplate = () =>
 								<br />
 								<br />
 								Alternatively, you can call the&nbsp;
-								<Text.Body inline weight="semibold">
+								<V2_Text.Body inline weight="semibold">
 									{hotlineContent.name} hotline&nbsp;
-								</Text.Body>
+								</V2_Text.Body>
 								at&nbsp;
-								<Text.Hyperlink.Default weight="semibold" href={`tel:${hotlineContent.number}`}>
+								<V2_Text.Hyperlink.Default weight="semibold" href={`tel:${hotlineContent.number}`}>
 									{hotlineContent.number}
-								</Text.Hyperlink.Default>
+								</V2_Text.Hyperlink.Default>
 								.
 							</Description>
 						}
