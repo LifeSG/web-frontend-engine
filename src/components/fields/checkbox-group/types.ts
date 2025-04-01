@@ -40,8 +40,3 @@ interface ICheckboxGroupToggleSchema<V = undefined, C = undefined>
 export type TCheckboxGroupSchema<V = undefined, C = undefined> =
 	| ICheckboxGroupDefaultSchema<V>
 	| ICheckboxGroupToggleSchema<V, C>;
-
-/** @deprecated will be removed in a future release. Use `TCheckboxGroupSchema` instead */
-export type ICheckboxGroupSchema<V = undefined, C = undefined> =
-	| ICheckboxGroupDefaultSchema<V>
-	| ICheckboxGroupToggleSchema<V, C>;

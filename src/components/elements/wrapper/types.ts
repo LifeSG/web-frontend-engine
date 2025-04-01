@@ -11,9 +11,6 @@ export type TInlineWrapperType = "span";
 
 export type TWrapperSchema<V = undefined, C = undefined> = IBlockWrapperSchema<V, C> | IInlineWrapperSchema;
 
-/** @deprecated use `TWrapperSchema` */
-export type IWrapperSchema<V = undefined, C = undefined> = IBlockWrapperSchema<V, C> | IInlineWrapperSchema;
-
 export interface IBlockWrapperSchema<V = undefined, C = undefined>
 	extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
 	uiType: TBlockWrapperType;
