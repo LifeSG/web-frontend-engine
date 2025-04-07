@@ -1,5 +1,5 @@
 import { IconButton } from "@lifesg/react-design-system/icon-button";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 import { Colour, MediaQuery } from "@lifesg/react-design-system";
 
@@ -64,7 +64,7 @@ export const Thumbnail = styled.div<{ src: string }>`
 	}
 `;
 
-export const TextBody = styled(V2_Text.Body)`
+export const TextBody = styled(Typography.BodyBL)`
 	flex: 1;
 `;
 
@@ -115,7 +115,7 @@ export const ProgressBar = styled.progress`
 	}
 `;
 
-export const ErrorText = styled(V2_Text.H6)`
+export const ErrorText = styled(Typography.BodySM)`
 	color: ${Colour["text-error"]};
 	width: 100%;
 `;

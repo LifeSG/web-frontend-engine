@@ -1,6 +1,6 @@
 import { ImageButton } from "@lifesg/react-design-system/image-button";
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import styled from "styled-components";
 import { TRadioToggleLayoutType } from "./types";
@@ -13,7 +13,7 @@ interface IToggleWrapperProps {
 	$layoutType?: TRadioToggleLayoutType;
 }
 
-export const Label = styled(V2_Text.BodySmall)<ILabelProps>`
+export const Label = styled(Typography.BodyMD)<ILabelProps>`
 	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 

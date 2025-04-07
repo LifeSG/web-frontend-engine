@@ -1,5 +1,5 @@
 import { Colour, MediaQuery } from "@lifesg/react-design-system";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
@@ -36,6 +36,6 @@ export const HintContainer = styled.div`
 	text-align: center;
 `;
 
-export const HintText = styled(V2_Text.BodySmall)`
+export const HintText = styled(Typography.BodyMD)`
 	color: ${Colour["text-primary"]};
 `;

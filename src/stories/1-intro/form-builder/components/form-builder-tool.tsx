@@ -1,4 +1,4 @@
-// import { V2_Text } from "@lifesg/react-design-system/v2_text";
+// import { Typography } from "@lifesg/react-design-system/typography";
 // import { EyeIcon } from "@lifesg/react-icons/eye";
 // import { PencilIcon } from "@lifesg/react-icons/pencil";
 // import { TabletIcon } from "@lifesg/react-icons/tablet";
@@ -74,15 +74,17 @@ export const FormBuilderTool = () => {
 	// 		</ModeButton>
 	// 	</Toolbar>
 	// );
+
 	// const renderPreview = () => {
 	// 	if (formBuilderMode !== "preview") return;
 	// 	return (
 	// 		<ContentWrapper $flexbox={true}>
-	// 			<V2_Text.H2>Generate Form</V2_Text.H2>
+	// 			<Typography.HeadingMD>Generate Form</Typography.HeadingMD>
 	// 			{formBuilderOutput && <FrontendEnginePreview data={formBuilderOutput.schema as IFrontendEngineData} />}
 	// 		</ContentWrapper>
 	// 	);
 	// };
+
 	// const renderSchemaPreview = () => {
 	// 	if (formBuilderMode !== "schema") return;
 	// 	return (
@@ -95,6 +97,7 @@ export const FormBuilderTool = () => {
 	// 		</ContentWrapper>
 	// 	);
 	// };
+	//
 	// return (
 	// 	<Unstyled>
 	// 		<Wrapper>

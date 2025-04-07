@@ -1,6 +1,6 @@
-import { Colour } from "@lifesg/react-design-system";
+import { Colour, V2_TextStyleHelper } from "@lifesg/react-design-system";
 import { Alert } from "@lifesg/react-design-system/alert";
-import { V2_Text, V2_TextStyleHelper } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 export const ESignatureWrapper = styled.div`
@@ -9,7 +9,7 @@ export const ESignatureWrapper = styled.div`
 	}
 `;
 
-export const ErrorWrapper = styled(V2_Text.H6)`
+export const ErrorWrapper = styled(Typography.BodySM)`
 	margin: -1rem 0 2rem;
 	color: ${Colour["text-error"]};
 	outline: none;

@@ -2,7 +2,7 @@ import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { Modal } from "@lifesg/react-design-system/modal";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { BinIcon } from "@lifesg/react-icons/bin";
 import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
@@ -71,7 +71,7 @@ export const ReviewCloseButton = styled(IconButton)`
 	}
 `;
 
-export const ReviewTitle = styled(V2_Text.H5)`
+export const ReviewTitle = styled(Typography.BodyMD)`
 	font-weight: 600;
 	color: ${Colour["text-primary"]};
 	margin: 0 auto;
@@ -110,7 +110,7 @@ export const ContentSection = styled.div`
 	}
 `;
 
-export const LoadingPreviewText = styled(V2_Text.H4)`
+export const LoadingPreviewText = styled(Typography.HeadingXS)`
 	color: white;
 `;
 
@@ -154,7 +154,7 @@ export const DrawDeleteButton = styled(IconButton)`
 	}
 `;
 
-export const DrawDeleteButtonText = styled(V2_Text.H6)<{ $disabled: boolean }>`
+export const DrawDeleteButtonText = styled(Typography.BodySM)<{ $disabled: boolean }>`
 	color: ${(props) => (props.$disabled ? Colour["text-subtler"] : Colour["text-primary"])};
 	line-height: 1.75rem;
 `;

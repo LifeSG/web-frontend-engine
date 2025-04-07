@@ -1,4 +1,4 @@
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
@@ -111,13 +111,13 @@ export const ImageError = (props: IProps) => {
 			<ErrorIcon src={WARNING_ICON} alt={errorTitle} />
 			<Content>
 				<BodyText
-					as={V2_Text.H4}
+					as={Typography.HeadingXS}
 					id={TestHelper.generateId(id, "title")}
 					data-testid={TestHelper.generateId(id, "title")}
 				>
 					{errorTitle}
 				</BodyText>
-				<BodyText as={V2_Text.Body} ref={errorDescriptionRef}>
+				<BodyText as={Typography.BodyBL} ref={errorDescriptionRef}>
 					{errorDescription}
 				</BodyText>
 				<OkButton

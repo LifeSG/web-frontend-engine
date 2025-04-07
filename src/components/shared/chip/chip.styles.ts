@@ -1,5 +1,5 @@
 import { Colour } from "@lifesg/react-design-system/theme";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled, { css } from "styled-components";
 import { IChipButtonProps } from "./types";
 
@@ -37,4 +37,4 @@ export const ChipButton = styled.button<IChipButtonProps>`
 	}}
 `;
 
-export const ChipText = styled(V2_Text.XSmall)``;
+export const ChipText = styled(Typography.BodyXS)``;

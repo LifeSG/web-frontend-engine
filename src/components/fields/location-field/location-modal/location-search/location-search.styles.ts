@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button, Colour, MediaQuery, V2_MediaWidths, V2_Text } from "@lifesg/react-design-system";
+import { Button, Colour, MediaQuery, Typography, V2_MediaWidths } from "@lifesg/react-design-system";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
@@ -112,12 +112,12 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	}
 `;
 
-export const ResultTitle = styled(V2_Text.H5)`
+export const ResultTitle = styled(Typography.BodyMD)`
 	border-bottom: 1px solid ${Colour.border};
 	padding: 1rem 0;
 `;
 
-export const NoResultTitle = styled(V2_Text.BodySmall)`
+export const NoResultTitle = styled(Typography.BodyMD)`
 	padding-top: 1rem;
 	color: ${Colour["text-subtlest"]};
 	word-break: break-all;

@@ -1,6 +1,6 @@
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 import { TCheckboxToggleLayoutType } from "./types";
 
@@ -12,7 +12,7 @@ interface IToggleWrapperProps {
 	$layoutType?: TCheckboxToggleLayoutType;
 }
 
-export const Label = styled(V2_Text.BodySmall)<ILabelProps>`
+export const Label = styled(Typography.BodyMD)<ILabelProps>`
 	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 

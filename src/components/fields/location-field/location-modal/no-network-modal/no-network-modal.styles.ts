@@ -1,6 +1,6 @@
 import { MediaQuery } from "@lifesg/react-design-system";
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -20,7 +20,7 @@ export const Image = styled.img`
 	}
 `;
 
-export const ContentTitle = styled(V2_Text.Body)`
+export const ContentTitle = styled(Typography.BodyBL)`
 	text-align: center;
 	margin: 1.5rem auto 0.5rem;
 
@@ -29,7 +29,7 @@ export const ContentTitle = styled(V2_Text.Body)`
 	}
 `;
 
-export const ContentBody = styled(V2_Text.Body)`
+export const ContentBody = styled(Typography.BodyBL)`
 	text-align: center;
 	width: 100%;
 

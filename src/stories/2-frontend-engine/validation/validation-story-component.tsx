@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { action } from "@storybook/addon-actions";
 import highlightjs from "highlight.js";
 import json from "highlight.js/lib/languages/json";
@@ -134,7 +134,7 @@ export const ValidationStoryComponent = ({
 			<V2_Layout.Content type="grid">
 				<V2_Layout.ColDiv desktopCols={12} tabletCols={8} mobileCols={4}>
 					<Section>
-						<V2_Text.H3>{ruleName}</V2_Text.H3>
+						<Typography.HeadingSM>{ruleName}</Typography.HeadingSM>
 						<Sanitize>{ruleDescription}</Sanitize>
 						<pre>
 							<code ref={ruleSnippet} key={demoFieldType} className="json">
@@ -145,7 +145,7 @@ export const ValidationStoryComponent = ({
 				</V2_Layout.ColDiv>
 				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
 					<Section>
-						<V2_Text.H5>Sample schema</V2_Text.H5>
+						<Typography.BodyMD>Sample schema</Typography.BodyMD>
 						<div>
 							<Form.Select
 								options={fieldOptions}
@@ -167,7 +167,7 @@ export const ValidationStoryComponent = ({
 				</V2_Layout.ColDiv>
 				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
 					<Section>
-						<V2_Text.H5>Preview</V2_Text.H5>
+						<Typography.BodyMD>Preview</Typography.BodyMD>
 						<p>Submit form to preview validation</p>
 						<FrontendEngine
 							key={demoFieldType}

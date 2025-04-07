@@ -1,7 +1,7 @@
-import { Colour, MediaQuery } from "@lifesg/react-design-system";
+import { Colour, MediaQuery, V2_TextStyleHelper } from "@lifesg/react-design-system";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_Text, V2_TextStyleHelper } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 export interface SubtitleProps {
@@ -21,7 +21,7 @@ export const Wrapper = styled.div`
 	}
 `;
 
-export const Subtitle = styled(V2_Text.Body)<SubtitleProps>`
+export const Subtitle = styled(Typography.BodyBL)<SubtitleProps>`
 	margin-bottom: ${(props) => (props.$hasDescription ? "0.5rem" : "1rem")};
 `;
 

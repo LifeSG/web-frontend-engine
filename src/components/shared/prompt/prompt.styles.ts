@@ -1,7 +1,7 @@
 import { MediaQuery } from "@lifesg/react-design-system";
 import { Button } from "@lifesg/react-design-system/button";
 import { Modal } from "@lifesg/react-design-system/modal";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 interface SizeProps {
@@ -78,10 +78,10 @@ export const LabelContainer = styled.div<SizeProps>`
 	}
 `;
 
-export const Description = styled(V2_Text.H4)`
+export const Description = styled(Typography.HeadingXS)`
 	margin-top: 0.5rem;
 `;
 
-export const Title = styled(V2_Text.H4)<SizeProps>`
+export const Title = styled(Typography.HeadingXS)<SizeProps>`
 	margin-top: 0rem;
 `;
