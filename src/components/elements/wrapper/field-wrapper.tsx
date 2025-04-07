@@ -1,6 +1,5 @@
-import { Colour } from "@lifesg/react-design-system/theme";
+import { Colour, Font } from "@lifesg/react-design-system/theme";
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
-import { V2_TextStyleHelper } from "@lifesg/react-design-system/v2_text";
 import isArray from "lodash/isArray";
 import isBoolean from "lodash/isBoolean";
 import isNumber from "lodash/isNumber";
@@ -133,13 +132,13 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 const StyledSublabel = styled(Sanitize)`
 	&.sub-label {
 		display: block;
-		${V2_TextStyleHelper.getFontFamily("BodySmall", 400)};
+		${Font["body-sm-regular"]};
 	}
 `;
 
 const StyledHint = styled(Sanitize)`
 	&.label-hint {
 		color: ${Colour.text};
-		${V2_TextStyleHelper.getFontFamily("BodySmall", 400)};
+		${Font["body-sm-regular"]};
 	}
 `;

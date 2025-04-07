@@ -1,4 +1,4 @@
-import { Colour, MediaQuery, V2_TextStyleHelper } from "@lifesg/react-design-system";
+import { Colour, Font, MediaQuery } from "@lifesg/react-design-system";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -26,7 +26,7 @@ export const Subtitle = styled(Typography.BodyBL)<SubtitleProps>`
 `;
 
 export const Content = styled.div`
-	${V2_TextStyleHelper.getTextStyle("BodySmall", "regular")}
+	${Font["body-sm-regular"]};
 	margin-bottom: 1.5rem;
 	color: ${Colour["text-subtler"]};
 `;

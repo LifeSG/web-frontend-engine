@@ -1,4 +1,4 @@
-import { Colour, V2_TextStyleHelper } from "@lifesg/react-design-system";
+import { Colour, Font } from "@lifesg/react-design-system";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
@@ -19,7 +19,7 @@ export const TryAgain = styled.button`
 	background: none;
 	padding: 0;
 	border: 0;
-	${V2_TextStyleHelper.getTextStyle("H6", "semibold")}
+	${Font["body-sm-semibold"]}
 	margin-left: 0.5rem;
 	color: ${Colour["text-primary"]};
 	text-decoration: underline;
