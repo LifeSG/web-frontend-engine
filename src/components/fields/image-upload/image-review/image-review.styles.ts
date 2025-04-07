@@ -1,6 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
-import { V2_MediaQuery, V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
+import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import { BinIcon } from "@lifesg/react-icons/bin";
@@ -8,7 +8,7 @@ import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import styled, { css } from "styled-components";
-import { Colour } from "@lifesg/react-design-system";
+import { Colour, MediaQuery } from "@lifesg/react-design-system";
 
 interface IModalBoxStyle {
 	imageReviewModalStyles?: string | undefined;
@@ -22,15 +22,15 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		if (imageReviewModalStyles) return `${imageReviewModalStyles}`;
 	}}
 
-	${V2_MediaQuery.MinWidth.tablet} {
+	${MediaQuery.MinWidth.xl} {
 		max-width: 42rem;
 		width: 100%;
 	}
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		margin: 0 1.25rem;
 	}
 
-	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -66,7 +66,7 @@ export const ReviewCloseButton = styled(IconButton)`
 		color: ${Colour["bg-primary"]};
 	}
 
-	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		height: 2.25rem;
 	}
 `;
@@ -105,7 +105,7 @@ export const ContentSection = styled.div`
 	background-color: black;
 	overflow: hidden;
 	height: 31.25rem;
-	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		height: 100%;
 	}
 `;
@@ -122,7 +122,7 @@ export const DrawDeleteButtonWrapper = styled.div`
 	flex-direction: column;
 	justify-content: flex-end;
 
-	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		right: 1.25rem;
 	}
 `;
@@ -185,7 +185,7 @@ export const FooterSection = styled.div`
 	align-items: center;
 	margin: 1rem 1.5rem 1rem 1.5rem;
 
-	${V2_MediaQuery.MaxWidth.mobileL}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		margin: 0 1.25rem;
 		height: 6.5rem;
 		max-height: 6.5rem;
@@ -205,7 +205,7 @@ export const EraserButton = styled.button`
 	width: 3rem;
 	height: 3rem;
 
-	${V2_MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		width: 2.5rem;
 		height: 2.5rem;
 	}
@@ -239,7 +239,7 @@ export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
 	border: solid 1px ${({ $color, $colorScheme }) => ($colorScheme === "light" ? "#979797" : $color)};
 	cursor: pointer;
 
-	${V2_MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		width: 2.5rem;
 		height: 2.5rem;
 		margin-left: 0.25rem;

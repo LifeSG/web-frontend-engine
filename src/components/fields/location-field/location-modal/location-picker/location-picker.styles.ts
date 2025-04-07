@@ -1,5 +1,4 @@
-import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
-import { Card, Colour } from "@lifesg/react-design-system";
+import { Card, Colour, MediaQuery } from "@lifesg/react-design-system";
 import styled from "styled-components";
 
 export const LocationPickerWrapper = styled.div`
@@ -95,7 +94,7 @@ export const BannerWrapper = styled.div`
 	width: 100%;
 	padding: 2rem 1.5rem;
 
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		padding: 1rem 1.25rem;
 	}
 `;

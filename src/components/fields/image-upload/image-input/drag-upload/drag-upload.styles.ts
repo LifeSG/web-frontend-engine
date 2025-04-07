@@ -1,5 +1,4 @@
-import { Colour } from "@lifesg/react-design-system";
-import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
+import { Colour, MediaQuery } from "@lifesg/react-design-system";
 import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import styled from "styled-components";
 
@@ -9,7 +8,7 @@ export const Wrapper = styled.div`
 	border-radius: 0.25rem;
 	padding: 2rem;
 
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		padding: 2rem 1.25rem;
 	}
 `;

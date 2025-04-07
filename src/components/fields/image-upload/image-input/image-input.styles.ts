@@ -1,7 +1,6 @@
-import { Colour } from "@lifesg/react-design-system";
+import { Colour, MediaQuery } from "@lifesg/react-design-system";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
 import { V2_Text, V2_TextStyleHelper } from "@lifesg/react-design-system/v2_text";
 import styled from "styled-components";
 
@@ -42,7 +41,7 @@ export const UploadWrapper = styled.div`
 export const AddButton = styled(Button.Small)`
 	width: 100%;
 	text-align: center;
-	${V2_MediaQuery.MinWidth.mobileL} {
+	${MediaQuery.MinWidth.md} {
 		width: 10rem;
 		height: 2.5rem;
 	}
@@ -51,7 +50,7 @@ export const AddButton = styled(Button.Small)`
 export const DropThemHereText = styled(Content)`
 	margin-top: 0.5rem;
 	display: none;
-	${V2_MediaQuery.MinWidth.tablet} {
+	${MediaQuery.MinWidth.xl} {
 		display: block;
 		width: 10rem;
 		text-align: center;

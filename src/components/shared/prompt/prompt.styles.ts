@@ -1,5 +1,5 @@
+import { MediaQuery } from "@lifesg/react-design-system";
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import styled from "styled-components";
@@ -19,7 +19,7 @@ export const GrowContainer = styled.div`
 	padding: 5rem 1.25rem;
 	width: 100%;
 
-	${V2_MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		padding: 1rem 1.25rem;
 	}
 `;
@@ -47,7 +47,7 @@ export const PromptButton = styled(Button.Default)<SizeProps>`
 	&:not(:first-child):last-child {
 		margin-top: 1rem;
 
-		${V2_MediaQuery.MinWidth.mobileL} {
+		${MediaQuery.MinWidth.md} {
 			margin-top: 0;
 			margin-right: ${(props) => (props.size === "large" ? "2rem" : "1rem")};
 		}
@@ -60,7 +60,7 @@ export const ButtonContainer = styled.div<SizeProps>`
 	justify-content: center;
 	padding: 0 1.5rem 4rem;
 
-	${V2_MediaQuery.MinWidth.mobileL} {
+	${MediaQuery.MinWidth.md} {
 		align-items: center;
 		padding: ${(props) => (props.size === "large" ? "2rem 4rem 4rem" : "2.5rem 1.5rem 2rem")};
 		flex-direction: row-reverse;
@@ -73,7 +73,7 @@ export const LabelContainer = styled.div<SizeProps>`
 	text-align: center;
 	padding: 4rem 1.5rem 1.5rem;
 
-	${V2_MediaQuery.MinWidth.mobileL} {
+	${MediaQuery.MinWidth.md} {
 		padding: ${(props) => (props.size === "large" ? "4rem 4rem 0rem 4rem" : "2rem 1.5rem 0")};
 	}
 `;

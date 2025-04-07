@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_MediaQuery, V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
+import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { action } from "@storybook/addon-actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef, useRef } from "react";
@@ -8,6 +8,7 @@ import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFro
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../components/frontend-engine";
 import { RecursivePartial, TNoInfer } from "../utils";
+import { MediaQuery } from "@lifesg/react-design-system";
 
 const EXCLUDED_STORY_PROPS: ArgTypes = {
 	invalid: { table: { disable: true } },
@@ -188,27 +189,27 @@ const StyledForm = styled(OriginalFrontendEngine)`
 	width: calc(${V2_MediaWidths.desktopL}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	max-width: 820px;
 
-	${V2_MediaQuery.MaxWidth.desktopM} {
+	${MediaQuery.MaxWidth.xl} {
 		min-width: 500px;
 		width: calc(${V2_MediaWidths.desktopM}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		min-width: 400px;
 		width: calc(${V2_MediaWidths.tablet}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
-	${V2_MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		min-width: 350px;
 		width: calc(${V2_MediaWidths.mobileL}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
 	}
 
-	${V2_MediaQuery.MaxWidth.mobileM} {
+	${MediaQuery.MaxWidth.xs} {
 		min-width: 0;
 		width: calc(${V2_MediaWidths.mobileM}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 
-	${V2_MediaQuery.MaxWidth.mobileS} {
+	${MediaQuery.MaxWidth.xxs} {
 		width: calc(${V2_MediaWidths.mobileS}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 `;

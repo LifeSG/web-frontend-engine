@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button, Colour, V2_MediaQuery, V2_MediaWidths, V2_Text } from "@lifesg/react-design-system";
+import { Button, Colour, MediaQuery, V2_MediaWidths, V2_Text } from "@lifesg/react-design-system";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
@@ -15,7 +15,7 @@ export const SearchWrapper = styled.div<ISinglePanelStyle>`
 	flex: 1;
 	padding: 2rem 1.5rem 1rem;
 
-	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		flex: unset;
 		height: ${({ panelInputMode }) => (panelInputMode === "search" ? `100%` : `auto`)};
 		padding: 1.5rem 1.25rem 0;
@@ -39,7 +39,7 @@ export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 		border-bottom: 1px solid ${Colour["border-focus"]};
 	}
 
-	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		margin: 0.8rem 0 0;
 	}
 `;
@@ -90,7 +90,7 @@ export const SearchBarModalCross = styled(CrossIcon)`
 	font-size: 1.5rem;
 	color: ${Colour["icon-primary"]};
 
-	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		display: block;
 		margin: -0.4rem 0 0 -0.4rem;
 	}
@@ -106,7 +106,7 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	flex: 1;
 	border-bottom: solid 1px ${Colour.border};
 
-	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? `block` : `none`)};
 		border-bottom: 0;
 	}
@@ -151,7 +151,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	gap: 1rem;
 	padding-top: 1rem;
 
-	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		display: ${({ panelInputMode }) => (panelInputMode === "map" ? `block` : `none`)};
 		position: absolute;
 		left: 0;
@@ -164,7 +164,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 export const ButtonItem = styled(Button.Default)<{ buttonType: "cancel" | "confirm" }>`
 	width: 9.5rem;
 
-	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		${({ buttonType }) => buttonType === "cancel" && `display: none`}
 		${({ buttonType }) => buttonType === "confirm" && `width: 100%`}
 	}

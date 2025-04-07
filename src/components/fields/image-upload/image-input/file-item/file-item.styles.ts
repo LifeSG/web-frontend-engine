@@ -1,8 +1,7 @@
 import { IconButton } from "@lifesg/react-design-system/icon-button";
-import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
 import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import styled from "styled-components";
-import { Colour } from "@lifesg/react-design-system";
+import { Colour, MediaQuery } from "@lifesg/react-design-system";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
 	display: flex;
@@ -16,7 +15,7 @@ export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }
 	min-height: 3.5rem;
 	margin-bottom: 1rem;
 	padding: 1rem 2rem;
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		padding: 1rem;
 	}
 `;
@@ -31,7 +30,7 @@ export const CellInfo = styled.div`
 export const CellFileSize = styled.div`
 	width: 4.24rem;
 
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		display: none;
 	}
 `;
@@ -41,7 +40,7 @@ export const CellProgressBar = styled.div`
 	justify-content: flex-end;
 	width: 19.15%;
 
-	${V2_MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		width: 100%;
 	}
 `;
@@ -60,7 +59,7 @@ export const Thumbnail = styled.div<{ src: string }>`
 	overflow: hidden;
 	border-radius: 0.25rem;
 
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		margin-right: 1rem;
 	}
 `;
@@ -75,14 +74,14 @@ export const FileNameWrapper = styled.div`
 
 export const MobileTextBodyDetail = styled.div`
 	display: none;
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		display: block;
 	}
 `;
 
 export const DesktopTextBodyDetail = styled.div`
 	display: block;
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		display: none;
 	}
 `;
@@ -92,7 +91,7 @@ export const ProgressBar = styled.progress`
 	flex: 1;
 	height: 0.63rem;
 
-	${V2_MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		max-width: none;
 	}
 
