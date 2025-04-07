@@ -1,5 +1,4 @@
-import { V2_ThemeSpec } from "@lifesg/react-design-system";
-import { V2_Color } from "@lifesg/react-design-system/v2_color";
+import { Colour, V2_ThemeSpec } from "@lifesg/react-design-system";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import styled, { keyframes } from "styled-components";
@@ -27,7 +26,7 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 `;
 
 export const ThumbnailWarningIcon = styled(ExclamationTriangleIcon)`
-	color: ${V2_Color.Neutral[4]};
+	color: ${Colour["icon-subtle"]};
 	position: absolute;
 	top: 5%;
 	left: 5%;
@@ -55,7 +54,7 @@ export const LoadingDot = styled.div`
 	border-radius: 50%;
 	animation: ${dotMoveKeyframe} 1.35s infinite linear;
 	opacity: 0.25;
-	background: ${V2_Color.Neutral[2]};
+	background: ${Colour["bg-inverse-subtle"]};
 	margin: 0.125rem;
 	transform-origin: bottom;
 `;
@@ -68,7 +67,7 @@ export const LoadingBox = styled.div`
 	justify-content: center;
 	align-items: center;
 	border-radius: 2px;
-	background-color: ${V2_Color.Neutral[5]};
+	background-color: ${Colour["bg-strongest"]};
 
 	${LoadingDot}:nth-child(1) {
 		animation-delay: 0s;
@@ -86,7 +85,7 @@ export const LoadingBox = styled.div`
 
 export const BorderOverlay = styled.div<{ isSelected: boolean }>`
 	border: ${(props) => (props.isSelected ? "solid  2px" : "none")};
-	border-color: ${V2_Color.Primary};
+	border-color: ${Colour["border-primary"]};
 	width: 100%;
 	height: 100%;
 `;
@@ -101,7 +100,7 @@ export const AddImageButton = styled(IconButton)`
 	height: 3rem;
 	background: #fff;
 	${({ theme }) => {
-		const borderColor = V2_Color.Primary({ theme });
+		const borderColor = Colour["border-primary"]({ theme });
 		return `background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${borderColor.replace(
 			"#",
 			"%23"
@@ -109,10 +108,10 @@ export const AddImageButton = styled(IconButton)`
 	}}
 
 	> svg {
-		color: ${V2_Color.Primary};
+		color: ${Colour["icon-primary"]};
 		width: 2.2rem;
 		height: 2.2rem;
-		stroke: ${V2_Color.Primary};
+		stroke: ${Colour["icon-primary"]};
 		stroke-width: 1;
 	}
 `;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_Color } from "@lifesg/react-design-system/v2_color";
 import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
+import { Colour } from "@lifesg/react-design-system";
 
 export const Wrapper = styled.div`
 	position: absolute;
@@ -41,7 +41,7 @@ export const Content = styled.div`
 `;
 
 export const BodyText = styled.div`
-	color: ${V2_Color.Neutral[8]};
+	color: ${Colour["text-inverse"]};
 	word-break: break-word;
 `;
 

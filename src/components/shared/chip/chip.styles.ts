@@ -1,4 +1,4 @@
-import { V2_Color } from "@lifesg/react-design-system/v2_color";
+import { Colour } from "@lifesg/react-design-system/theme";
 import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import styled, { css } from "styled-components";
 import { IChipButtonProps } from "./types";
@@ -7,8 +7,8 @@ import { IChipButtonProps } from "./types";
 // STYLING
 // =============================================================================
 export const ChipButton = styled.button<IChipButtonProps>`
-	background-color: ${V2_Color.Neutral[8]};
-	border: 1px solid ${V2_Color.Neutral[5]};
+	background-color: ${Colour.bg};
+	border: 1px solid ${Colour.border};
 	border-radius: 1rem;
 	display: inline-block;
 	padding: 0.063rem 0.438rem;
@@ -27,10 +27,10 @@ export const ChipButton = styled.button<IChipButtonProps>`
 	${(props) => {
 		if (props.isActive) {
 			return css`
-				background-color: ${V2_Color.Neutral[4](props)};
+				background-color: ${Colour["bg-inverse-subtlest"](props)};
 
 				${ChipText} {
-					color: ${V2_Color.Neutral[7](props)};
+					color: ${Colour["text-inverse"](props)};
 				}
 			`;
 		}

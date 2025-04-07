@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button, V2_Color, V2_MediaQuery, V2_MediaWidths, V2_Text } from "@lifesg/react-design-system";
+import { Button, Colour, V2_MediaQuery, V2_MediaWidths, V2_Text } from "@lifesg/react-design-system";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
@@ -29,14 +29,14 @@ export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	padding-bottom: 0.4rem;
 	alight-items: center;
 	justify-content: space-between;
-	border-bottom: 1px solid ${V2_Color.Neutral[5]};
+	border-bottom: 1px solid ${Colour.border};
 	clip-path: inset(0 0 -0.3rem 0);
 	transition: box-shadow 0.3s linear;
 
 	${({ hasScrolled }) => (hasScrolled ? `box-shadow: 0 0.06rem 0.4rem rgba(0,0,0,.12);` : "")}
 
 	&:focus-within {
-		border-bottom: 1px solid ${V2_Color.Accent.Light[1]};
+		border-bottom: 1px solid ${Colour["border-focus"]};
 	}
 
 	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
@@ -63,7 +63,7 @@ export const SearchBarIconWrapper = styled.span`
 	> svg {
 		width: 1rem;
 		height: auto;
-		color: ${V2_Color.Neutral[4]};
+		color: ${Colour["icon-subtle"]};
 	}
 `;
 
@@ -77,7 +77,7 @@ export const SearchBarInput = styled.input`
 
 	::placeholder,
 	::-webkit-input-placeholder {
-		color: ${V2_Color.Neutral[4]};
+		color: ${Colour["text-subtlest"]};
 	}
 
 	&:disabled {
@@ -88,7 +88,7 @@ export const SearchBarInput = styled.input`
 export const SearchBarModalCross = styled(CrossIcon)`
 	display: none;
 	font-size: 1.5rem;
-	color: ${V2_Color.Primary};
+	color: ${Colour["icon-primary"]};
 
 	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		display: block;
@@ -98,13 +98,13 @@ export const SearchBarModalCross = styled(CrossIcon)`
 
 export const SearchBarCross = styled(CrossIcon)`
 	font-size: 1.7rem;
-	color: ${V2_Color.Neutral[4]};
+	color: ${Colour["icon-subtle"]};
 `;
 
 export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	overflow-y: auto;
 	flex: 1;
-	border-bottom: solid 1px ${V2_Color.Neutral[5]};
+	border-bottom: solid 1px ${Colour.border};
 
 	${V2_MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? `block` : `none`)};
@@ -113,13 +113,13 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 `;
 
 export const ResultTitle = styled(V2_Text.H5)`
-	border-bottom: 1px solid ${V2_Color.Neutral[5]};
+	border-bottom: 1px solid ${Colour.border};
 	padding: 1rem 0;
 `;
 
 export const NoResultTitle = styled(V2_Text.BodySmall)`
 	padding-top: 1rem;
-	color: ${V2_Color.Neutral[4]};
+	color: ${Colour["text-subtlest"]};
 	word-break: break-all;
 	overflow-y: scroll;
 `;
@@ -129,10 +129,10 @@ export const ResultItem = styled.div<{ active?: boolean }>`
 	align-items: center;
 	gap: 1rem;
 	padding: 1rem 1rem 1rem 0;
-	border-bottom: 1px solid ${V2_Color.Neutral[5]};
+	border-bottom: 1px solid ${Colour.border};
 	text-transform: uppercase;
 	cursor: pointer;
-	background-color: ${({ active }) => (active ? V2_Color.Accent.Light[5] : `transparent`)};
+	background-color: ${({ active }) => (active ? Colour["bg-selected"] : `transparent`)};
 
 	.keyword {
 		font-family: "Open Sans Semibold";
@@ -142,7 +142,7 @@ export const ResultItem = styled.div<{ active?: boolean }>`
 export const ResultItemPin = styled(PinFillIcon)`
 	width: 1rem;
 	min-width: 1rem;
-	color: ${V2_Color.Neutral[1]};
+	color: ${Colour["icon-strongest"]};
 `;
 
 export const ButtonWrapper = styled.div<ISinglePanelStyle>`
@@ -171,5 +171,5 @@ export const ButtonItem = styled(Button.Default)<{ buttonType: "cancel" | "confi
 `;
 
 export const SearchIcon = styled(MagnifierIcon)`
-	color: ${V2_Color.Neutral[4]};
+	color: ${Colour["icon-subtle"]};
 `;

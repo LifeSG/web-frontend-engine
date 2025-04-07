@@ -1,8 +1,8 @@
-import { V2_Color } from "@lifesg/react-design-system/v2_color";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
 import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import styled from "styled-components";
+import { Colour } from "@lifesg/react-design-system";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
 	display: flex;
@@ -10,11 +10,9 @@ export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }
 	align-items: center;
 	gap: 0.5rem;
 	border: ${(props) =>
-		props.isError
-			? `1px solid ${V2_Color.Validation.Red.Border(props)}`
-			: `1px solid ${V2_Color.Neutral[5](props)}`};
+		props.isError ? `1px solid ${Colour["border-error"](props)}` : `1px solid ${Colour.border(props)}`};
 	border-radius: 4px;
-	background-color: ${(props) => (props.isError ? "rgb(253, 247, 247)" : `${V2_Color.Accent.Light[6](props)}`)};
+	background-color: ${(props) => (props.isError ? "rgb(253, 247, 247)" : `${Colour["bg-primary-subtlest"](props)}`)};
 	min-height: 3.5rem;
 	margin-bottom: 1rem;
 	padding: 1rem 2rem;
@@ -114,12 +112,12 @@ export const ProgressBar = styled.progress`
 	&[value]::-webkit-progress-value {
 		height: 100%;
 		border-radius: 1.25rem;
-		background-color: ${V2_Color.Accent.Light[1]};
+		background-color: ${Colour["bg-primary-subtle"]};
 	}
 `;
 
 export const ErrorText = styled(V2_Text.H6)`
-	color: ${V2_Color.Validation.Red.Text};
+	color: ${Colour["text-error"]};
 	width: 100%;
 `;
 
@@ -128,7 +126,7 @@ export const DeleteButton = styled(IconButton)`
 	// additional 0.5 negative marginRight because the image itself has padding already
 	background-color: transparent;
 	outline-style: none;
-	color: ${V2_Color.Neutral[3]};
+	color: ${Colour["text-subtler"]};
 
 	svg {
 		height: 1.875rem;

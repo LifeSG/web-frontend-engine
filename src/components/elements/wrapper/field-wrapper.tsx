@@ -1,4 +1,4 @@
-import { V2_Color } from "@lifesg/react-design-system/v2_color";
+import { Colour } from "@lifesg/react-design-system/theme";
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { V2_TextStyleHelper } from "@lifesg/react-design-system/v2_text";
 import isArray from "lodash/isArray";
@@ -139,7 +139,7 @@ const StyledSublabel = styled(Sanitize)`
 
 const StyledHint = styled(Sanitize)`
 	&.label-hint {
-		color: ${V2_Color.Neutral[1]};
+		color: ${Colour.text};
 		${V2_TextStyleHelper.getFontFamily("BodySmall", 400)};
 	}
 `;

@@ -1,4 +1,4 @@
-import { V2_Color } from "@lifesg/react-design-system/v2_color";
+import { Colour } from "@lifesg/react-design-system";
 import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
 import { V2_Text } from "@lifesg/react-design-system/v2_text";
 import styled from "styled-components";
@@ -26,10 +26,10 @@ export const HintContainer = styled.div`
 	height: 100%;
 	/* Generated background-image for the dashed border from https://kovart.github.io/dashed-border-generator/  */
 	background-image: ${(props) => {
-		const escapedColor = encodeURIComponent(V2_Color.Primary(props));
+		const escapedColor = encodeURIComponent(Colour["bg-primary"](props));
 		return `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${escapedColor}' stroke-width='4' stroke-dasharray='8%2c 8' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");`;
 	}};
-	background-color: ${V2_Color.Accent.Light[6]};
+	background-color: ${Colour["bg-primary-subtlest"]};
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -38,5 +38,5 @@ export const HintContainer = styled.div`
 `;
 
 export const HintText = styled(V2_Text.BodySmall)`
-	color: ${V2_Color.Primary};
+	color: ${Colour["text-primary"]};
 `;
