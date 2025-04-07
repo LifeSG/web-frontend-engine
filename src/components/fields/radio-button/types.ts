@@ -57,9 +57,3 @@ export type TRadioButtonGroupSchema<V = undefined, C = undefined> =
 	| IRadioButtonDefaultSchema<V>
 	| IRadioButtonToggleSchema<V, C>
 	| IRadioButtonImageButtonSchema<V>;
-
-/** @deprecated will be removed in a future release. Use `TRadioButtonGroupSchema` instead */
-export type IRadioButtonGroupSchema<V = undefined, C = undefined> =
-	| IRadioButtonDefaultSchema<V>
-	| IRadioButtonToggleSchema<V, C>
-	| IRadioButtonImageButtonSchema<V>;

@@ -272,7 +272,6 @@ export namespace LocationHelper {
 				YCOORD: geocodeInfo.Y,
 				LATITUDE: geocodeInfo.LATITUDE,
 				LONGITUDE: geocodeInfo.LONGITUDE,
-				LONGTITUDE: geocodeInfo.LONGTITUDE,
 			};
 		}
 		const { BLOCK, BUILDINGNAME, POSTALCODE, ROAD } = convertedGeoCodeInfo as OneMapGeocodeInfo;

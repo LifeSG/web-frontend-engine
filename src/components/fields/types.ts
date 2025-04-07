@@ -11,7 +11,7 @@ import { TDateRangeFieldSchema } from "./date-range-field";
 import { IESignatureFieldSchema } from "./e-signature-field/types";
 import { IErrorFieldSchema } from "./error-field";
 import { IFileUploadSchema, TFileUploadEvents } from "./file-upload";
-import { IHiddenFieldSchema } from "./hidden-field/types";
+import { THiddenFieldSchema } from "./hidden-field";
 import { IHistogramSliderSchema } from "./histogram-slider";
 import { IImageUploadSchema, TImageUploadEvents, TImageUploadTriggers } from "./image-upload";
 import { ILocationFieldSchema, TLocationEvents, TLocationFieldTriggers } from "./location-field";
@@ -81,7 +81,7 @@ export type TFieldSchema<V = undefined, C = undefined> =
 	| IESignatureFieldSchema<V>
 	| IErrorFieldSchema
 	| IFileUploadSchema<V>
-	| IHiddenFieldSchema<V>
+	| THiddenFieldSchema<V>
 	| IHistogramSliderSchema<V>
 	| IImageUploadSchema<V>
 	| ILocationFieldSchema<V>

@@ -416,7 +416,7 @@ describe("conditional-renderer", () => {
 		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
 
 		const values = SUBMIT_FN.mock.lastCall[0];
 		expect(values).not.toHaveProperty(FIELD_TWO_ID);
@@ -454,7 +454,7 @@ describe("conditional-renderer", () => {
 		renderComponent(fields, defaultValues);
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
 
 		const values = SUBMIT_FN.mock.lastCall[0];
 		expect(values).not.toHaveProperty(FIELD_TWO_ID);
@@ -866,20 +866,20 @@ describe("conditional-renderer", () => {
 			fireEvent.change(getFieldTwo(), { target: { value: userInput } });
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: userInput })
 			);
 
 			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
-			expect(SUBMIT_FN).toBeCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hi" }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
 
 			fireEvent.click(screen.queryByText("Reset"));
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({ [FIELD_ONE_ID]: "hello", [FIELD_TWO_ID]: defaultValue })
 			);
 		});

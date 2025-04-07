@@ -416,7 +416,7 @@ describe("frontend-engine", () => {
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(onSubmitError).toBeCalledWith({
+			expect(onSubmitError).toHaveBeenCalledWith({
 				[FIELD_ONE_ID]: {
 					message: ERROR_MESSAGE,
 					ref: expect.anything(),
@@ -434,7 +434,7 @@ describe("frontend-engine", () => {
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith({ [FIELD_ONE_ID]: "hello", submit: undefined });
+				expect(submitFn).toHaveBeenCalledWith({ [FIELD_ONE_ID]: "hello", submit: undefined });
 			});
 
 			it("should include form values of unregistered fields if stripUnknown is not true", async () => {
@@ -455,7 +455,7 @@ describe("frontend-engine", () => {
 				fireEvent.click(getCustomButton());
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith({
+				expect(submitFn).toHaveBeenCalledWith({
 					[FIELD_ONE_ID]: "hello",
 					nonExistentField: "hello world",
 					nonExistentField2: "john doe",
@@ -485,7 +485,7 @@ describe("frontend-engine", () => {
 				fireEvent.click(getCustomButton());
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith({
+				expect(submitFn).toHaveBeenCalledWith({
 					[FIELD_ONE_ID]: "hello",
 					submit: undefined,
 				});
@@ -708,7 +708,7 @@ describe("frontend-engine", () => {
 		fireEvent.click(getCustomButton());
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(onSubmit).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }));
+		expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }));
 	});
 
 	it("should return form validity through checkValid method", async () => {

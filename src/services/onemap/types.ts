@@ -7,10 +7,6 @@ export type OneMapGeocodeInfo = {
 	YCOORD: string;
 	LATITUDE: string;
 	LONGITUDE: string;
-	/**
-	 * @deprecated LONGTITUDE is deprecated and will be replaced by LONGITUDE
-	 */
-	LONGTITUDE: string;
 };
 
 export type OneMapSearchParam = {
@@ -43,7 +39,6 @@ export type OneMapSearchBuildingResult = {
 	Y: string;
 	LATITUDE: string;
 	LONGITUDE: string;
-	LONGTITUDE: string;
 	DISPLAY_ADDRESS?: string;
 };
 

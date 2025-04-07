@@ -38,6 +38,3 @@ export type THiddenFieldSchema<V = undefined> = Pick<
 	"showIf" | "validation" | "uiType"
 > &
 	TFieldType;
-
-/** @deprecated use THiddenFieldSchema */
-export type IHiddenFieldSchema<V = undefined> = THiddenFieldSchema<V>;
