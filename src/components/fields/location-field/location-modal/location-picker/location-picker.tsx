@@ -1,4 +1,4 @@
-import { V2_BaseTheme, V2_Color, V2_MediaWidths } from "@lifesg/react-design-system";
+import { Colour, V2_MediaWidths } from "@lifesg/react-design-system";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
@@ -181,11 +181,7 @@ export const LocationPicker = ({
 				: undefined;
 			const mapPinIcon =
 				"data:image/svg+xml;base64," +
-				btoa(
-					ReactDOMServer.renderToString(
-						<PinFillIcon color={V2_Color.Primary({ theme: theme || V2_BaseTheme })} />
-					)
-				);
+				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour.icon({ theme: theme })} />));
 			const marker = markerFrom(target, interactiveMapPinIconUrl ?? mapPinIcon, isSelected).addTo(map);
 
 			return shouldSelectOnClick

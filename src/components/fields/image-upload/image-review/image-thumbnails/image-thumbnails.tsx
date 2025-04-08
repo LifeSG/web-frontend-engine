@@ -1,4 +1,3 @@
-import { V2_BaseTheme } from "@lifesg/react-design-system";
 import { PlusIcon } from "@lifesg/react-icons/plus";
 import { ChangeEvent, useRef } from "react";
 import { useTheme } from "styled-components";
@@ -127,7 +126,7 @@ export const ImageThumbnails = (props: IProps) => {
 					data-testid={TestHelper.generateId(id, "add-image-button")}
 					aria-label="add image"
 					onClick={handleButtonClick}
-					theme={theme || V2_BaseTheme}
+					theme={theme}
 				>
 					<PlusIcon />
 				</AddImageButton>
