@@ -4,6 +4,8 @@ import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from
 import { FileHelper, TestHelper, WindowHelper } from "../../../../../utils";
 import { Canvas, Wrapper } from "./image-editor.styles";
 import { IImageEditorProps, IImageEditorRef } from "./types";
+import { ThemeSpec } from "@lifesg/react-design-system/theme/types";
+import { useTheme } from "styled-components";
 
 const MAX_ZOOM = 5;
 const PENCIL_BRUSH_SIZE = 10;
@@ -23,6 +25,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		pinchStartAmount: 0,
 		panAmount: { x: 0, y: 0 },
 	});
+	const theme = useTheme();
 
 	useImperativeHandle(ref, () => ({
 		clearDrawing,
@@ -110,7 +113,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					canvasHeight / fabricBackground.current.getScaledHeight()
 				);
 
-				fitImageToCanvas();
+				fitImageToCanvas(theme);
 
 				const canvasObjects = fabricCanvas.current.getObjects();
 				canvasObjects.forEach((obj) => {
@@ -132,7 +135,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			window.removeEventListener("resize", handleResize);
 			screen.orientation?.removeEventListener("change", handleResize);
 		};
-	}, []);
+	}, [theme]);
 
 	// reset back to default view
 	const resetZoomAndPosition = () => {
@@ -158,7 +161,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		}
 	};
 
-	const fitImageToCanvas = () => {
+	const fitImageToCanvas = (theme?: ThemeSpec) => {
 		if (fabricCanvas.current && fabricBackground.current) {
 			const img = fabricBackground.current;
 			const canvasRatio = fabricCanvas.current.getWidth() / fabricCanvas.current.getHeight();
@@ -174,7 +177,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			}
 
 			// extra logic to zoom in to fit image to canvas width in mobile landscape orientation
-			if (WindowHelper.isMobileView() && canvasRatio > 1) {
+			if (WindowHelper.isMobileView(theme) && canvasRatio > 1) {
 				const intendedZoom = Math.min((fabricCanvas.current.width || 0) / img.getScaledWidth() + 0.1, MAX_ZOOM);
 				fabricCanvas.current.zoomToPoint(
 					{ x: (fabricCanvas.current.width || 0) / 2, y: (fabricCanvas.current.height || 0) / 2 },
@@ -213,11 +216,11 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					fabricBackground.current = img;
 
 					resetZoomAndPosition();
-					fitImageToCanvas();
+					fitImageToCanvas(theme);
 				}
 			});
 		}
-	}, [baseImageDataURL]);
+	}, [baseImageDataURL, theme]);
 
 	// update drawing
 	useEffect(() => {

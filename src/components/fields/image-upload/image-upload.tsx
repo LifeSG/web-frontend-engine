@@ -16,6 +16,7 @@ import {
 	IUploadedImage,
 	TImageUploadAcceptedFileType,
 } from "./types";
+import { useTheme } from "styled-components";
 
 // lazy load to fix next.js SSR errors
 const ImageManager = lazy(() => import("./image-manager"));
@@ -58,6 +59,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [showReviewModal, setShowReviewModal] = useState(false);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
+	const theme = useTheme();
 
 	// =============================================================================
 	// EFFECTS
@@ -166,7 +168,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					case EImageStatus.COMPRESSED:
 					case EImageStatus.CONVERTED:
 						if (editImage && !showReviewModal) {
-							if (WindowHelper.isMobileView()) {
+							if (WindowHelper.isMobileView(theme)) {
 								setShowReviewModal(true);
 							} else {
 								setShowReviewPrompt(true);
