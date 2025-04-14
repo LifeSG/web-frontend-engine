@@ -20,6 +20,18 @@ const meta: Meta = {
 						All-purpose component to wrap fields or add copy. This can be used to group fields, layout the
 						form or add copy in between fields.
 					</p>
+					<p>
+						When colType is set to <code>v3</code>, the columns property will be <code>ColProps</code> type
+						parameters. For a complete reference of these properties and their usage, please consult the{" "}
+						<a
+							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/foundations-breakpoint-introduction--docs"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Breakpoint
+						</a>{" "}
+						documentation.
+					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
@@ -50,6 +62,20 @@ const meta: Meta = {
 				},
 			},
 			type: { name: "object", value: {}, required: true },
+		},
+		colType: {
+			description: `Specifies the grid system version to use. When set to <code>v2</code> (or left <code>undefined</code> ), the columns property expects <code>IColumns</code>  type.<br/>
+			When set to <code>v3</code>, the columns property expects <code>ColProps</code> type.`,
+			table: {
+				type: {
+					summary: "'v2' | 'v3' | undefined",
+				},
+				defaultValue: { summary: "v2" },
+			},
+			control: {
+				type: "select",
+				options: ["v2", "v3"],
+			},
 		},
 	},
 };

@@ -15,7 +15,7 @@ export type TWrapperSchema<V = undefined, C = undefined> = TBlockWrapperSchema<V
 /** @deprecated use `TWrapperSchema` */
 export type IWrapperSchema<V = undefined, C = undefined> = TBlockWrapperSchema<V, C> | TInlineWrapperSchema;
 
-interface IBlockWrapperSchemaBase<V = any, C = any>
+interface IBlockWrapperSchemaBase<V = undefined, C = undefined>
 	extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
 	uiType: TBlockWrapperType;
 	showIf?: TRenderRules[] | undefined;
@@ -23,7 +23,7 @@ interface IBlockWrapperSchemaBase<V = any, C = any>
 }
 
 // Define the variants with discriminated union
-export type TBlockWrapperSchema<V = any, C = any> =
+export type TBlockWrapperSchema<V = undefined, C = undefined> =
 	| (IBlockWrapperSchemaBase<V, C> & {
 			colType?: "v2" | undefined;
 			columns?: IColumns | undefined;
@@ -33,7 +33,7 @@ export type TBlockWrapperSchema<V = any, C = any> =
 			columns?: ColProps | undefined;
 	  });
 
-interface IInlineWrapperSchemaBase<V = any, C = any>
+interface IInlineWrapperSchemaBase<V = undefined, C = undefined>
 	extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
 	uiType: TInlineWrapperType;
 	showIf?: TRenderRules[] | undefined;
@@ -41,7 +41,7 @@ interface IInlineWrapperSchemaBase<V = any, C = any>
 }
 
 // Define the variants with discriminated union
-export type TInlineWrapperSchema<V = any, C = any> =
+export type TInlineWrapperSchema<V = undefined, C = undefined> =
 	| (IInlineWrapperSchemaBase<V, C> & {
 			colType?: "v2" | undefined;
 			columns?: IColumns | undefined;

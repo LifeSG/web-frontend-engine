@@ -1,7 +1,7 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IGridSchema } from "../../../components/elements";
-import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
+import { CommonFieldStoryProps, CUSTOM_OPTIONS_ARG_TYPE, DefaultStoryTemplate } from "../../common";
 
 const meta: Meta = {
 	title: "Element/Grid",
@@ -34,6 +34,7 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
+		...CUSTOM_OPTIONS_ARG_TYPE,
 	},
 };
 export default meta;

@@ -31,7 +31,7 @@ const renderComponent = (
 					[PARENT_ID]: {
 						uiType: wrapperType,
 						children: children as any,
-					},
+					} as TFrontendEngineFieldSchema,
 					...getSubmitButtonProps(),
 				},
 			},
