@@ -1,4 +1,4 @@
-import { V2_MediaWidths } from "@lifesg/react-design-system";
+import { Breakpoint, LifeSGTheme } from "@lifesg/react-design-system";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { useEffect, useRef, useState } from "react";
@@ -405,14 +405,14 @@ describe("location-input-group", () => {
 	let fetchSingleLocationByLatLngSpy;
 	let fetchLocationListSpy;
 
-	const setWindowAndViewPort = (width: number, height = V2_MediaWidths.tablet) => {
+	const setWindowAndViewPort = (width: number, height = ({ theme }) => Breakpoint["xl-max"]({ theme })) => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
-			value: V2_MediaWidths.mobileS, // Set the desired screen width for the desktop view
+			value: Breakpoint["xxs-max"]({ theme: LifeSGTheme }), // Set the desired screen width for the desktop view
 		});
 		Object.defineProperty(window, "innerHeight", {
 			writable: true,
-			value: V2_MediaWidths.mobileS, // Set the desired screen width for the desktop view
+			value: Breakpoint["xxs-max"]({ theme: LifeSGTheme }), // Set the desired screen width for the desktop view
 		});
 
 		const createMockVisualViewport = (width, height) => ({
@@ -436,7 +436,7 @@ describe("location-input-group", () => {
 
 		viewport.set({
 			width,
-			height: V2_MediaWidths.tablet,
+			height: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
 		});
 	};
 
@@ -453,10 +453,10 @@ describe("location-input-group", () => {
 		fetchLocationListSpy = jest.spyOn(LocationHelper, "fetchLocationList");
 
 		viewport = mockViewport({
-			width: V2_MediaWidths.tablet,
-			height: V2_MediaWidths.tablet,
+			width: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
+			height: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
 		});
-		setWindowAndViewPort(V2_MediaWidths.desktopL);
+		setWindowAndViewPort(Breakpoint["xl-max"]({ theme: LifeSGTheme }));
 	});
 
 	afterEach(() => {
@@ -1173,10 +1173,13 @@ describe("location-input-group", () => {
 					});
 					describe("modal controls", () => {
 						describe("for tablet and below", () => {
-							mockViewportForTestGroup({ width: V2_MediaWidths.mobileL, height: V2_MediaWidths.mobileL });
+							mockViewportForTestGroup({
+								width: Breakpoint["md-min"]({ theme: LifeSGTheme }),
+								height: Breakpoint["md-min"]({ theme: LifeSGTheme }),
+							});
 
 							it("should allow user to close the location modal when in map mode", async () => {
-								setWindowAndViewPort(V2_MediaWidths.mobileL);
+								setWindowAndViewPort(Breakpoint["md-min"]({ theme: LifeSGTheme }));
 
 								renderComponent();
 
@@ -1204,7 +1207,7 @@ describe("location-input-group", () => {
 							});
 
 							it("should allow user to close the modal when in search mode", async () => {
-								setWindowAndViewPort(V2_MediaWidths.mobileL);
+								setWindowAndViewPort(Breakpoint["md-min"]({ theme: LifeSGTheme }));
 
 								renderComponent();
 
@@ -1249,7 +1252,7 @@ describe("location-input-group", () => {
 
 						describe("for desktop", () => {
 							it("should allow user to cancel", async () => {
-								setWindowAndViewPort(V2_MediaWidths.desktopL);
+								setWindowAndViewPort(Breakpoint["xxl-min"]({ theme: LifeSGTheme }));
 
 								renderComponent();
 
@@ -1456,7 +1459,7 @@ describe("location-input-group", () => {
 
 					describe("when using location search in mobile", () => {
 						beforeEach(async () => {
-							setWindowAndViewPort(V2_MediaWidths.mobileL);
+							setWindowAndViewPort(Breakpoint["md-min"]({ theme: LifeSGTheme }));
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});

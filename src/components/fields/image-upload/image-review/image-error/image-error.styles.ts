@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
-import { Colour } from "@lifesg/react-design-system";
+import { Breakpoint, Colour } from "@lifesg/react-design-system";
 
 export const Wrapper = styled.div`
 	position: absolute;
@@ -17,7 +16,7 @@ export const Wrapper = styled.div`
 	padding: 2.5rem;
 	text-align: center;
 
-	@media (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	@media (orientation: landscape) and (max-height: ${({ theme }) => Breakpoint["md-min"]({ theme })}px) {
 		flex-direction: row;
 	}
 `;
@@ -28,7 +27,7 @@ export const ErrorIcon = styled.img`
 	height: auto;
 	margin-bottom: 2rem;
 
-	@media (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	@media (orientation: landscape) and (max-height: ${({ theme }) => Breakpoint["md-min"]({ theme })}px) {
 		margin: 0 2rem 0 0;
 	}
 `;
@@ -55,7 +54,7 @@ export const OkButton = styled(Button.Default)`
 	max-width: 16rem;
 	margin-top: 2rem;
 
-	@media (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	@media (orientation: landscape) and (max-height: ${({ theme }) => Breakpoint["md-min"]({ theme })}px) {
 		margin-top: 0.5rem;
 	}
 `;

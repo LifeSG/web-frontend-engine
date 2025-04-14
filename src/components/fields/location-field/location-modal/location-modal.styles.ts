@@ -1,9 +1,8 @@
-import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import styled from "styled-components";
 import { TPanelInputMode } from "../types";
 import { LocationPicker } from "./location-picker";
-import { MediaQuery } from "@lifesg/react-design-system";
+import { Breakpoint, MediaQuery } from "@lifesg/react-design-system";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
@@ -32,7 +31,8 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		max-height: 90%;
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${({ theme }) =>
+		Breakpoint["md-min"]({ theme })}px) {
 		height: 100%;
 		width: 100%;
 		flex-direction: column;
@@ -45,7 +45,8 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 export const StyledLocationPicker = styled(LocationPicker)<ISinglePanelStyle>`
 	width: 48.89%;
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${({ theme }) =>
+		Breakpoint["md-min"]({ theme })}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? "none" : "block")};
 		position: relative;
 		left: 0;

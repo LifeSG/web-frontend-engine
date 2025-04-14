@@ -1,5 +1,4 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { action } from "@storybook/addon-actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef, useRef } from "react";
@@ -8,7 +7,7 @@ import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFro
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../components/frontend-engine";
 import { RecursivePartial, TNoInfer } from "../utils";
-import { MediaQuery } from "@lifesg/react-design-system";
+import { Breakpoint, MediaQuery } from "@lifesg/react-design-system";
 
 const EXCLUDED_STORY_PROPS: ArgTypes = {
 	invalid: { table: { disable: true } },
@@ -186,31 +185,37 @@ const SIDEBAR_WIDTH = 210;
 const SPACER = 550;
 
 const StyledForm = styled(OriginalFrontendEngine)`
-	width: calc(${V2_MediaWidths.desktopL}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+	width: calc(
+		${({ theme }) => Breakpoint["xl-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px
+	);
 	max-width: 820px;
 
 	${MediaQuery.MaxWidth.xl} {
 		min-width: 500px;
-		width: calc(${V2_MediaWidths.desktopM}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+		width: calc(
+			${({ theme }) => Breakpoint["xl-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px
+		);
 	}
 
 	${MediaQuery.MaxWidth.lg} {
 		min-width: 400px;
-		width: calc(${V2_MediaWidths.tablet}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+		width: calc(
+			${({ theme }) => Breakpoint["lg-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px
+		);
 	}
 
 	${MediaQuery.MaxWidth.sm} {
 		min-width: 350px;
-		width: calc(${V2_MediaWidths.mobileL}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
+		width: calc(${({ theme }) => Breakpoint["md-min"]({ theme })}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
 	}
 
 	${MediaQuery.MaxWidth.xs} {
 		min-width: 0;
-		width: calc(${V2_MediaWidths.mobileM}px - ${MINIMUM_SIDE_PADDING}px);
+		width: calc(${({ theme }) => Breakpoint["xs-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 
 	${MediaQuery.MaxWidth.xxs} {
-		width: calc(${V2_MediaWidths.mobileS}px - ${MINIMUM_SIDE_PADDING}px);
+		width: calc(${({ theme }) => Breakpoint["xs-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 `;
 

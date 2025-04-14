@@ -1,6 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
-import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { BinIcon } from "@lifesg/react-icons/bin";
@@ -8,7 +7,7 @@ import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import styled, { css } from "styled-components";
-import { Colour, MediaQuery } from "@lifesg/react-design-system";
+import { Breakpoint, Colour, MediaQuery } from "@lifesg/react-design-system";
 
 interface IModalBoxStyle {
 	imageReviewModalStyles?: string | undefined;
@@ -30,7 +29,8 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		margin: 0 1.25rem;
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${({ theme }) =>
+		Breakpoint["md-min"]({ theme })}px) {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -66,7 +66,8 @@ export const ReviewCloseButton = styled(IconButton)`
 		color: ${Colour["bg-primary"]};
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${({ theme }) =>
+		Breakpoint["md-min"]({ theme })}px) {
 		height: 2.25rem;
 	}
 `;
@@ -105,7 +106,8 @@ export const ContentSection = styled.div`
 	background-color: black;
 	overflow: hidden;
 	height: 31.25rem;
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${({ theme }) =>
+		Breakpoint["md-min"]({ theme })}px) {
 		height: 100%;
 	}
 `;
@@ -122,7 +124,8 @@ export const DrawDeleteButtonWrapper = styled.div`
 	flex-direction: column;
 	justify-content: flex-end;
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${({ theme }) =>
+		Breakpoint["md-min"]({ theme })}px) {
 		right: 1.25rem;
 	}
 `;
@@ -185,7 +188,8 @@ export const FooterSection = styled.div`
 	align-items: center;
 	margin: 1rem 1.5rem 1rem 1.5rem;
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${V2_MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${({ theme }) =>
+		Breakpoint["md-min"]({ theme })}px) {
 		margin: 0 1.25rem;
 		height: 6.5rem;
 		max-height: 6.5rem;

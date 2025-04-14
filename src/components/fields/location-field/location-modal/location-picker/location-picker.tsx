@@ -1,4 +1,4 @@
-import { Colour, V2_MediaWidths } from "@lifesg/react-design-system";
+import { Breakpoint, Colour } from "@lifesg/react-design-system";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
@@ -52,7 +52,7 @@ export const LocationPicker = ({
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
 	const markersRef = useRef<L.Marker[]>();
-	const isMobile = window.matchMedia(`(max-width: ${V2_MediaWidths.tablet}px)`).matches;
+	const isMobile = window.matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`).matches;
 	const leafletConfig: L.MapOptions = {
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,

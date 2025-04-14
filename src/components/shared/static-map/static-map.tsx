@@ -1,9 +1,9 @@
-import { V2_MediaWidths } from "@lifesg/react-design-system/v2_media";
 import { useEffect, useRef, useState } from "react";
 import { IColor } from "../../../services/onemap/types";
 import { TestHelper } from "../../../utils";
 import { LocationHelper } from "../../fields/location-field/location-helper";
 import { StaticMapElement, StaticMapWrapper, staticMapDimensions } from "./static-map.styles";
+import { Breakpoint } from "@lifesg/react-design-system";
 
 const StaticMapPlaceholder = "https://assets.life.gov.sg/web-frontend-engine/img/map/static_map_placeholder.png";
 
@@ -55,7 +55,9 @@ export const StaticMap = ({
 
 	const reloadImage = () => {
 		if (!lat || !lng) return;
-		const newIsMobile = window.matchMedia(`(max-width: ${V2_MediaWidths.mobileL}px)`).matches;
+		const newIsMobile = window.matchMedia(
+			`(max-width: ${({ theme }) => Breakpoint["md-min"]({ theme })}px)`
+		).matches;
 		if (
 			isMobile.current !== newIsMobile ||
 			renderedCenter.current[0] !== lat ||
