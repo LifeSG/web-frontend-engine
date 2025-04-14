@@ -1,11 +1,11 @@
 import { RadioButtonProps } from "@lifesg/react-design-system/radio-button";
 import type { IPopoverSchema, ITextSchema } from "../../elements";
-import type { IInlineWrapperSchema } from "../../elements/wrapper";
+import type { TInlineWrapperSchema } from "../../elements/wrapper";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 export interface IRadioButtonOption {
-	label: string | Record<string, ITextSchema | IPopoverSchema | IInlineWrapperSchema>;
+	label: string | Record<string, ITextSchema | IPopoverSchema | TInlineWrapperSchema>;
 	value: string;
 	disabled?: boolean | undefined;
 }

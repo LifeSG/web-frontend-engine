@@ -1,3 +1,4 @@
+import { ColProps } from "@lifesg/react-design-system";
 import { TRenderRules } from "../../../context-providers";
 import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
@@ -9,25 +10,46 @@ export type TWrapperType = TBlockWrapperType | TInlineWrapperType;
 export type TBlockWrapperType = "div" | "header" | "footer" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
 export type TInlineWrapperType = "span";
 
-export type TWrapperSchema<V = undefined, C = undefined> = IBlockWrapperSchema<V, C> | IInlineWrapperSchema;
+export type TWrapperSchema<V = undefined, C = undefined> = TBlockWrapperSchema<V, C> | TInlineWrapperSchema;
 
-export interface IBlockWrapperSchema<V = undefined, C = undefined>
+/** @deprecated use `TWrapperSchema` */
+export type IWrapperSchema<V = undefined, C = undefined> = TBlockWrapperSchema<V, C> | TInlineWrapperSchema;
+
+interface IBlockWrapperSchemaBase<V = any, C = any>
 	extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
 	uiType: TBlockWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema<V, C>> | string;
-	/** set responsive columns */
-	columns?: IColumns | undefined;
 }
 
-export interface IInlineWrapperSchema<V = undefined, C = undefined>
+// Define the variants with discriminated union
+export type TBlockWrapperSchema<V = any, C = any> =
+	| (IBlockWrapperSchemaBase<V, C> & {
+			colType?: "v2" | undefined;
+			columns?: IColumns | undefined;
+	  })
+	| (IBlockWrapperSchemaBase<V, C> & {
+			colType: "v3";
+			columns?: ColProps | undefined;
+	  });
+
+interface IInlineWrapperSchemaBase<V = any, C = any>
 	extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
 	uiType: TInlineWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TInlineElementSchema<V, C>> | string;
-	/** set responsive columns */
-	columns?: IColumns | undefined;
 }
+
+// Define the variants with discriminated union
+export type TInlineWrapperSchema<V = any, C = any> =
+	| (IInlineWrapperSchemaBase<V, C> & {
+			colType?: "v2" | undefined;
+			columns?: IColumns | undefined;
+	  })
+	| (IInlineWrapperSchemaBase<V, C> & {
+			colType: "v3";
+			columns?: ColProps | undefined;
+	  });
 
 export interface IWrapperProps {
 	id?: string | undefined;

@@ -1,3 +1,4 @@
+import { ColProps } from "@lifesg/react-design-system";
 import { TRenderRules } from "../../context-providers";
 import { IColumns } from "../frontend-engine";
 import { IAccordionSchema, TAccordionEvents } from "./accordion";
@@ -8,7 +9,7 @@ import { IOrderedListSchema, IUnorderedListSchema } from "./list";
 import { IPopoverSchema } from "./popover";
 import { ITabItemSchema, ITabSchema } from "./tab";
 import type { ITextSchema } from "./text";
-import type { IInlineWrapperSchema, TWrapperSchema } from "./wrapper";
+import type { TInlineWrapperSchema, TWrapperSchema } from "./wrapper";
 
 /**
  * element types
@@ -76,7 +77,7 @@ export type TBlockElementSchema<V = undefined, C = undefined> =
 	| IUnorderedListSchema<V, C>;
 
 /** represent element schemas that render inline ui elements */
-export type TInlineElementSchema<V = undefined, C = undefined> = IInlineWrapperSchema<V, C> | IPopoverSchema;
+export type TInlineElementSchema<V = undefined, C = undefined> = TInlineWrapperSchema<V, C> | IPopoverSchema;
 
 /**
  * intersection type to represent all field events
@@ -96,7 +97,7 @@ export interface IBaseElementSchema<T> {
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
 	/** set responsive columns */
-	columns?: IColumns | undefined;
+	columns?: IColumns | ColProps | undefined;
 }
 // =============================================================================
 // ELEMENT PROPS

@@ -161,6 +161,21 @@ export const COLUMNS_ARG_TYPE: ArgTypes = {
 	},
 };
 
+export const CUSTOM_OPTIONS_ARG_TYPE: ArgTypes = {
+	customOptions: {
+		description:
+			"Determines whether to render the component using <code>v2</code> or <code>v3</code> breakpoints, default is <code>v2</code> ",
+		table: {
+			type: {
+				summary: "{ gridType?: 'v2' | 'v3' | undefined }",
+			},
+		},
+		type: { name: "object", value: {} },
+		control: { type: "object" },
+		defaultValue: { gridType: "v2" },
+	},
+};
+
 export const OVERRIDES_ARG_TYPE: ArgTypes = {
 	overrides: {
 		description: "Applies field schema properties on-the-fly over the schema without modifying `sections`",
