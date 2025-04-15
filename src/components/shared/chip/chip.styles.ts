@@ -1,4 +1,4 @@
-import { Colour } from "@lifesg/react-design-system/theme";
+import { Colour, Font } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled, { css } from "styled-components";
 import { IChipButtonProps } from "./types";
@@ -31,6 +31,7 @@ export const ChipButton = styled.button<IChipButtonProps>`
 
 				${ChipText} {
 					color: ${Colour["text-inverse"](props)};
+					${Font["body-md-semibold"]};
 				}
 			`;
 		}

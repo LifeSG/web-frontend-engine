@@ -1,4 +1,4 @@
-import { Colour, Font, MediaQuery } from "@lifesg/react-design-system";
+import { Border, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -10,12 +10,7 @@ export interface SubtitleProps {
 
 export const Wrapper = styled.div`
 	border-radius: 0.25rem;
-	${(props) => {
-		const color = encodeURIComponent(Colour["bg-strongest"](props));
-		/* Generated background-image for the dashed border from https://kovart.github.io/dashed-border-generator/  */
-		return `background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${color}' stroke-width='4' stroke-dasharray='8%2c 8' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");`;
-	}}
-
+	${Border.Util["dashed-default"]}
 	&:not(:last-child) {
 		margin-bottom: 2rem;
 	}
@@ -26,7 +21,7 @@ export const Subtitle = styled(Typography.BodyBL)<SubtitleProps>`
 `;
 
 export const Content = styled.div`
-	${Font["body-sm-regular"]};
+	${Font["body-md-regular"]};
 	margin-bottom: 1.5rem;
 	color: ${Colour["text-subtler"]};
 `;

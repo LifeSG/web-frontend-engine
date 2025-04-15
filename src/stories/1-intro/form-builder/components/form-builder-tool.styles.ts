@@ -62,13 +62,13 @@ export const Toolbar = styled.div`
 	z-index: 1;
 	gap: 2rem;
 	padding: 1rem;
-	background-color: ${Colour["bg-primary-subtler"]};
+	background-color: ${Colour["bg-primary-subtlest"]};
 	box-sizing: border-box;
 `;
 
 export const ModeButton = styled.button<IModeButtonProps>`
 	background: ${({ $active }) => ($active ? Colour["bg-primary-subtlest-selected"] : "transparent")};
-	color: ${Colour["text-primary"]};
+	color: ${Colour["bg-selected"]};
 	display: grid;
 	cursor: pointer;
 	border: none;
@@ -77,7 +77,7 @@ export const ModeButton = styled.button<IModeButtonProps>`
 	align-self: center;
 
 	:hover {
-		background: ${Colour["bg-hover-strong"]};
+		background: ${Colour["bg-selected-hover"]};
 	}
 
 	:focus {

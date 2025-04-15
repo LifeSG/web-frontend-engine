@@ -74,7 +74,7 @@ export const ButtonLocation = styled.button`
 	padding: 0;
 	background: ${Colour.bg};
 	cursor: pointer;
-	box-shadow: 0 0.125rem 0.25rem ${Colour["bg-inverse"]}66;
+	box-shadow: 0 0 4px rgb(from ${Colour.Primitive["neutral-20"]} r g b / 40%);
 `;
 
 export const ButtonLocationImage = styled.span`

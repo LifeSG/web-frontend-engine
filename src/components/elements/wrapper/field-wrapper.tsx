@@ -132,13 +132,13 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 const StyledSublabel = styled(Sanitize)`
 	&.sub-label {
 		display: block;
-		${Font["body-sm-regular"]};
+		${Font["body-md-regular"]};
 	}
 `;
 
 const StyledHint = styled(Sanitize)`
 	&.label-hint {
 		color: ${Colour.text};
-		${Font["body-sm-regular"]};
+		${Font["body-md-regular"]};
 	}
 `;

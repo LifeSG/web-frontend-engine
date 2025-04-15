@@ -1,4 +1,4 @@
-import { Colour, V2_ThemeSpec } from "@lifesg/react-design-system";
+import { Border, Colour, V2_ThemeSpec } from "@lifesg/react-design-system";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import styled, { keyframes } from "styled-components";
@@ -99,13 +99,7 @@ export const AddImageButton = styled(IconButton)`
 	width: 3rem;
 	height: 3rem;
 	background: #fff;
-	${({ theme }) => {
-		const borderColor = Colour["border-primary"]({ theme });
-		return `background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${borderColor.replace(
-			"#",
-			"%23"
-		)}FF' stroke-width='3' stroke-dasharray='5%2c1.55' stroke-dashoffset='5' stroke-linecap='butt'/%3e%3c/svg%3e");`;
-	}}
+	${Border.Util["dashed-default"]}
 
 	> svg {
 		color: ${Colour["icon-primary"]};

@@ -405,7 +405,7 @@ describe("location-input-group", () => {
 	let fetchSingleLocationByLatLngSpy;
 	let fetchLocationListSpy;
 
-	const setWindowAndViewPort = (width: number, height = ({ theme }) => Breakpoint["xl-max"]({ theme })) => {
+	const setWindowAndViewPort = (width: number, height = Breakpoint["xl-max"]({ theme: LifeSGTheme })) => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: Breakpoint["xxs-max"]({ theme: LifeSGTheme }), // Set the desired screen width for the desktop view

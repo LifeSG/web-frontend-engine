@@ -181,7 +181,7 @@ export const LocationPicker = ({
 				: undefined;
 			const mapPinIcon =
 				"data:image/svg+xml;base64," +
-				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour.icon({ theme: theme })} />));
+				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour["icon-primary"]({ theme })} />));
 			const marker = markerFrom(target, interactiveMapPinIconUrl ?? mapPinIcon, isSelected).addTo(map);
 
 			return shouldSelectOnClick

@@ -41,7 +41,6 @@ export const ImageThumbnails = (props: IProps) => {
 		multiple,
 	} = props;
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const theme = useTheme();
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -126,7 +125,6 @@ export const ImageThumbnails = (props: IProps) => {
 					data-testid={TestHelper.generateId(id, "add-image-button")}
 					aria-label="add image"
 					onClick={handleButtonClick}
-					theme={theme}
 				>
 					<PlusIcon />
 				</AddImageButton>

@@ -7,7 +7,7 @@ import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import styled, { css } from "styled-components";
-import { Breakpoint, Colour, MediaQuery } from "@lifesg/react-design-system";
+import { Breakpoint, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
 
 interface IModalBoxStyle {
 	imageReviewModalStyles?: string | undefined;
@@ -73,7 +73,7 @@ export const ReviewCloseButton = styled(IconButton)`
 `;
 
 export const ReviewTitle = styled(Typography.BodyMD)`
-	font-weight: 600;
+	${Font.Spec["weight-semibold"]};
 	color: ${Colour["text-primary"]};
 	margin: 0 auto;
 `;
@@ -103,7 +103,7 @@ export const ContentSection = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: black;
+	background-color: ${Colour["bg-inverse"]};
 	overflow: hidden;
 	height: 31.25rem;
 	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${({ theme }) =>
@@ -113,7 +113,7 @@ export const ContentSection = styled.div`
 `;
 
 export const LoadingPreviewText = styled(Typography.HeadingXS)`
-	color: white;
+	color: ${Colour["text-inverse"]};
 `;
 
 export const DrawDeleteButtonWrapper = styled.div`
@@ -134,7 +134,7 @@ export const DrawDeleteButton = styled(IconButton)`
 	padding: 0;
 	width: 5.4375rem;
 	height: 2.5rem;
-	background-color: white;
+	background-color: ${Colour.bg};
 	box-shadow: 0 0.125rem 0.25rem ${Colour["border-stronger"]}80;
 	border-radius: 1.25rem;
 
