@@ -4,6 +4,7 @@ import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 import { TRadioToggleLayoutType } from "./types";
+import { Spacing } from "@lifesg/react-design-system";
 
 interface ILabelProps {
 	disabled?: boolean | undefined;
@@ -18,7 +19,7 @@ export const Label = styled(Typography.BodyMD)<ILabelProps>`
 `;
 
 export const StyledRadioButton = styled(RadioButton)`
-	margin-right: 5px;
+	margin-right: ${Spacing["spacing-4"]};
 	flex-shrink: 0;
 `;
 
