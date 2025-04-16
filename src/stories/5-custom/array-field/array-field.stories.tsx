@@ -13,7 +13,7 @@ import {
 	WarningStoryTemplate,
 } from "../../common";
 import { ReactElement, useRef } from "react";
-import { Border, Button } from "@lifesg/react-design-system";
+import { Border, Button, Radius } from "@lifesg/react-design-system";
 import { RecursivePartial } from "../../../utils";
 
 const meta: Meta = {
@@ -172,7 +172,7 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 				style: {
 					padding: "1rem",
 					borderRadius: 4,
-					border: `${Border["width-010"]} ${Border.solid} #E0E4E5`,
+					border: `1px solid #E0E4E5`,
 				},
 				columns: { mobile: 4, tablet: 8, desktop: 12 },
 				children: {

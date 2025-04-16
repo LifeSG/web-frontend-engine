@@ -1,4 +1,4 @@
-import { Border, Font } from "@lifesg/react-design-system/theme";
+import { Border, Font, Radius } from "@lifesg/react-design-system/theme";
 import { Form } from "@lifesg/react-design-system/form";
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -187,7 +187,7 @@ const Wrapper = styled.div`
 	max-width: 90vw;
 
 	code {
-		border-radius: 4px;
+		border-radius: ${Radius.sm};
 	}
 `;
 
@@ -200,7 +200,7 @@ const Section = styled.section`
 
 	// follow storybook styling
 	border: ${Border["width-010"]} ${Border.solid} rgba(38, 85, 115, 0.15);
-	border-radius: 4px;
+	border-radius: ${Radius.sm};
 	box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0;
 `;
 

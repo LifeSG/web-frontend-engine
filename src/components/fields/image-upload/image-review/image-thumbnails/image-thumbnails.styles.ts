@@ -18,7 +18,7 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 	height: 3rem;
 	padding: 0;
 	border: none;
-	border-radius: 2px;
+	border-radius: ${Radius.xs};
 	${({ src }) => `background-image: url(${src});`}
 	background-color: ${({ error }) => error && "#eee"};
 	background-position: center;
@@ -66,7 +66,7 @@ export const LoadingBox = styled.div`
 	height: 3rem;
 	justify-content: center;
 	align-items: center;
-	border-radius: 2px;
+	border-radius: ${Radius.xs};
 	background-color: ${Colour["bg-strongest"]};
 
 	${LoadingDot}:nth-child(1) {

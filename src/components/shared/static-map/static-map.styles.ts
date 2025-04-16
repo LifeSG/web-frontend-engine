@@ -1,4 +1,4 @@
-import { Colour, MediaQuery } from "@lifesg/react-design-system";
+import { Colour, MediaQuery, Radius } from "@lifesg/react-design-system";
 import styled from "styled-components";
 
 export const staticMapDimensions = {
@@ -16,7 +16,7 @@ export const StaticMapWrapper = styled.div`
 	width: ${staticMapDimensions.desktop.width / 16}rem;
 	aspect-ratio: 3.55;
 	margin-top: 2.375rem;
-	border-radius: 4px;
+	border-radius: ${Radius.sm};
 	border: 1px solid ${Colour.border};
 	overflow: hidden;
 
