@@ -4,14 +4,14 @@ import { TWrapperSchema } from "../wrapper";
 
 export interface ITabSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"tab">,
-		TComponentOmitProps<TWrapperSchema> {
+		TComponentOmitProps<TWrapperSchema, "customOptions"> {
 	children: Record<string, ITabItemSchema<V, C>>;
 	currentActiveTabId?: string | undefined;
 }
 
 export interface ITabItemSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"tab-item">,
-		TComponentOmitProps<TWrapperSchema> {
+		TComponentOmitProps<TWrapperSchema, "customOptions"> {
 	children: Record<string, TFrontendEngineFieldSchema<V, C>>;
 	title: string;
 }

@@ -1,7 +1,7 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta } from "@storybook/react";
 import { IGridSchema } from "../../../components/elements";
-import { CommonFieldStoryProps, CUSTOM_OPTIONS_ARG_TYPE, DefaultStoryTemplate } from "../../common";
+import { CommonFieldStoryProps, DefaultStoryTemplate } from "../../common";
 
 const meta: Meta = {
 	title: "Element/Grid",
@@ -34,7 +34,19 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
-		...CUSTOM_OPTIONS_ARG_TYPE,
+		customOptions: {
+			description: `Determines whether to render the component using <code>v2</code> or <code>v3</code> breakpoints, default is <code>v2</code><br>
+				For gridType <code>v2</code>, component will use <code>V2_Layout.Container</code><br>
+				For gridType <code>v3</code>, component will use <code>Layout.Container</code>`,
+			table: {
+				type: {
+					summary: "{ gridType?: 'v2' | 'v3' | undefined }",
+				},
+			},
+			type: { name: "object", value: {} },
+			control: { type: "object" },
+			defaultValue: { gridType: "v2" },
+		},
 	},
 };
 export default meta;

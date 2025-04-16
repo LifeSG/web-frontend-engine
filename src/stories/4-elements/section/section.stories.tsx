@@ -42,6 +42,19 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
+		customOptions: {
+			description: `Determines whether to render the component using <code>v2</code> or <code>v3</code> breakpoints, default is <code>v2</code><br><br>
+				For gridType <code>v2</code>:<br>Component will use <code>V2_Layout.Container</code> and <code>V2_Layout.Section</code><br><br>
+				For gridType <code>v3</code>:<br>Component will use <code>Layout.Container</code> and <code>Layout.Section</code><br><br>`,
+			table: {
+				type: {
+					summary: "{ gridType?: 'v2' | 'v3' | undefined, contentType?: 'v2' | 'v3' | undefined }",
+				},
+			},
+			type: { name: "object", value: {} },
+			control: { type: "object" },
+			defaultValue: { gridType: "v2", contentType: "v2" },
+		},
 	},
 };
 export default meta;

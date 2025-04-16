@@ -1,4 +1,4 @@
-import { ColProps } from "@lifesg/react-design-system";
+import { ColProps } from "@lifesg/react-design-system/layout";
 import { TRenderRules } from "../../context-providers";
 import { IColumns } from "../frontend-engine";
 import { IAccordionSchema, TAccordionEvents } from "./accordion";

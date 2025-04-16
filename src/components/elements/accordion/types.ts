@@ -12,7 +12,7 @@ export interface IButtonAccordion {
 
 export interface IAccordionSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"accordion">,
-		TComponentOmitProps<TWrapperSchema, "title"> {
+		TComponentOmitProps<TWrapperSchema, "customOptions" | "title"> {
 	uiType: "accordion";
 	button?: boolean | IButtonAccordion | undefined;
 	children: Record<string, TFrontendEngineFieldSchema<V, C>>;

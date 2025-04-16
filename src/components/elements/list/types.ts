@@ -17,6 +17,6 @@ export interface IOrderedListSchema<V = undefined, C = undefined>
 
 export interface IListItemSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"list-item">,
-		TComponentOmitProps<TWrapperSchema> {
+		TComponentOmitProps<TWrapperSchema, "customOptions"> {
 	children: string | Record<string, TFrontendEngineFieldSchema<V, C>>;
 }

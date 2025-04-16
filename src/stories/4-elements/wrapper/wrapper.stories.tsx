@@ -20,18 +20,6 @@ const meta: Meta = {
 						All-purpose component to wrap fields or add copy. This can be used to group fields, layout the
 						form or add copy in between fields.
 					</p>
-					<p>
-						When colType is set to <code>v3</code>, the columns property will be <code>ColProps</code> type
-						parameters. For a complete reference of these properties and their usage, please consult the{" "}
-						<a
-							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/foundations-breakpoint-introduction--docs"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							Breakpoint
-						</a>{" "}
-						documentation.
-					</p>
 					<ArgTypes of={Default} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
@@ -133,6 +121,9 @@ String.args = {
 export const StringAndField = Template("wrapper-field-and-string").bind({});
 StringAndField.args = {
 	uiType: "div",
+	columns: {
+		xlCols: 1,
+	},
 	children: {
 		"child-string": {
 			uiType: "h6",
