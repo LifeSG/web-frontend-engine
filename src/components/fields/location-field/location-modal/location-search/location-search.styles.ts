@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Breakpoint, Button, Colour, Font, MediaQuery, Typography } from "@lifesg/react-design-system";
+import { Breakpoint, Button, Colour, Font, MediaQuery, Motion, Typography } from "@lifesg/react-design-system";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
@@ -31,7 +31,7 @@ export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	justify-content: space-between;
 	border-bottom: 1px solid ${Colour.border};
 	clip-path: inset(0 0 -0.3rem 0);
-	transition: box-shadow 0.3s linear;
+	transition: box-shadow ${Motion["duration-250"]} linear;
 
 	${({ hasScrolled }) => (hasScrolled ? `box-shadow: 0 0.06rem 0.4rem rgba(0,0,0,.12);` : "")}
 
