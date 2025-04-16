@@ -84,7 +84,7 @@ export const LoadingBox = styled.div`
 `;
 
 export const BorderOverlay = styled.div<{ isSelected: boolean }>`
-	border: ${(props) => (props.isSelected ? "solid  2px" : "none")};
+	border: ${(props) => (props.isSelected ? `${Border.solid} ${Border["width-020"]}` : "none")};
 	border-color: ${Colour["border-primary"]};
 	width: 100%;
 	height: 100%;

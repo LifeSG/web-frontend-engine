@@ -1,4 +1,4 @@
-import { Colour, Font } from "@lifesg/react-design-system/theme";
+import { Border, Colour, Font } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled, { css } from "styled-components";
 import { IChipButtonProps } from "./types";
@@ -8,7 +8,7 @@ import { IChipButtonProps } from "./types";
 // =============================================================================
 export const ChipButton = styled.button<IChipButtonProps>`
 	background-color: ${Colour.bg};
-	border: 1px solid ${Colour.border};
+	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	border-radius: 1rem;
 	display: inline-block;
 	padding: 0.063rem 0.438rem;

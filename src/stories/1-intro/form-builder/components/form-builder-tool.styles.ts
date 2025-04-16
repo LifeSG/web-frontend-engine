@@ -3,7 +3,7 @@ import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
 import { Textarea } from "@lifesg/react-design-system/input-textarea";
 import { FrontendEngine } from "../../../common";
-import { Colour } from "@lifesg/react-design-system";
+import { Border, Colour } from "@lifesg/react-design-system";
 
 // =============================================================================
 // STYLE INTERFACE
@@ -111,7 +111,7 @@ export const SchemaEditor = styled(Textarea)`
 	width: 100%;
 	overflow: auto;
 	padding: 1rem;
-	border: 1px solid ${Colour.border};
+	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	border-radius: 4px;
 `;
 

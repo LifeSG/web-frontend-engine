@@ -1,7 +1,7 @@
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
-import { Colour, Font, MediaQuery } from "@lifesg/react-design-system";
+import { Border, Colour, Font, MediaQuery } from "@lifesg/react-design-system/theme";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
 	display: flex;
@@ -9,7 +9,9 @@ export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }
 	align-items: center;
 	gap: 0.5rem;
 	border: ${(props) =>
-		props.isError ? `1px solid ${Colour["border-error"](props)}` : `1px solid ${Colour.border(props)}`};
+		props.isError
+			? `${Border["width-010"]} ${Border.solid} ${Colour["border-error"](props)}`
+			: `${Border["width-010"]} ${Border.solid} ${Colour.border(props)}`};
 	border-radius: 4px;
 	background-color: ${(props) =>
 		props.isError ? `${Colour["bg-error"](props)}` : `${Colour["bg-primary-subtlest"](props)}`};

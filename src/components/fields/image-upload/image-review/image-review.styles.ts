@@ -1,4 +1,4 @@
-import { Breakpoint, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
+import { Border, Breakpoint, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
 import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Modal } from "@lifesg/react-design-system/modal";
@@ -235,7 +235,8 @@ export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
 	border-radius: 0.25rem;
 	padding: 0.75rem;
 	background-color: ${({ $color }) => $color};
-	border: solid 1px ${({ $color, $colorScheme }) => ($colorScheme === "light" ? "#979797" : $color)};
+	border: ${Border.solid} ${Border["width-010"]}
+		${({ $color, $colorScheme }) => ($colorScheme === "light" ? "#979797" : $color)};
 	cursor: pointer;
 
 	${MediaQuery.MaxWidth.sm} {

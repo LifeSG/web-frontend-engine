@@ -1,4 +1,4 @@
-import { Font } from "@lifesg/react-design-system";
+import { Border, Font } from "@lifesg/react-design-system/theme";
 import { Form } from "@lifesg/react-design-system/form";
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -199,7 +199,7 @@ const Section = styled.section`
 	padding: 1.25rem;
 
 	// follow storybook styling
-	border: 1px solid rgba(38, 85, 115, 0.15);
+	border: ${Border["width-010"]} ${Border.solid} rgba(38, 85, 115, 0.15);
 	border-radius: 4px;
 	box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0;
 `;

@@ -9,6 +9,7 @@ import {
 	ResetStoryTemplate,
 } from "../../common";
 import { ChildDefault, ChildResize, ChildValidateSubmission, ChildValidation } from "./doc-elements";
+import { Border } from "@lifesg/react-design-system";
 
 const meta: Meta = {
 	title: "Custom/Iframe",
@@ -127,10 +128,10 @@ export const Overrides = OverrideStoryTemplate<IIframeSchema>("iframe-overrides"
 Overrides.args = {
 	referenceKey: "iframe",
 	validationTimeout: -1,
-	style: { border: "1px solid blue" },
+	style: { border: `${Border["width-010"]} ${Border.solid} blue` },
 	src: `${host}/iframe.html?viewMode=story&id=custom-iframe--default-child`,
 	overrides: {
-		style: { border: "1px solid red" },
+		style: { border: `${Border["width-010"]} ${Border.solid} red` },
 	},
 };
 Overrides.tags = ["!autodocs"];
