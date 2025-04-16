@@ -1,4 +1,4 @@
-import { Border, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
+import { Border, Colour, Font, MediaQuery, Radius } from "@lifesg/react-design-system";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -10,7 +10,11 @@ export interface SubtitleProps {
 
 export const Wrapper = styled.div`
 	border-radius: 0.25rem;
-	${Border.Util["dashed-default"]}
+	${Border.Util["dashed-default"]({
+		colour: Colour.border,
+		thickness: Border["width-040"],
+		radius: Radius.sm,
+	})}
 	&:not(:last-child) {
 		margin-bottom: 2rem;
 	}

@@ -524,7 +524,7 @@ describe("image-upload", () => {
 
 		describe("mobile", () => {
 			beforeEach(async () => {
-				jest.spyOn(WindowHelper, "isMobileView").mockReturnValue(true);
+				jest.spyOn(WindowHelper, "useMobileView").mockReturnValue(() => true);
 
 				await renderComponent({
 					files: [FILE_1],

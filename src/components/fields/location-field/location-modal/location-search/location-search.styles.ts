@@ -115,7 +115,7 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 export const ResultTitle = styled(Typography.BodyMD)`
 	border-bottom: 1px solid ${Colour.border};
 	padding: 1rem 0;
-	${Font.Spec["weight-bold"]}
+	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
 export const NoResultTitle = styled(Typography.BodyMD)`
@@ -136,7 +136,7 @@ export const ResultItem = styled.div<{ active?: boolean }>`
 	background-color: ${({ active }) => (active ? Colour["bg-selected"] : `transparent`)};
 
 	.keyword {
-		${Font.Spec["weight-semibold"]}
+		font-weight: ${Font.Spec["weight-semibold"]};
 	}
 `;
 

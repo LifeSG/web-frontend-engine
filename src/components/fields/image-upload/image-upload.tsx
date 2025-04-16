@@ -59,7 +59,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [showReviewModal, setShowReviewModal] = useState(false);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
-	const theme = useTheme();
+	const isMobileView = WindowHelper.useMobileView();
 
 	// =============================================================================
 	// EFFECTS
@@ -168,7 +168,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					case EImageStatus.COMPRESSED:
 					case EImageStatus.CONVERTED:
 						if (editImage && !showReviewModal) {
-							if (WindowHelper.isMobileView(theme)) {
+							if (isMobileView()) {
 								setShowReviewModal(true);
 							} else {
 								setShowReviewPrompt(true);

@@ -1,4 +1,4 @@
-import { Border, Colour, V2_ThemeSpec } from "@lifesg/react-design-system";
+import { Border, Colour, Radius, V2_ThemeSpec } from "@lifesg/react-design-system";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import styled, { keyframes } from "styled-components";
@@ -99,7 +99,11 @@ export const AddImageButton = styled(IconButton)`
 	width: 3rem;
 	height: 3rem;
 	background: #fff;
-	${Border.Util["dashed-default"]}
+	${Border.Util["dashed-default"]({
+		colour: Colour.border,
+		thickness: Border["width-040"],
+		radius: Radius.sm,
+	})}
 
 	> svg {
 		color: ${Colour["icon-primary"]};

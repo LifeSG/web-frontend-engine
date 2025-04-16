@@ -1,11 +1,17 @@
 import { Breakpoint } from "@lifesg/react-design-system";
-import { ThemeSpec } from "@lifesg/react-design-system/theme/types";
+import { useMemo } from "react";
+import { useTheme } from "styled-components";
 
 export namespace WindowHelper {
-	export const isMobileView = (theme?: ThemeSpec): boolean => {
-		return (
-			window.innerWidth <= Breakpoint["md-min"]({ theme }) ||
-			(window.innerWidth > window.innerHeight && window.innerHeight < Breakpoint["md-min"]({ theme }))
-		);
+	export const useMobileView = () => {
+		const theme = useTheme();
+
+		const isMobileView = useMemo(() => {
+			return () =>
+				window.innerWidth <= Breakpoint["md-min"]({ theme }) ||
+				(window.innerWidth > window.innerHeight && window.innerHeight < Breakpoint["md-min"]({ theme }));
+		}, [theme]);
+
+		return isMobileView;
 	};
 }
