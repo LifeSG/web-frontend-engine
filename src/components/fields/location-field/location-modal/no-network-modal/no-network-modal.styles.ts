@@ -25,7 +25,7 @@ export const ContentTitle = styled(Typography.BodyBL)`
 	margin: 1.5rem auto 0.5rem;
 
 	${MediaQuery.MaxWidth.sm} {
-		font-size: 0.875rem !important;
+		font-size: 0.875rem;
 	}
 `;
 
@@ -34,7 +34,7 @@ export const ContentBody = styled(Typography.BodyBL)`
 	width: 100%;
 
 	${MediaQuery.MaxWidth.sm} {
-		font-size: 0.875rem !important;
+		font-size: 0.875rem;
 		max-width: 14rem;
 	}
 `;
