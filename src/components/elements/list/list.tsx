@@ -1,4 +1,4 @@
-import { V2_TextList as DSTextList } from "@lifesg/react-design-system/v2_text-list";
+import { TextList } from "@lifesg/react-design-system/text-list";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
@@ -14,7 +14,7 @@ export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrdered
 		schema: { children, uiType, ...otherSchema },
 	} = props;
 
-	const Element = uiType === "ordered-list" ? DSTextList.Ol : DSTextList.Ul;
+	const Element = uiType === "ordered-list" ? TextList.Ol : TextList.Ul;
 
 	// =============================================================================
 	// RENDER FUNCTIONS
