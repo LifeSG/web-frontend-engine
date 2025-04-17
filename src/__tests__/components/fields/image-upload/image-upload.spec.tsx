@@ -5,7 +5,7 @@ import { FrontendEngine } from "../../../../components";
 import { EImageStatus, IImageUploadSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
-import { AxiosApiClient, FileHelper, ImageHelper, WindowHelper } from "../../../../utils";
+import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
 import * as IdHelper from "../../../../utils/id-helper";
 import {
 	ERROR_MESSAGE,
@@ -20,6 +20,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
+import * as WindowHelper from "../../../../utils/hooks/use-window-helper";
 
 const METADATA = { dateTimeOriginal: "2009:10:10 04:09:20", lat: 22.316033333333333, lng: 114.17031666666666 };
 
@@ -524,7 +525,7 @@ describe("image-upload", () => {
 
 		describe("mobile", () => {
 			beforeEach(async () => {
-				jest.spyOn(WindowHelper, "useMobileView").mockReturnValue(() => true);
+				jest.spyOn(WindowHelper, "useWindowHelper").mockReturnValue(() => true);
 
 				await renderComponent({
 					files: [FILE_1],

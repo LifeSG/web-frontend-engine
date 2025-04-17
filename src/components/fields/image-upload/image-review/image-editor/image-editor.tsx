@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { fabric } from "fabric";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { FileHelper, TestHelper, WindowHelper } from "../../../../../utils";
+import { FileHelper, TestHelper } from "../../../../../utils";
 import { Canvas, Wrapper } from "./image-editor.styles";
 import { IImageEditorProps, IImageEditorRef } from "./types";
+import { useWindowHelper } from "../../../../../utils/hooks";
 
 const MAX_ZOOM = 5;
 const PENCIL_BRUSH_SIZE = 10;
@@ -23,7 +24,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		pinchStartAmount: 0,
 		panAmount: { x: 0, y: 0 },
 	});
-	const isMobileView = WindowHelper.useMobileView();
+	const isMobileView = useWindowHelper();
 
 	useImperativeHandle(ref, () => ({
 		clearDrawing,
@@ -175,6 +176,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			}
 
 			// extra logic to zoom in to fit image to canvas width in mobile landscape orientation
+
 			if (isMobileView() && canvasRatio > 1) {
 				const intendedZoom = Math.min((fabricCanvas.current.width || 0) / img.getScaledWidth() + 0.1, MAX_ZOOM);
 				fabricCanvas.current.zoomToPoint(

@@ -9,3 +9,4 @@ export * from "./use-iframe-message";
 export * from "./use-previous";
 export * from "./use-validation-config";
 export * from "./use-validation-schema";
+export * from "./use-window-helper";

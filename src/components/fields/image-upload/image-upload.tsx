@@ -2,8 +2,8 @@ import xor from "lodash/xor";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { FileHelper, WindowHelper, generateRandomId } from "../../../utils";
-import { useFieldEvent, usePrevious, useValidationConfig } from "../../../utils/hooks";
+import { FileHelper, generateRandomId } from "../../../utils";
+import { useFieldEvent, usePrevious, useValidationConfig, useWindowHelper } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";
@@ -16,7 +16,6 @@ import {
 	IUploadedImage,
 	TImageUploadAcceptedFileType,
 } from "./types";
-import { useTheme } from "styled-components";
 
 // lazy load to fix next.js SSR errors
 const ImageManager = lazy(() => import("./image-manager"));
@@ -59,7 +58,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [showReviewModal, setShowReviewModal] = useState(false);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
-	const isMobileView = WindowHelper.useMobileView();
+	const isMobileView = useWindowHelper();
 
 	// =============================================================================
 	// EFFECTS
