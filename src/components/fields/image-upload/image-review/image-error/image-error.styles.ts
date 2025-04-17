@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Button } from "@lifesg/react-design-system/button";
-import { Breakpoint, Colour } from "@lifesg/react-design-system";
+import { Breakpoint, Colour, Font } from "@lifesg/react-design-system";
 
 export const Wrapper = styled.div`
 	position: absolute;
@@ -44,9 +44,15 @@ export const BodyText = styled.div`
 	word-break: break-word;
 `;
 
+export const TitleText = styled.div`
+	color: ${Colour["text-inverse"]};
+	word-break: break-word;
+	font-weight: ${Font.Spec["weight-bold"]};
+`;
+
 export const NameWrapper = styled.span`
 	display: inline-block;
-	font-weight: bold;
+	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
 export const OkButton = styled(Button.Default)`

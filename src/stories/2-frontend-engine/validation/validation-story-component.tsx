@@ -18,6 +18,7 @@ import { Sanitize } from "../../../components/shared";
 import { IYupValidationRule } from "../../../context-providers";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 import { ALL_VALIDATION_DEMO_FIELD_IDS, TValidationDemoFieldIds, VALIDATION_DEMO_CONFIGS } from "./validation.data";
+import { Font } from "@lifesg/react-design-system";
 
 highlightjs.registerLanguage("json", json);
 
@@ -134,7 +135,7 @@ export const ValidationStoryComponent = ({
 			<V2_Layout.Content type="grid">
 				<V2_Layout.ColDiv desktopCols={12} tabletCols={8} mobileCols={4}>
 					<Section>
-						<Typography.HeadingSM>{ruleName}</Typography.HeadingSM>
+						<SectionTitle as={Typography.HeadingSM}>{ruleName}</SectionTitle>
 						<Sanitize>{ruleDescription}</Sanitize>
 						<pre>
 							<code ref={ruleSnippet} key={demoFieldType} className="json">
@@ -145,7 +146,7 @@ export const ValidationStoryComponent = ({
 				</V2_Layout.ColDiv>
 				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
 					<Section>
-						<Typography.BodyMD>Sample schema</Typography.BodyMD>
+						<SectionTitle as={Typography.BodyMD}>Sample schema</SectionTitle>
 						<div>
 							<Form.Select
 								options={fieldOptions}
@@ -167,7 +168,7 @@ export const ValidationStoryComponent = ({
 				</V2_Layout.ColDiv>
 				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
 					<Section>
-						<Typography.BodyMD>Preview</Typography.BodyMD>
+						<SectionTitle as={Typography.BodyMD}>Preview</SectionTitle>
 						<p>Submit form to preview validation</p>
 						<FrontendEngine
 							key={demoFieldType}
@@ -201,4 +202,8 @@ const Section = styled.section`
 	border: 1px solid rgba(38, 85, 115, 0.15);
 	border-radius: 4px;
 	box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0;
+`;
+
+const SectionTitle = styled.div`
+	font-weight: ${Font.Spec["weight-bold"]};
 `;

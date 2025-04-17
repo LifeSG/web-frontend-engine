@@ -92,7 +92,7 @@ export const EditHeaderButton = styled.button`
 	color: ${Colour["text-primary"]};
 	font-size: 1rem;
 	padding: 0 1.5rem;
-	font-weight: 600;
+	font-weight: ${Font.Spec["weight-semibold"]};
 `;
 
 // =============================================================================
@@ -114,6 +114,7 @@ export const ContentSection = styled.div`
 
 export const LoadingPreviewText = styled(Typography.HeadingXS)`
 	color: ${Colour["text-inverse"]};
+	font-weight: ${Font.Spec["weight-semibold"]};
 `;
 
 export const DrawDeleteButtonWrapper = styled.div`

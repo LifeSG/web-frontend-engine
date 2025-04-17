@@ -1,4 +1,4 @@
-import { Card, Colour, MediaQuery } from "@lifesg/react-design-system";
+import { Card, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
 import styled from "styled-components";
 
 export const LocationPickerWrapper = styled.div`
@@ -37,7 +37,7 @@ export const LeafletWrapper = styled.div`
 				width: 100%;
 				height: 50%;
 				color: ${Colour.hyperlink};
-				font-weight: bold;
+				font-weight: ${Font.Spec["bold"]};
 
 				&.leaflet-control-zoom-in {
 					border-bottom-color: ${Colour.border};

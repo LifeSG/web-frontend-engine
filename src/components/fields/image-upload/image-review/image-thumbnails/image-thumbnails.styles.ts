@@ -100,7 +100,7 @@ export const AddImageButton = styled(IconButton)`
 	height: 3rem;
 	background: #fff;
 	${Border.Util["dashed-default"]({
-		colour: Colour.border,
+		colour: Colour["border-primary"],
 		thickness: Border["width-040"],
 		radius: Radius.sm,
 	})}

@@ -4,7 +4,7 @@ import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
 import { ImageContext } from "../../image-context";
 import { EImageStatus, IImage, ISharedImageProps } from "../../types";
-import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, Wrapper } from "./image-error.styles";
+import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, TitleText, Wrapper } from "./image-error.styles";
 
 const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-white.svg";
 
@@ -110,13 +110,13 @@ export const ImageError = (props: IProps) => {
 		<Wrapper>
 			<ErrorIcon src={WARNING_ICON} alt={errorTitle} />
 			<Content>
-				<BodyText
+				<TitleText
 					as={Typography.HeadingXS}
 					id={TestHelper.generateId(id, "title")}
 					data-testid={TestHelper.generateId(id, "title")}
 				>
 					{errorTitle}
-				</BodyText>
+				</TitleText>
 				<BodyText as={Typography.BodyBL} ref={errorDescriptionRef}>
 					{errorDescription}
 				</BodyText>

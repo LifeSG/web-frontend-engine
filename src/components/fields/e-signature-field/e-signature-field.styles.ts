@@ -13,6 +13,7 @@ export const ErrorWrapper = styled(Typography.BodySM)`
 	margin: -1rem 0 2rem;
 	color: ${Colour["text-error"]};
 	outline: none;
+	${Font["body-sm-bold"]}
 `;
 
 export const TryAgain = styled.button`

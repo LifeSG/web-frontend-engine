@@ -81,7 +81,7 @@ export const ModeButton = styled.button<IModeButtonProps>`
 	}
 
 	:focus {
-		outline-color: ${Colour["border-primary"]};
+		outline-color: ${Colour["border-focus"]};
 	}
 
 	svg {

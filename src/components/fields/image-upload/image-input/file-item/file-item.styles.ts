@@ -1,7 +1,7 @@
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
-import { Colour, MediaQuery } from "@lifesg/react-design-system";
+import { Colour, Font, MediaQuery } from "@lifesg/react-design-system";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
 	display: flex;
@@ -58,6 +58,7 @@ export const Thumbnail = styled.div<{ src: string }>`
 	background: url(${(props) => props.src}) no-repeat center / cover;
 	overflow: hidden;
 	border-radius: 0.25rem;
+	${Font["body-sm-bold"]}
 
 	${MediaQuery.MaxWidth.lg} {
 		margin-right: 1rem;
