@@ -24,25 +24,25 @@ export const Section = (props: ISectionProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderInGrid = () => {
-		const Section = customOptions.gridType === "v3" ? Layout.Section : V2_Layout.Section;
-		const Container = customOptions.gridType === "v3" ? Layout.Container : V2_Layout.Container;
+		const LayoutSection = customOptions.gridType === "v3" ? Layout.Section : V2_Layout.Section;
+		const LayoutContainer = customOptions.gridType === "v3" ? Layout.Container : V2_Layout.Container;
 		return (
-			<Section>
-				<GridWrapper as={Container} type="grid">
+			<LayoutSection>
+				<GridWrapper as={LayoutContainer} type="grid">
 					<Wrapper {...otherProps}>{children}</Wrapper>
 				</GridWrapper>
-			</Section>
+			</LayoutSection>
 		);
 	};
 
 	const renderContained = () => {
-		const Content = customOptions.contentType === "v3" ? Layout.Content : V2_Layout.Content;
+		const LayoutContent = customOptions.contentType === "v3" ? Layout.Content : V2_Layout.Content;
 		return (
-			<Content>
+			<LayoutContent>
 				<Contained>
 					<Wrapper {...otherProps}>{children}</Wrapper>
 				</Contained>
-			</Content>
+			</LayoutContent>
 		);
 	};
 

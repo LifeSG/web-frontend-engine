@@ -9,7 +9,7 @@ type TCustomOptions = {
 
 export interface ISectionSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"section">,
-		TComponentOmitProps<TWrapperSchema, "customOptions" | "columns"> {
+		TComponentOmitProps<TWrapperSchema> {
 	children: Record<string, TFrontendEngineFieldSchema<V, C>>;
 	layoutType?: "default" | "grid" | "contain" | undefined;
 	customOptions?: TCustomOptions | undefined;

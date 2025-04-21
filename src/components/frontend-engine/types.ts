@@ -12,6 +12,7 @@ import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
+import { ColProps } from "@lifesg/react-design-system";
 
 export type { IYupValidationRule, TCustomComponents, TCustomValidationFunction } from "../../context-providers";
 
@@ -197,6 +198,30 @@ export interface IColumns extends React.HTMLAttributes<HTMLDivElement> {
 	 * column.
 	 */
 	desktop?: DesktopCol | [DesktopColRange, DesktopColRange] | undefined;
+	xxl?: never;
+	xl?: never;
+	lg?: never;
+	md?: never;
+	sm?: never;
+	xs?: never;
+	xxs?: never;
+}
+
+export interface IV3Columns extends React.HTMLAttributes<HTMLDivElement> {
+	mobile?: never;
+	tablet?: never;
+	desktop?: never;
+	/**
+	 * Specifies the number of columns to be spanned across for any breakpoint.
+	 * If an array is specified, the format is [startCol, endCol].
+	 */
+	xxl?: ColProps["xxsCols"];
+	xl?: ColProps["xlCols"];
+	lg?: ColProps["lgCols"];
+	md?: ColProps["mdCols"];
+	sm?: ColProps["smCols"];
+	xs?: ColProps["xsCols"];
+	xxs?: ColProps["xxsCols"];
 }
 
 /**

@@ -51,20 +51,6 @@ const meta: Meta = {
 			},
 			type: { name: "object", value: {}, required: true },
 		},
-		colType: {
-			description: `Specifies the grid system version to use. When set to <code>v2</code> (or left <code>undefined</code> ), the columns property expects <code>IColumns</code>  type.<br/>
-			When set to <code>v3</code>, the columns property expects <code>ColProps</code> type.`,
-			table: {
-				type: {
-					summary: "'v2' | 'v3' | undefined",
-				},
-				defaultValue: { summary: "v2" },
-			},
-			control: {
-				type: "select",
-				options: ["v2", "v3"],
-			},
-		},
 	},
 };
 export default meta;
@@ -121,9 +107,6 @@ String.args = {
 export const StringAndField = Template("wrapper-field-and-string").bind({});
 StringAndField.args = {
 	uiType: "div",
-	columns: {
-		xlCols: 1,
-	},
 	children: {
 		"child-string": {
 			uiType: "h6",

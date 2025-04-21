@@ -71,7 +71,7 @@ const meta: Meta = {
 				"A name of the purpose of the element. Also accepts <code>Text</code>, <code>Popover</code> or <code>span</code> schemas",
 			table: {
 				type: {
-					summary: "string | ITextSchema | IPopoverSchema | TInlineWrapperSchema",
+					summary: "string | ITextSchema | IPopoverSchema | IInlineWrapperSchema",
 				},
 			},
 		},

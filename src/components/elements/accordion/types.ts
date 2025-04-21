@@ -4,7 +4,7 @@ import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-
 import { IPopoverSchema } from "../popover/types";
 import { ITextSchema } from "../text/types";
 import { IBaseElementSchema } from "../types";
-import { TInlineWrapperSchema, TWrapperSchema } from "../wrapper";
+import { IInlineWrapperSchema, TWrapperSchema } from "../wrapper";
 
 export interface IButtonAccordion {
 	label: string | undefined;
@@ -12,7 +12,7 @@ export interface IButtonAccordion {
 
 export interface IAccordionSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"accordion">,
-		TComponentOmitProps<TWrapperSchema, "customOptions" | "title"> {
+		TComponentOmitProps<TWrapperSchema, "title"> {
 	uiType: "accordion";
 	button?: boolean | IButtonAccordion | undefined;
 	children: Record<string, TFrontendEngineFieldSchema<V, C>>;
@@ -22,7 +22,7 @@ export interface IAccordionSchema<V = undefined, C = undefined>
 	collapsible?: boolean | undefined;
 	expanded?: boolean | undefined;
 	displayState?: BoxContainerDisplayState | undefined;
-	title: string | Record<string, ITextSchema | IPopoverSchema | TInlineWrapperSchema<V, C>>;
+	title: string | Record<string, ITextSchema | IPopoverSchema | IInlineWrapperSchema<V, C>>;
 	disableContentInset?: boolean | undefined;
 }
 
