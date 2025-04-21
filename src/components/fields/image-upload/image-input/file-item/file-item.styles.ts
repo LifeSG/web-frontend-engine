@@ -1,7 +1,7 @@
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
-import { Border, Colour, Font, MediaQuery, Radius } from "@lifesg/react-design-system";
+import { Border, Colour, Font, MediaQuery, Radius } from "@lifesg/react-design-system/theme";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
 	display: flex;

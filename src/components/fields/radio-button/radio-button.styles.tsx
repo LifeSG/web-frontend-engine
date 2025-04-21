@@ -4,7 +4,7 @@ import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 import { TRadioToggleLayoutType } from "./types";
-import { Spacing } from "@lifesg/react-design-system";
+import { Spacing } from "@lifesg/react-design-system/theme";
 
 interface ILabelProps {
 	disabled?: boolean | undefined;

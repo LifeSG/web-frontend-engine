@@ -1,4 +1,4 @@
-import { MediaQuery } from "@lifesg/react-design-system";
+import { MediaQuery } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";

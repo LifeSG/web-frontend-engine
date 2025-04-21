@@ -1,4 +1,4 @@
-import { Border, Colour, Radius, V2_ThemeSpec } from "@lifesg/react-design-system";
+import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import styled, { keyframes } from "styled-components";

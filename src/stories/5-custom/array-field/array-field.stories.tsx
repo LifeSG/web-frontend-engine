@@ -13,7 +13,7 @@ import {
 	WarningStoryTemplate,
 } from "../../common";
 import { ReactElement, useRef } from "react";
-import { Border, Button, Radius } from "@lifesg/react-design-system";
+import { Button } from "@lifesg/react-design-system/button";
 import { RecursivePartial } from "../../../utils";
 
 const meta: Meta = {

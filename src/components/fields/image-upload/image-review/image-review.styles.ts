@@ -1,4 +1,4 @@
-import { Border, Breakpoint, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
+import { Border, Breakpoint, Colour, Font, MediaQuery } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Modal } from "@lifesg/react-design-system/modal";

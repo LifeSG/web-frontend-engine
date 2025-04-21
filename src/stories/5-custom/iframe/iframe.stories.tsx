@@ -9,7 +9,7 @@ import {
 	ResetStoryTemplate,
 } from "../../common";
 import { ChildDefault, ChildResize, ChildValidateSubmission, ChildValidation } from "./doc-elements";
-import { Border } from "@lifesg/react-design-system";
+import { Border } from "@lifesg/react-design-system/theme";
 
 const meta: Meta = {
 	title: "Custom/Iframe",

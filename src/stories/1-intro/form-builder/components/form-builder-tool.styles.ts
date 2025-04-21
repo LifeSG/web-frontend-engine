@@ -3,7 +3,7 @@ import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
 import { Textarea } from "@lifesg/react-design-system/input-textarea";
 import { FrontendEngine } from "../../../common";
-import { Border, Colour, Radius } from "@lifesg/react-design-system";
+import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
 
 // =============================================================================
 // STYLE INTERFACE

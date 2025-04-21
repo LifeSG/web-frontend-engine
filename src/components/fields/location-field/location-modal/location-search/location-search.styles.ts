@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import { Breakpoint, Button, Colour, Font, MediaQuery, Motion, Typography } from "@lifesg/react-design-system";
+import { Breakpoint, Colour, Font, MediaQuery, Motion } from "@lifesg/react-design-system/theme";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
 import { MagnifierIcon } from "@lifesg/react-icons/magnifier";
+import { Typography } from "@lifesg/react-design-system/typography";
+import { Button } from "@lifesg/react-design-system/button";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;

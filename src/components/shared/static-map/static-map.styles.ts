@@ -1,4 +1,4 @@
-import { Colour, MediaQuery, Radius } from "@lifesg/react-design-system";
+import { Colour, MediaQuery, Radius } from "@lifesg/react-design-system/theme";
 import styled from "styled-components";
 
 export const staticMapDimensions = {
