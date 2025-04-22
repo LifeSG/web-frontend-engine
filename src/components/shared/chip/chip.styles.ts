@@ -31,7 +31,6 @@ export const ChipButton = styled.button<IChipButtonProps>`
 
 				${ChipText} {
 					color: ${Colour["text-inverse"](props)};
-					${Font["body-md-semibold"]};
 				}
 			`;
 		}

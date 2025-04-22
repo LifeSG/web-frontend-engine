@@ -185,37 +185,31 @@ const SIDEBAR_WIDTH = 210;
 const SPACER = 550;
 
 const StyledForm = styled(OriginalFrontendEngine)`
-	width: calc(
-		${({ theme }) => Breakpoint["xl-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px
-	);
+	width: calc(${Breakpoint["xl-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	max-width: 820px;
 
 	${MediaQuery.MaxWidth.xl} {
 		min-width: 500px;
-		width: calc(
-			${({ theme }) => Breakpoint["xl-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px
-		);
+		width: calc(${Breakpoint["xl-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
 	${MediaQuery.MaxWidth.lg} {
 		min-width: 400px;
-		width: calc(
-			${({ theme }) => Breakpoint["lg-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px
-		);
+		width: calc(${Breakpoint["lg-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
 	${MediaQuery.MaxWidth.sm} {
 		min-width: 350px;
-		width: calc(${({ theme }) => Breakpoint["md-min"]({ theme })}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
+		width: calc(${Breakpoint["md-min"]}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
 	}
 
 	${MediaQuery.MaxWidth.xs} {
 		min-width: 0;
-		width: calc(${({ theme }) => Breakpoint["xs-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING}px);
+		width: calc(${Breakpoint["xs-max"]}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 
 	${MediaQuery.MaxWidth.xxs} {
-		width: calc(${({ theme }) => Breakpoint["xs-max"]({ theme })}px - ${MINIMUM_SIDE_PADDING}px);
+		width: calc(${Breakpoint["xs-max"]}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 `;
 

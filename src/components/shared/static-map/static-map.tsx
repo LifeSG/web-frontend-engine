@@ -57,7 +57,7 @@ export const StaticMap = ({
 
 	const reloadImage = () => {
 		if (!lat || !lng) return;
-		const newIsMobile = window.matchMedia(`(max-width: ${Breakpoint["md-min"]({ theme })}px)`).matches;
+		const newIsMobile = window.matchMedia(`(max-width: ${Breakpoint["sm-max"]({ theme })}px)`).matches;
 		if (
 			isMobile.current !== newIsMobile ||
 			renderedCenter.current[0] !== lat ||

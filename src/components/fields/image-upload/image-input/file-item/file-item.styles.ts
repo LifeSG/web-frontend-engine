@@ -11,7 +11,8 @@ export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }
 	border: ${(props) =>
 		props.isError ? `1px solid ${Colour["border-error"](props)}` : `1px solid ${Colour.border(props)}`};
 	border-radius: 4px;
-	background-color: ${(props) => (props.isError ? "rgb(253, 247, 247)" : `${Colour["bg-primary-subtlest"](props)}`)};
+	background-color: ${(props) =>
+		props.isError ? `${Colour["bg-error"](props)}` : `${Colour["bg-primary-subtlest"](props)}`};
 	min-height: 3.5rem;
 	margin-bottom: 1rem;
 	padding: 1rem 2rem;

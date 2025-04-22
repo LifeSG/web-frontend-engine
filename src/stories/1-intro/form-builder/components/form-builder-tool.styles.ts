@@ -68,7 +68,7 @@ export const Toolbar = styled.div`
 
 export const ModeButton = styled.button<IModeButtonProps>`
 	background: ${({ $active }) => ($active ? Colour["bg-primary-subtlest-selected"] : "transparent")};
-	color: ${Colour["bg-selected"]};
+	color: ${Colour["icon-primary"]};
 	display: grid;
 	cursor: pointer;
 	border: none;

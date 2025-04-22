@@ -39,7 +39,7 @@ export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 		border-bottom: 1px solid ${Colour["border-focus"]};
 	}
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		margin: 0.8rem 0 0;
 	}
 `;

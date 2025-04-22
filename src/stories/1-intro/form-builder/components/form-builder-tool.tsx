@@ -79,7 +79,7 @@ export const FormBuilderTool = () => {
 	// 	if (formBuilderMode !== "preview") return;
 	// 	return (
 	// 		<ContentWrapper $flexbox={true}>
-	// 			<Typography.HeadingMD>Generate Form</Typography.HeadingMD>
+	// 			<Typography.HeadingMD weight="bold">Generate Form</Typography.HeadingMD>
 	// 			{formBuilderOutput && <FrontendEnginePreview data={formBuilderOutput.schema as IFrontendEngineData} />}
 	// 		</ContentWrapper>
 	// 	);

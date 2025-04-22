@@ -99,7 +99,7 @@ export const SchemaView = () => {
 
 	// return (
 	// 	<>
-	// 		<Typography.HeadingMD>Generate Schema</Typography.HeadingMD>
+	// 		<Typography.HeadingMD weight="bold">Generate Schema</Typography.HeadingMD>
 	// 		{renderActionPanel()}
 	// 		<SchemaEditorWrapper>
 	// 			<SchemaEditor value={stringifiedSchema} onChange={handleSchemaChange} />

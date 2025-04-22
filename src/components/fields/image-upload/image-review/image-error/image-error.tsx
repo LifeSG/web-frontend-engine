@@ -111,15 +111,13 @@ export const ImageError = (props: IProps) => {
 			<ErrorIcon src={WARNING_ICON} alt={errorTitle} />
 			<Content>
 				<TitleText
-					as={Typography.HeadingXS}
 					id={TestHelper.generateId(id, "title")}
 					data-testid={TestHelper.generateId(id, "title")}
+					weight="bold"
 				>
 					{errorTitle}
 				</TitleText>
-				<BodyText as={Typography.BodyBL} ref={errorDescriptionRef}>
-					{errorDescription}
-				</BodyText>
+				<BodyText ref={errorDescriptionRef}>{errorDescription}</BodyText>
 				<OkButton
 					onClick={onClickOk}
 					id={TestHelper.generateId(id, "ok-button")}
