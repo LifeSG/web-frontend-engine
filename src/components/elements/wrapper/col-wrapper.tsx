@@ -29,8 +29,19 @@ const isV3ColumnsFormat = (columns: IColumns | IV3Columns | undefined): boolean 
 export const ColWrapper = ({ id, children, childSchema }: IProps) => {
 	if ("columns" in childSchema) {
 		if (isV3ColumnsFormat(childSchema.columns)) {
+			const { xxs, xs, sm, md, lg, xl, xxl, ...rest } = (childSchema.columns as IV3Columns) || {};
 			return (
-				<Layout.ColDiv data-testid={TestHelper.generateId(id, "grid_item")} {...childSchema.columns}>
+				<Layout.ColDiv
+					data-testid={TestHelper.generateId(id, "grid_item")}
+					xlCols={xl}
+					lgCols={lg}
+					mdCols={md}
+					smCols={sm}
+					xsCols={xs}
+					xxlCols={xxl}
+					xxsCols={xxs}
+					{...rest}
+				>
 					{children}
 				</Layout.ColDiv>
 			);

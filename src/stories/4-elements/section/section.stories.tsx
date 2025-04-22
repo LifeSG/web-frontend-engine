@@ -85,8 +85,8 @@ Default.args = {
 	},
 };
 
-export const Grid = Template("section-grid").bind({});
-Grid.args = {
+export const GridV2 = Template("section-grid").bind({});
+GridV2.args = {
 	uiType: "section",
 	layoutType: "grid",
 	children: {
@@ -112,9 +112,42 @@ Grid.args = {
 		},
 	},
 };
+GridV2.storyName = "Grid V2";
 
-export const Contained = Template("section-contain").bind({});
-Contained.args = {
+export const GridV3 = Template("section-grid").bind({});
+GridV3.args = {
+	uiType: "section",
+	layoutType: "grid",
+	customOptions: {
+		gridType: "v3",
+	},
+	children: {
+		text1: {
+			uiType: "text-field",
+			label: "Text",
+			columns: { md: 3 },
+		},
+		text2: {
+			uiType: "text-field",
+			label: "Text 2",
+			columns: { md: 3 },
+		},
+		text3: {
+			uiType: "text-field",
+			label: "Text 3",
+			columns: { md: 3 },
+		},
+		text4: {
+			uiType: "text-field",
+			label: "Text 4",
+			columns: { md: 3 },
+		},
+	},
+};
+GridV3.storyName = "Grid V3";
+
+export const ContainedV2 = Template("section-contain").bind({});
+ContainedV2.args = {
 	uiType: "section",
 	layoutType: "contain",
 	children: {
@@ -128,3 +161,24 @@ Contained.args = {
 		},
 	},
 };
+ContainedV2.storyName = "Contained V2";
+
+export const ContainedV3 = Template("section-contain").bind({});
+ContainedV3.args = {
+	uiType: "section",
+	layoutType: "contain",
+	customOptions: {
+		contentType: "v3",
+	},
+	children: {
+		text1: {
+			uiType: "text-field",
+			label: "Contained within 1320px",
+		},
+		text2: {
+			uiType: "text-field",
+			label: "Contained within 1320px",
+		},
+	},
+};
+ContainedV3.storyName = "Contained V3";

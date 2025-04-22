@@ -12,7 +12,7 @@ import { TCustomSchema } from "../custom";
 import { TElementSchema } from "../elements";
 import { ISectionSchema } from "../elements/section";
 import { TFieldSchema } from "../fields";
-import { ColProps } from "@lifesg/react-design-system";
+import { ColProps } from "@lifesg/react-design-system/layout";
 
 export type { IYupValidationRule, TCustomComponents, TCustomValidationFunction } from "../../context-providers";
 
@@ -178,6 +178,7 @@ export interface IColumns extends React.HTMLAttributes<HTMLDivElement> {
 	 *
 	 * If all column props are not specified, the div will span across a single
 	 * column.
+	 * @deprecated Use design system v3 columns: `xxs` / `xs` / `sm`
 	 */
 	mobile?: MobileCol | [MobileColRange, MobileColRange] | undefined;
 	/**
@@ -188,6 +189,7 @@ export interface IColumns extends React.HTMLAttributes<HTMLDivElement> {
 	 *
 	 * If all column props are not specified, the div will span across a single
 	 * column.
+	 * @deprecated Use design system v3 columns: `lg`
 	 */
 	tablet?: TabletCol | [TabletColRange, TabletColRange] | undefined;
 	/**
@@ -196,32 +198,33 @@ export interface IColumns extends React.HTMLAttributes<HTMLDivElement> {
 	 *
 	 * If all column props are not specified, the div will span across a single
 	 * column.
+	 * @deprecated Use design system v3 columns: `xl` / `xxl`
 	 */
 	desktop?: DesktopCol | [DesktopColRange, DesktopColRange] | undefined;
-	xxl?: never;
-	xl?: never;
-	lg?: never;
-	md?: never;
-	sm?: never;
-	xs?: never;
-	xxs?: never;
+	xxl?: never | undefined;
+	xl?: never | undefined;
+	lg?: never | undefined;
+	md?: never | undefined;
+	sm?: never | undefined;
+	xs?: never | undefined;
+	xxs?: never | undefined;
 }
 
 export interface IV3Columns extends React.HTMLAttributes<HTMLDivElement> {
-	mobile?: never;
-	tablet?: never;
-	desktop?: never;
+	mobile?: never | undefined;
+	tablet?: never | undefined;
+	desktop?: never | undefined;
 	/**
 	 * Specifies the number of columns to be spanned across for any breakpoint.
 	 * If an array is specified, the format is [startCol, endCol].
 	 */
-	xxl?: ColProps["xxsCols"];
-	xl?: ColProps["xlCols"];
-	lg?: ColProps["lgCols"];
-	md?: ColProps["mdCols"];
-	sm?: ColProps["smCols"];
-	xs?: ColProps["xsCols"];
-	xxs?: ColProps["xxsCols"];
+	xxl?: ColProps["xxsCols"] | undefined;
+	xl?: ColProps["xlCols"] | undefined;
+	lg?: ColProps["lgCols"] | undefined;
+	md?: ColProps["mdCols"] | undefined;
+	sm?: ColProps["smCols"] | undefined;
+	xs?: ColProps["xsCols"] | undefined;
+	xxs?: ColProps["xxsCols"] | undefined;
 }
 
 /**
