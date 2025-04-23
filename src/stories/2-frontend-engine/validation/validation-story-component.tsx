@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
+import { Layout } from "@lifesg/react-design-system/layout";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { action } from "@storybook/addon-actions";
 import highlightjs from "highlight.js";
@@ -132,8 +132,8 @@ export const ValidationStoryComponent = ({
 	// =============================================================================
 	return (
 		<Wrapper>
-			<V2_Layout.Content type="grid">
-				<V2_Layout.ColDiv desktopCols={12} tabletCols={8} mobileCols={4}>
+			<Layout.Content type="grid">
+				<Layout.ColDiv xlCols={12} mdCols={8} xxsCols={4}>
 					<Section>
 						<SectionTitle as={Typography.HeadingSM}>{ruleName}</SectionTitle>
 						<Sanitize>{ruleDescription}</Sanitize>
@@ -143,8 +143,8 @@ export const ValidationStoryComponent = ({
 							</code>
 						</pre>
 					</Section>
-				</V2_Layout.ColDiv>
-				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
+				</Layout.ColDiv>
+				<Layout.ColDiv xlCols={6} mdCols={8}>
 					<Section>
 						<SectionTitle as={Typography.BodyMD}>Sample schema</SectionTitle>
 						<div>
@@ -165,8 +165,8 @@ export const ValidationStoryComponent = ({
 							</code>
 						</pre>
 					</Section>
-				</V2_Layout.ColDiv>
-				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
+				</Layout.ColDiv>
+				<Layout.ColDiv xlCols={6} mdCols={8}>
 					<Section>
 						<SectionTitle as={Typography.BodyMD}>Preview</SectionTitle>
 						<p>Submit form to preview validation</p>
@@ -177,8 +177,8 @@ export const ValidationStoryComponent = ({
 							data={generateSchema() as IFrontendEngineData}
 						/>
 					</Section>
-				</V2_Layout.ColDiv>
-			</V2_Layout.Content>
+				</Layout.ColDiv>
+			</Layout.Content>
 		</Wrapper>
 	);
 };
