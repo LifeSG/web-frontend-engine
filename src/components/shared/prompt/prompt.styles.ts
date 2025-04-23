@@ -80,10 +80,8 @@ export const LabelContainer = styled.div<SizeProps>`
 
 export const Description = styled(Typography.HeadingXS)`
 	margin-top: 0.5rem;
-	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
 export const Title = styled(Typography.HeadingXS)<SizeProps>`
 	margin-top: 0rem;
-	font-weight: ${Font.Spec["weight-bold"]};
 `;

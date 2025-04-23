@@ -124,6 +124,7 @@ export const ImageThumbnails = (props: IProps) => {
 					id={TestHelper.generateId(id, "add-image-button")}
 					data-testid={TestHelper.generateId(id, "add-image-button")}
 					aria-label="add image"
+					styleType="secondary"
 					onClick={handleButtonClick}
 				>
 					<PlusIcon />

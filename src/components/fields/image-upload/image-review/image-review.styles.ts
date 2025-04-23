@@ -71,7 +71,6 @@ export const ReviewCloseButton = styled(IconButton)`
 `;
 
 export const ReviewTitle = styled(Typography.BodyMD)`
-	font-weight: ${Font.Spec["weight-semibold"]};
 	color: ${Colour["text-primary"]};
 	margin: 0 auto;
 `;

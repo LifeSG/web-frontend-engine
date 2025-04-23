@@ -99,11 +99,6 @@ export const AddImageButton = styled(IconButton)`
 	width: 3rem;
 	height: 3rem;
 	background: #fff;
-	${Border.Util["dashed-default"]({
-		colour: Colour["border-primary"],
-		thickness: Border["width-040"],
-		radius: Radius.sm,
-	})}
 
 	> svg {
 		color: ${Colour["icon-primary"]};
