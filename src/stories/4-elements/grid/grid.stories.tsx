@@ -34,6 +34,19 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
+		customOptions: {
+			description: `Determines whether to render the component using <code>v2</code> or <code>v3</code> breakpoints, default is <code>v2</code><br>
+				For gridType <code>v2</code>, component will use <code>V2_Layout.Container</code><br>
+				For gridType <code>v3</code>, component will use <code>Layout.Container</code>`,
+			table: {
+				type: {
+					summary: "{ gridType?: 'v2' | 'v3' | undefined }",
+				},
+			},
+			type: { name: "object", value: {} },
+			control: { type: "object" },
+			defaultValue: { gridType: "v2" },
+		},
 	},
 };
 export default meta;
@@ -64,6 +77,35 @@ Default.args = {
 		},
 	},
 };
+
+export const GridV3 = DefaultStoryTemplate<IGridSchema>("grid").bind({});
+GridV3.args = {
+	uiType: "grid",
+	customOptions: { gridType: "v3" },
+	children: {
+		block1: {
+			uiType: "text-field",
+			label: "Block 1",
+			columns: { xl: 4 },
+		},
+		block2: {
+			uiType: "text-field",
+			label: "Block 2",
+			columns: { xl: 8 },
+		},
+		block3: {
+			uiType: "text-field",
+			label: "Block 3",
+			columns: { xl: 7 },
+		},
+		block4: {
+			uiType: "text-field",
+			label: "Block 4",
+			columns: { xl: 5 },
+		},
+	},
+};
+GridV3.storyName = "Grid V3";
 
 export const ResponsiveLayout = DefaultStoryTemplate<IGridSchema>("grid").bind({});
 ResponsiveLayout.args = {
