@@ -31,7 +31,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		max-height: 90%;
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		height: 100%;
 		width: 100%;
 		flex-direction: column;
@@ -44,7 +44,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 export const StyledLocationPicker = styled(LocationPicker)<ISinglePanelStyle>`
 	width: 48.89%;
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? "none" : "block")};
 		position: relative;
 		left: 0;

@@ -200,7 +200,7 @@ const StyledForm = styled(OriginalFrontendEngine)`
 
 	${MediaQuery.MaxWidth.sm} {
 		min-width: 350px;
-		width: calc(${Breakpoint["md-min"]}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
+		width: calc(${Breakpoint["sm-max"]}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
 	}
 
 	${MediaQuery.MaxWidth.xs} {

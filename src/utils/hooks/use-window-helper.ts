@@ -7,8 +7,8 @@ export const useWindowHelper = () => {
 
 	const isMobileView = useCallback(() => {
 		return (
-			window.innerWidth <= Breakpoint["md-min"]({ theme }) ||
-			(window.innerWidth > window.innerHeight && window.innerHeight < Breakpoint["md-min"]({ theme }))
+			window.innerWidth <= Breakpoint["sm-max"]({ theme }) ||
+			(window.innerWidth > window.innerHeight && window.innerHeight < Breakpoint["sm-max"]({ theme }))
 		);
 	}, [theme]);
 

@@ -28,7 +28,7 @@ export const ErrorIcon = styled.img`
 	height: auto;
 	margin-bottom: 2rem;
 
-	@media (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		margin: 0 2rem 0 0;
 	}
 `;
@@ -60,7 +60,7 @@ export const OkButton = styled(Button.Default)`
 	max-width: 16rem;
 	margin-top: 2rem;
 
-	@media (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		margin-top: 0.5rem;
 	}
 `;

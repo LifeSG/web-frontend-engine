@@ -29,7 +29,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		margin: 0 1.25rem;
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -65,7 +65,7 @@ export const ReviewCloseButton = styled(IconButton)`
 		color: ${Colour["bg-primary"]};
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		height: 2.25rem;
 	}
 `;
@@ -104,7 +104,7 @@ export const ContentSection = styled.div`
 	background-color: ${Colour["bg-inverse"]};
 	overflow: hidden;
 	height: 31.25rem;
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		height: 100%;
 	}
 `;
@@ -122,7 +122,7 @@ export const DrawDeleteButtonWrapper = styled.div`
 	flex-direction: column;
 	justify-content: flex-end;
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		right: 1.25rem;
 	}
 `;
@@ -185,7 +185,7 @@ export const FooterSection = styled.div`
 	align-items: center;
 	margin: 1rem 1.5rem 1rem 1.5rem;
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		margin: 0 1.25rem;
 		height: 6.5rem;
 		max-height: 6.5rem;

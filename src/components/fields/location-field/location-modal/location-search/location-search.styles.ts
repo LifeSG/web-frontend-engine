@@ -90,7 +90,7 @@ export const SearchBarModalCross = styled(CrossIcon)`
 	font-size: 1.5rem;
 	color: ${Colour["icon-primary"]};
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: block;
 		margin: -0.4rem 0 0 -0.4rem;
 	}
@@ -106,7 +106,7 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	flex: 1;
 	border-bottom: solid 1px ${Colour.border};
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? `block` : `none`)};
 		border-bottom: 0;
 	}
@@ -152,7 +152,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	gap: 1rem;
 	padding-top: 1rem;
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode === "map" ? `block` : `none`)};
 		position: absolute;
 		left: 0;
@@ -165,7 +165,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 export const ButtonItem = styled(Button.Default)<{ buttonType: "cancel" | "confirm" }>`
 	width: 9.5rem;
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["md-min"]}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		${({ buttonType }) => buttonType === "cancel" && `display: none`}
 		${({ buttonType }) => buttonType === "confirm" && `width: 100%`}
 	}

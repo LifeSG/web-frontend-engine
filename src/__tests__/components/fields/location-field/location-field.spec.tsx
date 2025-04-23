@@ -1174,12 +1174,12 @@ describe("location-input-group", () => {
 					describe("modal controls", () => {
 						describe("for tablet and below", () => {
 							mockViewportForTestGroup({
-								width: Breakpoint["md-min"]({ theme: LifeSGTheme }),
-								height: Breakpoint["md-min"]({ theme: LifeSGTheme }),
+								width: Breakpoint["sm-max"]({ theme: LifeSGTheme }),
+								height: Breakpoint["sm-max"]({ theme: LifeSGTheme }),
 							});
 
 							it("should allow user to close the location modal when in map mode", async () => {
-								setWindowAndViewPort(Breakpoint["md-min"]({ theme: LifeSGTheme }));
+								setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
 
 								renderComponent();
 
@@ -1207,7 +1207,7 @@ describe("location-input-group", () => {
 							});
 
 							it("should allow user to close the modal when in search mode", async () => {
-								setWindowAndViewPort(Breakpoint["md-min"]({ theme: LifeSGTheme }));
+								setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
 
 								renderComponent();
 
@@ -1459,7 +1459,7 @@ describe("location-input-group", () => {
 
 					describe("when using location search in mobile", () => {
 						beforeEach(async () => {
-							setWindowAndViewPort(Breakpoint["md-min"]({ theme: LifeSGTheme }));
+							setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});
