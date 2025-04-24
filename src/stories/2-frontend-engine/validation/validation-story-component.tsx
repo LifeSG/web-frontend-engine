@@ -133,7 +133,7 @@ export const ValidationStoryComponent = ({
 	return (
 		<Wrapper>
 			<Layout.Content type="grid">
-				<Layout.ColDiv xlCols={12} mdCols={8} xxsCols={4}>
+				<Layout.ColDiv lgCols={12} xxsCols={8}>
 					<Section>
 						<SectionTitle as={Typography.HeadingSM}>{ruleName}</SectionTitle>
 						<Sanitize>{ruleDescription}</Sanitize>
@@ -166,7 +166,7 @@ export const ValidationStoryComponent = ({
 						</pre>
 					</Section>
 				</Layout.ColDiv>
-				<Layout.ColDiv xlCols={6} mdCols={8}>
+				<Layout.ColDiv xxsCols={8} lgCols={6}>
 					<Section>
 						<SectionTitle as={Typography.BodyMD}>Preview</SectionTitle>
 						<p>Submit form to preview validation</p>
