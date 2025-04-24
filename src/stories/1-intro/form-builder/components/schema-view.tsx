@@ -1,8 +1,8 @@
-// import { V2_Text } from "@lifesg/react-design-system/v2_text";
+// import { Typography } from "@lifesg/react-design-system/typography";
 // import { IFormBuilderMethods } from "@lifesg/web-form-builder";
 // import { ISchemaProps } from "@lifesg/web-form-builder/translator";
 // import { useEffect, useState } from "react";
-import { IFrontendEngineData } from "../../../../components";
+// import { IFrontendEngineData } from "../../../../components";
 // import {
 // 	ActionWrapper,
 // 	AlertWrapper,
@@ -99,7 +99,7 @@ export const SchemaView = () => {
 
 	// return (
 	// 	<>
-	// 		<V2_Text.H2>Generate Schema</V2_Text.H2>
+	// 		<Typography.HeadingMD weight="bold">Generate Schema</Typography.HeadingMD>
 	// 		{renderActionPanel()}
 	// 		<SchemaEditorWrapper>
 	// 			<SchemaEditor value={stringifiedSchema} onChange={handleSchemaChange} />

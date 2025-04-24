@@ -1,4 +1,3 @@
-import { V2_BaseTheme } from "@lifesg/react-design-system";
 import { PlusIcon } from "@lifesg/react-icons/plus";
 import { ChangeEvent, useRef } from "react";
 import { useTheme } from "styled-components";
@@ -42,7 +41,6 @@ export const ImageThumbnails = (props: IProps) => {
 		multiple,
 	} = props;
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const theme = useTheme();
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -126,8 +124,8 @@ export const ImageThumbnails = (props: IProps) => {
 					id={TestHelper.generateId(id, "add-image-button")}
 					data-testid={TestHelper.generateId(id, "add-image-button")}
 					aria-label="add image"
+					styleType="secondary"
 					onClick={handleButtonClick}
-					theme={theme || V2_BaseTheme}
 				>
 					<PlusIcon />
 				</AddImageButton>

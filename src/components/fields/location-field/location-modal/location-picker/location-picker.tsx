@@ -1,5 +1,5 @@
-import { V2_BaseTheme, V2_Color, V2_MediaWidths } from "@lifesg/react-design-system";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Breakpoint, Colour } from "@lifesg/react-design-system";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
@@ -52,7 +52,7 @@ export const LocationPicker = ({
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
 	const markersRef = useRef<L.Marker[]>();
-	const isMobile = window.matchMedia(`(max-width: ${V2_MediaWidths.tablet}px)`).matches;
+	const isMobile = window.matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`).matches;
 	const leafletConfig: L.MapOptions = {
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,
@@ -181,11 +181,7 @@ export const LocationPicker = ({
 				: undefined;
 			const mapPinIcon =
 				"data:image/svg+xml;base64," +
-				btoa(
-					ReactDOMServer.renderToString(
-						<PinFillIcon color={V2_Color.Primary({ theme: theme || V2_BaseTheme })} />
-					)
-				);
+				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour["icon-primary"]({ theme })} />));
 			const marker = markerFrom(target, interactiveMapPinIconUrl ?? mapPinIcon, isSelected).addTo(map);
 
 			return shouldSelectOnClick
@@ -225,7 +221,7 @@ export const LocationPicker = ({
 			{mapBannerText && (
 				<BannerWrapper data-testid={TestHelper.generateId(id, "location-banner")}>
 					<Banner>
-						<V2_Text.XSmall>{mapBannerText}</V2_Text.XSmall>
+						<Typography.BodyXS>{mapBannerText}</Typography.BodyXS>
 					</Banner>
 				</BannerWrapper>
 			)}

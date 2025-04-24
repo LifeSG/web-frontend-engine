@@ -1,9 +1,9 @@
 import styled, { css } from "styled-components";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
-import { V2_Color } from "@lifesg/react-design-system/v2_color";
 import { Textarea } from "@lifesg/react-design-system/input-textarea";
 import { FrontendEngine } from "../../../common";
+import { Colour } from "@lifesg/react-design-system";
 
 // =============================================================================
 // STYLE INTERFACE
@@ -62,13 +62,13 @@ export const Toolbar = styled.div`
 	z-index: 1;
 	gap: 2rem;
 	padding: 1rem;
-	background-color: ${V2_Color.Accent.Light[5]};
+	background-color: ${Colour["bg-primary-subtlest"]};
 	box-sizing: border-box;
 `;
 
 export const ModeButton = styled.button<IModeButtonProps>`
-	background: ${({ $active }) => ($active ? V2_Color.Accent.Light[4] : "transparent")};
-	color: ${V2_Color.Primary};
+	background: ${({ $active }) => ($active ? Colour["bg-primary-subtlest-selected"] : "transparent")};
+	color: ${Colour["icon-primary"]};
 	display: grid;
 	cursor: pointer;
 	border: none;
@@ -77,11 +77,11 @@ export const ModeButton = styled.button<IModeButtonProps>`
 	align-self: center;
 
 	:hover {
-		background: ${V2_Color.Accent.Light[4]};
+		background: ${Colour["bg-selected-hover"]};
 	}
 
 	:focus {
-		outline-color: ${V2_Color.Primary};
+		outline-color: ${Colour["border-focus"]};
 	}
 
 	svg {
@@ -111,7 +111,7 @@ export const SchemaEditor = styled(Textarea)`
 	width: 100%;
 	overflow: auto;
 	padding: 1rem;
-	border: 1px solid ${V2_Color.Neutral[5]};
+	border: 1px solid ${Colour.border};
 	border-radius: 4px;
 `;
 

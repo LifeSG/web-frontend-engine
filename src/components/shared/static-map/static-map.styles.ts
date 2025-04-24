@@ -1,5 +1,4 @@
-import { V2_Color } from "@lifesg/react-design-system/v2_color";
-import { V2_MediaQuery } from "@lifesg/react-design-system/v2_media";
+import { Colour, MediaQuery } from "@lifesg/react-design-system";
 import styled from "styled-components";
 
 export const staticMapDimensions = {
@@ -18,10 +17,10 @@ export const StaticMapWrapper = styled.div`
 	aspect-ratio: 3.55;
 	margin-top: 2.375rem;
 	border-radius: 4px;
-	border: 1px solid ${V2_Color.Neutral[6]};
+	border: 1px solid ${Colour.border};
 	overflow: hidden;
 
-	${V2_MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		aspect-ratio: 2.46;
 		width: 100%;
 	}

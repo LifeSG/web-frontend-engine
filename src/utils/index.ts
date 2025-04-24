@@ -8,4 +8,3 @@ export * from "./math-helper";
 export * from "./object-helper";
 export * from "./test-helper";
 export * from "./types";
-export * from "./window-helper";
