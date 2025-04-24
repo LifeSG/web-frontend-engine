@@ -1,5 +1,5 @@
 import { Timeline as DSTimeline } from "@lifesg/react-design-system/timeline";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import * as Icons from "@lifesg/react-icons";
 import { useEffect } from "react";
 import * as Yup from "yup";
@@ -39,9 +39,9 @@ export const Timeline = (props: IGenericCustomElementProps<ITimelineSchema>) => 
 			let itemContent: React.ReactNode;
 			if (typeof children === "string") {
 				itemContent = (
-					<V2_Text.Body>
+					<Typography.BodyBL>
 						<Sanitize inline>{children}</Sanitize>
-					</V2_Text.Body>
+					</Typography.BodyBL>
 				);
 			} else {
 				itemContent = <Wrapper>{children}</Wrapper>;

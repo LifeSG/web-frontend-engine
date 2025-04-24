@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
-import { V2_Text } from "@lifesg/react-design-system/v2_text";
+import { Layout } from "@lifesg/react-design-system/layout";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { action } from "@storybook/addon-actions";
 import highlightjs from "highlight.js";
 import json from "highlight.js/lib/languages/json";
@@ -18,6 +18,7 @@ import { Sanitize } from "../../../components/shared";
 import { IYupValidationRule } from "../../../context-providers";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 import { ALL_VALIDATION_DEMO_FIELD_IDS, TValidationDemoFieldIds, VALIDATION_DEMO_CONFIGS } from "./validation.data";
+import { Font } from "@lifesg/react-design-system";
 
 highlightjs.registerLanguage("json", json);
 
@@ -131,10 +132,10 @@ export const ValidationStoryComponent = ({
 	// =============================================================================
 	return (
 		<Wrapper>
-			<V2_Layout.Content type="grid">
-				<V2_Layout.ColDiv desktopCols={12} tabletCols={8} mobileCols={4}>
+			<Layout.Content type="grid">
+				<Layout.ColDiv lgCols={12} xxsCols={8}>
 					<Section>
-						<V2_Text.H3>{ruleName}</V2_Text.H3>
+						<SectionTitle as={Typography.HeadingSM}>{ruleName}</SectionTitle>
 						<Sanitize>{ruleDescription}</Sanitize>
 						<pre>
 							<code ref={ruleSnippet} key={demoFieldType} className="json">
@@ -142,10 +143,10 @@ export const ValidationStoryComponent = ({
 							</code>
 						</pre>
 					</Section>
-				</V2_Layout.ColDiv>
-				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
+				</Layout.ColDiv>
+				<Layout.ColDiv xxsCols={8} lgCols={6}>
 					<Section>
-						<V2_Text.H5>Sample schema</V2_Text.H5>
+						<SectionTitle as={Typography.BodyMD}>Sample schema</SectionTitle>
 						<div>
 							<Form.Select
 								options={fieldOptions}
@@ -164,10 +165,10 @@ export const ValidationStoryComponent = ({
 							</code>
 						</pre>
 					</Section>
-				</V2_Layout.ColDiv>
-				<V2_Layout.ColDiv desktopCols={6} tabletCols={8}>
+				</Layout.ColDiv>
+				<Layout.ColDiv xxsCols={8} lgCols={6}>
 					<Section>
-						<V2_Text.H5>Preview</V2_Text.H5>
+						<SectionTitle as={Typography.BodyMD}>Preview</SectionTitle>
 						<p>Submit form to preview validation</p>
 						<FrontendEngine
 							key={demoFieldType}
@@ -176,8 +177,8 @@ export const ValidationStoryComponent = ({
 							data={generateSchema() as IFrontendEngineData}
 						/>
 					</Section>
-				</V2_Layout.ColDiv>
-			</V2_Layout.Content>
+				</Layout.ColDiv>
+			</Layout.Content>
 		</Wrapper>
 	);
 };
@@ -201,4 +202,8 @@ const Section = styled.section`
 	border: 1px solid rgba(38, 85, 115, 0.15);
 	border-radius: 4px;
 	box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0;
+`;
+
+const SectionTitle = styled.div`
+	font-weight: ${Font.Spec["weight-bold"]};
 `;
