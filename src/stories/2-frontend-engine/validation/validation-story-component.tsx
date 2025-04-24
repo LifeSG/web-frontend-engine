@@ -144,7 +144,7 @@ export const ValidationStoryComponent = ({
 						</pre>
 					</Section>
 				</Layout.ColDiv>
-				<Layout.ColDiv xlCols={6} mdCols={8}>
+				<Layout.ColDiv xxsCols={8} lgCols={6}>
 					<Section>
 						<SectionTitle as={Typography.BodyMD}>Sample schema</SectionTitle>
 						<div>
