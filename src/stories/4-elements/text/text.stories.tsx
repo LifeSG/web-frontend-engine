@@ -86,7 +86,13 @@ const meta: Meta = {
 			},
 		},
 		weight: {
-			description: "The weight of the text component",
+			description: `The weight of the text component.<br>
+			For backward compatibility, Numeric values will be mapped to the corresponding weight.<br>
+			300: <code>light</code><br>
+			400: <code>regular</code><br>
+			600: <code>semibold</code><br>
+			700: <code>bold</code><br>
+			900: <code>bold</code>`,
 			table: {
 				type: {
 					summary: '"regular" | "semibold" | "bold" | "light"',
