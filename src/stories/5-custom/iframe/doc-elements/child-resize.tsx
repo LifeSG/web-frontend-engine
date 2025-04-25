@@ -1,5 +1,5 @@
-import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
+import { Button } from "@lifesg/react-design-system/button";
 import { useEffect } from "react";
 import { EPostMessageEvent } from "../../../../components/custom";
 

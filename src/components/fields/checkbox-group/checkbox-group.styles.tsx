@@ -1,6 +1,6 @@
+import { Typography } from "@lifesg/react-design-system/typography";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
-import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 import { TCheckboxToggleLayoutType } from "./types";
 

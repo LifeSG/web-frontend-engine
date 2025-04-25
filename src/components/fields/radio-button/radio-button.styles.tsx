@@ -1,6 +1,6 @@
+import { Typography } from "@lifesg/react-design-system/typography";
 import { ImageButton } from "@lifesg/react-design-system/image-button";
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
-import { Typography } from "@lifesg/react-design-system/typography";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import styled from "styled-components";
 import { TRadioToggleLayoutType } from "./types";

@@ -14,3 +14,11 @@ export const TEXT_MAPPING = {
 	"TEXT-BODYSMALL": Typography.BodyMD,
 	"TEXT-XSMALL": Typography.BodyXS,
 };
+
+export const WEIGHT_MAPPING: Record<number, string> = {
+	300: "light",
+	400: "regular",
+	500: "medium",
+	700: "bold",
+	900: "bold",
+};

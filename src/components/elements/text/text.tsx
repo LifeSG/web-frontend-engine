@@ -7,9 +7,10 @@ import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
-import { TEXT_MAPPING } from "./data";
+import { TEXT_MAPPING, WEIGHT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
 import { Wrapper } from "../wrapper";
+import _ from "lodash";
 
 export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
@@ -17,7 +18,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
 	const {
 		id,
-		schema: { children, uiType, maxLines, ...otherSchema },
+		schema: { children, uiType, maxLines, weight, ...otherSchema },
 	} = props;
 
 	const elementRef = useRef(null);
@@ -94,6 +95,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				ref={elementRef}
 				maxLines={!expanded ? maxLines : undefined}
 				data-testid={getTestId(id)}
+				weight={_.isNumber(weight) ? WEIGHT_MAPPING[weight] : weight || undefined}
 				{...otherSchema}
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}

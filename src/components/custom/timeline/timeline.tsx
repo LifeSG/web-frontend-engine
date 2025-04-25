@@ -1,5 +1,5 @@
-import { Timeline as DSTimeline } from "@lifesg/react-design-system/timeline";
 import { Typography } from "@lifesg/react-design-system/typography";
+import { Timeline as DSTimeline } from "@lifesg/react-design-system/timeline";
 import * as Icons from "@lifesg/react-icons";
 import { useEffect } from "react";
 import * as Yup from "yup";
