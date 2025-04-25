@@ -1,4 +1,4 @@
-import { Colour, MediaQuery, Radius } from "@lifesg/react-design-system";
+import { Colour, MediaQuery, Radius } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 

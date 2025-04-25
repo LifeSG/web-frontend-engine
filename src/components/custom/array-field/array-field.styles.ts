@@ -3,7 +3,7 @@ import { Divider } from "@lifesg/react-design-system/divider";
 import { ErrorDisplay } from "@lifesg/react-design-system/error-display";
 import styled from "styled-components";
 import { Warning } from "../../shared";
-import { MediaQuery } from "@lifesg/react-design-system";
+import { MediaQuery } from "@lifesg/react-design-system/theme";
 
 // =============================================================================
 // STYLE INTERFACE

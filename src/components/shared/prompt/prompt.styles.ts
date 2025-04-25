@@ -1,4 +1,4 @@
-import { Font, MediaQuery } from "@lifesg/react-design-system";
+import { MediaQuery, Radius } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -26,7 +26,7 @@ export const GrowContainer = styled.div`
 
 export const Container = styled.div<SizeProps>`
 	background: white;
-	border-radius: 0.5rem;
+	border-radius: ${Radius.md};
 	display: flex;
 	flex-direction: column;
 	justify-content: center;

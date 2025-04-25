@@ -2,7 +2,7 @@ import { Modal } from "@lifesg/react-design-system/modal";
 import styled from "styled-components";
 import { TPanelInputMode } from "../types";
 import { LocationPicker } from "./location-picker";
-import { Breakpoint, MediaQuery } from "@lifesg/react-design-system";
+import { Breakpoint, MediaQuery } from "@lifesg/react-design-system/theme";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;

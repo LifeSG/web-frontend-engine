@@ -1,4 +1,4 @@
-import { Colour, Font } from "@lifesg/react-design-system";
+import { Colour, Font } from "@lifesg/react-design-system/theme";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";

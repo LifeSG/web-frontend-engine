@@ -108,13 +108,13 @@ export const ProgressBar = styled.progress`
 
 	&[value]::-webkit-progress-bar {
 		height: 100%;
-		border-radius: 1.25rem;
+		border-radius: ${Radius.full};
 		background-color: #eee;
 	}
 
 	&[value]::-webkit-progress-value {
 		height: 100%;
-		border-radius: 1.25rem;
+		border-radius: ${Radius.full};
 		background-color: ${Colour["bg-primary-subtle"]};
 	}
 `;

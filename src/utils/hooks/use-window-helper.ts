@@ -1,4 +1,4 @@
-import { Breakpoint } from "@lifesg/react-design-system";
+import { Breakpoint } from "@lifesg/react-design-system/theme";
 import { useCallback } from "react";
 import { useTheme } from "styled-components";
 

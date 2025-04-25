@@ -1,4 +1,4 @@
-import { Border, Colour, Font, MediaQuery, Radius } from "@lifesg/react-design-system";
+import { Border, Colour, Font, MediaQuery, Radius } from "@lifesg/react-design-system/theme";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";

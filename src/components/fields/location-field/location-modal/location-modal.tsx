@@ -1,4 +1,5 @@
-import { Breakpoint, Modal } from "@lifesg/react-design-system";
+import { Modal } from "@lifesg/react-design-system/modal";
+import { Breakpoint } from "@lifesg/react-design-system/theme";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";

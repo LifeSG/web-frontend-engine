@@ -1,4 +1,5 @@
-import { Card, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
+import { Card } from "@lifesg/react-design-system/card";
+import { Colour, Font, MediaQuery } from "@lifesg/react-design-system/theme";
 import styled from "styled-components";
 
 export const LocationPickerWrapper = styled.div`

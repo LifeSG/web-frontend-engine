@@ -1,4 +1,4 @@
-import { Breakpoint, Colour } from "@lifesg/react-design-system";
+import { Breakpoint, Colour } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";

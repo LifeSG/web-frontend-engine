@@ -1,4 +1,4 @@
-import { Breakpoint, LifeSGTheme } from "@lifesg/react-design-system";
+import { Breakpoint, LifeSGTheme } from "@lifesg/react-design-system/theme";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { useEffect, useRef, useState } from "react";
