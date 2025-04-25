@@ -1,4 +1,4 @@
-import { Border, Breakpoint, Colour, Font, MediaQuery, Radius } from "@lifesg/react-design-system/theme";
+import { Border, Breakpoint, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Modal } from "@lifesg/react-design-system/modal";
@@ -26,7 +26,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		width: 100%;
 	}
 	${MediaQuery.MaxWidth.lg} {
-		margin: 0 1.25rem;
+		margin: 0 ${Spacing["spacing-20"]};
 	}
 
 	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
@@ -57,7 +57,7 @@ export const HeaderSection = styled.div<{ $drawActive?: boolean }>`
 export const ReviewCloseButton = styled(IconButton)`
 	position: absolute;
 	left: 0.5rem;
-	padding: 0.25rem;
+	padding: ${Spacing["spacing-4"]};
 	background-color: transparent;
 	outline-style: none;
 	> svg {
@@ -88,7 +88,7 @@ export const EditHeaderButton = styled.button`
 	display: flex;
 	color: ${Colour["text-primary"]};
 	font-size: 1rem;
-	padding: 0 1.5rem;
+	padding: 0 ${Spacing["spacing-24"]};
 	font-weight: ${Font.Spec["weight-semibold"]};
 `;
 
@@ -135,7 +135,7 @@ export const DrawDeleteButton = styled(IconButton)`
 	border-radius: 1.25rem;
 
 	&:first-child {
-		margin-bottom: 1rem;
+		margin-bottom: ${Spacing["spacing-16"]};
 	}
 
 	> img {
@@ -160,7 +160,7 @@ export const DrawDeleteButtonText = styled(Typography.BodySM)<{ $disabled: boole
 
 export const DrawIcon = styled(PencilStrokeIcon)<{ $disabled: boolean }>`
 	color: ${(props) => (props.$disabled ? Colour.icon : Colour["icon-primary"])};
-	margin-right: 0.25rem;
+	margin-right: ${Spacing["spacing-4"]};
 `;
 
 export const DeleteIcon = styled(BinIcon)<{ $disabled: boolean }>`
@@ -182,10 +182,10 @@ export const FooterSection = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin: 1rem 1.5rem 1rem 1.5rem;
+	margin: ${Spacing["spacing-16"]} ${Spacing["spacing-24"]} ${Spacing["spacing-16"]} ${Spacing["spacing-24"]};
 
 	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		margin: 0 1.25rem;
+		margin: 0 ${Spacing["spacing-20"]};
 		height: 6.5rem;
 		max-height: 6.5rem;
 	}
@@ -193,7 +193,7 @@ export const FooterSection = styled.div`
 
 export const FooterSaveButton = styled(Button.Default)`
 	height: 3rem;
-	margin-left: 1rem;
+	margin-left: ${Spacing["spacing-16"]};
 	min-width: 6.5rem;
 	max-width: 7.125rem;
 `;
@@ -225,7 +225,7 @@ export const ButtonIcon = styled(PencilIcon)<{ $colorScheme: string }>`
 
 export const PaletteHolder = styled.div`
 	display: flex;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 	flex-direction: flex-end;
 `;
 
@@ -233,7 +233,7 @@ export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
 	width: 3rem;
 	height: 3rem;
 	border-radius: ${Radius.sm};
-	padding: 0.75rem;
+	padding: ${Spacing["spacing-12"]};
 	background-color: ${({ $color }) => $color};
 	border: ${Border.solid} ${Border["width-010"]}
 		${({ $color, $colorScheme }) => ($colorScheme === "light" ? "#979797" : $color)};
@@ -242,6 +242,6 @@ export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
 	${MediaQuery.MaxWidth.sm} {
 		width: 2.5rem;
 		height: 2.5rem;
-		margin-left: 0.25rem;
+		margin-left: ${Spacing["spacing-4"]};
 	}
 `;

@@ -5,6 +5,7 @@ import { Wrapper } from "../wrapper";
 import { IGridSchema } from "./types";
 import { Layout } from "@lifesg/react-design-system/layout";
 import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
+import { Spacing } from "@lifesg/react-design-system/theme";
 
 export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 	// =============================================================================
@@ -37,8 +38,8 @@ export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 
 const GridContainer = styled(Layout.Container)`
 	padding: 0;
-	gap: 2rem;
+	gap: ${Spacing["spacing-32"]};
 	&:not(:last-child) {
-		margin-bottom: 2rem;
+		margin-bottom: ${Spacing["spacing-32"]};
 	}
 `;

@@ -34,21 +34,21 @@ export const RadioContainer = styled.div`
 	display: flex;
 	align-items: center;
 	:not(:last-of-type) {
-		margin-bottom: 1rem;
+		margin-bottom: ${Spacing["spacing-16"]};
 	}
 `;
 
 export const FlexImageWrapper = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	gap: 1rem;
+	gap: ${Spacing["spacing-16"]};
 `;
 
 export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
 	display: flex;
 	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
-	gap: 1rem;
+	gap: ${Spacing["spacing-16"]};
 `;
 
 export const StyledToggle = styled(Toggle)`

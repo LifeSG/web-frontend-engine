@@ -1,4 +1,4 @@
-import { Border, Font, Radius } from "@lifesg/react-design-system/theme";
+import { Border, Font, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Form } from "@lifesg/react-design-system/form";
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -194,9 +194,9 @@ const Wrapper = styled.div`
 const Section = styled.section`
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
-	margin-bottom: 2rem;
-	padding: 1.25rem;
+	gap: ${Spacing["spacing-8"]};
+	margin-bottom: ${Spacing["spacing-32"]};
+	padding: ${Spacing["spacing-20"]};
 
 	// follow storybook styling
 	border: ${Border["width-010"]} ${Border.solid} rgba(38, 85, 115, 0.15);

@@ -1,4 +1,4 @@
-import { Colour, MediaQuery, Radius } from "@lifesg/react-design-system/theme";
+import { Colour, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
@@ -6,10 +6,10 @@ export const Wrapper = styled.div`
 	position: relative;
 	display: block;
 	border-radius: ${Radius.sm};
-	padding: 2rem;
+	padding: ${Spacing["spacing-32"]};
 
 	${MediaQuery.MaxWidth.lg} {
-		padding: 2rem 1.25rem;
+		padding: ${Spacing["spacing-32"]} ${Spacing["spacing-20"]};
 	}
 `;
 

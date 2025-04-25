@@ -1,11 +1,11 @@
-import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
+import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import styled, { keyframes } from "styled-components";
 
 export const ThumbnailsWrapper = styled.div`
 	display: flex;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 	align-items: center;
 	height: 100%;
 	max-height: 5rem;
@@ -55,7 +55,7 @@ export const LoadingDot = styled.div`
 	animation: ${dotMoveKeyframe} 1.35s infinite linear;
 	opacity: 0.25;
 	background: ${Colour["bg-inverse-subtle"]};
-	margin: 0.125rem;
+	${Spacing["spacing-4"]};
 	transform-origin: bottom;
 `;
 

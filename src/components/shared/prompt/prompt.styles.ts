@@ -1,4 +1,4 @@
-import { MediaQuery, Radius } from "@lifesg/react-design-system/theme";
+import { MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -16,11 +16,11 @@ export const ScrollableModal = styled(Modal)`
 
 export const GrowContainer = styled.div`
 	margin: auto;
-	padding: 5rem 1.25rem;
+	padding: 5rem ${Spacing["spacing-20"]};
 	width: 100%;
 
 	${MediaQuery.MaxWidth.sm} {
-		padding: 1rem 1.25rem;
+		padding: ${Spacing["spacing-16"]} ${Spacing["spacing-20"]};
 	}
 `;
 
@@ -37,7 +37,7 @@ export const Container = styled.div<SizeProps>`
 
 export const PromptImage = styled.img`
 	width: 11rem;
-	margin: 0 auto 2rem;
+	margin: 0 auto ${Spacing["spacing-32"]};
 `;
 
 export const PromptButton = styled(Button.Default)<SizeProps>`
@@ -45,11 +45,11 @@ export const PromptButton = styled(Button.Default)<SizeProps>`
 	margin: 0 auto;
 
 	&:not(:first-child):last-child {
-		margin-top: 1rem;
+		margin-top: ${Spacing["spacing-16"]};
 
 		${MediaQuery.MinWidth.md} {
 			margin-top: 0;
-			margin-right: ${(props) => (props.size === "large" ? "2rem" : "1rem")};
+			margin-right: ${(props) => (props.size === "large" ? Spacing["spacing-32"] : Spacing["spacing-16"])};
 		}
 	}
 `;
@@ -58,11 +58,14 @@ export const ButtonContainer = styled.div<SizeProps>`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	padding: 0 1.5rem 4rem;
+	padding: 0 ${Spacing["spacing-24"]} ${Spacing["spacing-64"]};
 
 	${MediaQuery.MinWidth.md} {
 		align-items: center;
-		padding: ${(props) => (props.size === "large" ? "2rem 4rem 4rem" : "2.5rem 1.5rem 2rem")};
+		padding: ${(props) =>
+			props.size === "large"
+				? `${Spacing["spacing-32"]} ${Spacing["spacing-64"]} ${Spacing["spacing-64"]}`
+				: `${Spacing["spacing-40"]} ${Spacing["spacing-24"]} ${Spacing["spacing-32"]}`};
 		flex-direction: row-reverse;
 	}
 `;
@@ -71,15 +74,18 @@ export const LabelContainer = styled.div<SizeProps>`
 	display: flex;
 	flex-direction: column;
 	text-align: center;
-	padding: 4rem 1.5rem 1.5rem;
+	padding: ${Spacing["spacing-64"]} ${Spacing["spacing-24"]} ${Spacing["spacing-24"]};
 
 	${MediaQuery.MinWidth.md} {
-		padding: ${(props) => (props.size === "large" ? "4rem 4rem 0rem 4rem" : "2rem 1.5rem 0")};
+		padding: ${(props) =>
+			props.size === "large"
+				? `${Spacing["spacing-64"]} ${Spacing["spacing-64"]} 0rem ${Spacing["spacing-64"]}`
+				: `${Spacing["spacing-32"]} ${Spacing["spacing-24"]} 0`};
 	}
 `;
 
 export const Description = styled(Typography.HeadingXS)`
-	margin-top: 0.5rem;
+	margin-top: ${Spacing["spacing-8"]};
 `;
 
 export const Title = styled(Typography.HeadingXS)<SizeProps>`

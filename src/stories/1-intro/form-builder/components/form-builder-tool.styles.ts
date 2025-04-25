@@ -3,7 +3,7 @@ import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
 import { Textarea } from "@lifesg/react-design-system/input-textarea";
 import { FrontendEngine } from "../../../common";
-import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
+import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
 
 // =============================================================================
 // STYLE INTERFACE
@@ -44,8 +44,8 @@ export const ContentWrapper = styled.div<IContentWrapperProps>`
 			flex-direction: column;
 			align-items: center;
 			justify-content: flex-start;
-			gap: 2rem;
-			padding: 2rem;
+			gap: ${Spacing["spacing-32"]};
+			padding: ${Spacing["spacing-32"]};
 		`};
 
 	width: 100%;
@@ -60,8 +60,8 @@ export const Toolbar = styled.div`
 	height: 5rem;
 	justify-content: flex-end;
 	z-index: 1;
-	gap: 2rem;
-	padding: 1rem;
+	gap: ${Spacing["spacing-32"]};
+	padding: ${Spacing["spacing-16"]};
 	background-color: ${Colour["bg-primary-subtlest"]};
 	box-sizing: border-box;
 `;
@@ -73,7 +73,7 @@ export const ModeButton = styled.button<IModeButtonProps>`
 	cursor: pointer;
 	border: none;
 	border-radius: ${Radius.sm};
-	padding: 1rem;
+	padding: ${Spacing["spacing-16"]};
 	align-self: center;
 
 	:hover {
@@ -92,7 +92,7 @@ export const ModeButton = styled.button<IModeButtonProps>`
 
 export const FrontendEnginePreview = styled(FrontendEngine)`
 	width: 100%;
-	margin-bottom: 2rem;
+	margin-bottom: ${Spacing["spacing-32"]};
 `;
 
 export const SchemaEditorWrapper = styled.div`
@@ -110,7 +110,7 @@ export const SchemaEditor = styled(Textarea)`
 	flex: 1;
 	width: 100%;
 	overflow: auto;
-	padding: 1rem;
+	padding: ${Spacing["spacing-16"]};
 	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	border-radius: ${Radius.sm};
 `;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Border, Breakpoint, Colour, Font, MediaQuery, Motion } from "@lifesg/react-design-system/theme";
+import { Border, Breakpoint, Colour, Font, MediaQuery, Motion, Spacing } from "@lifesg/react-design-system/theme";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
@@ -15,20 +15,20 @@ export const SearchWrapper = styled.div<ISinglePanelStyle>`
 	display: flex;
 	flex-direction: column;
 	flex: 1;
-	padding: 2rem 1.5rem 1rem;
+	padding: ${Spacing["spacing-32"]} ${Spacing["spacing-24"]} ${Spacing["spacing-16"]};
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		flex: unset;
 		height: ${({ panelInputMode }) => (panelInputMode === "search" ? `100%` : `auto`)};
-		padding: 1.5rem 1.25rem 0;
+		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} 0;
 	}
 `;
 
 export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	position: relative;
 	display: flex;
-	gap: 0.5rem;
-	padding-bottom: 0.4rem;
+	gap: ${Spacing["spacing-8"]};
+	padding-bottom: ${Spacing["spacing-8"]};
 	alight-items: center;
 	justify-content: space-between;
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
@@ -42,7 +42,7 @@ export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	}
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		margin: 0.8rem 0 0;
+		margin: ${Spacing["spacing-16"]} 0 0;
 	}
 `;
 
@@ -94,7 +94,7 @@ export const SearchBarModalCross = styled(CrossIcon)`
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: block;
-		margin: -0.4rem 0 0 -0.4rem;
+		margin: -${Spacing["spacing-8"]} 0 0 -${Spacing["spacing-8"]};
 	}
 `;
 
@@ -116,12 +116,12 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 
 export const ResultTitle = styled(Typography.BodyMD)`
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
-	padding: 1rem 0;
+	padding: ${Spacing["spacing-16"]} 0;
 	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
 export const NoResultTitle = styled(Typography.BodyMD)`
-	padding-top: 1rem;
+	padding-top: ${Spacing["spacing-16"]};
 	color: ${Colour["text-subtlest"]};
 	word-break: break-all;
 	overflow-y: scroll;
@@ -130,8 +130,8 @@ export const NoResultTitle = styled(Typography.BodyMD)`
 export const ResultItem = styled.div<{ active?: boolean }>`
 	display: flex;
 	align-items: center;
-	gap: 1rem;
-	padding: 1rem 1rem 1rem 0;
+	gap: ${Spacing["spacing-16"]};
+	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-16"]} ${Spacing["spacing-16"]} 0;
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	text-transform: uppercase;
 	cursor: pointer;
@@ -151,8 +151,8 @@ export const ResultItemPin = styled(PinFillIcon)`
 export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	display: flex;
 	justify-content: center;
-	gap: 1rem;
-	padding-top: 1rem;
+	gap: ${Spacing["spacing-16"]};
+	padding-top: ${Spacing["spacing-16"]};
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode === "map" ? `block` : `none`)};
@@ -160,7 +160,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 		left: 0;
 		bottom: 0;
 		width: 100%;
-		padding: 1.5rem 1.25rem 1.93rem;
+		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} ${Spacing["spacing-32"]};
 	}
 `;
 

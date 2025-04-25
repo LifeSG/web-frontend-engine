@@ -3,7 +3,7 @@ import { Divider } from "@lifesg/react-design-system/divider";
 import { ErrorDisplay } from "@lifesg/react-design-system/error-display";
 import styled from "styled-components";
 import { Warning } from "../../shared";
-import { MediaQuery } from "@lifesg/react-design-system/theme";
+import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
 // =============================================================================
 // STYLE INTERFACE
@@ -24,7 +24,7 @@ export const Inset = styled.div<InsetStyleProps>`
 	`}
 
 	&:not(:last-child) {
-		margin-bottom: 2rem;
+		margin-bottom: ${Spacing["spacing-32"]};
 	}
 `;
 
@@ -32,7 +32,7 @@ export const SectionHeader = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: baseline;
-	gap: 1rem;
+	gap: ${Spacing["spacing-16"]};
 
 	${MediaQuery.MaxWidth.sm} {
 		flex-direction: column;
@@ -40,8 +40,8 @@ export const SectionHeader = styled.div`
 `;
 
 export const RemoveButton = styled(ButtonWithIcon.Small)`
-	padding-left: 2rem;
-	padding-right: 2rem;
+	padding-left: ${Spacing["spacing-32"]};
+	padding-right: ${Spacing["spacing-32"]};
 
 	${MediaQuery.MaxWidth.sm} {
 		width: 100%;
@@ -49,11 +49,11 @@ export const RemoveButton = styled(ButtonWithIcon.Small)`
 `;
 
 export const AddButton = styled(ButtonWithIcon.Default)`
-	padding-left: 2rem;
-	padding-right: 2rem;
+	padding-left: ${Spacing["spacing-32"]};
+	padding-right: ${Spacing["spacing-32"]};
 
 	&:not(:last-child) {
-		margin-bottom: 2rem;
+		margin-bottom: ${Spacing["spacing-32"]};
 	}
 
 	${MediaQuery.MaxWidth.sm} {
@@ -62,7 +62,7 @@ export const AddButton = styled(ButtonWithIcon.Default)`
 `;
 
 export const SectionDivider = styled(Divider)`
-	margin: 2rem 0;
+	margin: ${Spacing["spacing-32"]} 0;
 `;
 
 export const WarningAlert = styled(Warning)`
@@ -70,5 +70,5 @@ export const WarningAlert = styled(Warning)`
 `;
 
 export const CustomErrorDisplay = styled(ErrorDisplay)`
-	margin-bottom: 2rem;
+	margin-bottom: ${Spacing["spacing-32"]};
 `;

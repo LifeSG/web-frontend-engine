@@ -1,13 +1,13 @@
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
-import { Border, Colour, Font, MediaQuery, Radius } from "@lifesg/react-design-system/theme";
+import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
 	display: flex;
 	flex-wrap: ${(props) => (props.isCustomMuted ? "nowrap" : "wrap")};
 	align-items: center;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 	border: ${(props) =>
 		props.isError
 			? `${Border["width-010"]} ${Border.solid} ${Colour["border-error"](props)}`
@@ -16,10 +16,10 @@ export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }
 	background-color: ${(props) =>
 		props.isError ? `${Colour["bg-error"](props)}` : `${Colour["bg-primary-subtlest"](props)}`};
 	min-height: 3.5rem;
-	margin-bottom: 1rem;
-	padding: 1rem 2rem;
+	margin-bottom: ${Spacing["spacing-16"]};
+	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-32"]};
 	${MediaQuery.MaxWidth.lg} {
-		padding: 1rem;
+		padding: ${Spacing["spacing-16"]};
 	}
 `;
 
@@ -55,7 +55,7 @@ export const CellDeleteButton = styled.div`
 `;
 
 export const Thumbnail = styled.div<{ src: string }>`
-	margin-right: 2rem;
+	margin-right: ${Spacing["spacing-32"]};
 	width: 6rem;
 	height: 6rem;
 	background: url(${(props) => props.src}) no-repeat center / cover;
@@ -64,7 +64,7 @@ export const Thumbnail = styled.div<{ src: string }>`
 	${Font["body-sm-bold"]}
 
 	${MediaQuery.MaxWidth.lg} {
-		margin-right: 1rem;
+		margin-right: ${Spacing["spacing-16"]};
 	}
 `;
 

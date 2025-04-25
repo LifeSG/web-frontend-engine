@@ -1,3 +1,4 @@
+import { Spacing } from "@lifesg/react-design-system/theme";
 import { Form } from "@lifesg/react-design-system/form";
 import styled, { css } from "styled-components";
 
@@ -14,10 +15,13 @@ export const Wrapper = styled.div<{ chipPosition?: "top" | "bottom" | undefined 
 `;
 
 export const ChipContainer = styled.div<{ $chipPosition?: "top" | "bottom" | undefined }>`
-	margin: ${({ $chipPosition }) => ($chipPosition === "bottom" ? "1rem 0 0.5rem" : "0.5rem 0 1rem")};
+	margin: ${({ $chipPosition }) =>
+		$chipPosition === "bottom"
+			? `${Spacing["spacing-16"]} 0 ${Spacing["spacing-8"]}`
+			: `${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]}`};
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 `;
 
 export const StyledTextarea = styled(Form.Textarea)<ITextareaProps>`
