@@ -1,4 +1,4 @@
-import { MediaQuery } from "@lifesg/react-design-system/theme";
+import { Font, MediaQuery } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
@@ -25,7 +25,7 @@ export const ContentTitle = styled(Typography.BodyBL)`
 	margin: 1.5rem auto 0.5rem;
 
 	${MediaQuery.MaxWidth.sm} {
-		font-size: 0.875rem;
+		font-size: ${Font.Spec["body-size-sm"]};
 	}
 `;
 
@@ -34,7 +34,7 @@ export const ContentBody = styled(Typography.BodyBL)`
 	width: 100%;
 
 	${MediaQuery.MaxWidth.sm} {
-		font-size: 0.875rem;
+		font-size: ${Font.Spec["body-size-sm"]};
 		max-width: 14rem;
 	}
 `;

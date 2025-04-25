@@ -1,4 +1,4 @@
-import { Border, Breakpoint, Colour, Font, MediaQuery } from "@lifesg/react-design-system/theme";
+import { Border, Breakpoint, Colour, Font, MediaQuery, Radius } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Modal } from "@lifesg/react-design-system/modal";
@@ -232,7 +232,7 @@ export const PaletteHolder = styled.div`
 export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
 	width: 3rem;
 	height: 3rem;
-	border-radius: 0.25rem;
+	border-radius: ${Radius.sm};
 	padding: 0.75rem;
 	background-color: ${({ $color }) => $color};
 	border: ${Border.solid} ${Border["width-010"]}

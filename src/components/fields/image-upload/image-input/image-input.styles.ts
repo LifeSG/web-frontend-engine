@@ -9,7 +9,7 @@ export interface SubtitleProps {
 }
 
 export const Wrapper = styled.div`
-	border-radius: 0.25rem;
+	border-radius: ${Radius.sm};
 	${Border.Util["dashed-default"]({
 		colour: Colour.border,
 		thickness: Border["width-040"],

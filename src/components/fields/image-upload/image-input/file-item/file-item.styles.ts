@@ -60,7 +60,7 @@ export const Thumbnail = styled.div<{ src: string }>`
 	height: 6rem;
 	background: url(${(props) => props.src}) no-repeat center / cover;
 	overflow: hidden;
-	border-radius: 0.25rem;
+	border-radius: ${Radius.sm};
 	${Font["body-sm-bold"]}
 
 	${MediaQuery.MaxWidth.lg} {

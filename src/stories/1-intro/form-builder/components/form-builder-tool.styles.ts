@@ -72,7 +72,7 @@ export const ModeButton = styled.button<IModeButtonProps>`
 	display: grid;
 	cursor: pointer;
 	border: none;
-	border-radius: 0.25rem;
+	border-radius: ${Radius.sm};
 	padding: 1rem;
 	align-self: center;
 

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Breakpoint, Colour, Font, MediaQuery, Motion } from "@lifesg/react-design-system/theme";
+import { Border, Breakpoint, Colour, Font, MediaQuery, Motion } from "@lifesg/react-design-system/theme";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
@@ -31,14 +31,14 @@ export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	padding-bottom: 0.4rem;
 	alight-items: center;
 	justify-content: space-between;
-	border-bottom: 1px solid ${Colour.border};
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	clip-path: inset(0 0 -0.3rem 0);
-	transition: box-shadow ${Motion["duration-250"]} linear;
+	transition: box-shadow ${Motion["duration-250"]} ${Motion["ease-default"]};
 
 	${({ hasScrolled }) => (hasScrolled ? `box-shadow: 0 0.06rem 0.4rem rgba(0,0,0,.12);` : "")}
 
 	&:focus-within {
-		border-bottom: 1px solid ${Colour["border-focus"]};
+		border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour["border-focus"]};
 	}
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
@@ -106,7 +106,7 @@ export const SearchBarCross = styled(CrossIcon)`
 export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	overflow-y: auto;
 	flex: 1;
-	border-bottom: solid 1px ${Colour.border};
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? `block` : `none`)};
@@ -115,7 +115,7 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 `;
 
 export const ResultTitle = styled(Typography.BodyMD)`
-	border-bottom: 1px solid ${Colour.border};
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	padding: 1rem 0;
 	font-weight: ${Font.Spec["weight-bold"]};
 `;
@@ -132,7 +132,7 @@ export const ResultItem = styled.div<{ active?: boolean }>`
 	align-items: center;
 	gap: 1rem;
 	padding: 1rem 1rem 1rem 0;
-	border-bottom: 1px solid ${Colour.border};
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	text-transform: uppercase;
 	cursor: pointer;
 	background-color: ${({ active }) => (active ? Colour["bg-selected"] : `transparent`)};
