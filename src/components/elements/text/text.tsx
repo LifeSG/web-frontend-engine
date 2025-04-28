@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
-import { TEXT_MAPPING } from "./data";
+import { TAG_MAPPING, TEXT_MAPPING } from "./data";
 import { ITextSchema } from "./types";
 import { Wrapper } from "../wrapper";
 
@@ -25,6 +25,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	const [showExpandButton, setShowExpandButton] = useState(false);
 
 	const Element = TEXT_MAPPING[uiType.toUpperCase()] || undefined;
+	const Tag = TAG_MAPPING[uiType] || undefined;
 
 	// =============================================================================
 	// EFFECTS / CALLBACKS
@@ -96,6 +97,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				data-testid={getTestId(id)}
 				{...otherSchema}
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
+				{...(Tag && !hasNestedFields() && { as: Tag })}
 				{...(hasNestedFields() && { as: "div" })}
 			>
 				{renderText()}

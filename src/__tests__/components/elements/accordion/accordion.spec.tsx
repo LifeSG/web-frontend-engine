@@ -129,7 +129,7 @@ describe(UI_TYPE, () => {
 		const element = screen.getByText(ACCORDION_TITLE);
 		expect(element).toBeInTheDocument();
 		expect(element.tagName).toBe("SPAN");
-		expect(element.parentElement.tagName).toBe("H6");
+		expect(element.parentElement.tagName).toBe("H4");
 
 		const spanElement = screen.getByText(SPAN_TITLE);
 		expect(spanElement).toBeInTheDocument();
