@@ -1,6 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
-import { ITextSchema } from "../../../components/elements";
+import { ITextSchema, ITypographySchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, LOREM_IPSUM } from "../../common";
 
 const meta: Meta = {
@@ -43,7 +43,7 @@ const meta: Meta = {
 			description: "The content of the text component",
 			table: {
 				type: {
-					summary: "string | string[] | Record<string, ITextSchema>",
+					summary: "string | string[] | Record<string, ITextSchema | ITypographySchema>",
 				},
 			},
 		},
@@ -149,7 +149,7 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as StoryFn<ITextSchema>;
+	)) as StoryFn<ITextSchema | ITypographySchema>;
 
 export const Variants = Template("text-variants").bind({});
 Variants.args = {

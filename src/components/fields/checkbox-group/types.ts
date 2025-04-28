@@ -1,11 +1,11 @@
 import { CheckboxProps } from "@lifesg/react-design-system/checkbox";
-import type { IPopoverSchema, ITextSchema } from "../../elements";
+import type { IPopoverSchema, ITextSchema, ITypographySchema } from "../../elements";
 import type { IInlineWrapperSchema } from "../../elements/wrapper";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 export interface ICheckboxGroupOption {
-	label: string | Record<string, ITextSchema | IPopoverSchema | IInlineWrapperSchema>;
+	label: string | Record<string, ITextSchema | ITypographySchema | IPopoverSchema | IInlineWrapperSchema>;
 	value: string;
 	disabled?: boolean | undefined;
 }

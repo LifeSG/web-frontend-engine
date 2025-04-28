@@ -15,6 +15,19 @@ export const TEXT_MAPPING = {
 	"TEXT-XSMALL": Typography.BodyXS,
 };
 
+export const TYPOGRAPHY_MAPPING = {
+	"HEADING-XXL": Typography.HeadingXXL,
+	"HEADING-XL": Typography.HeadingXL,
+	"HEADING-MD": Typography.HeadingMD,
+	"HEADING-SM": Typography.HeadingSM,
+	"HEADING-LG": Typography.HeadingLG,
+	"HEADING-XS": Typography.HeadingXS,
+	"BODY-MD": Typography.BodyMD,
+	"BODY-SM": Typography.BodySM,
+	"BODY-BL": Typography.BodyBL,
+	"BODY-XS": Typography.BodyXS,
+};
+
 export const WEIGHT_MAPPING: Record<number, string> = {
 	300: "light",
 	400: "regular",

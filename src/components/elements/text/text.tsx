@@ -7,12 +7,12 @@ import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
-import { TEXT_MAPPING, WEIGHT_MAPPING } from "./data";
-import { ITextSchema } from "./types";
+import { TEXT_MAPPING, TYPOGRAPHY_MAPPING, WEIGHT_MAPPING } from "./data";
+import { ITextSchema, ITypographySchema } from "./types";
 import { Wrapper } from "../wrapper";
-import _ from "lodash";
+import isNumber from "lodash/isNumber";
 
-export const Text = (props: IGenericElementProps<ITextSchema>) => {
+export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
@@ -25,7 +25,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	const [expanded, setExpanded] = useState(false);
 	const [showExpandButton, setShowExpandButton] = useState(false);
 
-	const Element = TEXT_MAPPING[uiType.toUpperCase()] || undefined;
+	const Element = TEXT_MAPPING[uiType.toUpperCase()] || TYPOGRAPHY_MAPPING[uiType.toUpperCase()] || undefined;
 
 	// =============================================================================
 	// EFFECTS / CALLBACKS
@@ -95,7 +95,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				ref={elementRef}
 				maxLines={!expanded ? maxLines : undefined}
 				data-testid={getTestId(id)}
-				weight={_.isNumber(weight) ? WEIGHT_MAPPING[weight] : weight || undefined}
+				weight={isNumber(weight) ? WEIGHT_MAPPING[weight] : weight}
 				{...otherSchema}
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}

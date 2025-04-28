@@ -7,7 +7,7 @@ import { IGridSchema } from "./grid";
 import { IOrderedListSchema, IUnorderedListSchema } from "./list";
 import { IPopoverSchema } from "./popover";
 import { ITabItemSchema, ITabSchema } from "./tab";
-import type { ITextSchema } from "./text";
+import type { ITextSchema, ITypographySchema } from "./text";
 import type { IInlineWrapperSchema, TWrapperSchema } from "./wrapper";
 
 /**
@@ -73,6 +73,7 @@ export type TBlockElementSchema<V = undefined, C = undefined> =
 	| IDividerSchema
 	| IOrderedListSchema<V, C>
 	| ITextSchema
+	| ITypographySchema
 	| IUnorderedListSchema<V, C>;
 
 /** represent element schemas that render inline ui elements */

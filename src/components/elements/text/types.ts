@@ -1,7 +1,10 @@
-import { TypographyProps } from "@lifesg/react-design-system/typography";
+import { TypographyProps, V2_TextProps } from "@lifesg/react-design-system";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseElementSchema, TInlineElementSchema } from "../types";
 
+/**
+ * @deprecated Use design system v3 TTypographyType
+ */
 export type TTextType =
 	| "text-d1"
 	| "text-d2"
@@ -16,6 +19,27 @@ export type TTextType =
 	| "text-bodysmall"
 	| "text-xsmall";
 
-export interface ITextSchema extends IBaseElementSchema<TTextType>, TComponentOmitProps<TypographyProps, "children"> {
+/**
+ * @deprecated Use design system v3 ITypographySchema
+ */
+export interface ITextSchema extends IBaseElementSchema<TTextType>, TComponentOmitProps<V2_TextProps, "children"> {
 	children: string | string[] | Record<string, ITextSchema | TInlineElementSchema>;
+}
+
+export type TTypographyType =
+	| "heading-xxl"
+	| "heading-xl"
+	| "heading-md"
+	| "heading-sm"
+	| "heading-lg"
+	| "heading-xs"
+	| "body-md"
+	| "body-sm"
+	| "body-bl"
+	| "body-xs";
+
+export interface ITypographySchema
+	extends IBaseElementSchema<TTypographyType>,
+		TComponentOmitProps<TypographyProps, "children"> {
+	children: string | string[] | Record<string, ITypographySchema | TInlineElementSchema>;
 }
