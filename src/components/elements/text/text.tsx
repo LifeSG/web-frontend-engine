@@ -1,5 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import isArray from "lodash/isArray";
+import isNumber from "lodash/isNumber";
 import isObject from "lodash/isObject";
 import { useEffect, useRef, useState } from "react";
 import sanitizeHtml, { IOptions } from "sanitize-html";
@@ -7,10 +8,9 @@ import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
-import { TEXT_MAPPING, TYPOGRAPHY_MAPPING, WEIGHT_MAPPING } from "./data";
-import { ITextSchema, ITypographySchema } from "./types";
 import { Wrapper } from "../wrapper";
-import isNumber from "lodash/isNumber";
+import { TAG_MAPPING, TEXT_MAPPING, TYPOGRAPHY_MAPPING, WEIGHT_MAPPING } from "./data";
+import { ITextSchema, ITypographySchema } from "./types";
 
 export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema>) => {
 	// =============================================================================
@@ -26,6 +26,7 @@ export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema
 	const [showExpandButton, setShowExpandButton] = useState(false);
 
 	const Element = TEXT_MAPPING[uiType.toUpperCase()] || TYPOGRAPHY_MAPPING[uiType.toUpperCase()] || undefined;
+	const Tag = TAG_MAPPING[uiType] || undefined;
 
 	// =============================================================================
 	// EFFECTS / CALLBACKS
@@ -98,6 +99,7 @@ export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema
 				weight={isNumber(weight) ? WEIGHT_MAPPING[weight] : weight}
 				{...otherSchema}
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
+				{...(Tag && !hasNestedFields() && { as: Tag })}
 				{...(hasNestedFields() && { as: "div" })}
 			>
 				{renderText()}
