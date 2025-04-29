@@ -2,18 +2,20 @@ import { Typography } from "@lifesg/react-design-system/typography";
 import { TTextType } from "./types";
 
 export const TEXT_MAPPING = {
-	"TEXT-D1": Typography.HeadingXXL,
-	"TEXT-D2": Typography.HeadingXL,
-	"TEXT-DBODY": Typography.HeadingSM,
-	"TEXT-H1": Typography.HeadingLG,
-	"TEXT-H2": Typography.HeadingMD,
-	"TEXT-H3": Typography.HeadingSM,
-	"TEXT-H4": Typography.HeadingXS,
-	"TEXT-H5": Typography.BodyMD,
-	"TEXT-H6": Typography.BodySM,
-	"TEXT-BODY": Typography.BodyBL,
-	"TEXT-BODYSMALL": Typography.BodyMD,
-	"TEXT-XSMALL": Typography.BodyXS,
+	"TEXT-D1": { type: Typography.HeadingXXL, weight: "bold" },
+	"TEXT-D2": { type: Typography.HeadingXL, weight: "bold" },
+	"TEXT-D3": { type: Typography.HeadingMD, weight: "bold" },
+	"TEXT-D4": { type: Typography.HeadingSM, weight: "bold" },
+	"TEXT-DBODY": { type: Typography.HeadingSM, weight: "light" },
+	"TEXT-H1": { type: Typography.HeadingLG, weight: "bold" },
+	"TEXT-H2": { type: Typography.HeadingMD, weight: "bold" },
+	"TEXT-H3": { type: Typography.HeadingSM, weight: "bold" },
+	"TEXT-H4": { type: Typography.HeadingXS, weight: "bold" },
+	"TEXT-H5": { type: Typography.BodyMD, weight: "bold" },
+	"TEXT-H6": { type: Typography.BodySM, weight: "bold" },
+	"TEXT-BODY": { type: Typography.BodyBL, weight: "regular" },
+	"TEXT-BODYSMALL": { type: Typography.BodyMD, weight: "regular" },
+	"TEXT-XSMALL": { type: Typography.BodyXS, weight: "regular" },
 };
 
 export const TYPOGRAPHY_MAPPING = {

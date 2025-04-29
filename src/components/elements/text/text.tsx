@@ -25,8 +25,16 @@ export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema
 	const [expanded, setExpanded] = useState(false);
 	const [showExpandButton, setShowExpandButton] = useState(false);
 
-	const Element = TEXT_MAPPING[uiType.toUpperCase()] || TYPOGRAPHY_MAPPING[uiType.toUpperCase()] || undefined;
+	const Element = TEXT_MAPPING[uiType.toUpperCase()].type || TYPOGRAPHY_MAPPING[uiType.toUpperCase()] || undefined;
 	const Tag = TAG_MAPPING[uiType] || undefined;
+
+	const getWeight = () => {
+		if (weight) {
+			return isNumber(weight) ? WEIGHT_MAPPING[weight] : weight;
+		} else if (uiType.toUpperCase() in TEXT_MAPPING) {
+			return TEXT_MAPPING[uiType.toUpperCase()].weight;
+		}
+	};
 
 	// =============================================================================
 	// EFFECTS / CALLBACKS
@@ -96,7 +104,7 @@ export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema
 				ref={elementRef}
 				maxLines={!expanded ? maxLines : undefined}
 				data-testid={getTestId(id)}
-				weight={isNumber(weight) ? WEIGHT_MAPPING[weight] : weight}
+				weight={getWeight()}
 				{...otherSchema}
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(Tag && !hasNestedFields() && { as: Tag })}

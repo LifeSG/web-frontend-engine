@@ -1,6 +1,7 @@
-import { Typography } from "@lifesg/react-design-system/typography";
+import { Font } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
 import { Layout } from "@lifesg/react-design-system/layout";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { action } from "@storybook/addon-actions";
 import highlightjs from "highlight.js";
 import json from "highlight.js/lib/languages/json";
@@ -18,7 +19,6 @@ import { Sanitize } from "../../../components/shared";
 import { IYupValidationRule } from "../../../context-providers";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 import { ALL_VALIDATION_DEMO_FIELD_IDS, TValidationDemoFieldIds, VALIDATION_DEMO_CONFIGS } from "./validation.data";
-import { Font } from "@lifesg/react-design-system";
 
 highlightjs.registerLanguage("json", json);
 

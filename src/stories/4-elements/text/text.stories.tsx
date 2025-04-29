@@ -11,8 +11,17 @@ const meta: Meta = {
 				<>
 					<Title>Text</Title>
 					<p>
-						This component renders a <code>Text</code> component provided by the Design System within a
-						Frontend Engine generated form.
+						This component renders a <code>Typography</code> component provided by the Design System within
+						a Frontend Engine generated form. For backward compatibility, it retains the original HTML
+						element and weight of <code>V2_Text</code>. Please refer to the{" "}
+						<a
+							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/v2-text-introduction--docs"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							design system
+						</a>{" "}
+						for the properties.
 					</p>
 
 					<p>
@@ -43,7 +52,7 @@ const meta: Meta = {
 			description: "The content of the text component",
 			table: {
 				type: {
-					summary: "string | string[] | Record<string, ITextSchema | ITypographySchema>",
+					summary: "string | string[] | Record<string, ITextSchema>",
 				},
 			},
 		},
@@ -208,24 +217,24 @@ Variants.args = {
 
 export const Weights = Template("text-weights").bind({});
 Weights.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: {
 		default: {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: LOREM_IPSUM("Default"),
 		},
 		bold: {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: LOREM_IPSUM("Bold"),
 			weight: "bold",
 		},
 		semibold: {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: LOREM_IPSUM("Semibold"),
 			weight: "semibold",
 		},
 		light: {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: LOREM_IPSUM("Light"),
 			weight: "light",
 		},

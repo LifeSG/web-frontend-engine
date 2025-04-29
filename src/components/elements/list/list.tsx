@@ -1,11 +1,11 @@
-import { V2_TextSizeType } from "@lifesg/react-design-system";
 import { TextList } from "@lifesg/react-design-system/text-list";
 import { TypographySizeType } from "@lifesg/react-design-system/theme/font/types";
+import { V2_TextSizeType } from "@lifesg/react-design-system/v2_text/types";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
-import { SIZE_MAPPING, V2_TEXT_SIZE_SET } from "./data";
+import { SIZE_MAPPING } from "./data";
 import { IOrderedListSchema, IUnorderedListSchema, IV2OrderedListSchema, IV2UnorderedListSchema } from "./types";
 
 export const List = (
@@ -24,11 +24,11 @@ export const List = (
 	const Element = uiType === "ordered-list" ? TextList.Ol : TextList.Ul;
 
 	// =============================================================================
-	// HELPER FUNCION
+	// HELPER FUNCTIONS
 	// =============================================================================
 
 	const isV2TextSizeType = (size: TypographySizeType | V2_TextSizeType): size is V2_TextSizeType =>
-		V2_TEXT_SIZE_SET.has(size);
+		size in SIZE_MAPPING;
 
 	// =============================================================================
 	// RENDER FUNCTIONS

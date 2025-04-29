@@ -17,22 +17,3 @@ export const SIZE_MAPPING: Record<V2_TextSizeType, TypographySizeType> = {
 	BodySmall: "body-md",
 	XSmall: "body-xs",
 };
-
-const V2_TEXT_SIZE_TYPES: readonly V2_TextSizeType[] = [
-	"D1",
-	"D2",
-	"D3",
-	"D4",
-	"DBody",
-	"H1",
-	"H2",
-	"H3",
-	"H4",
-	"H5",
-	"H6",
-	"Body",
-	"BodySmall",
-	"XSmall",
-];
-
-export const V2_TEXT_SIZE_SET = new Set<string>(V2_TEXT_SIZE_TYPES);

@@ -1,13 +1,13 @@
-import { Typography } from "@lifesg/react-design-system/typography";
+import { Breakpoint, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
 import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Modal } from "@lifesg/react-design-system/modal";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { BinIcon } from "@lifesg/react-icons/bin";
 import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import styled, { css } from "styled-components";
-import { Breakpoint, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
 
 interface IModalBoxStyle {
 	imageReviewModalStyles?: string | undefined;

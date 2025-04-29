@@ -12,13 +12,13 @@ import {
 } from "../../../components/fields";
 import { ERROR_SVG, TIMEOUT_SVG } from "../../../components/fields/location-field/location-modal/location-modal.data";
 import { ErrorImage } from "../../../components/fields/location-field/location-modal/location-modal.styles";
+import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { Prompt } from "../../../components/shared";
 import { Description } from "../../../components/shared/prompt/prompt.styles";
 import { TestHelper } from "../../../utils";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-field.stories";
-import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 
 const meta: Meta = {
 	title: "Field/LocationField/Events",
