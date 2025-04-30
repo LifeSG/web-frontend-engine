@@ -182,7 +182,7 @@ export const FooterSection = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin: ${Spacing["spacing-16"]} ${Spacing["spacing-24"]} ${Spacing["spacing-16"]} ${Spacing["spacing-24"]};
+	margin: ${Spacing["spacing-16"]} ${Spacing["spacing-24"]};
 
 	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		margin: 0 ${Spacing["spacing-20"]};

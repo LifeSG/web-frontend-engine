@@ -55,7 +55,7 @@ export const LoadingDot = styled.div`
 	animation: ${dotMoveKeyframe} 1.35s infinite linear;
 	opacity: 0.25;
 	background: ${Colour["bg-inverse-subtle"]};
-	${Spacing["spacing-4"]};
+	margin: 0.125rem;
 	transform-origin: bottom;
 `;
 

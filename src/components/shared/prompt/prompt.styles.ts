@@ -2,7 +2,7 @@ import { MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Typography } from "@lifesg/react-design-system/typography";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface SizeProps {
 	size?: "large";
@@ -16,11 +16,11 @@ export const ScrollableModal = styled(Modal)`
 
 export const GrowContainer = styled.div`
 	margin: auto;
-	padding: 5rem ${Spacing["spacing-20"]};
+	padding: 5rem ${Spacing["layout-md"]};
 	width: 100%;
 
 	${MediaQuery.MaxWidth.sm} {
-		padding: ${Spacing["spacing-16"]} ${Spacing["spacing-20"]};
+		padding: ${Spacing["layout-sm"]} ${Spacing["layout-md"]};
 	}
 `;
 
@@ -62,11 +62,14 @@ export const ButtonContainer = styled.div<SizeProps>`
 
 	${MediaQuery.MinWidth.md} {
 		align-items: center;
-		padding: ${(props) =>
-			props.size === "large"
-				? `${Spacing["spacing-32"]} ${Spacing["spacing-64"]} ${Spacing["spacing-64"]}`
-				: `${Spacing["spacing-40"]} ${Spacing["spacing-24"]} ${Spacing["spacing-32"]}`};
 		flex-direction: row-reverse;
+
+		${(props) =>
+			css`
+				padding: ${props.size === "large"
+					? `${Spacing["spacing-32"]} ${Spacing["spacing-64"]} ${Spacing["spacing-64"]}`
+					: `${Spacing["spacing-40"]} ${Spacing["spacing-24"]} ${Spacing["spacing-32"]}`};
+			`}
 	}
 `;
 
@@ -77,10 +80,12 @@ export const LabelContainer = styled.div<SizeProps>`
 	padding: ${Spacing["spacing-64"]} ${Spacing["spacing-24"]} ${Spacing["spacing-24"]};
 
 	${MediaQuery.MinWidth.md} {
-		padding: ${(props) =>
-			props.size === "large"
-				? `${Spacing["spacing-64"]} ${Spacing["spacing-64"]} 0rem ${Spacing["spacing-64"]}`
-				: `${Spacing["spacing-32"]} ${Spacing["spacing-24"]} 0`};
+		${(props) =>
+			css`
+				padding: ${props.size === "large"
+					? `${Spacing["spacing-64"]} ${Spacing["spacing-64"]} 0rem ${Spacing["spacing-64"]}`
+					: `${Spacing["spacing-32"]} ${Spacing["spacing-24"]} 0`};
+			`}
 	}
 `;
 

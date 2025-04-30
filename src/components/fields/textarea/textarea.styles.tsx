@@ -15,10 +15,15 @@ export const Wrapper = styled.div<{ chipPosition?: "top" | "bottom" | undefined 
 `;
 
 export const ChipContainer = styled.div<{ $chipPosition?: "top" | "bottom" | undefined }>`
-	margin: ${({ $chipPosition }) =>
+	${({ $chipPosition }) =>
 		$chipPosition === "bottom"
-			? `${Spacing["spacing-16"]} 0 ${Spacing["spacing-8"]}`
-			: `${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]}`};
+			? css`
+					margin: ${Spacing["spacing-16"]} 0 ${Spacing["spacing-8"]};
+			  `
+			: css`
+					margin: ${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]};
+			  `}
+
 	display: flex;
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-8"]};

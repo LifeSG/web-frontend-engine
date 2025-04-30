@@ -42,7 +42,7 @@ export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	}
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		margin: ${Spacing["spacing-16"]} 0 0;
+		margin: ${Spacing["spacing-12"]} 0 0;
 	}
 `;
 
