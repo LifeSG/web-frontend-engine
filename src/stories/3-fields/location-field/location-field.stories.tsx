@@ -118,6 +118,18 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
+		bufferRadius: {
+			description: "Specifies the bufferRadius parameter when calling reverseGeoCode from OneMap",
+			table: {
+				type: {
+					summary: "number",
+				},
+				defaultValue: { summary: "500" },
+			},
+			control: {
+				type: "number",
+			},
+		},
 	},
 };
 export default meta;

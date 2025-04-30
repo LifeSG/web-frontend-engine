@@ -77,6 +77,7 @@ export const LocationSearch = ({
 	restrictLocationSelection,
 	selectablePins,
 	searchBarIcon = "search",
+	bufferRadius,
 }: ILocationSearchProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -500,7 +501,8 @@ export const LocationSearch = ({
 				mustHavePostalCode,
 				reverseGeocodeAborter,
 				onError,
-				true
+				true,
+				bufferRadius
 			);
 		} catch (error) {
 			return;

@@ -45,7 +45,8 @@ export namespace LocationHelper {
 		mustHavePostalCode: boolean,
 		reverseGeocodeAborter: MutableRefObject<AbortController>,
 		onError: (error: any) => void,
-		excludeNonSG?: boolean
+		excludeNonSG?: boolean,
+		bufferRadius = 500
 	): Promise<IResultListItem[]> => {
 		let onemapLocationList: IResultListItem[];
 
@@ -58,7 +59,7 @@ export namespace LocationHelper {
 					latitude: lat,
 					longitude: lng,
 					abortSignal: reverseGeocodeAborter.current.signal,
-					bufferRadius: 500,
+					bufferRadius: bufferRadius,
 					otherFeatures: OneMapBoolean.YES,
 					options: {
 						excludeNonSG,
