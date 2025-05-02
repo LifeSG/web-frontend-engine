@@ -67,10 +67,10 @@ export const ButtonContainer = styled.div<SizeProps>`
 		padding: ${(props) =>
 			props.size === "large"
 				? css`
-						${Spacing["spacing-64"]} ${Spacing["spacing-64"]} 0rem ${Spacing["spacing-64"]}
+						${Spacing["spacing-32"]} ${Spacing["spacing-64"]} ${Spacing["spacing-64"]}
 				  `
 				: css`
-						${Spacing["spacing-32"]} ${Spacing["spacing-24"]} 0
+						${Spacing["spacing-40"]} ${Spacing["spacing-24"]} ${Spacing["spacing-32"]}
 				  `};
 	}
 `;
