@@ -4,10 +4,10 @@ import * as Icons from "@lifesg/react-icons";
 import { useEffect } from "react";
 import * as Yup from "yup";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Wrapper } from "../../elements/wrapper";
 import { Sanitize } from "../../shared";
 import { IGenericCustomElementProps } from "../types";
 import { ITimelineSchema } from "./types";
-import { Wrapper } from "../../elements/wrapper";
 
 export const Timeline = (props: IGenericCustomElementProps<ITimelineSchema>) => {
 	// =========================================================================

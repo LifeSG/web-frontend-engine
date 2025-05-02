@@ -1,5 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import isArray from "lodash/isArray";
+import isNumber from "lodash/isNumber";
 import isObject from "lodash/isObject";
 import { useEffect, useRef, useState } from "react";
 import sanitizeHtml, { IOptions } from "sanitize-html";
@@ -7,24 +8,24 @@ import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
-import { TAG_MAPPING, TEXT_MAPPING } from "./data";
-import { ITextSchema } from "./types";
 import { Wrapper } from "../wrapper";
+import { TAG_MAPPING, TEXT_MAPPING, TYPOGRAPHY_MAPPING, WEIGHT_MAPPING } from "./data";
+import { ITextSchema, ITypographySchema } from "./types";
 
-export const Text = (props: IGenericElementProps<ITextSchema>) => {
+export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
 		id,
-		schema: { children, uiType, maxLines, ...otherSchema },
+		schema: { children, uiType, maxLines, weight, ...otherSchema },
 	} = props;
 
 	const elementRef = useRef(null);
 	const [expanded, setExpanded] = useState(false);
 	const [showExpandButton, setShowExpandButton] = useState(false);
 
-	const Element = TEXT_MAPPING[uiType.toUpperCase()] || undefined;
+	const Element = TEXT_MAPPING[uiType.toUpperCase()]?.type || TYPOGRAPHY_MAPPING[uiType.toUpperCase()] || undefined;
 	const Tag = TAG_MAPPING[uiType] || undefined;
 
 	// =============================================================================
@@ -49,6 +50,14 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 	// =============================================================================
 	const getTestId = (id: string): string => {
 		return TestHelper.generateId(id, "text");
+	};
+
+	const getWeight = () => {
+		if (weight) {
+			return isNumber(weight) ? WEIGHT_MAPPING[weight] : weight;
+		} else if (uiType.toUpperCase() in TEXT_MAPPING) {
+			return TEXT_MAPPING[uiType.toUpperCase()].weight;
+		}
 	};
 
 	const hasNestedFields = (): boolean => {
@@ -95,6 +104,7 @@ export const Text = (props: IGenericElementProps<ITextSchema>) => {
 				ref={elementRef}
 				maxLines={!expanded ? maxLines : undefined}
 				data-testid={getTestId(id)}
+				weight={getWeight()}
 				{...otherSchema}
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(Tag && !hasNestedFields() && { as: Tag })}
