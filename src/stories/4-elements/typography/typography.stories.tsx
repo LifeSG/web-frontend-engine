@@ -12,7 +12,10 @@ const meta: Meta = {
 					<Title>Typography</Title>
 					<p>
 						This component renders a <code>Typography</code> component provided by the Design System within
-						a Frontend Engine generated form. For more information, please refer to the{" "}
+						a Frontend Engine generated form.
+					</p>
+					<p>
+						Please refer to the{" "}
 						<a
 							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/core-typography--docs"
 							target="_blank"
@@ -20,11 +23,7 @@ const meta: Meta = {
 						>
 							design system
 						</a>{" "}
-						for the properties.
-					</p>
-
-					<p>
-						Here is the properties and demo of <code>Typography</code>
+						for the properties of <code>Typography</code>.
 					</p>
 					<ArgTypes of={Variants} />
 					<Stories includePrimary={true} title="Example" />
@@ -273,7 +272,7 @@ ParagraphText.args = {
 export const HTMLString = Template("text-html-string").bind({});
 HTMLString.args = {
 	uiType: "body-bl",
-	children: "<p>his is a paragraph in a HTML string</p>",
+	children: "<p>This is a paragraph in a HTML string</p>",
 };
 
 export const ImageTextString = Template("image-text-string").bind({});

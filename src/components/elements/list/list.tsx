@@ -6,13 +6,9 @@ import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
 import { SIZE_MAPPING } from "./data";
-import { IOrderedListSchema, IUnorderedListSchema, IV2OrderedListSchema, IV2UnorderedListSchema } from "./types";
+import { IOrderedListSchema, IUnorderedListSchema } from "./types";
 
-export const List = (
-	props: IGenericElementProps<
-		IUnorderedListSchema | IOrderedListSchema | IV2UnorderedListSchema | IV2OrderedListSchema
-	>
-) => {
+export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrderedListSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================

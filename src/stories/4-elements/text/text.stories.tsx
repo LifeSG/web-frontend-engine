@@ -1,6 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
-import { ITextSchema, ITypographySchema } from "../../../components/elements";
+import { ITextSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, LOREM_IPSUM } from "../../common";
 
 const meta: Meta = {
@@ -13,7 +13,11 @@ const meta: Meta = {
 					<p>
 						This component renders a <code>Typography</code> component provided by the Design System within
 						a Frontend Engine generated form. For backward compatibility, it retains the original HTML
-						element and weight of <code>V2_Text</code>. Please refer to the{" "}
+						element and weight of <code>V2_Text</code>.
+					</p>
+
+					<p>
+						Please refer to the{" "}
 						<a
 							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/v2-text-introduction--docs"
 							target="_blank"
@@ -21,11 +25,7 @@ const meta: Meta = {
 						>
 							design system
 						</a>{" "}
-						for the properties.
-					</p>
-
-					<p>
-						Here is the properties and demo of <code>V2_Text</code>
+						for the properties of <code>V2_Text</code>.
 					</p>
 					<ArgTypes of={Variants} />
 					<Stories includePrimary={true} title="Example" />
@@ -88,7 +88,7 @@ const meta: Meta = {
 		},
 		weight: {
 			description: `The weight of the text component.<br>
-			For backward compatibility, Numeric values will be mapped to the corresponding weight.<br>
+			For backward compatibility, numeric values will be mapped to the corresponding weight.<br>
 			300: <code>light</code><br>
 			400: <code>regular</code><br>
 			600: <code>semibold</code><br>
