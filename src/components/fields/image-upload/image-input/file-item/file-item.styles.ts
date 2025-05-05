@@ -1,6 +1,6 @@
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Typography } from "@lifesg/react-design-system/typography";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
@@ -10,8 +10,13 @@ export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }
 	gap: ${Spacing["spacing-8"]};
 	border: ${(props) =>
 		props.isError
-			? `${Border["width-010"]} ${Border.solid} ${Colour["border-error"](props)}`
-			: `${Border["width-010"]} ${Border.solid} ${Colour.border(props)}`};
+			? css`
+					${Border["width-010"]} ${Border.solid} ${Colour["border-error"]}
+			  `
+			: css`
+					${Border["width-010"]} ${Border.solid} ${Colour.border}
+			  `};
+	border-radius: ${Radius.sm};
 	border-radius: ${Radius.sm};
 	background-color: ${(props) =>
 		props.isError ? `${Colour["bg-error"](props)}` : `${Colour["bg-primary-subtlest"](props)}`};

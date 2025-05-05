@@ -1,7 +1,7 @@
 import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export const ThumbnailsWrapper = styled.div`
 	display: flex;
@@ -84,7 +84,12 @@ export const LoadingBox = styled.div`
 `;
 
 export const BorderOverlay = styled.div<{ isSelected: boolean }>`
-	border: ${(props) => (props.isSelected ? `${Border.solid} ${Border["width-020"]}` : "none")};
+	border: ${(props) =>
+		props.isSelected
+			? css`
+					${Border.solid} ${Border["width-020"]}
+			  `
+			: "none"};
 	border-color: ${Colour["border-primary"]};
 	width: 100%;
 	height: 100%;
