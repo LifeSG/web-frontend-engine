@@ -34,5 +34,5 @@ export interface ILocationSearchProps {
 	selectablePins: IMapPin[];
 	disableSearch?: "disabled" | "readonly" | undefined;
 	searchBarIcon?: "search" | "location-pin";
-	bufferRadius?: number;
+	bufferRadius?: number | undefined;
 }
