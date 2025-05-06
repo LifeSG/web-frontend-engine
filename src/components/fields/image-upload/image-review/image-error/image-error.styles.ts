@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Button } from "@lifesg/react-design-system/button";
-import { Breakpoint, Colour, Font } from "@lifesg/react-design-system/theme";
+import { Breakpoint, Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 
 export const Wrapper = styled.div`
@@ -14,7 +14,7 @@ export const Wrapper = styled.div`
 	align-items: center;
 	flex-direction: column;
 	background-color: black;
-	padding: 2.5rem;
+	padding: ${Spacing["spacing-40"]};
 	text-align: center;
 
 	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
@@ -26,10 +26,10 @@ export const ErrorIcon = styled.img`
 	width: 100%;
 	max-width: 9rem;
 	height: auto;
-	margin-bottom: 2rem;
+	margin-bottom: ${Spacing["spacing-32"]};
 
 	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		margin: 0 2rem 0 0;
+		margin: 0 ${Spacing["spacing-32"]} 0 0;
 	}
 `;
 
@@ -37,7 +37,7 @@ export const Content = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 `;
 
 export const BodyText = styled(Typography.BodyBL)`
@@ -58,9 +58,9 @@ export const NameWrapper = styled.span`
 export const OkButton = styled(Button.Default)`
 	width: 100%;
 	max-width: 16rem;
-	margin-top: 2rem;
+	margin-top: ${Spacing["spacing-32"]};
 
 	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		margin-top: 0.5rem;
+		margin-top: ${Spacing["spacing-8"]};
 	}
 `;

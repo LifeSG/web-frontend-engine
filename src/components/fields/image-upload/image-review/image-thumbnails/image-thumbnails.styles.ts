@@ -1,11 +1,11 @@
-import { Border, Colour, Radius, V2_ThemeSpec } from "@lifesg/react-design-system";
+import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export const ThumbnailsWrapper = styled.div`
 	display: flex;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 	align-items: center;
 	height: 100%;
 	max-height: 5rem;
@@ -18,7 +18,7 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 	height: 3rem;
 	padding: 0;
 	border: none;
-	border-radius: 2px;
+	border-radius: ${Radius.xs};
 	${({ src }) => `background-image: url(${src});`}
 	background-color: ${({ error }) => error && "#eee"};
 	background-position: center;
@@ -66,7 +66,7 @@ export const LoadingBox = styled.div`
 	height: 3rem;
 	justify-content: center;
 	align-items: center;
-	border-radius: 2px;
+	border-radius: ${Radius.xs};
 	background-color: ${Colour["bg-strongest"]};
 
 	${LoadingDot}:nth-child(1) {
@@ -84,7 +84,12 @@ export const LoadingBox = styled.div`
 `;
 
 export const BorderOverlay = styled.div<{ isSelected: boolean }>`
-	border: ${(props) => (props.isSelected ? "solid  2px" : "none")};
+	border: ${(props) =>
+		props.isSelected
+			? css`
+					${Border.solid} ${Border["width-020"]}
+			  `
+			: "none"};
 	border-color: ${Colour["border-primary"]};
 	width: 100%;
 	height: 100%;

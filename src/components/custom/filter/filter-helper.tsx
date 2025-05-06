@@ -2,7 +2,7 @@ import { FormLabelAddonProps } from "@lifesg/react-design-system/form/types";
 import styled from "styled-components";
 import { Sanitize } from "../../shared";
 import { IFilterItemLabel } from "./types";
-import { Colour } from "@lifesg/react-design-system";
+import { Colour } from "@lifesg/react-design-system/theme";
 
 export namespace FilterHelper {
 	export const constructFormattedLabel = (

@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import { Breakpoint, Button, Colour, Font, MediaQuery, Typography } from "@lifesg/react-design-system";
+import { Border, Breakpoint, Colour, Font, MediaQuery, Motion, Spacing } from "@lifesg/react-design-system/theme";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
 import { MagnifierIcon } from "@lifesg/react-icons/magnifier";
+import { Typography } from "@lifesg/react-design-system/typography";
+import { Button } from "@lifesg/react-design-system/button";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
@@ -13,34 +15,34 @@ export const SearchWrapper = styled.div<ISinglePanelStyle>`
 	display: flex;
 	flex-direction: column;
 	flex: 1;
-	padding: 2rem 1.5rem 1rem;
+	padding: ${Spacing["spacing-32"]} ${Spacing["spacing-24"]} ${Spacing["spacing-16"]};
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		flex: unset;
 		height: ${({ panelInputMode }) => (panelInputMode === "search" ? `100%` : `auto`)};
-		padding: 1.5rem 1.25rem 0;
+		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} 0;
 	}
 `;
 
 export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	position: relative;
 	display: flex;
-	gap: 0.5rem;
-	padding-bottom: 0.4rem;
+	gap: ${Spacing["spacing-8"]};
+	padding-bottom: ${Spacing["spacing-8"]};
 	alight-items: center;
 	justify-content: space-between;
-	border-bottom: 1px solid ${Colour.border};
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	clip-path: inset(0 0 -0.3rem 0);
-	transition: box-shadow 0.3s linear;
+	transition: box-shadow ${Motion["duration-250"]} ${Motion["ease-default"]};
 
 	${({ hasScrolled }) => (hasScrolled ? `box-shadow: 0 0.06rem 0.4rem rgba(0,0,0,.12);` : "")}
 
 	&:focus-within {
-		border-bottom: 1px solid ${Colour["border-focus"]};
+		border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour["border-focus"]};
 	}
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		margin: 0.8rem 0 0;
+		margin: ${Spacing["spacing-12"]} 0 0;
 	}
 `;
 
@@ -92,7 +94,7 @@ export const SearchBarModalCross = styled(CrossIcon)`
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: block;
-		margin: -0.4rem 0 0 -0.4rem;
+		margin: -${Spacing["spacing-8"]} 0 0 -${Spacing["spacing-8"]};
 	}
 `;
 
@@ -104,7 +106,7 @@ export const SearchBarCross = styled(CrossIcon)`
 export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	overflow-y: auto;
 	flex: 1;
-	border-bottom: solid 1px ${Colour.border};
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? `block` : `none`)};
@@ -113,13 +115,13 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 `;
 
 export const ResultTitle = styled(Typography.BodyMD)`
-	border-bottom: 1px solid ${Colour.border};
-	padding: 1rem 0;
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
+	padding: ${Spacing["spacing-16"]} 0;
 	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
 export const NoResultTitle = styled(Typography.BodyMD)`
-	padding-top: 1rem;
+	padding-top: ${Spacing["spacing-16"]};
 	color: ${Colour["text-subtlest"]};
 	word-break: break-all;
 	overflow-y: scroll;
@@ -128,9 +130,9 @@ export const NoResultTitle = styled(Typography.BodyMD)`
 export const ResultItem = styled.div<{ active?: boolean }>`
 	display: flex;
 	align-items: center;
-	gap: 1rem;
-	padding: 1rem 1rem 1rem 0;
-	border-bottom: 1px solid ${Colour.border};
+	gap: ${Spacing["spacing-16"]};
+	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-16"]} ${Spacing["spacing-16"]} 0;
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	text-transform: uppercase;
 	cursor: pointer;
 	background-color: ${({ active }) => (active ? Colour["bg-selected"] : `transparent`)};
@@ -149,8 +151,8 @@ export const ResultItemPin = styled(PinFillIcon)`
 export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	display: flex;
 	justify-content: center;
-	gap: 1rem;
-	padding-top: 1rem;
+	gap: ${Spacing["spacing-16"]};
+	padding-top: ${Spacing["spacing-16"]};
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode === "map" ? `block` : `none`)};
@@ -158,7 +160,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 		left: 0;
 		bottom: 0;
 		width: 100%;
-		padding: 1.5rem 1.25rem 1.93rem;
+		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} ${Spacing["spacing-32"]};
 	}
 `;
 

@@ -1,4 +1,4 @@
-import { MediaQuery } from "@lifesg/react-design-system";
+import { Font, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
@@ -22,10 +22,10 @@ export const Image = styled.img`
 
 export const ContentTitle = styled(Typography.BodyBL)`
 	text-align: center;
-	margin: 1.5rem auto 0.5rem;
+	margin: ${Spacing["spacing-24"]} auto ${Spacing["spacing-8"]};
 
 	${MediaQuery.MaxWidth.sm} {
-		font-size: 0.875rem !important;
+		font-size: ${Font.Spec["body-size-sm"]};
 	}
 `;
 
@@ -34,13 +34,13 @@ export const ContentBody = styled(Typography.BodyBL)`
 	width: 100%;
 
 	${MediaQuery.MaxWidth.sm} {
-		font-size: 0.875rem !important;
+		font-size: ${Font.Spec["body-size-sm"]};
 		max-width: 14rem;
 	}
 `;
 
 export const ButtonWrapper = styled(Button.Default)`
-	margin-top: 2.5rem;
+	margin-top: ${Spacing["spacing-40"]};
 	width: 100%;
 	max-width: 16.5rem;
 

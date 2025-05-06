@@ -1,4 +1,5 @@
-import { Card, Colour, Font, MediaQuery } from "@lifesg/react-design-system";
+import { Card } from "@lifesg/react-design-system/card";
+import { Colour, Font, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 import styled from "styled-components";
 
 export const LocationPickerWrapper = styled.div`
@@ -92,13 +93,13 @@ export const BannerWrapper = styled.div`
 	position: absolute;
 	z-index: 1000;
 	width: 100%;
-	padding: 2rem 1.5rem;
+	padding: ${Spacing["spacing-32"]} ${Spacing["spacing-24"]};
 
 	${MediaQuery.MaxWidth.lg} {
-		padding: 1rem 1.25rem;
+		padding: ${Spacing["spacing-16"]} ${Spacing["spacing-20"]};
 	}
 `;
 
 export const Banner = styled(Card)`
-	padding: 0.5rem 1rem;
+	padding: ${Spacing["spacing-8"]} ${Spacing["spacing-16"]};
 `;

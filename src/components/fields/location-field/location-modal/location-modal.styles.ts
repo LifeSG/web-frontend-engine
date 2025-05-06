@@ -2,7 +2,7 @@ import { Modal } from "@lifesg/react-design-system/modal";
 import styled from "styled-components";
 import { TPanelInputMode } from "../types";
 import { LocationPicker } from "./location-picker";
-import { Breakpoint, MediaQuery } from "@lifesg/react-design-system";
+import { Breakpoint, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
@@ -49,19 +49,19 @@ export const StyledLocationPicker = styled(LocationPicker)<ISinglePanelStyle>`
 		position: relative;
 		left: 0;
 		width: 100%;
-		margin-top: 1rem;
+		margin-top: ${Spacing["spacing-16"]};
 		height: calc(100% - 13rem);
 	}
 `;
 
 export const ErrorImage = styled.img`
 	display: block;
-	margin: 0 auto 2rem;
+	margin: 0 auto ${Spacing["spacing-32"]};
 	width: 10.5rem;
 	height: 8rem;
 
 	${MediaQuery.MaxWidth.sm} {
-		margin-top: 2.5rem;
+		margin-top: ${Spacing["spacing-40"]};
 	}
 `;
 

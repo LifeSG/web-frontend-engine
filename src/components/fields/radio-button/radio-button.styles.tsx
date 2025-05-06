@@ -4,6 +4,7 @@ import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 import { TRadioToggleLayoutType } from "./types";
+import { Spacing } from "@lifesg/react-design-system/theme";
 
 interface ILabelProps {
 	disabled?: boolean | undefined;
@@ -18,7 +19,7 @@ export const Label = styled(Typography.BodyMD)<ILabelProps>`
 `;
 
 export const StyledRadioButton = styled(RadioButton)`
-	margin-right: 5px;
+	margin-right: ${Spacing["spacing-4"]};
 	flex-shrink: 0;
 `;
 
@@ -33,21 +34,21 @@ export const RadioContainer = styled.div`
 	display: flex;
 	align-items: center;
 	:not(:last-of-type) {
-		margin-bottom: 1rem;
+		margin-bottom: ${Spacing["spacing-16"]};
 	}
 `;
 
 export const FlexImageWrapper = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	gap: 1rem;
+	gap: ${Spacing["spacing-16"]};
 `;
 
 export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
 	display: flex;
 	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
-	gap: 1rem;
+	gap: ${Spacing["spacing-16"]};
 `;
 
 export const StyledToggle = styled(Toggle)`

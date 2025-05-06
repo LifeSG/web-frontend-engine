@@ -1,4 +1,4 @@
-import { L1OptionProps } from "@lifesg/react-design-system";
+import { L1OptionProps } from "@lifesg/react-design-system/input-nested-select";
 import { Form } from "@lifesg/react-design-system/form";
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";

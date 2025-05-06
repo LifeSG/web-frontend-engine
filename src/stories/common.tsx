@@ -7,7 +7,7 @@ import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFro
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../components/frontend-engine";
 import { RecursivePartial, TNoInfer } from "../utils";
-import { Breakpoint, MediaQuery } from "@lifesg/react-design-system";
+import { Breakpoint, MediaQuery } from "@lifesg/react-design-system/theme";
 
 const EXCLUDED_STORY_PROPS: ArgTypes = {
 	invalid: { table: { disable: true } },

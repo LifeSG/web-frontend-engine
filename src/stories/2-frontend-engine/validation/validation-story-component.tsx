@@ -1,4 +1,4 @@
-import { Font } from "@lifesg/react-design-system";
+import { Font } from "@lifesg/react-design-system/theme";
 import { Form } from "@lifesg/react-design-system/form";
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Typography } from "@lifesg/react-design-system/typography";
