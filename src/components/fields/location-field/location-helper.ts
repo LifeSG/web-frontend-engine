@@ -45,7 +45,8 @@ export namespace LocationHelper {
 		mustHavePostalCode: boolean,
 		reverseGeocodeAborter: MutableRefObject<AbortController>,
 		onError: (error: any) => void,
-		excludeNonSG?: boolean
+		excludeNonSG?: boolean,
+		bufferRadius?: number
 	): Promise<IResultListItem[]> => {
 		let onemapLocationList: IResultListItem[];
 
@@ -58,7 +59,7 @@ export namespace LocationHelper {
 					latitude: lat,
 					longitude: lng,
 					abortSignal: reverseGeocodeAborter.current.signal,
-					bufferRadius: 500,
+					bufferRadius,
 					otherFeatures: OneMapBoolean.YES,
 					options: {
 						excludeNonSG,
@@ -159,12 +160,24 @@ export namespace LocationHelper {
 	// =========================================================================
 	// reverseGeoCodeEndpoint
 	// =========================================================================
-	export const reverseGeocode = async ({ options, ...others }: TReverseGeocodeParams): Promise<IResultsMetaData> => {
+	export const reverseGeocode = async ({
+		bufferRadius,
+		options,
+		...others
+	}: TReverseGeocodeParams): Promise<IResultsMetaData> => {
 		if (!LocationHelper.isCoordinateInBounds({ lat: others.latitude, lng: others.longitude })) {
 			throw new Error("Coordinate is outside Singapore");
 		}
 
-		const locationList = await mapService.reverseGeocode(others);
+		let clampedBufferRadius = 500;
+		if (typeof bufferRadius === "number") {
+			clampedBufferRadius = Math.min(500, Math.max(0, bufferRadius));
+			if (bufferRadius < 0 || bufferRadius > 500) {
+				console.warn("bufferRadius must be between 0 and 500 meters.");
+			}
+		}
+
+		const locationList = await mapService.reverseGeocode({ bufferRadius: clampedBufferRadius, ...others });
 		const lat = others.latitude;
 		const lng = others.longitude;
 
