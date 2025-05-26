@@ -639,6 +639,17 @@ export const Uinfin: Story = {
 	},
 };
 
+export const Uen: Story = {
+	args: {
+		info: {
+			rule: { uen: true, errorMessage: "Invalid UEN" },
+			ruleName: "uen",
+			ruleDescription: "Indicates that the value must be a valid UEN.",
+		},
+		fields: ["maskedField", "textarea", "textField"],
+	},
+};
+
 export const Url: Story = {
 	args: {
 		info: {
