@@ -237,8 +237,8 @@ export namespace YupHelper {
 			const customRuleKey = Object.keys(rule).filter((k) =>
 				customYupConditions.includes(k as TYupCondition)
 			)?.[0] as TYupCondition;
-			if (customRuleKey) {
-				yupSchema = (yupSchema as unknown)[customRuleKey]?.(rule[customRuleKey], rule.errorMessage);
+			if (customRuleKey && (yupSchema as unknown)[customRuleKey]) {
+				yupSchema = (yupSchema as unknown)[customRuleKey](rule[customRuleKey], rule.errorMessage);
 			}
 			// prevent applying non-required validation for empty fields
 			if (yupSchema) {
