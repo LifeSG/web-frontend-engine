@@ -238,7 +238,11 @@ export namespace YupHelper {
 				customYupConditions.includes(k as TYupCondition)
 			)?.[0] as TYupCondition;
 			if (customRuleKey) {
-				yupSchema = (yupSchema as unknown)[customRuleKey]?.(rule[customRuleKey], rule.errorMessage);
+				if ((yupSchema as unknown)[customRuleKey]) {
+					yupSchema = (yupSchema as unknown)[customRuleKey](rule[customRuleKey], rule.errorMessage);
+				} else {
+					console.warn(`error applying "${customRuleKey}" condition to ${yupSchema.type} schema`);
+				}
 			}
 			// prevent applying non-required validation for empty fields
 			if (yupSchema) {

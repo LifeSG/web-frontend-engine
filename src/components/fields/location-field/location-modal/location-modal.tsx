@@ -51,6 +51,7 @@ const LocationModal = ({
 	disableSearch,
 	addressFieldPlaceholder,
 	searchBarIcon,
+	bufferRadius,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -483,6 +484,7 @@ const LocationModal = ({
 								disableSearch={disableSearch}
 								addressFieldPlaceholder={addressFieldPlaceholder}
 								searchBarIcon={searchBarIcon}
+								bufferRadius={bufferRadius}
 							/>
 							<StyledLocationPicker
 								id={id}

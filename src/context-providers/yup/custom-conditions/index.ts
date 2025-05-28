@@ -5,6 +5,7 @@ import isNil from "lodash/isNil";
 import isNumber from "lodash/isNumber";
 import { YupHelper } from "../helper";
 import "./uinfin";
+import "./uen";
 import { DateTimeHelper } from "../../../utils";
 import { IDaysRangeRule } from "../types";
 

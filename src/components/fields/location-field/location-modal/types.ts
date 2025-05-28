@@ -13,6 +13,7 @@ export interface ILocationModalProps
 			| "disableSearch"
 			| "addressFieldPlaceholder"
 			| "searchBarIcon"
+			| "bufferRadius"
 		> {
 	id: string;
 	className: string;

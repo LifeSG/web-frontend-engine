@@ -118,6 +118,19 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
+		bufferRadius: {
+			description:
+				"Used in reverse geocoding, this value (0-500m) sets the radius around a point to include all buildings within that area and find their addresses",
+			table: {
+				type: {
+					summary: "number",
+				},
+				defaultValue: { summary: "500" },
+			},
+			control: {
+				type: "number",
+			},
+		},
 	},
 };
 export default meta;
