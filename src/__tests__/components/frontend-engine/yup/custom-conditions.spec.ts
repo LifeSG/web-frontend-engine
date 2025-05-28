@@ -1,26 +1,18 @@
 import { YupHelper } from "../../../../context-providers";
 import { TestHelper } from "../../../../utils";
+import { ERROR_MESSAGE } from "../../../common";
 
-describe("validateUinfin", () => {
-	describe("uinfin", () => {
-		it("should pass when given a valid uinfin", async () => {
-			const schema = YupHelper.buildFieldSchema(YupHelper.mapSchemaType("string"), [{ uinfin: true }]);
-			["S1111111D", "T8017681Z", "F4769209K", "G5825195Q", "M1234567K"].forEach((uinfin) =>
-				expect(() => schema.validateSync(uinfin)).not.toThrowError()
-			);
-		});
+it.each`
+	type        | config              | valid                                                                               | invalid
+	${"uinfin"} | ${{ uinfin: true }} | ${["S1111111D", "T8017681Z", "F4769209K", "G5825195Q", "M1234567K", "", undefined]} | ${["S1234567A"]}
+	${"uen"}    | ${{ uen: true }}    | ${["200012345A", "12345678A", "T09LL0001B", undefined]}                             | ${["1234A567A", "T09L10001B"]}
+`("should support $type validation", ({ config, valid, invalid }) => {
+	const schema = YupHelper.buildFieldSchema(YupHelper.mapSchemaType("string"), [
+		{ ...config, errorMessage: ERROR_MESSAGE },
+	]);
 
-		it("should fail when given an invalid uinfin", () => {
-			const schema = YupHelper.buildFieldSchema(YupHelper.mapSchemaType("string"), [
-				{ uinfin: true, errorMessage: "error" },
-			]);
-			expect(TestHelper.getError(() => schema.validateSync("S1234567A")).message).toBe("error");
-		});
-
-		it("should pass when given an empty value", async () => {
-			const schema = YupHelper.buildFieldSchema(YupHelper.mapSchemaType("string"), [{ uinfin: true }]);
-			expect(() => schema.validateSync("")).not.toThrowError();
-			expect(() => schema.validateSync(undefined)).not.toThrowError();
-		});
-	});
+	valid.forEach((validValue: string | undefined) => expect(() => schema.validateSync(validValue)).not.toThrow());
+	invalid.forEach((invalidValue: string | undefined) =>
+		expect(TestHelper.getError(() => schema.validateSync(invalidValue)).message).toBe(ERROR_MESSAGE)
+	);
 });
