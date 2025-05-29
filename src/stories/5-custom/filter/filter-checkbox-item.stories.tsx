@@ -28,10 +28,11 @@ const meta: Meta = {
 		...CommonCustomStoryProps("filter-checkbox"),
 		label: {
 			description:
-				"A name/description of the purpose of the element. Accepts a string for a default label, or an object with a main label and a hint displayed in a popover.",
+				'A name/description of the purpose of the element. Accepts a string for a default label, or an object with a main label and a hint displayed in a popover.\n\nAlso accepts an element schema for more customisation. (See <a href="../?path=/story/custom-filter-filtercheckbox--label-customisation-with-schema">Label Customisation With Schema</a>)',
 			table: {
 				type: {
-					summary: "string | { mainLabel: string, hint?: { content: string, zIndex?: number } }",
+					summary:
+						"string | { mainLabel: string, hint?: { content: string | Record<string, TElementSchema>, zIndex?: number } }",
 				},
 			},
 		},
@@ -200,6 +201,69 @@ LabelCustomisation.args = {
 	label: {
 		mainLabel: "Filter item",
 		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
+	},
+	referenceKey: "filter-checkbox",
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+};
+
+export const LabelCustomisationWithSchema = Template("filter-checkbox-label-customisation-with-schema").bind({});
+LabelCustomisationWithSchema.args = {
+	label: {
+		mainLabel: "Filter item",
+		hint: {
+			content: {
+				wrapperSpan: {
+					children: {
+						titleInH3: {
+							children: '<h3 style="margin-bottom:1rem">Common questions in h3</h3>',
+							uiType: "text-h3",
+							weight: "semibold",
+						},
+						anotherTitleInH4: {
+							children: '<h4 style="margin-bottom:1rem">Common questions in h4</h4>',
+							uiType: "text-h4",
+							weight: "semibold",
+						},
+						bodyText: {
+							children:
+								'<p style="margin-bottom:1rem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>',
+							uiType: "text-body",
+						},
+						lists: {
+							children: [
+								{
+									listItem: {
+										children: {
+											bodyText: {
+												children: '<p style="margin-bottom:0.5rem">a bullet list </p>',
+												uiType: "text-body",
+											},
+										},
+										uiType: "list-item",
+									},
+									listItem2: {
+										children: {
+											"just a text": {
+												children:
+													'<span><strong>A description: </strong><a href="https://www.google.com" target="_blank" rel="noopener noreferrer">a link to google</span>',
+												uiType: "text-body",
+											},
+										},
+										uiType: "list-item",
+									},
+								},
+							],
+							uiType: "unordered-list",
+						},
+					},
+					uiType: "div",
+				},
+			},
+			zIndex: 9999,
+		},
 	},
 	referenceKey: "filter-checkbox",
 	options: [
