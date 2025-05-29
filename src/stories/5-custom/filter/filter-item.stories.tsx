@@ -20,6 +20,15 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonCustomStoryProps("filter-item"),
+		label: {
+			description:
+				"A name/description of the purpose of the element. Accepts a string for a default label, or an object with a main label and a hint displayed in a popover.",
+			table: {
+				type: {
+					summary: "string | { mainLabel: string, hint?: { content: string, zIndex?: number } }",
+				},
+			},
+		},
 		children: {
 			description: "Elements or string that is the descendant of this component",
 			table: {

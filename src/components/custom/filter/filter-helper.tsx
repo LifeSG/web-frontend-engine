@@ -21,6 +21,7 @@ export namespace FilterHelper {
 					  {
 							type: "popover",
 							content: <StyledHint className="label-hint">{label.hint?.content}</StyledHint>,
+							zIndex: label.hint?.zIndex,
 							"data-testid": id + "-popover",
 					  }
 					: /* eslint-enable indent */
