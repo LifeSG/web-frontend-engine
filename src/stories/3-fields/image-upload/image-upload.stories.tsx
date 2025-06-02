@@ -122,10 +122,10 @@ const meta: Meta = {
 			type: { name: "object", value: {} },
 			defaultValue: { url: "", method: "post" },
 			description:
-				"<div>Whether upload to API on adding file / after editing image, this can be used to do AV scan of the added file.</div><ul><li>method: HTTP method.</li><li>url: API endpoint to upload to.</li></ul>",
+				"<div>Whether upload to API on adding file / after editing image, this can be used to do AV scan of the added file.</div><ul><li>method: HTTP method.</li><li>url: API endpoint to upload to.</li><li>sessionId: id that use for validation purpose.</li></ul>",
 			table: {
 				type: {
-					summary: "{ method: post|put|patch, url: string }",
+					summary: "{ method: post|put|patch, url: string, sessionId?: string }",
 				},
 				defaultValue: { summary: null },
 			},

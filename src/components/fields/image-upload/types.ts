@@ -25,7 +25,7 @@ export interface IImageUploadSchema<V = undefined>
 	editImage?: boolean | undefined;
 	label: string;
 	outputType?: TImageUploadOutputFileType | undefined;
-	uploadOnAddingFile?: { method: TUploadMethod; url: string } | undefined;
+	uploadOnAddingFile?: { method: TUploadMethod; url: string; sessionId?: string } | undefined;
 	compress?: boolean | undefined;
 	dimensions?: IImageDimensions | undefined;
 	capture?: TFileCapture | undefined;
