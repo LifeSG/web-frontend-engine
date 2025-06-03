@@ -26,6 +26,21 @@ const meta: Meta = {
 	},
 	argTypes: {
 		...CommonCustomStoryProps("filter-checkbox"),
+		label: {
+			description: `A name/description of the purpose of the section which may include an optional hint displayed in a popover.<br>
+				If string is provided, the entire label will be rendered.<br>
+				If object is provided:
+				<ul>
+					<li>mainLabel: Primary text to display.</li>
+					<li>hint.content: Displays an info icon and brings up the content as a popover on click. Accepts a string or schema for more customisation. (See <strong>Label Customisation With Schema</strong> story)</li>
+				</ul>`,
+			table: {
+				type: {
+					summary:
+						"string | { mainLabel: string, hint?: { content: string | Record<string, TBlockElementSchema | TInlineElementSchema | TWrapperSchema>, zIndex?: number } }",
+				},
+			},
+		},
 		children: {
 			description: "Elements or string that is the descendant of this component",
 			table: {
@@ -191,6 +206,63 @@ LabelCustomisation.args = {
 	label: {
 		mainLabel: "Filter item",
 		hint: { content: "A helpful tip<br>Another helpful tip on next line" },
+	},
+	referenceKey: "filter-checkbox",
+	options: [
+		{ label: "Red", value: "red" },
+		{ label: "Blue", value: "blue" },
+	],
+};
+
+export const LabelCustomisationWithSchema = Template("filter-checkbox-label-customisation-with-schema").bind({});
+LabelCustomisationWithSchema.args = {
+	label: {
+		mainLabel: "Filter item",
+		hint: {
+			content: {
+				wrapper: {
+					children: {
+						heading: {
+							uiType: "text-h3",
+							weight: "semibold",
+							children: "Heading",
+							style: {
+								marginBottom: "1rem",
+							},
+						},
+						description: {
+							uiType: "text-body",
+							children:
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+							style: {
+								marginBottom: "1rem",
+							},
+						},
+						list: {
+							children: [
+								{
+									listItem: {
+										children: "A bullet list",
+										uiType: "list-item",
+										style: {
+											marginBottom: "0.5rem",
+										},
+									},
+									listItem2: {
+										children:
+											'<strong>A description: </strong><a href="https://www.google.com" target="_blank" rel="noopener noreferrer">a link to google</a>',
+										uiType: "list-item",
+									},
+								},
+							],
+							uiType: "unordered-list",
+							size: "BodySmall",
+						},
+					},
+					uiType: "div",
+				},
+			},
+		},
 	},
 	referenceKey: "filter-checkbox",
 	options: [
