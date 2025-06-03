@@ -271,7 +271,7 @@ const FileUploadManager = (props: IProps) => {
 		});
 
 		const formData = new FormData();
-		formData.append("sessionId", sessionId.current || "");
+		formData.append("sessionId", upload?.sessionId || sessionId.current || "");
 		formData.append("fileId", fileToUpload.fileItem.id);
 		formData.append("slot", fileToUpload.slot.toString());
 		if (upload.type === "base64") {
