@@ -20,7 +20,7 @@ interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	upload?: {
 		method: TUploadMethod;
 		url: string;
-		sessionId?: string;
+		sessionId?: string | undefined;
 	};
 	value: any;
 }
