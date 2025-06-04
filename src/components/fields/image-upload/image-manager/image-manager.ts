@@ -20,6 +20,7 @@ interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	upload?: {
 		method: TUploadMethod;
 		url: string;
+		sessionId?: string | undefined;
 	};
 	value: any;
 }
@@ -363,7 +364,7 @@ export const ImageManager = (props: IProps) => {
 			if (upload?.method && upload?.url) {
 				const formData = new FormData();
 				formData.append("dataURL", iFile.drawingDataURL || iFile.dataURL || "");
-				formData.append("sessionId", sessionId.current || "");
+				formData.append("sessionId", upload?.sessionId || sessionId.current || "");
 				formData.append("slot", `${iFile.slot}`);
 				response = await new AxiosApiClient("", undefined, undefined, true)[upload.method](
 					upload.url,

@@ -1,6 +1,6 @@
 {
 	"name": "@lifesg/web-frontend-engine",
-	"version": "2.0.0-alpha.3",
+	"version": "2.0.0-alpha.4",
 	"description": "A frontend engine for LifeSG React apps",
 	"main": "dist/cjs/index.js",
 	"module": "dist/index.js",
@@ -58,7 +58,7 @@
 	"peerDependencies": {
 		"@floating-ui/dom": "^1.6.10",
 		"@floating-ui/react": "^0.26.23",
-		"@lifesg/react-design-system": "^3.0.0-alpha.5",
+		"@lifesg/react-design-system": "^3.0.0-alpha.10",
 		"@lifesg/react-icons": "^1.9.0",
 		"react": "^17.0.2 || ^18.0.0",
 		"react-dom": "^17.0.2 || ^18.0.0",
@@ -71,7 +71,7 @@
 		"@babel/preset-typescript": "^7.18.6",
 		"@floating-ui/dom": "^1.6.10",
 		"@floating-ui/react": "^0.26.23",
-		"@lifesg/react-design-system": "^3.0.0-alpha.7",
+		"@lifesg/react-design-system": "^3.0.0-alpha.10",
 		"@lifesg/react-icons": "^1.9.0",
 		"@lifesg/web-form-builder": "^1.0.0-alpha.3",
 		"@mihkeleidast/storybook-addon-source": "^1.0.1",

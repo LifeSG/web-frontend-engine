@@ -22,7 +22,12 @@ export interface IFileUploadSchema<V = undefined>
 	className?: string | undefined;
 	description?: string | undefined;
 	label: string;
-	uploadOnAddingFile: { type: TUploadType; url: string; headers?: AxiosRequestConfig["headers"] | undefined };
+	uploadOnAddingFile: {
+		type: TUploadType;
+		url: string;
+		headers?: AxiosRequestConfig["headers"] | undefined;
+		sessionId?: string | undefined;
+	};
 	warning?: string | undefined;
 	compressImages?: boolean | undefined;
 }
