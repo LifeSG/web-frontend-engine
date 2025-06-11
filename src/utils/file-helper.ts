@@ -170,6 +170,31 @@ export namespace FileHelper {
 		}
 	};
 
+	export const sanitizeFileName = (fileName: string): string => {
+		const parts = fileName.split(".");
+		let ext: string;
+		let name: string;
+
+		if (parts.length === 2 && parts[0] === "") {
+			// file without extension but with leading .
+			name = parts[1];
+		} else if (parts.length > 1) {
+			// file with extension
+			ext = parts.pop();
+			name = parts.join(".");
+		} else {
+			// file without extension
+			name = parts.join(".");
+		}
+
+		let sanitized = name.replace(/[^A-Za-z0-9 _-]*/g, "").trim();
+		if (!sanitized) {
+			sanitized = "file";
+		}
+
+		return ext ? `${sanitized}.${ext}` : `${sanitized}`;
+	};
+
 	export const blobToFile = (blob: Blob, metadata: { name: string; lastModified: number }): File => {
 		const { name, lastModified } = metadata;
 		return new File([blob], name, {

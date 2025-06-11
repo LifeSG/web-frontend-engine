@@ -102,7 +102,7 @@ export const ImageManager = (props: IProps) => {
 										name: FileHelper.deduplicateFileName(
 											images.map(({ name }) => name),
 											index,
-											image.name
+											FileHelper.sanitizeFileName(image.name)
 										),
 										type: mimeType,
 										status: image.addedFrom !== "schema" ? image.status : EImageStatus.UPLOADED,
