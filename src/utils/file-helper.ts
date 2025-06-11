@@ -163,7 +163,7 @@ export namespace FileHelper {
 			const name = originalFilename.split(".");
 			const ext = name.pop();
 			if (!ext) return fileName;
-			fileName = name.join().concat(` (${counter}).`).concat(ext);
+			fileName = name.join(".").concat(` (${counter}).`).concat(ext);
 			return deduplicateFileName(fileNameList, index, fileName, originalFilename, ++counter);
 		} else {
 			return fileName;
