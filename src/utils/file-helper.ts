@@ -177,7 +177,7 @@ export namespace FileHelper {
 
 		if (parts.length === 2 && parts[0] === "") {
 			// file without extension but with leading .
-			name = parts[1];
+			name = fileName;
 		} else if (parts.length > 1) {
 			// file with extension
 			ext = parts.pop();
@@ -187,7 +187,8 @@ export namespace FileHelper {
 			name = parts.join(".");
 		}
 
-		let sanitized = name.replace(/[^A-Za-z0-9 _-]*/g, "").trim();
+		// allow ascii characters only
+		let sanitized = name.replace(/[^\u0020-\u007E]*/g, "");
 		if (!sanitized) {
 			sanitized = "file";
 		}
