@@ -248,7 +248,7 @@ const FileUploadManager = (props: IProps) => {
 					name: FileHelper.deduplicateFileName(
 						files.map(({ fileItem }) => fileItem?.name),
 						index,
-						compressedFile.rawFile.name
+						FileHelper.sanitizeFileName(compressedFile.rawFile.name)
 					),
 					size: compressedFile.rawFile.size,
 					type: fileType.mime,
