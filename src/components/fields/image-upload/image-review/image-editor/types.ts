@@ -1,9 +1,10 @@
+import { FabricObject } from "fabric";
 import { ForwardedRef } from "react";
 
 export interface IImageEditorProps {
 	maxSizeInKb?: number;
 	baseImageDataURL?: string;
-	drawing?: fabric.Object[];
+	drawing?: FabricObject[];
 	color?: string;
 	erase?: boolean;
 	forwardedRef?: ForwardedRef<IImageEditorRef>;
@@ -11,7 +12,7 @@ export interface IImageEditorProps {
 export interface IImageEditorRef {
 	clearDrawing: VoidFunction;
 	export: () => {
-		drawing: fabric.Object[];
+		drawing: FabricObject[];
 		dataURL: string;
 	};
 }

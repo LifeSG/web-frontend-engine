@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { fabric } from "fabric";
+import { EraserBrush } from "@erase2d/fabric";
+import { Canvas as FabricCanvas, FabricImage, FabricObject, Path, PencilBrush, Point, Rect, TEvent } from "fabric";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { FileHelper, TestHelper, WindowHelper } from "../../../../../utils";
 import { Canvas, Wrapper } from "./image-editor.styles";
@@ -13,12 +14,13 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	// CONST, STATE, REFS
 	//  =============================================================================
 	const { maxSizeInKb, baseImageDataURL, drawing, color, erase } = props;
+	console.log("drawing, color, erase: ", drawing, color, erase);
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const fabricCanvas = useRef<fabric.Canvas>();
-	const fabricBackground = useRef<fabric.Image>();
-	const pencilBrush = useRef<fabric.PencilBrush>();
-	const eraserBrush = useRef<fabric.BaseBrush>();
+	const fabricCanvas = useRef<FabricCanvas>();
+	const fabricBackground = useRef<FabricImage>();
+	const pencilBrush = useRef<PencilBrush>();
+	const eraserBrush = useRef<EraserBrush>();
 	const gestures = useRef({
 		pinchStartAmount: 0,
 		panAmount: { x: 0, y: 0 },
@@ -33,7 +35,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					drawing: fabricCanvas.current
 						.getObjects()
 						.map((obj) => (obj.type !== "image" ? obj : undefined))
-						.filter((obj) => obj) as fabric.Object[],
+						.filter((obj) => obj) as FabricObject[],
 					dataURL: toDataURLWithLimit(),
 				};
 			}
@@ -76,14 +78,10 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		if (wrapperRef.current && canvasRef.current) {
 			canvasRef.current.width = wrapperRef.current?.clientWidth;
 			canvasRef.current.height = wrapperRef.current?.clientHeight;
-			fabricCanvas.current = new fabric.Canvas(TestHelper.generateId("imageEditor"));
+			fabricCanvas.current = new FabricCanvas(TestHelper.generateId("imageEditor"));
 			fabricCanvas.current.selection = false;
-
-			pencilBrush.current = new fabric.PencilBrush(fabricCanvas.current);
-
-			// eraser brush is an optional fabric module, the typing is not included that's why the need to use `any`
-			eraserBrush.current = new (fabric as any).EraserBrush(fabricCanvas.current) as fabric.BaseBrush;
-
+			pencilBrush.current = new PencilBrush(fabricCanvas.current);
+			eraserBrush.current = new EraserBrush(fabricCanvas.current);
 			fabricCanvas.current.freeDrawingBrush = pencilBrush.current;
 		}
 	}, []);
@@ -143,7 +141,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			vpt[4] = 0;
 			vpt[5] = 0;
 
-			fabricCanvas.current.renderAll();
+			fabricCanvas.current.requestRenderAll();
 		}
 	};
 
@@ -177,12 +175,12 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			if (WindowHelper.isMobileView() && canvasRatio > 1) {
 				const intendedZoom = Math.min((fabricCanvas.current.width || 0) / img.getScaledWidth() + 0.1, MAX_ZOOM);
 				fabricCanvas.current.zoomToPoint(
-					{ x: (fabricCanvas.current.width || 0) / 2, y: (fabricCanvas.current.height || 0) / 2 },
+					new Point((fabricCanvas.current.width || 0) / 2, (fabricCanvas.current.height || 0) / 2),
 					intendedZoom
 				);
 			}
 
-			fabricCanvas.current.clipPath = new fabric.Rect({
+			fabricCanvas.current.clipPath = new Rect({
 				left: img.left,
 				top: img.top,
 				width: img.getScaledWidth(),
@@ -191,32 +189,33 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 
 			if (pencilBrush.current && eraserBrush.current) {
 				pencilBrush.current.width = PENCIL_BRUSH_SIZE * (img.scaleX || 1);
-				eraserBrush.current.width = PENCIL_BRUSH_SIZE * (img.scaleX || 1) * 2;
+				eraserBrush.current.width = PENCIL_BRUSH_SIZE * (img.scaleX || 1) * 2; // TODO custom width
 			}
 
-			fabricCanvas.current.renderAll();
+			fabricCanvas.current.requestRenderAll();
 		}
 	};
 
 	// update image
 	useEffect(() => {
-		if (baseImageDataURL) {
-			fabric.Image.fromURL(baseImageDataURL, (img) => {
+		const handleUpdateImage = async () => {
+			if (baseImageDataURL) {
+				const img = await FabricImage.fromURL(baseImageDataURL);
 				if (fabricCanvas.current) {
 					if (fabricBackground.current) {
 						fabricCanvas.current.remove(fabricBackground.current);
 					}
 					img.selectable = false;
 					img.hoverCursor = "default";
-					(img as any).erasable = false;
+					img.erasable = false;
 					fabricCanvas.current.add(img);
 					fabricBackground.current = img;
-
 					resetZoomAndPosition();
 					fitImageToCanvas();
 				}
-			});
-		}
+			}
+		};
+		handleUpdateImage();
 	}, [baseImageDataURL]);
 
 	// update drawing
@@ -228,8 +227,8 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 						fabricCanvas.current?.remove(obj);
 					}
 				});
-				drawing?.forEach((d: fabric.Object) => {
-					const path = new fabric.Path((d as any).path, d);
+				drawing?.forEach((d: FabricObject) => {
+					const path = new Path((d as any).path, { d });
 					fabricCanvas.current?.add(path);
 				});
 				fabricCanvas.current.renderAll();
@@ -262,7 +261,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	useEffect(() => {
 		if (fabricCanvas.current) {
 			if (erase) {
-				fabricCanvas.current.freeDrawingBrush = eraserBrush.current as fabric.BaseBrush;
+				fabricCanvas.current.freeDrawingBrush = eraserBrush.current;
 			} else if (pencilBrush.current) {
 				fabricCanvas.current.freeDrawingBrush = pencilBrush.current;
 			}
@@ -272,7 +271,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	// =============================================================================
 	// GESTURES
 	// =============================================================================
-	const handleMouseDown = (e: fabric.IEvent) => {
+	const handleMouseDown = (e: TEvent) => {
 		if (typeof TouchEvent !== "undefined" && e.e instanceof TouchEvent && e.e.touches.length === 2) {
 			if (typeof TouchEvent !== "undefined" && fabricCanvas.current && fabricCanvas.current.isDrawingMode) {
 				fabricCanvas.current.isDrawingMode = false;
@@ -290,7 +289,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		}
 	};
 
-	const handleMouseUp = (e: fabric.IEvent) => {
+	const handleMouseUp = (e: TEvent) => {
 		if (typeof TouchEvent !== "undefined" && e.e instanceof TouchEvent && e.e.touches.length === 0) {
 			gestures.current.pinchStartAmount = 0;
 			if (fabricCanvas.current && (color || erase)) {
@@ -304,7 +303,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		});
 	};
 
-	const handlePinch = (e: fabric.IEvent) => {
+	const handlePinch = (e: TEvent) => {
 		if (typeof TouchEvent !== "undefined" && (color || erase)) {
 			const innerEvent = e.e as TouchEvent;
 			if (fabricCanvas.current && innerEvent.touches?.length === 2) {
@@ -315,20 +314,20 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					let zoom = gestures.current.pinchStartAmount * self.scale;
 					if (zoom < 1) zoom = 1;
 					else if (zoom > MAX_ZOOM) zoom = MAX_ZOOM;
-					fabricCanvas.current.zoomToPoint({ x: self.x, y: self.y }, zoom);
+					fabricCanvas.current.zoomToPoint(new Point(self.x, self.y), zoom);
 				}
 			}
 		}
 	};
 
-	const handleDrag = (e: fabric.IEvent) => {
+	const handleDrag = (e: TEvent) => {
 		if (typeof TouchEvent !== "undefined" && (color || erase)) {
 			const innerEvent = e.e as TouchEvent;
 			if (fabricCanvas.current && innerEvent.touches?.length === 2) {
 				if (innerEvent.type !== "touchstart") {
 					const xChange = innerEvent.touches[0].clientX - gestures.current.panAmount.x;
 					const yChange = innerEvent.touches[0].clientY - gestures.current.panAmount.y;
-					fabricCanvas.current.relativePan({ x: xChange, y: yChange });
+					fabricCanvas.current.relativePan(new Point(xChange, yChange));
 
 					const vpt = fabricCanvas.current.viewportTransform || [];
 					const zoom = fabricCanvas.current.getZoom();
@@ -348,22 +347,27 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		}
 	};
 
+	const handlePencilErasable = (e: any) => {
+		const path = e.path as Path;
+		path.erasable = true; // Important for @erase2d/fabric
+	};
+
 	useEffect(() => {
 		if (fabricCanvas.current) {
-			fabricCanvas.current
-				.on("mouse:down", handleMouseDown)
-				.on("mouse:up", handleMouseUp)
-				.on("touch:gesture", handlePinch)
-				.on("touch:drag", handleDrag);
+			fabricCanvas.current.on("mouse:down", handleMouseDown);
+			fabricCanvas.current.on("mouse:up", handleMouseUp);
+			// fabricCanvas.current.on("touch:gesture", handlePinch);
+			// fabricCanvas.current.on("touch:drag", handleDrag);
+			fabricCanvas.current.on("path:created", handlePencilErasable);
 		}
 
 		return () => {
 			if (fabricCanvas.current) {
-				fabricCanvas.current
-					.off("mouse:down", handleMouseDown)
-					.off("mouse:up", handleMouseUp)
-					.off("touch:gesture", handlePinch)
-					.off("touch:drag", handleDrag);
+				fabricCanvas.current.off("mouse:down", handleMouseDown);
+				fabricCanvas.current.off("mouse:up", handleMouseUp);
+				// fabricCanvas.current.off("touch:gesture", handlePinch);
+				// fabricCanvas.current.off("touch:drag", handleDrag);
+				fabricCanvas.current.on("path:created", handlePencilErasable);
 			}
 		};
 	}, [fabricCanvas.current, color, erase]);

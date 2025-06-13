@@ -79,6 +79,7 @@ export const ImageReview = (props: IProps) => {
 		imageReviewModalStyles,
 	} = props;
 	const { images, setImages } = useContext(ImageContext);
+	console.log("images: ", images);
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	const previousShow = usePrevious(show);
 
