@@ -5,6 +5,7 @@ import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from
 import { FileHelper, TestHelper, WindowHelper } from "../../../../../utils";
 import { Canvas, Wrapper } from "./image-editor.styles";
 import { IImageEditorProps, IImageEditorRef } from "./types";
+import { useDrag, useGesture, useHover, usePinch } from "@use-gesture/react";
 
 const MAX_ZOOM = 5;
 const PENCIL_BRUSH_SIZE = 10;
@@ -303,19 +304,48 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		});
 	};
 
-	const handlePinch = (e: TEvent) => {
+	// const handlePinch = (e: TEvent) => {
+	// 	if (typeof TouchEvent !== "undefined" && (color || erase)) {
+	// 		const innerEvent = e.e as TouchEvent;
+	// 		if (fabricCanvas.current && innerEvent.touches?.length === 2) {
+	// 			const { self } = e as any;
+	// 			if (self.state === "start" || gestures.current.pinchStartAmount === 0) {
+	// 				gestures.current.pinchStartAmount = fabricCanvas.current.getZoom();
+	// 			} else {
+	// 				let zoom = gestures.current.pinchStartAmount * self.scale;
+	// 				if (zoom < 1) zoom = 1;
+	// 				else if (zoom > MAX_ZOOM) zoom = MAX_ZOOM;
+	// 				fabricCanvas.current.zoomToPoint(new Point(self.x, self.y), zoom);
+	// 			}
+	// 		}
+	// 	}
+	// };
+
+	const handlePinch = (isGuestureStart: boolean, e: TouchEvent, scale: number, origin: [number, number]) => {
 		if (typeof TouchEvent !== "undefined" && (color || erase)) {
-			const innerEvent = e.e as TouchEvent;
-			if (fabricCanvas.current && innerEvent.touches?.length === 2) {
-				const { self } = e as any;
-				if (self.state === "start" || gestures.current.pinchStartAmount === 0) {
+			if (fabricCanvas.current && e.touches?.length === 2) {
+				if (isGuestureStart || gestures.current.pinchStartAmount === 0) {
 					gestures.current.pinchStartAmount = fabricCanvas.current.getZoom();
 				} else {
-					let zoom = gestures.current.pinchStartAmount * self.scale;
+					let zoom = gestures.current.pinchStartAmount * scale;
 					if (zoom < 1) zoom = 1;
 					else if (zoom > MAX_ZOOM) zoom = MAX_ZOOM;
-					fabricCanvas.current.zoomToPoint(new Point(self.x, self.y), zoom);
+					fabricCanvas.current.zoomToPoint(new Point(origin[0], origin[1]), zoom);
 				}
+			}
+		}
+	};
+
+	const handlePinchPointers = (isGuestureStart: boolean, scale: number, origin: [number, number]) => {
+		console.log("isGuestureStart: ", isGuestureStart, origin);
+		if (color || erase) {
+			if (isGuestureStart || gestures.current.pinchStartAmount === 0) {
+				gestures.current.pinchStartAmount = fabricCanvas.current.getZoom();
+			} else {
+				let zoom = gestures.current.pinchStartAmount * scale;
+				if (zoom < 1) zoom = 1;
+				else if (zoom > MAX_ZOOM) zoom = MAX_ZOOM;
+				fabricCanvas.current.zoomToPoint(new Point(origin[0], origin[1]), zoom);
 			}
 		}
 	};
@@ -371,6 +401,68 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			}
 		};
 	}, [fabricCanvas.current, color, erase]);
+
+	usePinch(
+		({ da: [scale], origin, event, first }) => {
+			console.log("EVENT: ", event);
+			handlePinchPointers(first, scale, origin);
+			// if ("touches" in event) {
+			// 	handlePinch(first, event, scale, origin);
+			// }
+		},
+		{ target: wrapperRef }
+	);
+
+	// usePinch(
+	// 	({ da: [scale] }) => {
+	// 		console.log("Scale:", scale);
+	// 	},
+	// 	{ target: wrapperRef }
+	// );
+
+	// const bind = useHover(() => {
+	// 	console.log("ABC");
+	// });
+
+	// const doSomethingWith = (state: any) => {
+	// 	console.log("ABCDEFG");
+	// };
+
+	// const bind = useGesture({
+	// 	onDrag: (state) => doSomethingWith(state),
+	// 	onDragStart: (state) => doSomethingWith(state),
+	// 	onDragEnd: (state) => doSomethingWith(state),
+	// 	onPinch: (state) => doSomethingWith(state),
+	// 	onPinchStart: (state) => doSomethingWith(state),
+	// 	onPinchEnd: (state) => doSomethingWith(state),
+	// 	onScroll: (state) => doSomethingWith(state),
+	// 	onScrollStart: (state) => doSomethingWith(state),
+	// 	onScrollEnd: (state) => doSomethingWith(state),
+	// 	onMove: (state) => doSomethingWith(state),
+	// 	onMoveStart: (state) => doSomethingWith(state),
+	// 	onMoveEnd: (state) => doSomethingWith(state),
+	// 	onWheel: (state) => doSomethingWith(state),
+	// 	onWheelStart: (state) => doSomethingWith(state),
+	// 	onWheelEnd: (state) => doSomethingWith(state),
+	// 	onHover: (state) => doSomethingWith(state),
+	// });
+
+	// useGesture(
+	// 	{
+	// 		onHover: ({ active, event }) => console.log("hover", event, active),
+	// 		onMove: ({ event }) => console.log("move", event),
+	// 		onDrag: ({ pinching, cancel, offset: [x, y], ...rest }) => {
+	// 			console.log("DRAG");
+	// 		},
+	// 		onPinch: ({ origin: [ox, oy], first, movement: [ms], offset: [s, a], memo }) => {
+	// 			console.log("PINCH");
+	// 		},
+	// 	},
+	// 	{
+	// 		target: wrapperRef,
+	// 		pinch: { scaleBounds: { min: 0.5, max: 2 }, rubberband: true },
+	// 	}
+	// );
 
 	return (
 		<Wrapper ref={wrapperRef}>
