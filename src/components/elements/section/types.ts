@@ -4,7 +4,6 @@ import { TWrapperSchema } from "../wrapper";
 
 type TCustomOptions = {
 	gridType?: "v2" | "v3" | undefined;
-	contentType?: "v2" | "v3" | undefined;
 };
 
 export interface ISectionSchema<V = undefined, C = undefined>

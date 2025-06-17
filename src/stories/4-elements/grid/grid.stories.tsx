@@ -36,8 +36,8 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description: `Determines whether to render the component using <code>v2</code> or <code>v3</code> breakpoints, default is <code>v2</code><br>
-				For gridType <code>v2</code>, component will use <code>V2_Layout.Container</code><br>
-				For gridType <code>v3</code>, component will use <code>Layout.Container</code>`,
+				For gridType <code>v2</code>, component will use the 12-8-4 column grid
+				For gridType <code>v3</code>, component will use the 12-8-8 column grid`,
 			table: {
 				type: {
 					summary: "{ gridType?: 'v2' | 'v3' | undefined }",

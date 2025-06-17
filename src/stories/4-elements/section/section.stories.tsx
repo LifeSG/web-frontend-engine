@@ -44,16 +44,16 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description: `Determines whether to render the component using <code>v2</code> or <code>v3</code> breakpoints, default is <code>v2</code><br><br>
-				For gridType <code>v2</code>:<br>Component will use <code>V2_Layout.Container</code> and <code>V2_Layout.Section</code><br><br>
-				For gridType <code>v3</code>:<br>Component will use <code>Layout.Container</code> and <code>Layout.Section</code><br><br>`,
+				For gridType <code>v2</code>:<br>Component will use the 12-8-4 column grid
+				For gridType <code>v3</code>:<br>Component will use the 12-8-8 column grid`,
 			table: {
 				type: {
-					summary: "{ gridType?: 'v2' | 'v3' | undefined, contentType?: 'v2' | 'v3' | undefined }",
+					summary: "{ gridType?: 'v2' | 'v3' | undefined }",
 				},
 			},
 			type: { name: "object", value: {} },
 			control: { type: "object" },
-			defaultValue: { gridType: "v2", contentType: "v2" },
+			defaultValue: { gridType: "v2" },
 		},
 	},
 };
@@ -146,39 +146,19 @@ GridV3.args = {
 };
 GridV3.storyName = "Grid V3";
 
-export const ContainedV2 = Template("section-contain").bind({});
-ContainedV2.args = {
+export const Contained = Template("section-contain").bind({});
+Contained.args = {
 	uiType: "section",
 	layoutType: "contain",
 	children: {
 		text1: {
 			uiType: "text-field",
-			label: "Contained within 1320px",
+			label: "Contained within 1440px",
 		},
 		text2: {
 			uiType: "text-field",
-			label: "Contained within 1320px",
+			label: "Contained within 1440px",
 		},
 	},
 };
-ContainedV2.storyName = "Contained V2";
-
-export const ContainedV3 = Template("section-contain").bind({});
-ContainedV3.args = {
-	uiType: "section",
-	layoutType: "contain",
-	customOptions: {
-		contentType: "v3",
-	},
-	children: {
-		text1: {
-			uiType: "text-field",
-			label: "Contained within 1320px",
-		},
-		text2: {
-			uiType: "text-field",
-			label: "Contained within 1320px",
-		},
-	},
-};
-ContainedV3.storyName = "Contained V3";
+Contained.storyName = "Contained";
