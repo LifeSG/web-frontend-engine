@@ -13,7 +13,6 @@ export const Section = (props: ISectionProps) => {
 			layoutType,
 			customOptions = {
 				gridType: "v2",
-				contentType: "v2",
 			},
 		},
 		...otherProps
