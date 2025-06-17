@@ -1,8 +1,7 @@
-import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
-import { Wrapper } from "../wrapper";
-import { Contained, GridWrapper } from "./section.styles";
-import { ISectionProps } from "./types";
 import { Layout } from "@lifesg/react-design-system/layout";
+import { Wrapper } from "../wrapper";
+import { Contained, GridWrapper, V2GridWrapper } from "./section.styles";
+import { ISectionProps } from "./types";
 
 export const Section = (props: ISectionProps) => {
 	// =============================================================================
@@ -24,25 +23,24 @@ export const Section = (props: ISectionProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderInGrid = () => {
-		const LayoutSection = customOptions.gridType === "v3" ? Layout.Section : V2_Layout.Section;
-		const LayoutContainer = customOptions.gridType === "v3" ? Layout.Container : V2_Layout.Container;
+		const LayoutContainer = customOptions.gridType === "v3" ? GridWrapper : V2GridWrapper;
+		const type = customOptions.gridType === "v3" ? "grid" : "flex";
 		return (
-			<LayoutSection>
-				<GridWrapper as={LayoutContainer} type="grid">
+			<Layout.Section>
+				<LayoutContainer type={type}>
 					<Wrapper {...otherProps}>{children}</Wrapper>
-				</GridWrapper>
-			</LayoutSection>
+				</LayoutContainer>
+			</Layout.Section>
 		);
 	};
 
 	const renderContained = () => {
-		const LayoutContent = customOptions.contentType === "v3" ? Layout.Content : V2_Layout.Content;
 		return (
-			<LayoutContent>
+			<Layout.Content>
 				<Contained>
 					<Wrapper {...otherProps}>{children}</Wrapper>
 				</Contained>
-			</LayoutContent>
+			</Layout.Content>
 		);
 	};
 
