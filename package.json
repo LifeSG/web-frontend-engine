@@ -18,8 +18,7 @@
 		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
 		"storybook": "storybook dev -p 6006",
 		"prepare": "(test -d ./.git && npx husky install) || true",
-		"build-fabric": "test -d ./node_modules/fabric && cd ./node_modules/fabric && node build.js modules=ALL exclude=assessors || true",
-		"postinstall": "npm run build-fabric"
+		"postinstall": "node scripts/patch-fabric.js"
 	},
 	"repository": {
 		"type": "git",
