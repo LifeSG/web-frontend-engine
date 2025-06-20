@@ -216,7 +216,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					img.selectable = false;
 					img.hoverCursor = "default";
 					img.erasable = false;
-					fabricCanvas.current.add(img);
+					fabricCanvas.current.insertAt(0, img); // Insert the image as the lowest object so we can draw on top of it
 					fabricBackground.current = img;
 					resetZoomAndPosition();
 					fitImageToCanvas();
@@ -228,19 +228,17 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 
 	// update drawing
 	useEffect(() => {
-		setTimeout(() => {
-			if (fabricCanvas.current) {
-				fabricCanvas.current.getObjects().forEach((obj) => {
-					if (obj.type !== "image") {
-						fabricCanvas.current?.remove(obj);
-					}
-				});
-				drawing?.forEach((d: FabricObject) => {
-					fabricCanvas.current.add(d);
-				});
-				fabricCanvas.current.requestRenderAll();
-			}
-		});
+		if (fabricCanvas.current) {
+			fabricCanvas.current.getObjects().forEach((obj) => {
+				if (obj.type !== "image") {
+					fabricCanvas.current.remove(obj);
+				}
+			});
+			drawing?.forEach((d: Path) => {
+				fabricCanvas.current.add(d);
+			});
+			fabricCanvas.current.requestRenderAll();
+		}
 	}, [drawing]);
 
 	// =============================================================================
