@@ -1,3 +1,4 @@
+import { FabricObject } from "fabric";
 import { IBaseFieldSchema } from "../types";
 import { IYupValidationRule } from "../../../context-providers";
 import { TFieldEventListener } from "../../../utils";
@@ -74,7 +75,7 @@ export interface IImage {
 	dataURL?: string;
 	thumbnailDataURL?: string;
 	drawingDataURL?: string;
-	drawing?: fabric.Object[];
+	drawing?: FabricObject[];
 	status: EImageStatus;
 	addedFrom?: "dragInput" | "reviewModal" | "schema";
 	uploadProgress: number;
