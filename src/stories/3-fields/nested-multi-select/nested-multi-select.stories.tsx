@@ -67,17 +67,6 @@ const meta: Meta = {
 			},
 			defaultValue: { summary: "false" },
 		},
-		listStyleWidth: {
-			description: "Style option: The width of the options. You can specify e.g. 100% or 12rem",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
 		mode: {
 			description: "Determines if items are expanded or collapsed when the dropdown is opened",
 			table: {
@@ -287,14 +276,6 @@ Searchable.args = {
 	label: "Fruits",
 	options,
 	enableSearch: true,
-};
-
-export const CustomWidth = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-custom-width").bind({});
-CustomWidth.args = {
-	uiType: "nested-multi-select",
-	label: "Fruits",
-	options: options,
-	listStyleWidth: "22rem",
 };
 
 export const Placeholder = DefaultStoryTemplate<INestedMultiSelectSchema>("nested-multi-select-placeholder").bind({});
