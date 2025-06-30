@@ -34,6 +34,8 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 					values[key] = [];
 				} else if (isString(value) || isNumber(value)) {
 					values[key] = "";
+				} else if (typeof value === "object") {
+					values[key] = {};
 				}
 			});
 			reset(values);
