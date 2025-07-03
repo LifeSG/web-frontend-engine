@@ -80,11 +80,16 @@ describe("reset", () => {
 	});
 
 	it("reset the form on press when default value is set, ignoreDefaultValue:true", async () => {
-		renderComponent({ ignoreDefaultValues: true }, { [CHECKBOX_ID]: ["Apple"], [TEXT_ID]: "hello" });
+		renderComponent(
+			{ ignoreDefaultValues: true },
+			{ [CHECKBOX_ID]: ["Apple"], [TEXT_ID]: "hello", ["OBJECT_ID"]: { street: "123 Road", city: "Townsville" } }
+		);
 
 		await waitFor(() => fireEvent.click(getResetButton()));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [CHECKBOX_ID]: [], [TEXT_ID]: "" }));
+		expect(SUBMIT_FN).toBeCalledWith(
+			expect.objectContaining({ [CHECKBOX_ID]: [], [TEXT_ID]: "", ["OBJECT_ID"]: {} })
+		);
 	});
 
 	it("should be disabled if configured", async () => {

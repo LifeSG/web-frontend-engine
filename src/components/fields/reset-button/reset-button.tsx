@@ -1,6 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import isArray from "lodash/isArray";
 import isNumber from "lodash/isNumber";
+import isObjectLike from "lodash/isObjectLike";
 import isString from "lodash/isString";
 import { useFormContext } from "react-hook-form";
 import { IGenericFieldProps } from "..";
@@ -34,6 +35,8 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 					values[key] = [];
 				} else if (isString(value) || isNumber(value)) {
 					values[key] = "";
+				} else if (isObjectLike(value)) {
+					values[key] = {};
 				}
 			});
 			reset(values);
