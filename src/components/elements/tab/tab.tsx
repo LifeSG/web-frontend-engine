@@ -17,7 +17,7 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	// =========================================================================
 	const {
 		id,
-		schema: { currentActiveTabId, children },
+		schema: { currentActiveTabId, children, ...otherTabSchema },
 	} = props;
 	const [currentTabIndex, setCurrentTabIndex] = useState(getCurrentTabIndex());
 	const { removeFieldValidationConfig } = useValidationConfig();
@@ -90,15 +90,17 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	// =========================================================================
 	return (
 		<DSTab
+			{...otherTabSchema}
 			id={id}
 			data-testid={TestHelper.generateId(id, "tab")}
 			currentActive={currentTabIndex}
 			onTabClick={handleTabClick}
 		>
 			{Object.entries(children).map(([childId, childSchema]) => {
-				const { title, children } = childSchema;
+				const { title, children, ...otherTabItemSchema } = childSchema;
 				return (
 					<DSTab.Item
+						{...otherTabItemSchema}
 						key={childId}
 						id={childId}
 						data-testid={TestHelper.generateId(childId, "tab-item")}

@@ -10,7 +10,7 @@ import {
 import { ERROR_MESSAGE, RESET_BUTTON_ID, RESET_BUTTON_LABEL, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
 import { useRef } from "react";
 
-type TAriaRoles = "textbox" | "generic" | "button" | "spinbutton" | "radio" | "list" | "slider" | "option";
+type TAriaRoles = "textbox" | "generic" | "button" | "spinbutton" | "radio" | "list" | "slider" | "option" | "treeitem";
 
 export const getSubmitButton = (): HTMLElement => {
 	return screen.getByRole("button", { name: SUBMIT_BUTTON_LABEL });

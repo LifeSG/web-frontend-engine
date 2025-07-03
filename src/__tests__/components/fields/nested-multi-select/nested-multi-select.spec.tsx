@@ -109,19 +109,19 @@ const ComponentWithSetSchemaButton = (props: {
 };
 
 const getComponent = (): HTMLElement => {
-	return screen.getByTestId("field-base");
+	return screen.getByTestId("selector");
 };
 
 const getCheckboxA = (isQuery = false, options?: ByRoleOptions): HTMLElement => {
-	return getField("button", { name: "A", ...options }, isQuery);
+	return getField("treeitem", { name: "A", ...options }, isQuery);
 };
 
 const getCheckboxB = (isQuery = false, options?: ByRoleOptions): HTMLElement => {
-	return getField("button", { name: "B", ...options }, isQuery);
+	return getField("treeitem", { name: "B", ...options }, isQuery);
 };
 
 const getCheckboxC = (isQuery = false, options?: ByRoleOptions): HTMLElement => {
-	return getField("button", { name: "C", ...options }, isQuery);
+	return getField("treeitem", { name: "C", ...options }, isQuery);
 };
 
 describe(UI_TYPE, () => {
@@ -147,7 +147,7 @@ describe(UI_TYPE, () => {
 
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 		await waitFor(() => fireEvent.click(getComponent()));
-		expect(getCheckboxA().querySelector("div[aria-checked=true]")).toBeInTheDocument();
+		expect(getCheckboxA()).toBeChecked();
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
@@ -163,14 +163,7 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getComponent().parentElement).toHaveAttribute("disabled");
-	});
-
-	it("should be able to support custom list style width", async () => {
-		const width = "24rem";
-		renderComponent({ listStyleWidth: width });
-		await waitFor(() => fireEvent.click(getComponent()));
-		expect(getField("list")).toHaveStyle({ width });
+		expect(getComponent()).toHaveAttribute("disabled");
 	});
 
 	it("should be able to support custom placeholder", () => {
@@ -260,7 +253,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getComponent()));
 			const apple = getCheckboxA(true);
 			const berry = getCheckboxB(true);
-			const parent = screen.queryByRole("button", { name: "Parent" });
+			const parent = screen.queryByRole("treeitem", { name: "Parent" });
 			const test = (obj: HTMLElement) =>
 				mode === "collapse" ? expect(obj).toBeNull() : expect(obj).toBeInTheDocument();
 			expect(parent).toBeVisible();
@@ -290,7 +283,7 @@ describe(UI_TYPE, () => {
 				],
 			});
 			await waitFor(() => fireEvent.click(getComponent()));
-			const input = getField("textbox", { name: "Type to search" });
+			const input = getField("textbox", { name: "Enter text to search" });
 			await waitFor(() =>
 				fireEvent.change(input, {
 					target: {
@@ -300,10 +293,10 @@ describe(UI_TYPE, () => {
 			);
 			expect(input).toHaveValue(searchTerm);
 			expectedResult.forEach((name: string) => {
-				expect(screen.queryByRole("button", { name })).toBeInTheDocument();
+				expect(screen.queryByRole("treeitem", { name })).toBeInTheDocument();
 			});
 			expectedHiddenResult.forEach((name: string) => {
-				expect(screen.queryByRole("button", { name })).toBeNull();
+				expect(screen.queryByRole("treeitem", { name })).toBeNull();
 			});
 		});
 	});
@@ -339,7 +332,7 @@ describe(UI_TYPE, () => {
 			);
 
 			await waitFor(() => fireEvent.click(getComponent()));
-			selected.forEach((name: string) => fireEvent.click(screen.getByRole("button", { name })));
+			selected.forEach((name: string) => fireEvent.click(screen.getByRole("treeitem", { name })));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(SUBMIT_FN).toHaveBeenLastCalledWith(
 				expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
@@ -406,7 +399,7 @@ describe(UI_TYPE, () => {
 			);
 
 			await waitFor(() => fireEvent.click(getComponent()));
-			selected.forEach((name: string) => fireEvent.click(screen.getByRole("button", { name })));
+			selected.forEach((name: string) => fireEvent.click(screen.getByRole("treeitem", { name })));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(SUBMIT_FN).toHaveBeenLastCalledWith(
 				expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
@@ -477,7 +470,7 @@ describe(UI_TYPE, () => {
 
 				await waitFor(() => fireEvent.click(getComponent()));
 
-				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
+				selected.forEach((name) => fireEvent.click(screen.getByRole("treeitem", { name })));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toHaveBeenLastCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
@@ -544,7 +537,7 @@ describe(UI_TYPE, () => {
 
 				await waitFor(() => fireEvent.click(getComponent()));
 
-				selected.forEach((name) => fireEvent.click(screen.getByRole("button", { name })));
+				selected.forEach((name) => fireEvent.click(screen.getByRole("treeitem", { name })));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toHaveBeenLastCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
@@ -573,8 +566,8 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText("Select")).toBeInTheDocument();
-			expect(apple.querySelector("div[aria-checked=false]")).toBeInTheDocument();
-			expect(berry.querySelector("div[aria-checked=false]")).toBeInTheDocument();
+			expect(apple).not.toBeChecked();
+			expect(berry).not.toBeChecked();
 			expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -594,9 +587,9 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText("2 selected")).toBeInTheDocument();
-			expect(apple.querySelector("div[aria-checked=true]")).toBeInTheDocument();
-			expect(berry.querySelector("div[aria-checked=true]")).toBeInTheDocument();
-			expect(cherry.querySelector("div[aria-checked=false]")).toBeInTheDocument();
+			expect(apple).toBeChecked();
+			expect(berry).toBeChecked();
+			expect(cherry).not.toBeChecked();
 			expect(SUBMIT_FN).toHaveBeenLastCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});

@@ -58,7 +58,7 @@
 		"yup": "^0.32.11"
 	},
 	"peerDependencies": {
-		"@lifesg/react-design-system": "^2.9.0-canary.2",
+		"@lifesg/react-design-system": "^2.13.1",
 		"@lifesg/react-icons": "^1.9.0",
 		"react": "^17.0.2 || ^18.0.0",
 		"react-dom": "^17.0.2 || ^18.0.0",
@@ -69,7 +69,7 @@
 		"@babel/preset-env": "^7.19.3",
 		"@babel/preset-react": "^7.18.6",
 		"@babel/preset-typescript": "^7.18.6",
-		"@lifesg/react-design-system": "^2.9.0-canary.2",
+		"@lifesg/react-design-system": "^2.13.1",
 		"@lifesg/react-icons": "^1.9.0",
 		"@mihkeleidast/storybook-addon-source": "^1.0.1",
 		"@rollup/plugin-commonjs": "^22.0.2",
