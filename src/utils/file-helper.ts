@@ -163,11 +163,37 @@ export namespace FileHelper {
 			const name = originalFilename.split(".");
 			const ext = name.pop();
 			if (!ext) return fileName;
-			fileName = name.join().concat(` (${counter}).`).concat(ext);
+			fileName = name.join(".").concat(` (${counter}).`).concat(ext);
 			return deduplicateFileName(fileNameList, index, fileName, originalFilename, ++counter);
 		} else {
 			return fileName;
 		}
+	};
+
+	export const sanitizeFileName = (fileName: string): string => {
+		const parts = fileName.split(".");
+		let ext: string;
+		let name: string;
+
+		if (parts.length === 2 && parts[0] === "") {
+			// file without extension but with leading .
+			name = fileName;
+		} else if (parts.length > 1) {
+			// file with extension
+			ext = parts.pop();
+			name = parts.join(".");
+		} else {
+			// file without extension
+			name = parts.join(".");
+		}
+
+		// allow ascii characters only
+		let sanitized = name.replace(/[^\u0020-\u007E]*/g, "");
+		if (!sanitized) {
+			sanitized = "file";
+		}
+
+		return ext ? `${sanitized}.${ext}` : `${sanitized}`;
 	};
 
 	export const blobToFile = (blob: Blob, metadata: { name: string; lastModified: number }): File => {
