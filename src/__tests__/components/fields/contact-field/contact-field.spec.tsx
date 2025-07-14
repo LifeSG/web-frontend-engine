@@ -144,6 +144,13 @@ describe(UI_TYPE, () => {
 			expect(screen.getByText("+60")).toBeInTheDocument();
 		});
 
+		it("should support format phone number without spaces", async () => {
+			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: "+84327016340" } });
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "+84 327016340" }));
+		});
+
 		it("should not switch country if an invalid country code is specified in defaultValues", async () => {
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: "+999 91234567" } });
 
