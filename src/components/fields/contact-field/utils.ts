@@ -1,5 +1,5 @@
 import { byCountry } from "country-code-lookup";
-import { CountryCode, parsePhoneNumber } from "libphonenumber-js";
+import { CountryCode, parsePhoneNumber, parsePhoneNumberFromString } from "libphonenumber-js";
 import { IParsedPhoneNumber } from "./types";
 
 const SINGAPORE_PHONE_NUMBER_REGEX = /^(?!\+?6599)(?!^\+65\d{6}$)^(?:\+?(?:65)?([9,8,6,3]{1}\d{7}))$/;
@@ -8,9 +8,17 @@ const SINGAPORE_MOBILE_NUMBER_REGEX = /^(?!\+?6599)(?!^\+65\d{6}$)^(?:\+?(?:65)?
 
 export namespace PhoneHelper {
 	export const getParsedPhoneNumber = (value: string): IParsedPhoneNumber => {
+		const parsedValue = parsePhoneNumberFromString(value);
+		if (parsedValue) {
+			// Use countryCallingCode (string, without '+')
+			return {
+				prefix: parsedValue.countryCallingCode || "",
+				number: parsedValue.nationalNumber || "",
+			};
+		}
+		// fallback to split for manual input
 		const parsedValues = value.split(" ");
 		const hasPrefix = parsedValues.length > 1;
-
 		return {
 			prefix: hasPrefix ? parsedValues[0] : "",
 			number: hasPrefix ? parsedValues[1] : value,
