@@ -140,7 +140,12 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 					files: [files[i]],
 				},
 			});
-			await flushPromise();
+			if (uploadType === "input") {
+				await new Promise((resolve) => setTimeout(resolve, 100));
+				await flushPromise();
+			} else {
+				await flushPromise();
+			}
 		}
 	});
 
@@ -1110,6 +1115,7 @@ describe("image-upload", () => {
 						files: [FILE_1],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 			});
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
@@ -1173,6 +1179,7 @@ describe("image-upload", () => {
 						files: [FILE_1],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 				await flushPromise(100);
 				await waitFor(() => fireEvent.click(getResetButton()));
 			});
@@ -1204,6 +1211,7 @@ describe("image-upload", () => {
 						files: [FILE_2],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 				await flushPromise(100);
 				await waitFor(() => fireEvent.click(getResetButton()));
 			});
@@ -1235,6 +1243,7 @@ describe("image-upload", () => {
 						files: [FILE_1, FILE_2],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 				await flushPromise();
 			});
 			expect((getDragInputUploadField() as HTMLInputElement).files).toHaveLength(2);
@@ -1252,6 +1261,7 @@ describe("image-upload", () => {
 						files: [FILE_1, FILE_2],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 			});
 			expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(1))).toBeInTheDocument();
 		});

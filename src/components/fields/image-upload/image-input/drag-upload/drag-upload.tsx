@@ -19,12 +19,7 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 	// =============================================================================
 	const handleInputChange = async (event: ChangeEvent<HTMLInputElement>) => {
 		setTimeout(() => {
-			if (event.target.files) {
-				const validFiles = Array.from(event.target.files).filter((file) => file && file.size > 0);
-				if (validFiles.length > 0) {
-					onInput(validFiles);
-				}
-			}
+			onInput(Array.from(event.target.files));
 		}, 100); // 100ms delay to make sure the files availability.
 	};
 
