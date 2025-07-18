@@ -200,6 +200,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 				eraserBrush.current.width = PENCIL_BRUSH_SIZE * (img.scaleX || 1) * 2;
 			}
 
+			img.setCoords(); // Ensures the internal coordinate system matches the visual state after scaling
 			fabricCanvas.current.requestRenderAll();
 		}
 	};
