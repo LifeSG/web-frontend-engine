@@ -46,9 +46,12 @@ export const ImageThumbnails = (props: IProps) => {
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleInputChange = async (event: ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files?.length > 0) {
-			onSelectFile(Array.from(event.target.files));
-		}
+		const files = Array.from(event.target.files || []);
+		if (!files.length) return;
+
+		setTimeout(() => {
+			onSelectFile(files);
+		}, 100); // 100ms delay to ensure files are available
 	};
 
 	const handleButtonClick = () => fileInputRef?.current?.click();
