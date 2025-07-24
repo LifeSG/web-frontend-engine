@@ -140,7 +140,12 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 					files: [files[i]],
 				},
 			});
-			await flushPromise();
+			if (uploadType === "input") {
+				await new Promise((resolve) => setTimeout(resolve, 100));
+				await flushPromise();
+			} else {
+				await flushPromise();
+			}
 		}
 	});
 
@@ -588,6 +593,9 @@ describe("image-upload", () => {
 
 				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "png", mime: "image/png" });
 				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
+				await act(async () => {
+					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+				});
 
 				expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
 				expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MODAL.FILE_TYPE.TITLE)).toBeInTheDocument();
@@ -609,6 +617,9 @@ describe("image-upload", () => {
 
 				jest.spyOn(ImageHelper, "convertBlob").mockRejectedValue("error");
 				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
+				await act(async () => {
+					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+				});
 
 				expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MODAL.GENERIC_ERROR.TITLE)).toBeInTheDocument();
 				expect(getSaveButton()).toBeDisabled();
@@ -627,6 +638,9 @@ describe("image-upload", () => {
 
 				jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(`${JPG_BASE64}${JPG_BASE64}`);
 				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
+				await act(async () => {
+					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+				});
 			});
 
 			it("should not compress the image", async () => {
@@ -1110,6 +1124,7 @@ describe("image-upload", () => {
 						files: [FILE_1],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 			});
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
@@ -1173,6 +1188,7 @@ describe("image-upload", () => {
 						files: [FILE_1],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 				await flushPromise(100);
 				await waitFor(() => fireEvent.click(getResetButton()));
 			});
@@ -1204,6 +1220,7 @@ describe("image-upload", () => {
 						files: [FILE_2],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 				await flushPromise(100);
 				await waitFor(() => fireEvent.click(getResetButton()));
 			});
@@ -1235,6 +1252,7 @@ describe("image-upload", () => {
 						files: [FILE_1, FILE_2],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 				await flushPromise();
 			});
 			expect((getDragInputUploadField() as HTMLInputElement).files).toHaveLength(2);
@@ -1252,6 +1270,7 @@ describe("image-upload", () => {
 						files: [FILE_1, FILE_2],
 					},
 				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
 			});
 			expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES(1))).toBeInTheDocument();
 		});
@@ -1266,6 +1285,9 @@ describe("image-upload", () => {
 				await waitFor(() =>
 					fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1, FILE_2] } })
 				);
+				await act(async () => {
+					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+				});
 				expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
 				expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
 				expect(getField("button", `thumbnail of test (1).jpg`)).toBeInTheDocument();
@@ -1280,6 +1302,9 @@ describe("image-upload", () => {
 				await waitFor(() =>
 					fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1, FILE_2] } })
 				);
+				await act(async () => {
+					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+				});
 				expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
 				expect(
 					screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(1))
