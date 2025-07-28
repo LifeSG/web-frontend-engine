@@ -67,17 +67,6 @@ const meta: Meta = {
 			},
 			defaultValue: { summary: "false" },
 		},
-		listStyleWidth: {
-			description: "Style option: The width of the options. You can specify e.g. 100% or 12rem",
-			table: {
-				type: {
-					summary: "string",
-				},
-			},
-			control: {
-				type: "text",
-			},
-		},
 		mode: {
 			description: "Determines if items are expanded or collapsed when the dropdown is opened",
 			table: {
