@@ -40,7 +40,7 @@
 		"@js-joda/locale_en-us": "^4.8.6",
 		"@js-joda/timezone": "^2.15.0",
 		"@use-gesture/react": "^10.3.1",
-		"axios": "^1.11.0",
+		"axios": "^1.7.9",
 		"country-code-lookup": "^0.0.20",
 		"exifreader": "^4.23.7",
 		"fabric": "^6.7.0",
