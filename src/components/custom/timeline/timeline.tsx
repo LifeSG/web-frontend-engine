@@ -1,13 +1,13 @@
 import { Timeline as DSTimeline } from "@lifesg/react-design-system/timeline";
-import { Text } from "@lifesg/react-design-system/text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import * as Icons from "@lifesg/react-icons";
 import { useEffect } from "react";
 import * as Yup from "yup";
 import { useValidationConfig } from "../../../utils/hooks";
+import { Wrapper } from "../../elements/wrapper";
 import { Sanitize } from "../../shared";
 import { IGenericCustomElementProps } from "../types";
 import { ITimelineSchema } from "./types";
-import { Wrapper } from "../../elements/wrapper";
 
 export const Timeline = (props: IGenericCustomElementProps<ITimelineSchema>) => {
 	// =========================================================================
@@ -39,9 +39,9 @@ export const Timeline = (props: IGenericCustomElementProps<ITimelineSchema>) => 
 			let itemContent: React.ReactNode;
 			if (typeof children === "string") {
 				itemContent = (
-					<Text.Body>
+					<Typography.BodyBL>
 						<Sanitize inline>{children}</Sanitize>
-					</Text.Body>
+					</Typography.BodyBL>
 				);
 			} else {
 				itemContent = <Wrapper>{children}</Wrapper>;

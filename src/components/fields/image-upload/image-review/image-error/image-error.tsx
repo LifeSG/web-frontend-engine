@@ -1,10 +1,10 @@
-import { Text } from "@lifesg/react-design-system/text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
 import { ImageContext } from "../../image-context";
 import { EImageStatus, IImage, ISharedImageProps } from "../../types";
-import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, Wrapper } from "./image-error.styles";
+import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, TitleText, Wrapper } from "./image-error.styles";
 
 const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-white.svg";
 
@@ -110,16 +110,14 @@ export const ImageError = (props: IProps) => {
 		<Wrapper>
 			<ErrorIcon src={WARNING_ICON} alt={errorTitle} />
 			<Content>
-				<BodyText
-					as={Text.H4}
+				<TitleText
 					id={TestHelper.generateId(id, "title")}
 					data-testid={TestHelper.generateId(id, "title")}
+					weight="bold"
 				>
 					{errorTitle}
-				</BodyText>
-				<BodyText as={Text.Body} ref={errorDescriptionRef}>
-					{errorDescription}
-				</BodyText>
+				</TitleText>
+				<BodyText ref={errorDescriptionRef}>{errorDescription}</BodyText>
 				<OkButton
 					onClick={onClickOk}
 					id={TestHelper.generateId(id, "ok-button")}

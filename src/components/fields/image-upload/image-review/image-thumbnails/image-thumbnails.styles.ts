@@ -1,12 +1,11 @@
-import { ThemeSpec } from "@lifesg/react-design-system";
-import { Color } from "@lifesg/react-design-system/color";
+import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export const ThumbnailsWrapper = styled.div`
 	display: flex;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 	align-items: center;
 	height: 100%;
 	max-height: 5rem;
@@ -19,7 +18,7 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 	height: 3rem;
 	padding: 0;
 	border: none;
-	border-radius: 2px;
+	border-radius: ${Radius.xs};
 	${({ src }) => `background-image: url(${src});`}
 	background-color: ${({ error }) => error && "#eee"};
 	background-position: center;
@@ -27,7 +26,7 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 `;
 
 export const ThumbnailWarningIcon = styled(ExclamationTriangleIcon)`
-	color: ${Color.Neutral[4]};
+	color: ${Colour["icon-subtle"]};
 	position: absolute;
 	top: 5%;
 	left: 5%;
@@ -55,7 +54,7 @@ export const LoadingDot = styled.div`
 	border-radius: 50%;
 	animation: ${dotMoveKeyframe} 1.35s infinite linear;
 	opacity: 0.25;
-	background: ${Color.Neutral[2]};
+	background: ${Colour["bg-inverse-subtle"]};
 	margin: 0.125rem;
 	transform-origin: bottom;
 `;
@@ -67,8 +66,8 @@ export const LoadingBox = styled.div`
 	height: 3rem;
 	justify-content: center;
 	align-items: center;
-	border-radius: 2px;
-	background-color: ${Color.Neutral[5]};
+	border-radius: ${Radius.xs};
+	background-color: ${Colour["bg-strongest"]};
 
 	${LoadingDot}:nth-child(1) {
 		animation-delay: 0s;
@@ -85,8 +84,13 @@ export const LoadingBox = styled.div`
 `;
 
 export const BorderOverlay = styled.div<{ isSelected: boolean }>`
-	border: ${(props) => (props.isSelected ? "solid  2px" : "none")};
-	border-color: ${Color.Primary};
+	border: ${(props) =>
+		props.isSelected
+			? css`
+					${Border.solid} ${Border["width-020"]}
+			  `
+			: "none"};
+	border-color: ${Colour["border-primary"]};
 	width: 100%;
 	height: 100%;
 `;
@@ -100,19 +104,18 @@ export const AddImageButton = styled(IconButton)`
 	width: 3rem;
 	height: 3rem;
 	background: #fff;
-	${({ theme }) => {
-		const borderColor = Color.Primary({ theme });
-		return `background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${borderColor.replace(
-			"#",
-			"%23"
-		)}FF' stroke-width='3' stroke-dasharray='5%2c1.55' stroke-dashoffset='5' stroke-linecap='butt'/%3e%3c/svg%3e");`;
-	}}
+	border: none;
+	${Border.Util["dashed-default"]({
+		colour: Colour["border-primary"],
+		thickness: Border["width-040"],
+		radius: Radius.sm,
+	})}
 
 	> svg {
-		color: ${Color.Primary};
+		color: ${Colour["icon-primary"]};
 		width: 2.2rem;
 		height: 2.2rem;
-		stroke: ${Color.Primary};
+		stroke: ${Colour["icon-primary"]};
 		stroke-width: 1;
 	}
 `;

@@ -1,6 +1,6 @@
 import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
-import { DateRangeInputProps } from "@lifesg/react-design-system";
+import { DateRangeInputProps } from "@lifesg/react-design-system/date-range-input";
 import { Form } from "@lifesg/react-design-system/form";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";

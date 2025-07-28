@@ -75,7 +75,7 @@ describe(REFERENCE_KEY, () => {
 		expect(screen.getAllByDisplayValue(defaultValue)[0]).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should pass other props into the field", async () => {

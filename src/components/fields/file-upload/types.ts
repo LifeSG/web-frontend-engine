@@ -1,4 +1,4 @@
-import { FileItemProps, FileUploadProps } from "@lifesg/react-design-system";
+import { FileItemProps, FileUploadProps } from "@lifesg/react-design-system/file-upload";
 import { AxiosRequestConfig } from "axios";
 import { IYupValidationRule } from "../../../context-providers";
 import { TFieldEventListener } from "../../../utils";

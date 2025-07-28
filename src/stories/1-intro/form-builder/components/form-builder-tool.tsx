@@ -1,4 +1,4 @@
-import { Text } from "@lifesg/react-design-system/text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { EyeIcon } from "@lifesg/react-icons/eye";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { TabletIcon } from "@lifesg/react-icons/tablet";
@@ -19,10 +19,9 @@ export const FormBuilderTool = () => {
 	const formBuilderRef = useRef<IFormBuilderMethods>(null);
 	const [formBuilderMode, setFormBuilderMode] = useState<TFormBuilderMode>("form-builder");
 	const [formBuilderOutput, setFormBuilderOutput] = useState<ISchemaProps | null>(null);
-
-	// =========================================================================
-	// EVENT HANDLERS
-	// =========================================================================
+	// // =========================================================================
+	// // EVENT HANDLERS
+	// // =========================================================================
 	const handleClickToolbarButton = (mode: TFormBuilderMode) => {
 		switch (mode) {
 			case "form-builder":
@@ -46,7 +45,6 @@ export const FormBuilderTool = () => {
 		}
 		setFormBuilderMode(mode);
 	};
-
 	// =========================================================================
 	// RENDER FUNCTIONS
 	// =========================================================================
@@ -80,7 +78,7 @@ export const FormBuilderTool = () => {
 		if (formBuilderMode !== "preview") return;
 		return (
 			<ContentWrapper $flexbox={true}>
-				<Text.H2>Generate Form</Text.H2>
+				<Typography.HeadingMD weight="bold">Generate Form</Typography.HeadingMD>
 				{formBuilderOutput && <FrontendEnginePreview data={formBuilderOutput.schema as IFrontendEngineData} />}
 			</ContentWrapper>
 		);
@@ -91,7 +89,7 @@ export const FormBuilderTool = () => {
 		return (
 			<ContentWrapper $flexbox={true}>
 				<SchemaView
-					schema={formBuilderOutput.schema as IFrontendEngineData}
+					schema={formBuilderOutput.schema}
 					onChange={setFormBuilderOutput}
 					formBuilderRef={formBuilderRef}
 				/>

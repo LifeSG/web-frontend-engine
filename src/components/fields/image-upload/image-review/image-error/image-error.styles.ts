@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Button } from "@lifesg/react-design-system/button";
-import { Color } from "@lifesg/react-design-system/color";
-import { MediaWidths } from "@lifesg/react-design-system/media";
+import { Breakpoint, Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
+import { Typography } from "@lifesg/react-design-system/typography";
 
 export const Wrapper = styled.div`
 	position: absolute;
@@ -14,10 +14,10 @@ export const Wrapper = styled.div`
 	align-items: center;
 	flex-direction: column;
 	background-color: black;
-	padding: 2.5rem;
+	padding: ${Spacing["spacing-40"]};
 	text-align: center;
 
-	@media (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		flex-direction: row;
 	}
 `;
@@ -26,10 +26,10 @@ export const ErrorIcon = styled.img`
 	width: 100%;
 	max-width: 9rem;
 	height: auto;
-	margin-bottom: 2rem;
+	margin-bottom: ${Spacing["spacing-32"]};
 
-	@media (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
-		margin: 0 2rem 0 0;
+	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+		margin: 0 ${Spacing["spacing-32"]} 0 0;
 	}
 `;
 
@@ -37,25 +37,30 @@ export const Content = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 `;
 
-export const BodyText = styled.div`
-	color: ${Color.Neutral[8]};
+export const BodyText = styled(Typography.BodyBL)`
+	color: ${Colour["text-inverse"]};
+	word-break: break-word;
+`;
+
+export const TitleText = styled(Typography.HeadingXS)`
+	color: ${Colour["text-inverse"]};
 	word-break: break-word;
 `;
 
 export const NameWrapper = styled.span`
 	display: inline-block;
-	font-weight: bold;
+	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
 export const OkButton = styled(Button.Default)`
 	width: 100%;
 	max-width: 16rem;
-	margin-top: 2rem;
+	margin-top: ${Spacing["spacing-32"]};
 
-	@media (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
-		margin-top: 0.5rem;
+	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+		margin-top: ${Spacing["spacing-8"]};
 	}
 `;

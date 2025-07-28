@@ -87,7 +87,7 @@ describe(uiType, () => {
 		expect(getDayInput(TDateRangeInputType.START)).toHaveAttribute("value", defaultDay);
 		expect(getMonthInput(TDateRangeInputType.START)).toHaveAttribute("value", defaultMonth);
 		expect(getYearInput(TDateRangeInputType.START)).toHaveAttribute("value", defaultYear);
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from, to } }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from, to } }));
 	});
 
 	describe("dateFormat", () => {
@@ -121,7 +121,7 @@ describe(uiType, () => {
 				fireEvent.click(screen.getByText("Done"));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 			});
 
 			it("should accept defaultValue in the format as defined by dateFormat", async () => {
@@ -129,7 +129,7 @@ describe(uiType, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 			});
 
 			it("should reject defaultValue if it did not follow dateFormat", async () => {
@@ -190,7 +190,7 @@ describe(uiType, () => {
 			fireEvent.click(getField("button", "Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
 			);
 		});
@@ -244,7 +244,7 @@ describe(uiType, () => {
 			fireEvent.click(getField("button", "Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
 			);
 
@@ -347,7 +347,7 @@ describe(uiType, () => {
 			expect(getDayInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
 			expect(getMonthInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
 			expect(getYearInput(TDateRangeInputType.END)).toHaveAttribute("value", "");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -375,7 +375,7 @@ describe(uiType, () => {
 			expect(getDayInput(TDateRangeInputType.END)).toHaveAttribute("value", defaultDay);
 			expect(getMonthInput(TDateRangeInputType.END)).toHaveAttribute("value", defaultMonth);
 			expect(getYearInput(TDateRangeInputType.END)).toHaveAttribute("value", defaultYear);
-			expect(SUBMIT_FN).toBeCalledWith(
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({ [COMPONENT_ID]: { from: defaultValue, to: defaultValue } })
 			);
 		});

@@ -1,6 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { Form } from "@lifesg/react-design-system/form";
-import { Text } from "@lifesg/react-design-system/text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { action } from "@storybook/addon-actions";
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
@@ -957,7 +957,7 @@ const MyCustomComponent: TCustomComponent<MyCustomSchema> = (props: TCustomCompo
 
 	return (
 		<>
-			<Text.BodySmall style={{ marginBottom: "2rem" }}>{description}</Text.BodySmall>
+			<Typography.BodyMD style={{ marginBottom: "2rem" }}>{description}</Typography.BodyMD>
 			<Form.Input
 				label={displayTitle}
 				id={id}

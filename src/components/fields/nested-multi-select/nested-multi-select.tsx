@@ -1,4 +1,4 @@
-import { L1OptionProps } from "@lifesg/react-design-system";
+import { L1OptionProps } from "@lifesg/react-design-system/input-nested-select";
 import { Form } from "@lifesg/react-design-system/form";
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -148,9 +148,9 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 				label={formattedLabel}
 				options={options as L1OptionProps<string, string, string>[]}
 				onSelectOptions={handleChange}
+				onBlur={onBlur}
 				selectedKeyPaths={keyPaths}
 				errorMessage={error?.message}
-				onBlur={onBlur}
 			/>
 			<Warning id={id} message={warning} />
 		</>

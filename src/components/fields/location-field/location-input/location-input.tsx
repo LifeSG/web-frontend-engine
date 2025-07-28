@@ -1,5 +1,5 @@
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
-import { Form } from "@lifesg/react-design-system";
+import { Form } from "@lifesg/react-design-system/form";
 import { FormInputGroupProps } from "@lifesg/react-design-system/form/types";
 import { TestHelper } from "../../../../utils";
 

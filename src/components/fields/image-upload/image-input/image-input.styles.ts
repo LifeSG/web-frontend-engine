@@ -1,8 +1,7 @@
+import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
-import { Color } from "@lifesg/react-design-system/color";
-import { MediaQuery } from "@lifesg/react-design-system/media";
-import { Text, TextStyleHelper } from "@lifesg/react-design-system/text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 export interface SubtitleProps {
@@ -10,48 +9,47 @@ export interface SubtitleProps {
 }
 
 export const Wrapper = styled.div`
-	border-radius: 0.25rem;
-	${(props) => {
-		const color = encodeURIComponent(Color.Neutral[5](props));
-		/* Generated background-image for the dashed border from https://kovart.github.io/dashed-border-generator/  */
-		return `background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${color}' stroke-width='4' stroke-dasharray='8%2c 8' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");`;
-	}}
-
+	border-radius: ${Radius.sm};
+	${Border.Util["dashed-default"]({
+		colour: Colour.border,
+		thickness: Border["width-040"],
+		radius: Radius.sm,
+	})}
 	&:not(:last-child) {
-		margin-bottom: 2rem;
+		margin-bottom: ${Spacing["spacing-32"]};
 	}
 `;
 
-export const Subtitle = styled(Text.Body)<SubtitleProps>`
-	margin-bottom: ${(props) => (props.$hasDescription ? "0.5rem" : "1rem")};
+export const Subtitle = styled(Typography.BodyBL)<SubtitleProps>`
+	margin-bottom: ${(props) => (props.$hasDescription ? Spacing["spacing-8"] : Spacing["spacing-16"])};
 `;
 
 export const Content = styled.div`
-	${TextStyleHelper.getTextStyle("BodySmall", "regular")}
-	margin-bottom: 1.5rem;
-	color: ${Color.Neutral[3]};
+	${Font["body-md-regular"]};
+	margin-bottom: ${Spacing["spacing-24"]};
+	color: ${Colour["text-subtler"]};
 `;
 
 export const UploadWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	margin-top: 2rem;
+	margin-top: ${Spacing["spacing-32"]};
 `;
 
 export const AddButton = styled(Button.Small)`
 	width: 100%;
 	text-align: center;
-	${MediaQuery.MinWidth.mobileL} {
+	${MediaQuery.MinWidth.md} {
 		width: 10rem;
 		height: 2.5rem;
 	}
 `;
 
 export const DropThemHereText = styled(Content)`
-	margin-top: 0.5rem;
+	margin-top: ${Spacing["spacing-8"]};
 	display: none;
-	${MediaQuery.MinWidth.tablet} {
+	${MediaQuery.MinWidth.xl} {
 		display: block;
 		width: 10rem;
 		text-align: center;
@@ -59,6 +57,6 @@ export const DropThemHereText = styled(Content)`
 `;
 
 export const AlertContainer = styled(Alert)`
-	margin-top: 1rem;
-	margin-bottom: 1rem;
+	margin-top: ${Spacing["spacing-16"]};
+	margin-bottom: ${Spacing["spacing-16"]};
 `;

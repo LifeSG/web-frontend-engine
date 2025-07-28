@@ -1,4 +1,4 @@
-import { PhoneNumberInputValue } from "@lifesg/react-design-system";
+import { PhoneNumberInputValue } from "@lifesg/react-design-system/phone-number-input";
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";

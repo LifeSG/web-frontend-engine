@@ -2,7 +2,7 @@ import { BoxContainerDisplayState, BoxContainerSubComponentTestIds } from "@life
 import { TFieldEventListener } from "../../../utils";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IPopoverSchema } from "../popover/types";
-import { ITextSchema } from "../text/types";
+import { ITextSchema, ITypographySchema } from "../text/types";
 import { IBaseElementSchema } from "../types";
 import { IInlineWrapperSchema, TWrapperSchema } from "../wrapper";
 
@@ -22,7 +22,7 @@ export interface IAccordionSchema<V = undefined, C = undefined>
 	collapsible?: boolean | undefined;
 	expanded?: boolean | undefined;
 	displayState?: BoxContainerDisplayState | undefined;
-	title: string | Record<string, ITextSchema | IPopoverSchema | IInlineWrapperSchema<V, C>>;
+	title: string | Record<string, ITextSchema | ITypographySchema | IPopoverSchema | IInlineWrapperSchema<V, C>>;
 	disableContentInset?: boolean | undefined;
 }
 

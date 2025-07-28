@@ -102,7 +102,7 @@ describe(UI_TYPE, () => {
 		expect(getDayInput()).toHaveAttribute("value", defaultDay);
 		expect(getMonthInput()).toHaveAttribute("value", defaultMonth);
 		expect(getYearInput()).toHaveAttribute("value", defaultYear);
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should show current date if useCurrentDate=true", async () => {
@@ -112,7 +112,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(
+		expect(SUBMIT_FN).toHaveBeenCalledWith(
 			expect.objectContaining({
 				field: date,
 			})
@@ -142,7 +142,7 @@ describe(UI_TYPE, () => {
 				await changeDate("25", "01", "2022");
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 			});
 
 			it("should format current date accordingly if useCurrentDate=true", async () => {
@@ -152,7 +152,7 @@ describe(UI_TYPE, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 			});
 
 			it("should accept defaultValue in the format as defined by dateFormat", async () => {
@@ -160,7 +160,7 @@ describe(UI_TYPE, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 			});
 
 			it("should reject defaultValue if it did not follow dateFormat", async () => {
@@ -211,7 +211,7 @@ describe(UI_TYPE, () => {
 			await changeDate(invalid[0], invalid[1], invalid[2]);
 			fireEvent.click(getField("button", "Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it(`should show error message on submit if there is validation error for ${condition} dates and invalid default dates`, async () => {
@@ -232,7 +232,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getField("button", "Done"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
 			await changeDate(valid[0], valid[1], valid[2]);
 
@@ -248,13 +248,13 @@ describe(UI_TYPE, () => {
 		fireEvent.click(getField("button", "Done"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
 		await changeDate("15", "01", "2022");
 		fireEvent.click(getField("button", "Done"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "2022-01-15" }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "2022-01-15" }));
 	});
 
 	it("should derive the earliest of the allowed dates if there are maxDate, past and notFuture rules", async () => {
@@ -265,13 +265,13 @@ describe(UI_TYPE, () => {
 		fireEvent.click(getField("button", "Done"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
 		await changeDate("15", "12", "2021");
 		fireEvent.click(getField("button", "Done"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "2021-12-15" }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "2021-12-15" }));
 	});
 
 	describe("reset", () => {
@@ -285,7 +285,7 @@ describe(UI_TYPE, () => {
 			expect(getDayInput()).toHaveAttribute("value", "");
 			expect(getMonthInput()).toHaveAttribute("value", "");
 			expect(getYearInput()).toHaveAttribute("value", "");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -302,7 +302,7 @@ describe(UI_TYPE, () => {
 			expect(getDayInput()).toHaveAttribute("value", defaultDay);
 			expect(getMonthInput()).toHaveAttribute("value", defaultMonth);
 			expect(getYearInput()).toHaveAttribute("value", defaultYear);
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 
 		it("should revert to current date on reset", async () => {
@@ -320,7 +320,7 @@ describe(UI_TYPE, () => {
 			expect(getDayInput()).toHaveAttribute("value", currentDay);
 			expect(getMonthInput()).toHaveAttribute("value", currentMonth);
 			expect(getYearInput()).toHaveAttribute("value", currentYear);
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: currentDate }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: currentDate }));
 		});
 	});
 

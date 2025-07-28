@@ -1,9 +1,9 @@
-import { Color } from "@lifesg/react-design-system/color";
 import { FormLabelAddonProps } from "@lifesg/react-design-system/form/types";
 import styled from "styled-components";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize } from "../../shared";
 import { IFilterItemLabel } from "./types";
+import { Colour } from "@lifesg/react-design-system/theme";
 
 export namespace FilterHelper {
 	export const constructFormattedLabel = (
@@ -40,6 +40,6 @@ export namespace FilterHelper {
 
 const StyledHint = styled(Sanitize)`
 	&.label-hint {
-		color: ${Color.Neutral[1]};
+		color: ${Colour.text};
 	}
 `;

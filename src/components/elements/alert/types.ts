@@ -1,4 +1,4 @@
-import { AlertProps, AlertType } from "@lifesg/react-design-system";
+import { AlertProps, AlertType } from "@lifesg/react-design-system/alert";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseElementSchema, TBlockElementSchema, TInlineElementSchema } from "../types";
 

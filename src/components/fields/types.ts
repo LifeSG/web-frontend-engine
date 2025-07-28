@@ -1,7 +1,7 @@
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IYupValidationRule, TRenderRules } from "../../context-providers";
-import { IColumns } from "../frontend-engine";
+import { IColumns, IV3Columns } from "../frontend-engine";
 import { IButtonSchema, TButtonEvents } from "./button";
 import { TCheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
@@ -11,7 +11,7 @@ import { TDateRangeFieldSchema } from "./date-range-field";
 import { IESignatureFieldSchema } from "./e-signature-field/types";
 import { IErrorFieldSchema } from "./error-field";
 import { IFileUploadSchema, TFileUploadEvents } from "./file-upload";
-import { IHiddenFieldSchema } from "./hidden-field/types";
+import { THiddenFieldSchema } from "./hidden-field";
 import { IHistogramSliderSchema } from "./histogram-slider";
 import { IImageUploadSchema, TImageUploadEvents, TImageUploadTriggers } from "./image-upload";
 import { ILocationFieldSchema, TLocationEvents, TLocationFieldTriggers } from "./location-field";
@@ -81,7 +81,7 @@ export type TFieldSchema<V = undefined, C = undefined> =
 	| IESignatureFieldSchema<V>
 	| IErrorFieldSchema
 	| IFileUploadSchema<V>
-	| IHiddenFieldSchema<V>
+	| THiddenFieldSchema<V>
 	| IHistogramSliderSchema<V>
 	| IImageUploadSchema<V>
 	| ILocationFieldSchema<V>
@@ -129,7 +129,7 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
 	/** set responsive columns */
-	columns?: IColumns | undefined;
+	columns?: IColumns | IV3Columns | undefined;
 }
 
 /**

@@ -1,5 +1,4 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { MediaQuery, MediaWidths } from "@lifesg/react-design-system/media";
 import { action } from "@storybook/addon-actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef, useRef } from "react";
@@ -8,6 +7,7 @@ import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFro
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../components/frontend-engine";
 import { RecursivePartial, TNoInfer } from "../utils";
+import { Breakpoint, MediaQuery } from "@lifesg/react-design-system/theme";
 
 const EXCLUDED_STORY_PROPS: ArgTypes = {
 	invalid: { table: { disable: true } },
@@ -148,12 +148,23 @@ export const CommonCustomStoryWithoutLabelProps = (referenceKey: string): ArgTyp
 export const COLUMNS_ARG_TYPE: ArgTypes = {
 	columns: {
 		description: `Specifies the number of columns to be span across in desktop / tablet / mobile viewports. If an array is specified, the format is as such <code>[startCol, endCol]</code>.<br><br>
-		Permitted values<br>Desktop: <code>1 - 12</code> and <code>1 - 13</code> if specifying a range.<br>Mobile: <code>1 - 4</code> and <code>1 - 5</code> if specifying a range.<br><br>
+		The system automatically determines which grid layout to use based on the properties you provide:<br>
+		V2 Grid System is applied when you use <code>desktop, tablet, or mobile</code> properties<br>
+		V3 Grid System is applied when you use any of the properties <code>xxs, xs, sm, md, lg, xl, or xxl</code><br><br>
+		For <code>v2</code> version:<br>
+		Permitted values:<br>
+		Desktop: <code>1 - 12</code> and <code>1 - 13</code> if specifying a range.<br>Mobile: <code>1 - 4</code> and <code>1 - 5</code> if specifying a range.<br><br>
 		Settings are applied by similar to how <code>@max-width</code> works: if <code>desktop</code> is not specified, <code>tablet</code> will be used for desktop and tablet, if <code>tablet</code> is also not specified, <code>mobile</code> will be used for all screen sizes.<br><br>
-		If all column settings are not specified, element will span across a single column.`,
+		If all column settings are not specified, element will span across a single column.<br><br>
+		For <code>v3</code> version:<br>
+		Permitted values:<br>
+		xxs-md: <code>1-8</code> or <code>1-9</code> if specifying a range.<br>
+		lg-xxl: <code>1-12</code> or <code>1-13</code> if specifying a range.<br><br>
+		Settings are applied by similar to how <code>@max-width</code> works: if <code>lg-xxl</code> is not specified, <code>xxs-md</code> will be used for all screen sizes.<br><br>
+		If all column settings are not specified, element will span across a single column.<br><br>`,
 		table: {
 			type: {
-				summary: `{desktop?: number, tablet?: number, mobile?: number}`,
+				summary: `v2: {desktop?: number, tablet?: number, mobile?: number} | v3: {xxs?: number, xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number}`,
 			},
 		},
 		defaultValue: { desktop: 12 },
@@ -185,31 +196,31 @@ const SIDEBAR_WIDTH = 210;
 const SPACER = 550;
 
 const StyledForm = styled(OriginalFrontendEngine)`
-	width: calc(${MediaWidths.desktopL}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+	width: calc(${Breakpoint["xl-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	max-width: 820px;
 
-	${MediaQuery.MaxWidth.desktopM} {
+	${MediaQuery.MaxWidth.xl} {
 		min-width: 500px;
-		width: calc(${MediaWidths.desktopM}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+		width: calc(${Breakpoint["xl-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
-	${MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		min-width: 400px;
-		width: calc(${MediaWidths.tablet}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+		width: calc(${Breakpoint["lg-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		min-width: 350px;
-		width: calc(${MediaWidths.mobileL}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
+		width: calc(${Breakpoint["sm-max"]}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
 	}
 
-	${MediaQuery.MaxWidth.mobileM} {
+	${MediaQuery.MaxWidth.xs} {
 		min-width: 0;
-		width: calc(${MediaWidths.mobileM}px - ${MINIMUM_SIDE_PADDING}px);
+		width: calc(${Breakpoint["xs-max"]}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 
-	${MediaQuery.MaxWidth.mobileS} {
-		width: calc(${MediaWidths.mobileS}px - ${MINIMUM_SIDE_PADDING}px);
+	${MediaQuery.MaxWidth.xxs} {
+		width: calc(${Breakpoint["xs-max"]}px - ${MINIMUM_SIDE_PADDING}px);
 	}
 `;
 

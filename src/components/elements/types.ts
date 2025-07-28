@@ -1,5 +1,5 @@
 import { TRenderRules } from "../../context-providers";
-import { IColumns } from "../frontend-engine";
+import { IColumns, IV3Columns } from "../frontend-engine";
 import { IAccordionSchema, TAccordionEvents } from "./accordion";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
@@ -7,7 +7,7 @@ import { IGridSchema } from "./grid";
 import { IOrderedListSchema, IUnorderedListSchema } from "./list";
 import { IPopoverSchema } from "./popover";
 import { ITabItemSchema, ITabSchema } from "./tab";
-import type { ITextSchema } from "./text";
+import type { ITextSchema, ITypographySchema } from "./text";
 import type { IInlineWrapperSchema, TWrapperSchema } from "./wrapper";
 
 /**
@@ -29,6 +29,16 @@ export enum EElementType {
 	"TEXT-BODY" = "Text",
 	"TEXT-BODYSMALL" = "Text",
 	"TEXT-XSMALL" = "Text",
+	"HEADING-XXL" = "Text",
+	"HEADING-XL" = "Text",
+	"HEADING-MD" = "Text",
+	"HEADING-SM" = "Text",
+	"HEADING-LG" = "Text",
+	"HEADING-XS" = "Text",
+	"BODY-MD" = "Text",
+	"BODY-SM" = "Text",
+	"BODY-BL" = "Text",
+	"BODY-XS" = "Text",
 	DIV = "Wrapper",
 	DIVIDER = "Divider",
 	SPAN = "Wrapper",
@@ -73,6 +83,7 @@ export type TBlockElementSchema<V = undefined, C = undefined> =
 	| IDividerSchema
 	| IOrderedListSchema<V, C>
 	| ITextSchema
+	| ITypographySchema
 	| IUnorderedListSchema<V, C>;
 
 /** represent element schemas that render inline ui elements */
@@ -96,7 +107,7 @@ export interface IBaseElementSchema<T> {
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
 	/** set responsive columns */
-	columns?: IColumns | undefined;
+	columns?: IColumns | IV3Columns | undefined;
 }
 // =============================================================================
 // ELEMENT PROPS

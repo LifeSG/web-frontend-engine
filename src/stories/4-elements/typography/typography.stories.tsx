@@ -1,31 +1,29 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
-import { ITextSchema } from "../../../components/elements";
+import { ITypographySchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, LOREM_IPSUM } from "../../common";
 
 const meta: Meta = {
-	title: "Element/Text",
+	title: "Element/Typography",
 	parameters: {
 		docs: {
 			page: () => (
 				<>
-					<Title>Text</Title>
+					<Title>Typography</Title>
 					<p>
 						This component renders a <code>Typography</code> component provided by the Design System within
-						a Frontend Engine generated form. For backward compatibility, it retains the original HTML
-						element and weight of <code>V2_Text</code>.
+						a Frontend Engine generated form.
 					</p>
-
 					<p>
 						Please refer to the{" "}
 						<a
-							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/v2-text-introduction--docs"
+							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/core-typography--docs"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
 							design system
 						</a>{" "}
-						for the properties of <code>V2_Text</code>.
+						for the properties of <code>Typography</code>.
 					</p>
 					<ArgTypes of={Variants} />
 					<Stories includePrimary={true} title="Example" />
@@ -44,7 +42,7 @@ const meta: Meta = {
 			description: "The content of the text component",
 			table: {
 				type: {
-					summary: "string | string[] | Record<string, ITextSchema>",
+					summary: "string | string[] | Record<string, ITypographySchema>",
 				},
 			},
 		},
@@ -53,47 +51,37 @@ const meta: Meta = {
 			table: {
 				type: {
 					summary: `
-						"text-d1" |
-						"text-d2" |
-						"text-dbody" |
-						"text-h1" |
-						"text-h2" |
-						"text-h3" |
-						"text-h4" |
-						"text-h5" |
-						"text-h6" |
-						"text-body" |
-						"text-bodysmall" |
-						"text-xsmall"
+						 "heading-xxl"
+						| "heading-xl"
+						| "heading-md"
+						| "heading-sm"
+						| "heading-lg"
+						| "heading-xs"
+						| "body-md"
+						| "body-sm"
+						| "body-bl"
+						| "body-xs"
 					`,
 				},
 			},
 			options: [
-				"text-d1",
-				"text-d2",
-				"text-dbody",
-				"text-h1",
-				"text-h2",
-				"text-h3",
-				"text-h4",
-				"text-h5",
-				"text-h6",
-				"text-body",
-				"text-bodysmall",
-				"text-xsmall",
+				"heading-xxl",
+				"heading-xl",
+				"heading-md",
+				"heading-sm",
+				"heading-lg",
+				"heading-xs",
+				"body-md",
+				"body-sm",
+				"body-bl",
+				"body-xs",
 			],
 			control: {
 				type: "select",
 			},
 		},
 		weight: {
-			description: `The weight of the text component.<br>
-			For backward compatibility, numeric values will be mapped to the corresponding weight.<br>
-			300: <code>light</code><br>
-			400: <code>regular</code><br>
-			600: <code>semibold</code><br>
-			700: <code>bold</code><br>
-			900: <code>bold</code>`,
+			description: `The weight of the text component.<br>`,
 			table: {
 				type: {
 					summary: '"regular" | "semibold" | "bold" | "light"',
@@ -150,83 +138,75 @@ const Template = (id: string) =>
 				},
 			}}
 		/>
-	)) as StoryFn<ITextSchema>;
+	)) as StoryFn<ITypographySchema>;
 
 export const Variants = Template("text-variants").bind({});
 Variants.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: {
-		d1: {
-			uiType: "text-d1",
-			children: LOREM_IPSUM("text-d1"),
+		"heading-xxl": {
+			uiType: "heading-xxl",
+			children: LOREM_IPSUM("heading-xxl"),
 		},
-		d2: {
-			uiType: "text-d2",
-			children: LOREM_IPSUM("text-d2"),
+		"heading-xl": {
+			uiType: "heading-xl",
+			children: LOREM_IPSUM("heading-xl"),
 		},
-		dbody: {
-			uiType: "text-dbody",
-			children: LOREM_IPSUM("text-dbody"),
+		"heading-lg": {
+			uiType: "heading-lg",
+			children: LOREM_IPSUM("heading-lg"),
 		},
-		h1: {
-			uiType: "text-h1",
-			children: LOREM_IPSUM("text-h1"),
+		"heading-md": {
+			uiType: "heading-md",
+			children: LOREM_IPSUM("heading-md"),
 		},
-		h2: {
-			uiType: "text-h2",
-			children: LOREM_IPSUM("text-h2"),
+		"heading-sm": {
+			uiType: "heading-sm",
+			children: LOREM_IPSUM("heading-sm"),
 		},
-		h3: {
-			uiType: "text-h3",
-			children: LOREM_IPSUM("text-h3"),
+		"heading-xs": {
+			uiType: "heading-xs",
+			children: LOREM_IPSUM("heading-xs"),
 		},
-		h4: {
-			uiType: "text-h4",
-			children: LOREM_IPSUM("text-h4"),
+		"body-md": {
+			uiType: "body-md",
+			children: LOREM_IPSUM("body-md"),
 		},
-		h5: {
-			uiType: "text-h5",
-			children: LOREM_IPSUM("text-h5"),
+		"body-sm": {
+			uiType: "body-sm",
+			children: LOREM_IPSUM("body-sm"),
 		},
-		h6: {
-			uiType: "text-h6",
-			children: LOREM_IPSUM("text-h6"),
+		"body-bl": {
+			uiType: "body-bl",
+			children: LOREM_IPSUM("body-bl"),
 		},
-		body: {
-			uiType: "text-body",
-			children: LOREM_IPSUM("text-body"),
-		},
-		bodysmall: {
-			uiType: "text-bodysmall",
-			children: LOREM_IPSUM("text-bodysmall"),
-		},
-		xsmall: {
-			uiType: "text-xsmall",
-			children: LOREM_IPSUM("text-xsmall"),
+		"body-xs": {
+			uiType: "body-xs",
+			children: LOREM_IPSUM("body-xs"),
 		},
 	},
 };
 
 export const Weights = Template("text-weights").bind({});
 Weights.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: {
 		default: {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: LOREM_IPSUM("Default"),
 		},
 		bold: {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: LOREM_IPSUM("Bold"),
 			weight: "bold",
 		},
 		semibold: {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: LOREM_IPSUM("Semibold"),
 			weight: "semibold",
 		},
 		light: {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: LOREM_IPSUM("Light"),
 			weight: "light",
 		},
@@ -235,32 +215,32 @@ Weights.args = {
 
 export const ArrayOfText = Template("text-array").bind({});
 ArrayOfText.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: ["This", "is", "an", "array", "of", "text"],
 };
 
 export const ArrayOfStyledText = Template("text-array-plain-styled").bind({});
 ArrayOfStyledText.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: ["This", "<mark>is</mark>", "<u>a</u>", "<strong>styled</strong>", "<i>sentence</i>"],
 };
 
 export const InlineText = Template("text-inline").bind({});
 InlineText.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: {
 		"text-start": {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: "This is ",
 			inline: true,
 		},
 		"text-body": {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: "an inline ",
 			inline: true,
 		},
 		"text-end": {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: "text",
 			inline: true,
 		},
@@ -269,20 +249,20 @@ InlineText.args = {
 
 export const ParagraphText = Template("text-paragraph").bind({});
 ParagraphText.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: {
 		"text-paragraph-one": {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: "This is the first paragraph",
 			paragraph: true,
 		},
 		"text-paragraph-two": {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: "This is the second paragraph",
 			paragraph: true,
 		},
 		"text-paragraph-three": {
-			uiType: "text-body",
+			uiType: "body-bl",
 			children: "This is the third paragraph",
 			paragraph: true,
 		},
@@ -291,26 +271,26 @@ ParagraphText.args = {
 
 export const HTMLString = Template("text-html-string").bind({});
 HTMLString.args = {
-	uiType: "text-body",
-	children: "<p>his is a paragraph in a HTML string</p>",
+	uiType: "body-bl",
+	children: "<p>This is a paragraph in a HTML string</p>",
 };
 
 export const ImageTextString = Template("image-text-string").bind({});
 ImageTextString.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children:
 		"<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg'> <p>The image above is added via img tag and this text is rendered in a p tag</p>",
 };
 
 export const SanitizedHTMLString = Template("text-sanitized-html-string").bind({});
 SanitizedHTMLString.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: "<p>This component should not contain a script tag<script>console.log('hello world')</script></p>",
 };
 
 export const LongTextWithViewMoreButton = Template("text-array").bind({});
 LongTextWithViewMoreButton.args = {
-	uiType: "text-body",
+	uiType: "body-bl",
 	children: ["This", "is", "a", "long", "text"],
 	maxLines: 3,
 };

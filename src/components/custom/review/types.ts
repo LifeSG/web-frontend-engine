@@ -8,9 +8,6 @@ import type { ICustomElementJsonSchema } from "../types";
 type TReviewSectionChildren = TBlockElementSchema | TInlineElementSchema | TWrapperSchema;
 export type TReviewSchema = IReviewSchemaAccordion | IReviewSchemaBox;
 
-/** @deprecated use TReviewSchema */
-export type IReviewSchema = TReviewSchema;
-
 export interface IUnmaskConfig {
 	url: string;
 	body?: unknown | undefined;

@@ -99,9 +99,7 @@ describe(UI_TYPE, () => {
 
 	it("should render the title string correctly", () => {
 		renderComponent({});
-		const element = screen.getByText(ACCORDION_TITLE);
-		expect(element).toBeInTheDocument();
-		expect(element.tagName).toBe("H3");
+		expect(screen.getByTestId("title")).toHaveTextContent(ACCORDION_TITLE);
 	});
 
 	it("should render the title schema correctly", () => {
@@ -136,7 +134,7 @@ describe(UI_TYPE, () => {
 		const spanElement = screen.getByText(SPAN_TITLE);
 		expect(spanElement).toBeInTheDocument();
 		expect(spanElement.tagName).toBe("SPAN");
-		expect(spanElement.parentElement.tagName).toBe("H3");
+		expect(spanElement.parentElement.getAttribute("data-testid")).toBe("title");
 
 		expect(screen.queryByTestId("popover__popover")).toBeInTheDocument();
 	});

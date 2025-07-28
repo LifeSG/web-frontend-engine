@@ -2,8 +2,8 @@ import xor from "lodash/xor";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { FileHelper, WindowHelper, generateRandomId } from "../../../utils";
-import { useFieldEvent, usePrevious, useValidationConfig } from "../../../utils/hooks";
+import { FileHelper, generateRandomId } from "../../../utils";
+import { useFieldEvent, usePrevious, useValidationConfig, useWindowHelper } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";
@@ -58,6 +58,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [showReviewModal, setShowReviewModal] = useState(false);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
+	const isMobileView = useWindowHelper();
 
 	// =============================================================================
 	// EFFECTS
@@ -166,7 +167,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					case EImageStatus.COMPRESSED:
 					case EImageStatus.CONVERTED:
 						if (editImage && !showReviewModal) {
-							if (WindowHelper.isMobileView()) {
+							if (isMobileView()) {
 								setShowReviewModal(true);
 							} else {
 								setShowReviewPrompt(true);
