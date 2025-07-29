@@ -41,7 +41,7 @@
 		"@js-joda/timezone": "^2.15.0",
 		"@lifesg/web-form-builder": "^1.0.0-alpha.2",
 		"@use-gesture/react": "^10.3.1",
-		"axios": "^1.11.0",
+		"axios": "^1.7.9",
 		"country-code-lookup": "^0.0.20",
 		"exifreader": "^4.23.7",
 		"fabric": "^6.7.0",
