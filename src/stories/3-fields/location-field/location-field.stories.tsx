@@ -131,6 +131,18 @@ const meta: Meta = {
 				type: "number",
 			},
 		},
+		zoomDuration: {
+			description:
+				"Specifies the duration of the zoom animation when the map is panned to a new location. Defaults to 2.5 seconds if undefined.",
+			table: {
+				type: {
+					summary: "undefined | number",
+				},
+			},
+			control: {
+				type: "number",
+			},
+		},
 	},
 };
 export default meta;

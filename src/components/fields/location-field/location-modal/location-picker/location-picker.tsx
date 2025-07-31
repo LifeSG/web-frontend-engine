@@ -210,7 +210,7 @@ export const LocationPicker = ({
 				? map.getZoom()
 				: panZoomValue;
 
-		map.flyTo(L.latLng(zoomCenter.lat, zoomCenter.lng), zoomValue);
+		map.flyTo(L.latLng(zoomCenter.lat, zoomCenter.lng), zoomValue, { duration: mapPanZoom?.duration });
 		setTimeout(() => map.invalidateSize(), 500);
 	};
 
