@@ -15,6 +15,7 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 				nonMobile?: number | undefined;
 				min?: number | undefined;
 				max?: number | undefined;
+				duration?: number | undefined;
 		  }
 		| undefined;
 	panelInputMode: TPanelInputMode;
