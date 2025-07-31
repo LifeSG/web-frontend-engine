@@ -43,6 +43,7 @@ export const LocationPicker = ({
 	disableSelectionFromMap,
 	disableCurrLocationMarker,
 	selectablePins,
+	zoomDuration,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -210,7 +211,7 @@ export const LocationPicker = ({
 				? map.getZoom()
 				: panZoomValue;
 
-		map.flyTo(L.latLng(zoomCenter.lat, zoomCenter.lng), zoomValue);
+		map.flyTo(L.latLng(zoomCenter.lat, zoomCenter.lng), zoomValue, { duration: zoomDuration });
 		setTimeout(() => map.invalidateSize(), 500);
 	};
 
