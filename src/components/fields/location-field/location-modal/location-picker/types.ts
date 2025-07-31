@@ -29,4 +29,5 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 	disableSelectionFromMap?: boolean | undefined;
 	disableCurrLocationMarker?: boolean | undefined;
 	selectablePins: IMapPin[];
+	zoomDuration?: number | undefined;
 }

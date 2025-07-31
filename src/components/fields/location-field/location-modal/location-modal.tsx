@@ -50,6 +50,7 @@ const LocationModal = ({
 	addressFieldPlaceholder,
 	searchBarIcon,
 	bufferRadius,
+	zoomDuration,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -501,6 +502,7 @@ const LocationModal = ({
 								disableSelectionFromMap={locationSelectionMode === "pins-only"}
 								disableCurrLocationMarker={locationSelectionMode === "pins-only"}
 								selectablePins={selectablePins}
+								zoomDuration={zoomDuration}
 							/>
 						</>
 					) : (

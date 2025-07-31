@@ -43,6 +43,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			addressFieldPlaceholder,
 			searchBarIcon,
 			bufferRadius,
+			zoomDuration,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -194,6 +195,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						addressFieldPlaceholder={addressFieldPlaceholder}
 						searchBarIcon={searchBarIcon}
 						bufferRadius={bufferRadius}
+						zoomDuration={zoomDuration}
 					/>
 				)}
 			</Suspense>
