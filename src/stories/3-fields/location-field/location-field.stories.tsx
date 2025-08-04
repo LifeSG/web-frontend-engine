@@ -73,7 +73,7 @@ const meta: Meta = {
 			description: "Specifies the map pan zoom value.",
 			table: {
 				type: {
-					summary: `{mobile?: number, nonMobile?: number, min?: number, max?: number}`,
+					summary: `{mobile?: number, nonMobile?: number, min?: number, max?: number, duration?: number}`,
 				},
 			},
 			control: { type: "object" },
@@ -299,7 +299,7 @@ WithCustomMapPanZoom.args = {
 	label: "WithCustomMapPanZoom",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
-	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14 },
+	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14, duration: 1 },
 };
 
 export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
