@@ -73,7 +73,7 @@ const meta: Meta = {
 			description: "Specifies the map pan zoom value.",
 			table: {
 				type: {
-					summary: `{mobile?: number, nonMobile?: number, min?: number, max?: number}`,
+					summary: `{mobile?: number, nonMobile?: number, min?: number, max?: number, duration?: number}`,
 				},
 			},
 			control: { type: "object" },
@@ -126,18 +126,6 @@ const meta: Meta = {
 					summary: "number",
 				},
 				defaultValue: { summary: "500" },
-			},
-			control: {
-				type: "number",
-			},
-		},
-		zoomDuration: {
-			description:
-				"Specifies the duration of the zoom animation when the map is panned to a new location. Defaults to 2.5 seconds if undefined.",
-			table: {
-				type: {
-					summary: "undefined | number",
-				},
 			},
 			control: {
 				type: "number",
@@ -311,7 +299,7 @@ WithCustomMapPanZoom.args = {
 	label: "WithCustomMapPanZoom",
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
-	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14 },
+	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14, duration: 1 },
 };
 
 export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
