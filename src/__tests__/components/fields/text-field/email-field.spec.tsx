@@ -129,7 +129,7 @@ describe(UI_TYPE, () => {
 
 		expect(getEmailField()).toHaveAttribute("placeholder", "placeholder");
 		expect(getEmailField()).toHaveAttribute("readOnly");
-		expect(getEmailField()).toBeDisabled();
+		expect(getEmailField()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should not prevent copy and paste if `preventCopyAndPaste` is false", async () => {

@@ -1281,7 +1281,7 @@ describe("frontend-engine", () => {
 				},
 			});
 
-			expect(getFieldOne()).toBeDisabled();
+			expect(getFieldOne()).toHaveAttribute("aria-disabled", "true");
 		});
 
 		it("should remove entries on overriding with null values", () => {
@@ -1383,7 +1383,7 @@ describe("frontend-engine", () => {
 
 			fireEvent.click(screen.getByRole("button", { name: "Override schema" }));
 
-			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
+			expect(getField("textbox", FIELD_ONE_LABEL)).toHaveAttribute("aria-disabled", "true");
 		});
 
 		it("should allow overriding of validation config", async () => {
@@ -1417,7 +1417,7 @@ describe("frontend-engine", () => {
 				},
 			});
 
-			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
+			expect(getField("textbox", FIELD_ONE_LABEL)).toHaveAttribute("aria-disabled", "true");
 			expect(getField("textbox", FIELD_ONE_LABEL)).toHaveValue("hello world");
 		});
 	});

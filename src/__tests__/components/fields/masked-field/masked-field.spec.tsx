@@ -109,7 +109,7 @@ describe(UI_TYPE, () => {
 
 		expect(getMaskedField()).toHaveAttribute("placeholder", "placeholder");
 		expect(getMaskedField()).toHaveAttribute("readonly");
-		expect(getMaskedField()).toBeDisabled();
+		expect(getMaskedField()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should mask based on regex", async () => {

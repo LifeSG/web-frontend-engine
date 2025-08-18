@@ -73,10 +73,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 const getCheckboxes = (): HTMLElement[] => {
-	return screen
-		.getAllByRole("checkbox")
-		.map((checkbox) => checkbox.querySelector("input"))
-		.filter(Boolean);
+	return screen.getAllByRole("checkbox");
 };
 
 describe(UI_TYPE, () => {
@@ -99,9 +96,9 @@ describe(UI_TYPE, () => {
 		const checkboxes = getCheckboxes();
 		checkboxes.forEach((checkbox) => {
 			if (defaultValues.includes((checkbox as HTMLInputElement).value)) {
-				expect(checkbox.parentElement.getAttribute("aria-checked")).toBe("true");
+				expect(checkbox).toBeChecked();
 			} else {
-				expect(checkbox.parentElement.getAttribute("aria-checked")).toBe("false");
+				expect(checkbox).not.toBeChecked();
 			}
 		});
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
@@ -339,8 +336,8 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(checkboxes[0].parentElement.getAttribute("aria-checked")).toBe("false");
-			expect(checkboxes[1].parentElement.getAttribute("aria-checked")).toBe("false");
+			expect(checkboxes[0]).not.toBeChecked();
+			expect(checkboxes[1]).not.toBeChecked();
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -353,8 +350,8 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(checkboxes[0].parentElement.getAttribute("aria-checked")).toBe("true");
-			expect(checkboxes[1].parentElement.getAttribute("aria-checked")).toBe("false");
+			expect(checkboxes[0]).toBeChecked();
+			expect(checkboxes[1]).not.toBeChecked();
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
