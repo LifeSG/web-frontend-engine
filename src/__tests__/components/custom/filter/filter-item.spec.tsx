@@ -87,7 +87,7 @@ describe(REFERENCE_KEY, () => {
 
 		expect(getTextfield()).toHaveAttribute("placeholder", "placeholder");
 		expect(getTextfield()).toHaveAttribute("readonly");
-		expect(getTextfield()).toBeDisabled();
+		expect(getTextfield()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should be able to render hint", async () => {

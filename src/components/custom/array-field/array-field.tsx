@@ -1,4 +1,5 @@
 import { Alert } from "@lifesg/react-design-system/alert";
+import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import * as Icons from "@lifesg/react-icons";
 import { PlusCircleFillIcon } from "@lifesg/react-icons/plus-circle-fill";
@@ -222,8 +223,12 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 										type="button"
 										styleType="light"
 										danger
-										icon={removeButton?.icon ? renderIcon(removeButton.icon) : undefined}
 										onClick={() => handleRemoveSection(index)}
+										{...(removeButton?.icon
+											? {
+													icon: renderIcon(removeButton.icon),
+											  }
+											: { as: Button.Small })}
 									>
 										{removeButton?.label ?? "Remove"}
 									</RemoveButton>

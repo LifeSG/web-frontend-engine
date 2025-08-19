@@ -690,7 +690,7 @@ describe("location-input-group", () => {
 				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 				expect(getEditLocationButton(true)).toBeInTheDocument();
-				expect(getLocationInput()).toHaveAttribute("disabled");
+				expect(getLocationInput()).toHaveAttribute("aria-disabled", "true");
 				fireEvent.click(getEditLocationButton());
 
 				expect(editButtonOnClickSpy).toBeCalled();

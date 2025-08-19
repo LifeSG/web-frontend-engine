@@ -95,8 +95,8 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getFloorInputField()).toBeDisabled();
-		expect(getUnitInputField()).toBeDisabled();
+		expect(getFloorInputField()).toHaveAttribute("aria-disabled", "true");
+		expect(getUnitInputField()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should be able to support custom placeholder", () => {

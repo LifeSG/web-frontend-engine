@@ -50,10 +50,7 @@ const renderComponent = (overrideField?: TOverrideField<IFilterCheckboxSchema>, 
 };
 
 const getCheckboxes = (): HTMLElement[] => {
-	return screen
-		.getAllByRole("checkbox")
-		.filter((el) => el.getAttribute("data-testid") === "checkbox")
-		.map((el) => el.closest("label"));
+	return screen.getAllByRole("checkbox");
 };
 
 const getCheckboxByVal = (val: string) => {

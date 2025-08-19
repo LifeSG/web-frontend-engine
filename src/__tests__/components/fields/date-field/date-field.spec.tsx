@@ -58,15 +58,15 @@ const renderComponent = (overrideField?: TOverrideField<IDateFieldSchema>, overr
 };
 
 const getDayInput = (): HTMLElement => {
-	return getField("textbox", "day");
+	return getField("textbox", "Date");
 };
 
 const getMonthInput = (): HTMLElement => {
-	return getField("textbox", "month");
+	return getField("textbox", "Month");
 };
 
 const getYearInput = (): HTMLElement => {
-	return getField("textbox", "year");
+	return getField("textbox", "Year");
 };
 
 const changeDate = async (day: string, month: string, year: string) => {

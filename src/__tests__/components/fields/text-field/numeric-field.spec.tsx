@@ -125,7 +125,7 @@ describe(UI_TYPE, () => {
 
 		expect(getNumericField()).toHaveAttribute("placeholder", "placeholder");
 		expect(getNumericField()).toHaveAttribute("readOnly");
-		expect(getNumericField()).toBeDisabled();
+		expect(getNumericField()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should not prevent copy and paste if `preventCopyAndPaste` is false", async () => {

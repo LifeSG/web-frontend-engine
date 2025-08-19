@@ -63,10 +63,10 @@ const getFieldThree = (isQuery = false): HTMLElement => {
 };
 
 export const changeDate = async (day: string, month: string, year: string) => {
-	fireEvent.focus(getField("textbox", "day"));
-	fireEvent.change(getField("textbox", "day"), { target: { value: day } });
-	fireEvent.change(getField("textbox", "month"), { target: { value: month } });
-	fireEvent.change(getField("textbox", "year"), { target: { value: year } });
+	fireEvent.focus(getField("textbox", "Date"));
+	fireEvent.change(getField("textbox", "Date"), { target: { value: day } });
+	fireEvent.change(getField("textbox", "Month"), { target: { value: month } });
+	fireEvent.change(getField("textbox", "Year"), { target: { value: year } });
 	await waitFor(() => fireEvent.click(screen.getByText("Done")));
 };
 
@@ -594,7 +594,7 @@ describe("conditional-renderer", () => {
 			);
 			await waitFor(() => fireEvent.change(getFieldOne(), { target: { value: "hello" } }));
 
-			expect(getFieldTwo()).toBeDisabled();
+			expect(getFieldTwo()).toHaveAttribute("aria-disabled", "true");
 		});
 
 		it("should allow overriding of component into being conditionally rendered", () => {
