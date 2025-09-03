@@ -77,8 +77,8 @@ export const SearchBarInput = styled.input`
 	font-size: 1rem;
 	outline: none;
 
-	::placeholder,
-	::-webkit-input-placeholder {
+	&::placeholder,
+	&::-webkit-input-placeholder {
 		color: ${Colour["text-subtlest"]};
 	}
 

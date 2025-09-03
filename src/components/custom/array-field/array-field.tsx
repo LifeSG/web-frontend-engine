@@ -228,7 +228,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 											? {
 													icon: renderIcon(removeButton.icon),
 											  }
-											: { as: Button.Small })}
+											: { as: Button.Small, icon: undefined })}
 									>
 										{removeButton?.label ?? "Remove"}
 									</RemoveButton>

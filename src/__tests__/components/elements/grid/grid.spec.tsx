@@ -57,6 +57,6 @@ describe(UI_TYPE, () => {
 	it("Check style descendants's grid layout", () => {
 		renderComponent();
 		const box1 = screen.getByTestId(TestHelper.generateId("box1", "grid_item"));
-		expect(getComputedStyle(box1)["grid-column"]).toBe("auto / span 6");
+		expect(getComputedStyle(box1)["grid-column"]).toBe("auto/span 6");
 	});
 });

@@ -5,9 +5,9 @@ import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ReactDOMServer from "react-dom/server";
-import { useTheme } from "styled-components";
+import { ThemeContext } from "styled-components";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { LocationHelper } from "../../location-helper";
@@ -47,7 +47,7 @@ export const LocationPicker = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const theme = useTheme();
+	const theme = useContext(ThemeContext);
 	const mapRef = useRef<L.Map>();
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);

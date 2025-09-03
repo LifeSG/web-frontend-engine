@@ -33,7 +33,7 @@ export const StyledImageButton = styled(ImageButton)`
 export const RadioContainer = styled.div`
 	display: flex;
 	align-items: center;
-	:not(:last-of-type) {
+	&:not(:last-of-type) {
 		margin-bottom: ${Spacing["spacing-16"]};
 	}
 `;
