@@ -74,7 +74,7 @@
 		"@floating-ui/react": "^0.26.23",
 		"@lifesg/react-design-system": "^3.0.0-alpha.22",
 		"@lifesg/react-icons": "^1.9.0",
-		"@lifesg/web-form-builder": "^1.0.0-alpha.3",
+		"@lifesg/web-form-builder": "^1.0.0-alpha.4",
 		"@mihkeleidast/storybook-addon-source": "^1.0.1",
 		"@rollup/plugin-commonjs": "^22.0.2",
 		"@rollup/plugin-image": "^2.1.1",
