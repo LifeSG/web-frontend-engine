@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { IColor } from "../../../services/onemap/types";
 import { TestHelper } from "../../../utils";
 import { LocationHelper } from "../../fields/location-field/location-helper";
 import { StaticMapElement, StaticMapWrapper, staticMapDimensions } from "./static-map.styles";
 import { Breakpoint } from "@lifesg/react-design-system/theme";
-import { useTheme } from "styled-components";
+import { ThemeContext } from "styled-components";
 
 const StaticMapPlaceholder = "https://assets.life.gov.sg/web-frontend-engine/img/map/static_map_placeholder.png";
 
@@ -35,7 +35,7 @@ export const StaticMap = ({
 	const isMobile = useRef(false);
 	const [mapSrc, setMapSrc] = useState<string>("");
 	const renderedCenter = useRef<[number, number]>([0, 0]);
-	const theme = useTheme();
+	const theme = useContext(ThemeContext);
 
 	// =============================================================================
 	// EFFECTS

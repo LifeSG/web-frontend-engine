@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { useState } from "react";
 import { IFilterCheckboxSchema } from "../../../../components/custom/filter/filter-checkbox/types";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -90,7 +90,7 @@ describe(REFERENCE_KEY, () => {
 		});
 		fireEvent.click(screen.getByTestId("field-popover"));
 
-		expect(screen.getByText("Main label")).toBeInTheDocument();
+		expect(within(screen.getByTestId("filter-item-title")).getByText("Main label")).toBeInTheDocument();
 		expect(screen.getByText("Hint")).toBeVisible();
 	});
 
@@ -219,7 +219,7 @@ describe(REFERENCE_KEY, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: changedValue }));
 
-			fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+			fireEvent.click(screen.getByRole("button", { name: "clear Filter Item" }));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValue }));
 		});
@@ -239,16 +239,14 @@ describe(REFERENCE_KEY, () => {
 					},
 				},
 			});
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Collapse")).toBeVisible();
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "true");
 		});
 
 		it("should be expanded when expanded is true", () => {
 			renderComponent({
 				expanded: true,
 			});
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Collapse")).toBeVisible();
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "true");
 		});
 
 		it("should be collapsed when override expanded is false", () => {
@@ -269,14 +267,14 @@ describe(REFERENCE_KEY, () => {
 					},
 				}
 			);
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Expand")).toBeVisible();
+
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "false");
 		});
 
 		it("should be collapsed when expanded is false", () => {
 			renderComponent();
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Expand")).toBeVisible();
+
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "false");
 		});
 	});
 });

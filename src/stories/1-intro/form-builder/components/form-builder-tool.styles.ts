@@ -76,11 +76,11 @@ export const ModeButton = styled.button<IModeButtonProps>`
 	padding: ${Spacing["spacing-16"]};
 	align-self: center;
 
-	:hover {
+	&:hover {
 		background: ${Colour["bg-selected-hover"]};
 	}
 
-	:focus {
+	&:focus {
 		outline-color: ${Colour["border-focus"]};
 	}
 

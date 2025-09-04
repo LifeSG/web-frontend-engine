@@ -14,12 +14,12 @@ export const ChipButton = styled.button<IChipButtonProps>`
 	padding: 0.063rem 0.438rem;
 	overflow-wrap: anywhere;
 
-	:hover {
+	&:hover {
 		box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.2);
 		cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 	}
 
-	:focus-visible {
+	&:focus-visible {
 		outline: none;
 		box-shadow: 0 0 0 1px #024fa9;
 	}

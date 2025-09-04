@@ -92,7 +92,7 @@ describe(REFERENCE_KEY, () => {
 
 		it("should render modal with Done button when clicked on filters button", async () => {
 			renderComponent();
-			expect(screen.getByTestId("filterItem1__filter-item")).toBeInTheDocument();
+			expect(screen.getByTestId("filter__filter")).toBeInTheDocument();
 			const filterBtn = screen.queryByRole("button", { name: "Filters" });
 			expect(filterBtn).toBeInTheDocument();
 			await waitFor(() => fireEvent.click(filterBtn));
@@ -101,14 +101,14 @@ describe(REFERENCE_KEY, () => {
 
 		it("should be able to close the rendered modal with close button.", async () => {
 			renderComponent();
-			expect(screen.getByTestId("filterItem1__filter-item")).toBeInTheDocument();
+			expect(screen.getByTestId("filter__filter")).toBeInTheDocument();
 			const filterBtn = screen.queryByRole("button", { name: "Filters" });
 			expect(filterBtn).toBeInTheDocument();
 			await waitFor(() => fireEvent.click(filterBtn));
 			expect(screen.getByText("Done")).toBeVisible();
-			const closeBtn = screen.getByLabelText("Dismiss");
+			const closeBtn = screen.getByLabelText("close Filters");
 			await waitFor(() => fireEvent.click(closeBtn));
-			expect(screen.getByText("Done")).not.toBeVisible();
+			expect(screen.queryByText("Done")).not.toBeInTheDocument();
 		});
 	});
 });

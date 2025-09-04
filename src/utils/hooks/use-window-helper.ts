@@ -1,9 +1,9 @@
 import { Breakpoint } from "@lifesg/react-design-system/theme";
-import { useCallback } from "react";
-import { useTheme } from "styled-components";
+import { useCallback, useContext } from "react";
+import { ThemeContext } from "styled-components";
 
 export const useWindowHelper = () => {
-	const theme = useTheme();
+	const theme = useContext(ThemeContext);
 
 	const isMobileView = useCallback(() => {
 		return (
