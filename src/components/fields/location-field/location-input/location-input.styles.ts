@@ -23,23 +23,16 @@ const errorFocusCss = css`
 	box-shadow: ${DesignToken.InputErrorBoxShadow};
 `;
 
-export const LocationInputGroup = styled.div`
-	display: flex;
-	flex-direction: column;
-	:last-child {
-		margin-bottom: 2rem;
-	}
-`;
-
 export const DummyLocationInput = styled.div<InputWrapperStyleProps>`
 	border: 1px solid ${Color.Neutral[5]};
-	background: transparent;
+	background: ${Color.Neutral[8]};
 	height: 3rem;
 	border-radius: 4px;
 	padding: 0 1rem;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	margin-bottom: 2rem;
 	${(props) => {
 		if (props.$readOnly) {
 			return css`

@@ -9,7 +9,17 @@ export interface ILocationInputProps extends FormInputGroupProps<string, string>
 }
 
 export const LocationInput = (props: ILocationInputProps) => {
-	const { id, label, locationInputPlaceholder = "", onFocus, value, errorMessage, disabled, readOnly } = props;
+	const {
+		id,
+		label,
+		className,
+		locationInputPlaceholder = "",
+		onFocus,
+		value,
+		errorMessage,
+		disabled,
+		readOnly,
+	} = props;
 
 	return (
 		<Form.CustomField
@@ -25,6 +35,7 @@ export const LocationInput = (props: ILocationInputProps) => {
 				onFocus={onFocus}
 				value={value}
 				error={!!errorMessage}
+				className={className}
 			/>
 		</Form.CustomField>
 	);
