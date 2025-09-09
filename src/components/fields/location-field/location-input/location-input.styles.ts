@@ -32,7 +32,6 @@ export const DummyLocationInput = styled.div<InputWrapperStyleProps>`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 2rem;
 	${(props) => {
 		if (props.$readOnly) {
 			return css`
