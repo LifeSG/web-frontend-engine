@@ -1,4 +1,6 @@
-import { Color, DesignToken, TextStyleHelper } from "@lifesg/react-design-system";
+import { TextStyleHelper } from "@lifesg/react-design-system/text";
+import { DesignToken } from "@lifesg/react-design-system/design-token";
+import { Color } from "@lifesg/react-design-system/color";
 import styled, { css } from "styled-components";
 
 interface InputWrapperStyleProps {
@@ -23,7 +25,7 @@ const errorFocusCss = css`
 	box-shadow: ${DesignToken.InputErrorBoxShadow};
 `;
 
-export const DummyLocationInput = styled.div<InputWrapperStyleProps>`
+export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
 	border: 1px solid ${Color.Neutral[5]};
 	background: ${Color.Neutral[8]};
 	height: 3rem;
@@ -73,6 +75,7 @@ export const LocationInputText = styled.span<{ $placeholder?: boolean; $disabled
 	text-overflow: clip;
 	white-space: nowrap;
 	cursor: text;
+	text-align: left;
 	${TextStyleHelper.getTextStyle("Body", "regular")}
 	color: ${Color.Neutral[1]};
 	${(props) =>
