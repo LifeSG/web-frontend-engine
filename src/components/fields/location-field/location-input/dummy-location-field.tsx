@@ -2,45 +2,38 @@ import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { DummyLocationInput, LocationIconWrapper, LocationInputText } from "./location-input.styles";
 
 interface IDummyLocationFieldProps {
-	disabled?: boolean;
-	readOnly?: boolean;
-	placeholder?: string;
-	value?: string | number | readonly string[];
-	error?: boolean;
-	onFocus: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
-	className?: string;
+	id?: string | undefined;
+	"data-testid"?: string | undefined;
+	disabled?: boolean | undefined;
+	readOnly?: boolean | undefined;
+	placeholder?: string | undefined;
+	value?: string | number | readonly string[] | undefined;
+	error?: boolean | undefined;
+	onFocus: React.FocusEventHandler<HTMLElement>;
+	className?: string | undefined;
 }
 
 export const DummyLocationField = (props: IDummyLocationFieldProps) => {
-	const { className, disabled, readOnly, onFocus, value, placeholder, error } = props;
+	const { id, "data-testid": dataTestId, className, disabled, readOnly, onFocus, value, placeholder, error } = props;
 
-	const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 		if (disabled) return;
 
 		e.currentTarget.focus();
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-		if (disabled) return;
-
-		if (e.key === "Enter" || e.key === " ") {
-			e.preventDefault();
-			e.currentTarget.click();
-		}
-	};
-
 	return (
 		<DummyLocationInput
+			id={id}
+			data-testid={dataTestId}
 			className={className}
 			$disabled={disabled}
 			$readOnly={readOnly}
 			$error={error}
 			onFocus={onFocus}
 			onClick={handleClick}
-			onKeyDown={handleKeyDown}
 			tabIndex={disabled ? -1 : 0}
 			aria-disabled={disabled || undefined}
-			role="combobox"
 			aria-haspopup="dialog"
 			aria-readonly={readOnly}
 		>

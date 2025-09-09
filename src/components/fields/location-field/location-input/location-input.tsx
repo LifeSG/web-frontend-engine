@@ -1,4 +1,4 @@
-import { Form } from "@lifesg/react-design-system";
+import { Form } from "@lifesg/react-design-system/form";
 import { FormInputGroupProps } from "@lifesg/react-design-system/form/types";
 import { TestHelper } from "../../../../utils";
 import { DummyLocationField } from "./dummy-location-field";
@@ -29,6 +29,8 @@ export const LocationInput = (props: ILocationInputProps) => {
 			errorMessage={errorMessage}
 		>
 			<DummyLocationField
+				id={TestHelper.generateId(id, "location-input-base")}
+				data-testid={TestHelper.generateId(id, "location-input-base")}
 				disabled={disabled}
 				readOnly={readOnly}
 				placeholder={locationInputPlaceholder}
