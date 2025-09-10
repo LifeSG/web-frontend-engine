@@ -1,7 +1,7 @@
-import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { Form } from "@lifesg/react-design-system/form";
 import { FormInputGroupProps } from "@lifesg/react-design-system/form/types";
 import { TestHelper } from "../../../../utils";
+import { DummyLocationField } from "./dummy-location-field";
 
 export interface ILocationInputProps extends FormInputGroupProps<string, string> {
 	locationInputPlaceholder?: string | undefined;
@@ -22,25 +22,23 @@ export const LocationInput = (props: ILocationInputProps) => {
 	} = props;
 
 	return (
-		<Form.InputGroup
+		<Form.CustomField
 			id={TestHelper.generateId(id, "location-input")}
 			data-testid={TestHelper.generateId(id, "location-input")}
-			className={`${className}-location-input`}
-			role="button"
 			label={label}
-			addon={{
-				type: "custom",
-				attributes: {
-					children: <PinFillIcon />,
-				},
-				position: "right",
-			}}
-			disabled={disabled}
-			readOnly={readOnly}
-			onFocus={onFocus}
-			placeholder={locationInputPlaceholder}
-			value={value}
 			errorMessage={errorMessage}
-		/>
+		>
+			<DummyLocationField
+				id={TestHelper.generateId(id, "location-input-base")}
+				data-testid={TestHelper.generateId(id, "location-input-base")}
+				disabled={disabled}
+				readOnly={readOnly}
+				placeholder={locationInputPlaceholder}
+				onFocus={onFocus}
+				value={value}
+				error={!!errorMessage}
+				className={className}
+			/>
+		</Form.CustomField>
 	);
 };

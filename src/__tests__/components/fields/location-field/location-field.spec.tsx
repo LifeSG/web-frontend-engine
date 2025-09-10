@@ -307,7 +307,7 @@ const getLocationSearchButton = (query = false) => {
 };
 
 const getLocationInput = (query = false) => {
-	return within(testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-input"))).getByTestId("input");
+	return testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "location-input-base"));
 };
 
 const getLocationSearchClearButton = (query = false) => {
@@ -563,7 +563,7 @@ describe("location-input-group", () => {
 				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
-				screen.getByTestId("input").focus();
+				screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")).focus();
 
 				expect(setCurrentLocationSpy).toBeCalled();
 
@@ -604,7 +604,7 @@ describe("location-input-group", () => {
 				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
-				screen.getByTestId("input").focus();
+				screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")).focus();
 
 				expect(setCurrentLocationSpy).toBeCalled();
 
@@ -1625,7 +1625,7 @@ describe("location-input-group", () => {
 					await renderComponent();
 
 					await waitFor(() =>
-						fireEvent.click(screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input")))
+						fireEvent.click(screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")))
 					);
 
 					await waitFor(() => window.dispatchEvent(new Event("offline")));
@@ -1639,7 +1639,7 @@ describe("location-input-group", () => {
 					await renderComponent();
 
 					await waitFor(() =>
-						fireEvent.click(screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input")))
+						fireEvent.click(screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")))
 					);
 
 					await waitFor(() => window.dispatchEvent(new Event("offline")));
