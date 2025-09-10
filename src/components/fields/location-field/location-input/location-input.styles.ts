@@ -4,7 +4,7 @@ import { Color } from "@lifesg/react-design-system/color";
 import styled, { css } from "styled-components";
 
 interface InputWrapperStyleProps {
-	$disabled?: boolean | undefined;
+	disabled?: boolean | undefined;
 	$error?: boolean | undefined;
 	$readOnly?: boolean | undefined;
 	$focused?: boolean | undefined;
@@ -45,7 +45,7 @@ export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
 				}
 				${props.$focused && readOnlyFocusCss}
 			`;
-		} else if (props.$disabled) {
+		} else if (props.disabled) {
 			return css`
 				background: ${Color.Neutral[6]};
 				cursor: not-allowed;

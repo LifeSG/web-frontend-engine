@@ -28,7 +28,7 @@ export const DummyLocationField = (props: IDummyLocationFieldProps) => {
 			data-testid={dataTestId}
 			type="button"
 			className={className}
-			$disabled={disabled}
+			disabled={disabled}
 			$readOnly={readOnly}
 			$error={error}
 			onFocus={onFocus}
