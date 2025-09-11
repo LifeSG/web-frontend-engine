@@ -106,13 +106,12 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		setValue(id, updatedValues, { shouldDirty });
 	};
 
-	const handleFocus = (e?: React.FocusEvent<HTMLInputElement, Element>) => {
+	const handleFocus = () => {
 		if (readOnly || disabled) {
 			return;
 		}
 		setShowLocationModal(true);
 		dispatchFieldEvent("show-location-modal", id);
-		e?.currentTarget.blur();
 	};
 
 	const handleClose = () => {
