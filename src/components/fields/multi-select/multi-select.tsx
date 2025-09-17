@@ -1,7 +1,7 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import useDeepCompareEffect from "use-deep-compare-effect";
+import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
@@ -19,7 +19,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 		formattedLabel,
 		id,
 		onChange,
-		schema: { label: _label, options, validation, ...otherSchema },
+		schema: { label: _label, options = [], validation, ...otherSchema },
 		value,
 		warning,
 		...otherProps
@@ -53,7 +53,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
-	useDeepCompareEffect(() => {
+	useDeepCompareEffectNoCheck(() => {
 		const updatedValues = value?.filter((v) => options.find((option) => option.value === v));
 		setValue(id, updatedValues);
 	}, [options]);
