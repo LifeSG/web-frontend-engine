@@ -2,7 +2,7 @@ import { L1OptionProps } from "@lifesg/react-design-system/input-nested-select";
 import { Form } from "@lifesg/react-design-system/form";
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import useDeepCompareEffect from "use-deep-compare-effect";
+import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
@@ -15,7 +15,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label: _label, validation, options, ...otherSchema },
+		schema: { label: _label, validation, options = [], ...otherSchema },
 		id,
 		value,
 		formattedLabel,
@@ -73,7 +73,7 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
-	useDeepCompareEffect(() => {
+	useDeepCompareEffectNoCheck(() => {
 		const findValueInOptions = (options: TL1OptionProps[], nested: TNestedValues): TNestedValues | string => {
 			const result: TNestedValues = {};
 
