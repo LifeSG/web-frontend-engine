@@ -16,6 +16,7 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
+import { CustomUneditableSection } from "./review.styles";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -187,15 +188,15 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				expanded={expanded}
 				{...otherSchema}
 			>
-				<UneditableSection
+				<CustomUneditableSection
 					background={false}
-					stretch
 					id={id}
 					items={formatItems()}
 					topSection={generateSection(topSection)}
 					bottomSection={generateSection(bottomSection)}
 					onUnmask={handleUnmask}
 					onTryAgain={handleUnmask}
+					fullWidth
 				/>
 			</BoxContainer>
 		);
