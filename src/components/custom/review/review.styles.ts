@@ -1,4 +1,5 @@
-import { MediaQuery, Spacing, UneditableSection } from "@lifesg/react-design-system";
+import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
+import { UneditableSection } from "@lifesg/react-design-system/uneditable-section";
 import styled from "styled-components";
 
 export const CustomUneditableSection = styled(UneditableSection)`
