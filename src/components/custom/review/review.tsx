@@ -205,7 +205,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const renderBox = (schema: IReviewSchemaBox) => {
 		const { label, description, topSection, bottomSection, ...otherSchema } = schema;
 		return (
-			<UneditableSection
+			<CustomUneditableSection
 				{...otherSchema}
 				id={id}
 				title={label}
@@ -215,6 +215,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				bottomSection={generateSection(bottomSection)}
 				onUnmask={handleUnmask}
 				onTryAgain={handleUnmask}
+				fullWidth
 			/>
 		);
 	};
