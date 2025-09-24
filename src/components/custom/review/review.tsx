@@ -16,6 +16,7 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
+import { CustomUneditableSection } from "./review.styles";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -187,15 +188,15 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				expanded={expanded}
 				{...otherSchema}
 			>
-				<UneditableSection
+				<CustomUneditableSection
 					background={false}
-					stretch
 					id={id}
 					items={formatItems()}
 					topSection={generateSection(topSection)}
 					bottomSection={generateSection(bottomSection)}
 					onUnmask={handleUnmask}
 					onTryAgain={handleUnmask}
+					fullWidth
 				/>
 			</BoxContainer>
 		);
@@ -204,7 +205,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const renderBox = (schema: IReviewSchemaBox) => {
 		const { label, description, topSection, bottomSection, ...otherSchema } = schema;
 		return (
-			<UneditableSection
+			<CustomUneditableSection
 				{...otherSchema}
 				id={id}
 				title={label}
@@ -214,6 +215,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				bottomSection={generateSection(bottomSection)}
 				onUnmask={handleUnmask}
 				onTryAgain={handleUnmask}
+				fullWidth
 			/>
 		);
 	};
