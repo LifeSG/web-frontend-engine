@@ -1,12 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
-import { FrontendEngine } from "../../../../components";
 import { EPostMessageEvent, IIframeSchema } from "../../../../components/custom";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	FrontendEngineWithEventListener,
 	TOverrideField,
 	TOverrideSchema,
 	getResetButton,
@@ -41,7 +41,16 @@ const getIframe = () => {
 	return screen.getByTestId<HTMLIFrameElement>(COMPONENT_ID);
 };
 
-const renderComponent = (overrideField?: TOverrideField<IIframeSchema>, overrideSchema?: TOverrideSchema) => {
+interface IRenderOptions {
+	eventType?: string | undefined;
+	eventListener?: ((this: Element, ev: Event) => any) | undefined;
+}
+
+const renderComponent = (
+	overrideField?: TOverrideField<IIframeSchema> | undefined,
+	overrideSchema?: TOverrideSchema | undefined,
+	options?: IRenderOptions | undefined
+) => {
 	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
 	merge(json, {
 		sections: {
@@ -53,7 +62,14 @@ const renderComponent = (overrideField?: TOverrideField<IIframeSchema>, override
 		},
 	});
 	return render(
-		<FrontendEngine data={json} onValueChange={(values, isValid) => CHANGE_FN(isValid)} onSubmit={SUBMIT_FN} />
+		<FrontendEngineWithEventListener
+			uiType={UI_TYPE}
+			componentId={COMPONENT_ID}
+			data={json}
+			onValueChange={(_values, isValid) => CHANGE_FN(isValid)}
+			onSubmit={SUBMIT_FN}
+			{...options}
+		/>
 	);
 };
 
@@ -102,6 +118,25 @@ describe("iframe", () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello world" }));
+	});
+
+	describe("load", () => {
+		it("should fire a loading event when iframe starts loading", () => {
+			const testFn = jest.fn();
+
+			renderComponent(undefined, undefined, { eventType: "loading", eventListener: testFn });
+
+			expect(testFn).toHaveBeenCalled();
+		});
+
+		it("should fire a loaded event on receiving a loaded postMessage", () => {
+			const testFn = jest.fn();
+
+			renderComponent(undefined, undefined, { eventType: "loaded", eventListener: testFn });
+			sendPostMessage(EPostMessageEvent.LOADED);
+
+			expect(testFn).toHaveBeenCalled();
+		});
 	});
 
 	describe("validation", () => {
