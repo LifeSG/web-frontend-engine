@@ -1,14 +1,20 @@
+import { LoadingDotsSpinner } from "@lifesg/react-design-system/animations";
+import { Modal } from "@lifesg/react-design-system/modal";
+import { action } from "@storybook/addon-actions";
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryFn, StoryObj } from "@storybook/react";
+import { useEffect, useRef, useState } from "react";
+import { IFrontendEngineRef } from "../../../components";
 import { IIframeSchema } from "../../../components/custom/iframe/types";
 import {
 	CommonCustomStoryProps,
 	DefaultStoryTemplate,
+	FrontendEngine,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
 	ResetStoryTemplate,
 } from "../../common";
-import { ChildDefault, ChildResize, ChildValidateSubmission, ChildValidation } from "./doc-elements";
+import { ChildDefault, ChildLoading, ChildResize, ChildValidateSubmission, ChildValidation } from "./doc-elements";
 
 const meta: Meta = {
 	title: "Custom/Iframe",
@@ -50,7 +56,14 @@ const meta: Meta = {
 };
 export default meta;
 
-const host = `${window.location.protocol}//${window.location.host}`;
+const getHost = () => {
+	const urlObj = new URL(window.location.href);
+	const pathSegments = urlObj.pathname.split("/").filter(Boolean);
+	pathSegments.pop(); // Remove last segment (e.g. "iframe.html" or "index.html")
+	const basePath = pathSegments.length ? `/${pathSegments.join("/")}` : "";
+	return `${urlObj.origin}${basePath}`;
+};
+const host = getHost();
 
 export const Default = DefaultStoryTemplate<IIframeSchema>("iframe-default").bind({});
 Default.args = {
@@ -94,6 +107,64 @@ DetectSubmission.args = {
 DetectSubmission.tags = ["!autodocs"];
 export const DetectSubmissionChild: StoryObj = {
 	render: () => <ChildValidateSubmission />,
+	tags: ["!autodocs", "!dev"],
+};
+
+export const Loading: StoryFn = () => {
+	const formRef = useRef<IFrontendEngineRef>(null);
+	const [showLoading, setShowLoading] = useState(false);
+
+	useEffect(() => {
+		formRef.current?.addFieldEventListener("iframe", "loading", "iframe", handleLoading);
+		formRef.current?.addFieldEventListener("iframe", "loaded", "iframe", handleLoaded);
+	}, [setShowLoading]);
+
+	const handleLoading = (e: unknown) => {
+		action("loading")(e);
+		setShowLoading(true);
+	};
+	const handleLoaded = (e: unknown) => {
+		action("loaded")(e);
+		setShowLoading(false);
+	};
+
+	const LoadingModal = () => (
+		<Modal show id={`loading-modal`}>
+			<Modal.Box style={{ textAlign: "center", padding: "2rem" }}>
+				<LoadingDotsSpinner />
+			</Modal.Box>
+		</Modal>
+	);
+
+	return (
+		<>
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								iframe: {
+									referenceKey: "iframe",
+									validationTimeout: -1,
+									src: `${host}/iframe.html?viewMode=story&id=custom-iframe--loading-child`,
+								},
+							},
+						},
+					},
+				}}
+			/>
+			{showLoading && <LoadingModal />}
+		</>
+	);
+};
+Loading.tags = ["!autodocs"];
+Loading.parameters = {
+	controls: { hideNoControlsWarning: true },
+};
+export const LoadingChild: StoryObj = {
+	render: () => <ChildLoading />,
 	tags: ["!autodocs", "!dev"],
 };
 
