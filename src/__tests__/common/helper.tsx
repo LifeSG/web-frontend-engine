@@ -89,14 +89,14 @@ export const FrontendEngineWithCustomButton = (props: {
 	);
 };
 
-interface ICustomFrontendEngineProps extends IFrontendEngineProps {
+interface IFrontendEngineWithEventListenerProps extends IFrontendEngineProps {
 	uiType: string;
 	componentId: string | undefined;
 	eventType?: string | undefined;
 	eventListener?: ((this: Element, ev: Event) => void) | undefined;
 }
 
-export const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
+export const FrontendEngineWithEventListener = (props: IFrontendEngineWithEventListenerProps) => {
 	const { uiType, componentId, eventType, eventListener, ...otherProps } = props;
 	const formRef = useRef<IFrontendEngineRef>();
 
