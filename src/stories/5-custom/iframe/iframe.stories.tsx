@@ -161,7 +161,7 @@ export const Loading: StoryFn = () => {
 };
 Loading.tags = ["!autodocs"];
 Loading.parameters = {
-	controls: { hideNoControlsWarning: true },
+	controls: { disable: true },
 };
 export const LoadingChild: StoryObj = {
 	render: () => <ChildLoading />,
