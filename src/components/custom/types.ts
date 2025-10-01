@@ -7,7 +7,7 @@ import type { TRenderRules } from "../../context-providers";
 import type { IColumns, IYupValidationRule } from "../frontend-engine";
 import type { IArrayFieldSchema } from "./array-field";
 import type { IFilterSchema } from "./filter/filter/types";
-import type { IIframeSchema } from "./iframe";
+import type { IIframeSchema, TIframeEvents } from "./iframe";
 import type { TReviewEvents, TReviewSchema } from "./review";
 import { ITimelineSchema } from "./timeline";
 
@@ -46,7 +46,7 @@ export type TCustomSchema<V = undefined, C = undefined> =
 /**
  * intersection type to represent all field events
  */
-export type TCustomEvents = TReviewEvents;
+export type TCustomEvents = TIframeEvents & TReviewEvents;
 
 /**
  * base schema for custom elements

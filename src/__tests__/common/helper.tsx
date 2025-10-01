@@ -8,7 +8,10 @@ import {
 	TFrontendEngineValues,
 } from "../../components/frontend-engine";
 import { ERROR_MESSAGE, RESET_BUTTON_ID, RESET_BUTTON_LABEL, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { TFieldSchema } from "../../components/fields";
+import { TElementSchema } from "../../components/elements";
+import { TCustomComponentSchema } from "../../components";
 
 type TAriaRoles = "textbox" | "generic" | "button" | "spinbutton" | "radio" | "list" | "slider" | "option" | "treeitem";
 
@@ -84,4 +87,27 @@ export const FrontendEngineWithCustomButton = (props: {
 			</button>
 		</>
 	);
+};
+
+interface IFrontendEngineWithEventListenerProps extends IFrontendEngineProps {
+	uiType: string;
+	componentId: string | undefined;
+	eventType?: string | undefined;
+	eventListener?: ((this: Element, ev: Event) => void) | undefined;
+}
+
+export const FrontendEngineWithEventListener = (props: IFrontendEngineWithEventListenerProps) => {
+	const { uiType, componentId, eventType, eventListener, ...otherProps } = props;
+	const formRef = useRef<IFrontendEngineRef>();
+
+	useEffect(() => {
+		if (eventType && eventListener) {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener(uiType as any, eventType as any, componentId, eventListener);
+			return () =>
+				currentFormRef.removeFieldEventListener(uiType as any, eventType as any, componentId, eventListener);
+		}
+	}, [componentId, eventListener, eventType, uiType]);
+
+	return <FrontendEngine {...otherProps} ref={formRef} />;
 };
