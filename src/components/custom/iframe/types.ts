@@ -1,3 +1,4 @@
+import { TFieldEventListener } from "../../../utils";
 import { IBaseCustomFieldSchema } from "../types";
 
 export interface IIframeSchema
@@ -21,4 +22,29 @@ export enum EPostMessageEvent {
 	VALIDATE = "frontendEngine.validate",
 	/** validation response from child to parent */
 	VALIDATION_RESULT = "frontendEngine.validationResult",
+	/** load complete */
+	LOADED = "frontendEngine.loaded",
 }
+
+// =============================================================================
+// EVENTS (fired from FEE)
+// =============================================================================
+/** fired when button is clicked */
+function iframeEvent(
+	referenceKey: "iframe",
+	type: "loading",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+function iframeEvent(
+	referenceKey: "iframe",
+	type: "loaded",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+function iframeEvent() {
+	//
+}
+export type TIframeEvents = typeof iframeEvent;
