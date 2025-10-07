@@ -9,7 +9,6 @@ import { ERROR_MESSAGES, StaticMap, Warning } from "../../shared";
 import { LocationHelper } from "./location-helper";
 import { LocationInput } from "./location-input";
 import { ILocationFieldSchema, ILocationFieldValues } from "./types";
-import { Wrapper } from "./location-field.styles";
 
 const LocationModal = lazy(() => import("./location-modal/location-modal"));
 
@@ -135,7 +134,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Wrapper id={id} data-testid={TestHelper.generateId(id)} className={className}>
+		<div id={id} data-testid={TestHelper.generateId(id)} className={className}>
 			<LocationInput
 				id={id}
 				label={formattedLabel}
@@ -198,6 +197,6 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 				)}
 			</Suspense>
 			<Warning id={id} message={warning} />
-		</Wrapper>
+		</div>
 	);
 };
