@@ -10,9 +10,9 @@ export interface ILocationInputProps extends FormInputGroupProps<string, string>
 
 export const LocationInput = (props: ILocationInputProps) => {
 	const {
-		className,
 		id,
 		label,
+		className,
 		locationInputPlaceholder = "",
 		onFocus,
 		value,
