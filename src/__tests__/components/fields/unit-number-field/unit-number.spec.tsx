@@ -89,14 +89,14 @@ describe(UI_TYPE, () => {
 
 		expect(getFloorInputField()).toHaveAttribute("value", defaultFloor);
 		expect(getUnitInputField()).toHaveAttribute("value", defaultUnit);
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getFloorInputField()).toBeDisabled();
-		expect(getUnitInputField()).toBeDisabled();
+		expect(getFloorInputField()).toHaveAttribute("aria-disabled", "true");
+		expect(getUnitInputField()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should be able to support custom placeholder", () => {
@@ -117,7 +117,7 @@ describe(UI_TYPE, () => {
 			setFieldValue(floorNumber, unitNumber);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: unitNumberValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: unitNumberValue }));
 		});
 
 		it("03- should be an invalid unit number", async () => {
@@ -156,7 +156,7 @@ describe(UI_TYPE, () => {
 
 			expect(getFloorInputField()).toHaveValue("");
 			expect(getUnitInputField()).toHaveValue("");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -171,7 +171,7 @@ describe(UI_TYPE, () => {
 
 			expect(getFloorInputField()).toHaveValue(defaultFloor);
 			expect(getUnitInputField()).toHaveValue(defaultUnit);
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});
 

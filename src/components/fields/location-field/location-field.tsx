@@ -144,7 +144,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 				onFocus={handleFocus}
 				value={formValue?.address || ""}
 				errorMessage={error?.message}
-				disabled={(hasExplicitEdit === "explicit" && formValue?.address) || disabled}
+				disabled={(hasExplicitEdit === "explicit" && !!formValue?.address) || disabled}
 				readOnly={readOnly}
 			/>
 			{hasExplicitEdit && formValue?.address && (

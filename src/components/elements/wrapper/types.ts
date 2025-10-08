@@ -1,7 +1,7 @@
 import { TRenderRules } from "../../../context-providers";
 import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
-import { IColumns, TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { IColumns, IV3Columns, TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IListItemSchema } from "../list";
 import { TInlineElementSchema } from "../types";
 
@@ -11,16 +11,12 @@ export type TInlineWrapperType = "span";
 
 export type TWrapperSchema<V = undefined, C = undefined> = IBlockWrapperSchema<V, C> | IInlineWrapperSchema;
 
-/** @deprecated use `TWrapperSchema` */
-export type IWrapperSchema<V = undefined, C = undefined> = IBlockWrapperSchema<V, C> | IInlineWrapperSchema;
-
 export interface IBlockWrapperSchema<V = undefined, C = undefined>
 	extends TComponentOmitProps<React.HTMLAttributes<HTMLElement>, "children"> {
 	uiType: TBlockWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema<V, C>> | string;
-	/** set responsive columns */
-	columns?: IColumns | undefined;
+	columns?: IColumns | IV3Columns | undefined;
 }
 
 export interface IInlineWrapperSchema<V = undefined, C = undefined>
@@ -28,8 +24,7 @@ export interface IInlineWrapperSchema<V = undefined, C = undefined>
 	uiType: TInlineWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TInlineElementSchema<V, C>> | string;
-	/** set responsive columns */
-	columns?: IColumns | undefined;
+	columns?: IColumns | IV3Columns | undefined;
 }
 
 export interface IWrapperProps {

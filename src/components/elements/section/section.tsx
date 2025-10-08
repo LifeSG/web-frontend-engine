@@ -1,6 +1,6 @@
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Wrapper } from "../wrapper";
-import { Contained, GridWrapper } from "./section.styles";
+import { Contained, GridWrapper, V2GridWrapper } from "./section.styles";
 import { ISectionProps } from "./types";
 
 export const Section = (props: ISectionProps) => {
@@ -8,28 +8,40 @@ export const Section = (props: ISectionProps) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		sectionSchema: { children, layoutType },
+		sectionSchema: {
+			children,
+			layoutType,
+			customOptions = {
+				gridType: "v2",
+			},
+		},
 		...otherProps
 	} = props;
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderInGrid = () => (
-		<Layout.Section>
-			<GridWrapper type="grid">
-				<Wrapper {...otherProps}>{children}</Wrapper>
-			</GridWrapper>
-		</Layout.Section>
-	);
+	const renderInGrid = () => {
+		const LayoutContainer = customOptions.gridType === "v3" ? GridWrapper : V2GridWrapper;
+		const type = customOptions.gridType === "v3" ? "grid" : "flex";
+		return (
+			<Layout.Section>
+				<LayoutContainer type={type}>
+					<Wrapper {...otherProps}>{children}</Wrapper>
+				</LayoutContainer>
+			</Layout.Section>
+		);
+	};
 
-	const renderContained = () => (
-		<Layout.Content>
-			<Contained>
-				<Wrapper {...otherProps}>{children}</Wrapper>
-			</Contained>
-		</Layout.Content>
-	);
+	const renderContained = () => {
+		return (
+			<Layout.Content>
+				<Contained>
+					<Wrapper {...otherProps}>{children}</Wrapper>
+				</Contained>
+			</Layout.Content>
+		);
+	};
 
 	const renderDefault = () => <Wrapper {...otherProps}>{children}</Wrapper>;
 

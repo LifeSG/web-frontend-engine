@@ -1,9 +1,9 @@
 import styled, { css } from "styled-components";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
-import { Color } from "@lifesg/react-design-system/color";
 import { Textarea } from "@lifesg/react-design-system/input-textarea";
 import { FrontendEngine } from "../../../common";
+import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
 
 // =============================================================================
 // STYLE INTERFACE
@@ -44,8 +44,8 @@ export const ContentWrapper = styled.div<IContentWrapperProps>`
 			flex-direction: column;
 			align-items: center;
 			justify-content: flex-start;
-			gap: 2rem;
-			padding: 2rem;
+			gap: ${Spacing["spacing-32"]};
+			padding: ${Spacing["spacing-32"]};
 		`};
 
 	width: 100%;
@@ -60,28 +60,28 @@ export const Toolbar = styled.div`
 	height: 5rem;
 	justify-content: flex-end;
 	z-index: 1;
-	gap: 2rem;
-	padding: 1rem;
-	background-color: ${Color.Accent.Light[5]};
+	gap: ${Spacing["spacing-32"]};
+	padding: ${Spacing["spacing-16"]};
+	background-color: ${Colour["bg-primary-subtlest"]};
 	box-sizing: border-box;
 `;
 
 export const ModeButton = styled.button<IModeButtonProps>`
-	background: ${({ $active }) => ($active ? Color.Accent.Light[4] : "transparent")};
-	color: ${Color.Primary};
+	background: ${({ $active }) => ($active ? Colour["bg-primary-subtlest-selected"] : "transparent")};
+	color: ${Colour["icon-primary"]};
 	display: grid;
 	cursor: pointer;
 	border: none;
-	border-radius: 0.25rem;
-	padding: 1rem;
+	border-radius: ${Radius.sm};
+	padding: ${Spacing["spacing-16"]};
 	align-self: center;
 
-	:hover {
-		background: ${Color.Accent.Light[4]};
+	&:hover {
+		background: ${Colour["bg-selected-hover"]};
 	}
 
-	:focus {
-		outline-color: ${Color.Primary};
+	&:focus {
+		outline-color: ${Colour["border-focus"]};
 	}
 
 	svg {
@@ -92,7 +92,7 @@ export const ModeButton = styled.button<IModeButtonProps>`
 
 export const FrontendEnginePreview = styled(FrontendEngine)`
 	width: 100%;
-	margin-bottom: 2rem;
+	margin-bottom: ${Spacing["spacing-32"]};
 `;
 
 export const SchemaEditorWrapper = styled.div`
@@ -110,9 +110,9 @@ export const SchemaEditor = styled(Textarea)`
 	flex: 1;
 	width: 100%;
 	overflow: auto;
-	padding: 1rem;
-	border: 1px solid ${Color.Neutral[5]};
-	border-radius: 4px;
+	padding: ${Spacing["spacing-16"]};
+	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
+	border-radius: ${Radius.sm};
 `;
 
 export const SaveButton = styled(Button.Default)`

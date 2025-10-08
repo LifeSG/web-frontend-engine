@@ -1,4 +1,4 @@
-import { MediaWidths } from "@lifesg/react-design-system";
+import { Breakpoint, LifeSGTheme } from "@lifesg/react-design-system/theme";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { useEffect, useRef, useState } from "react";
@@ -405,14 +405,14 @@ describe("location-input-group", () => {
 	let fetchSingleLocationByLatLngSpy;
 	let fetchLocationListSpy;
 
-	const setWindowAndViewPort = (width: number, height = MediaWidths.tablet) => {
+	const setWindowAndViewPort = (width: number, height = Breakpoint["lg-max"]({ theme: LifeSGTheme })) => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
-			value: MediaWidths.mobileS, // Set the desired screen width for the desktop view
+			value: Breakpoint["xxs-max"]({ theme: LifeSGTheme }), // Set the desired screen width for the desktop view
 		});
 		Object.defineProperty(window, "innerHeight", {
 			writable: true,
-			value: MediaWidths.mobileS, // Set the desired screen width for the desktop view
+			value: Breakpoint["xxs-max"]({ theme: LifeSGTheme }), // Set the desired screen width for the desktop view
 		});
 
 		const createMockVisualViewport = (width, height) => ({
@@ -436,7 +436,7 @@ describe("location-input-group", () => {
 
 		viewport.set({
 			width,
-			height: MediaWidths.tablet,
+			height: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
 		});
 	};
 
@@ -453,10 +453,10 @@ describe("location-input-group", () => {
 		fetchLocationListSpy = jest.spyOn(LocationHelper, "fetchLocationList");
 
 		viewport = mockViewport({
-			width: MediaWidths.tablet,
-			height: MediaWidths.tablet,
+			width: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
+			height: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
 		});
-		setWindowAndViewPort(MediaWidths.desktopL);
+		setWindowAndViewPort(Breakpoint["xl-max"]({ theme: LifeSGTheme }));
 	});
 
 	afterEach(() => {
@@ -690,7 +690,7 @@ describe("location-input-group", () => {
 				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 				expect(getEditLocationButton(true)).toBeInTheDocument();
-				expect(getLocationInput()).toHaveAttribute("disabled");
+				expect(getLocationInput()).toHaveAttribute("aria-disabled", "true");
 				fireEvent.click(getEditLocationButton());
 
 				expect(editButtonOnClickSpy).toBeCalled();
@@ -1173,10 +1173,13 @@ describe("location-input-group", () => {
 					});
 					describe("modal controls", () => {
 						describe("for tablet and below", () => {
-							mockViewportForTestGroup({ width: MediaWidths.mobileL, height: MediaWidths.mobileL });
+							mockViewportForTestGroup({
+								width: Breakpoint["sm-max"]({ theme: LifeSGTheme }),
+								height: Breakpoint["sm-max"]({ theme: LifeSGTheme }),
+							});
 
 							it("should allow user to close the location modal when in map mode", async () => {
-								setWindowAndViewPort(MediaWidths.mobileL);
+								setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
 
 								renderComponent();
 
@@ -1204,7 +1207,7 @@ describe("location-input-group", () => {
 							});
 
 							it("should allow user to close the modal when in search mode", async () => {
-								setWindowAndViewPort(MediaWidths.mobileL);
+								setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
 
 								renderComponent();
 
@@ -1249,7 +1252,7 @@ describe("location-input-group", () => {
 
 						describe("for desktop", () => {
 							it("should allow user to cancel", async () => {
-								setWindowAndViewPort(MediaWidths.desktopL);
+								setWindowAndViewPort(Breakpoint["xxl-min"]({ theme: LifeSGTheme }));
 
 								renderComponent();
 
@@ -1456,7 +1459,7 @@ describe("location-input-group", () => {
 
 					describe("when using location search in mobile", () => {
 						beforeEach(async () => {
-							setWindowAndViewPort(MediaWidths.mobileL);
+							setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});

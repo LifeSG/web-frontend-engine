@@ -121,7 +121,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent("AC");
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -159,7 +159,9 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(getOptionA()));
 		await waitFor(() => fireEvent.click(getOptionC()));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(
+			expect.objectContaining({ [COMPONENT_ID]: { from: "Apple", to: "Cherry" } })
+		);
 	});
 
 	it("should be able to clear all inputs when only 1st option is selected and then click away outside of component", async () => {
@@ -172,7 +174,7 @@ describe(UI_TYPE, () => {
 		expect(queryByText(getRangeSelector(), "A")).toBeNull();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(
+		expect(SUBMIT_FN).toHaveBeenCalledWith(
 			expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
 		);
 	});
@@ -216,13 +218,15 @@ describe(UI_TYPE, () => {
 
 				selected.forEach((name) => fireEvent.click(screen.getAllByText(name)[0]));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
+				);
 			}
 		);
 	});
@@ -284,13 +288,15 @@ describe(UI_TYPE, () => {
 
 				selected.forEach((name) => fireEvent.click(screen.getAllByText(name)[0]));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
+				);
 			}
 		);
 	});
@@ -305,7 +311,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getResetButton()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -319,7 +325,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getResetButton()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
 
@@ -333,7 +339,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getClearButton()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
 			);
 		});
@@ -348,7 +354,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getComponent()));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalledWith(
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
 			);
 		});

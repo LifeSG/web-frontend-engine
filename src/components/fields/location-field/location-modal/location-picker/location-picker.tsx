@@ -1,13 +1,13 @@
-import { BaseTheme, Color, MediaWidths } from "@lifesg/react-design-system";
-import { Text } from "@lifesg/react-design-system/text";
+import { Breakpoint, Colour } from "@lifesg/react-design-system/theme";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ReactDOMServer from "react-dom/server";
-import { useTheme } from "styled-components";
+import { ThemeContext } from "styled-components";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { LocationHelper } from "../../location-helper";
@@ -47,12 +47,12 @@ export const LocationPicker = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const theme = useTheme();
+	const theme = useContext(ThemeContext);
 	const mapRef = useRef<L.Map>();
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
 	const markersRef = useRef<L.Marker[]>();
-	const isMobile = window.matchMedia(`(max-width: ${MediaWidths.tablet}px)`).matches;
+	const isMobile = window.matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`).matches;
 	const leafletConfig: L.MapOptions = {
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,
@@ -181,9 +181,7 @@ export const LocationPicker = ({
 				: undefined;
 			const mapPinIcon =
 				"data:image/svg+xml;base64," +
-				btoa(
-					ReactDOMServer.renderToString(<PinFillIcon color={Color.Primary({ theme: theme || BaseTheme })} />)
-				);
+				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour["icon-primary"]({ theme })} />));
 			const marker = markerFrom(target, interactiveMapPinIconUrl ?? mapPinIcon, isSelected).addTo(map);
 
 			return shouldSelectOnClick
@@ -223,7 +221,7 @@ export const LocationPicker = ({
 			{mapBannerText && (
 				<BannerWrapper data-testid={TestHelper.generateId(id, "location-banner")}>
 					<Banner>
-						<Text.XSmall>{mapBannerText}</Text.XSmall>
+						<Typography.BodyXS>{mapBannerText}</Typography.BodyXS>
 					</Banner>
 				</BannerWrapper>
 			)}

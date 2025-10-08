@@ -1,31 +1,32 @@
+import { Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
 import { Alert } from "@lifesg/react-design-system/alert";
-import { Color } from "@lifesg/react-design-system/color";
-import { Text, TextStyleHelper } from "@lifesg/react-design-system/text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 export const ESignatureWrapper = styled.div`
 	&:not(:last-child) {
-		margin: 0 0 2rem;
+		margin: 0 0 ${Spacing["spacing-32"]};
 	}
 `;
 
-export const ErrorWrapper = styled(Text.H6)`
-	margin: -1rem 0 2rem;
-	color: ${Color.Validation.Red.Text};
+export const ErrorWrapper = styled(Typography.BodySM)`
+	margin: -${Spacing["spacing-16"]} 0 ${Spacing["spacing-32"]};
+	color: ${Colour["text-error"]};
 	outline: none;
+	${Font["body-sm-bold"]}
 `;
 
 export const TryAgain = styled.button`
 	background: none;
 	padding: 0;
 	border: 0;
-	${TextStyleHelper.getTextStyle("H6", "semibold")}
-	margin-left: 0.5rem;
-	color: ${Color.Primary};
+	${Font["body-sm-semibold"]}
+	margin-left: ${Spacing["spacing-8"]};
+	color: ${Colour["text-primary"]};
 	text-decoration: underline;
 	cursor: pointer;
 `;
 
 export const RefreshAlert = styled(Alert)`
-	margin-top: 0.5rem;
+	margin-top: ${Spacing["spacing-8"]};
 `;

@@ -10,7 +10,7 @@ const PARENT_ID = "wrapper";
 const PARENT_FIELD_TYPE = "div";
 const CHILD_ID = "field1";
 const CHILD_FIELD_TYPE = "text-field";
-const CHILD_TEST_ID = TestHelper.generateId(CHILD_ID, CHILD_FIELD_TYPE);
+const CHILD_TEST_ID = `${TestHelper.generateId(CHILD_ID, CHILD_FIELD_TYPE)}-base`;
 
 const renderComponent = (
 	wrapperType: TWrapperType = "div",

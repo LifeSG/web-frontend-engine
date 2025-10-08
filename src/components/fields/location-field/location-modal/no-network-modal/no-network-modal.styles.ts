@@ -1,6 +1,6 @@
+import { Font, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
-import { MediaQuery } from "@lifesg/react-design-system/media";
-import { Text } from "@lifesg/react-design-system/text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -15,36 +15,36 @@ export const Container = styled.div`
 export const Image = styled.img`
 	width: 12.5625rem;
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		width: 11.5rem;
 	}
 `;
 
-export const ContentTitle = styled(Text.Body)`
+export const ContentTitle = styled(Typography.BodyBL)`
 	text-align: center;
-	margin: 1.5rem auto 0.5rem;
+	margin: ${Spacing["spacing-24"]} auto ${Spacing["spacing-8"]};
 
-	${MediaQuery.MaxWidth.mobileL} {
-		font-size: 0.875rem !important;
+	${MediaQuery.MaxWidth.sm} {
+		font-size: ${Font.Spec["body-size-sm"]};
 	}
 `;
 
-export const ContentBody = styled(Text.Body)`
+export const ContentBody = styled(Typography.BodyBL)`
 	text-align: center;
 	width: 100%;
 
-	${MediaQuery.MaxWidth.mobileL} {
-		font-size: 0.875rem !important;
+	${MediaQuery.MaxWidth.sm} {
+		font-size: ${Font.Spec["body-size-sm"]};
 		max-width: 14rem;
 	}
 `;
 
 export const ButtonWrapper = styled(Button.Default)`
-	margin-top: 2.5rem;
+	margin-top: ${Spacing["spacing-40"]};
 	width: 100%;
 	max-width: 16.5rem;
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		max-width: 16.5rem;
 	}
 `;

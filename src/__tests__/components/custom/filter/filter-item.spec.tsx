@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { ITextFieldSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
@@ -75,7 +75,7 @@ describe(REFERENCE_KEY, () => {
 		expect(screen.getAllByDisplayValue(defaultValue)[0]).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should pass other props into the field", async () => {
@@ -87,7 +87,7 @@ describe(REFERENCE_KEY, () => {
 
 		expect(getTextfield()).toHaveAttribute("placeholder", "placeholder");
 		expect(getTextfield()).toHaveAttribute("readonly");
-		expect(getTextfield()).toBeDisabled();
+		expect(getTextfield()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should be able to render hint", async () => {
@@ -123,7 +123,7 @@ describe(REFERENCE_KEY, () => {
 		`("it should $scenario", async ({ clearBehavior, expectedValue }) => {
 			await renderComponent(undefined, { clearBehavior }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 			fireEvent.change(screen.getByLabelText(TEXTFIELD_LABEL), { target: { value: changedValue } });
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Clear" })));
+			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "clear Filter" })));
 
 			expect(getTextfield()).toHaveValue(expectedValue);
 		});
@@ -134,8 +134,7 @@ describe(REFERENCE_KEY, () => {
 			await renderComponent(undefined, {
 				expanded: true,
 			});
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Collapse")).toBeVisible();
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "true");
 		});
 		it("should be expanded when override expanded is true", async () => {
 			await renderComponent(undefined, undefined, {
@@ -145,14 +144,12 @@ describe(REFERENCE_KEY, () => {
 					},
 				},
 			});
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Collapse")).toBeVisible();
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "true");
 		});
 
 		it("should be collapsed when expanded is false", async () => {
 			await renderComponent();
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Expand")).toBeVisible();
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "false");
 		});
 
 		it("should be collapsed when override expanded is false", async () => {
@@ -170,7 +167,7 @@ describe(REFERENCE_KEY, () => {
 				}
 			);
 			//This is checking for the chevron
-			expect(screen.getByLabelText("Expand")).toBeVisible();
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "false");
 		});
 	});
 });
