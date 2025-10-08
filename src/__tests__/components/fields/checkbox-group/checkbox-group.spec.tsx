@@ -73,10 +73,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 const getCheckboxes = (): HTMLElement[] => {
-	return screen
-		.getAllByRole("checkbox")
-		.map((checkbox) => checkbox.querySelector("input"))
-		.filter(Boolean);
+	return screen.getAllByRole("checkbox");
 };
 
 describe(UI_TYPE, () => {
@@ -99,12 +96,12 @@ describe(UI_TYPE, () => {
 		const checkboxes = getCheckboxes();
 		checkboxes.forEach((checkbox) => {
 			if (defaultValues.includes((checkbox as HTMLInputElement).value)) {
-				expect(checkbox.parentElement.getAttribute("aria-checked")).toBe("true");
+				expect(checkbox).toBeChecked();
 			} else {
-				expect(checkbox.parentElement.getAttribute("aria-checked")).toBe("false");
+				expect(checkbox).not.toBeChecked();
 			}
 		});
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -129,7 +126,7 @@ describe(UI_TYPE, () => {
 		expect(checkboxes[0]).toBeEnabled();
 		expect(checkboxes[1]).toBeDisabled();
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
 	it("should be disabled if configured", async () => {
@@ -142,7 +139,7 @@ describe(UI_TYPE, () => {
 			expect(checkbox).toBeDisabled();
 		});
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
 	it("should be disabled if configured for both component/options", async () => {
@@ -161,7 +158,7 @@ describe(UI_TYPE, () => {
 			expect(checkbox).toBeDisabled();
 		});
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
 	it("should be able to toggle the checkboxes", async () => {
@@ -171,15 +168,15 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
 	it("should be able to render HTML string in option label", () => {
@@ -275,12 +272,14 @@ describe(UI_TYPE, () => {
 
 				selected.forEach((value) => fireEvent.click(screen.getByLabelText(value)));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
+				);
 			}
 		);
 	});
@@ -314,13 +313,15 @@ describe(UI_TYPE, () => {
 
 				selected.forEach((value) => fireEvent.click(screen.getByLabelText(value)));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
+				);
 			}
 		);
 	});
@@ -335,9 +336,9 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(checkboxes[0].parentElement.getAttribute("aria-checked")).toBe("false");
-			expect(checkboxes[1].parentElement.getAttribute("aria-checked")).toBe("false");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(checkboxes[0]).not.toBeChecked();
+			expect(checkboxes[1]).not.toBeChecked();
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -349,9 +350,9 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(checkboxes[0].parentElement.getAttribute("aria-checked")).toBe("true");
-			expect(checkboxes[1].parentElement.getAttribute("aria-checked")).toBe("false");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+			expect(checkboxes[0]).toBeChecked();
+			expect(checkboxes[1]).not.toBeChecked();
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
 

@@ -1,11 +1,11 @@
 import { RadioButtonProps } from "@lifesg/react-design-system/radio-button";
-import type { IPopoverSchema, ITextSchema } from "../../elements";
+import type { IPopoverSchema, ITextSchema, ITypographySchema } from "../../elements";
 import type { IInlineWrapperSchema } from "../../elements/wrapper";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 export interface IRadioButtonOption {
-	label: string | Record<string, ITextSchema | IPopoverSchema | IInlineWrapperSchema>;
+	label: string | Record<string, ITextSchema | ITypographySchema | IPopoverSchema | IInlineWrapperSchema>;
 	value: string;
 	disabled?: boolean | undefined;
 }
@@ -54,12 +54,6 @@ interface IRadioButtonImageButtonSchema<V = undefined>
 }
 
 export type TRadioButtonGroupSchema<V = undefined, C = undefined> =
-	| IRadioButtonDefaultSchema<V>
-	| IRadioButtonToggleSchema<V, C>
-	| IRadioButtonImageButtonSchema<V>;
-
-/** @deprecated will be removed in a future release. Use `TRadioButtonGroupSchema` instead */
-export type IRadioButtonGroupSchema<V = undefined, C = undefined> =
 	| IRadioButtonDefaultSchema<V>
 	| IRadioButtonToggleSchema<V, C>
 	| IRadioButtonImageButtonSchema<V>;

@@ -1,6 +1,4 @@
-import { TextStyleHelper } from "@lifesg/react-design-system/text";
-import { DesignToken } from "@lifesg/react-design-system/design-token";
-import { Color } from "@lifesg/react-design-system/color";
+import { Border, Colour, Font, Radius, Shadow, Spacing } from "@lifesg/react-design-system/theme";
 import styled, { css } from "styled-components";
 
 interface InputWrapperStyleProps {
@@ -11,35 +9,34 @@ interface InputWrapperStyleProps {
 }
 
 const readOnlyFocusCss = css`
-	border: 1px solid ${Color.Accent.Light[1]};
+	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-focus"]};
 	box-shadow: none;
 `;
 
 const disabledFocusCss = css`
-	border: 1px solid ${Color.Neutral[5]};
+	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border"]};
 	box-shadow: none;
 `;
 
 const errorFocusCss = css`
-	border: 1px solid ${Color.Validation.Red.Border};
-	box-shadow: ${DesignToken.InputErrorBoxShadow};
+	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-error"]};
+	box-shadow: ${Shadow["xs-error-strong"]};
 `;
 
 export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
-	border: 1px solid ${Color.Neutral[5]};
-	background: ${Color.Neutral[8]};
-	height: 3rem;
-	border-radius: 4px;
-	padding: 0 1rem;
+	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border"]};
+	border-radius: ${Radius["sm"]};
+	background: ${Colour["bg"]};
+	height: ${Spacing["spacing-48"]};
+	padding: ${Spacing["spacing-0"]} ${Spacing["spacing-16"]};
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	${(props) => {
 		if (props.$readOnly) {
 			return css`
-				border: 1px solid transparent;
+				border: ${Border["width-010"]} ${Border["solid"]} transparent;
 				background: transparent !important;
-
 				:focus-within {
 					${readOnlyFocusCss}
 				}
@@ -47,9 +44,8 @@ export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
 			`;
 		} else if (props.disabled) {
 			return css`
-				background: ${Color.Neutral[6]};
+				background: ${Colour["bg-stronger"]};
 				cursor: not-allowed;
-
 				:focus-within {
 					${disabledFocusCss}
 				}
@@ -57,12 +53,11 @@ export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
 			`;
 		} else if (props.$error) {
 			return css`
-				border: 1px solid ${Color.Validation.Red.Border};
-
+				border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-error"]};
 				:focus-within {
 					${errorFocusCss}
 				}
-				${props.$focused && errorFocusCss}
+				${props.$focused && errorFocusCss};
 			`;
 		}
 	}}
@@ -70,19 +65,19 @@ export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
 
 export const LocationInputText = styled.span<{ $placeholder?: boolean; $disabled?: boolean }>`
 	flex: 1 1 auto;
-	min-width: 0;
 	display: -webkit-box;
 	-webkit-line-clamp: 1;
 	-webkit-box-orient: vertical;
+	min-width: ${Spacing["spacing-0"]};
 	overflow: hidden;
 	cursor: text;
 	text-align: left;
-	${TextStyleHelper.getTextStyle("Body", "regular")}
-	color: ${Color.Neutral[1]};
+	${Font["body-baseline-regular"]};
+	color: ${Colour["text"]};
 	${(props) =>
 		props.$placeholder &&
 		css`
-			color: ${Color.Neutral[3]};
+			color: ${Colour["text-subtler"]};
 		`}
 	${(props) =>
 		props.$disabled &&
@@ -95,33 +90,32 @@ export const LocationIconWrapper = styled.div<{ $disabled?: boolean; $readOnly?:
 	display: flex;
 	align-items: center;
 	svg {
-		height: 1.5rem;
-		width: 1.5rem;
+		height: ${Spacing["spacing-24"]};
+		width: ${Spacing["spacing-24"]};
 		#path {
-			fill: ${Color.Neutral[1]};
+			fill: ${Colour["text"]};
 		}
 	}
 	${(props) => {
 		if (props.$disabled) {
 			return css`
-				color: ${Color.Neutral[4](props)};
+				color: ${Colour.Primitive["neutral-70"](props)};
 				svg {
 					#path {
-						fill: ${Color.Neutral[4](props)};
+						fill: ${Colour.Primitive["neutral-70"](props)};
 					}
 				}
 			`;
 		}
 		if (props.$readOnly) {
 			return css`
-				margin-left: ${props.$readOnly ? "0.25rem" : "0.75rem"};
+				margin-left: ${props.$readOnly ? Spacing["spacing-4"] : Spacing["spacing-12"]};
 			`;
 		}
 	}}
-
 	${(props) => {
 		return css`
-			margin-left: ${props.$readOnly ? "0.25rem" : "0.75rem"};
+			margin-left: ${props.$readOnly ? Spacing["spacing-4"] : Spacing["spacing-12"]};
 		`;
 	}}
 `;

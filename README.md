@@ -12,11 +12,11 @@ The intention of frontend engine is to take out the heavy lifting of form develo
 
 Developers are expected to have the following packages installed:
 
--   @lifesg/react-design-system 2.13.1
+-   @lifesg/react-design-system v3.0.0-alpha.22
 -   @lifesg/react-icons 1.9.0
 -   react 17.0.2 or 18
 -   react-dom 17.0.2 or 18
--   styled-components 5.3.5
+-   styled-components 6.1.19
 
 ## Installation
 

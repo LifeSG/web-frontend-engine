@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { IGenericFieldProps } from "..";
 import { IButtonSchema } from "./types";
 import { useFieldEvent } from "../../../utils/hooks";
+import { Spacing } from "@lifesg/react-design-system/theme";
 
 export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// =============================================================================
@@ -51,6 +52,6 @@ const CustomButton = styled(Button.Default)`
 	> span {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: ${Spacing["spacing-8"]};
 	}
 `;

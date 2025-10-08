@@ -1,7 +1,7 @@
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 import { CountryData } from "./data";
-import { PhoneNumberInputProps } from "@lifesg/react-design-system";
+import { PhoneNumberInputProps } from "@lifesg/react-design-system/phone-number-input";
 
 interface IContactFieldProps extends PhoneNumberInputProps {
 	defaultCountry?: TCountry;

@@ -1,5 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { useState } from "react";
 import { IFilterCheckboxSchema } from "../../../../components/custom/filter/filter-checkbox/types";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -50,10 +50,7 @@ const renderComponent = (overrideField?: TOverrideField<IFilterCheckboxSchema>, 
 };
 
 const getCheckboxes = (): HTMLElement[] => {
-	return screen
-		.getAllByRole("checkbox")
-		.filter((el) => el.getAttribute("data-testid") !== "toggle-label")
-		.filter(Boolean);
+	return screen.getAllByRole("checkbox");
 };
 
 const getCheckboxByVal = (val: string) => {
@@ -81,7 +78,7 @@ describe(REFERENCE_KEY, () => {
 			const checkBox = getCheckboxByVal(val);
 			expect(checkBox.checked).toBeTruthy();
 		});
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
 	it("should be able to render hint", () => {
@@ -93,7 +90,7 @@ describe(REFERENCE_KEY, () => {
 		});
 		fireEvent.click(screen.getByTestId("field-popover"));
 
-		expect(screen.getByText("Main label")).toBeInTheDocument();
+		expect(within(screen.getByTestId("filter-item-title")).getByText("Main label")).toBeInTheDocument();
 		expect(screen.getByText("Hint")).toBeVisible();
 	});
 
@@ -103,15 +100,15 @@ describe(REFERENCE_KEY, () => {
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[0]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(checkboxes[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
 	it("should support default values matching initial overrides", async () => {
@@ -191,13 +188,15 @@ describe(REFERENCE_KEY, () => {
 
 				selected.forEach((value) => fireEvent.click(getCheckboxByVal(value)));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
+				);
 			}
 		);
 	});
@@ -218,11 +217,11 @@ describe(REFERENCE_KEY, () => {
 			const checkboxes = getCheckboxes();
 			await waitFor(() => fireEvent.click(checkboxes[1]));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: changedValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: changedValue }));
 
-			fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+			fireEvent.click(screen.getByRole("button", { name: "clear Filter Item" }));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValue }));
 		});
 	});
 
@@ -240,16 +239,14 @@ describe(REFERENCE_KEY, () => {
 					},
 				},
 			});
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Collapse")).toBeVisible();
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "true");
 		});
 
 		it("should be expanded when expanded is true", () => {
 			renderComponent({
 				expanded: true,
 			});
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Collapse")).toBeVisible();
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "true");
 		});
 
 		it("should be collapsed when override expanded is false", () => {
@@ -270,14 +267,14 @@ describe(REFERENCE_KEY, () => {
 					},
 				}
 			);
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Expand")).toBeVisible();
+
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "false");
 		});
 
 		it("should be collapsed when expanded is false", () => {
 			renderComponent();
-			//This is checking for the chevron
-			expect(screen.getByLabelText("Expand")).toBeVisible();
+
+			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "false");
 		});
 	});
 });

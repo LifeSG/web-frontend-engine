@@ -103,7 +103,7 @@ describe("checkbox toggle group", () => {
 		const toggles = getToggles();
 		const checkbox = toggles.find((chkbx) => chkbx.nextElementSibling.querySelector("label").textContent === "A");
 		expect(checkbox).toBeChecked();
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -128,7 +128,7 @@ describe("checkbox toggle group", () => {
 		expect(toggles[0]).toBeEnabled();
 		expect(toggles[1]).toBeDisabled();
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
 	it("should be disabled if configured", async () => {
@@ -141,7 +141,7 @@ describe("checkbox toggle group", () => {
 			expect(checkbox).toBeDisabled();
 		});
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
 	it("should be disabled if configured for both component/options", async () => {
@@ -160,7 +160,7 @@ describe("checkbox toggle group", () => {
 			expect(checkbox).toBeDisabled();
 		});
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
 	it("should be able to toggle the checkboxes", async () => {
@@ -170,15 +170,15 @@ describe("checkbox toggle group", () => {
 		await waitFor(() => fireEvent.click(toggles[0]));
 		await waitFor(() => fireEvent.click(toggles[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Apple", "Berry"] }));
 
 		await waitFor(() => fireEvent.click(toggles[0]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: ["Berry"] }));
 
 		await waitFor(() => fireEvent.click(toggles[1]));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
 	});
 
 	it("should be able to render HTML string in option label", () => {
@@ -256,13 +256,15 @@ describe("checkbox toggle group", () => {
 
 				selected.forEach((value) => fireEvent.click(screen.getByLabelText(value)));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
+				);
 			}
 		);
 	});
@@ -296,13 +298,15 @@ describe("checkbox toggle group", () => {
 
 				selected.forEach((value) => fireEvent.click(screen.getByLabelText(value)));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({ [COMPONENT_ID]: expectedValueBeforeUpdate })
 				);
 
 				fireEvent.click(screen.getByRole("button", { name: "Update options" }));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate }));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: expectedValueAfterUpdate })
+				);
 			}
 		);
 	});
@@ -423,7 +427,7 @@ describe("checkbox toggle group", () => {
 
 			expect(checkboxes[0]).not.toBeChecked();
 			expect(checkboxes[1]).not.toBeChecked();
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -437,7 +441,7 @@ describe("checkbox toggle group", () => {
 
 			expect(checkboxes[0]).toBeChecked();
 			expect(checkboxes[1]).not.toBeChecked();
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
 

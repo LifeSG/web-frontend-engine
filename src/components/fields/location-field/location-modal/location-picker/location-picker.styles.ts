@@ -1,6 +1,5 @@
-import { Card } from "@lifesg/react-design-system";
-import { Color } from "@lifesg/react-design-system/color";
-import { MediaQuery } from "@lifesg/react-design-system/media";
+import { Card } from "@lifesg/react-design-system/card";
+import { Colour, Font, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 import styled from "styled-components";
 
 export const LocationPickerWrapper = styled.div`
@@ -29,7 +28,7 @@ export const LeafletWrapper = styled.div`
 			&.leaflet-bar {
 				border-radius: 1.25rem;
 				overflow: hidden;
-				box-shadow: 0 0.125rem 0.25rem ${Color.Neutral[1]}66;
+				box-shadow: 0 0.125rem 0.25rem ${Colour["bg-inverse"]}66;
 			}
 
 			&.leaflet-bar a {
@@ -38,11 +37,11 @@ export const LeafletWrapper = styled.div`
 				justify-content: center;
 				width: 100%;
 				height: 50%;
-				color: ${Color.Primary};
-				font-weight: bold;
+				color: ${Colour.hyperlink};
+				font-weight: ${Font.Spec["bold"]};
 
 				&.leaflet-control-zoom-in {
-					border-bottom-color: ${Color.Neutral[5]};
+					border-bottom-color: ${Colour.border};
 				}
 			}
 		}
@@ -74,9 +73,9 @@ export const ButtonLocation = styled.button`
 	border: 0;
 	border-radius: 50%;
 	padding: 0;
-	background: ${Color.Neutral[8]};
+	background: ${Colour.bg};
 	cursor: pointer;
-	box-shadow: 0 0.125rem 0.25rem ${Color.Neutral[1]}66;
+	box-shadow: 0 0 4px rgb(from ${Colour.Primitive["neutral-20"]} r g b / 40%);
 `;
 
 export const ButtonLocationImage = styled.span`
@@ -86,7 +85,7 @@ export const ButtonLocationImage = styled.span`
 	> svg {
 		width: inherit;
 		height: inherit;
-		color: ${Color.Primary};
+		color: ${Colour["icon-primary"]};
 	}
 `;
 
@@ -94,13 +93,13 @@ export const BannerWrapper = styled.div`
 	position: absolute;
 	z-index: 1000;
 	width: 100%;
-	padding: 2rem 1.5rem;
+	padding: ${Spacing["spacing-32"]} ${Spacing["spacing-24"]};
 
-	${MediaQuery.MaxWidth.tablet} {
-		padding: 1rem 1.25rem;
+	${MediaQuery.MaxWidth.lg} {
+		padding: ${Spacing["spacing-16"]} ${Spacing["spacing-20"]};
 	}
 `;
 
 export const Banner = styled(Card)`
-	padding: 0.5rem 1rem;
+	padding: ${Spacing["spacing-8"]} ${Spacing["spacing-16"]};
 `;

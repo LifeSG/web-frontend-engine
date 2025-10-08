@@ -1,6 +1,7 @@
+import { Font } from "@lifesg/react-design-system/theme";
 import { Form } from "@lifesg/react-design-system/form";
 import { Layout } from "@lifesg/react-design-system/layout";
-import { Text } from "@lifesg/react-design-system/text";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { action } from "@storybook/addon-actions";
 import highlightjs from "highlight.js";
 import json from "highlight.js/lib/languages/json";
@@ -132,9 +133,9 @@ export const ValidationStoryComponent = ({
 	return (
 		<Wrapper>
 			<Layout.Content type="grid">
-				<Layout.ColDiv desktopCols={12} tabletCols={8} mobileCols={4}>
+				<Layout.ColDiv lgCols={12} xxsCols={8}>
 					<Section>
-						<Text.H3>{ruleName}</Text.H3>
+						<SectionTitle as={Typography.HeadingSM}>{ruleName}</SectionTitle>
 						<Sanitize>{ruleDescription}</Sanitize>
 						<pre>
 							<code ref={ruleSnippet} key={demoFieldType} className="json">
@@ -143,9 +144,9 @@ export const ValidationStoryComponent = ({
 						</pre>
 					</Section>
 				</Layout.ColDiv>
-				<Layout.ColDiv desktopCols={6} tabletCols={8}>
+				<Layout.ColDiv xxsCols={8} lgCols={6}>
 					<Section>
-						<Text.H5>Sample schema</Text.H5>
+						<SectionTitle as={Typography.BodyMD}>Sample schema</SectionTitle>
 						<div>
 							<Form.Select
 								options={fieldOptions}
@@ -165,9 +166,9 @@ export const ValidationStoryComponent = ({
 						</pre>
 					</Section>
 				</Layout.ColDiv>
-				<Layout.ColDiv desktopCols={6} tabletCols={8}>
+				<Layout.ColDiv xxsCols={8} lgCols={6}>
 					<Section>
-						<Text.H5>Preview</Text.H5>
+						<SectionTitle as={Typography.BodyMD}>Preview</SectionTitle>
 						<p>Submit form to preview validation</p>
 						<FrontendEngine
 							key={demoFieldType}
@@ -201,4 +202,8 @@ const Section = styled.section`
 	border: 1px solid rgba(38, 85, 115, 0.15);
 	border-radius: 4px;
 	box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0;
+`;
+
+const SectionTitle = styled.div`
+	font-weight: ${Font.Spec["weight-bold"]};
 `;

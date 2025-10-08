@@ -3,9 +3,10 @@ import { EraserBrush } from "@erase2d/fabric";
 import { useDrag, usePinch } from "@use-gesture/react";
 import { Canvas as FabricCanvas, FabricImage, FabricObject, Path, PencilBrush, Point, Rect, TEvent } from "fabric";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { FileHelper, TestHelper, WindowHelper } from "../../../../../utils";
+import { FileHelper, TestHelper } from "../../../../../utils";
 import { Canvas, Wrapper } from "./image-editor.styles";
 import { IImageEditorProps, IImageEditorRef } from "./types";
+import { useWindowHelper } from "../../../../../utils/hooks";
 
 const MAX_ZOOM = 5;
 const PENCIL_BRUSH_SIZE = 10;
@@ -24,6 +25,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	const gestures = useRef({
 		pinchStartAmount: 0,
 	});
+	const isMobileView = useWindowHelper();
 
 	useImperativeHandle(ref, () => ({
 		clearDrawing,
@@ -180,7 +182,8 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			}
 
 			// extra logic to zoom in to fit image to canvas width in mobile landscape orientation
-			if (WindowHelper.isMobileView() && canvasRatio > 1) {
+
+			if (isMobileView() && canvasRatio > 1) {
 				const intendedZoom = Math.min((fabricCanvas.current.width || 0) / img.getScaledWidth() + 0.1, MAX_ZOOM);
 				fabricCanvas.current.zoomToPoint(
 					new Point((fabricCanvas.current.width || 0) / 2, (fabricCanvas.current.height || 0) / 2),

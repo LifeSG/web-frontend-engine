@@ -96,7 +96,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should be able to support validation schema", async () => {
@@ -125,7 +125,7 @@ describe(UI_TYPE, () => {
 		await pickValidTime();
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00AM" }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00AM" }));
 	});
 
 	it("should be able to display current time if useCurrentTime=true", async () => {
@@ -141,7 +141,7 @@ describe(UI_TYPE, () => {
 		await pickValidTime();
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00" }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "01:00" }));
 	});
 
 	describe("reset", () => {
@@ -152,7 +152,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			await waitFor(() => expect(getTimePicker()).toHaveValue(""));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -163,7 +163,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			await waitFor(() => expect(getTimePicker()).toHaveValue(defaultValue));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 
 		it("should revert to current time on reset", async () => {
@@ -175,7 +175,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => expect(getTimePicker()).toHaveValue(`${currentTime}pm`));
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: `${currentTime}PM` }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: `${currentTime}PM` }));
 		});
 	});
 

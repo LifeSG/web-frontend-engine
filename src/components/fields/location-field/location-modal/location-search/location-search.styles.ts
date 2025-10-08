@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import { Button, Color, MediaQuery, MediaWidths, Text } from "@lifesg/react-design-system";
+import { Border, Breakpoint, Colour, Font, MediaQuery, Motion, Spacing } from "@lifesg/react-design-system/theme";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
 import { MagnifierIcon } from "@lifesg/react-icons/magnifier";
+import { Typography } from "@lifesg/react-design-system/typography";
+import { Button } from "@lifesg/react-design-system/button";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
@@ -13,34 +15,34 @@ export const SearchWrapper = styled.div<ISinglePanelStyle>`
 	display: flex;
 	flex-direction: column;
 	flex: 1;
-	padding: 2rem 1.5rem 1rem;
+	padding: ${Spacing["spacing-32"]} ${Spacing["spacing-24"]} ${Spacing["spacing-16"]};
 
-	${MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		flex: unset;
 		height: ${({ panelInputMode }) => (panelInputMode === "search" ? `100%` : `auto`)};
-		padding: 1.5rem 1.25rem 0;
+		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} 0;
 	}
 `;
 
 export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
 	position: relative;
 	display: flex;
-	gap: 0.5rem;
-	padding-bottom: 0.4rem;
+	gap: ${Spacing["spacing-8"]};
+	padding-bottom: ${Spacing["spacing-8"]};
 	alight-items: center;
 	justify-content: space-between;
-	border-bottom: 1px solid ${Color.Neutral[5]};
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	clip-path: inset(0 0 -0.3rem 0);
-	transition: box-shadow 0.3s linear;
+	transition: box-shadow ${Motion["duration-250"]} ${Motion["ease-default"]};
 
 	${({ hasScrolled }) => (hasScrolled ? `box-shadow: 0 0.06rem 0.4rem rgba(0,0,0,.12);` : "")}
 
 	&:focus-within {
-		border-bottom: 1px solid ${Color.Accent.Light[1]};
+		border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour["border-focus"]};
 	}
 
-	${MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
-		margin: 0.8rem 0 0;
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+		margin: ${Spacing["spacing-12"]} 0 0;
 	}
 `;
 
@@ -63,7 +65,7 @@ export const SearchBarIconWrapper = styled.span`
 	> svg {
 		width: 1rem;
 		height: auto;
-		color: ${Color.Neutral[4]};
+		color: ${Colour["icon-subtle"]};
 	}
 `;
 
@@ -75,9 +77,9 @@ export const SearchBarInput = styled.input`
 	font-size: 1rem;
 	outline: none;
 
-	::placeholder,
-	::-webkit-input-placeholder {
-		color: ${Color.Neutral[4]};
+	&::placeholder,
+	&::-webkit-input-placeholder {
+		color: ${Colour["text-subtlest"]};
 	}
 
 	&:disabled {
@@ -88,38 +90,39 @@ export const SearchBarInput = styled.input`
 export const SearchBarModalCross = styled(CrossIcon)`
 	display: none;
 	font-size: 1.5rem;
-	color: ${Color.Primary};
+	color: ${Colour["icon-primary"]};
 
-	${MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: block;
-		margin: -0.4rem 0 0 -0.4rem;
+		margin: -${Spacing["spacing-8"]} 0 0 -${Spacing["spacing-8"]};
 	}
 `;
 
 export const SearchBarCross = styled(CrossIcon)`
 	font-size: 1.7rem;
-	color: ${Color.Neutral[4]};
+	color: ${Colour["icon-subtle"]};
 `;
 
 export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	overflow-y: auto;
 	flex: 1;
-	border-bottom: solid 1px ${Color.Neutral[5]};
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 
-	${MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? `block` : `none`)};
 		border-bottom: 0;
 	}
 `;
 
-export const ResultTitle = styled(Text.H5)`
-	border-bottom: 1px solid ${Color.Neutral[5]};
-	padding: 1rem 0;
+export const ResultTitle = styled(Typography.BodyMD)`
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
+	padding: ${Spacing["spacing-16"]} 0;
+	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
-export const NoResultTitle = styled(Text.BodySmall)`
-	padding-top: 1rem;
-	color: ${Color.Neutral[4]};
+export const NoResultTitle = styled(Typography.BodyMD)`
+	padding-top: ${Spacing["spacing-16"]};
+	color: ${Colour["text-subtlest"]};
 	word-break: break-all;
 	overflow-y: scroll;
 `;
@@ -127,49 +130,49 @@ export const NoResultTitle = styled(Text.BodySmall)`
 export const ResultItem = styled.div<{ active?: boolean }>`
 	display: flex;
 	align-items: center;
-	gap: 1rem;
-	padding: 1rem 1rem 1rem 0;
-	border-bottom: 1px solid ${Color.Neutral[5]};
+	gap: ${Spacing["spacing-16"]};
+	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-16"]} ${Spacing["spacing-16"]} 0;
+	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	text-transform: uppercase;
 	cursor: pointer;
-	background-color: ${({ active }) => (active ? Color.Accent.Light[5] : `transparent`)};
+	background-color: ${({ active }) => (active ? Colour["bg-selected"] : `transparent`)};
 
 	.keyword {
-		font-family: "Open Sans Semibold";
+		font-weight: ${Font.Spec["weight-semibold"]};
 	}
 `;
 
 export const ResultItemPin = styled(PinFillIcon)`
 	width: 1rem;
 	min-width: 1rem;
-	color: ${Color.Neutral[1]};
+	color: ${Colour["icon-strongest"]};
 `;
 
 export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	display: flex;
 	justify-content: center;
-	gap: 1rem;
-	padding-top: 1rem;
+	gap: ${Spacing["spacing-16"]};
+	padding-top: ${Spacing["spacing-16"]};
 
-	${MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		display: ${({ panelInputMode }) => (panelInputMode === "map" ? `block` : `none`)};
 		position: absolute;
 		left: 0;
 		bottom: 0;
 		width: 100%;
-		padding: 1.5rem 1.25rem 1.93rem;
+		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} ${Spacing["spacing-32"]};
 	}
 `;
 
 export const ButtonItem = styled(Button.Default)<{ buttonType: "cancel" | "confirm" }>`
 	width: 9.5rem;
 
-	${MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
+	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		${({ buttonType }) => buttonType === "cancel" && `display: none`}
 		${({ buttonType }) => buttonType === "confirm" && `width: 100%`}
 	}
 `;
 
 export const SearchIcon = styled(MagnifierIcon)`
-	color: ${Color.Neutral[4]};
+	color: ${Colour["icon-subtle"]};
 `;

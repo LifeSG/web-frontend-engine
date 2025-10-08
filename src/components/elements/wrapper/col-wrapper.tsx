@@ -1,21 +1,54 @@
 import { Layout } from "@lifesg/react-design-system/layout";
+import { V2_Layout } from "@lifesg/react-design-system/v2_layout";
 import React from "react";
 import { TestHelper } from "../../../utils";
-import { TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { IColumns, IV3Columns, TFrontendEngineFieldSchema } from "../../frontend-engine";
 
 interface IProps {
 	id: string;
 	children: React.ReactNode;
 	childSchema: TFrontendEngineFieldSchema;
 }
+const isV3ColumnsFormat = (columns: IColumns | IV3Columns | undefined): boolean => {
+	if (!columns) return false;
+
+	// Check for V3-specific properties
+	return (
+		"xxs" in columns ||
+		"xs" in columns ||
+		"sm" in columns ||
+		"md" in columns ||
+		"lg" in columns ||
+		"xl" in columns ||
+		"xxl" in columns
+	);
+};
 /**
  * render as col when using grid layout
  */
 export const ColWrapper = ({ id, children, childSchema }: IProps) => {
 	if ("columns" in childSchema) {
-		const { desktop, tablet, mobile, ...rest } = childSchema.columns || {};
+		if (isV3ColumnsFormat(childSchema.columns)) {
+			const { xxs, xs, sm, md, lg, xl, xxl, ...rest } = (childSchema.columns as IV3Columns) || {};
+			return (
+				<Layout.ColDiv
+					data-testid={TestHelper.generateId(id, "grid_item")}
+					xlCols={xl}
+					lgCols={lg}
+					mdCols={md}
+					smCols={sm}
+					xsCols={xs}
+					xxlCols={xxl}
+					xxsCols={xxs}
+					{...rest}
+				>
+					{children}
+				</Layout.ColDiv>
+			);
+		}
+		const { desktop, tablet, mobile, ...rest } = (childSchema.columns as IColumns) || {};
 		return (
-			<Layout.ColDiv
+			<V2_Layout.ColDiv
 				data-testid={TestHelper.generateId(id, "grid_item")}
 				desktopCols={desktop ?? 12}
 				tabletCols={tablet}
@@ -23,7 +56,7 @@ export const ColWrapper = ({ id, children, childSchema }: IProps) => {
 				{...rest}
 			>
 				{children}
-			</Layout.ColDiv>
+			</V2_Layout.ColDiv>
 		);
 	}
 	return <>{children}</>;

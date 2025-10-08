@@ -1,4 +1,4 @@
-import { Text } from "@lifesg/react-design-system";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { action } from "@storybook/addon-actions";
 import { Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
@@ -12,13 +12,13 @@ import {
 } from "../../../components/fields";
 import { ERROR_SVG, TIMEOUT_SVG } from "../../../components/fields/location-field/location-modal/location-modal.data";
 import { ErrorImage } from "../../../components/fields/location-field/location-modal/location-modal.styles";
+import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { Prompt } from "../../../components/shared";
 import { Description } from "../../../components/shared/prompt/prompt.styles";
 import { TestHelper } from "../../../utils";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-field.stories";
-import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 
 const meta: Meta = {
 	title: "Field/LocationField/Events",
@@ -339,14 +339,14 @@ const ErrorEventsTemplate = () =>
 				<>
 					<br />
 					<br />
-					Alternatively, you can call the&nbsp;
-					<Text.Body inline weight="semibold">
+					Alternatively, you can call the
+					<Typography.BodyBL inline weight="semibold">
 						{name} hotline&nbsp;
-					</Text.Body>
-					at&nbsp;
-					<Text.Hyperlink.Default weight="semibold" href={`tel:${number}`}>
+					</Typography.BodyBL>
+					at
+					<Typography.LinkBL weight="semibold" href={`tel:${number}`}>
 						{number}
-					</Text.Hyperlink.Default>
+					</Typography.LinkBL>
 					.
 				</>
 			);
@@ -431,13 +431,13 @@ const ErrorEventsTemplate = () =>
 								<br />
 								<br />
 								Alternatively, you can call the&nbsp;
-								<Text.Body inline weight="semibold">
+								<Typography.BodyBL inline weight="semibold">
 									{hotlineContent.name} hotline&nbsp;
-								</Text.Body>
+								</Typography.BodyBL>
 								at&nbsp;
-								<Text.Hyperlink.Default weight="semibold" href={`tel:${hotlineContent.number}`}>
+								<Typography.LinkBL weight="semibold" href={`tel:${hotlineContent.number}`}>
 									{hotlineContent.number}
-								</Text.Hyperlink.Default>
+								</Typography.LinkBL>
 								.
 							</Description>
 						}

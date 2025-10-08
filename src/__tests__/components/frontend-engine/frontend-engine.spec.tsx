@@ -416,7 +416,7 @@ describe("frontend-engine", () => {
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(onSubmitError).toBeCalledWith({
+			expect(onSubmitError).toHaveBeenCalledWith({
 				[FIELD_ONE_ID]: {
 					message: ERROR_MESSAGE,
 					ref: expect.anything(),
@@ -434,7 +434,7 @@ describe("frontend-engine", () => {
 				fireEvent.change(getFieldOne(), { target: { value: "hello" } });
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith({ [FIELD_ONE_ID]: "hello", submit: undefined });
+				expect(submitFn).toHaveBeenCalledWith({ [FIELD_ONE_ID]: "hello", submit: undefined });
 			});
 
 			it("should include form values of unregistered fields if stripUnknown is not true", async () => {
@@ -455,7 +455,7 @@ describe("frontend-engine", () => {
 				fireEvent.click(getCustomButton());
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith({
+				expect(submitFn).toHaveBeenCalledWith({
 					[FIELD_ONE_ID]: "hello",
 					nonExistentField: "hello world",
 					nonExistentField2: "john doe",
@@ -485,7 +485,7 @@ describe("frontend-engine", () => {
 				fireEvent.click(getCustomButton());
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(submitFn).toBeCalledWith({
+				expect(submitFn).toHaveBeenCalledWith({
 					[FIELD_ONE_ID]: "hello",
 					submit: undefined,
 				});
@@ -708,7 +708,7 @@ describe("frontend-engine", () => {
 		fireEvent.click(getCustomButton());
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(onSubmit).toBeCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }));
+		expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello" }));
 	});
 
 	it("should return form validity through checkValid method", async () => {
@@ -1281,7 +1281,7 @@ describe("frontend-engine", () => {
 				},
 			});
 
-			expect(getFieldOne()).toBeDisabled();
+			expect(getFieldOne()).toHaveAttribute("aria-disabled", "true");
 		});
 
 		it("should remove entries on overriding with null values", () => {
@@ -1383,7 +1383,7 @@ describe("frontend-engine", () => {
 
 			fireEvent.click(screen.getByRole("button", { name: "Override schema" }));
 
-			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
+			expect(getField("textbox", FIELD_ONE_LABEL)).toHaveAttribute("aria-disabled", "true");
 		});
 
 		it("should allow overriding of validation config", async () => {
@@ -1417,7 +1417,7 @@ describe("frontend-engine", () => {
 				},
 			});
 
-			expect(getField("textbox", FIELD_ONE_LABEL)).toBeDisabled();
+			expect(getField("textbox", FIELD_ONE_LABEL)).toHaveAttribute("aria-disabled", "true");
 			expect(getField("textbox", FIELD_ONE_LABEL)).toHaveValue("hello world");
 		});
 	});

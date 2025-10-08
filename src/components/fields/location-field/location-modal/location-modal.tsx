@@ -1,6 +1,7 @@
-import { MediaWidths, Modal } from "@lifesg/react-design-system";
+import { Modal } from "@lifesg/react-design-system/modal";
+import { Breakpoint } from "@lifesg/react-design-system/theme";
 import { isEmpty } from "lodash";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
@@ -22,6 +23,7 @@ import { IMapPin } from "./location-picker/types";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 import { ILocationModalProps } from "./types";
+import { ThemeContext } from "styled-components";
 
 /**
  * Location modal screen variation
@@ -78,6 +80,8 @@ const LocationModal = ({
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
 
 	const shouldCallGetSelectablePins = useRef(true);
+
+	const theme = useContext(ThemeContext);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -278,7 +282,7 @@ const LocationModal = ({
 	useEffect(() => {
 		if (!window) return;
 
-		const mql = matchMedia(`(max-width: ${MediaWidths.tablet}px)`);
+		const mql = matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`);
 		setPanelInputMode(mql.matches ? "map" : "double");
 
 		const handleHasInternetConnectivity = () => setHasInternetConnectivity(true);

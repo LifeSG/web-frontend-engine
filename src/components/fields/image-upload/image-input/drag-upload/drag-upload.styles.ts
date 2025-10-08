@@ -1,16 +1,15 @@
-import { Color } from "@lifesg/react-design-system/color";
-import { MediaQuery } from "@lifesg/react-design-system/media";
-import { Text } from "@lifesg/react-design-system/text";
+import { Colour, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
+import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
 	position: relative;
 	display: block;
-	border-radius: 0.25rem;
-	padding: 2rem;
+	border-radius: ${Radius.sm};
+	padding: ${Spacing["spacing-32"]};
 
-	${MediaQuery.MaxWidth.tablet} {
-		padding: 2rem 1.25rem;
+	${MediaQuery.MaxWidth.lg} {
+		padding: ${Spacing["spacing-32"]} ${Spacing["spacing-20"]};
 	}
 `;
 
@@ -26,10 +25,10 @@ export const HintContainer = styled.div`
 	height: 100%;
 	/* Generated background-image for the dashed border from https://kovart.github.io/dashed-border-generator/  */
 	background-image: ${(props) => {
-		const escapedColor = encodeURIComponent(Color.Primary(props));
+		const escapedColor = encodeURIComponent(Colour["border-focus-strong"](props));
 		return `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='4' ry='4' stroke='${escapedColor}' stroke-width='4' stroke-dasharray='8%2c 8' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");`;
 	}};
-	background-color: ${Color.Accent.Light[6]};
+	background-color: ${Colour["bg-primary-subtlest"]};
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -37,6 +36,6 @@ export const HintContainer = styled.div`
 	text-align: center;
 `;
 
-export const HintText = styled(Text.BodySmall)`
-	color: ${Color.Primary};
+export const HintText = styled(Typography.BodyMD)`
+	color: ${Colour["text-selected"]};
 `;

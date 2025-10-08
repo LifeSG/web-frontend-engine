@@ -117,7 +117,7 @@ describe(UI_TYPE, () => {
 		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
 	it("should pass other props into the field", () => {
@@ -129,7 +129,7 @@ describe(UI_TYPE, () => {
 
 		expect(getEmailField()).toHaveAttribute("placeholder", "placeholder");
 		expect(getEmailField()).toHaveAttribute("readOnly");
-		expect(getEmailField()).toBeDisabled();
+		expect(getEmailField()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should not prevent copy and paste if `preventCopyAndPaste` is false", async () => {
@@ -223,7 +223,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(getEmailField()).toHaveValue("");
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
 		it("should revert to default value on reset", async () => {
@@ -235,7 +235,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(getEmailField()).toHaveValue(defaultValue);
-			expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});
 

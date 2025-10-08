@@ -1,23 +1,30 @@
-import { Color } from "@lifesg/react-design-system/color";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
-import { MediaQuery } from "@lifesg/react-design-system/media";
-import { Text } from "@lifesg/react-design-system/text";
-import styled from "styled-components";
+import { Typography } from "@lifesg/react-design-system/typography";
+import styled, { css } from "styled-components";
+import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 
 export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
 	display: flex;
 	flex-wrap: ${(props) => (props.isCustomMuted ? "nowrap" : "wrap")};
 	align-items: center;
-	gap: 0.5rem;
+	gap: ${Spacing["spacing-8"]};
 	border: ${(props) =>
-		props.isError ? `1px solid ${Color.Validation.Red.Border(props)}` : `1px solid ${Color.Neutral[5](props)}`};
-	border-radius: 4px;
-	background-color: ${(props) => (props.isError ? "rgb(253, 247, 247)" : `${Color.Accent.Light[6](props)}`)};
+		props.isError
+			? css`
+					${Border["width-010"]} ${Border.solid} ${Colour["border-error"]}
+			  `
+			: css`
+					${Border["width-010"]} ${Border.solid} ${Colour.border}
+			  `};
+	border-radius: ${Radius.sm};
+	border-radius: ${Radius.sm};
+	background-color: ${(props) =>
+		props.isError ? `${Colour["bg-error"](props)}` : `${Colour["bg-primary-subtlest"](props)}`};
 	min-height: 3.5rem;
-	margin-bottom: 1rem;
-	padding: 1rem 2rem;
-	${MediaQuery.MaxWidth.tablet} {
-		padding: 1rem;
+	margin-bottom: ${Spacing["spacing-16"]};
+	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-32"]};
+	${MediaQuery.MaxWidth.lg} {
+		padding: ${Spacing["spacing-16"]};
 	}
 `;
 
@@ -31,7 +38,7 @@ export const CellInfo = styled.div`
 export const CellFileSize = styled.div`
 	width: 4.24rem;
 
-	${MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		display: none;
 	}
 `;
@@ -41,7 +48,7 @@ export const CellProgressBar = styled.div`
 	justify-content: flex-end;
 	width: 19.15%;
 
-	${MediaQuery.MaxWidth.mobileL} {
+	${MediaQuery.MaxWidth.sm} {
 		width: 100%;
 	}
 `;
@@ -53,19 +60,20 @@ export const CellDeleteButton = styled.div`
 `;
 
 export const Thumbnail = styled.div<{ src: string }>`
-	margin-right: 2rem;
+	margin-right: ${Spacing["spacing-32"]};
 	width: 6rem;
 	height: 6rem;
 	background: url(${(props) => props.src}) no-repeat center / cover;
 	overflow: hidden;
-	border-radius: 0.25rem;
+	border-radius: ${Radius.sm};
+	${Font["body-sm-bold"]}
 
-	${MediaQuery.MaxWidth.tablet} {
-		margin-right: 1rem;
+	${MediaQuery.MaxWidth.lg} {
+		margin-right: ${Spacing["spacing-16"]};
 	}
 `;
 
-export const TextBody = styled(Text.Body)`
+export const TextBody = styled(Typography.BodyBL)`
 	flex: 1;
 `;
 
@@ -75,14 +83,14 @@ export const FileNameWrapper = styled.div`
 
 export const MobileTextBodyDetail = styled.div`
 	display: none;
-	${MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		display: block;
 	}
 `;
 
 export const DesktopTextBodyDetail = styled.div`
 	display: block;
-	${MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		display: none;
 	}
 `;
@@ -92,7 +100,7 @@ export const ProgressBar = styled.progress`
 	flex: 1;
 	height: 0.63rem;
 
-	${MediaQuery.MaxWidth.tablet} {
+	${MediaQuery.MaxWidth.lg} {
 		max-width: none;
 	}
 
@@ -105,19 +113,19 @@ export const ProgressBar = styled.progress`
 
 	&[value]::-webkit-progress-bar {
 		height: 100%;
-		border-radius: 1.25rem;
+		border-radius: ${Radius.full};
 		background-color: #eee;
 	}
 
 	&[value]::-webkit-progress-value {
 		height: 100%;
-		border-radius: 1.25rem;
-		background-color: ${Color.Accent.Light[1]};
+		border-radius: ${Radius.full};
+		background-color: ${Colour["bg-primary-subtle"]};
 	}
 `;
 
-export const ErrorText = styled(Text.H6)`
-	color: ${Color.Validation.Red.Text};
+export const ErrorText = styled(Typography.BodySM)`
+	color: ${Colour["text-error"]};
 	width: 100%;
 `;
 
@@ -126,7 +134,7 @@ export const DeleteButton = styled(IconButton)`
 	// additional 0.5 negative marginRight because the image itself has padding already
 	background-color: transparent;
 	outline-style: none;
-	color: ${Color.Neutral[3]};
+	color: ${Colour["text-subtler"]};
 
 	svg {
 		height: 1.875rem;
