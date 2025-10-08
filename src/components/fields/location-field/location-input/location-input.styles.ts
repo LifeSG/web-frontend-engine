@@ -71,9 +71,10 @@ export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
 export const LocationInputText = styled.span<{ $placeholder?: boolean; $disabled?: boolean }>`
 	flex: 1 1 auto;
 	min-width: 0;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
 	overflow: hidden;
-	text-overflow: clip;
-	white-space: nowrap;
 	cursor: text;
 	text-align: left;
 	${TextStyleHelper.getTextStyle("Body", "regular")}
