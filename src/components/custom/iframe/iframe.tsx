@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FieldError, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import * as Yup from "yup";
-import { useIframeMessage, useValidationConfig } from "../../../utils/hooks";
+import { useFieldEvent, useIframeMessage, useValidationConfig } from "../../../utils/hooks";
 import { IGenericCustomFieldProps } from "../types";
 import { EPostMessageEvent, IIframeSchema } from "./types";
 
@@ -35,6 +35,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	const promiseTimeoutRef = useRef<NodeJS.Timeout>();
 	const [dimensions, setDimensions] = useState<{ width?: number; height?: number }>({});
 	const { setFieldValidationConfig } = useValidationConfig();
+	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =========================================================================
 	// HELPER FUNCTIONS
@@ -111,9 +112,12 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	}, [asyncValidation, validationTimeout]);
 
 	useEffect(() => {
+		dispatchFieldEvent("loading", id);
+	}, [dispatchFieldEvent, id, src]);
+
+	useEffect(() => {
 		iframePostMessage({ type: EPostMessageEvent.SYNC, payload: { error, id, value } });
 	}, [error, id, value, iframePostMessage]);
-
 	// =========================================================================
 	// POSTMESSAGE HANDLERS
 	// =========================================================================
@@ -157,6 +161,13 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 			},
 			[clearAsyncValidation]
 		)
+	);
+
+	useIframeMessage(
+		EPostMessageEvent.LOADED,
+		useCallback(() => {
+			dispatchFieldEvent("loaded", id);
+		}, [dispatchFieldEvent, id])
 	);
 
 	// =========================================================================
