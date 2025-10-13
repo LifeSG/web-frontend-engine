@@ -182,6 +182,120 @@ MoreThan5Options.args = {
 	],
 };
 
+export const WithNestedOptions6Levels = Template("filter-checkbox-nested-options-6-levels").bind({});
+WithNestedOptions6Levels.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: false,
+	options: [
+		{
+			value: "antartica",
+			label: "Antartica",
+		},
+		{
+			value: "americas",
+			label: "Americas",
+			options: [
+				{
+					value: "usa",
+					label: "USA",
+					options: [
+						{
+							value: "california",
+							label: "California",
+							options: [
+								{
+									value: "los_angeles_county",
+									label: "Los Angeles County",
+									options: [
+										{
+											value: "los_angeles",
+											label: "Los Angeles",
+											options: [
+												{
+													value: "beverly_crest",
+													label: "Beverly Crest",
+												},
+												{
+													value: "hollywood",
+													label: "Hollywood",
+												},
+												{
+													value: "westchester",
+													label: "Westchester",
+												},
+											],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			],
+		},
+	],
+};
+
+export const NestedOptionsWithViewMore = Template("filter-checkbox-nested-options-view-more").bind({});
+NestedOptionsWithViewMore.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: false,
+	options: [
+		{
+			value: "food",
+			label: "Food & Dining",
+			options: [
+				{
+					value: "restaurants",
+					label: "Restaurants",
+					options: [
+						{ value: "italian", label: "Italian" },
+						{ value: "chinese", label: "Chinese" },
+						{ value: "japanese", label: "Japanese" },
+					],
+				},
+				{
+					value: "fastfood",
+					label: "Fast Food",
+					options: [
+						{ value: "burgers", label: "Burgers" },
+						{ value: "pizza", label: "Pizza" },
+					],
+				},
+				{ value: "cafes", label: "Cafes" },
+			],
+		},
+		{
+			value: "shopping",
+			label: "Shopping",
+			options: [
+				{
+					value: "clothing",
+					label: "Clothing",
+					options: [
+						{ value: "mens", label: "Men's Wear" },
+						{ value: "womens", label: "Women's Wear" },
+						{ value: "kids", label: "Kids' Wear" },
+					],
+				},
+				{ value: "electronics", label: "Electronics" },
+				{ value: "books", label: "Books" },
+			],
+		},
+		{
+			value: "entertainment",
+			label: "Entertainment",
+			options: [
+				{ value: "movies", label: "Movies" },
+				{ value: "concerts", label: "Concerts" },
+				{ value: "sports", label: "Sports" },
+			],
+		},
+	],
+};
+
 export const WithDefaultValues = Template("filter-checkbox-default-values").bind({});
 WithDefaultValues.args = {
 	label: "Filter checkbox",
