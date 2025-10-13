@@ -91,7 +91,7 @@ export interface IFrontendEngineData<V = undefined, C = undefined> {
 	stripUnknown?: boolean | undefined;
 }
 
-export type TFrontendEngineValues<T = any> = Record<keyof T, T[keyof T]>;
+export type TFrontendEngineValues<T = any> = { [P in keyof T]: T[P] };
 export type TRevalidationMode = Exclude<keyof ValidationMode, "onTouched" | "all">;
 export type TValidationMode = keyof ValidationMode;
 export type TRestoreMode = "none" | "default-value" | "user-input";
