@@ -23,13 +23,26 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	const [selectedOptions, setSelectedOptions] = useState<IOption[]>(); // Current selected value state
 	const [expandedState, setExpandedState] = useState(expanded);
 	const { title, addon } = FilterHelper.constructFormattedLabel(label, id);
+
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
+
+	const flattenOptions = (options: IOption[]): IOption[] => {
+		return options.reduce<IOption[]>((acc, option) => {
+			return [...acc, option, ...(option.options ? flattenOptions(option.options) : [])];
+		}, []);
+	};
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 
 	useDeepCompareEffect(() => {
-		const updatedValues = value?.filter((v) => options.find((option) => option.value === v));
-		const selectedOpts = options.filter((opt) => value?.find((val) => opt.value === val));
+		const flatOptions = flattenOptions(options);
+		const updatedValues = value?.filter((v) => flatOptions.find((option) => option.value === v));
+		const selectedOpts = flatOptions.filter((opt) => value?.find((val) => opt.value === val));
+
 		setSelectedOptions(selectedOpts);
 		setValue(id, updatedValues);
 	}, [options, value]);

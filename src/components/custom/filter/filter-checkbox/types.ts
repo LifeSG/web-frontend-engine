@@ -17,4 +17,5 @@ export interface IFilterCheckboxSchema<V = undefined>
 export interface IOption {
 	label: string;
 	value: string;
+	options?: IOption[] | undefined;
 }
