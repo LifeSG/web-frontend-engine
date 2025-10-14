@@ -74,7 +74,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 const getSelectToggle = (): HTMLElement => {
-	return getField("button", "Select");
+	return screen.getByTestId("selector");
 };
 
 describe(UI_TYPE, () => {
@@ -114,7 +114,7 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getSelectToggle()).toHaveAttribute("disabled");
+		expect(getSelectToggle()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should be able to support custom placeholder", () => {
@@ -242,7 +242,7 @@ describe(UI_TYPE, () => {
 			const defaultValue = "Apple";
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
 
-			fireEvent.click(getField("button", "A"));
+			fireEvent.click(getField("combobox"));
 			fireEvent.click(screen.getByRole("option", { name: "B" }));
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));

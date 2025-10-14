@@ -209,7 +209,7 @@ describe(UI_TYPE, () => {
 			renderComponent({ validation: [config] });
 
 			await changeDate(invalid[0], invalid[1], invalid[2]);
-			fireEvent.click(getField("button", "Done"));
+			fireEvent.click(screen.getByTestId("done-button"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
@@ -229,7 +229,7 @@ describe(UI_TYPE, () => {
 			renderComponent({ validation: [{ dateFormat: "d MMMM uuuu", ...config }] });
 
 			await changeDate(invalid[0], invalid[1], invalid[2]);
-			fireEvent.click(getField("button", "Done"));
+			fireEvent.click(screen.getByTestId("done-button"));
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
@@ -245,13 +245,13 @@ describe(UI_TYPE, () => {
 		renderComponent({ validation: [{ minDate: "2022-01-15" }, { future: true }, { notPast: true }] });
 
 		await changeDate("05", "01", "2022");
-		fireEvent.click(getField("button", "Done"));
+		fireEvent.click(screen.getByTestId("done-button"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
 		await changeDate("15", "01", "2022");
-		fireEvent.click(getField("button", "Done"));
+		fireEvent.click(screen.getByTestId("done-button"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "2022-01-15" }));
@@ -262,13 +262,13 @@ describe(UI_TYPE, () => {
 		renderComponent({ validation: [{ maxDate: "2021-12-15" }, { past: true }, { notFuture: true }] });
 
 		await changeDate("30", "12", "2021");
-		fireEvent.click(getField("button", "Done"));
+		fireEvent.click(screen.getByTestId("done-button"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 
 		await changeDate("15", "12", "2021");
-		fireEvent.click(getField("button", "Done"));
+		fireEvent.click(screen.getByTestId("done-button"));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "2021-12-15" }));

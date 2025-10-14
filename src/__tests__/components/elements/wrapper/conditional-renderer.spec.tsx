@@ -179,7 +179,7 @@ describe("conditional-renderer", () => {
 		};
 		renderComponent(fields);
 
-		await waitFor(() => fireEvent.click(getField("button", "Select")));
+		await waitFor(() => fireEvent.click(screen.getByTestId("selector")));
 
 		invalid?.forEach((value: string) => {
 			fireEvent.click(screen.getByRole("option", { name: value }));

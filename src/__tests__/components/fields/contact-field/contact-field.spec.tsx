@@ -3,7 +3,7 @@ import { setupJestCanvasMock } from "jest-canvas-mock";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
-import { IContactFieldSchema, TSingaporeNumberRule } from "../../../../components/fields";
+import { IContactFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import {
@@ -63,8 +63,12 @@ const getContactField = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
 };
 
+const getContactFieldWithPlaceholder = (): HTMLElement => {
+	return getField("textbox", "Contact Number Enter phone number");
+};
+
 const getDefaultDropdownToggle = (): HTMLElement => {
-	return screen.getByTestId("addon-selector");
+	return screen.getByTestId("selector");
 };
 
 describe(UI_TYPE, () => {
@@ -79,7 +83,7 @@ describe(UI_TYPE, () => {
 	it("should be able to render the field", () => {
 		renderComponent();
 
-		expect(getContactField()).toBeInTheDocument();
+		expect(getContactFieldWithPlaceholder()).toBeInTheDocument();
 	});
 
 	it("should be able to support default country", async () => {
@@ -102,17 +106,17 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-		const afghanCode = getField("button", "Afghanistan +93");
+		const afghanCode = getField("option", "Afghanistan+93");
 		await waitFor(() => fireEvent.click(afghanCode));
 
-		expect(screen.getByText("+93")).toBeInTheDocument();
+		expect(getDefaultDropdownToggle()).toHaveTextContent("+93");
 	});
 
 	it("should be able to support custom placeholder", async () => {
 		const placeholder = "custom placeholder";
 		renderComponent({ placeholder });
 
-		expect(getContactField()).toHaveAttribute("placeholder", placeholder);
+		expect(getContactFieldWithPlaceholder()).toHaveAttribute("placeholder", placeholder);
 	});
 
 	it("should be able to support search bar", async () => {
@@ -120,7 +124,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-		expect(getField("textbox", "search-input")).toBeInTheDocument();
+		expect(screen.getByTestId("search-input")).toBeInTheDocument();
 	});
 
 	describe("defaultValues", () => {
@@ -179,7 +183,9 @@ describe(UI_TYPE, () => {
 	it("should not apply phone number validation if no validation rule is provided", async () => {
 		const contactNumber = "1234";
 		renderComponent();
-		fireEvent.change(getContactField(), { target: { value: contactNumber } });
+		fireEvent.change(getContactFieldWithPlaceholder(), {
+			target: { value: contactNumber },
+		});
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+65 ${contactNumber}` }));
@@ -241,10 +247,12 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-			const japanCode = getField("button", "Japan +81");
+			const japanCode = getField("option", "Japan+81");
 
 			await waitFor(() => fireEvent.click(japanCode));
-			fireEvent.change(getContactField(), { target: { value: contactNumber } });
+			fireEvent.change(getContactFieldWithPlaceholder(), {
+				target: { value: contactNumber },
+			});
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: `+81 ${contactNumber}` }));
@@ -256,10 +264,12 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-			const japanCode = getField("button", "Japan +81");
+			const japanCode = getField("option", "Japan+81");
 
 			await waitFor(() => fireEvent.click(japanCode));
-			fireEvent.change(getContactField(), { target: { value: contactNumber } });
+			fireEvent.change(getContactFieldWithPlaceholder(), {
+				target: { value: contactNumber },
+			});
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(screen.getByText(ERROR_MESSAGES.CONTACT.INVALID_INTERNATIONAL_NUMBER)).toBeInTheDocument();
@@ -296,7 +306,7 @@ describe(UI_TYPE, () => {
 				],
 			});
 
-			expect(screen.queryByTestId("addon-selector")).not.toBeInTheDocument();
+			expect(screen.queryByTestId("selector")).not.toBeInTheDocument();
 			expect(screen.getByTestId("addon")).toBeInTheDocument();
 		});
 
@@ -313,7 +323,7 @@ describe(UI_TYPE, () => {
 				],
 			});
 
-			expect(screen.queryByTestId("addon-selector")).not.toBeInTheDocument();
+			expect(screen.queryByTestId("selector")).not.toBeInTheDocument();
 			expect(screen.getByTestId("addon")).toBeInTheDocument();
 		});
 
@@ -328,7 +338,7 @@ describe(UI_TYPE, () => {
 				],
 			});
 
-			expect(screen.getByTestId("addon-selector")).toBeInTheDocument();
+			expect(screen.getByTestId("selector")).toBeInTheDocument();
 			expect(screen.queryByTestId("addon")).not.toBeInTheDocument();
 		});
 
@@ -357,11 +367,13 @@ describe(UI_TYPE, () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
 
-			fireEvent.change(getContactField(), { target: { value: "91234567" } });
+			fireEvent.change(getContactFieldWithPlaceholder(), {
+				target: { value: "91234567" },
+			});
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getContactField()).toHaveValue("");
+			expect(getContactFieldWithPlaceholder()).toHaveValue("");
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "" }));
 		});
 
@@ -369,11 +381,13 @@ describe(UI_TYPE, () => {
 			const defaultValues = "+65 91234567";
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
-			fireEvent.change(getContactField(), { target: { value: "987654321" } });
+			fireEvent.change(getContactFieldWithPlaceholder(), {
+				target: { value: "987654321" },
+			});
 			fireEvent.click(getResetButton());
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getContactField()).toHaveValue("9123 4567");
+			expect(getContactFieldWithPlaceholder()).toHaveValue("9123 4567");
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 		});
 	});
@@ -397,7 +411,9 @@ describe(UI_TYPE, () => {
 
 		it("should set form state as dirty if user modifies the field", () => {
 			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getContactField(), { target: { value: "+65 91234567" } });
+			fireEvent.change(getContactFieldWithPlaceholder(), {
+				target: { value: "+65 91234567" },
+			});
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(true);
@@ -417,7 +433,9 @@ describe(UI_TYPE, () => {
 
 		it("should reset and revert form dirty state to false", () => {
 			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getContactField(), { target: { value: "+65 91234567" } });
+			fireEvent.change(getContactFieldWithPlaceholder(), {
+				target: { value: "+65 91234567" },
+			});
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
@@ -431,7 +449,9 @@ describe(UI_TYPE, () => {
 					onClick={handleClick}
 				/>
 			);
-			fireEvent.change(getContactField(), { target: { value: "+65 91234567" } });
+			fireEvent.change(getContactFieldWithPlaceholder(), {
+				target: { value: "+65 91234567" },
+			});
 			fireEvent.click(getResetButton());
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
