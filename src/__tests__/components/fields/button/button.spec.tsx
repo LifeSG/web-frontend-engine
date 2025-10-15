@@ -88,4 +88,123 @@ describe("button", () => {
 			expect(handleClick).toHaveBeenCalled();
 		});
 	});
+
+	describe("navigation", () => {
+		const mockWindowOpen = jest.fn();
+		let mockLocationHref = "";
+		const originalOpen = window.open;
+		const originalLocation = window.location;
+
+		beforeEach(() => {
+			window.open = mockWindowOpen;
+
+			mockLocationHref = "";
+			Object.defineProperty(window, "location", {
+				value: {
+					...originalLocation,
+					get href() {
+						return mockLocationHref;
+					},
+					set href(url: string) {
+						mockLocationHref = url;
+					},
+				},
+				writable: true,
+				configurable: true,
+			});
+		});
+
+		afterEach(() => {
+			jest.clearAllMocks();
+			window.open = originalOpen;
+			Object.defineProperty(window, "location", {
+				value: originalLocation,
+				writable: true,
+				configurable: true,
+			});
+		});
+
+		it.each`
+			scenario                                           | href
+			${"should not navigate when href is not provided"} | ${undefined}
+			${"should not navigate when href is invalid"}      | ${"invalid-url"}
+		`("$scenario", ({ href }) => {
+			renderComponent({ overrideButton: { ...(href && { href }) } });
+			fireEvent.click(getField("button", COMPONENT_LABEL));
+
+			expect(mockWindowOpen).not.toHaveBeenCalled();
+			expect(window.location.href).toBe("");
+		});
+
+		it.each`
+			scenario                                                                  | target       | expectedWindowOpen | expectedHref
+			${"should navigate in same window when target is _self"}                  | ${"_self"}   | ${false}           | ${"https://example.com"}
+			${"should navigate in same window when no target is specified (default)"} | ${undefined} | ${false}           | ${"https://example.com"}
+			${"should open new tab when target is _blank"}                            | ${"_blank"}  | ${true}            | ${""}
+		`("$scenario", ({ target, expectedWindowOpen, expectedHref }) => {
+			renderComponent({
+				overrideButton: {
+					href: "https://example.com",
+					...(target && { target }),
+				},
+			});
+			fireEvent.click(getField("button", COMPONENT_LABEL));
+
+			if (expectedWindowOpen) {
+				expect(mockWindowOpen).toHaveBeenCalledWith("https://example.com", "_blank", "noopener noreferrer");
+			} else {
+				expect(mockWindowOpen).not.toHaveBeenCalled();
+			}
+			expect(window.location.href).toBe(expectedHref);
+		});
+
+		it.each`
+			scenario                                                     | target       | windowProperty
+			${"should navigate in parent window when target is _parent"} | ${"_parent"} | ${"parent"}
+			${"should navigate in top window when target is _top"}       | ${"_top"}    | ${"top"}
+		`("$scenario", ({ target, windowProperty }) => {
+			const mockWindow = {
+				location: { href: "" },
+			};
+			const originalWindow = (window as any)[windowProperty];
+			Object.defineProperty(window, windowProperty, {
+				value: mockWindow,
+				writable: true,
+				configurable: true,
+			});
+
+			renderComponent({
+				overrideButton: {
+					href: "https://example.com",
+					target,
+				},
+			});
+			fireEvent.click(getField("button", COMPONENT_LABEL));
+
+			expect(mockWindow.location.href).toBe("https://example.com");
+			expect(mockWindowOpen).not.toHaveBeenCalled();
+
+			Object.defineProperty(window, windowProperty, {
+				value: originalWindow,
+				writable: true,
+				configurable: true,
+			});
+		});
+
+		it("should still fire click event when navigating", () => {
+			const handleClick = jest.fn();
+			renderComponent({
+				overrideButton: {
+					href: "https://example.com",
+					target: "_blank",
+				},
+				eventType: "click",
+				eventListener: handleClick,
+			});
+			fireEvent.click(getField("button", COMPONENT_LABEL));
+
+			expect(handleClick).toHaveBeenCalled();
+			expect(mockWindowOpen).toHaveBeenCalled();
+		});
+	});
 });
