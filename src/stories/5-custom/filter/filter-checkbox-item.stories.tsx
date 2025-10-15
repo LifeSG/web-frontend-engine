@@ -51,10 +51,11 @@ const meta: Meta = {
 			type: { name: "object", value: {}, required: true },
 		},
 		options: {
-			description: "A list of options that a user can choose from.",
+			description:
+				"A list of options that a user can choose from. Supports nested options - only leaf options (without nested children) will submit values when selected. Parent options with nested children are used for grouping only.",
 			table: {
 				type: {
-					summary: "{label: string, value: string}[]",
+					summary: "{label: string, value: string, options?: IOption[]}[]",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -179,6 +180,23 @@ MoreThan5Options.args = {
 		{ label: "orange", value: "orange" },
 		{ label: "yellow", value: "yellow" },
 		{ label: "black", value: "black" },
+	],
+};
+
+export const Test = Template("test").bind({});
+Test.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	options: [
+		{
+			label: "Food",
+			value: "food",
+			options: [
+				{ label: "Pizza", value: "pizza" },
+				{ label: "Burger", value: "burger" },
+			],
+		},
+		{ label: "Drinks", value: "drinks" },
 	],
 };
 
