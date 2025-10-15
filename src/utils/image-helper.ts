@@ -9,8 +9,11 @@ export namespace ImageHelper {
 	export const convertBlob = async (blob: File | Blob, outputMimeType = "image/jpeg") => {
 		const inputMimeType = (await FileHelper.getType(blob)).mime;
 		if (inputMimeType === "image/heic" || inputMimeType === "image/heif") {
-			const { default: heic2any } = await import("heic2any"); // get around SSR
-			blob = (await heic2any({ blob, toType: outputMimeType })) as File;
+			const { heicTo } = await import("heic-to/csp");
+			blob = (await heicTo({
+				blob: blob,
+				type: outputMimeType as `image/${string}`,
+			})) as Blob;
 		}
 
 		const image = await blobToImage(blob);
