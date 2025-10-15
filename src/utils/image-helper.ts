@@ -9,7 +9,7 @@ export namespace ImageHelper {
 	export const convertBlob = async (blob: File | Blob, outputMimeType = "image/jpeg") => {
 		const inputMimeType = (await FileHelper.getType(blob)).mime;
 		if (inputMimeType === "image/heic" || inputMimeType === "image/heif") {
-			const { heicTo } = await import("heic-to/dist/csp/heic-to");
+			const { heicTo } = await import("heic-to/csp");
 			blob = (await heicTo({
 				blob: blob,
 				type: outputMimeType as `image/${string}`,
