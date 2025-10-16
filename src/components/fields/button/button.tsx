@@ -47,29 +47,10 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 		dispatchFieldEvent("click", id, e);
 		if (href && isValidUrl(href)) {
-			const linkTarget: TLinkTarget = target || "_self";
-
-			switch (linkTarget) {
-				case "_blank":
-					window.open(href, "_blank", "noopener noreferrer");
-					break;
-				case "_parent":
-					if (window.parent) {
-						window.parent.location.href = href;
-					} else {
-						window.location.href = href;
-					}
-					break;
-				case "_top":
-					if (window.top) {
-						window.top.location.href = href;
-					} else {
-						window.location.href = href;
-					}
-					break;
-				case "_self":
-				default:
-					window.location.href = href;
+			if (target) {
+				window.open(href, target, "noopener noreferrer");
+			} else {
+				window.location.href = href;
 			}
 		}
 	};

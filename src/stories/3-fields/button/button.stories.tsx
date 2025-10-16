@@ -95,7 +95,6 @@ const meta: Meta = {
 				type: {
 					summary: "string",
 				},
-				defaultValue: { summary: "undefined" },
 			},
 			control: {
 				type: "text",
