@@ -283,7 +283,7 @@ describe(REFERENCE_KEY, () => {
 			options: [
 				{
 					label: "Food",
-					value: "Food",
+					key: "Food",
 					options: [
 						{ label: "Pizza", value: "Pizza" },
 						{ label: "Burger", value: "Burger" },

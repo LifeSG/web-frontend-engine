@@ -14,8 +14,15 @@ export interface IFilterCheckboxSchema<V = undefined>
 	useToggleContentWidth?: boolean | undefined;
 }
 
-export interface IOption {
+export interface IParentOption {
+	label: string;
+	key: string;
+	options: IOption[];
+}
+
+export interface ILeafOption {
 	label: string;
 	value: string;
-	options?: IOption[] | undefined;
 }
+
+export type IOption = IParentOption | ILeafOption;

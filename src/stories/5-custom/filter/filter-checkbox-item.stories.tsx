@@ -52,10 +52,10 @@ const meta: Meta = {
 		},
 		options: {
 			description:
-				"A list of options that a user can choose from. Supports nested options - only leaf options (without nested children) will submit values when selected. Parent options with nested children are used for grouping only.",
+				"A list of options that a user can choose from. Supports nested options - parent options with nested children use 'key' for identification, while leaf options (without children) use 'value' and will submit values when selected. Parent options are used for grouping only.",
 			table: {
 				type: {
-					summary: "{label: string, value: string, options?: IOption[]}[]",
+					summary: "Array<{label: string, key: string, options: IOption[]} | {label: string, value: string}>",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -183,23 +183,6 @@ MoreThan5Options.args = {
 	],
 };
 
-export const Test = Template("test").bind({});
-Test.args = {
-	label: "Filter checkbox",
-	referenceKey: "filter-checkbox",
-	options: [
-		{
-			label: "Food",
-			value: "food",
-			options: [
-				{ label: "Pizza", value: "pizza" },
-				{ label: "Burger", value: "burger" },
-			],
-		},
-		{ label: "Drinks", value: "drinks" },
-	],
-};
-
 export const WithNestedOptions6Levels = Template("filter-checkbox-nested-options-6-levels").bind({});
 WithNestedOptions6Levels.args = {
 	label: "Filter checkbox",
@@ -211,23 +194,23 @@ WithNestedOptions6Levels.args = {
 			label: "Antartica",
 		},
 		{
-			value: "americas",
+			key: "americas",
 			label: "Americas",
 			options: [
 				{
-					value: "usa",
+					key: "usa",
 					label: "USA",
 					options: [
 						{
-							value: "california",
+							key: "california",
 							label: "California",
 							options: [
 								{
-									value: "los_angeles_county",
+									key: "los_angeles_county",
 									label: "Los Angeles County",
 									options: [
 										{
-											value: "los_angeles",
+											key: "los_angeles",
 											label: "Los Angeles",
 											options: [
 												{
@@ -262,11 +245,11 @@ NestedOptionsWithViewMore.args = {
 	collapsible: false,
 	options: [
 		{
-			value: "food",
+			key: "food",
 			label: "Food & Dining",
 			options: [
 				{
-					value: "restaurants",
+					key: "restaurants",
 					label: "Restaurants",
 					options: [
 						{ value: "italian", label: "Italian" },
@@ -275,7 +258,7 @@ NestedOptionsWithViewMore.args = {
 					],
 				},
 				{
-					value: "fastfood",
+					key: "fastfood",
 					label: "Fast Food",
 					options: [
 						{ value: "burgers", label: "Burgers" },
@@ -286,11 +269,11 @@ NestedOptionsWithViewMore.args = {
 			],
 		},
 		{
-			value: "shopping",
+			key: "shopping",
 			label: "Shopping",
 			options: [
 				{
-					value: "clothing",
+					key: "clothing",
 					label: "Clothing",
 					options: [
 						{ value: "mens", label: "Men's Wear" },
@@ -303,7 +286,7 @@ NestedOptionsWithViewMore.args = {
 			],
 		},
 		{
-			value: "entertainment",
+			key: "entertainment",
 			label: "Entertainment",
 			options: [
 				{ value: "movies", label: "Movies" },

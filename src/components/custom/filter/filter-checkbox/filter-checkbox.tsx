@@ -6,7 +6,7 @@ import { TestHelper } from "../../../../utils";
 import { Sanitize } from "../../../shared";
 import { IGenericCustomFieldProps } from "../../types";
 import { FilterHelper } from "../filter-helper";
-import { IFilterCheckboxSchema, IOption } from "./types";
+import { IFilterCheckboxSchema, IOption, IParentOption } from "./types";
 
 export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSchema>) => {
 	// =============================================================================
@@ -28,9 +28,17 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	// HELPER FUNCTIONS
 	// =============================================================================
 
+	const isParentOption = (option: IOption): option is IParentOption => {
+		return "options" in option && Array.isArray(option.options);
+	};
+
+	const getOptionValue = (option: IOption): string => {
+		return isParentOption(option) ? option.key : option.value;
+	};
+
 	const flattenOptions = (options: IOption[]): IOption[] => {
 		return options.reduce<IOption[]>((acc, option) => {
-			return [...acc, option, ...(option.options ? flattenOptions(option.options) : [])];
+			return [...acc, option, ...(isParentOption(option) ? flattenOptions(option.options) : [])];
 		}, []);
 	};
 
@@ -40,8 +48,8 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 
 	useDeepCompareEffect(() => {
 		const flatOptions = flattenOptions(options);
-		const updatedValues = value?.filter((v) => flatOptions.find((option) => option.value === v));
-		const selectedOpts = flatOptions.filter((opt) => value?.find((val) => opt.value === val));
+		const updatedValues = value?.filter((v) => flatOptions.find((option) => getOptionValue(option) === v));
+		const selectedOpts = flatOptions.filter((opt) => value?.find((val) => getOptionValue(opt) === val));
 
 		setSelectedOptions(selectedOpts);
 		setValue(id, updatedValues);
@@ -55,7 +63,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (options: IOption[]): void => {
-		onChange({ target: { value: options.map((opt) => opt.value) } });
+		onChange({ target: { value: options.map((opt) => getOptionValue(opt)) } });
 	};
 
 	// =============================================================================
