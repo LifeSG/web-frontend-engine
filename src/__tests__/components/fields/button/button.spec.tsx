@@ -138,9 +138,11 @@ describe("button", () => {
 
 		it.each`
 			scenario                                                                  | target       | expectedWindowOpen | expectedHref
-			${"should navigate in same window when target is _self"}                  | ${"_self"}   | ${false}           | ${"https://example.com"}
 			${"should navigate in same window when no target is specified (default)"} | ${undefined} | ${false}           | ${"https://example.com"}
+			${"should navigate in same window when target is _self"}                  | ${"_self"}   | ${true}            | ${""}
 			${"should open new tab when target is _blank"}                            | ${"_blank"}  | ${true}            | ${""}
+			${"should open window with _parent target"}                               | ${"_parent"} | ${true}            | ${""}
+			${"should open window with _top target"}                                  | ${"_top"}    | ${true}            | ${""}
 		`("$scenario", ({ target, expectedWindowOpen, expectedHref }) => {
 			renderComponent({
 				overrideButton: {
@@ -151,44 +153,11 @@ describe("button", () => {
 			fireEvent.click(getField("button", COMPONENT_LABEL));
 
 			if (expectedWindowOpen) {
-				expect(mockWindowOpen).toHaveBeenCalledWith("https://example.com", "_blank", "noopener noreferrer");
+				expect(mockWindowOpen).toHaveBeenCalledWith("https://example.com", target, "noopener noreferrer");
 			} else {
 				expect(mockWindowOpen).not.toHaveBeenCalled();
 			}
 			expect(window.location.href).toBe(expectedHref);
-		});
-
-		it.each`
-			scenario                                                     | target       | windowProperty
-			${"should navigate in parent window when target is _parent"} | ${"_parent"} | ${"parent"}
-			${"should navigate in top window when target is _top"}       | ${"_top"}    | ${"top"}
-		`("$scenario", ({ target, windowProperty }) => {
-			const mockWindow = {
-				location: { href: "" },
-			};
-			const originalWindow = (window as any)[windowProperty];
-			Object.defineProperty(window, windowProperty, {
-				value: mockWindow,
-				writable: true,
-				configurable: true,
-			});
-
-			renderComponent({
-				overrideButton: {
-					href: "https://example.com",
-					target,
-				},
-			});
-			fireEvent.click(getField("button", COMPONENT_LABEL));
-
-			expect(mockWindow.location.href).toBe("https://example.com");
-			expect(mockWindowOpen).not.toHaveBeenCalled();
-
-			Object.defineProperty(window, windowProperty, {
-				value: originalWindow,
-				writable: true,
-				configurable: true,
-			});
 		});
 
 		it("should still fire click event when navigating", () => {
