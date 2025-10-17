@@ -215,7 +215,6 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				bottomSection={generateSection(bottomSection)}
 				onUnmask={handleUnmask}
 				onTryAgain={handleUnmask}
-				fullWidth
 			/>
 		);
 	};
