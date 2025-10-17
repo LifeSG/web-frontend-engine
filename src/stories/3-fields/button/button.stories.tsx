@@ -88,6 +88,31 @@ const meta: Meta = {
 			},
 			options: Object.keys(Icons),
 		},
+		href: {
+			description:
+				"URL to navigate to when the button is clicked. Must be a valid URL with supported protocols (http, https, mailto, tel)",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
+			},
+		},
+		target: {
+			description: "Specifies where to open the linked document.",
+			table: {
+				type: {
+					summary: "'_blank' | '_self' | '_parent' | '_top'",
+				},
+				defaultValue: { summary: "undefined" },
+			},
+			control: {
+				type: "select",
+			},
+			options: ["_blank", "_self", "_parent", "_top"],
+		},
 	},
 };
 export default meta;
@@ -172,4 +197,19 @@ export const ClickEvent = Template("button-click-event", "click").bind({});
 ClickEvent.args = {
 	uiType: "button",
 	label: "Button",
+};
+
+export const LinkOption = Template("button-link-option", "click").bind({});
+LinkOption.args = {
+	uiType: "button",
+	href: "https://example.com/",
+	label: "Button",
+};
+
+export const LinkOptionWithTarget = Template("button-link-option-with-target", "click").bind({});
+LinkOptionWithTarget.args = {
+	uiType: "button",
+	href: "https://example.com/",
+	label: "Button",
+	target: "_blank",
 };

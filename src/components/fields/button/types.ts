@@ -3,6 +3,11 @@ import * as Icons from "@lifesg/react-icons";
 import { IBaseFieldSchema } from "../types";
 import { TFieldEventListener } from "../../../utils";
 
+// =============================================================================
+// TYPES
+// =============================================================================
+export type TLinkTarget = "_blank" | "_self" | "_parent" | "_top";
+
 export interface IButtonSchema
 	extends Omit<IBaseFieldSchema<"button">, "validation">,
 		Omit<ButtonProps, "loading" | "type"> {
@@ -10,6 +15,8 @@ export interface IButtonSchema
 	endIcon?: keyof typeof Icons | undefined;
 	"data-testid"?: string | undefined;
 	label: string;
+	href?: string | undefined;
+	target?: TLinkTarget | undefined;
 }
 
 // =============================================================================
