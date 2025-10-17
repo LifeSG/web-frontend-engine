@@ -6,7 +6,7 @@ import { TestHelper } from "../../../../utils";
 import { Sanitize } from "../../../shared";
 import { IGenericCustomFieldProps } from "../../types";
 import { FilterHelper } from "../filter-helper";
-import { IFilterCheckboxSchema, IOption } from "./types";
+import { IFilterCheckboxSchema, IOption, IParentOption } from "./types";
 
 export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSchema>) => {
 	// =============================================================================
@@ -23,13 +23,34 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	const [selectedOptions, setSelectedOptions] = useState<IOption[]>(); // Current selected value state
 	const [expandedState, setExpandedState] = useState(expanded);
 	const { title, addon } = FilterHelper.constructFormattedLabel(label, id);
+
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
+
+	const isParentOption = (option: IOption): option is IParentOption => {
+		return "options" in option && Array.isArray(option.options);
+	};
+
+	const getOptionValue = (option: IOption): string => {
+		return isParentOption(option) ? option.key : option.value;
+	};
+
+	const flattenOptions = (options: IOption[]): IOption[] => {
+		return options.reduce<IOption[]>((acc, option) => {
+			return [...acc, option, ...(isParentOption(option) ? flattenOptions(option.options) : [])];
+		}, []);
+	};
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 
 	useDeepCompareEffect(() => {
-		const updatedValues = value?.filter((v) => options.find((option) => option.value === v));
-		const selectedOpts = options.filter((opt) => value?.find((val) => opt.value === val));
+		const flatOptions = flattenOptions(options);
+		const updatedValues = value?.filter((v) => flatOptions.find((option) => getOptionValue(option) === v));
+		const selectedOpts = flatOptions.filter((opt) => value?.find((val) => getOptionValue(opt) === val));
+
 		setSelectedOptions(selectedOpts);
 		setValue(id, updatedValues);
 	}, [options, value]);
@@ -42,7 +63,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChange = (options: IOption[]): void => {
-		onChange({ target: { value: options.map((opt) => opt.value) } });
+		onChange({ target: { value: options.map((opt) => getOptionValue(opt)) } });
 	};
 
 	// =============================================================================

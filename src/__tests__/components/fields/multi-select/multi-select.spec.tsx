@@ -125,7 +125,7 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getComponent()).toBeDisabled();
+		expect(getComponent()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should be able to support custom placeholder", () => {

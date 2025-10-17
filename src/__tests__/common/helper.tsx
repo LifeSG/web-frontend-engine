@@ -13,7 +13,17 @@ import { TFieldSchema } from "../../components/fields";
 import { TElementSchema } from "../../components/elements";
 import { TCustomComponentSchema } from "../../components";
 
-type TAriaRoles = "textbox" | "generic" | "button" | "spinbutton" | "radio" | "list" | "slider" | "option" | "treeitem";
+type TAriaRoles =
+	| "textbox"
+	| "generic"
+	| "button"
+	| "spinbutton"
+	| "radio"
+	| "list"
+	| "slider"
+	| "option"
+	| "treeitem"
+	| "combobox";
 
 export const getSubmitButton = (): HTMLElement => {
 	return screen.getByRole("button", { name: SUBMIT_BUTTON_LABEL });

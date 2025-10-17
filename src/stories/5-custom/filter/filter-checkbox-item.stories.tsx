@@ -51,10 +51,11 @@ const meta: Meta = {
 			type: { name: "object", value: {}, required: true },
 		},
 		options: {
-			description: "A list of options that a user can choose from.",
+			description:
+				"A list of options that a user can choose from. Supports nested options - parent options with nested children use 'key' for identification, while leaf options (without children) use 'value' and will submit values when selected. Parent options are used for grouping only.",
 			table: {
 				type: {
-					summary: "{label: string, value: string}[]",
+					summary: "Array<{label: string, key: string, options: IOption[]} | {label: string, value: string}>",
 				},
 			},
 			type: { name: "object", value: {} },
@@ -179,6 +180,61 @@ MoreThan5Options.args = {
 		{ label: "orange", value: "orange" },
 		{ label: "yellow", value: "yellow" },
 		{ label: "black", value: "black" },
+	],
+};
+
+export const WithNestedOptions6Levels = Template("filter-checkbox-nested-options-6-levels").bind({});
+WithNestedOptions6Levels.args = {
+	label: "Filter checkbox",
+	referenceKey: "filter-checkbox",
+	collapsible: false,
+	options: [
+		{
+			value: "antartica",
+			label: "Antartica",
+		},
+		{
+			key: "americas",
+			label: "Americas",
+			options: [
+				{
+					key: "usa",
+					label: "USA",
+					options: [
+						{
+							key: "california",
+							label: "California",
+							options: [
+								{
+									key: "los_angeles_county",
+									label: "Los Angeles County",
+									options: [
+										{
+											key: "los_angeles",
+											label: "Los Angeles",
+											options: [
+												{
+													value: "beverly_crest",
+													label: "Beverly Crest",
+												},
+												{
+													value: "hollywood",
+													label: "Hollywood",
+												},
+												{
+													value: "westchester",
+													label: "Westchester",
+												},
+											],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			],
+		},
 	],
 };
 

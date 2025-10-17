@@ -277,4 +277,65 @@ describe(REFERENCE_KEY, () => {
 			expect(screen.getByTestId("expand-collapse-button")).toHaveAttribute("aria-expanded", "false");
 		});
 	});
+
+	describe("nested options", () => {
+		const nestedOptionsConfig = {
+			options: [
+				{
+					label: "Food",
+					key: "Food",
+					options: [
+						{ label: "Pizza", value: "Pizza" },
+						{ label: "Burger", value: "Burger" },
+					],
+				},
+				{ label: "Drinks", value: "Drinks" },
+			],
+		};
+
+		it("should submit only child values when only children are selected", async () => {
+			renderComponent(nestedOptionsConfig);
+
+			const expandButton = screen.getByTestId("expand-collapse-button");
+			fireEvent.click(expandButton);
+
+			await waitFor(() => fireEvent.click(screen.getByText("Pizza")));
+			await waitFor(() => fireEvent.click(screen.getByText("Burger")));
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({
+					[COMPONENT_ID]: expect.arrayContaining(["Pizza", "Burger"]),
+				})
+			);
+		});
+
+		it("should submit only child values when only parent is selected", async () => {
+			renderComponent(nestedOptionsConfig);
+
+			fireEvent.click(screen.getByText("Food"));
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({
+					[COMPONENT_ID]: expect.arrayContaining(["Pizza", "Burger"]),
+				})
+			);
+		});
+
+		it("should submit standalone option values correctly", async () => {
+			renderComponent(nestedOptionsConfig);
+
+			fireEvent.click(screen.getByText("Drinks"));
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({
+					[COMPONENT_ID]: ["Drinks"],
+				})
+			);
+		});
+	});
 });

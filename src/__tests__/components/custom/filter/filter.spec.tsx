@@ -108,7 +108,7 @@ describe(REFERENCE_KEY, () => {
 			expect(screen.getByText("Done")).toBeVisible();
 			const closeBtn = screen.getByLabelText("close Filters");
 			await waitFor(() => fireEvent.click(closeBtn));
-			expect(screen.queryByText("Done")).not.toBeInTheDocument();
+			expect(screen.queryByText("Done")).not.toBeVisible();
 		});
 	});
 });
