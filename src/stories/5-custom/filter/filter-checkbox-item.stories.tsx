@@ -238,65 +238,6 @@ WithNestedOptions6Levels.args = {
 	],
 };
 
-export const NestedOptionsWithViewMore = Template("filter-checkbox-nested-options-view-more").bind({});
-NestedOptionsWithViewMore.args = {
-	label: "Filter checkbox",
-	referenceKey: "filter-checkbox",
-	collapsible: false,
-	options: [
-		{
-			key: "food",
-			label: "Food & Dining",
-			options: [
-				{
-					key: "restaurants",
-					label: "Restaurants",
-					options: [
-						{ value: "italian", label: "Italian" },
-						{ value: "chinese", label: "Chinese" },
-						{ value: "japanese", label: "Japanese" },
-					],
-				},
-				{
-					key: "fastfood",
-					label: "Fast Food",
-					options: [
-						{ value: "burgers", label: "Burgers" },
-						{ value: "pizza", label: "Pizza" },
-					],
-				},
-				{ value: "cafes", label: "Cafes" },
-			],
-		},
-		{
-			key: "shopping",
-			label: "Shopping",
-			options: [
-				{
-					key: "clothing",
-					label: "Clothing",
-					options: [
-						{ value: "mens", label: "Men's Wear" },
-						{ value: "womens", label: "Women's Wear" },
-						{ value: "kids", label: "Kids' Wear" },
-					],
-				},
-				{ value: "electronics", label: "Electronics" },
-				{ value: "books", label: "Books" },
-			],
-		},
-		{
-			key: "entertainment",
-			label: "Entertainment",
-			options: [
-				{ value: "movies", label: "Movies" },
-				{ value: "concerts", label: "Concerts" },
-				{ value: "sports", label: "Sports" },
-			],
-		},
-	],
-};
-
 export const WithDefaultValues = Template("filter-checkbox-default-values").bind({});
 WithDefaultValues.args = {
 	label: "Filter checkbox",
