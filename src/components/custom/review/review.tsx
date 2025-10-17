@@ -205,7 +205,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const renderBox = (schema: IReviewSchemaBox) => {
 		const { label, description, topSection, bottomSection, ...otherSchema } = schema;
 		return (
-			<CustomUneditableSection
+			<UneditableSection
 				{...otherSchema}
 				id={id}
 				title={label}
