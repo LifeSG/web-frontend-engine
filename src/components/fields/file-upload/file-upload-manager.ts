@@ -205,8 +205,11 @@ const FileUploadManager = (props: IProps) => {
 			rawFile = new File([response], fileToInject.rawFile.name, { type: fileType.mime });
 			fileToInject.dataURL = await FileHelper.fileToDataUrl(rawFile);
 		}
-		const { errorMessage, fileType } = await readFile({ ...fileToInject, rawFile });
-		const thumbnailImageDataUrl = await generateThumbnail(fileToInject, fileType.mime);
+
+		// rawFile may not be available because some use cases is not able to return dataURL / fileUrl due to security concerns
+		// in such cases, we will rely on the uploadResponse for file info
+		const { errorMessage, fileType } = rawFile ? await readFile({ ...fileToInject, rawFile }) : {};
+		const thumbnailImageDataUrl = rawFile ? await generateThumbnail(fileToInject, fileType?.mime) : undefined;
 
 		setFiles((prev) => {
 			const updatedFiles = [...prev];
@@ -216,13 +219,13 @@ const FileUploadManager = (props: IProps) => {
 					errorMessage,
 					id: fileToInject.fileItem?.id || generateRandomId(),
 					name: FileHelper.deduplicateFileName(
-						files.map(({ fileItem }) => fileItem?.name),
+						files.map(({ fileItem }) => fileItem.name),
 						index,
-						rawFile.name
+						rawFile?.name || fileToInject.rawFile.name
 					),
 					progress: 1,
-					size: rawFile.size,
-					type: fileType.mime,
+					size: rawFile?.size || fileToInject.uploadResponse?.["fileSize"],
+					type: fileType?.mime || fileToInject.uploadResponse?.["mimeType"],
 					thumbnailImageDataUrl,
 				},
 				rawFile,
