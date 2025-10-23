@@ -139,13 +139,14 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 						return files
 							.filter((file) => file.status === EFileStatus.UPLOADED)
 							.every((file) => {
-								if (uploadOnAddingFile.type === "base64") {
+								if (uploadOnAddingFile.type === "base64" && file.dataURL) {
 									return (
 										FileHelper.getFilesizeFromBase64(file.dataURL) <=
 										maxFileSizeRuleRef.current.maxSizeInKb * 1024
 									);
 								} else if (uploadOnAddingFile.type === "multipart") {
-									return file.rawFile.size <= maxFileSizeRuleRef.current.maxSizeInKb * 1024;
+									const filesize = file.rawFile?.size || file.uploadResponse?.["fileSize"];
+									return filesize <= maxFileSizeRuleRef.current.maxSizeInKb * 1024;
 								}
 							});
 					}

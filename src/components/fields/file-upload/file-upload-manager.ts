@@ -146,20 +146,10 @@ const FileUploadManager = (props: IProps) => {
 			return validFileType;
 		}
 
-		if (maxFileSizeRule.maxSizeInKb > 0) {
-			const maxSizeInB = maxFileSizeRule.maxSizeInKb * 1024;
-			if (
-				(upload.type === "base64" && FileHelper.getFilesizeFromBase64(dataURL) > maxSizeInB) ||
-				(upload.type === "multipart" && rawFile.size > maxSizeInB)
-			) {
-				return {
-					errorMessage:
-						maxFileSizeRule.errorMessage ||
-						ERROR_MESSAGES.UPLOAD().MAX_FILE_SIZE(maxFileSizeRule.maxSizeInKb),
-					fileType,
-					status: EFileStatus.ERROR_SIZE,
-				};
-			}
+		const fileSize = upload.type === "base64" ? FileHelper.getFilesizeFromBase64(dataURL) : rawFile.size;
+		const { errorMessage, status } = validateFileSize(fileSize);
+		if (status < 0) {
+			return { errorMessage, fileType, status };
 		}
 
 		if (addedFrom === "schema") {
@@ -189,6 +179,22 @@ const FileUploadManager = (props: IProps) => {
 
 		return {};
 	};
+
+	const validateFileSize = (fileSizeInKb: number) => {
+		if (maxFileSizeRule.maxSizeInKb > 0) {
+			const maxSizeInB = maxFileSizeRule.maxSizeInKb * 1024;
+			if (fileSizeInKb > maxSizeInB) {
+				return {
+					errorMessage:
+						maxFileSizeRule.errorMessage ||
+						ERROR_MESSAGES.UPLOAD().MAX_FILE_SIZE(maxFileSizeRule.maxSizeInKb),
+					status: EFileStatus.ERROR_SIZE,
+				};
+			}
+		}
+		return {};
+	};
+
 	// =============================================================================
 	// FILE STATUS HANDLERS
 	// =============================================================================
@@ -223,6 +229,10 @@ const FileUploadManager = (props: IProps) => {
 					mime: fileToInject.uploadResponse?.["mimeType"],
 					ext: fileToInject.uploadResponse?.["ext"],
 			  });
+		const { errorMessage: filesizeErrorMessage } = validateFileSize(
+			rawFile?.size || fileToInject.uploadResponse?.["fileSize"]
+		);
+
 		const thumbnailImageDataUrl = rawFile ? await generateThumbnail(fileToInject, fileType?.mime) : undefined;
 
 		setFiles((prev) => {
@@ -230,7 +240,7 @@ const FileUploadManager = (props: IProps) => {
 			updatedFiles[index] = {
 				...fileToInject,
 				fileItem: {
-					errorMessage,
+					errorMessage: errorMessage || filesizeErrorMessage,
 					id: fileToInject.fileItem?.id || generateRandomId(),
 					name: FileHelper.deduplicateFileName(
 						files.map(({ fileItem }) => fileItem.name),
