@@ -5,6 +5,9 @@ import type { Preview } from "@storybook/react";
 const preview: Preview = {
 	decorators: [withJsx],
 	parameters: {
+		docs: {
+			source: { type: "code" },
+		},
 		controls: { expanded: true },
 		options: {
 			storySort: {
