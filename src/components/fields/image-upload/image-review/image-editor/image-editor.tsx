@@ -18,10 +18,10 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	const { maxSizeInKb, baseImageDataURL, drawing, color, erase } = props;
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const fabricCanvas = useRef<FabricCanvas>();
-	const fabricBackground = useRef<FabricImage>();
-	const pencilBrush = useRef<PencilBrush>();
-	const eraserBrush = useRef<EraserBrush>();
+	const fabricCanvas = useRef<FabricCanvas>(null);
+	const fabricBackground = useRef<FabricImage>(null);
+	const pencilBrush = useRef<PencilBrush>(null);
+	const eraserBrush = useRef<EraserBrush>(null);
 	const gestures = useRef({
 		pinchStartAmount: 0,
 	});

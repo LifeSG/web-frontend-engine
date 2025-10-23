@@ -235,7 +235,9 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 								)}
 							</SectionHeader>
 							<ArrayFieldElement
-								ref={(formRef) => (formRefs.current[index] = formRef)}
+								ref={(formRef) => {
+									formRefs.current[index] = formRef;
+								}}
 								formValues={sectionValues}
 								schema={fieldSchema}
 								onChange={handleSectionChange(index)}

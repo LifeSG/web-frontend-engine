@@ -38,7 +38,7 @@ export const ImageManager = (props: IProps) => {
 	const previousImages = usePrevious(images);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
-	const sessionId = useRef<string>();
+	const sessionId = useRef<string>(null);
 	const managerErrorCount = useRef(0);
 
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();

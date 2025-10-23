@@ -31,7 +31,7 @@ export default meta;
 const Template = (eventName: string) =>
 	((args) => {
 		const id = `file-upload-${eventName}`;
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		useEffect(() => {
 			const currentFormRef = formRef.current;

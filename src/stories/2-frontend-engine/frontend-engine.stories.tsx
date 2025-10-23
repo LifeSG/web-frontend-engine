@@ -367,7 +367,7 @@ OnValueChange.args = {
 };
 
 export const ExternalSubmit: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = () => {
 		ref.current.submit();
 	};
@@ -519,7 +519,7 @@ export const OverrideSchema: StoryFn<IFrontendEngineProps> = () => {
 };
 
 export const GetValues: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = () => {
 		action("getValues")(ref.current.getValues());
 	};
@@ -539,7 +539,7 @@ GetValues.parameters = {
 };
 
 export const SetValue: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = () => {
 		ref.current.setValue("name", "Erik");
 	};
@@ -559,7 +559,7 @@ SetValue.parameters = {
 };
 
 export const CheckIsValid: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = () => {
 		action("isValid")(ref.current.isValid());
 	};
@@ -579,7 +579,7 @@ CheckIsValid.parameters = {
 };
 
 export const TriggerValidation: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = (fields?: string | string[] | undefined) => {
 		ref.current.validate(fields);
 	};
@@ -607,7 +607,7 @@ TriggerValidation.parameters = {
 };
 
 export const CheckUserIntervention: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = () => {
 		action("isDirty")(ref.current.isDirty);
 	};
@@ -630,7 +630,7 @@ interface IYupCustomValidationRule {
 	mustBeHello?: boolean | undefined;
 }
 export const AddCustomValidation: StoryFn = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 
 	useEffect(() => {
 		ref.current?.addCustomValidation("string", "mustBeHello", (value) => value === "hello");
@@ -668,7 +668,7 @@ AddCustomValidation.parameters = {
 };
 
 export const SetCustomErrors: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = () => {
 		try {
 			throw {
@@ -711,7 +711,7 @@ SetCustomErrors.parameters = {
 };
 
 export const ClearErrors: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleTriggerError = () => {
 		try {
 			throw {
@@ -776,7 +776,7 @@ ClearErrors.parameters = {
 };
 
 export const SetWarnings: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = () => {
 		ref.current.setWarnings({ name: "Warning" });
 	};
@@ -813,7 +813,7 @@ SetWarnings.parameters = {
 };
 
 export const Reset: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleClick = () => {
 		ref.current.reset();
 	};
@@ -834,7 +834,7 @@ Reset.parameters = {
 };
 
 export const OnSubmitError: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 
 	return (
 		<FrontendEngine
@@ -876,7 +876,7 @@ OnSubmitError.parameters = {
 };
 
 export const StripUnknown: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const json: IFrontendEngineData = {
 		stripUnknown: true,
 		sections: {
@@ -970,7 +970,7 @@ const MyCustomComponent: TCustomComponent<MyCustomSchema> = (props: TCustomCompo
 };
 
 export const CustomComponent: StoryFn<IFrontendEngineProps> = () => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 
 	useEffect(() => {
 		const currentFormRef = ref.current;

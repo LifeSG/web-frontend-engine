@@ -82,7 +82,7 @@ const FrontendEngineWithEventListener = ({
 	eventListener,
 	...otherProps
 }: ICustomFrontendEngineProps) => {
-	const formRef = useRef<IFrontendEngineRef>();
+	const formRef = useRef<IFrontendEngineRef>(null);
 	const [showEditPrompt, setShowEditPrompt] = useState<boolean>(false);
 	const [showConfirmLocationPrompt, setShowConfirmLocationPrompt] = useState<boolean>(false);
 

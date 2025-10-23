@@ -35,7 +35,7 @@ const FileUploadManager = (props: IProps) => {
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
 	const { dispatchFieldEvent } = useFieldEvent();
-	const sessionId = useRef<string>();
+	const sessionId = useRef<string>(null);
 
 	// =============================================================================
 	// EFFECTS

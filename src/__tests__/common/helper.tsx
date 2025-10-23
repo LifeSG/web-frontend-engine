@@ -87,7 +87,7 @@ export const FrontendEngineWithCustomButton = (props: {
 	overrideProps?: Partial<Exclude<IFrontendEngineProps, "onSubmit">>;
 }) => {
 	const { data, onClick, onSubmit, overrideProps } = props;
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 
 	return (
 		<>
@@ -108,7 +108,7 @@ interface IFrontendEngineWithEventListenerProps extends IFrontendEngineProps {
 
 export const FrontendEngineWithEventListener = (props: IFrontendEngineWithEventListenerProps) => {
 	const { uiType, componentId, eventType, eventListener, ...otherProps } = props;
-	const formRef = useRef<IFrontendEngineRef>();
+	const formRef = useRef<IFrontendEngineRef>(null);
 
 	useEffect(() => {
 		if (eventType && eventListener) {

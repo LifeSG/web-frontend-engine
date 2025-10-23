@@ -48,10 +48,10 @@ export const LocationPicker = ({
 	// CONST, STATE, REFS
 	// =============================================================================
 	const theme = useContext(ThemeContext);
-	const mapRef = useRef<L.Map>();
+	const mapRef = useRef<L.Map>(null);
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
-	const markersRef = useRef<L.Marker[]>();
+	const markersRef = useRef<L.Marker[]>(null);
 	const isMobile = window.matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`).matches;
 	const leafletConfig: L.MapOptions = {
 		minZoom: 11,

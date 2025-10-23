@@ -11,7 +11,7 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 	// CONST, STATE, REFS
 	// =============================================================================
 	const { accept, capture, children, hint = "Drop photos here", id = "drag-upload", onInput, multiple } = props;
-	const hiddenInputRef = useRef<HTMLInputElement>();
+	const hiddenInputRef = useRef<HTMLInputElement>(null);
 	const { getRootProps, isDragActive } = useDropzone({ onDrop: onInput, noClick: true });
 
 	// =============================================================================

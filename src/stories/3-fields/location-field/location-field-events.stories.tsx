@@ -44,7 +44,7 @@ export default meta;
 const Template = (eventName: string) =>
 	((args) => {
 		const id = `location-field-${eventName}`;
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const handleEvent = (e: unknown) => action(eventName)(e);
 
 		useEffect(() => {
@@ -78,7 +78,7 @@ const EditPromptTemplate = () =>
 	((args) => {
 		const [showEditPrompt, setShowEditPrompt] = useState<boolean>(false);
 		const id = "location-field-click-edit-button";
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
@@ -155,7 +155,7 @@ const EditPromptTemplate = () =>
 const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 	((args) => {
 		const id = "location-field-get-current-location";
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 
 		const handleGetCurrentLocation = (e: TLocationFieldEvents["get-current-location"]) => {
 			// Here is where you would call the device geolocation api
@@ -208,7 +208,7 @@ const ConfirmLocationPromptTemplate = () =>
 	((args) => {
 		const [showConfirmLocationPrompt, setShowConfirmLocationPrompt] = useState<boolean>(false);
 		const id = "location-search-controls-confirm";
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
@@ -318,7 +318,7 @@ const hotlineContent: HotlineContent = {
 const ErrorEventsTemplate = () =>
 	((args) => {
 		const id = "location-field-get-current-location";
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const [showGetLocationError, setShowGetLocationError] = useState(false);
 		const [showOneMapError, setShowOneMapError] = useState(false);
 		const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
@@ -556,7 +556,7 @@ CustomErrorHandling.args = {
 const StrictLocationTemplate = () =>
 	((args) => {
 		const id = "location-modal";
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 
 		const handleCloseLocationModal = (e) => {
 			e.preventDefault();
@@ -608,7 +608,7 @@ StrictLocation.args = {
 const HidePermissionModalTemplate = () =>
 	((args) => {
 		const id = "location-modal";
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 
 		const handleCloseLocationModal = (e) => {
 			e.preventDefault();
@@ -659,7 +659,7 @@ HidePermissionModal.args = {
 const SetSelectablePinsTemplate = () =>
 	((args) => {
 		const id = "location-enable-map-click";
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
@@ -735,7 +735,7 @@ SetSelectablePins.args = {
 const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 	((args) => {
 		const id = "location-refresh";
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const [showRefreshLocationPrompt, setShowRefreshLocationPrompt] = useState(false);
 
 		const handleShowRefreshLocationPrompt = (e) => {

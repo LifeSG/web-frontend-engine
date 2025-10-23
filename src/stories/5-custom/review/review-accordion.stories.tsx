@@ -146,7 +146,7 @@ const SAMPLE_ITEMS: TReviewSchemaItem[] = [
 const EventTemplate = (eventName: string) =>
 	((args) => {
 		const id = `review-accordion-${eventName}`;
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		useEffect(() => {
 			const currentFormRef = formRef.current;

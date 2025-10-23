@@ -222,7 +222,7 @@ Warning.args = {
 const CustomErrorTemplate = () =>
 	((args) => {
 		const id = `file-upload-with-custom-error`;
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const handleSetCustomErrors = () => {
 			const error: TFileUploadErrorMessage = {
 				message: "Custom error message <strong>with bold text</strong>",

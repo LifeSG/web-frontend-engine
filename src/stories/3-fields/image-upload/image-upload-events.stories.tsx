@@ -31,7 +31,7 @@ export default meta;
 const Template = (eventName: string) =>
 	((args) => {
 		const id = `image-upload-${eventName}`;
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		useEffect(() => {
 			const currentFormRef = formRef.current;
@@ -103,7 +103,7 @@ Uploaded.args = {
 const SaveReviewImagesTemplate = (eventName: string) =>
 	((args) => {
 		const id = `image-upload-${eventName}`;
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const [attemptCount, setAttemptCount] = useState(1);
 
 		const handleSaveReviewImages = useCallback(
@@ -160,7 +160,7 @@ SaveReviewImages.args = {
 const ImageUploadReadyOrUploadedTemplate = (eventName: string, customMuted: boolean) =>
 	((args) => {
 		const id = `image-upload-${eventName}`;
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 
 		useEffect(() => {
 			const handleUploadReady = async (e: CustomEvent<{ imageData: IImage }>) => {

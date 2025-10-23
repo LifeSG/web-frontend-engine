@@ -120,7 +120,7 @@ export default meta;
 /* eslint-disable react-hooks/rules-of-hooks */
 const Template = (id: string, eventName?: string | undefined) =>
 	((args) => {
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const handleEvent = (e: unknown) => action(eventName)(e);
 
 		useEffect(() => {

@@ -105,7 +105,7 @@ export default meta;
 const EventTemplate = <T, U = string>(id: string, eventName: string) =>
 	((args) => {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		// eslint-disable-next-line react-hooks/rules-of-hooks

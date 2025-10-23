@@ -17,7 +17,7 @@ export const EventContext = createContext<IEventContext>({
 });
 
 export const EventProvider = ({ children }: IProps) => {
-	const eventManagerRef = useRef<Element>();
+	const eventManagerRef = useRef<Element>(null);
 
 	useEffect(() => {
 		eventManagerRef.current = document.createElement("div");

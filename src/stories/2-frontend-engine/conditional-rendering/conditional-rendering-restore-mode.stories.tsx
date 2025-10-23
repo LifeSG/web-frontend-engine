@@ -69,7 +69,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: StoryFn<IFrontendEngineProps> = (args) => {
-	const ref = useRef<IFrontendEngineRef>();
+	const ref = useRef<IFrontendEngineRef>(null);
 	const handleReset = () => {
 		ref.current.reset();
 	};

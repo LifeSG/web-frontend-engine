@@ -18,7 +18,7 @@ interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 
 const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
 	const { eventType, eventListener, ...otherProps } = props;
-	const formRef = useRef<IFrontendEngineRef>();
+	const formRef = useRef<IFrontendEngineRef>(null);
 
 	useEffect(() => {
 		if (eventType && eventListener) {

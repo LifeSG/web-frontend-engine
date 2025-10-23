@@ -32,7 +32,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 		resolve?: ((v: boolean | PromiseLike<boolean>) => void) | undefined;
 		reject?: ((v: boolean | PromiseLike<boolean>) => void) | undefined;
 	}>({});
-	const promiseTimeoutRef = useRef<NodeJS.Timeout>();
+	const promiseTimeoutRef = useRef<NodeJS.Timeout>(null);
 	const [dimensions, setDimensions] = useState<{ width?: number; height?: number }>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();

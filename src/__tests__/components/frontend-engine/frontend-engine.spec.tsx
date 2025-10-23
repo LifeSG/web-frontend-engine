@@ -795,7 +795,7 @@ describe("frontend-engine", () => {
 				},
 				onClick,
 			} = props;
-			const formRef = useRef<IFrontendEngineRef>();
+			const formRef = useRef<IFrontendEngineRef>(null);
 
 			return (
 				<>
@@ -1233,7 +1233,7 @@ describe("frontend-engine", () => {
 		const eventName = "my-event";
 
 		const FrontendEngineWithEvent = () => {
-			const ref = useRef<IFrontendEngineRef>();
+			const ref = useRef<IFrontendEngineRef>(null);
 			const handleAddFieldEventListener = () => {
 				ref.current?.addFieldEventListener(eventName, FIELD_ONE_ID, testFn);
 			};

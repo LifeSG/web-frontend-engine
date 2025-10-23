@@ -335,7 +335,7 @@ Overrides.argTypes = OVERRIDES_ARG_TYPE;
 const CustomErrorStory = <T,>(id: string, showSubmitButton = true) =>
 	(({ overrides, ...args }) => {
 		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const formRef = useRef<IFrontendEngineRef>();
+		const formRef = useRef<IFrontendEngineRef>(null);
 		const handleTriggeredError = () => {
 			try {
 				throw {
