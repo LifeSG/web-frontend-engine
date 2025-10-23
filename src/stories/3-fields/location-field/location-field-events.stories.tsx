@@ -324,7 +324,7 @@ const ErrorEventsTemplate = () =>
 		const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
 		const [showPostalCodeError, setShowPostalCodeError] = useState(false);
 
-		const renderUnableToSubmitReport = (): JSX.Element => {
+		const renderUnableToSubmitReport = (): React.JSX.Element => {
 			return (
 				<>
 					<br />
@@ -334,7 +334,7 @@ const ErrorEventsTemplate = () =>
 			);
 		};
 
-		const renderHotlineDetails = ({ name, number }: HotlineContent): JSX.Element => {
+		const renderHotlineDetails = ({ name, number }: HotlineContent): React.JSX.Element => {
 			return (
 				<>
 					<br />

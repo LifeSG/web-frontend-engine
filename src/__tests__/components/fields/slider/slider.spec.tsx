@@ -61,12 +61,12 @@ const getSlider = (): HTMLElement => {
 	return getField("slider");
 };
 
-const changeSliderValue = (sliderSpy: jest.SpyInstance<JSX.Element, [FormSliderProps]>, value: number) => {
+const changeSliderValue = (sliderSpy: jest.SpyInstance<React.JSX.Element, [FormSliderProps]>, value: number) => {
 	act(() => sliderSpy.mock.lastCall[0].onChangeEnd(value));
 };
 
 describe(UI_TYPE, () => {
-	let sliderSpy: jest.SpyInstance<JSX.Element, [FormSliderProps]>;
+	let sliderSpy: jest.SpyInstance<React.JSX.Element, [FormSliderProps]>;
 
 	beforeEach(() => {
 		jest.restoreAllMocks();

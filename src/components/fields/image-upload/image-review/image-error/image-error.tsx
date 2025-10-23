@@ -30,7 +30,7 @@ export const ImageError = (props: IProps) => {
 	} = props;
 	const { images } = useContext(ImageContext);
 	const [errorTitle, setErrorTitle] = useState<string>();
-	const [errorDescription, setErrorDescription] = useState<JSX.Element>();
+	const [errorDescription, setErrorDescription] = useState<React.JSX.Element>();
 	const [transformedFileName, setTransformedFileName] = useState<string>();
 	const errorDescriptionRef = useRef<HTMLParagraphElement>(null);
 

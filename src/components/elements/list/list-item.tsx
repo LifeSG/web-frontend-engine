@@ -15,7 +15,7 @@ export const ListItem = (props: IGenericElementProps<IListItemSchema>) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderText = (): JSX.Element[] | JSX.Element => {
+	const renderText = (): React.JSX.Element[] | React.JSX.Element => {
 		if (typeof children === "string") {
 			return <Sanitize inline>{children}</Sanitize>;
 		}

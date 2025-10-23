@@ -140,7 +140,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderChips = (): JSX.Element[] => {
+	const renderChips = (): React.JSX.Element[] => {
 		return options.map((option, index) => (
 			<Chip
 				{...otherSchema}
@@ -154,7 +154,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		));
 	};
 
-	const renderTextareaChip = (): JSX.Element => {
+	const renderTextareaChip = (): React.JSX.Element => {
 		if (!textarea?.label) {
 			return;
 		}
@@ -171,7 +171,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		);
 	};
 
-	const renderTextarea = (): JSX.Element => {
+	const renderTextarea = (): React.JSX.Element => {
 		if (!textarea?.label) {
 			return <></>;
 		}

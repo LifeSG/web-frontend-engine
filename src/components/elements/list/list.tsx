@@ -29,7 +29,7 @@ export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrdered
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderChildren = (): JSX.Element[] | JSX.Element => {
+	const renderChildren = (): React.JSX.Element[] | React.JSX.Element => {
 		return children.map((childSchema, index) => {
 			if (typeof childSchema === "string") {
 				return (

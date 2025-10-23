@@ -74,7 +74,7 @@ export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema
 		allowedAttributes: false,
 	};
 
-	const renderText = (): JSX.Element[] | JSX.Element | string[] | string => {
+	const renderText = (): React.JSX.Element[] | React.JSX.Element | string[] | string => {
 		if (isArray(children)) {
 			return children.map((text, index) => {
 				const childrenId = `${id}-${index}`;

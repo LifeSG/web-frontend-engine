@@ -64,14 +64,14 @@ const renderComponent = (overrideField?: TOverrideField<IHistogramSliderSchema>,
 };
 
 const changeSliderValue = (
-	sliderSpy: jest.SpyInstance<JSX.Element, [FormHistogramSliderProps]>,
+	sliderSpy: jest.SpyInstance<React.JSX.Element, [FormHistogramSliderProps]>,
 	value: [number, number]
 ) => {
 	act(() => sliderSpy.mock.lastCall[0].onChangeEnd(value));
 };
 
 describe(UI_TYPE, () => {
-	let sliderSpy: jest.SpyInstance<JSX.Element, [FormHistogramSliderProps]>;
+	let sliderSpy: jest.SpyInstance<React.JSX.Element, [FormHistogramSliderProps]>;
 
 	beforeEach(() => {
 		jest.restoreAllMocks();

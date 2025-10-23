@@ -9,7 +9,7 @@ interface IFileUploadContext {
 }
 
 interface Props {
-	children: (string | boolean | JSX.Element)[] | (string | boolean | JSX.Element);
+	children: (string | boolean | React.JSX.Element)[] | (string | boolean | React.JSX.Element);
 }
 
 export const FileUploadContext = createContext<IFileUploadContext>({

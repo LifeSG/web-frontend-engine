@@ -71,14 +71,14 @@ const getSelector = (): HTMLElement => {
 };
 
 const changeSliderValue = (
-	sliderSpy: jest.SpyInstance<JSX.Element, [FormSelectHistogramProps]>,
+	sliderSpy: jest.SpyInstance<React.JSX.Element, [FormSelectHistogramProps]>,
 	value: [number, number]
 ) => {
 	act(() => sliderSpy.mock.lastCall[0].onChangeEnd(value));
 };
 
 describe(UI_TYPE, () => {
-	let sliderSpy: jest.SpyInstance<JSX.Element, [FormSelectHistogramProps]>;
+	let sliderSpy: jest.SpyInstance<React.JSX.Element, [FormSelectHistogramProps]>;
 
 	beforeEach(() => {
 		jest.restoreAllMocks();

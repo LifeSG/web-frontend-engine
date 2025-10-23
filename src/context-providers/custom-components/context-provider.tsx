@@ -1,7 +1,7 @@
 import { Dispatch, ReactElement, SetStateAction, createContext, useState } from "react";
 import { TCustomComponentProps } from "../../components";
 
-export type TCustomComponent<S> = (props: TCustomComponentProps<S>) => JSX.Element;
+export type TCustomComponent<S> = (props: TCustomComponentProps<S>) => React.JSX.Element;
 export type TCustomComponents = Record<string, TCustomComponent<any>>;
 
 interface ICustomComponentsContext {

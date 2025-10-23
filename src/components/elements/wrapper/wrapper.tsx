@@ -24,7 +24,7 @@ import { IWrapperProps, TWrapperChildSchema } from "./types";
 const fieldTypeKeys = Object.keys(EFieldType);
 const elementTypeKeys = Object.keys(EElementType);
 
-export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
+export const Wrapper = (props: IWrapperProps): React.JSX.Element | null => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
@@ -52,7 +52,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	useIsomorphicDeepLayoutEffect(() => {
 		const wrapperChildren = overrideSchema(schemaChildren || children, overrides);
 		if (typeof wrapperChildren === "object") {
-			const renderComponents: JSX.Element[] = [];
+			const renderComponents: React.JSX.Element[] = [];
 
 			Object.keys(wrapperChildren).forEach((childId) => {
 				const childSchema = wrapperChildren[childId];
@@ -96,7 +96,7 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	/* eslint-disable indent */
 	const buildConditionalRenderer =
 		(childId: string, childSchema: TWrapperChildSchema) =>
-		(buildFn: (childId: string, child: TWrapperChildSchema) => JSX.Element) =>
+		(buildFn: (childId: string, child: TWrapperChildSchema) => React.JSX.Element) =>
 			(
 				<ConditionalRenderer
 					id={childId}

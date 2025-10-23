@@ -24,7 +24,7 @@ export const Sanitize = (props: IProps) => {
 	// =============================================================================
 	const formatHTMLString = (): string => {
 		if (typeof children !== "string") {
-			return renderToStaticMarkup(children as JSX.Element);
+			return renderToStaticMarkup(children as React.JSX.Element);
 		}
 		return children;
 	};

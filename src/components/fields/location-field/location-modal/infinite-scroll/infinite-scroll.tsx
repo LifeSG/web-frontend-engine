@@ -6,7 +6,7 @@ export type InfiniteScrollProp = {
 	loading: boolean;
 	hasNextPage: boolean;
 	loadMore: VoidFunction;
-	items: JSX.Element[];
+	items: React.JSX.Element[];
 
 	disabled?: boolean;
 	delayInMs?: number;
@@ -14,7 +14,7 @@ export type InfiniteScrollProp = {
 	error?: boolean | undefined;
 };
 
-export const InfiniteScrollList = (props: InfiniteScrollProp): JSX.Element => {
+export const InfiniteScrollList = (props: InfiniteScrollProp): React.JSX.Element => {
 	const { loading, items, hasNextPage, error, loadMore, rootMargin = "0px 0px 50px 0px" } = props;
 
 	const [sentryRef] = useInfiniteScroll({
