@@ -140,15 +140,10 @@ const FileUploadManager = (props: IProps) => {
 	const readFile = async (fileToRead: IFile) => {
 		const { addedFrom, dataURL, rawFile } = fileToRead;
 		const fileType = await FileHelper.getType(rawFile);
-		const validFileType = fileTypeRule.fileType?.length ? fileTypeRule.fileType?.includes(fileType.ext) : true;
+		const validFileType = validateFileType(fileType);
 
-		if (!validFileType) {
-			return {
-				errorMessage:
-					fileTypeRule.errorMessage || ERROR_MESSAGES.UPLOAD().FILE_TYPE(fileTypeRule.fileType || []),
-				fileType,
-				status: EFileStatus.ERROR_FORMAT,
-			};
+		if (validFileType?.errorMessage) {
+			return validFileType;
 		}
 
 		if (maxFileSizeRule.maxSizeInKb > 0) {
@@ -180,6 +175,20 @@ const FileUploadManager = (props: IProps) => {
 		};
 	};
 
+	const validateFileType = (fileType: { mime: string; ext: string }) => {
+		const validFileType = fileTypeRule.fileType?.length ? fileTypeRule.fileType?.includes(fileType.ext) : true;
+
+		if (!validFileType) {
+			return {
+				errorMessage:
+					fileTypeRule.errorMessage || ERROR_MESSAGES.UPLOAD().FILE_TYPE(fileTypeRule.fileType || []),
+				fileType,
+				status: EFileStatus.ERROR_FORMAT,
+			};
+		}
+
+		return {};
+	};
 	// =============================================================================
 	// FILE STATUS HANDLERS
 	// =============================================================================
@@ -208,7 +217,12 @@ const FileUploadManager = (props: IProps) => {
 
 		// rawFile may not be available because some use cases is not able to return dataURL / fileUrl due to security concerns
 		// in such cases, we will rely on the uploadResponse for file info
-		const { errorMessage, fileType } = rawFile ? await readFile({ ...fileToInject, rawFile }) : {};
+		const { errorMessage, fileType } = rawFile
+			? await readFile({ ...fileToInject, rawFile })
+			: validateFileType({
+					mime: fileToInject.uploadResponse?.["mimeType"],
+					ext: fileToInject.uploadResponse?.["ext"],
+			  });
 		const thumbnailImageDataUrl = rawFile ? await generateThumbnail(fileToInject, fileType?.mime) : undefined;
 
 		setFiles((prev) => {
