@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto";
+import { TextDecoder, TextEncoder } from "util";
+import { MessageChannel } from "worker_threads";
 const { ResizeObserver } = window;
 
 window.crypto.randomUUID = randomUUID;
@@ -20,3 +22,7 @@ global.beforeEach(() => {
 global.afterEach(() => {
 	window.ResizeObserver = ResizeObserver;
 });
+
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+global.MessageChannel = MessageChannel;
