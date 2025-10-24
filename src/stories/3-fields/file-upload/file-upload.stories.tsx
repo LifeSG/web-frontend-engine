@@ -183,6 +183,7 @@ export const DefaultValue = DefaultStoryTemplate<IFileUploadSchema, IFileUploadV
 );
 DefaultValue.args = {
 	...COMMON_STORY_ARGS,
+	validation: [{ fileType: ["png"], errorMessage: "Accepts only png format" }],
 	defaultValues: [
 		{
 			fileId: "file-1",
@@ -206,6 +207,45 @@ DefaultValue.argTypes = {
 		},
 	},
 };
+
+export const DefaultValueWithoutImage = DefaultStoryTemplate<IFileUploadSchema, IFileUploadValue[]>(
+	"upload-default-value"
+).bind({});
+DefaultValueWithoutImage.args = {
+	...COMMON_STORY_ARGS,
+	description:
+		"Prefilling without <code>fileUrl</code> and <code>dataURL</code>, the file size and mime type are derived from <code>uploadResponse</code>",
+	uploadOnAddingFile: {
+		type: "base64",
+		url: "https://jsonplaceholder.typicode.com/posts",
+	},
+	defaultValues: [
+		{
+			fileId: "0829ws801xcs9gkt5p3cnlg677ggwani9lldu22bv1xnfjd9jr1pja",
+			fileName: "england-london-bridge.jpg",
+			uploadResponse: {
+				fileSize: 595705,
+				mimeType: "image/jpeg",
+			},
+		},
+	],
+};
+DefaultValueWithoutImage.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary:
+					"{ dataURL?: string; fileId?: string; fileName: string; fileUrl?: string; uploadResponse?: unknown }[]",
+			},
+		},
+		control: {
+			type: "object",
+			value: {},
+		},
+	},
+};
+
 export const WithValidation = DefaultStoryTemplate<IFileUploadSchema>("upload-with-validation").bind({});
 WithValidation.args = {
 	...COMMON_STORY_ARGS,
