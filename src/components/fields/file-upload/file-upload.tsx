@@ -35,6 +35,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		schema: {
 			compressImages,
 			description,
+			hideThumbnail,
 			label,
 			uploadOnAddingFile,
 			validation,
@@ -288,13 +289,14 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		<>
 			<Suspense fallback={null}>
 				<FileUploadManager
-					id={id}
-					fileTypeRule={fileTypeRuleRef.current}
-					maxFileSizeRule={maxFileSizeRuleRef.current}
-					uploadRule={uploadRuleRef.current}
-					upload={uploadOnAddingFile}
-					value={value}
 					compressImages={!!compressImages}
+					fileTypeRule={fileTypeRuleRef.current}
+					hideThumbnail={hideThumbnail}
+					id={id}
+					maxFileSizeRule={maxFileSizeRuleRef.current}
+					upload={uploadOnAddingFile}
+					uploadRule={uploadRuleRef.current}
+					value={value}
 				/>
 			</Suspense>
 			<DSFileUpload

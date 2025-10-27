@@ -17,6 +17,7 @@ import {
 interface IProps {
 	compressImages: boolean;
 	fileTypeRule: IFileUploadValidationRule;
+	hideThumbnail?: boolean | undefined;
 	id: string;
 	maxFileSizeRule: IFileUploadValidationRule;
 	upload: IFileUploadSchema["uploadOnAddingFile"];
@@ -30,7 +31,7 @@ const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { compressImages, fileTypeRule, id, maxFileSizeRule, upload, uploadRule, value } = props;
+	const { compressImages, fileTypeRule, hideThumbnail, id, maxFileSizeRule, upload, uploadRule, value } = props;
 	const { files, setFiles, setCurrentFileIds } = useContext(FileUploadContext);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
@@ -129,7 +130,7 @@ const FileUploadManager = (props: IProps) => {
 	};
 
 	const generateThumbnail = async (file: IFile, fileType?: string | undefined) => {
-		if (RESIZEABLE_IMAGE_TYPES.includes(fileType || file.fileItem?.type)) {
+		if (hideThumbnail !== true && RESIZEABLE_IMAGE_TYPES.includes(fileType || file.fileItem?.type)) {
 			const image = await ImageHelper.dataUrlToImage(file.dataURL);
 			const thumbnail = await ImageHelper.resampleImage(image, { width: 94, height: 94, crop: true });
 			return await FileHelper.fileToDataUrl(thumbnail);
