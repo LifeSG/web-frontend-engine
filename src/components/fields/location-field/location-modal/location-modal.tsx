@@ -52,6 +52,7 @@ const LocationModal = ({
 	addressFieldPlaceholder,
 	searchBarIcon,
 	bufferRadius,
+	pinsOnlyIndicateCurrentLocation,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -503,8 +504,11 @@ const LocationModal = ({
 								mapPanZoom={mapPanZoom}
 								mapBannerText={mapBannerText}
 								disableSelectionFromMap={locationSelectionMode === "pins-only"}
-								disableCurrLocationMarker={locationSelectionMode === "pins-only"}
+								disableSelectedLocationMarker={locationSelectionMode === "pins-only"}
 								selectablePins={selectablePins}
+								pinsOnlyIndicateCurrentLocation={
+									pinsOnlyIndicateCurrentLocation && locationSelectionMode === "pins-only"
+								}
 							/>
 						</>
 					) : (
