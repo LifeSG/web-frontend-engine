@@ -115,13 +115,15 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 		field: ControllerRenderProps<FieldValues, FieldPath<FieldValues>>;
 		fieldState: ControllerFieldState;
 	}) => {
+		// not passing ref because not all components have fields to be manipulated
+		const { ref: _ref, ...fieldPropsWithoutRef } = field;
+
 		const fieldProps = {
-			...field,
+			...fieldPropsWithoutRef,
 			id,
 			formattedLabel: constructFormattedLabel(id, schema),
 			value: getField(id),
 			warning,
-			ref: undefined, // not passing ref because not all components have fields to be manipulated
 		};
 		return <Field schema={schema} {...fieldProps} {...fieldState} />;
 	};

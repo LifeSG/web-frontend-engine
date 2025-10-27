@@ -15,8 +15,10 @@ global.beforeEach(() => {
 		unobserve: jest.fn(),
 		disconnect: jest.fn(),
 	}));
+	window.scrollTo = jest.fn();
 });
 
 global.afterEach(() => {
 	window.ResizeObserver = ResizeObserver;
+	window.scrollTo.mockClear();
 });
