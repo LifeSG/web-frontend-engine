@@ -135,7 +135,7 @@ const meta: Meta = {
 		uploadOnAddingFile: {
 			type: { name: "object", value: {} },
 			description:
-				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId: To indicate which session it belongs to.</li></ul>",
+				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId: To indicate which session it belongs to.</li></ul><div><br><br>API response can optionally include additional file metadata, these values are particularly useful when prefilling default values without `dataURL` or `fileUrl` (see <a href='./?path=/story/field-fileupload--default-value-without-image'>DefaultValueWithoutImage example</a>):</div><ul><li>`mimeType`: MIME type of the file (e.g., 'image/jpeg'). Used for file type validation and display.</li><li>`ext`: File extension (e.g., 'jpg', 'png'). Used for file type identification.</li><li>`fileSize`: Size of the file in bytes. Used for file size validation and display.</li></ul>",
 			table: {
 				type: {
 					summary:
