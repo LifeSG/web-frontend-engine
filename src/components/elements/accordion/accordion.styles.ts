@@ -1,7 +1,9 @@
-import { Spacing } from "@lifesg/react-design-system/theme";
+import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 import styled from "styled-components";
 
 export const Container = styled.div`
-	flex: 1;
-	padding: ${Spacing["spacing-32"]} 0;
+	padding: ${Spacing["spacing-32"]};
+	${MediaQuery.MaxWidth.sm} {
+		padding: ${Spacing["spacing-32"]} ${Spacing["spacing-20"]};
+	}
 `;
