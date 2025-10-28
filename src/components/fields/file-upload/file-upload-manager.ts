@@ -141,10 +141,10 @@ const FileUploadManager = (props: IProps) => {
 	const readFile = async (fileToRead: IFile) => {
 		const { addedFrom, dataURL, rawFile } = fileToRead;
 		const fileType = await FileHelper.getType(rawFile);
-		const validFileType = validateFileType(fileType);
+		const fileTypeResult = validateFileType(fileType);
 
-		if (validFileType?.errorMessage) {
-			return validFileType;
+		if (fileTypeResult?.status < 0) {
+			return fileTypeResult;
 		}
 
 		const fileSize = upload.type === "base64" ? FileHelper.getFilesizeFromBase64(dataURL) : rawFile.size;
