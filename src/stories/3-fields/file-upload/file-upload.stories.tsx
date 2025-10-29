@@ -93,6 +93,19 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		hideThumbnail: {
+			description: "For image files, hide the image preview thumbnail",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: "false" },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 		readOnly: {
 			description: "Prevents adding and deleting files. Upload and delete buttons are hidden.",
 			table: {
@@ -122,7 +135,7 @@ const meta: Meta = {
 		uploadOnAddingFile: {
 			type: { name: "object", value: {} },
 			description:
-				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId: To indicate which session it belongs to.</li></ul>",
+				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId: To indicate which session it belongs to.</li></ul><div><br><br>API response can optionally include additional file metadata, these values are particularly useful when prefilling default values without `dataURL` or `fileUrl` (see <a href='./?path=/story/field-fileupload--default-value-without-image'>DefaultValueWithoutImage example</a>):</div><ul><li>`mimeType`: MIME type of the file (e.g., 'image/jpeg'). Used for file type validation and display.</li><li>`ext`: File extension (e.g., 'jpg', 'png'). Used for file type identification.</li><li>`fileSize`: Size of the file in bytes. Used for file size validation and display.</li></ul>",
 			table: {
 				type: {
 					summary:
@@ -206,6 +219,45 @@ DefaultValue.argTypes = {
 		},
 	},
 };
+
+export const DefaultValueWithoutImage = DefaultStoryTemplate<IFileUploadSchema, IFileUploadValue[]>(
+	"upload-default-value-without-image"
+).bind({});
+DefaultValueWithoutImage.args = {
+	...COMMON_STORY_ARGS,
+	description:
+		"Prefilling without <code>fileUrl</code> and <code>dataURL</code>, the file size and mime type are derived from <code>uploadResponse</code>",
+	uploadOnAddingFile: {
+		type: "base64",
+		url: "https://jsonplaceholder.typicode.com/posts",
+	},
+	defaultValues: [
+		{
+			fileId: "0829ws801xcs9gkt5p3cnlg677ggwani9lldu22bv1xnfjd9jr1pja",
+			fileName: "england-london-bridge.jpg",
+			uploadResponse: {
+				fileSize: 595705,
+				mimeType: "image/jpeg",
+			},
+		},
+	],
+};
+DefaultValueWithoutImage.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary:
+					"{ dataURL?: string; fileId?: string; fileName: string; fileUrl?: string; uploadResponse?: unknown }[]",
+			},
+		},
+		control: {
+			type: "object",
+			value: {},
+		},
+	},
+};
+
 export const WithValidation = DefaultStoryTemplate<IFileUploadSchema>("upload-with-validation").bind({});
 WithValidation.args = {
 	...COMMON_STORY_ARGS,
@@ -308,6 +360,13 @@ MaxFileSize.args = {
 	description: "Max 100kb",
 	validation: [{ maxSizeInKb: 100, errorMessage: "Max 100kb" }],
 	compressImages: true,
+};
+
+export const HideThumbnail = DefaultStoryTemplate<IFileUploadSchema>("upload-hide-thumbnail").bind({});
+HideThumbnail.args = {
+	...COMMON_STORY_ARGS,
+	description: "For image files, hide the image preview thumbnail",
+	hideThumbnail: true,
 };
 
 export const Reset = ResetStoryTemplate<IFileUploadSchema>("upload-reset").bind({});

@@ -35,6 +35,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		schema: {
 			compressImages,
 			description,
+			hideThumbnail,
 			label,
 			uploadOnAddingFile,
 			validation,
@@ -139,13 +140,14 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 						return files
 							.filter((file) => file.status === EFileStatus.UPLOADED)
 							.every((file) => {
-								if (uploadOnAddingFile.type === "base64") {
+								if (uploadOnAddingFile.type === "base64" && file.dataURL) {
 									return (
 										FileHelper.getFilesizeFromBase64(file.dataURL) <=
 										maxFileSizeRuleRef.current.maxSizeInKb * 1024
 									);
 								} else if (uploadOnAddingFile.type === "multipart") {
-									return file.rawFile.size <= maxFileSizeRuleRef.current.maxSizeInKb * 1024;
+									const filesize = file.rawFile?.size || file.uploadResponse?.["fileSize"];
+									return filesize <= maxFileSizeRuleRef.current.maxSizeInKb * 1024;
 								}
 							});
 					}
@@ -287,13 +289,14 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		<>
 			<Suspense fallback={null}>
 				<FileUploadManager
-					id={id}
-					fileTypeRule={fileTypeRuleRef.current}
-					maxFileSizeRule={maxFileSizeRuleRef.current}
-					uploadRule={uploadRuleRef.current}
-					upload={uploadOnAddingFile}
-					value={value}
 					compressImages={!!compressImages}
+					fileTypeRule={fileTypeRuleRef.current}
+					hideThumbnail={hideThumbnail}
+					id={id}
+					maxFileSizeRule={maxFileSizeRuleRef.current}
+					upload={uploadOnAddingFile}
+					uploadRule={uploadRuleRef.current}
+					value={value}
 				/>
 			</Suspense>
 			<DSFileUpload

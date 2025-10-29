@@ -22,6 +22,7 @@ export interface IFileUploadSchema<V = undefined>
 	className?: string | undefined;
 	description?: string | undefined;
 	label: string;
+	hideThumbnail?: boolean | undefined;
 	uploadOnAddingFile: {
 		type: TUploadType;
 		url: string;
