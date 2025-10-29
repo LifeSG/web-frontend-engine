@@ -1,13 +1,18 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
-import { ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
+import { Meta, StoryFn } from "@storybook/react";
+import { ILocationCoord, ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
+	FrontendEngine,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
+	SUBMIT_BUTTON_SCHEMA,
 	WarningStoryTemplate,
 } from "../../common";
+import { useEffect, useRef } from "react";
+import { IFrontendEngineRef } from "../../../components/frontend-engine";
+import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 
 const reverseGeoCodeEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code";
 const convertLatLngToXYEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/convert-latlng-to-xy";
@@ -129,6 +134,18 @@ const meta: Meta = {
 			},
 			control: {
 				type: "number",
+			},
+		},
+		enableCurrentLocationMarker: {
+			description:
+				"Specifies if the user's current location marker is to be shown on the map. The current location marker is unselectable.",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+			},
+			control: {
+				type: "boolean",
 			},
 		},
 	},
@@ -320,4 +337,85 @@ locationSelectionMode.args = {
 	reverseGeoCodeEndpoint,
 	convertLatLngToXYEndpoint,
 	locationSelectionMode: "pins-only",
+};
+
+/* eslint-disable react-hooks/rules-of-hooks */
+const EnableCurrentMarkerTemplate = () =>
+	((args) => {
+		const id = "location-enable-map-click";
+		const formRef = useRef<IFrontendEngineRef>();
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
+
+			return () => {
+				currentFormRef.removeFieldEventListener("location-field", "get-selectable-pins", id, getPins);
+			};
+		}, []);
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const getPins = (e: CustomEvent<ILocationCoord>) => {
+			const res = [
+				{
+					carParkName: "BLK 120 TO 124 PAYA LEBAR WAY",
+					carParkNumber: "M32",
+					carParkType: "SURFACE CAR PARK",
+					parkingSystem: "ELECTRONIC PARKING",
+					latitude: 1.3223122045708784,
+					longitude: 103.88279263612282,
+					xCoord: 33506.0078,
+					yCoord: 33840.2109,
+					distanceFromReference: 109.9831233911331,
+				},
+			];
+			setTimeout(() => {
+				formRef.current.dispatchFieldEvent("location-field", "set-selectable-pins", id, {
+					pins: res.map(
+						(r) =>
+							({
+								lat: r.latitude,
+								lng: r.longitude,
+								resultListItemText: r.carParkName,
+								address: `${r.carParkName} (${r.carParkNumber})`,
+							} as IMapPin)
+					),
+				});
+			}, 2000);
+		};
+
+		return (
+			<>
+				<FrontendEngine
+					ref={formRef}
+					data={{
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[id]: {
+										...args,
+										reverseGeoCodeEndpoint:
+											"https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code",
+									},
+									...SUBMIT_BUTTON_SCHEMA,
+								},
+							},
+						},
+					}}
+				/>
+			</>
+		);
+	}) as StoryFn<ILocationFieldSchema>;
+
+export const EnableCurrentLocationMarker = EnableCurrentMarkerTemplate().bind({});
+EnableCurrentLocationMarker.args = {
+	uiType: "location-field",
+	label: "Enable Current Location Marker",
+	reverseGeoCodeEndpoint,
+	convertLatLngToXYEndpoint,
+	locationSelectionMode: "pins-only",
+	enableCurrentLocationMarker: true,
+	interactiveMapPinIconUrl:
+		"https://dev.eservices.lifesg.io/report-neighbourhood-issue/img/icons/car-location-pin.svg",
 };

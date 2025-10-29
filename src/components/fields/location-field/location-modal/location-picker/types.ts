@@ -4,6 +4,7 @@ import { ILocationCoord } from "../../types";
 export interface IMapPin extends ILocationCoord {
 	address?: string | undefined;
 	resultListItemText?: string | undefined;
+	isCurrentLocation?: boolean | undefined;
 }
 
 export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivElement> {
@@ -28,6 +29,7 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 	onMapCenterChange: (latlng: ILocationCoord) => void;
 	mapBannerText?: string | undefined;
 	disableSelectionFromMap?: boolean | undefined;
-	disableCurrLocationMarker?: boolean | undefined;
+	disableSelectedLocationMarker?: boolean | undefined;
 	selectablePins: IMapPin[];
+	enableCurrentLocationMarker?: boolean | undefined;
 }
