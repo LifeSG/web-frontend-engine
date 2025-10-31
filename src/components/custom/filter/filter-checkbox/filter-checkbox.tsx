@@ -2,7 +2,9 @@ import { Filter } from "@lifesg/react-design-system/filter";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
+import * as Yup from "yup";
 import { TestHelper } from "../../../../utils";
+import { useValidationConfig } from "../../../../utils/hooks";
 import { Sanitize } from "../../../shared";
 import { IGenericCustomFieldProps } from "../../types";
 import { FilterHelper } from "../filter-helper";
@@ -13,7 +15,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
-		schema: { label, options, expanded, ...otherSchema },
+		schema: { label, options, expanded, validation, ...otherSchema },
 		id,
 		value,
 		onChange,
@@ -22,6 +24,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	const { setValue } = useFormContext();
 	const [selectedOptions, setSelectedOptions] = useState<IOption[]>(); // Current selected value state
 	const [expandedState, setExpandedState] = useState(expanded);
+	const { setFieldValidationConfig } = useValidationConfig();
 	const { title, addon } = FilterHelper.constructFormattedLabel(label, id);
 
 	// =============================================================================
@@ -45,6 +48,10 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		setFieldValidationConfig(id, Yup.array().of(Yup.string()), validation);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [validation]);
 
 	useDeepCompareEffect(() => {
 		const flatOptions = flattenOptions(options);
