@@ -5,10 +5,10 @@ import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import { ThemeContext } from "styled-components";
-import { TestHelper } from "../../../../../utils";
+import { GeoLocationHelper, TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { LocationHelper } from "../../location-helper";
 import { ILocationCoord } from "../../types";
@@ -21,7 +21,7 @@ import {
 	LeafletWrapper,
 	LocationPickerWrapper,
 } from "./location-picker.styles";
-import { ILocationPickerProps } from "./types";
+import { ILocationPickerProps, IMapPin } from "./types";
 
 // Show picker when
 // tablet: "map" mode
@@ -41,14 +41,16 @@ export const LocationPicker = ({
 	onMapCenterChange,
 	mapBannerText,
 	disableSelectionFromMap,
-	disableCurrLocationMarker,
+	disableSelectedLocationMarker,
 	selectablePins,
+	pinsOnlyIndicateCurrentLocation,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const theme = useContext(ThemeContext);
 	const mapRef = useRef<L.Map>();
+	const [currentLocation, setCurrentLocation] = useState(undefined);
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
 	const markersRef = useRef<L.Marker[]>();
@@ -63,6 +65,13 @@ export const LocationPicker = ({
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+
+	useEffect(() => {
+		if (pinsOnlyIndicateCurrentLocation) {
+			getCurrentLocationMarker();
+		}
+	}, [pinsOnlyIndicateCurrentLocation]);
+
 	/**
 	 * Attach map and keep ref
 	 */
@@ -130,14 +139,16 @@ export const LocationPicker = ({
 
 		if (selectablePins.length) {
 			const pins = [...selectablePins];
-			if (!disableCurrLocationMarker) {
+			if (!disableSelectedLocationMarker) {
 				pins.push(selectedLocationCoord);
+			} else if (pinsOnlyIndicateCurrentLocation && currentLocation) {
+				pins.push(currentLocation);
 			}
 			zoomWithMarkers(pins, true, selectedLocationCoord, true, true);
 		} else {
-			zoomWithMarkers([selectedLocationCoord], !disableCurrLocationMarker);
+			zoomWithMarkers([selectedLocationCoord], !disableSelectedLocationMarker);
 		}
-	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng, selectablePins]);
+	}, [selectedLocationCoord?.lat, selectedLocationCoord?.lng, selectablePins, currentLocation]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -152,7 +163,7 @@ export const LocationPicker = ({
 	};
 
 	const zoomWithMarkers = (
-		targets: ILocationCoord[],
+		targets: IMapPin[],
 		shouldSetMarkers = true,
 		_zoomCenter?: ILocationCoord,
 		selectableMarkers = false,
@@ -169,22 +180,23 @@ export const LocationPicker = ({
 		zoomAndCenter(map, _zoomCenter || targets[0]);
 	};
 
-	const getMarkers = (
-		map: L.Map,
-		targets: ILocationCoord[],
-		shouldSelectOnClick: boolean,
-		enlargeSelectedMarker: boolean
-	) =>
+	const getMarkers = (map: L.Map, targets: IMapPin[], shouldSelectOnClick: boolean, enlargeSelectedMarker: boolean) =>
 		targets.map((target) => {
-			const isSelected = enlargeSelectedMarker
-				? target.lat === selectedLocationCoord.lat && target.lng === selectedLocationCoord.lng
-				: undefined;
+			const isSelected =
+				enlargeSelectedMarker && !target.isCurrentLocation
+					? target.lat === selectedLocationCoord.lat && target.lng === selectedLocationCoord.lng
+					: undefined;
 			const mapPinIcon =
 				"data:image/svg+xml;base64," +
 				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour["icon-primary"]({ theme })} />));
-			const marker = markerFrom(target, interactiveMapPinIconUrl ?? mapPinIcon, isSelected).addTo(map);
+			const marker = markerFrom(
+				target,
+				interactiveMapPinIconUrl && !target.isCurrentLocation ? interactiveMapPinIconUrl : mapPinIcon,
+				isSelected,
+				target.isCurrentLocation
+			).addTo(map);
 
-			return shouldSelectOnClick
+			return shouldSelectOnClick && !target.isCurrentLocation
 				? marker.on("click", () => {
 						// To accurately identify the pin, use the original lat & lng from the pin
 						// instead of the ones from the LeafletMouseEvent.
@@ -212,6 +224,11 @@ export const LocationPicker = ({
 		setTimeout(() => map.invalidateSize(), 500);
 	};
 
+	const getCurrentLocationMarker = async () => {
+		const currentLocationValue = await GeoLocationHelper.getCurrentLocation();
+		setCurrentLocation({ ...currentLocationValue, isCurrentLocation: true });
+	};
+
 	return (
 		<LocationPickerWrapper
 			className={`${className}-location-picker`}
@@ -229,6 +246,9 @@ export const LocationPicker = ({
 			<ButtonLocation
 				data-testid={TestHelper.generateId(id, "refresh-current-location-button")}
 				onClick={() => {
+					if (pinsOnlyIndicateCurrentLocation) {
+						getCurrentLocationMarker();
+					}
 					if (locationAvailable) {
 						const shouldPreventDefault = !dispatchFieldEvent("click-refresh-current-location", id);
 						if (!shouldPreventDefault) {

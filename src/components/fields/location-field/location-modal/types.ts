@@ -26,4 +26,5 @@ export interface ILocationModalProps
 	locationListTitle?: string | undefined;
 	mapBannerText?: string | undefined;
 	locationSelectionMode?: "default" | "pins-only" | undefined;
+	pinsOnlyIndicateCurrentLocation?: boolean | undefined;
 }
