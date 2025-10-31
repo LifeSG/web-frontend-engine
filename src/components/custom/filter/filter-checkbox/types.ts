@@ -2,8 +2,7 @@ import { IBaseCustomFieldSchema } from "../../types";
 import { TClearBehavior } from "../filter/types";
 import { IFilterItemLabel } from "../types";
 
-export interface IFilterCheckboxSchema<V = undefined>
-	extends Omit<IBaseCustomFieldSchema<"filter-checkbox", V>, "validation"> {
+export interface IFilterCheckboxSchema<V = undefined> extends IBaseCustomFieldSchema<"filter-checkbox", V> {
 	label: string | IFilterItemLabel;
 	options: IOption[];
 	collapsible?: boolean | undefined;
