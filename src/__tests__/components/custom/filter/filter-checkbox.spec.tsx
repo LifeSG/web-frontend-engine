@@ -57,6 +57,10 @@ const getCheckboxByVal = (val: string) => {
 	return screen.getByText(val).closest("label").querySelector("input");
 };
 
+const getNestedCheckboxByVal = (val: string) => {
+	return screen.getByRole("treeitem", { name: val });
+};
+
 describe(REFERENCE_KEY, () => {
 	afterEach(() => {
 		jest.resetAllMocks();
@@ -280,18 +284,42 @@ describe(REFERENCE_KEY, () => {
 
 	describe("nested options", () => {
 		const nestedOptionsConfig = {
+			minimisableOptions: false,
 			options: [
 				{
-					label: "Food",
-					key: "Food",
+					label: "Mains",
+					key: "Mains",
 					options: [
 						{ label: "Pizza", value: "Pizza" },
 						{ label: "Burger", value: "Burger" },
 					],
 				},
+				{
+					label: "Soups",
+					key: "Soups",
+					options: [{ label: "Mushroom", value: "Mushroom" }],
+				},
 				{ label: "Drinks", value: "Drinks" },
 			],
 		};
+
+		it("should be able to support default values", async () => {
+			const defaultValues = ["Pizza", "Mushroom"];
+			renderComponent(nestedOptionsConfig, { defaultValues: { [COMPONENT_ID]: defaultValues } });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			defaultValues.forEach((val) => {
+				const checkBox = getNestedCheckboxByVal(val);
+				expect(checkBox).toBeChecked();
+			});
+
+			expect(getNestedCheckboxByVal("Mains")).toHaveAttribute("aria-checked", "mixed");
+			expect(getNestedCheckboxByVal("Soups")).toBeChecked();
+			expect(getNestedCheckboxByVal("Drinks")).not.toBeChecked();
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
+		});
 
 		it("should submit only child values when only children are selected", async () => {
 			renderComponent(nestedOptionsConfig);
@@ -313,7 +341,7 @@ describe(REFERENCE_KEY, () => {
 		it("should submit only child values when only parent is selected", async () => {
 			renderComponent(nestedOptionsConfig);
 
-			fireEvent.click(screen.getByText("Food"));
+			fireEvent.click(screen.getByText("Mains"));
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
