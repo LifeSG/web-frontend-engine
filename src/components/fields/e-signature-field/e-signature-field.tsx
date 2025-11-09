@@ -23,8 +23,8 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		value,
 		warning,
 	} = props;
-	const [stateValue, setStateValue] = useState<IESignatureValue>(value);
 	const [signatureDataURL, setSignatureDataURL] = useState<string>(null);
+	const [loadError, setLoadError] = useState(false);
 	const [uploadErrorCount, setUploadErrorCount] = useState(0);
 	const [loadingProgress, setLoadingProgress] = useState<number>(null);
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -57,7 +57,30 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value);
+		setLoadError(false);
+
+		const esignatureValue = value as IESignatureValue;
+
+		if (!esignatureValue) {
+			setSignatureDataURL(null);
+		} else if (esignatureValue.dataURL) {
+			setSignatureDataURL(esignatureValue.dataURL);
+		} else if (esignatureValue.fileUrl) {
+			const loadImage = async () => {
+				try {
+					const response: Blob = await new AxiosApiClient("", undefined, undefined, false, {
+						responseType: "blob",
+					}).get(esignatureValue?.fileUrl);
+					const fileType = await FileHelper.getType(new File([response], esignatureValue.fileId));
+					const rawFile = new File([response], esignatureValue.fileId, { type: fileType.mime });
+					const dataURL = await FileHelper.fileToDataUrl(rawFile);
+					setSignatureDataURL(dataURL);
+				} catch {
+					setLoadError(true);
+				}
+			};
+			loadImage();
+		}
 	}, [value]);
 
 	// =============================================================================
@@ -66,6 +89,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	const handleChange = async (dataURL: string) => {
 		const fileId = generateRandomId();
 		setSignatureDataURL(dataURL);
+		setLoadError(false);
 		if (!isEmpty(upload)) {
 			try {
 				const response = await uploadFile(fileId, dataURL);
@@ -122,12 +146,12 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderError = () => {
-		if ((!error?.message && !uploadErrorCount) || loadingProgress !== null) return null;
+		if ((!error?.message && !uploadErrorCount && !loadError) || loadingProgress !== null) return null;
 
 		// upload error takes highest precedence
 		if (uploadErrorCount > 0) {
 			return (
-				<ErrorWrapper weight="semibold">
+				<ErrorWrapper>
 					{uploadRuleRef.current?.errorMessage || ERROR_MESSAGES.ESIGNATURE.UPLOAD}
 					<TryAgain type="button" onClick={() => handleChange(signatureDataURL)}>
 						Please try again.
@@ -141,7 +165,11 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 			);
 		}
 
-		return <ErrorWrapper weight="semibold">{error?.message}</ErrorWrapper>;
+		if (loadError) {
+			return <ErrorWrapper>Failed to load</ErrorWrapper>;
+		}
+
+		return <ErrorWrapper>{error?.message}</ErrorWrapper>;
 	};
 
 	return (
@@ -151,7 +179,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 				id={id}
 				label={formattedLabel}
 				onChange={handleChange}
-				value={stateValue?.dataURL}
+				value={signatureDataURL}
 				{...(loadingProgress !== null && { loadingProgress })}
 			/>
 			{renderError()}

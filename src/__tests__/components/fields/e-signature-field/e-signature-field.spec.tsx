@@ -99,6 +99,31 @@ describe(UI_TYPE, () => {
 		expect(screen.getByAltText("Signature preview")).toHaveAttribute("src", PNG_BASE64);
 	});
 
+	it("should be able to support default value (multipart)", async () => {
+		const uploadConfig = { url: "url", type: "multipart" } as const;
+		jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+		jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "png", mime: "image/png" });
+		jest.spyOn(FileHelper, "fileToDataUrl").mockResolvedValue(PNG_BASE64);
+
+		renderComponent(
+			{ upload: uploadConfig },
+			{
+				defaultValues: {
+					[COMPONENT_ID]: {
+						fieldId: "fieldId",
+						fileUrl: "https://example.com",
+					},
+				},
+			}
+		);
+
+		await act(async () => {
+			// wait for useEffect
+		});
+
+		expect(screen.getByAltText("Signature preview")).toHaveAttribute("src", PNG_BASE64);
+	});
+
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 		await waitFor(() => fireEvent.click(getSubmitButton()));

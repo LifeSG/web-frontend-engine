@@ -13,7 +13,7 @@ export const ErrorWrapper = styled(Typography.BodySM)`
 	margin: -${Spacing["spacing-16"]} 0 ${Spacing["spacing-32"]};
 	color: ${Colour["text-error"]};
 	outline: none;
-	${Font["body-sm-bold"]}
+	${Font["body-sm-semibold"]}
 `;
 
 export const TryAgain = styled.button`
