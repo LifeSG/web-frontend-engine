@@ -71,6 +71,10 @@ const drawAndSave = (edit = false) => {
 	fireEvent.click(screen.getByRole("button", { name: "Save" }));
 };
 
+const getTryAgainButton = () => {
+	return screen.getByRole("button", { name: "Please try again." });
+};
+
 describe(UI_TYPE, () => {
 	beforeEach(() => {
 		setupJestCanvasMock();
@@ -148,7 +152,7 @@ describe(UI_TYPE, () => {
 			await waitFor(() => drawAndSave());
 
 			expect(screen.getByText(ERROR_MESSAGES.ESIGNATURE.UPLOAD)).toBeInTheDocument();
-			expect(screen.getByRole("button", { name: "Please try again." })).toBeInTheDocument();
+			expect(getTryAgainButton()).toBeInTheDocument();
 			expect(screen.queryByTestId(`${COMPONENT_ID}-base-progress-bar`)).not.toBeInTheDocument();
 		});
 
@@ -158,12 +162,15 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => drawAndSave());
 
-			const tryAgainButton = screen.getByRole("button", { name: "Please try again." });
-			await waitFor(() => fireEvent.click(tryAgainButton));
-			await waitFor(() => fireEvent.click(tryAgainButton));
+			await waitFor(() => fireEvent.click(getTryAgainButton()));
+			await waitFor(() => fireEvent.click(getTryAgainButton()));
 
 			expect(screen.getByText(ERROR_MESSAGES.ESIGNATURE.UPLOAD)).toBeInTheDocument();
-			expect(screen.getByRole("button", { name: "Please try again." })).toBeInTheDocument();
+			expect(getTryAgainButton()).toBeInTheDocument();
+
+			await waitFor(() => {
+				expect(screen.getByTestId("upload-refresh-alert")).toBeInTheDocument();
+			});
 		});
 
 		it("should allow customisation of the upload failed error message", async () => {
@@ -175,6 +182,55 @@ describe(UI_TYPE, () => {
 			await waitFor(() => drawAndSave());
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		});
+	});
+
+	describe("load default value (multipart)", () => {
+		const uploadConfig = { url: "url", type: "multipart" } as const;
+		const defaultValue = { fieldId: "fieldId", fileUrl: "https://example.com" };
+
+		it("should be able to support default value (multipart)", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "png", mime: "image/png" });
+			jest.spyOn(FileHelper, "fileToDataUrl").mockResolvedValue(PNG_BASE64);
+
+			renderComponent({ upload: uploadConfig }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			await act(async () => {
+				// wait for useEffect
+			});
+
+			expect(screen.getByAltText("Signature preview")).toHaveAttribute("src", PNG_BASE64);
+		});
+
+		it("should show error message with retry button if loading of image fails", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "get").mockRejectedValue({});
+
+			renderComponent({ upload: uploadConfig }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			await act(async () => {
+				// wait for useEffect
+			});
+
+			expect(screen.getByText("Failed to load.")).toBeInTheDocument();
+			expect(getTryAgainButton()).toBeInTheDocument();
+		});
+
+		it("should show refresh page alert message if loading of image fails for 3 consecutive times", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "get").mockRejectedValue({});
+
+			renderComponent({ upload: uploadConfig }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			await act(async () => {
+				// wait for useEffect
+			});
+
+			await waitFor(() => fireEvent.click(getTryAgainButton()));
+			await waitFor(() => fireEvent.click(getTryAgainButton()));
+
+			expect(screen.getByText("Failed to load.")).toBeInTheDocument();
+			expect(getTryAgainButton()).toBeInTheDocument();
+			expect(screen.getByTestId("load-refresh-alert")).toBeInTheDocument();
 		});
 	});
 

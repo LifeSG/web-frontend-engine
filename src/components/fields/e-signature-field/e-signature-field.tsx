@@ -1,4 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
+import { CanceledError } from "axios";
 import isEmpty from "lodash/isEmpty";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -23,9 +24,9 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		value,
 		warning,
 	} = props;
-	const [stateValue, setStateValue] = useState<IESignatureValue>(value);
 	const [signatureDataURL, setSignatureDataURL] = useState<string>(null);
 	const [uploadErrorCount, setUploadErrorCount] = useState(0);
+	const [loadErrorCount, setLoadErrorCount] = useState(0);
 	const [loadingProgress, setLoadingProgress] = useState<number>(null);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const uploadRuleRef = useRef<IESignatureFieldValidationRule>(null);
@@ -57,7 +58,16 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	}, [validation]);
 
 	useEffect(() => {
-		setStateValue(value);
+		setLoadErrorCount(0);
+
+		if (!hasValue(value)) {
+			setSignatureDataURL(null);
+		} else if (value.dataURL) {
+			setSignatureDataURL(value.dataURL);
+		} else if (value.fileUrl) {
+			const controller = loadImage(value.fileId, value.fileUrl);
+			return () => controller.abort();
+		}
 	}, [value]);
 
 	// =============================================================================
@@ -66,6 +76,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	const handleChange = async (dataURL: string) => {
 		const fileId = generateRandomId();
 		setSignatureDataURL(dataURL);
+		setLoadErrorCount(0);
 		if (!isEmpty(upload)) {
 			try {
 				const response = await uploadFile(fileId, dataURL);
@@ -93,6 +104,10 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
+	const hasValue = (val: unknown): val is IESignatureValue => {
+		return !!val;
+	};
+
 	const uploadFile = async (fileId: string, signatureDataURL: string) => {
 		setLoadingProgress(0);
 		const formData = new FormData();
@@ -118,22 +133,48 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		return response;
 	};
 
+	const loadImage = (fileId: string, fileUrl: string) => {
+		const controller = new AbortController();
+
+		const fetchImage = async () => {
+			try {
+				const request = await new AxiosApiClient("", undefined, undefined, false, {
+					responseType: "blob",
+				}).get<Blob>(fileUrl, { signal: controller.signal });
+				const fileType = await FileHelper.getType(new File([request], fileId));
+				const rawFile = new File([request], fileId, { type: fileType.mime });
+				const dataURL = await FileHelper.fileToDataUrl(rawFile);
+				setSignatureDataURL(dataURL);
+				setLoadErrorCount(0);
+			} catch (error) {
+				if (error instanceof CanceledError) {
+					return;
+				}
+				setLoadErrorCount((prevCount) => prevCount + 1);
+			}
+		};
+
+		fetchImage();
+
+		return controller;
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderError = () => {
-		if ((!error?.message && !uploadErrorCount) || loadingProgress !== null) return null;
+		if ((!error?.message && !uploadErrorCount && !loadErrorCount) || loadingProgress !== null) return null;
 
 		// upload error takes highest precedence
 		if (uploadErrorCount > 0) {
 			return (
-				<ErrorWrapper weight="semibold">
+				<ErrorWrapper>
 					{uploadRuleRef.current?.errorMessage || ERROR_MESSAGES.ESIGNATURE.UPLOAD}
 					<TryAgain type="button" onClick={() => handleChange(signatureDataURL)}>
 						Please try again.
 					</TryAgain>
 					{uploadErrorCount >= 3 && (
-						<RefreshAlert type="warning" data-testid="refresh-alert">
+						<RefreshAlert type="warning" data-testid="upload-refresh-alert">
 							Refresh this page if you cannot upload your signature.
 						</RefreshAlert>
 					)}
@@ -141,7 +182,23 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 			);
 		}
 
-		return <ErrorWrapper weight="semibold">{error?.message}</ErrorWrapper>;
+		if (loadErrorCount > 0 && hasValue(value)) {
+			return (
+				<ErrorWrapper>
+					Failed to load.
+					<TryAgain type="button" onClick={() => loadImage(value.fileId, value.fileUrl)}>
+						Please try again.
+					</TryAgain>
+					{loadErrorCount >= 3 && (
+						<RefreshAlert type="warning" data-testid="load-refresh-alert">
+							Refresh this page if your signature failed to load.
+						</RefreshAlert>
+					)}
+				</ErrorWrapper>
+			);
+		}
+
+		return <ErrorWrapper>{error?.message}</ErrorWrapper>;
 	};
 
 	return (
@@ -151,7 +208,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 				id={id}
 				label={formattedLabel}
 				onChange={handleChange}
-				value={stateValue?.dataURL}
+				value={signatureDataURL}
 				{...(loadingProgress !== null && { loadingProgress })}
 			/>
 			{renderError()}

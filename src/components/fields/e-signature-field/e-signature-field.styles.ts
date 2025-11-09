@@ -1,6 +1,6 @@
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Color } from "@lifesg/react-design-system/color";
-import { Text, TextStyleHelper } from "@lifesg/react-design-system/text";
+import { TextStyleHelper } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
 
 export const ESignatureWrapper = styled.div`
@@ -9,10 +9,11 @@ export const ESignatureWrapper = styled.div`
 	}
 `;
 
-export const ErrorWrapper = styled(Text.H6)`
+export const ErrorWrapper = styled.div`
 	margin: -1rem 0 2rem;
 	color: ${Color.Validation.Red.Text};
 	outline: none;
+	${TextStyleHelper.getTextStyle("H6", "semibold")}
 `;
 
 export const TryAgain = styled.button`

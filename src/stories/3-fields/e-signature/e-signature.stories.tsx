@@ -80,7 +80,7 @@ export const DefaultValue = DefaultStoryTemplate<IESignatureFieldSchema, IESigna
 ).bind({});
 DefaultValue.args = {
 	...COMMON_STORY_ARGS,
-	defaultValues: { fileId: "fileId", dataURL: signatureDataURL, fileUrl: "fileUrl" },
+	defaultValues: { fileId: "fileId", dataURL: signatureDataURL },
 	validation: [{ required: true }],
 };
 DefaultValue.argTypes = {
@@ -96,6 +96,23 @@ DefaultValue.argTypes = {
 			type: "object",
 			value: {},
 		},
+	},
+};
+
+export const DefaultValueMultipart = DefaultStoryTemplate<IESignatureFieldSchema, IESignatureValue>(
+	"e-signature-default-value-multipart"
+).bind({});
+DefaultValueMultipart.args = {
+	...COMMON_STORY_ARGS,
+	defaultValues: {
+		fileId: "fileId",
+		fileUrl:
+			"https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Autograph_of_Benjamin_Franklin.svg/330px-Autograph_of_Benjamin_Franklin.svg.png",
+		uploadResponse: { field: "example" },
+	},
+	upload: {
+		type: "multipart",
+		url: "https://jsonplaceholder.typicode.com/posts",
 	},
 };
 
