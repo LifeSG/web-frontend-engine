@@ -160,6 +160,9 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	}, [validation]);
 
 	useEffect(() => {
+		const hasUnloadedImages = images.some((img) => img.status === EImageStatus.NONE);
+		if (hasUnloadedImages) return; // Waiting for all images to load
+
 		images.some((image, index) => {
 			const previousFile = previousImages?.[index];
 			if (image.status !== previousFile?.status || image.dataURL !== previousFile.dataURL) {
