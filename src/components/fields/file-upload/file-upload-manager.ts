@@ -234,6 +234,10 @@ const FileUploadManager = (props: IProps) => {
 			rawFile?.size || fileToInject.uploadResponse?.["fileSize"]
 		);
 
+		let size = rawFile?.size || fileToInject.uploadResponse?.["fileSize"] || 0;
+		if (isNaN(size)) {
+			size = 0;
+		}
 		const thumbnailImageDataUrl = rawFile ? await generateThumbnail(fileToInject, fileType?.mime) : undefined;
 
 		setFiles((prev) => {
@@ -249,7 +253,7 @@ const FileUploadManager = (props: IProps) => {
 						rawFile?.name || fileToInject.rawFile.name
 					),
 					progress: 1,
-					size: rawFile?.size || fileToInject.uploadResponse?.["fileSize"],
+					size,
 					type: fileType?.mime || fileToInject.uploadResponse?.["mimeType"],
 					thumbnailImageDataUrl,
 				},
