@@ -112,6 +112,11 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		setLoadingProgress(0);
 		const formData = new FormData();
 		formData.append("fileId", fileId);
+
+		if (upload.sessionId) {
+			formData.append("sessionId", upload.sessionId);
+		}
+
 		if (upload.type === "base64") {
 			formData.append("dataURL", signatureDataURL);
 		} else if (upload.type === "multipart") {
@@ -123,6 +128,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		const response = await new AxiosApiClient("", undefined, undefined, true).post(upload.url, formData, {
 			headers: {
 				"Content-Type": upload.type === "base64" ? "application/json" : "multipart/form-data",
+				...upload.headers,
 			},
 			onUploadProgress: (progressEvent) => {
 				const { loaded, total } = progressEvent;
