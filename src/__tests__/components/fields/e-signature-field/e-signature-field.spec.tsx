@@ -127,6 +127,29 @@ describe(UI_TYPE, () => {
 			);
 		});
 
+		it("should include optional headers and session id when specified", async () => {
+			const uploadConfig = {
+				url: "url",
+				type: "base64",
+				headers: { "test-header": "test" },
+				sessionId: "test-session-id",
+			} satisfies IESignatureFieldSchema["upload"];
+			const uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({});
+			renderComponent({ upload: uploadConfig });
+			await waitFor(() => drawAndSave());
+
+			expect(uploadSpy).toHaveBeenCalledWith(
+				uploadConfig.url,
+				expect.any(FormData),
+				expect.objectContaining({
+					headers: { "Content-Type": "application/json", "test-header": "test" },
+				})
+			);
+
+			const formData = [...(uploadSpy.mock.lastCall[1] as FormData).entries()];
+			expect(formData).toContainEqual(["sessionId", "test-session-id"]);
+		});
+
 		it("should be able to upload as multipart content-type", async () => {
 			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
 
