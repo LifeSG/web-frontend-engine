@@ -30,6 +30,10 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(() => {
+		if (disabled !== "invalid-form") setIsDisabled(!!disabled);
+	}, [disabled]);
+
 	useDeepCompareEffect(() => {
 		(async () => {
 			if (disabled === "invalid-form") {
