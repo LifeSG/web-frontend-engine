@@ -1,6 +1,5 @@
-import { Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
 import { Alert } from "@lifesg/react-design-system/alert";
-import { Typography } from "@lifesg/react-design-system/typography";
+import { Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
 import styled from "styled-components";
 
 export const ESignatureWrapper = styled.div`
@@ -9,11 +8,11 @@ export const ESignatureWrapper = styled.div`
 	}
 `;
 
-export const ErrorWrapper = styled(Typography.BodySM)`
+export const ErrorWrapper = styled.div`
 	margin: -${Spacing["spacing-16"]} 0 ${Spacing["spacing-32"]};
 	color: ${Colour["text-error"]};
 	outline: none;
-	${Font["body-sm-bold"]}
+	${Font["body-sm-semibold"]}
 `;
 
 export const TryAgain = styled.button`
