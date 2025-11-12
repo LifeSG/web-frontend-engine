@@ -50,6 +50,7 @@ const LocationModal = ({
 	addressFieldPlaceholder,
 	searchBarIcon,
 	bufferRadius,
+	pinsOnlyIndicateCurrentLocation,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -76,6 +77,7 @@ const LocationModal = ({
 	// map picked value can be falsy/ no address found
 	// selectedAddressInfo have valid addresses from one map
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
+	const [currentLocation, setCurrentLocation] = useState<ILocationCoord>();
 
 	const shouldCallGetSelectablePins = useRef(true);
 
@@ -136,9 +138,10 @@ const LocationModal = ({
 		onClose();
 	}, [onClose]);
 
-	const handleGetLocationCallback = () => {
+	const handleGetLocationCallback = (lat: number, lng: number) => {
 		setGettingCurrentLocation(false);
 		setLocationAvailable(true);
+		setCurrentLocation({ lat, lng });
 	};
 
 	const handleApiErrors = (error?: any) => {
@@ -499,8 +502,12 @@ const LocationModal = ({
 								mapPanZoom={mapPanZoom}
 								mapBannerText={mapBannerText}
 								disableSelectionFromMap={locationSelectionMode === "pins-only"}
-								disableCurrLocationMarker={locationSelectionMode === "pins-only"}
+								disableSelectedLocationMarker={locationSelectionMode === "pins-only"}
 								selectablePins={selectablePins}
+								pinsOnlyIndicateCurrentLocation={
+									pinsOnlyIndicateCurrentLocation && locationSelectionMode === "pins-only"
+								}
+								currentLocation={currentLocation}
 							/>
 						</>
 					) : (
