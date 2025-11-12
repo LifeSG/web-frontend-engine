@@ -34,6 +34,7 @@ export interface ILocationFieldSchema<V = undefined>
 	locationModalStyles?: string | undefined;
 	locationListTitle?: string | undefined;
 	mapBannerText?: string | undefined;
+	pinsOnlyIndicateCurrentLocation?: boolean | undefined;
 }
 
 export type TSinglePanelInputMode = "search" | "map";
