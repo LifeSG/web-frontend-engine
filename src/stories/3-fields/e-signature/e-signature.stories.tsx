@@ -49,10 +49,11 @@ const meta: Meta = {
 		upload: {
 			type: { name: "object", value: {} },
 			description:
-				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li></ul>",
+				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId (optional): To indicate which session it belongs to.</li></ul>",
 			table: {
 				type: {
-					summary: "{ type: base64|multipart, url: string }",
+					summary:
+						'{ type: "base64" | "multipart", url: string, headers?: AxiosRequestConfig["headers"], sessionId?: string }',
 				},
 				defaultValue: { summary: null },
 			},
@@ -80,7 +81,7 @@ export const DefaultValue = DefaultStoryTemplate<IESignatureFieldSchema, IESigna
 ).bind({});
 DefaultValue.args = {
 	...COMMON_STORY_ARGS,
-	defaultValues: { fileId: "fileId", dataURL: signatureDataURL, fileUrl: "fileUrl" },
+	defaultValues: { fileId: "fileId", dataURL: signatureDataURL },
 	validation: [{ required: true }],
 };
 DefaultValue.argTypes = {
@@ -96,6 +97,23 @@ DefaultValue.argTypes = {
 			type: "object",
 			value: {},
 		},
+	},
+};
+
+export const DefaultValueMultipart = DefaultStoryTemplate<IESignatureFieldSchema, IESignatureValue>(
+	"e-signature-default-value-multipart"
+).bind({});
+DefaultValueMultipart.args = {
+	...COMMON_STORY_ARGS,
+	defaultValues: {
+		fileId: "fileId",
+		fileUrl:
+			"https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Autograph_of_Benjamin_Franklin.svg/330px-Autograph_of_Benjamin_Franklin.svg.png",
+		uploadResponse: { field: "example" },
+	},
+	upload: {
+		type: "multipart",
+		url: "https://jsonplaceholder.typicode.com/posts",
 	},
 };
 
