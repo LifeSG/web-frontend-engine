@@ -230,14 +230,13 @@ const FileUploadManager = (props: IProps) => {
 					mime: fileToInject.uploadResponse?.["mimeType"],
 					ext: fileToInject.uploadResponse?.["ext"],
 			  });
-		const { errorMessage: filesizeErrorMessage } = validateFileSize(
-			rawFile?.size || fileToInject.uploadResponse?.["fileSize"]
-		);
 
 		let size = rawFile?.size || fileToInject.uploadResponse?.["fileSize"] || 0;
 		if (isNaN(size)) {
 			size = 0;
 		}
+		const { errorMessage: filesizeErrorMessage } = validateFileSize(size);
+
 		const thumbnailImageDataUrl = rawFile ? await generateThumbnail(fileToInject, fileType?.mime) : undefined;
 
 		setFiles((prev) => {
