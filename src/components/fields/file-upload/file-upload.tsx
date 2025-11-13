@@ -146,7 +146,10 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 										maxFileSizeRuleRef.current.maxSizeInKb * 1024
 									);
 								} else if (uploadOnAddingFile.type === "multipart") {
-									const filesize = file.rawFile?.size || file.uploadResponse?.["fileSize"];
+									let filesize = file.rawFile?.size || file.uploadResponse?.["fileSize"];
+									if (isNaN(filesize)) {
+										filesize = 0;
+									}
 									return filesize <= maxFileSizeRuleRef.current.maxSizeInKb * 1024;
 								}
 							});
