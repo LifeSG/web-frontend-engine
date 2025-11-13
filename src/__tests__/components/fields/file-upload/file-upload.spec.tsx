@@ -293,6 +293,31 @@ describe(UI_TYPE, () => {
 			});
 		});
 
+		it("should display 0kb when dataURL and fileUrl are not present and uploadResponse.fileSize is not a number", async () => {
+			const uploadResponse = {
+				fileId: "f307b120-6c4d-4b2c-b278-33bb9aefbc6e",
+				fileName: "my-image.jpg",
+				fileSize: "test",
+				mimeType: "image/jpeg",
+				uploadedAt: "2025-01-01T03:57:55.573Z",
+			};
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(uploadSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getByText("0 KB")).toBeInTheDocument();
+			});
+		});
+
 		it("should add files until max number of files", async () => {
 			await renderComponent({
 				overrideField: { validation: [{ max: 1, errorMessage: ERROR_MESSAGE }] },
