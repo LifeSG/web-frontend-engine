@@ -45,9 +45,10 @@ export const StyledLocationPicker = styled(LocationPicker)<ISinglePanelStyle>`
 	width: 48.89%;
 
 	${MediaQuery.MaxWidth.tablet}, (orientation: landscape) and (max-height: ${MediaWidths.mobileL}px) {
-		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? "none" : "block")};
-		position: relative;
-		left: 0;
+		/* Keep map mounted but control visibility to prevent coordinate corruption */
+		display: block;
+		visibility: ${({ panelInputMode }) => (panelInputMode !== "map" ? "hidden" : "visible")};
+		pointer-events: ${({ panelInputMode }) => (panelInputMode !== "map" ? "none" : "auto")};
 		width: 100%;
 		margin-top: 1rem;
 		height: calc(100% - 13rem);
