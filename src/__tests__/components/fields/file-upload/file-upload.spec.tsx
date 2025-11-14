@@ -222,6 +222,102 @@ describe(UI_TYPE, () => {
 			);
 		});
 
+		it("should support default value without dataURL and fileUrl", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+			});
+
+			expect(uploadSpy).not.toHaveBeenCalled();
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({
+					field: expect.arrayContaining([
+						expect.objectContaining({
+							dataURL: undefined,
+							fileId: FILE_1.name,
+							fileName: FILE_1.name,
+						}),
+					]),
+				})
+			);
+		});
+
+		it("should determine file size based on uploadResponse when dataURL and fileUrl are not present", async () => {
+			const uploadResponse = {
+				fileId: "f307b120-6c4d-4b2c-b278-33bb9aefbc6e",
+				fileName: "my-image.jpg",
+				fileSize: 595705,
+				mimeType: "image/jpeg",
+				uploadedAt: "2025-01-01T03:57:55.573Z",
+			};
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(uploadSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getByText("582 KB")).toBeInTheDocument();
+			});
+		});
+
+		it("should display 0kb when dataURL and fileUrl are not present", async () => {
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(uploadSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getByText("0 KB")).toBeInTheDocument();
+			});
+		});
+
+		it("should display 0kb when dataURL and fileUrl are not present and uploadResponse.fileSize is not a number", async () => {
+			const uploadResponse = {
+				fileId: "f307b120-6c4d-4b2c-b278-33bb9aefbc6e",
+				fileName: "my-image.jpg",
+				fileSize: "test",
+				mimeType: "image/jpeg",
+				uploadedAt: "2025-01-01T03:57:55.573Z",
+			};
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(uploadSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getByText("0 KB")).toBeInTheDocument();
+			});
+		});
+
 		it("should add files until max number of files", async () => {
 			await renderComponent({
 				overrideField: { validation: [{ max: 1, errorMessage: ERROR_MESSAGE }] },
@@ -239,6 +335,23 @@ describe(UI_TYPE, () => {
 				expect(screen.getAllByTestId(/thumbnail$/).length).toBe(1);
 				expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 			});
+		});
+
+		it("should not render thumbnail when hideThumbnail is true", async () => {
+			await renderComponent({
+				overrideField: { hideThumbnail: true },
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ dataURL: JPG_BASE64, fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			await waitFor(() => expect(screen.getByLabelText(`delete ${FILE_1.name}`)).toBeInTheDocument());
+			expect(screen.queryByTestId(`${FILE_1.name}-thumbnail`)).not.toBeInTheDocument();
 		});
 	});
 
@@ -280,6 +393,58 @@ describe(UI_TYPE, () => {
 		});
 	});
 
+	describe("default value validation", () => {
+		const uploadResponse = {
+			fileSize: 999999,
+			mimeType: "image/jpeg",
+		};
+		const base64DefaultValues = {
+			dataURL: JPG_BASE64,
+			fileId: FILE_1.name,
+			fileName: FILE_1.name,
+			uploadResponse,
+		};
+		const fileUrlDefaultValues = {
+			fileUrl: "mock url",
+			fileId: FILE_1.name,
+			fileName: FILE_1.name,
+			uploadResponse,
+		};
+		beforeEach(() => {
+			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
+			jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+		});
+
+		it.each`
+			scenario                                                  | type           | validation                | defaultValues
+			${"do not match file type"}                               | ${"base64"}    | ${{ fileType: ["png"] }}  | ${base64DefaultValues}
+			${"do not match file type"}                               | ${"multipart"} | ${{ fileType: ["png"] }}  | ${fileUrlDefaultValues}
+			${"exceed file size limit"}                               | ${"base64"}    | ${{ maxSizeInKb: 0.001 }} | ${base64DefaultValues}
+			${"exceed file size limit"}                               | ${"multipart"} | ${{ maxSizeInKb: 0.001 }} | ${fileUrlDefaultValues}
+			${"have no dataURL / fileUrl and do not match file type"} | ${"base64"}    | ${{ fileType: ["png"] }}  | ${{ ...base64DefaultValues, dataURL: undefined, fileUrl: undefined }}
+			${"have no dataURL / fileUrl and do not match file type"} | ${"multipart"} | ${{ fileType: ["png"] }}  | ${{ ...fileUrlDefaultValues, dataURL: undefined, fileUrl: undefined }}
+			${"have no dataURL / fileUrl and exceed file size limit"} | ${"base64"}    | ${{ maxSizeInKb: 0.001 }} | ${{ ...base64DefaultValues, dataURL: undefined, fileUrl: undefined }}
+			${"have no dataURL / fileUrl and exceed file size limit"} | ${"multipart"} | ${{ maxSizeInKb: 0.001 }} | ${{ ...fileUrlDefaultValues, dataURL: undefined, fileUrl: undefined }}
+		`(
+			"should reject $type file upload with default values that $scenario",
+			async ({ type, validation, defaultValues }) => {
+				await renderComponent({
+					overrideField: {
+						uploadOnAddingFile: { type, url: UPLOAD_URL },
+						validation: [{ ...validation, errorMessage: ERROR_MESSAGE }],
+					},
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: [defaultValues],
+						},
+					},
+				});
+
+				await waitFor(() => expect(screen.getAllByText(ERROR_MESSAGE).length).toBe(2)); // each error message is rendered twice
+			}
+		);
+	});
+
 	describe("upload", () => {
 		it("should upload with additional headers", async () => {
 			const mockUploadResponse = { data: { hello: "world" } };
@@ -305,6 +470,21 @@ describe(UI_TYPE, () => {
 				expect.anything(),
 				expect.objectContaining({ headers: expect.objectContaining(mockHeaders) })
 			);
+		});
+
+		it("should not render thumbnail when hideThumbnail is true", async () => {
+			const mockUploadResponse = { data: { hello: "world" } };
+			uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue(mockUploadResponse);
+
+			await renderComponent({
+				files: [FILE_1],
+				uploadType: "base64",
+				overrideField: { hideThumbnail: true },
+			});
+			await flushPromise(200);
+
+			await waitFor(() => expect(screen.getByLabelText(`delete ${FILE_1.name}`)).toBeInTheDocument());
+			expect(screen.queryAllByTestId(/-thumbnail$/)).toHaveLength(0);
 		});
 	});
 

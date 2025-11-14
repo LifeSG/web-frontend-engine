@@ -17,6 +17,7 @@ import {
 interface IProps {
 	compressImages: boolean;
 	fileTypeRule: IFileUploadValidationRule;
+	hideThumbnail?: boolean | undefined;
 	id: string;
 	maxFileSizeRule: IFileUploadValidationRule;
 	upload: IFileUploadSchema["uploadOnAddingFile"];
@@ -30,7 +31,7 @@ const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { compressImages, fileTypeRule, id, maxFileSizeRule, upload, uploadRule, value } = props;
+	const { compressImages, fileTypeRule, hideThumbnail, id, maxFileSizeRule, upload, uploadRule, value } = props;
 	const { files, setFiles, setCurrentFileIds } = useContext(FileUploadContext);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
@@ -129,7 +130,7 @@ const FileUploadManager = (props: IProps) => {
 	};
 
 	const generateThumbnail = async (file: IFile, fileType?: string | undefined) => {
-		if (RESIZEABLE_IMAGE_TYPES.includes(fileType || file.fileItem?.type)) {
+		if (hideThumbnail !== true && RESIZEABLE_IMAGE_TYPES.includes(fileType || file.fileItem?.type)) {
 			const image = await ImageHelper.dataUrlToImage(file.dataURL);
 			const thumbnail = await ImageHelper.resampleImage(image, { width: 94, height: 94, crop: true });
 			return await FileHelper.fileToDataUrl(thumbnail);
@@ -140,31 +141,16 @@ const FileUploadManager = (props: IProps) => {
 	const readFile = async (fileToRead: IFile) => {
 		const { addedFrom, dataURL, rawFile } = fileToRead;
 		const fileType = await FileHelper.getType(rawFile);
-		const validFileType = fileTypeRule.fileType?.length ? fileTypeRule.fileType?.includes(fileType.ext) : true;
+		const fileTypeResult = validateFileType(fileType);
 
-		if (!validFileType) {
-			return {
-				errorMessage:
-					fileTypeRule.errorMessage || ERROR_MESSAGES.UPLOAD().FILE_TYPE(fileTypeRule.fileType || []),
-				fileType,
-				status: EFileStatus.ERROR_FORMAT,
-			};
+		if (fileTypeResult?.status < 0) {
+			return fileTypeResult;
 		}
 
-		if (maxFileSizeRule.maxSizeInKb > 0) {
-			const maxSizeInB = maxFileSizeRule.maxSizeInKb * 1024;
-			if (
-				(upload.type === "base64" && FileHelper.getFilesizeFromBase64(dataURL) > maxSizeInB) ||
-				(upload.type === "multipart" && rawFile.size > maxSizeInB)
-			) {
-				return {
-					errorMessage:
-						maxFileSizeRule.errorMessage ||
-						ERROR_MESSAGES.UPLOAD().MAX_FILE_SIZE(maxFileSizeRule.maxSizeInKb),
-					fileType,
-					status: EFileStatus.ERROR_SIZE,
-				};
-			}
+		const fileSize = upload.type === "base64" ? FileHelper.getFilesizeFromBase64(dataURL) : rawFile.size;
+		const { errorMessage, status } = validateFileSize(fileSize);
+		if (status < 0) {
+			return { errorMessage, fileType, status };
 		}
 
 		if (addedFrom === "schema") {
@@ -178,6 +164,36 @@ const FileUploadManager = (props: IProps) => {
 			fileType,
 			status: EFileStatus.UPLOAD_READY,
 		};
+	};
+
+	const validateFileType = (fileType: { mime: string; ext: string }) => {
+		const validFileType = fileTypeRule.fileType?.length ? fileTypeRule.fileType?.includes(fileType.ext) : true;
+
+		if (!validFileType) {
+			return {
+				errorMessage:
+					fileTypeRule.errorMessage || ERROR_MESSAGES.UPLOAD().FILE_TYPE(fileTypeRule.fileType || []),
+				fileType,
+				status: EFileStatus.ERROR_FORMAT,
+			};
+		}
+
+		return {};
+	};
+
+	const validateFileSize = (fileSizeInKb: number) => {
+		if (maxFileSizeRule.maxSizeInKb > 0) {
+			const maxSizeInB = maxFileSizeRule.maxSizeInKb * 1024;
+			if (fileSizeInKb > maxSizeInB) {
+				return {
+					errorMessage:
+						maxFileSizeRule.errorMessage ||
+						ERROR_MESSAGES.UPLOAD().MAX_FILE_SIZE(maxFileSizeRule.maxSizeInKb),
+					status: EFileStatus.ERROR_SIZE,
+				};
+			}
+		}
+		return {};
 	};
 
 	// =============================================================================
@@ -205,24 +221,39 @@ const FileUploadManager = (props: IProps) => {
 			rawFile = new File([response], fileToInject.rawFile.name, { type: fileType.mime });
 			fileToInject.dataURL = await FileHelper.fileToDataUrl(rawFile);
 		}
-		const { errorMessage, fileType } = await readFile({ ...fileToInject, rawFile });
-		const thumbnailImageDataUrl = await generateThumbnail(fileToInject, fileType.mime);
+
+		// rawFile may not be available because some use cases is not able to return dataURL / fileUrl due to security concerns
+		// in such cases, we will rely on the uploadResponse for file info
+		const { errorMessage, fileType } = rawFile
+			? await readFile({ ...fileToInject, rawFile })
+			: validateFileType({
+					mime: fileToInject.uploadResponse?.["mimeType"],
+					ext: fileToInject.uploadResponse?.["ext"],
+			  });
+
+		let size = rawFile?.size || fileToInject.uploadResponse?.["fileSize"] || 0;
+		if (isNaN(size)) {
+			size = 0;
+		}
+		const { errorMessage: filesizeErrorMessage } = validateFileSize(size);
+
+		const thumbnailImageDataUrl = rawFile ? await generateThumbnail(fileToInject, fileType?.mime) : undefined;
 
 		setFiles((prev) => {
 			const updatedFiles = [...prev];
 			updatedFiles[index] = {
 				...fileToInject,
 				fileItem: {
-					errorMessage,
+					errorMessage: errorMessage || filesizeErrorMessage,
 					id: fileToInject.fileItem?.id || generateRandomId(),
 					name: FileHelper.deduplicateFileName(
-						files.map(({ fileItem }) => fileItem?.name),
+						files.map(({ fileItem }) => fileItem.name),
 						index,
-						rawFile.name
+						rawFile?.name || fileToInject.rawFile.name
 					),
 					progress: 1,
-					size: rawFile.size,
-					type: fileType.mime,
+					size,
+					type: fileType?.mime || fileToInject.uploadResponse?.["mimeType"],
 					thumbnailImageDataUrl,
 				},
 				rawFile,
