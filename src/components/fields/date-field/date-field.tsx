@@ -34,6 +34,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [derivedProps, setDerivedProps] = useState<Pick<DateInputProps, "minDate" | "maxDate" | "disabledDates">>();
+	const [isInteracted, setIsInteracted] = useState<boolean>(false);
 	const { setFieldValidationConfig } = useValidationConfig();
 	// =============================================================================
 	// EFFECTS
@@ -180,7 +181,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		if (!dateFormat) return;
 
 		if (!value) {
-			if (!isDirty) {
+			if (!isInteracted) {
 				// runs on mount and reset
 				if (useCurrentDate) {
 					const currentDate = DateTimeHelper.formatDateTime(LocalDate.now().toString(), dateFormat, "date");
@@ -210,12 +211,13 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [useCurrentDate, value, dateFormat, isDirty]);
+	}, [useCurrentDate, value, dateFormat, isInteracted]);
 
 	// =============================================================================
 	// EVENT HANDLER
 	// =============================================================================
 	const handleChange = (value: string) => {
+		setIsInteracted(true);
 		onChange({
 			target: {
 				value: DateTimeHelper.formatDateTime(value, dateFormat, "date", ERROR_MESSAGES.DATE.INVALID),
