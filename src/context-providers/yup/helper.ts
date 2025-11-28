@@ -85,13 +85,9 @@ export namespace YupHelper {
 					when: fieldValidationConfig.when ? { ...fieldValidationConfig.when } : undefined,
 				};
 				Object.keys(parsedConfig.when).forEach((whenFieldId) => {
-					// Check field existence
 					if (!fieldConfigs[whenFieldId]) {
-						console.error(
-							`Validation error: Field "${id}" depends on "${whenFieldId}" ` +
-								`which doesn't exist in form schema`
-						);
-						return; // Skip this when rule
+						console.warn(`field "${whenFieldId}" was not found, when condition on "${id}" was not applied`);
+						return;
 					}
 
 					// when
@@ -211,13 +207,12 @@ export namespace YupHelper {
 				case !!rule.when:
 					{
 						Object.keys(rule.when).forEach((fieldId) => {
-							// Safety net - check yupSchema exists
-							const whenYupSchema = rule.when[fieldId].yupSchema;
+							const whenYupSchema = rule.when[fieldId]?.yupSchema;
 							if (!whenYupSchema) {
 								console.warn(
 									`[mapRules] Unexpected: yupSchema missing for field "${fieldId}" in when condition. `
 								);
-								return; // Skip this when rule
+								return;
 							}
 
 							const isRule = rule.when[fieldId].is;
