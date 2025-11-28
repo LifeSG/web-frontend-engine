@@ -10,6 +10,13 @@ const ERROR_MESSAGE_3 = "test error message 3";
 
 describe("YupHelper", () => {
 	describe("buildSchema", () => {
+		beforeEach(() => {
+			jest.spyOn(console, "warn").mockImplementation();
+		});
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
 		it("should create Yup schema based on config provided", () => {
 			const values = {
 				field1: undefined,
@@ -83,6 +90,29 @@ describe("YupHelper", () => {
 			expect(error.inner[0].message).toBe(ERROR_MESSAGE);
 			expect(error.inner[1].message).toBe(ERROR_MESSAGE_2);
 			expect(() => schema.validateSync({ field1: "hello" })).not.toThrow();
+		});
+
+		it("should log warn and skip when condition if dependent field does not exist", () => {
+			const schema = YupHelper.buildSchema({
+				field1: {
+					schema: Yup.string(),
+					validationRules: [
+						{
+							when: {
+								nonExistentField: {
+									is: [{ empty: true }],
+									then: [{ required: true, errorMessage: ERROR_MESSAGE }],
+								},
+							},
+						},
+					],
+				},
+			});
+
+			expect(console.warn).toHaveBeenCalledWith(
+				'field "nonExistentField" was not found, when condition on "field1" was not applied'
+			);
+			expect(() => schema.validateSync({ field1: undefined })).not.toThrow();
 		});
 	});
 
