@@ -80,6 +80,22 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1 }));
 	});
 
+	it("should not update value when user types 'e' or 'E' in numeric field", async () => {
+		renderComponent();
+		const input = getNumericField();
+
+		fireEvent.change(input, { target: { value: "5" } });
+		expect(input).toHaveValue(5);
+
+		fireEvent.keyDown(input, { key: "e", code: "KeyE" });
+		fireEvent.keyDown(input, { key: "E", code: "KeyE" });
+
+		expect(input).toHaveValue(5);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 5 }));
+	});
+
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 

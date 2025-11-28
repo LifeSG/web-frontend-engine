@@ -137,6 +137,15 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		setStateValue(event.target.value);
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+		if (uiType === "numeric-field") {
+			// handle suppressing exponent input for numeric fields
+			if (event.key.toLowerCase() === "e") {
+				event.preventDefault();
+			}
+		}
+	};
+
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
@@ -219,6 +228,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 				onDrop={(e) => (customOptions?.preventDragAndDrop ? e.preventDefault() : null)}
 				inputMode={formatInputMode()}
 				onChange={handleChange}
+				onKeyDown={handleKeyDown}
 				value={stateValue}
 				errorMessage={error?.message}
 				addon={buildAddOn()}
