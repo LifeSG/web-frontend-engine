@@ -80,16 +80,15 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1 }));
 	});
 
-	it("should not update value when user types 'e' or 'E' in numeric field", async () => {
+	it("should not allow user to enter 'e' or 'E' notation in numeric field", async () => {
 		renderComponent();
 		const input = getNumericField();
 
-		fireEvent.change(input, { target: { value: "5" } });
+		await userEvent.type(input, "5");
 		expect(input).toHaveValue(5);
 
-		fireEvent.keyDown(input, { key: "e", code: "KeyE" });
-		fireEvent.keyDown(input, { key: "E", code: "KeyE" });
-
+		await userEvent.type(input, "e");
+		await userEvent.type(input, "E");
 		expect(input).toHaveValue(5);
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
