@@ -85,6 +85,11 @@ export namespace YupHelper {
 					when: fieldValidationConfig.when ? { ...fieldValidationConfig.when } : undefined,
 				};
 				Object.keys(parsedConfig.when).forEach((whenFieldId) => {
+					if (!fieldConfigs[whenFieldId]) {
+						console.warn(`field "${whenFieldId}" was not found, when condition on "${id}" was not applied`);
+						return;
+					}
+
 					// when
 					whenPairIds.push([id, whenFieldId]);
 					parsedConfig.when[whenFieldId] = {
@@ -202,6 +207,14 @@ export namespace YupHelper {
 				case !!rule.when:
 					{
 						Object.keys(rule.when).forEach((fieldId) => {
+							const whenYupSchema = rule.when[fieldId]?.yupSchema;
+							if (!whenYupSchema) {
+								console.warn(
+									`[mapRules] Unexpected: yupSchema missing for field "${fieldId}" in when condition. `
+								);
+								return;
+							}
+
 							const isRule = rule.when[fieldId].is;
 							const thenRule = mapRules(yupSchema, rule.when[fieldId].then);
 							const otherwiseRule =
@@ -210,7 +223,7 @@ export namespace YupHelper {
 							if (Array.isArray(isRule) && (isRule as unknown[]).every((r) => typeof r === "object")) {
 								yupSchema = yupSchema.when(fieldId, (value: unknown) => {
 									const localYupSchema = mapRules(
-										rule.when[fieldId].yupSchema?.clone(),
+										whenYupSchema.clone(),
 										isRule as IYupConditionalValidationRule[]
 									);
 									let fulfilled = false;
