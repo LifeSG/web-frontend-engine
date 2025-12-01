@@ -80,6 +80,21 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toBeCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1 }));
 	});
 
+	it("should not allow user to enter 'e' or 'E' notation in numeric field", async () => {
+		renderComponent();
+		const input = getNumericField();
+
+		await userEvent.type(input, "5");
+		expect(input).toHaveValue(5);
+
+		await userEvent.type(input, "e");
+		await userEvent.type(input, "E");
+		expect(input).toHaveValue(5);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 5 }));
+	});
+
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
