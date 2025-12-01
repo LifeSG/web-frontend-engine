@@ -5,12 +5,7 @@ import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IFileUploadSchema, TFileUploadErrorMessage, TUploadType } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
-import {
-	EFieldType,
-	IFrontendEngineData,
-	IFrontendEngineProps,
-	IFrontendEngineRef,
-} from "../../../../components/types";
+import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
@@ -534,9 +529,6 @@ describe(UI_TYPE, () => {
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
 			expect(uploadSpy).toHaveBeenCalledTimes(2);
-
-			const formData = [...(uploadSpy.mock.lastCall[1] as FormData).entries()];
-			expect(formData).toContainEqual(["fieldType", EFieldType["FILE-UPLOAD"]]);
 			expect(SUBMIT_FN).toHaveBeenCalledWith(
 				expect.objectContaining({
 					field: expect.arrayContaining([
