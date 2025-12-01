@@ -3,7 +3,7 @@ import { setupJestCanvasMock } from "jest-canvas-mock";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineRef } from "../../../../components";
-import { IESignatureFieldSchema } from "../../../../components/fields";
+import { EFieldType, IESignatureFieldSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { AxiosApiClient, FileHelper } from "../../../../utils";
 import {
@@ -167,6 +167,8 @@ describe(UI_TYPE, () => {
 					headers: { "Content-Type": "multipart/form-data" },
 				})
 			);
+			const formData = [...(uploadSpy.mock.lastCall[1] as FormData).entries()];
+			expect(formData).toContainEqual(["fieldType", EFieldType["E-SIGNATURE-FIELD"]]);
 		});
 
 		it("should show error message with retry button and dismiss the loading indicator if upload fails", async () => {

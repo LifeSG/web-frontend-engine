@@ -5,7 +5,12 @@ import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IFileUploadSchema, TFileUploadErrorMessage, TUploadType } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
-import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
+import {
+	EFieldType,
+	IFrontendEngineData,
+	IFrontendEngineProps,
+	IFrontendEngineRef,
+} from "../../../../components/types";
 import { AxiosApiClient, FileHelper, ImageHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
@@ -547,6 +552,8 @@ describe(UI_TYPE, () => {
 					]),
 				})
 			);
+			const formData = [...(uploadSpy.mock.lastCall[1] as FormData).entries()];
+			expect(formData).toContainEqual(["fieldType", EFieldType["FILE-UPLOAD"]]);
 		});
 	});
 
