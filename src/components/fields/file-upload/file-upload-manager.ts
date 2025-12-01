@@ -13,6 +13,7 @@ import {
 	IFileUploadValue,
 	TUploadErrorDetail,
 } from "./types";
+import { EFieldType } from "../types";
 
 interface IProps {
 	compressImages: boolean;
@@ -308,6 +309,7 @@ const FileUploadManager = (props: IProps) => {
 		if (upload.type === "base64") {
 			formData.append("dataURL", fileToUpload.dataURL);
 		} else if (upload.type === "multipart") {
+			formData.append("fieldType", EFieldType["FILE-UPLOAD"]);
 			formData.append("file", fileToUpload.rawFile, fileToUpload.fileItem?.name);
 		}
 

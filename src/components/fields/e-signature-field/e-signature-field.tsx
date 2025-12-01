@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { AxiosApiClient, FileHelper, generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
-import { IGenericFieldProps } from "../types";
+import { EFieldType, IGenericFieldProps } from "../types";
 import { ESignatureWrapper, ErrorWrapper, RefreshAlert, TryAgain } from "./e-signature-field.styles";
 import { IESignatureFieldSchema, IESignatureFieldValidationRule, IESignatureValue } from "./types";
 
@@ -123,6 +123,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 			const blob = await FileHelper.dataUrlToBlob(signatureDataURL);
 			const file = FileHelper.blobToFile(blob, { name: fileId, lastModified: Date.now() });
 			formData.append("file", file, fileId);
+			formData.append("fieldType", EFieldType["E-SIGNATURE-FIELD"]);
 		}
 
 		const response = await new AxiosApiClient("", undefined, undefined, true).post(upload.url, formData, {
