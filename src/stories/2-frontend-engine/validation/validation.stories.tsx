@@ -5,6 +5,7 @@ import {
 	ARRAY_BASED_VALIDATION_DEMO_FIELD_IDS,
 	NUMERIC_BASED_VALIDATION_DEMO_FIELD_IDS,
 	OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS,
+	RAW_TEXT_INPUT_VALIDATION_DEMO_FIELD_IDS,
 	STRING_BASED_VALIDATION_DEMO_FIELD_IDS,
 	VALIDATION_DEMO_CONFIGS,
 } from "./validation.data";
@@ -603,6 +604,19 @@ export const NotMatches: Story = {
 				rule: { notMatches: "/^01/", errorMessage: "Must not be at 1st floor." },
 			},
 		],
+	},
+};
+
+export const Trim: Story = {
+	name: "Trim",
+	args: {
+		info: {
+			rule: { trim: true, errorMessage: "Input must not be blank" },
+			ruleName: "trim",
+			ruleDescription:
+				"Indicates that the value must either be empty or contain characters other than whitespace.",
+		},
+		fields: RAW_TEXT_INPUT_VALIDATION_DEMO_FIELD_IDS,
 	},
 };
 

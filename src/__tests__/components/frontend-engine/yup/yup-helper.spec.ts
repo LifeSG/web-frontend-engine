@@ -186,6 +186,7 @@ describe("YupHelper", () => {
 			${"string"}  | ${"uinfin"}            | ${{ uinfin: true }}                 | ${"S1234567D"}                            | ${"S1234567A"}
 			${"string"}  | ${"matches"}           | ${{ matches: "/^(hello)/" }}        | ${"hello world"}                          | ${"hi there"}
 			${"string"}  | ${"notMatches"}        | ${{ notMatches: "/^(hello)/" }}     | ${"hi there"}                             | ${"hello world"}
+			${"string"}  | ${"trim"}              | ${{ trim: true }}                   | ${"  .  "}                                | ${"      "}
 			${"string"}  | ${"length"}            | ${{ length: 1 }}                    | ${"h"}                                    | ${"hi"}
 			${"string"}  | ${"min"}               | ${{ min: 2 }}                       | ${"he"}                                   | ${"h"}
 			${"string"}  | ${"max"}               | ${{ max: 1 }}                       | ${"h"}                                    | ${"hi"}

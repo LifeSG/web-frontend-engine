@@ -26,6 +26,12 @@ YupHelper.addCondition("string", "notMatches", (value: string, regex: string) =>
 	const parsedRegex = new RegExp(matches[1], matches[2]);
 	return !parsedRegex.test(value);
 });
+YupHelper.addCondition("string", "trim", (value: string, trim: boolean) => {
+	if (isEmptyValue(value) || !trim) {
+		return true;
+	}
+	return /\S/.test(value);
+});
 YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
 	if (!values?.length) return true;
 	if (!Array.isArray(matches)) {
