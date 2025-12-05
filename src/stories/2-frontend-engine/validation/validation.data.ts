@@ -214,6 +214,11 @@ export const STRING_BASED_VALIDATION_DEMO_FIELD_IDS: TValidationDemoFieldIds[] =
 	"timeField",
 	"unitNumberField",
 ];
+export const RAW_TEXT_INPUT_VALIDATION_DEMO_FIELD_IDS: TValidationDemoFieldIds[] = [
+	"textField",
+	"textarea",
+	"maskedField",
+];
 export const ARRAY_BASED_VALIDATION_DEMO_FIELD_IDS: TValidationDemoFieldIds[] = ["checkbox", "chips", "multiSelect"];
 export const NUMERIC_BASED_VALIDATION_DEMO_FIELD_IDS: TValidationDemoFieldIds[] = ["numericField", "slider"];
 export const OBJECT_BASED_VALIDATION_DEMO_FIELD_IDS: TValidationDemoFieldIds[] = [
