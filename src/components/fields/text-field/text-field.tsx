@@ -146,6 +146,14 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		}
 	};
 
+	const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>): void => {
+		const pastedText = event.clipboardData.getData("text");
+		// disable pasting of numbers with exponential notation for numeric fields
+		if (customOptions?.preventCopyAndPaste || (uiType === "numeric-field" && /e/i.test(pastedText))) {
+			event.preventDefault();
+		}
+	};
+
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
@@ -224,7 +232,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 				ref={ref}
 				type={formatInputType()}
 				label={formattedLabel}
-				onPaste={(e) => (customOptions?.preventCopyAndPaste ? e.preventDefault() : null)}
+				onPaste={handlePaste}
 				onDrop={(e) => (customOptions?.preventDragAndDrop ? e.preventDefault() : null)}
 				inputMode={formatInputMode()}
 				onChange={handleChange}
