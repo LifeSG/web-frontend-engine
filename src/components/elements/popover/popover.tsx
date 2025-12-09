@@ -3,7 +3,7 @@ import * as Icons from "@lifesg/react-icons";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
-import { IPopoverSchema } from "./types";
+import { IPopoverSchema, PopoverHintType } from "./types";
 
 export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 	// =============================================================================
@@ -15,7 +15,7 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 			children,
 			className,
 			icon,
-			hint: { content: hintContent, ...hintProps },
+			hint: { content: hintContent, type: hintContentType, ...hintProps },
 			...otherSchema
 		},
 	} = props;
@@ -30,6 +30,17 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 		return <Element />;
 	};
 
+	const renderPopoverContent = () => {
+		switch (hintContentType) {
+			case PopoverHintType.IMAGE:
+				return <img src={hintContent as string} alt="popover content" />;
+			case PopoverHintType.COMPONENT:
+				return hintContent as React.ReactElement;
+			default:
+				return <Sanitize inline>{hintContent as string}</Sanitize>;
+		}
+	};
+
 	return (
 		<PopoverInline
 			id={id}
@@ -37,7 +48,7 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 			className={className}
 			icon={renderIcon()}
 			content={children && <Sanitize inline>{children}</Sanitize>}
-			popoverContent={<Sanitize inline>{hintContent}</Sanitize>}
+			popoverContent={renderPopoverContent()}
 			{...hintProps}
 			{...otherSchema}
 		/>
