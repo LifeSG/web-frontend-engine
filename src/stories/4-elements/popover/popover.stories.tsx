@@ -2,7 +2,9 @@ import * as Icons from "@lifesg/react-icons";
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IPopoverSchema } from "../../../components/elements";
+import { PopoverHintType } from "../../../components/elements/popover/types";
 import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
+import { Button } from "@lifesg/react-design-system";
 
 const meta: Meta = {
 	title: "Element/Popover",
@@ -14,6 +16,22 @@ const meta: Meta = {
 					<p>
 						This component renders the <code>PopoverInline</code> provided by the Design System within a
 						Frontend Engine generated form to display text or an icon that triggers a popover.
+					</p>
+
+					<p>
+						The popover hint content supports three types:
+						<ul>
+							<li>
+								<strong>Text content</strong> (default): Plain text or HTML strings
+							</li>
+							<li>
+								<strong>Image content</strong>: Display images by providing a URL
+							</li>
+							<li>
+								<strong>Custom components</strong>: Render any React component for rich, interactive
+								content
+							</li>
+						</ul>
 					</p>
 
 					<p>
@@ -62,7 +80,8 @@ const meta: Meta = {
 		hint: {
 			description: `The popover configuration
 				<ul>
-					<li>content: Content to display in the popover.</li>
+					<li>content: Content to display in the popover (string or ReactElement).</li>
+					<li>type: Type of content - default | image | component.</li>
 					<li>customOffset: The popover offset.</li>
 					<li>position: The preferred popover position.</li>
 					<li>zIndex: Customises the popover z-index.</li>
@@ -71,7 +90,7 @@ const meta: Meta = {
 			table: {
 				type: {
 					summary:
-						"{ content: string; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
+						"{ content: string | ReactElement; type?: PopoverHintType; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
 				},
 			},
 		},
@@ -127,6 +146,26 @@ Default.args = {
 	uiType: "popover",
 	children: "More info",
 	hint: { content: "Hint" },
+};
+
+export const PopoverImage = Template("popover-image").bind({});
+PopoverImage.args = {
+	uiType: "popover",
+	children: "More info",
+	hint: {
+		content: "https://assets.life.gov.sg/lifesg/logo-lifesg.svg",
+		type: PopoverHintType.IMAGE,
+	},
+};
+
+export const PopoverComponent = Template("popover-component").bind({});
+PopoverComponent.args = {
+	uiType: "popover",
+	children: "More info",
+	hint: {
+		content: <Button.Default onClick={() => alert("Interactive button clicked!")}>Click me!</Button.Default>,
+		type: PopoverHintType.COMPONENT,
+	},
 };
 
 export const WithIcon = Template("popover-with-icon").bind({});
