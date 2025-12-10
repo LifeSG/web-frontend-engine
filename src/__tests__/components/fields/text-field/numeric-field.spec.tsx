@@ -80,7 +80,7 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1 }));
 	});
 
-	it("should not allow user to enter 'e' or 'E' notation in numeric field", async () => {
+	it("should not allow users to enter 'e' or 'E' notation", async () => {
 		renderComponent();
 		const input = getNumericField();
 
@@ -93,6 +93,23 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 5 }));
+	});
+
+	it("should not allow users to paste 'e' or 'E' notation", async () => {
+		renderComponent();
+		const input = getNumericField();
+
+		await userEvent.click(input);
+		await userEvent.paste("11");
+		expect(input).toHaveValue(11);
+
+		// disable the pasting of 'e' or 'E' notation
+		await userEvent.paste("2e3");
+		await userEvent.paste("5E4");
+		expect(input).toHaveValue(11);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 11 }));
 	});
 
 	it("should support validation schema", async () => {
