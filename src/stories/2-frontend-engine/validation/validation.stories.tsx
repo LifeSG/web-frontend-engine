@@ -607,12 +607,12 @@ export const NotMatches: Story = {
 	},
 };
 
-export const Trim: Story = {
-	name: "Trim",
+export const NoWhitespaceOnly: Story = {
+	name: "No whitespace only",
 	args: {
 		info: {
-			rule: { trim: true, errorMessage: "Input must not be blank" },
-			ruleName: "trim",
+			rule: { noWhitespaceOnly: true, errorMessage: "Input must not be blank" },
+			ruleName: "noWhitespaceOnly",
 			ruleDescription:
 				"Indicates that the value must either be empty or contain characters other than whitespace.",
 		},
