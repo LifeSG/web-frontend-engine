@@ -35,6 +35,7 @@ interface IYupRule {
 	max?: number | undefined;
 	matches?: string | undefined;
 	notMatches?: string | undefined;
+	noWhitespaceOnly?: boolean | undefined;
 	email?: boolean | undefined;
 	url?: boolean | undefined;
 	uuid?: boolean | undefined;
