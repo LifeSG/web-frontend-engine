@@ -1,17 +1,11 @@
 import { PopoverInlineProps } from "@lifesg/react-design-system/popover-v2";
 import * as Icons from "@lifesg/react-icons";
-import { ReactElement } from "react";
+import { ITextSchema, ITypographySchema } from "../text";
 import { IBaseElementSchema } from "../types";
-
-export enum PopoverHintType {
-	DEFAULT = "default",
-	IMAGE = "image",
-	COMPONENT = "component",
-}
+import { IInlineWrapperSchema } from "../wrapper";
 
 interface IPopoverHint extends Pick<PopoverInlineProps, "position" | "customOffset" | "zIndex"> {
-	content: string | ReactElement;
-	type?: PopoverHintType;
+	content: string | Record<string, ITextSchema | ITypographySchema | IInlineWrapperSchema>;
 }
 
 export interface IPopoverSchema

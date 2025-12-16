@@ -3,7 +3,9 @@ import * as Icons from "@lifesg/react-icons";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
-import { IPopoverSchema, PopoverHintType } from "./types";
+import { Wrapper } from "../wrapper";
+import { IPopoverSchema } from "./types";
+import sanitizeHtml, { IOptions } from "sanitize-html";
 
 export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 	// =============================================================================
@@ -15,7 +17,7 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 			children,
 			className,
 			icon,
-			hint: { content: hintContent, type: hintContentType, ...hintProps },
+			hint: { content: hintContent, ...hintProps },
 			...otherSchema
 		},
 	} = props;
@@ -29,16 +31,20 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 		const Element = Icons[icon];
 		return <Element />;
 	};
+	const sanitizeOptions: IOptions = {
+		allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+		allowedAttributes: false,
+	};
 
 	const renderPopoverContent = () => {
-		switch (hintContentType) {
-			case PopoverHintType.IMAGE:
-				return <img src={hintContent as string} alt="popover content" />;
-			case PopoverHintType.COMPONENT:
-				return hintContent as React.ReactElement;
-			default:
-				return <Sanitize inline>{hintContent as string}</Sanitize>;
+		if (typeof hintContent === "string") {
+			return (
+				<Sanitize inline sanitizeOptions={sanitizeOptions}>
+					{hintContent}
+				</Sanitize>
+			);
 		}
+		return <Wrapper>{hintContent}</Wrapper>;
 	};
 
 	return (
