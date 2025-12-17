@@ -210,7 +210,7 @@ export const ImageInput = (props: IImageInputProps) => {
 				multiple={multiple}
 			>
 				<Subtitle
-					as="label"
+					forwardedAs="label"
 					htmlFor={TestHelper.generateId(id, "file-input-add-button")}
 					$hasDescription={!!description}
 					weight="semibold"
