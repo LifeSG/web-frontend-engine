@@ -15,6 +15,7 @@ import {
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	editImage: boolean;
 	compress: boolean;
+	crop: boolean;
 	dimensions: { width: number; height: number };
 	outputType: TImageUploadOutputFileType;
 	upload?: {
@@ -33,7 +34,7 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { accepts, compress, dimensions, editImage, id, maxSizeInKb, outputType, upload, value } = props;
+	const { accepts, compress, crop, dimensions, editImage, id, maxSizeInKb, outputType, upload, value } = props;
 	const { images, setImages, setErrorCount, setCurrentFileIds } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const previousValue = usePrevious(value);
@@ -267,8 +268,17 @@ export const ImageManager = (props: IProps) => {
 			);
 			const image = await ImageHelper.dataUrlToImage(dataURL);
 			const origDim = { w: image.naturalWidth, h: image.naturalHeight };
-			const scale = getScale(origDim.w, origDim.h);
-			let compressed = await ImageHelper.resampleImage(image, { scale });
+			let compressed: Blob;
+			if (crop) {
+				compressed = await ImageHelper.resampleImage(image, {
+					width: dimensions.width,
+					height: dimensions.height,
+					crop: true,
+				});
+			} else {
+				const scale = getScale(origDim.w, origDim.h);
+				compressed = await ImageHelper.resampleImage(image, { scale });
+			}
 			if (maxSizeInKb) {
 				compressed = (await ImageHelper.compressImage(compressed, {
 					fileSize: maxSizeInKb,
@@ -315,8 +325,17 @@ export const ImageManager = (props: IProps) => {
 			try {
 				const image = await ImageHelper.dataUrlToImage(imageToCompress.drawingDataURL);
 				const origDim = { w: image.naturalWidth, h: image.naturalHeight };
-				const scale = getScale(origDim.w, origDim.h);
-				let scaledFile = await ImageHelper.resampleImage(image, { scale });
+				let scaledFile: Blob;
+				if (crop) {
+					scaledFile = await ImageHelper.resampleImage(image, {
+						width: dimensions.width,
+						height: dimensions.height,
+						crop: true,
+					});
+				} else {
+					const scale = getScale(origDim.w, origDim.h);
+					scaledFile = await ImageHelper.resampleImage(image, { scale });
+				}
 				scaledFile = (await ImageHelper.compressImage(scaledFile, { fileSize: maxSizeInKb })) as File;
 
 				if (scaledFile.size > maxSizeInKb * 1024) {
