@@ -30,6 +30,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			capture,
 			className,
 			compress,
+			crop,
 			description,
 			dimensions = { width: 1000, height: 1000 },
 			editImage,
@@ -264,6 +265,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				<ImageManager
 					accepts={acceptedFileTypes}
 					compress={!!compress}
+					crop={!!crop}
 					dimensions={dimensions}
 					editImage={editImage}
 					id={id}
