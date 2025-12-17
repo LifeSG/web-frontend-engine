@@ -166,7 +166,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
 					<TextBody
-						as="div"
+						forwardedAs="div"
 						id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 					>
@@ -176,7 +176,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 					</TextBody>
 				</ErrorCustomMutedThumbnailContainer>
 				<TextBody
-					as="div"
+					forwardedAs="div"
 					id={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
 				>
@@ -193,7 +193,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 					/>
 				)}
 				<TextBody
-					as="div"
+					forwardedAs="div"
 					id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 				>
