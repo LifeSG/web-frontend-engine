@@ -7,6 +7,6 @@ interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, IChipBut
 
 export const Chip = ({ children, ...otherProps }: IProps) => (
 	<ChipButton type="button" aria-pressed={otherProps?.isActive} {...otherProps}>
-		<ChipText>{children}</ChipText>
+		<ChipText weight="semibold">{children}</ChipText>
 	</ChipButton>
 );
