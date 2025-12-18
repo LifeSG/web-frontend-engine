@@ -1,4 +1,4 @@
-import { Border, Colour, Font } from "@lifesg/react-design-system/theme";
+import { Border, Colour } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled, { css } from "styled-components";
 import { IChipButtonProps } from "./types";
