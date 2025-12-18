@@ -501,6 +501,69 @@ describe("image-upload", () => {
 				await waitFor(() => expect(extractMetadataSpy).toHaveBeenCalledTimes(1));
 				expect(extractMetadataSpy).toHaveBeenCalledWith(FILE_1);
 			});
+
+			it("should resize image to fit dimensions when crop is false", async () => {
+				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+				await act(async () => {
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: {
+							compress: true,
+							crop: false,
+							dimensions: { width: 500, height: 500 },
+						},
+						uploadType: inputType,
+					});
+					await flushPromise();
+				});
+
+				await waitFor(() => expect(resampleSpy).toHaveBeenCalled());
+				expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), { scale: expect.any(Number) });
+			});
+
+			it("should crop image to exact dimensions when crop is true", async () => {
+				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+				await act(async () => {
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: {
+							compress: true,
+							crop: true,
+							dimensions: { width: 500, height: 500 },
+						},
+						uploadType: inputType,
+					});
+					await flushPromise();
+				});
+
+				await waitFor(() => expect(resampleSpy).toHaveBeenCalled());
+				expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), {
+					width: 500,
+					height: 500,
+					crop: true,
+				});
+			});
+
+			it("should not use crop when compress is false even if crop is true", async () => {
+				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+				const convertSpy = jest.spyOn(ImageHelper, "convertBlob");
+				await act(async () => {
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: {
+							compress: false,
+							crop: true,
+							dimensions: { width: 500, height: 500 },
+						},
+						uploadType: inputType,
+					});
+					await flushPromise();
+				});
+
+				// convertImage is called instead of compressImage when compress=false
+				await waitFor(() => expect(convertSpy).toHaveBeenCalled());
+				expect(resampleSpy).not.toHaveBeenCalled();
+			});
 		});
 	});
 
@@ -692,6 +755,41 @@ describe("image-upload", () => {
 				expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
 				expect(getField("button", "eraser", true)).not.toBeInTheDocument();
 				expect(getField("button", /brush$/i, true)).not.toBeInTheDocument();
+			});
+		});
+
+		describe("when editing image with crop enabled", () => {
+			it("should recompress with crop when crop is enabled and image is edited", async () => {
+				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage").mockResolvedValue(FILE_1);
+				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
+				jest.spyOn(ImageHelper, "compressImage").mockResolvedValue(FILE_1);
+
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: {
+						editImage: true,
+						compress: true,
+						crop: true,
+						dimensions: { width: 400, height: 400 },
+						validation: [{ maxSizeInKb: 100 }],
+					},
+					reviewImage: true,
+				});
+
+				await waitFor(() => fireEvent.click(getField("button", "Draw")));
+
+				await act(async () => {
+					await waitFor(() => fireEvent.click(getField("button", "Save")));
+					await flushPromise();
+				});
+
+				await waitFor(() =>
+					expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), {
+						width: 400,
+						height: 400,
+						crop: true,
+					})
+				);
 			});
 		});
 

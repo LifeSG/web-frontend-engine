@@ -29,6 +29,7 @@ export interface IImageUploadSchema<V = undefined>
 	uploadOnAddingFile?: { method: TUploadMethod; url: string; sessionId?: string | undefined } | undefined;
 	compress?: boolean | undefined;
 	dimensions?: IImageDimensions | undefined;
+	crop?: boolean | undefined;
 	capture?: TFileCapture | undefined;
 	multiple?: boolean | undefined;
 	imageReviewModalStyles?: string | undefined;

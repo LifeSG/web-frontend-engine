@@ -81,12 +81,27 @@ const meta: Meta = {
 			type: { name: "object", value: {} },
 			defaultValue: { width: 1000, height: 1000 },
 			description:
-				"Desired image dimensions allowed. Will resize image up/down to its longest side acording to this value. Requires `compress=true`",
+				"Desired image dimensions. Will resize image to its longest side acording to this value. Requires `compress=true`. Use with `crop=true` to crop to exact dimensions.",
 			table: {
 				type: {
 					summary: "object",
 				},
 				defaultValue: { summary: "{ width: 1000, height: 1000 }" },
+			},
+		},
+		crop: {
+			type: { name: "boolean", required: false },
+			defaultValue: false,
+			description:
+				"When true, crops the image to exact dimensions instead of resizing to fit. Uses center cropping. Requires `dimensions` to be provided",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: "false" },
+			},
+			control: {
+				type: "boolean",
 			},
 		},
 		editImage: {
@@ -229,6 +244,7 @@ Dimensions.args = {
 	editImage: true,
 	compress: true,
 	dimensions: { width: 250, height: 250 },
+	crop: false,
 };
 
 export const EditImage = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
