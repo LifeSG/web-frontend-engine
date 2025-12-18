@@ -62,7 +62,7 @@ const meta: Meta = {
 		hint: {
 			description: `The popover configuration
 				<ul>
-					<li>content: Content to display in the popover (string or a record of schemas).</li>
+					<li>content: Content to display in the popover (string or schema).</li>
 					<li>customOffset: The popover offset.</li>
 					<li>position: The preferred popover position.</li>
 					<li>zIndex: Customises the popover z-index.</li>
@@ -71,7 +71,7 @@ const meta: Meta = {
 			table: {
 				type: {
 					summary:
-						"{ content: string | Record<string, ITextSchema | ITypographySchema | IInlineWrapperSchema>; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
+						"{ content: string | Record<string, ITextSchema | ITypographySchema | IInlineWrapperSchema | TBlockElementSchema | TInlineElementSchema | TWrapperSchema>; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
 				},
 			},
 		},
@@ -129,23 +129,21 @@ Default.args = {
 	hint: { content: "Hint" },
 };
 
-export const PopoverImage = Template("popover-image").bind({});
-PopoverImage.args = {
-	uiType: "popover",
-	children: "More info",
-	hint: {
-		content: `<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt="logo">`,
-	},
-};
-
-export const PopoverComponent = Template("popover-component").bind({});
-PopoverComponent.args = {
+export const TooltipCustomisationWithSchema = Template("popover-component").bind({});
+TooltipCustomisationWithSchema.args = {
 	uiType: "popover",
 	children: "More info",
 	hint: {
 		content: {
 			text: {
-				children: ["This", "<mark>is</mark>", "<u>a</u>", "<strong>styled</strong>", "<i>sentence</i>"],
+				children: [
+					"This",
+					"<mark>is</mark>",
+					"<u>a</u>",
+					"<strong>styled</strong>",
+					"<i>sentence</i>",
+					`<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt="logo">`,
+				],
 				uiType: "body-bl",
 			},
 		},

@@ -31,12 +31,12 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 		const Element = Icons[icon];
 		return <Element />;
 	};
-	const sanitizeOptions: IOptions = {
-		allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-		allowedAttributes: false,
-	};
 
 	const renderPopoverContent = () => {
+		const sanitizeOptions: IOptions = {
+			allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+			allowedAttributes: false,
+		};
 		if (typeof hintContent === "string") {
 			return (
 				<Sanitize inline sanitizeOptions={sanitizeOptions}>
