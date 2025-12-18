@@ -186,6 +186,7 @@ describe("YupHelper", () => {
 			${"string"}  | ${"uinfin"}            | ${{ uinfin: true }}                 | ${"S1234567D"}                            | ${"S1234567A"}
 			${"string"}  | ${"matches"}           | ${{ matches: "/^(hello)/" }}        | ${"hello world"}                          | ${"hi there"}
 			${"string"}  | ${"notMatches"}        | ${{ notMatches: "/^(hello)/" }}     | ${"hi there"}                             | ${"hello world"}
+			${"string"}  | ${"noWhitespaceOnly"}  | ${{ noWhitespaceOnly: true }}       | ${"  .  "}                                | ${"      "}
 			${"string"}  | ${"length"}            | ${{ length: 1 }}                    | ${"h"}                                    | ${"hi"}
 			${"string"}  | ${"min"}               | ${{ min: 2 }}                       | ${"he"}                                   | ${"h"}
 			${"string"}  | ${"max"}               | ${{ max: 1 }}                       | ${"h"}                                    | ${"hi"}
@@ -197,14 +198,16 @@ describe("YupHelper", () => {
 			${"string"}  | ${"equals"}            | ${{ equals: "hello" }}              | ${"hello"}                                | ${"hi"}
 			${"string"}  | ${"notEquals"}         | ${{ notEquals: "hello" }}           | ${"hi"}                                   | ${"hello"}
 			${"number"}  | ${"required"}          | ${{ required: true }}               | ${1}                                      | ${undefined}
-			${"number"}  | ${"min"}               | ${{ min: 1 }}                       | ${1}                                      | ${0}
-			${"number"}  | ${"max"}               | ${{ max: 1 }}                       | ${1}                                      | ${2}
+			${"number"}  | ${"min"}               | ${{ min: 0 }}                       | ${0}                                      | ${-1}
+			${"number"}  | ${"max"}               | ${{ max: 0 }}                       | ${0}                                      | ${1}
 			${"number"}  | ${"filled"}            | ${{ filled: true }}                 | ${1}                                      | ${undefined}
 			${"number"}  | ${"empty"}             | ${{ empty: true }}                  | ${undefined}                              | ${1}
 			${"number"}  | ${"equals"}            | ${{ equals: 1 }}                    | ${1}                                      | ${2}
 			${"number"}  | ${"notEquals"}         | ${{ notEquals: 1 }}                 | ${2}                                      | ${1}
-			${"number"}  | ${"lessThan"}          | ${{ lessThan: 1 }}                  | ${0}                                      | ${1}
-			${"number"}  | ${"moreThan"}          | ${{ moreThan: 1 }}                  | ${2}                                      | ${1}
+			${"number"}  | ${"lessThan"}          | ${{ lessThan: 0 }}                  | ${-1}                                     | ${0}
+			${"number"}  | ${"lessThan"}          | ${{ lessThan: 1 }}                  | ${0.9}                                    | ${1.1}
+			${"number"}  | ${"moreThan"}          | ${{ moreThan: 0 }}                  | ${1}                                      | ${0}
+			${"number"}  | ${"moreThan"}          | ${{ moreThan: 1 }}                  | ${1.1}                                    | ${0.9}
 			${"number"}  | ${"positive"}          | ${{ positive: true }}               | ${1}                                      | ${-1}
 			${"number"}  | ${"negative"}          | ${{ negative: true }}               | ${-1}                                     | ${1}
 			${"number"}  | ${"integer"}           | ${{ integer: true }}                | ${1}                                      | ${1.1}
