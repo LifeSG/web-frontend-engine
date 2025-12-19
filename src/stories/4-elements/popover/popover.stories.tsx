@@ -62,7 +62,7 @@ const meta: Meta = {
 		hint: {
 			description: `The popover configuration
 				<ul>
-					<li>content: Content to display in the popover.</li>
+					<li>content: Content to display in the popover (string or schema).</li>
 					<li>customOffset: The popover offset.</li>
 					<li>position: The preferred popover position.</li>
 					<li>zIndex: Customises the popover z-index.</li>
@@ -71,7 +71,7 @@ const meta: Meta = {
 			table: {
 				type: {
 					summary:
-						"{ content: string; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
+						"{ content: string | Record<string, ITextSchema | ITypographySchema | IInlineWrapperSchema | TBlockElementSchema | TInlineElementSchema | TWrapperSchema>; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
 				},
 			},
 		},
@@ -127,6 +127,27 @@ Default.args = {
 	uiType: "popover",
 	children: "More info",
 	hint: { content: "Hint" },
+};
+
+export const TooltipCustomisationWithSchema = Template("popover-component").bind({});
+TooltipCustomisationWithSchema.args = {
+	uiType: "popover",
+	children: "More info",
+	hint: {
+		content: {
+			text: {
+				children: [
+					"This",
+					"<mark>is</mark>",
+					"<u>a</u>",
+					"<strong>styled</strong>",
+					"<i>sentence</i>",
+					`<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt="logo">`,
+				],
+				uiType: "body-bl",
+			},
+		},
+	},
 };
 
 export const WithIcon = Template("popover-with-icon").bind({});
