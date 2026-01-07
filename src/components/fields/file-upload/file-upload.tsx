@@ -146,7 +146,8 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 										maxFileSizeRuleRef.current.maxSizeInKb * 1024
 									);
 								} else if (uploadOnAddingFile.type === "multipart") {
-									let filesize = file.rawFile?.size || file.uploadResponse?.["fileSize"];
+									const uploadData = file.uploadResponse?.["data"] || file.uploadResponse;
+									let filesize = file.rawFile?.size || uploadData?.["fileSize"];
 									if (isNaN(filesize)) {
 										filesize = 0;
 									}
