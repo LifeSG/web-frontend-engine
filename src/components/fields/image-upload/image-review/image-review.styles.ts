@@ -1,25 +1,23 @@
-import { Border, Breakpoint, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Modal } from "@lifesg/react-design-system/modal";
+import { Border, Breakpoint, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { BinIcon } from "@lifesg/react-icons/bin";
 import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
-import styled, { css } from "styled-components";
+import styled, { RuleSet, css } from "styled-components";
 
 interface IModalBoxStyle {
-	imageReviewModalStyles?: string | undefined;
+	imageReviewModalStyles?: RuleSet<object>;
 }
 
 export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 	display: block;
 	max-height: fit-content;
 
-	${({ imageReviewModalStyles }) => {
-		if (imageReviewModalStyles) return `${imageReviewModalStyles}`;
-	}}
+	${(props) => props.imageReviewModalStyles}
 
 	${MediaQuery.MinWidth.xl} {
 		max-width: 42rem;

@@ -32,6 +32,7 @@ import {
 	ReviewTitle,
 } from "./image-review.styles";
 import { ImageThumbnails } from "./image-thumbnails";
+import { RuleSet } from "styled-components";
 
 // lazy load to fix next.js SSR errors
 const ImageEditor = lazy(() => import("./image-editor"));
@@ -55,7 +56,7 @@ interface IProps extends ISharedImageProps {
 	show: boolean;
 	multiple?: boolean | undefined;
 	maxFilesErrorMessage?: string | undefined;
-	imageReviewModalStyles?: string | undefined;
+	imageReviewModalStyles?: RuleSet<object> | undefined;
 }
 
 export const ImageReview = (props: IProps) => {

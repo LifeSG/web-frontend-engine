@@ -2,6 +2,7 @@ import { FabricObject } from "fabric";
 import { IBaseFieldSchema } from "../types";
 import { IYupValidationRule } from "../../../context-providers";
 import { TFieldEventListener } from "../../../utils";
+import { RuleSet } from "styled-components";
 
 export type TFileCapture = boolean | "user" | "environment" | undefined;
 export type TUploadMethod = "post" | "put" | "patch";
@@ -31,7 +32,7 @@ export interface IImageUploadSchema<V = undefined>
 	dimensions?: IImageDimensions | undefined;
 	capture?: TFileCapture | undefined;
 	multiple?: boolean | undefined;
-	imageReviewModalStyles?: string | undefined;
+	imageReviewModalStyles?: RuleSet<object> | undefined;
 }
 
 export interface ISharedImageProps {
