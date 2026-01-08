@@ -250,13 +250,40 @@ describe(UI_TYPE, () => {
 			);
 		});
 
-		it("should determine file size based on uploadResponse when dataURL and fileUrl are not present", async () => {
+		it("should determine file size based on uploadResponse when dataURL and fileUrl are not present (flat structure)", async () => {
 			const uploadResponse = {
 				fileId: "f307b120-6c4d-4b2c-b278-33bb9aefbc6e",
 				fileName: "my-image.jpg",
 				fileSize: 595705,
 				mimeType: "image/jpeg",
 				uploadedAt: "2025-01-01T03:57:55.573Z",
+			};
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(uploadSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getByText("582 KB")).toBeInTheDocument();
+			});
+		});
+
+		it("should determine file size based on uploadResponse when dataURL and fileUrl are not present (nested structure)", async () => {
+			const uploadResponse = {
+				data: {
+					fileId: "f307b120-6c4d-4b2c-b278-33bb9aefbc6e",
+					fileName: "my-image.jpg",
+					fileSize: 595705,
+					mimeType: "image/jpeg",
+					uploadedAt: "2025-01-01T03:57:55.573Z",
+				},
 			};
 			await renderComponent({
 				overrideSchema: {
@@ -293,13 +320,40 @@ describe(UI_TYPE, () => {
 			});
 		});
 
-		it("should display 0kb when dataURL and fileUrl are not present and uploadResponse.fileSize is not a number", async () => {
+		it("should display 0kb when dataURL and fileUrl are not present and uploadResponse.fileSize is not a number (flat structure)", async () => {
 			const uploadResponse = {
 				fileId: "f307b120-6c4d-4b2c-b278-33bb9aefbc6e",
 				fileName: "my-image.jpg",
 				fileSize: "test",
 				mimeType: "image/jpeg",
 				uploadedAt: "2025-01-01T03:57:55.573Z",
+			};
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(uploadSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getByText("0 KB")).toBeInTheDocument();
+			});
+		});
+
+		it("should display 0kb when dataURL and fileUrl are not present and uploadResponse.data.fileSize is not a number (nested structure)", async () => {
+			const uploadResponse = {
+				data: {
+					fileId: "f307b120-6c4d-4b2c-b278-33bb9aefbc6e",
+					fileName: "my-image.jpg",
+					fileSize: "test",
+					mimeType: "image/jpeg",
+					uploadedAt: "2025-01-01T03:57:55.573Z",
+				},
 			};
 			await renderComponent({
 				overrideSchema: {
