@@ -32,6 +32,12 @@ YupHelper.addCondition("string", "noWhitespaceOnly", (value: string, noWhitespac
 	}
 	return /\S/.test(value);
 });
+YupHelper.addCondition("string", "noExtraWhitespace", (value: string, noExtraWhitespace: boolean) => {
+	if (isEmptyValue(value) || !noExtraWhitespace) {
+		return true;
+	}
+	return /^(?!\s+$)(?!\s).*(?<!\s)$/.test(value);
+});
 YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
 	if (!values?.length) return true;
 	if (!Array.isArray(matches)) {
