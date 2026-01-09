@@ -224,14 +224,15 @@ const FileUploadManager = (props: IProps) => {
 
 		// rawFile may not be available because some use cases is not able to return dataURL / fileUrl due to security concerns
 		// in such cases, we will rely on the uploadResponse for file info
+		const uploadData = fileToInject.uploadResponse?.["data"] || fileToInject.uploadResponse;
 		const { errorMessage, fileType } = rawFile
 			? await readFile({ ...fileToInject, rawFile })
 			: validateFileType({
-					mime: fileToInject.uploadResponse?.["mimeType"],
-					ext: fileToInject.uploadResponse?.["ext"],
+					mime: uploadData?.["mimeType"],
+					ext: uploadData?.["ext"],
 			  });
 
-		let size = rawFile?.size || fileToInject.uploadResponse?.["fileSize"] || 0;
+		let size = rawFile?.size || uploadData?.["fileSize"] || 0;
 		if (isNaN(size)) {
 			size = 0;
 		}
@@ -253,7 +254,7 @@ const FileUploadManager = (props: IProps) => {
 					),
 					progress: 1,
 					size,
-					type: fileType?.mime || fileToInject.uploadResponse?.["mimeType"],
+					type: fileType?.mime || uploadData?.["mimeType"],
 					thumbnailImageDataUrl,
 				},
 				rawFile,

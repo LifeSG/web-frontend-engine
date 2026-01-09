@@ -135,7 +135,7 @@ const meta: Meta = {
 		uploadOnAddingFile: {
 			type: { name: "object", value: {} },
 			description:
-				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId: To indicate which session it belongs to.</li></ul><div><br><br>API response can optionally include additional file metadata, these values are particularly useful when prefilling default values without `dataURL` or `fileUrl` (see <a href='./?path=/story/field-fileupload--default-value-without-image'>DefaultValueWithoutImage example</a>):</div><ul><li>`mimeType`: MIME type of the file (e.g., 'image/jpeg'). Used for file type validation and display.</li><li>`ext`: File extension (e.g., 'jpg', 'png'). Used for file type identification.</li><li>`fileSize`: Size of the file in bytes. Used for file size validation and display.</li></ul>",
+				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId: To indicate which session it belongs to.</li></ul><div><br><br>API response can optionally include additional file metadata, these values are particularly useful when prefilling default values without `dataURL` or `fileUrl`. The expected format is a JSON object containing the following keys:</div><ul><li>`mimeType`: MIME type of the file (e.g., 'image/jpeg'). Used for file type validation and display.</li><li>`ext`: File extension (e.g., 'jpg', 'png'). Used for file type identification.</li><li>`fileSize`: Size of the file in bytes. Used for file size validation and display.</li></ul><div>Alternatively, you may provide the JSON nested in a `data` object. See <a href='./?path=/story/field-fileupload--default-value-without-image'>DefaultValueWithoutImage example</a> and <a href='./?path=/story/field-fileupload--default-value-with-nested-response'>DefaultValueWithNestedResponse example</a>.</div>",
 			table: {
 				type: {
 					summary:
@@ -249,6 +249,47 @@ DefaultValueWithoutImage.argTypes = {
 			type: {
 				summary:
 					"{ dataURL?: string; fileId?: string; fileName: string; fileUrl?: string; uploadResponse?: unknown }[]",
+			},
+		},
+		control: {
+			type: "object",
+			value: {},
+		},
+	},
+};
+
+export const DefaultValueWithNestedResponse = DefaultStoryTemplate<IFileUploadSchema, IFileUploadValue[]>(
+	"upload-default-value-nested-response"
+).bind({});
+DefaultValueWithNestedResponse.args = {
+	...COMMON_STORY_ARGS,
+	description:
+		"Prefilling without <code>fileUrl</code> and <code>dataURL</code>, the file size and mime type are derived from <code>uploadResponse.data</code>",
+	uploadOnAddingFile: {
+		type: "base64",
+		url: "https://jsonplaceholder.typicode.com/posts",
+	},
+	defaultValues: [
+		{
+			fileId: "nested-response-file-id",
+			fileName: "document-with-nested-response.pdf",
+			uploadResponse: {
+				data: {
+					fileSize: 2349231,
+					mimeType: "application/pdf",
+					ext: "pdf",
+				},
+			},
+		},
+	],
+};
+DefaultValueWithNestedResponse.argTypes = {
+	defaultValues: {
+		description: "Default value for the field, this is declared outside `sections`",
+		table: {
+			type: {
+				summary:
+					"{ dataURL?: string; fileId?: string; fileName: string; fileUrl?: string; uploadResponse?: { data?: { fileSize, mimeType, ext } } }[]",
 			},
 		},
 		control: {
