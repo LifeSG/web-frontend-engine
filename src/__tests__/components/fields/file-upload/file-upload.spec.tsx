@@ -448,55 +448,110 @@ describe(UI_TYPE, () => {
 	});
 
 	describe("default value validation", () => {
-		const uploadResponse = {
-			fileSize: 999999,
-			mimeType: "image/jpeg",
-		};
-		const base64DefaultValues = {
-			dataURL: JPG_BASE64,
-			fileId: FILE_1.name,
-			fileName: FILE_1.name,
-			uploadResponse,
-		};
-		const fileUrlDefaultValues = {
-			fileUrl: "mock url",
-			fileId: FILE_1.name,
-			fileName: FILE_1.name,
-			uploadResponse,
-		};
 		beforeEach(() => {
 			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
 			jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
 		});
 
-		it.each`
-			scenario                                                  | type           | validation                | defaultValues
-			${"do not match file type"}                               | ${"base64"}    | ${{ fileType: ["png"] }}  | ${base64DefaultValues}
-			${"do not match file type"}                               | ${"multipart"} | ${{ fileType: ["png"] }}  | ${fileUrlDefaultValues}
-			${"exceed file size limit"}                               | ${"base64"}    | ${{ maxSizeInKb: 0.001 }} | ${base64DefaultValues}
-			${"exceed file size limit"}                               | ${"multipart"} | ${{ maxSizeInKb: 0.001 }} | ${fileUrlDefaultValues}
-			${"have no dataURL / fileUrl and do not match file type"} | ${"base64"}    | ${{ fileType: ["png"] }}  | ${{ ...base64DefaultValues, dataURL: undefined, fileUrl: undefined }}
-			${"have no dataURL / fileUrl and do not match file type"} | ${"multipart"} | ${{ fileType: ["png"] }}  | ${{ ...fileUrlDefaultValues, dataURL: undefined, fileUrl: undefined }}
-			${"have no dataURL / fileUrl and exceed file size limit"} | ${"base64"}    | ${{ maxSizeInKb: 0.001 }} | ${{ ...base64DefaultValues, dataURL: undefined, fileUrl: undefined }}
-			${"have no dataURL / fileUrl and exceed file size limit"} | ${"multipart"} | ${{ maxSizeInKb: 0.001 }} | ${{ ...fileUrlDefaultValues, dataURL: undefined, fileUrl: undefined }}
-		`(
-			"should reject $type file upload with default values that $scenario",
-			async ({ type, validation, defaultValues }) => {
-				await renderComponent({
-					overrideField: {
-						uploadOnAddingFile: { type, url: UPLOAD_URL },
-						validation: [{ ...validation, errorMessage: ERROR_MESSAGE }],
-					},
-					overrideSchema: {
-						defaultValues: {
-							[COMPONENT_ID]: [defaultValues],
-						},
-					},
-				});
+		describe("flat uploadResponse structure", () => {
+			const uploadResponse = {
+				fileSize: 999999,
+				mimeType: "image/jpeg",
+				ext: "jpg",
+			};
+			const base64DefaultValues = {
+				dataURL: JPG_BASE64,
+				fileId: FILE_1.name,
+				fileName: FILE_1.name,
+				uploadResponse,
+			};
+			const fileUrlDefaultValues = {
+				fileUrl: "mock url",
+				fileId: FILE_1.name,
+				fileName: FILE_1.name,
+				uploadResponse,
+			};
 
-				await waitFor(() => expect(screen.getAllByText(ERROR_MESSAGE).length).toBe(2)); // each error message is rendered twice
-			}
-		);
+			it.each`
+				scenario                                                  | type           | validation                | defaultValues
+				${"do not match file type"}                               | ${"base64"}    | ${{ fileType: ["png"] }}  | ${base64DefaultValues}
+				${"do not match file type"}                               | ${"multipart"} | ${{ fileType: ["png"] }}  | ${fileUrlDefaultValues}
+				${"exceed file size limit"}                               | ${"base64"}    | ${{ maxSizeInKb: 0.001 }} | ${base64DefaultValues}
+				${"exceed file size limit"}                               | ${"multipart"} | ${{ maxSizeInKb: 0.001 }} | ${fileUrlDefaultValues}
+				${"have no dataURL / fileUrl and do not match file type"} | ${"base64"}    | ${{ fileType: ["png"] }}  | ${{ ...base64DefaultValues, dataURL: undefined, fileUrl: undefined }}
+				${"have no dataURL / fileUrl and do not match file type"} | ${"multipart"} | ${{ fileType: ["png"] }}  | ${{ ...fileUrlDefaultValues, dataURL: undefined, fileUrl: undefined }}
+				${"have no dataURL / fileUrl and exceed file size limit"} | ${"base64"}    | ${{ maxSizeInKb: 0.001 }} | ${{ ...base64DefaultValues, dataURL: undefined, fileUrl: undefined }}
+				${"have no dataURL / fileUrl and exceed file size limit"} | ${"multipart"} | ${{ maxSizeInKb: 0.001 }} | ${{ ...fileUrlDefaultValues, dataURL: undefined, fileUrl: undefined }}
+			`(
+				"should reject $type file upload with default values that $scenario",
+				async ({ type, validation, defaultValues }) => {
+					await renderComponent({
+						overrideField: {
+							uploadOnAddingFile: { type, url: UPLOAD_URL },
+							validation: [{ ...validation, errorMessage: ERROR_MESSAGE }],
+						},
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: [defaultValues],
+							},
+						},
+					});
+
+					await waitFor(() => expect(screen.getAllByText(ERROR_MESSAGE).length).toBe(2)); // each error message is rendered twice
+				}
+			);
+		});
+
+		describe("nested uploadResponse structure", () => {
+			const uploadResponseNested = {
+				data: {
+					fileSize: 999999,
+					mimeType: "image/jpeg",
+					ext: "jpg",
+				},
+			};
+			const base64DefaultValuesNested = {
+				dataURL: JPG_BASE64,
+				fileId: FILE_1.name,
+				fileName: FILE_1.name,
+				uploadResponse: uploadResponseNested,
+			};
+			const fileUrlDefaultValuesNested = {
+				fileUrl: "mock url",
+				fileId: FILE_1.name,
+				fileName: FILE_1.name,
+				uploadResponse: uploadResponseNested,
+			};
+
+			it.each`
+				scenario                                                  | type           | validation                | defaultValues
+				${"do not match file type"}                               | ${"base64"}    | ${{ fileType: ["png"] }}  | ${base64DefaultValuesNested}
+				${"do not match file type"}                               | ${"multipart"} | ${{ fileType: ["png"] }}  | ${fileUrlDefaultValuesNested}
+				${"exceed file size limit"}                               | ${"base64"}    | ${{ maxSizeInKb: 0.001 }} | ${base64DefaultValuesNested}
+				${"exceed file size limit"}                               | ${"multipart"} | ${{ maxSizeInKb: 0.001 }} | ${fileUrlDefaultValuesNested}
+				${"have no dataURL / fileUrl and do not match file type"} | ${"base64"}    | ${{ fileType: ["png"] }}  | ${{ ...base64DefaultValuesNested, dataURL: undefined, fileUrl: undefined }}
+				${"have no dataURL / fileUrl and do not match file type"} | ${"multipart"} | ${{ fileType: ["png"] }}  | ${{ ...fileUrlDefaultValuesNested, dataURL: undefined, fileUrl: undefined }}
+				${"have no dataURL / fileUrl and exceed file size limit"} | ${"base64"}    | ${{ maxSizeInKb: 0.001 }} | ${{ ...base64DefaultValuesNested, dataURL: undefined, fileUrl: undefined }}
+				${"have no dataURL / fileUrl and exceed file size limit"} | ${"multipart"} | ${{ maxSizeInKb: 0.001 }} | ${{ ...fileUrlDefaultValuesNested, dataURL: undefined, fileUrl: undefined }}
+			`(
+				"should reject $type file upload with default values that $scenario",
+				async ({ type, validation, defaultValues }) => {
+					await renderComponent({
+						overrideField: {
+							uploadOnAddingFile: { type, url: UPLOAD_URL },
+							validation: [{ ...validation, errorMessage: ERROR_MESSAGE }],
+						},
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: [defaultValues],
+							},
+						},
+					});
+
+					await waitFor(() => expect(screen.getAllByText(ERROR_MESSAGE).length).toBe(2)); // each error message is rendered twice
+				}
+			);
+		});
 	});
 
 	describe("upload", () => {
