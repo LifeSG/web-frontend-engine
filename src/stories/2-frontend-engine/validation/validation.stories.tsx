@@ -620,6 +620,19 @@ export const NoWhitespaceOnly: Story = {
 	},
 };
 
+export const NoExtraWhitespace: Story = {
+	name: "No extra whitespace",
+	args: {
+		info: {
+			rule: { noExtraWhitespace: true, errorMessage: "Input cannot contain leading or trailing whitespace." },
+			ruleName: "noExtraWhitespace",
+			ruleDescription:
+				"Indicates that the value must either be empty or contain no leading or trailing whitespace.",
+		},
+		fields: RAW_TEXT_INPUT_VALIDATION_DEMO_FIELD_IDS,
+	},
+};
+
 export const Required: Story = {
 	args: {
 		info: {
