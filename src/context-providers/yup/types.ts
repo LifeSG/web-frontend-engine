@@ -35,8 +35,6 @@ interface IYupRule {
 	max?: number | undefined;
 	matches?: string | undefined;
 	notMatches?: string | undefined;
-	noWhitespaceOnly?: boolean | undefined;
-	noExtraWhitespace?: boolean | undefined;
 	email?: boolean | undefined;
 	url?: boolean | undefined;
 	uuid?: boolean | undefined;
@@ -54,6 +52,9 @@ interface IYupRule {
 	uen?: boolean | undefined;
 	equalsField?: string | undefined;
 	notEqualsField?: string | undefined;
+	whitespace?: boolean | undefined;
+	/** @deprecated */
+	noWhitespaceOnly?: boolean | undefined;
 }
 
 /**

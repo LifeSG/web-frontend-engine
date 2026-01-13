@@ -606,7 +606,7 @@ export const NotMatches: Story = {
 		],
 	},
 };
-
+/** @deprecated */
 export const NoWhitespaceOnly: Story = {
 	name: "No whitespace only",
 	args: {
@@ -620,12 +620,12 @@ export const NoWhitespaceOnly: Story = {
 	},
 };
 
-export const NoExtraWhitespace: Story = {
-	name: "No extra whitespace",
+export const Whitespace: Story = {
+	name: "Whitespace",
 	args: {
 		info: {
-			rule: { noExtraWhitespace: true, errorMessage: "Input cannot contain leading or trailing whitespace." },
-			ruleName: "noExtraWhitespace",
+			rule: { whitespace: true, errorMessage: "Input cannot contain leading or trailing whitespace." },
+			ruleName: "whitespace",
 			ruleDescription:
 				"Indicates that the value must either be empty or contain no leading or trailing whitespace.",
 		},

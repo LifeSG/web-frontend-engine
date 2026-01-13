@@ -26,14 +26,15 @@ YupHelper.addCondition("string", "notMatches", (value: string, regex: string) =>
 	const parsedRegex = new RegExp(matches[1], matches[2]);
 	return !parsedRegex.test(value);
 });
+/** @deprecated */
 YupHelper.addCondition("string", "noWhitespaceOnly", (value: string, noWhitespaceOnly: boolean) => {
 	if (isEmptyValue(value) || !noWhitespaceOnly) {
 		return true;
 	}
 	return /\S/.test(value);
 });
-YupHelper.addCondition("string", "noExtraWhitespace", (value: string, noExtraWhitespace: boolean) => {
-	if (isEmptyValue(value) || !noExtraWhitespace) {
+YupHelper.addCondition("string", "whitespace", (value: string, whitespace: boolean) => {
+	if (isEmptyValue(value) || !whitespace) {
 		return true;
 	}
 	return /^(?!\s+$)(?!\s).*(?<!\s)$/.test(value);
