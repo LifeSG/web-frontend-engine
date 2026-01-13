@@ -445,6 +445,25 @@ describe(UI_TYPE, () => {
 
 			expect(screen.getAllByText(ERROR_MESSAGE).length > 0).toBeTruthy();
 		});
+
+		it("should prevent form submission while files are uploading", async () => {
+			// Mock upload to be slow
+			uploadSpy = jest
+				.spyOn(AxiosApiClient.prototype, "post")
+				.mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 5000)));
+
+			await renderComponent({
+				files: [FILE_1],
+				overrideField: { validation: [{ required: true }] },
+			});
+
+			// Try to submit while uploading
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			// Should show uploading error and not call submit
+			expect(screen.getByText(ERROR_MESSAGES.UPLOAD().UPLOADING)).toBeInTheDocument();
+			expect(SUBMIT_FN).not.toHaveBeenCalled();
+		});
 	});
 
 	describe("default value validation", () => {
