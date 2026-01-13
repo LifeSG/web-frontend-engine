@@ -72,6 +72,7 @@ export const ERROR_MESSAGES = {
 		GENERIC: "Upload failed. Please try again.",
 		FILE_TYPE: (acceptedFileTypes: string[]) =>
 			`Upload failed. Only ${FileHelper.extensionsToSentence(acceptedFileTypes)} files are accepted.`,
+		UPLOADING: `Please wait for all ${unitPlural} to finish uploading.`,
 		MODAL: {
 			FILE_TYPE: {
 				TITLE: `Unsupported ${unit} format`,

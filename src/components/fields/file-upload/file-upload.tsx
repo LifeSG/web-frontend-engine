@@ -164,7 +164,12 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 						if (!value || !Array.isArray(value) || !maxFilesRuleRef.current.max) return true;
 						return value.length <= maxFilesRuleRef.current.max;
 					}
-				),
+				)
+				.test("no-uploading-files", ERROR_MESSAGES.UPLOAD().UPLOADING, () => {
+					// Prevent form submission while files are uploading
+					const hasUploadingFiles = filesRef.current.some((file) => file.status === EFileStatus.UPLOADING);
+					return !hasUploadingFiles;
+				}),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
