@@ -7,7 +7,7 @@ import { YupHelper } from "../helper";
 import "./uinfin";
 import "./uen";
 import { DateTimeHelper } from "../../../utils";
-import { IDaysRangeRule } from "../types";
+import { IDaysRangeRule, IWhitespaceRule } from "../types";
 
 /**
  * empty check that is applicable to numbers too
@@ -33,8 +33,12 @@ YupHelper.addCondition("string", "noWhitespaceOnly", (value: string, noWhitespac
 	}
 	return /\S/.test(value);
 });
-YupHelper.addCondition("string", "whitespace", (value: string, whitespace: boolean) => {
-	if (isEmptyValue(value) || !whitespace) {
+YupHelper.addCondition("string", "whitespace", (value: string, whitespace: boolean | IWhitespaceRule) => {
+	if (
+		isEmptyValue(value) ||
+		!(whitespace === true || (typeof whitespace === "object" && whitespace.noLeadingOrTrailingWhitespace))
+	) {
+		console.log("running here ", value, "  ", whitespace);
 		return true;
 	}
 	return /^(?!\s+$)(?!\s).*(?<!\s)$/.test(value);

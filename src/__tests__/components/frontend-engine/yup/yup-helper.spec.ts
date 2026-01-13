@@ -177,6 +177,8 @@ describe("YupHelper", () => {
 	});
 
 	describe("mapRules", () => {
+		const whitespaceRule = { noLeadingOrTrailingWhitespace: true };
+
 		it.each`
 			type         | condition              | config                              | valid                                     | invalid
 			${"string"}  | ${"required"}          | ${{ required: true }}               | ${"hello"}                                | ${undefined}
@@ -189,6 +191,8 @@ describe("YupHelper", () => {
 			${"string"}  | ${"noWhitespaceOnly"}  | ${{ noWhitespaceOnly: true }}       | ${"  .  "}                                | ${"      "}
 			${"string"}  | ${"whitespace"}        | ${{ whitespace: true }}             | ${""}                                     | ${"      "}
 			${"string"}  | ${"whitespace"}        | ${{ whitespace: true }}             | ${"hello   world"}                        | ${" hello  "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: whitespaceRule }}   | ${""}                                     | ${"      "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: whitespaceRule }}   | ${"hello   world"}                        | ${" hello  "}
 			${"string"}  | ${"length"}            | ${{ length: 1 }}                    | ${"h"}                                    | ${"hi"}
 			${"string"}  | ${"min"}               | ${{ min: 2 }}                       | ${"he"}                                   | ${"h"}
 			${"string"}  | ${"max"}               | ${{ max: 1 }}                       | ${"h"}                                    | ${"hi"}

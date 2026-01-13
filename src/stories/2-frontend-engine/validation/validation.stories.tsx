@@ -606,15 +606,18 @@ export const NotMatches: Story = {
 		],
 	},
 };
-/** @deprecated */
+
+/**
+ * @deprecated Use `whitespace` rule instead.
+ */
 export const NoWhitespaceOnly: Story = {
-	name: "No whitespace only",
+	name: "No whitespace only (deprecated)",
 	args: {
 		info: {
 			rule: { noWhitespaceOnly: true, errorMessage: "Input must not be blank" },
 			ruleName: "noWhitespaceOnly",
 			ruleDescription:
-				"Indicates that the value must either be empty or contain characters other than whitespace.",
+				"Indicates that the value must either be empty or contain characters other than whitespace. Deprecated in favour of `whitespace` rule.",
 		},
 		fields: RAW_TEXT_INPUT_VALIDATION_DEMO_FIELD_IDS,
 	},
