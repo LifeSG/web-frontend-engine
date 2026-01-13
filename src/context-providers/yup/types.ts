@@ -52,8 +52,10 @@ interface IYupRule {
 	uen?: boolean | undefined;
 	equalsField?: string | undefined;
 	notEqualsField?: string | undefined;
-	whitespace?: boolean | undefined;
-	/** @deprecated */
+	whitespace?: boolean | IWhitespaceRule | undefined;
+	/**
+	 * @deprecated Use `whitespace` rule instead.
+	 */
 	noWhitespaceOnly?: boolean | undefined;
 }
 
@@ -109,4 +111,8 @@ export interface IDaysRangeRule {
 export interface IWithinDaysRangeRule extends IDaysRangeRule {
 	/** inclusive of today (or `fromDate` if specified). defaults to false, meaning today will fail validation */
 	inclusive?: boolean;
+}
+
+export interface IWhitespaceRule {
+	noLeadingOrTrailingWhitespace?: boolean;
 }
