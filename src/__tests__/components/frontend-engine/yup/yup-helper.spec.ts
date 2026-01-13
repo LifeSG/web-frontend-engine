@@ -187,8 +187,8 @@ describe("YupHelper", () => {
 			${"string"}  | ${"matches"}           | ${{ matches: "/^(hello)/" }}        | ${"hello world"}                          | ${"hi there"}
 			${"string"}  | ${"notMatches"}        | ${{ notMatches: "/^(hello)/" }}     | ${"hi there"}                             | ${"hello world"}
 			${"string"}  | ${"noWhitespaceOnly"}  | ${{ noWhitespaceOnly: true }}       | ${"  .  "}                                | ${"      "}
-			${"string"}  | ${"noExtraWhitespace"} | ${{ noExtraWhitespace: true }}      | ${""}                                     | ${"      "}
-			${"string"}  | ${"noExtraWhitespace"} | ${{ noExtraWhitespace: true }}      | ${"hello   world"}                        | ${" hello  "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: true }}             | ${""}                                     | ${"      "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: true }}             | ${"hello   world"}                        | ${" hello  "}
 			${"string"}  | ${"length"}            | ${{ length: 1 }}                    | ${"h"}                                    | ${"hi"}
 			${"string"}  | ${"min"}               | ${{ min: 2 }}                       | ${"he"}                                   | ${"h"}
 			${"string"}  | ${"max"}               | ${{ max: 1 }}                       | ${"h"}                                    | ${"hi"}
