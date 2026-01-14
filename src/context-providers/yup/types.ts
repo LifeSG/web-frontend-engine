@@ -114,5 +114,5 @@ export interface IWithinDaysRangeRule extends IDaysRangeRule {
 }
 
 export interface IWhitespaceRule {
-	noLeadingOrTrailingWhitespace?: boolean;
+	noLeadingOrTrailingWhitespace?: boolean | undefined;
 }

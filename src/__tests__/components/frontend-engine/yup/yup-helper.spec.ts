@@ -1,7 +1,7 @@
 import isEqual from "lodash/isEqual";
 import * as Yup from "yup";
 import { SchemaDescription } from "yup/lib/schema";
-import { IYupValidationRule, TYupSchemaType, YupHelper } from "../../../../context-providers";
+import { IWhitespaceRule, IYupValidationRule, TYupSchemaType, YupHelper } from "../../../../context-providers";
 import { TestHelper } from "../../../../utils";
 
 const ERROR_MESSAGE = "test error message";
@@ -177,9 +177,10 @@ describe("YupHelper", () => {
 	});
 
 	describe("mapRules", () => {
-		const whitespaceRule = { noLeadingOrTrailingWhitespace: true };
+		const nlotwTrue: IWhitespaceRule = { noLeadingOrTrailingWhitespace: true };
+		const nlotwFalse: IWhitespaceRule = { noLeadingOrTrailingWhitespace: false };
 
-		it.each`
+		fit.each`
 			type         | condition              | config                              | valid                                     | invalid
 			${"string"}  | ${"required"}          | ${{ required: true }}               | ${"hello"}                                | ${undefined}
 			${"string"}  | ${"email"}             | ${{ email: true }}                  | ${"john@doe.tld"}                         | ${"hello"}
@@ -190,9 +191,11 @@ describe("YupHelper", () => {
 			${"string"}  | ${"notMatches"}        | ${{ notMatches: "/^(hello)/" }}     | ${"hi there"}                             | ${"hello world"}
 			${"string"}  | ${"noWhitespaceOnly"}  | ${{ noWhitespaceOnly: true }}       | ${"  .  "}                                | ${"      "}
 			${"string"}  | ${"whitespace"}        | ${{ whitespace: true }}             | ${""}                                     | ${"      "}
-			${"string"}  | ${"whitespace"}        | ${{ whitespace: true }}             | ${"hello   world"}                        | ${" hello  "}
-			${"string"}  | ${"whitespace"}        | ${{ whitespace: whitespaceRule }}   | ${""}                                     | ${"      "}
-			${"string"}  | ${"whitespace"}        | ${{ whitespace: whitespaceRule }}   | ${"hello   world"}                        | ${" hello  "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: true }}             | ${"hello   world"}                        | ${"      "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: nlotwTrue }}        | ${""}                                     | ${"      "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: nlotwTrue }}        | ${"hello   world"}                        | ${" hello  "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: nlotwFalse }}       | ${""}                                     | ${"      "}
+			${"string"}  | ${"whitespace"}        | ${{ whitespace: nlotwFalse }}       | ${" hello  "}                             | ${"      "}
 			${"string"}  | ${"length"}            | ${{ length: 1 }}                    | ${"h"}                                    | ${"hi"}
 			${"string"}  | ${"min"}               | ${{ min: 2 }}                       | ${"he"}                                   | ${"h"}
 			${"string"}  | ${"max"}               | ${{ max: 1 }}                       | ${"h"}                                    | ${"hi"}
