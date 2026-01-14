@@ -36,10 +36,13 @@ YupHelper.addCondition("string", "noWhitespaceOnly", (value: string, noWhitespac
 YupHelper.addCondition("string", "whitespace", (value: string, whitespace: boolean | IWhitespaceRule) => {
 	if (
 		isEmptyValue(value) ||
-		!(whitespace === true || (typeof whitespace === "object" && whitespace.noLeadingOrTrailingWhitespace))
+		!whitespace ||
+		(typeof whitespace === "object" && !isBoolean(whitespace.noLeadingOrTrailingWhitespace))
 	) {
-		console.log("running here ", value, "  ", whitespace);
 		return true;
+	}
+	if (isBoolean(whitespace) || (typeof whitespace === "object" && !whitespace.noLeadingOrTrailingWhitespace)) {
+		return /\S/.test(value);
 	}
 	return /^(?!\s+$)(?!\s).*(?<!\s)$/.test(value);
 });
