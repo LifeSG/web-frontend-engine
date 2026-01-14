@@ -165,10 +165,16 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 						return value.length <= maxFilesRuleRef.current.max;
 					}
 				)
-				.test("no-uploading-files", ERROR_MESSAGES.UPLOAD().UPLOADING, () => {
-					// Prevent form submission while files are uploading
-					const hasUploadingFiles = filesRef.current.some((file) => file.status === EFileStatus.UPLOADING);
-					return !hasUploadingFiles;
+				.test("no-interim-statuses", ERROR_MESSAGES.UPLOAD().UPLOADING, () => {
+					// Block submission if any file is in a processing state
+					const processingStatuses = new Set([
+						EFileStatus.INJECTING,
+						EFileStatus.NONE,
+						EFileStatus.UPLOAD_READY,
+						EFileStatus.UPLOADING,
+					]);
+
+					return !filesRef.current.some((file) => processingStatuses.has(file.status));
 				}),
 			validation
 		);

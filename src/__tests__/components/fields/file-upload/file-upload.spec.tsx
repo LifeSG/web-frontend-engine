@@ -464,6 +464,28 @@ describe(UI_TYPE, () => {
 			expect(screen.getByText(ERROR_MESSAGES.UPLOAD().UPLOADING)).toBeInTheDocument();
 			expect(SUBMIT_FN).not.toHaveBeenCalled();
 		});
+
+		it("should prevent form submission while files are being injected from default value", async () => {
+			// Mock slow default value processing
+			jest.spyOn(FileHelper, "dataUrlToBlob").mockImplementation(
+				() => new Promise((resolve) => setTimeout(() => resolve(FILE_1), 5000))
+			);
+
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ dataURL: JPG_BASE64, fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+			});
+
+			// Try to submit while injecting
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			// Should show uploading error and not call submit
+			expect(screen.getByText(ERROR_MESSAGES.UPLOAD().UPLOADING)).toBeInTheDocument();
+			expect(SUBMIT_FN).not.toHaveBeenCalled();
+		});
 	});
 
 	describe("default value validation", () => {
