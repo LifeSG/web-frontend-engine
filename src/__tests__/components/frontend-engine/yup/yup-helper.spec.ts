@@ -180,7 +180,7 @@ describe("YupHelper", () => {
 		const nlotwTrue: IWhitespaceRule = { noLeadingOrTrailingWhitespace: true };
 		const nlotwFalse: IWhitespaceRule = { noLeadingOrTrailingWhitespace: false };
 
-		fit.each`
+		it.each`
 			type         | condition              | config                              | valid                                     | invalid
 			${"string"}  | ${"required"}          | ${{ required: true }}               | ${"hello"}                                | ${undefined}
 			${"string"}  | ${"email"}             | ${{ email: true }}                  | ${"john@doe.tld"}                         | ${"hello"}
