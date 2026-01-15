@@ -41,7 +41,7 @@ YupHelper.addCondition("string", "whitespace", (value: string, whitespace: boole
 	) {
 		return true;
 	}
-	if (isBoolean(whitespace) || (typeof whitespace === "object" && !whitespace.noLeadingOrTrailingWhitespace)) {
+	if (typeof whitespace === "object" && !whitespace.noLeadingOrTrailingWhitespace) {
 		return /\S/.test(value);
 	}
 	return /^(?!\s+$)(?!\s).*(?<!\s)$/.test(value);
