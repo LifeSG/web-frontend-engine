@@ -168,6 +168,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				.test("no-interim-statuses", ERROR_MESSAGES.UPLOAD().UPLOADING, () => {
 					// Block submission if any file is in a processing state
 					const processingStatuses = new Set([
+						EFileStatus.INJECTED,
 						EFileStatus.INJECTING,
 						EFileStatus.NONE,
 						EFileStatus.UPLOAD_READY,
