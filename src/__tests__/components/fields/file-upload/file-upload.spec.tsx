@@ -454,7 +454,6 @@ describe(UI_TYPE, () => {
 
 			await renderComponent({
 				files: [FILE_1],
-				overrideField: { validation: [{ required: true }] },
 			});
 
 			// Try to submit while uploading
