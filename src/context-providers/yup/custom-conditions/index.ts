@@ -7,7 +7,7 @@ import { YupHelper } from "../helper";
 import "./uinfin";
 import "./uen";
 import { DateTimeHelper } from "../../../utils";
-import { IDaysRangeRule } from "../types";
+import { IDaysRangeRule, IWhitespaceRule } from "../types";
 
 /**
  * empty check that is applicable to numbers too
@@ -26,11 +26,25 @@ YupHelper.addCondition("string", "notMatches", (value: string, regex: string) =>
 	const parsedRegex = new RegExp(matches[1], matches[2]);
 	return !parsedRegex.test(value);
 });
+/** @deprecated */
 YupHelper.addCondition("string", "noWhitespaceOnly", (value: string, noWhitespaceOnly: boolean) => {
 	if (isEmptyValue(value) || !noWhitespaceOnly) {
 		return true;
 	}
 	return /\S/.test(value);
+});
+YupHelper.addCondition("string", "whitespace", (value: string, whitespace: boolean | IWhitespaceRule) => {
+	if (
+		isEmptyValue(value) ||
+		!whitespace ||
+		(typeof whitespace === "object" && !isBoolean(whitespace.noLeadingOrTrailingWhitespace))
+	) {
+		return true;
+	}
+	if (typeof whitespace === "object" && !whitespace.noLeadingOrTrailingWhitespace) {
+		return /\S/.test(value);
+	}
+	return /^(?!\s+$)(?!\s).*(?<!\s)$/.test(value);
 });
 YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
 	if (!values?.length) return true;
