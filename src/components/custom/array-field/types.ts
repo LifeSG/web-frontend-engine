@@ -1,3 +1,4 @@
+import { ButtonStyleType } from "@lifesg/react-design-system/button/types";
 import * as Icons from "@lifesg/react-icons";
 import { IYupValidationRule, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { IBaseCustomFieldSchema } from "../types";
@@ -10,9 +11,16 @@ export interface IArrayFieldValidationRule extends IYupValidationRule {
 export interface IArrayFieldButton {
 	label?: string | undefined;
 	icon?: keyof typeof Icons | undefined;
+	styleType?: ButtonStyleType | undefined;
+}
+
+export interface IArrayFieldRemoveButton extends IArrayFieldButton {
+	position?: "top" | "bottom" | undefined;
+	alignment?: "left" | "right" | undefined;
 }
 
 export interface IArrayFieldRemoveConfirmationModal {
+	disabled?: boolean | undefined;
 	title?: string | undefined;
 }
 
@@ -24,6 +32,6 @@ export interface IArrayFieldSchema<V = undefined>
 	sectionTitle?: string | undefined;
 	showDivider?: boolean | undefined;
 	addButton?: IArrayFieldButton | undefined;
-	removeButton?: IArrayFieldButton | undefined;
+	removeButton?: IArrayFieldRemoveButton | undefined;
 	removeConfirmationModal?: IArrayFieldRemoveConfirmationModal | undefined;
 }
