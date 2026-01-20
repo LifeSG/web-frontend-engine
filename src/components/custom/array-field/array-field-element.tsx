@@ -1,7 +1,7 @@
 import isEqual from "lodash/isEqual";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useFormState } from "react-hook-form";
-import { useFormSchema, usePrevious } from "../../../utils/hooks";
+import { useCustomComponents, useFormSchema, usePrevious } from "../../../utils/hooks";
 import { FrontendEngine, TErrorPayload } from "../../frontend-engine";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema, TFrontendEngineValues } from "../../types";
 
@@ -20,6 +20,7 @@ const Component = (
 	// CONST, STATE, REFS
 	// =============================================================================
 	const formRef = useRef<IFrontendEngineRef>(null);
+	const { customComponents } = useCustomComponents();
 	const [sectionValues, setSectionValues] = useState<TFrontendEngineValues>({});
 	const [defaultValues, setDefaultValues] = useState<TFrontendEngineValues>();
 	const { isSubmitting, isDirty } = useFormState();
@@ -92,6 +93,7 @@ const Component = (
 			}}
 			onValueChange={handleChange}
 			wrapInForm={false}
+			components={customComponents}
 		/>
 	);
 };

@@ -73,12 +73,13 @@ const meta: Meta = {
 				<ul>
 					<li>\`label\` prop overrides the text</li>
 					<li>\`icon\` prop overrides the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
+					<li>\`styleType\` prop sets the button style (\`default\`, \`secondary\`, \`light\`, \`link\`)</li>
 				</ul>
 			`,
 
 			table: {
 				type: {
-					summary: "{ label?: string, icon?: string }",
+					summary: "{ label?: string, icon?: string, styleType?: ButtonStyleType }",
 				},
 			},
 		},
@@ -87,11 +88,15 @@ const meta: Meta = {
 				<ul>
 					<li>\`label\` prop overrides the text</li>
 					<li>\`icon\` prop sets the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
+					<li>\`styleType\` prop sets the button style (\`default\`, \`secondary\`, \`light\`, \`link\`)</li>
+					<li>\`position\` prop sets button position: \`top\` (default) or \`bottom\`</li>
+					<li>\`alignment\` prop sets button alignment: \`left\` or \`right\` (default)</li>
 				</ul>
 			`,
 			table: {
 				type: {
-					summary: "{ label?: string, icon?: string }",
+					summary:
+						"{ label?: string, icon?: string, styleType?: ButtonStyleType, position?: 'top' | 'bottom', alignment?: 'left' | 'right' }",
 				},
 			},
 		},
@@ -99,12 +104,13 @@ const meta: Meta = {
 			description: `Customisation options for the confirmation modal when item is removed<br/>
 				<ul>
 					<li>\`title\` prop overrides the confirmation text title</li>
+					<li>\`skip\` prop skips the confirmation modal and removes the item immediately</li>
 				</ul>
 			`,
 
 			table: {
 				type: {
-					summary: "{ title?: string }",
+					summary: "{ title?: string } | { skip: true }",
 				},
 			},
 		},
@@ -285,6 +291,35 @@ HideDivider.args = {
 	sectionTitle: "New fruit",
 	showDivider: false,
 	fieldSchema: SCHEMA,
+};
+
+export const RemoveButtonLocation = DefaultStoryTemplate<IArrayFieldSchema>("array-field-remove-button-location").bind(
+	{}
+);
+RemoveButtonLocation.args = {
+	referenceKey: "array-field",
+	sectionTitle: "New fruit",
+	fieldSchema: SCHEMA,
+	removeButton: { position: "bottom", alignment: "left" },
+};
+
+export const ButtonStyleType = DefaultStoryTemplate<IArrayFieldSchema>("array-field-button-style-type").bind({});
+ButtonStyleType.args = {
+	referenceKey: "array-field",
+	sectionTitle: "New fruit",
+	fieldSchema: SCHEMA,
+	addButton: { styleType: "secondary" },
+	removeButton: { styleType: "link" },
+};
+
+export const DisabledConfirmationModal = DefaultStoryTemplate<IArrayFieldSchema>(
+	"array-field-disabled-confirmation-modal"
+).bind({});
+DisabledConfirmationModal.args = {
+	referenceKey: "array-field",
+	sectionTitle: "New fruit",
+	fieldSchema: SCHEMA,
+	removeConfirmationModal: { skip: true },
 };
 
 export const Warning = WarningStoryTemplate<IArrayFieldSchema>("array-field-with-warning").bind({});
