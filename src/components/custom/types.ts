@@ -35,7 +35,7 @@ export enum ECustomFieldType {
  * union type to represent all custom elements / fields schema
  */
 export type TCustomSchema<V = undefined, C = undefined> =
-	| IArrayFieldSchema<V>
+	| IArrayFieldSchema<V, C>
 	| ICustomElementJsonSchema<string>
 	| IFilterSchema<V, C>
 	| IIframeSchema
