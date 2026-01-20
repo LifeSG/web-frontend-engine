@@ -19,10 +19,9 @@ export interface IArrayFieldRemoveButton extends IArrayFieldButton {
 	alignment?: "left" | "right" | undefined;
 }
 
-export interface IArrayFieldRemoveConfirmationModal {
-	disabled?: boolean | undefined;
-	title?: string | undefined;
-}
+export type IArrayFieldRemoveConfirmationModal =
+	| { skip: true }
+	| { skip?: false | undefined; title?: string | undefined };
 
 export interface IArrayFieldSchema<V = undefined, C = undefined>
 	extends IBaseCustomFieldSchema<"array-field", V, IArrayFieldValidationRule> {

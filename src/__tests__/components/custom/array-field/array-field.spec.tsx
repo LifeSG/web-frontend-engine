@@ -295,7 +295,7 @@ describe(UI_TYPE, () => {
 
 		it("should not show confirmation modal when disabled prop is true", async () => {
 			renderComponent({
-				removeConfirmationModal: { disabled: true },
+				removeConfirmationModal: { skip: true },
 			});
 
 			fireEvent.click(getRemoveButton(0));

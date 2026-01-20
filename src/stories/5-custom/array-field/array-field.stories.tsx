@@ -104,13 +104,13 @@ const meta: Meta = {
 			description: `Customisation options for the confirmation modal when item is removed<br/>
 				<ul>
 					<li>\`title\` prop overrides the confirmation text title</li>
-					<li>\`disabled\` prop skips the confirmation modal and removes the entry immediately</li>
+					<li>\`skip\` prop skips the confirmation modal and removes the item immediately</li>
 				</ul>
 			`,
 
 			table: {
 				type: {
-					summary: "{ title?: string, disabled?: boolean }",
+					summary: "{ title?: string } | { skip: true }",
 				},
 			},
 		},
@@ -319,7 +319,7 @@ DisabledConfirmationModal.args = {
 	referenceKey: "array-field",
 	sectionTitle: "New fruit",
 	fieldSchema: SCHEMA,
-	removeConfirmationModal: { disabled: true },
+	removeConfirmationModal: { skip: true },
 };
 
 export const Warning = WarningStoryTemplate<IArrayFieldSchema>("array-field-with-warning").bind({});

@@ -174,7 +174,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	};
 
 	const handleRemoveSection = (index: number) => {
-		if (removeConfirmationModal?.disabled) {
+		if (removeConfirmationModal?.skip) {
 			// directly remove without confirmation
 			const updatedValues = stateValue.filter((_, i) => i !== index);
 			const updatedKeys = stateKeys.filter((_, i) => i !== index);
@@ -229,6 +229,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const showAddButton = max >= 1 ? stateValue.length < max : true;
 	const removeButtonPosition = removeButton?.position ?? "top";
 	const removeButtonAlignment = removeButton?.alignment ?? "right";
+	const skipRemoveConfirmationModal = removeConfirmationModal?.skip === true;
 
 	const renderIcon = (icon: keyof typeof Icons) => {
 		const Element = Icons[icon];
@@ -309,7 +310,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				id={`${id}-remove-prompt`}
 				size="large"
 				image={<CustomErrorDisplay type="warning" title={<></>} description={<></>} />}
-				title={removeConfirmationModal?.title ?? "Remove entry?"}
+				title={skipRemoveConfirmationModal ? undefined : removeConfirmationModal?.title ?? "Remove entry?"}
 				description="The information you’ve entered will be deleted."
 				show={showRemovePrompt}
 				buttons={[
