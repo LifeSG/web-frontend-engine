@@ -92,22 +92,14 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 						return value.length > 0 && value.some((item) => !isEmpty(item));
 					}
 				)
-				.test(
-					"min-length",
-					minRule?.errorMessage || (min ? ERROR_MESSAGES.ARRAY_FIELD.MIN(min) : ""),
-					(value) => {
-						if (!value || min === undefined) return true;
-						return value.length >= min;
-					}
-				)
-				.test(
-					"max-length",
-					maxRule?.errorMessage || (max ? ERROR_MESSAGES.ARRAY_FIELD.MAX(max) : ""),
-					(value) => {
-						if (!value || max === undefined) return true;
-						return value.length <= max;
-					}
-				),
+				.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(min), (value) => {
+					if (!value || min === undefined) return true;
+					return value.length >= min;
+				})
+				.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(max), (value) => {
+					if (!value || max === undefined) return true;
+					return value.length <= max;
+				}),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -173,27 +165,27 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		onChange({ target: { value: newFormValues } });
 	};
 
+	const removeSectionAtIndex = (index: number) => {
+		const updatedValues = stateValue.filter((_, i) => i !== index);
+		const updatedKeys = stateKeys.filter((_, i) => i !== index);
+		setStateValue(updatedValues);
+		setStateKeys(updatedKeys);
+		onChange({ target: { value: updatedValues } });
+	};
+
 	const handleRemoveSection = (index: number) => {
 		if (removeConfirmationModal?.skip) {
-			// directly remove without confirmation
-			const updatedValues = stateValue.filter((_, i) => i !== index);
-			const updatedKeys = stateKeys.filter((_, i) => i !== index);
-			setStateValue(updatedValues);
-			setStateKeys(updatedKeys);
-			onChange({ target: { value: updatedValues } });
-		} else {
-			setShowRemovePrompt(true);
-			setIndexToRemove(index);
+			removeSectionAtIndex(index);
+			return;
 		}
+
+		setIndexToRemove(index);
+		setShowRemovePrompt(true);
 	};
 
 	const handleConfirmRemove = () => {
-		const updatedValues = stateValue.filter((_, i) => i !== indexToRemove);
-		const updatedKeys = stateKeys.filter((_, i) => i !== indexToRemove);
-		setStateValue(updatedValues);
-		setStateKeys(updatedKeys);
+		removeSectionAtIndex(indexToRemove);
 		setShowRemovePrompt(false);
-		onChange({ target: { value: updatedValues } });
 	};
 
 	const handleCancelRemove = () => {
