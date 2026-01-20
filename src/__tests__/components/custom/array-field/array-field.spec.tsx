@@ -284,6 +284,28 @@ describe(UI_TYPE, () => {
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 			expect(VALUE_CHANGE_FN).toHaveBeenCalledWith(expect.anything(), true);
 		});
+
+		it("should show confirmation modal when removing a section", async () => {
+			renderComponent();
+
+			fireEvent.click(getRemoveButton(0));
+
+			expect(screen.queryByText("Remove entry?")).toBeVisible();
+		});
+
+		it("should not show confirmation modal when disabled prop is true", async () => {
+			renderComponent({
+				removeConfirmationModal: { disabled: true },
+			});
+
+			fireEvent.click(getRemoveButton(0));
+
+			expect(screen.queryByText("Remove entry?")).not.toBeVisible();
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: [] }));
+		});
 	});
 
 	it("should support customisation of buttons and confirmation modal", async () => {
@@ -314,7 +336,24 @@ describe(UI_TYPE, () => {
 			expect(getRemoveButton(0)).not.toBeInTheDocument();
 		});
 
-		it("should show error when min rule is not fulfilled", async () => {
+		it("should show default error when min rule is not fulfilled", async () => {
+			renderComponent(
+				{
+					validation: [{ min: 2 }],
+				},
+				{
+					defaultValues: {
+						[COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }],
+					},
+				}
+			);
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText("At least 2 entries must be provided")).toBeInTheDocument();
+		});
+
+		it("should show custom error when min rule is not fulfilled", async () => {
 			renderComponent({ validation: [{ min: 2, errorMessage: ERROR_MESSAGE }] });
 
 			fireEvent.change(getTextField(0), { target: { value: "Hello" } });
@@ -349,7 +388,20 @@ describe(UI_TYPE, () => {
 			expect(getRemoveButton(0)).toBeInTheDocument();
 		});
 
-		it("should show error when max rule is not fulfilled", async () => {
+		it("should show default error when max rule is not fulfilled", async () => {
+			renderComponent(
+				{ validation: [{ max: 1 }] },
+				{
+					defaultValues: { [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }, { [TEXT_FIELD_ID]: "World" }] },
+				}
+			);
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText("No more than 1 entry can be provided")).toBeInTheDocument();
+		});
+
+		it("should show custom error when max rule is not fulfilled", async () => {
 			renderComponent(
 				{ validation: [{ max: 1, errorMessage: ERROR_MESSAGE }] },
 				{
