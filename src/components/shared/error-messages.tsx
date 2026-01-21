@@ -109,5 +109,7 @@ export const ERROR_MESSAGES = {
 	ARRAY_FIELD: {
 		INVALID: "One or more of the sections is incomplete",
 		REQUIRED: "At least one section must be filled in",
+		MIN: (min: number) => `At least ${min} ${min === 1 ? "entry" : "entries"} must be provided`,
+		MAX: (max: number) => `No more than ${max} ${max === 1 ? "entry" : "entries"} can be provided`,
 	},
 };
