@@ -12,6 +12,10 @@ interface InsetStyleProps {
 	$inset?: string | number;
 }
 
+interface RemoveButtonStyleProps {
+	$alignment?: "left" | "right";
+}
+
 // =============================================================================
 // STYLING
 // =============================================================================
@@ -39,7 +43,9 @@ export const SectionHeader = styled.div`
 	}
 `;
 
-export const RemoveButton = styled(ButtonWithIcon.Small)`
+export const RemoveButton = styled(ButtonWithIcon.Small)<RemoveButtonStyleProps>`
+	${({ $alignment }) => $alignment === "right" && "margin-left: auto;"}
+	${({ $alignment }) => $alignment === "left" && "margin-right: auto;"}
 	padding-left: 2rem;
 	padding-right: 2rem;
 

@@ -90,7 +90,15 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 						return value.length > 0 && value.some((item) => !isEmpty(item));
 					}
-				),
+				)
+				.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(min), (value) => {
+					if (!value || min === undefined) return true;
+					return value.length >= min;
+				})
+				.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(max), (value) => {
+					if (!value || max === undefined) return true;
+					return value.length <= max;
+				}),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,18 +164,27 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		onChange({ target: { value: newFormValues } });
 	};
 
+	const removeSectionAtIndex = (index: number) => {
+		const updatedValues = stateValue.filter((_, i) => i !== index);
+		const updatedKeys = stateKeys.filter((_, i) => i !== index);
+		setStateValue(updatedValues);
+		setStateKeys(updatedKeys);
+		onChange({ target: { value: updatedValues } });
+	};
+
 	const handleRemoveSection = (index: number) => {
-		setShowRemovePrompt(true);
+		if (removeConfirmationModal?.skip) {
+			removeSectionAtIndex(index);
+			return;
+		}
+
 		setIndexToRemove(index);
+		setShowRemovePrompt(true);
 	};
 
 	const handleConfirmRemove = () => {
-		const updatedValues = stateValue.filter((_, i) => i !== indexToRemove);
-		const updatedKeys = stateKeys.filter((_, i) => i !== indexToRemove);
-		setStateValue(updatedValues);
-		setStateKeys(updatedKeys);
+		removeSectionAtIndex(indexToRemove);
 		setShowRemovePrompt(false);
-		onChange({ target: { value: updatedValues } });
 	};
 
 	const handleCancelRemove = () => {
@@ -201,12 +218,29 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	// =============================================================================
 	const showRemoveButton = min >= 0 ? stateValue.length > min : true;
 	const showAddButton = max >= 1 ? stateValue.length < max : true;
+	const removeButtonPosition = removeButton?.position ?? "top";
+	const removeButtonAlignment = removeButton?.alignment ?? "right";
+	const skipRemoveConfirmationModal = removeConfirmationModal?.skip === true;
 
 	const renderIcon = (icon: keyof typeof Icons) => {
 		const Element = Icons[icon];
 
 		return <Element />;
 	};
+
+	const renderRemoveButton = (index: number) => (
+		<RemoveButton
+			className="array-field-remove-button"
+			type="button"
+			styleType={removeButton?.styleType ?? "light"}
+			danger
+			$alignment={removeButtonAlignment}
+			icon={removeButton?.icon ? renderIcon(removeButton.icon) : undefined}
+			onClick={() => handleRemoveSection(index)}
+		>
+			{removeButton?.label ?? "Remove"}
+		</RemoveButton>
+	);
 
 	return (
 		<>
@@ -215,27 +249,20 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				return (
 					<Fragment key={stateKeys[index]}>
 						<Inset $inset={sectionInset}>
-							<SectionHeader>
-								{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
-								{showRemoveButton && (
-									<RemoveButton
-										type="button"
-										styleType="light"
-										danger
-										icon={removeButton?.icon ? renderIcon(removeButton.icon) : undefined}
-										onClick={() => handleRemoveSection(index)}
-									>
-										{removeButton?.label ?? "Remove"}
-									</RemoveButton>
-								)}
-							</SectionHeader>
-							<ArrayFieldElement
-								ref={(formRef) => (formRefs.current[index] = formRef)}
-								formValues={sectionValues}
-								schema={fieldSchema}
-								onChange={handleSectionChange(index)}
-								error={fieldErrors?.[index]}
-							/>
+							<div className="array-field-section-container">
+								<SectionHeader>
+									{sectionTitle && <Text.Body weight="bold">{sectionTitle}</Text.Body>}
+									{showRemoveButton && removeButtonPosition === "top" && renderRemoveButton(index)}
+								</SectionHeader>
+								<ArrayFieldElement
+									ref={(formRef) => (formRefs.current[index] = formRef)}
+									formValues={sectionValues}
+									schema={fieldSchema}
+									onChange={handleSectionChange(index)}
+									error={fieldErrors?.[index]}
+								/>
+								{showRemoveButton && removeButtonPosition === "bottom" && renderRemoveButton(index)}
+							</div>
 						</Inset>
 						{showDivider && !isLastItem ? <SectionDivider /> : null}
 					</Fragment>
@@ -244,8 +271,9 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			{showAddButton && (
 				<Inset $inset={sectionInset}>
 					<AddButton
+						className="array-field-add-button"
 						type="button"
-						styleType="light"
+						styleType={addButton?.styleType ?? "light"}
 						icon={addButton?.icon ? renderIcon(addButton.icon) : <PlusCircleFillIcon />}
 						onClick={handleAddSection}
 					>
@@ -267,7 +295,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				id={`${id}-remove-prompt`}
 				size="large"
 				image={<CustomErrorDisplay type="warning" title={<></>} description={<></>} />}
-				title={removeConfirmationModal?.title ?? "Remove entry?"}
+				title={skipRemoveConfirmationModal ? undefined : removeConfirmationModal?.title ?? "Remove entry?"}
 				description="The information you’ve entered will be deleted."
 				show={showRemovePrompt}
 				buttons={[
