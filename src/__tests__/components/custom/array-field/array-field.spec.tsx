@@ -300,7 +300,8 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).not.toBeVisible();
+			expect(screen.queryByText("Remove entry?")).not.toBeInTheDocument();
+			expect(screen.queryByText("The information you’ve entered will be deleted.")).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
