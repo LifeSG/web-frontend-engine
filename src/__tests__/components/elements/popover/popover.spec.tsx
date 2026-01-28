@@ -77,4 +77,17 @@ describe(UI_TYPE, () => {
 
 		expect(label.compareDocumentPosition(icon)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
 	});
+
+	it("should render FEE schema content in hint", () => {
+		renderComponent({
+			hint: {
+				content: {
+					text: { uiType: "text-body", children: "Schema hint content" },
+				},
+			},
+		});
+
+		fireEvent.click(screen.getByTestId(COMPONENT_TEST_ID));
+		expect(screen.getByText("Schema hint content")).toBeInTheDocument();
+	});
 });
