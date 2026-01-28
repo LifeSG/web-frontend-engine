@@ -129,27 +129,6 @@ Default.args = {
 	hint: { content: "Hint" },
 };
 
-export const TooltipCustomisationWithSchema = Template("popover-component").bind({});
-TooltipCustomisationWithSchema.args = {
-	uiType: "popover",
-	children: "More info",
-	hint: {
-		content: {
-			text: {
-				children: [
-					"This",
-					"<mark>is</mark>",
-					"<u>a</u>",
-					"<strong>styled</strong>",
-					"<i>sentence</i>",
-					`<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt="logo">`,
-				],
-				uiType: "body-bl",
-			},
-		},
-	},
-};
-
 export const WithIcon = Template("popover-with-icon").bind({});
 WithIcon.args = {
 	uiType: "popover",
@@ -177,6 +156,27 @@ TooltipCustomisation.args = {
 	uiType: "popover",
 	children: "More info",
 	hint: { content: "A helpful tip<br>Another helpful tip on next line" },
+};
+
+export const TooltipCustomisationWithSchema = Template("popover-component").bind({});
+TooltipCustomisationWithSchema.args = {
+	uiType: "popover",
+	children: "More info",
+	hint: {
+		content: {
+			text: {
+				children: [
+					"This",
+					"<mark>is</mark>",
+					"<u>a</u>",
+					"<strong>styled</strong>",
+					"<i>sentence</i>",
+					`<img src='https://assets.life.gov.sg/lifesg/logo-lifesg.svg' alt="logo">`,
+				],
+				uiType: "body-bl",
+			},
+		},
+	},
 };
 
 export const Hover = Template("popover-hover").bind({});

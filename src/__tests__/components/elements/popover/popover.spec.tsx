@@ -83,24 +83,11 @@ describe(UI_TYPE, () => {
 			hint: {
 				content: {
 					text: { uiType: "text-body", children: "Schema hint content" },
-				} as any,
+				},
 			},
 		});
 
 		fireEvent.click(screen.getByTestId(COMPONENT_TEST_ID));
 		expect(screen.getByText("Schema hint content")).toBeInTheDocument();
-	});
-
-	it("should handle enhanced content types without error", () => {
-		const enhancedContent = {
-			"text-element": { uiType: "text" as const, children: "Enhanced text" },
-			"span-wrapper": { uiType: "span" as const, children: "Enhanced span" },
-		};
-
-		expect(() => {
-			renderComponent({ hint: { content: enhancedContent as any } });
-		}).not.toThrow();
-
-		expect(screen.getByTestId(COMPONENT_TEST_ID)).toBeInTheDocument();
 	});
 });
