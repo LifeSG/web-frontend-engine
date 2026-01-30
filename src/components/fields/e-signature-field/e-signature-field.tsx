@@ -74,6 +74,21 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	// EVENT HANDLER
 	// =============================================================================
 	const handleChange = async (dataURL: string) => {
+		// For the case that user clear the signature and save without drawing a new one
+		// we need to reset the states
+		// Refer: https://sgtechstack.atlassian.net/browse/MOL-20239
+		if (!dataURL) {
+			setSignatureDataURL(null);
+			setLoadErrorCount(0);
+			setUploadErrorCount(0);
+			setLoadingProgress(null);
+			onChange({
+				target: {
+					value: null,
+				},
+			});
+			return;
+		}
 		const fileId = generateRandomId();
 		setSignatureDataURL(dataURL);
 		setLoadErrorCount(0);
