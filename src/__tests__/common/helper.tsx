@@ -7,11 +7,17 @@ import {
 	TFrontendEngineFieldSchema,
 	TFrontendEngineValues,
 } from "../../components/frontend-engine";
-import { ERROR_MESSAGE, RESET_BUTTON_ID, RESET_BUTTON_LABEL, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
+import {
+	CLEAR_SIGNATURE_BUTTON_LABEL,
+	EDIT_SIGNATURE_BUTTON_LABEL,
+	ERROR_MESSAGE,
+	RESET_BUTTON_ID,
+	RESET_BUTTON_LABEL,
+	SAVE_SIGNATURE_BUTTON_LABEL,
+	SUBMIT_BUTTON_ID,
+	SUBMIT_BUTTON_LABEL,
+} from "./data";
 import { useEffect, useRef } from "react";
-import { TFieldSchema } from "../../components/fields";
-import { TElementSchema } from "../../components/elements";
-import { TCustomComponentSchema } from "../../components";
 
 type TAriaRoles = "textbox" | "generic" | "button" | "spinbutton" | "radio" | "list" | "slider" | "option" | "treeitem";
 
@@ -110,4 +116,16 @@ export const FrontendEngineWithEventListener = (props: IFrontendEngineWithEventL
 	}, [componentId, eventListener, eventType, uiType]);
 
 	return <FrontendEngine {...otherProps} ref={formRef} />;
+};
+
+export const getEditSignatureButton = (): HTMLElement => {
+	return screen.getByRole("button", { name: EDIT_SIGNATURE_BUTTON_LABEL });
+};
+
+export const getClearSignatureButton = (): HTMLElement => {
+	return screen.getByRole("button", { name: CLEAR_SIGNATURE_BUTTON_LABEL });
+};
+
+export const getSaveSignatureButton = (): HTMLElement => {
+	return screen.getByRole("button", { name: SAVE_SIGNATURE_BUTTON_LABEL });
 };
