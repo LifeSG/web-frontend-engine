@@ -4,6 +4,3 @@ export const RESET_BUTTON_ID = "reset";
 export const RESET_BUTTON_LABEL = "Reset";
 export const ERROR_MESSAGE = "test error message";
 export const FRONTEND_ENGINE_ID = "test";
-export const EDIT_SIGNATURE_BUTTON_LABEL = "Edit signature";
-export const CLEAR_SIGNATURE_BUTTON_LABEL = "Clear";
-export const SAVE_SIGNATURE_BUTTON_LABEL = "Save";

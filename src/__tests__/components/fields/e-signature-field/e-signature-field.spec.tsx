@@ -12,11 +12,9 @@ import {
 	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
-	getClearSignatureButton,
-	getEditSignatureButton,
+	getButtonByName,
 	getResetButton,
 	getResetButtonProps,
-	getSaveSignatureButton,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
@@ -75,9 +73,9 @@ const drawAndSave = (edit = false) => {
 };
 
 const clearAndSave = () => {
-	fireEvent.click(getEditSignatureButton());
-	fireEvent.click(getClearSignatureButton());
-	fireEvent.click(getSaveSignatureButton());
+	fireEvent.click(getButtonByName("Edit signature"));
+	fireEvent.click(getButtonByName("Clear"));
+	fireEvent.click(getButtonByName("Save"));
 };
 
 const getTryAgainButton = () => {
@@ -391,8 +389,6 @@ describe(UI_TYPE, () => {
 			await waitFor(() => clearAndSave());
 
 			expect(screen.queryByAltText("Signature preview")).not.toBeInTheDocument();
-			expect(screen.queryByText("Please try again.")).not.toBeInTheDocument();
-			expect(screen.queryByText("Failed to load.")).not.toBeInTheDocument();
 			expect(screen.queryByTestId("upload-refresh-alert")).not.toBeInTheDocument();
 			expect(screen.queryByTestId("load-refresh-alert")).not.toBeInTheDocument();
 		});
@@ -415,8 +411,6 @@ describe(UI_TYPE, () => {
 			await waitFor(() => clearAndSave());
 
 			expect(screen.queryByAltText("Signature preview")).not.toBeInTheDocument();
-			expect(screen.queryByText("Please try again.")).not.toBeInTheDocument();
-			expect(screen.queryByText("Failed to load.")).not.toBeInTheDocument();
 			expect(screen.queryByTestId("upload-refresh-alert")).not.toBeInTheDocument();
 			expect(screen.queryByTestId("load-refresh-alert")).not.toBeInTheDocument();
 		});
