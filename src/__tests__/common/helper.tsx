@@ -7,16 +7,7 @@ import {
 	TFrontendEngineFieldSchema,
 	TFrontendEngineValues,
 } from "../../components/frontend-engine";
-import {
-	CLEAR_SIGNATURE_BUTTON_LABEL,
-	EDIT_SIGNATURE_BUTTON_LABEL,
-	ERROR_MESSAGE,
-	RESET_BUTTON_ID,
-	RESET_BUTTON_LABEL,
-	SAVE_SIGNATURE_BUTTON_LABEL,
-	SUBMIT_BUTTON_ID,
-	SUBMIT_BUTTON_LABEL,
-} from "./data";
+import { ERROR_MESSAGE, RESET_BUTTON_ID, RESET_BUTTON_LABEL, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
 import { useEffect, useRef } from "react";
 
 type TAriaRoles =
@@ -128,14 +119,6 @@ export const FrontendEngineWithEventListener = (props: IFrontendEngineWithEventL
 	return <FrontendEngine {...otherProps} ref={formRef} />;
 };
 
-export const getEditSignatureButton = (): HTMLElement => {
-	return screen.getByRole("button", { name: EDIT_SIGNATURE_BUTTON_LABEL });
-};
-
-export const getClearSignatureButton = (): HTMLElement => {
-	return screen.getByRole("button", { name: CLEAR_SIGNATURE_BUTTON_LABEL });
-};
-
-export const getSaveSignatureButton = (): HTMLElement => {
-	return screen.getByRole("button", { name: SAVE_SIGNATURE_BUTTON_LABEL });
+export const getButtonByName = (name: string): HTMLElement => {
+	return screen.getByRole("button", { name });
 };
