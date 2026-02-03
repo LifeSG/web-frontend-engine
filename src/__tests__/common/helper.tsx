@@ -108,7 +108,3 @@ export const FrontendEngineWithEventListener = (props: IFrontendEngineWithEventL
 
 	return <FrontendEngine {...otherProps} ref={formRef} />;
 };
-
-export const getButtonByName = (name: string): HTMLElement => {
-	return screen.getByRole("button", { name });
-};

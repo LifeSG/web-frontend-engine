@@ -12,7 +12,6 @@ import {
 	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
-	getButtonByName,
 	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
@@ -73,9 +72,9 @@ const drawAndSave = (edit = false) => {
 };
 
 const clearAndSave = () => {
-	fireEvent.click(getButtonByName("Edit signature"));
-	fireEvent.click(getButtonByName("Clear"));
-	fireEvent.click(getButtonByName("Save"));
+	fireEvent.click(screen.getByRole("button", { name: "Edit signature" }));
+	fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+	fireEvent.click(screen.getByRole("button", { name: "Save" }));
 };
 
 const getTryAgainButton = () => {
