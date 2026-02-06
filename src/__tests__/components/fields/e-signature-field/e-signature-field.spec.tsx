@@ -71,6 +71,12 @@ const drawAndSave = (edit = false) => {
 	fireEvent.click(screen.getByRole("button", { name: "Save" }));
 };
 
+const clearAndSave = () => {
+	fireEvent.click(screen.getByRole("button", { name: "Edit signature" }));
+	fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+	fireEvent.click(screen.getByRole("button", { name: "Save" }));
+};
+
 const getTryAgainButton = () => {
 	return screen.getByRole("button", { name: "Please try again." });
 };
@@ -365,6 +371,47 @@ describe(UI_TYPE, () => {
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(false);
+		});
+	});
+
+	describe("clears and saves empty signature", () => {
+		it("should clear and save empty signature (base64)", async () => {
+			renderComponent(undefined, {
+				defaultValues: {
+					[COMPONENT_ID]: {
+						fieldId: "fieldId",
+						dataURL: PNG_BASE64,
+					},
+				},
+			});
+			expect(screen.getByAltText("Signature preview")).toHaveAttribute("src", PNG_BASE64);
+			await waitFor(() => clearAndSave());
+
+			expect(screen.queryByAltText("Signature preview")).not.toBeInTheDocument();
+			expect(screen.queryByTestId("upload-refresh-alert")).not.toBeInTheDocument();
+			expect(screen.queryByTestId("load-refresh-alert")).not.toBeInTheDocument();
+		});
+
+		it("should clear and save empty signature (multipart)", async () => {
+			const uploadConfig = { url: "url", type: "multipart" } as const;
+			const defaultValue = { fieldId: "fieldId", fileUrl: "https://example.com" };
+			jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "png", mime: "image/png" });
+			jest.spyOn(FileHelper, "fileToDataUrl").mockResolvedValue(PNG_BASE64);
+
+			renderComponent({ upload: uploadConfig }, { defaultValues: { [COMPONENT_ID]: defaultValue } });
+
+			await act(async () => {
+				// wait for useEffect
+			});
+
+			expect(screen.getByAltText("Signature preview")).toHaveAttribute("src", PNG_BASE64);
+
+			await waitFor(() => clearAndSave());
+
+			expect(screen.queryByAltText("Signature preview")).not.toBeInTheDocument();
+			expect(screen.queryByTestId("upload-refresh-alert")).not.toBeInTheDocument();
+			expect(screen.queryByTestId("load-refresh-alert")).not.toBeInTheDocument();
 		});
 	});
 
