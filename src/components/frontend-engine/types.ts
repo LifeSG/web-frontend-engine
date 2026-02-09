@@ -1,5 +1,6 @@
 import { UseFormClearErrors, UseFormReset, UseFormSetValue, ValidationMode } from "react-hook-form";
 import {
+	ICallbacks,
 	TAddFieldEventListener,
 	TCustomComponents,
 	TCustomValidationFunction,
@@ -48,6 +49,9 @@ export interface IFrontendEngineProps<V = undefined, C = undefined> {
 	 *
 	 * Default: true */
 	wrapInForm?: boolean | undefined;
+
+	/** Callback functions for handling form interactions such as tab changes, field events, and other lifecycle events */
+	callbacks?: ICallbacks;
 }
 
 /**

@@ -237,7 +237,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
  */
 export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => {
 	return (
-		<ContextProviders>
+		<ContextProviders callbacks={props.callbacks}>
 			<FrontendEngineInner {...props} ref={ref} />
 		</ContextProviders>
 	);

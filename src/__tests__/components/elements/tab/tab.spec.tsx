@@ -3,6 +3,7 @@ import { FrontendEngine } from "../../../../components";
 import { ITabItemSchema, ITabSchema } from "../../../../components/elements";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import { FRONTEND_ENGINE_ID, TOverrideField, getField, getSubmitButton, getSubmitButtonProps } from "../../../common";
+import { ICallbacks } from "../../../../context-providers";
 
 const SUBMIT_FN = jest.fn();
 
@@ -18,7 +19,8 @@ const FIELD_TWO_ERROR = "Error message two";
 const renderComponent = (
 	overrideField?: TOverrideField<ITabSchema>,
 	children?: Record<string, ITabItemSchema>,
-	defaultValues?: Record<string, unknown>
+	defaultValues?: Record<string, unknown>,
+	callbacks?: ICallbacks
 ) => {
 	const defaultChildren: Record<string, ITabItemSchema> = {
 		tabItem1: {
@@ -59,7 +61,7 @@ const renderComponent = (
 		},
 		defaultValues,
 	};
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} callbacks={callbacks ?? {}} />);
 };
 
 const getFieldOne = (): HTMLElement => {
@@ -163,5 +165,34 @@ describe("Tab", () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello1" }));
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
+	});
+
+	describe("onTabChange callback", () => {
+		it("should call onTabChange callback only once per tab switch", async () => {
+			const onTabChange = jest.fn();
+			renderComponent(undefined, undefined, undefined, { onTabChange });
+
+			fireEvent.click(screen.getByRole("tab", { name: "Tab Title 2" }));
+
+			await waitFor(() => {
+				expect(onTabChange).toHaveBeenCalledTimes(1);
+			});
+
+			fireEvent.click(screen.getByRole("tab", { name: "Tab Title 1" }));
+
+			await waitFor(() => {
+				expect(onTabChange).toHaveBeenCalledTimes(2);
+			});
+		});
+
+		it("should not call onTabChange callback if callback is not defined", async () => {
+			renderComponent();
+
+			fireEvent.click(screen.getByRole("tab", { name: "Tab Title 2" }));
+
+			await waitFor(() => {
+				expect(screen.queryByText("Tab Body 2")).toBeInTheDocument();
+			});
+		});
 	});
 });
