@@ -50,8 +50,8 @@ export interface IFrontendEngineProps<V = undefined, C = undefined> {
 	 * Default: true */
 	wrapInForm?: boolean | undefined;
 
-	/** Fires every time user switch tab */
-	callbacks?: ICallbacks; // to make a common type
+	/** Callback functions for handling form interactions such as tab changes, field events, and other lifecycle events */
+	callbacks?: ICallbacks;
 }
 
 /**
