@@ -9,9 +9,6 @@ import {
 } from "../../components/frontend-engine";
 import { ERROR_MESSAGE, RESET_BUTTON_ID, RESET_BUTTON_LABEL, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
 import { useEffect, useRef } from "react";
-import { TFieldSchema } from "../../components/fields";
-import { TElementSchema } from "../../components/elements";
-import { TCustomComponentSchema } from "../../components";
 
 type TAriaRoles = "textbox" | "generic" | "button" | "spinbutton" | "radio" | "list" | "slider" | "option" | "treeitem";
 
