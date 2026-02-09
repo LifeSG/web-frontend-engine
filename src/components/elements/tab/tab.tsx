@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { TestHelper } from "../../../utils";
-import { useValidationConfig } from "../../../utils/hooks";
+import { useCallbacks, useValidationConfig } from "../../../utils/hooks";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
@@ -20,8 +20,10 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 		schema: { currentActiveTabId, children, ...otherTabSchema },
 	} = props;
 	const [currentTabIndex, setCurrentTabIndex] = useState(getCurrentTabIndex());
+	const [pendingTabChangeCallback, setPendingTabChangeCallback] = useState(false);
 	const { removeFieldValidationConfig } = useValidationConfig();
 	const { unregister } = useFormContext();
+	const { callbacks } = useCallbacks();
 
 	// =========================================================================
 	// EFFECTS
@@ -45,11 +47,21 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentTabIndex, children]);
 
+	useEffect(() => {
+		if (pendingTabChangeCallback) {
+			// Trigger callback after unregister has completed and form has re-rendered
+			callbacks?.onTabChange?.();
+			setPendingTabChangeCallback(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentTabIndex, pendingTabChangeCallback]);
+
 	// =========================================================================
 	// EVENT HANDLERS
 	// =========================================================================
 	const handleTabClick = (_title: string, index: number) => {
 		setCurrentTabIndex(index);
+		setPendingTabChangeCallback(true);
 	};
 
 	// =========================================================================
