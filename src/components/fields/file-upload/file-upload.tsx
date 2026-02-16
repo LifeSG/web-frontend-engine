@@ -3,7 +3,6 @@ import xor from "lodash/xor";
 import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
-import { IGenericFieldProps } from "..";
 import { FileHelper } from "../../../utils";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { IYupValidationRule } from "../../frontend-engine";
@@ -13,7 +12,7 @@ import { FileUploadHelper } from "./file-upload-helper";
 import {
 	EFileStatus,
 	IFile,
-	IFileUploadSchema,
+	IFileUploadProps,
 	IFileUploadValidationRule,
 	IFileUploadValue,
 	TFileUploadErrorObject,
@@ -22,7 +21,7 @@ import {
 // lazy load to fix next.js SSR errors
 const FileUploadManager = lazy(() => import("./file-upload-manager"));
 
-export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) => {
+export const FileUploadInner = (props: IFileUploadProps) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
@@ -43,6 +42,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 			...otherSchema
 		},
 		warning,
+		customLabels,
 	} = props;
 	const { files, currentFileIds, setFiles } = useContext(FileUploadContext);
 	const fileTypeRuleRef = useRef<IFileUploadValidationRule>({});
@@ -327,12 +327,13 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				onDelete={handleDelete}
 				title={renderHtmlText(label)}
 				warning={renderHtmlText(warning || schemaWarning)}
+				customLabels={customLabels}
 			/>
 		</>
 	);
 };
 
-export const FileUpload = (props: IGenericFieldProps<IFileUploadSchema>) => (
+export const FileUpload = (props: IFileUploadProps) => (
 	<FileUploadProvider>
 		<FileUploadInner {...props} />
 	</FileUploadProvider>
