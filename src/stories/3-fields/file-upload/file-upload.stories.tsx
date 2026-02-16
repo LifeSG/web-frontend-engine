@@ -40,6 +40,15 @@ const meta: Meta = {
 				},
 			},
 		},
+		customLabels: {
+			description:
+				"Object to override internal labels. Currently, only the upload button label is supported via uploadButtonLabel.",
+			table: {
+				type: {
+					summary: "{ uploadButtonLabel?: string }",
+				},
+			},
+		},
 		capture: {
 			description:
 				"Whether to allow image to be taken by device and which camera to do so. Based on HTML capture attribute, for more info, see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#capture",
