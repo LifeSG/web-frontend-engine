@@ -19,7 +19,7 @@ export interface IFileUploadValidationRule extends IYupValidationRule {
 
 export interface IFileUploadSchema<V = undefined>
 	extends IBaseFieldSchema<"file-upload", V, IFileUploadValidationRule>,
-		Pick<FileUploadProps, "capture" | "data-testid" | "disabled" | "readOnly" | "styleType"> {
+		Pick<FileUploadProps, "capture" | "customLabels" | "data-testid" | "disabled" | "readOnly" | "styleType"> {
 	className?: string | undefined;
 	description?: string | undefined;
 	label: string;
@@ -85,13 +85,8 @@ export type TUploadErrorDetail = {
 	errorData: unknown;
 };
 
-// Custom labels type for FileUpload
-export type TFileUploadCustomLabels = FileUploadProps extends { customLabels?: infer T } ? T : never;
-
 // Props interface for FileUpload component
-export interface IFileUploadProps extends IGenericFieldProps<IFileUploadSchema> {
-	customLabels?: TFileUploadCustomLabels;
-}
+export interface IFileUploadProps extends IGenericFieldProps<IFileUploadSchema> {}
 
 // =============================================================================
 // EVENTS (fired from FEE)

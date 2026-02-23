@@ -32,6 +32,7 @@ export const FileUploadInner = (props: IFileUploadProps) => {
 		isTouched,
 		value,
 		schema: {
+			customLabels,
 			compressImages,
 			description,
 			hideThumbnail,
@@ -42,7 +43,6 @@ export const FileUploadInner = (props: IFileUploadProps) => {
 			...otherSchema
 		},
 		warning,
-		customLabels,
 	} = props;
 	const { files, currentFileIds, setFiles } = useContext(FileUploadContext);
 	const fileTypeRuleRef = useRef<IFileUploadValidationRule>({});
