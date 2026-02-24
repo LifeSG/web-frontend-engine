@@ -4,7 +4,6 @@ import { IYupValidationRule } from "../../../context-providers";
 import { TFieldEventListener } from "../../../utils";
 import { TErrorMessage } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
-import { IGenericFieldProps } from "../types";
 
 export type TUploadType = "base64" | "multipart";
 
@@ -84,9 +83,6 @@ export type TUploadErrorDetail = {
 	fileId: string;
 	errorData: unknown;
 };
-
-// Props interface for FileUpload component
-export interface IFileUploadProps extends IGenericFieldProps<IFileUploadSchema> {}
 
 // =============================================================================
 // EVENTS (fired from FEE)

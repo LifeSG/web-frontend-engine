@@ -41,8 +41,7 @@ const meta: Meta = {
 			},
 		},
 		customLabels: {
-			description:
-				"Object to override internal labels. Currently, only the upload button label is supported via uploadButtonLabel.",
+			description: "Specify custom label text for some elements",
 			table: {
 				type: {
 					summary: "{ uploadButtonLabel?: string }",

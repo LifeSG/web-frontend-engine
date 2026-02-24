@@ -9,19 +9,14 @@ import { IYupValidationRule } from "../../frontend-engine";
 import { ERROR_MESSAGES, Sanitize } from "../../shared";
 import { FileUploadContext, FileUploadProvider } from "./file-upload-context";
 import { FileUploadHelper } from "./file-upload-helper";
-import {
-	EFileStatus,
-	IFile,
-	IFileUploadProps,
-	IFileUploadValidationRule,
-	IFileUploadValue,
-	TFileUploadErrorObject,
-} from "./types";
+import { EFileStatus, IFile, IFileUploadValidationRule, IFileUploadValue, TFileUploadErrorObject } from "./types";
+import { IGenericFieldProps } from "../types";
+import { IFileUploadSchema } from "./types";
 
 // lazy load to fix next.js SSR errors
 const FileUploadManager = lazy(() => import("./file-upload-manager"));
 
-export const FileUploadInner = (props: IFileUploadProps) => {
+export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
@@ -333,7 +328,7 @@ export const FileUploadInner = (props: IFileUploadProps) => {
 	);
 };
 
-export const FileUpload = (props: IFileUploadProps) => (
+export const FileUpload = (props: IGenericFieldProps<IFileUploadSchema>) => (
 	<FileUploadProvider>
 		<FileUploadInner {...props} />
 	</FileUploadProvider>

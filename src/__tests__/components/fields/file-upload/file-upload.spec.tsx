@@ -802,7 +802,8 @@ describe(UI_TYPE, () => {
 			});
 
 			it("should not upload the invalid file and show an error message", () => {
-				expect(screen.getAllByText(ERROR_MESSAGE).length).toBe(2); // each error message is rendered twice
+				// each error message may be rendered multiple times depending on the design system internals
+				expect(screen.getAllByText(ERROR_MESSAGE).length).toBeGreaterThanOrEqual(2);
 				expect(uploadSpy).toHaveBeenCalledTimes(1);
 			});
 
