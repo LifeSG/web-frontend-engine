@@ -2,6 +2,7 @@ import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IOrderedListSchema, IUnorderedListSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine } from "../../common";
+import { StarIcon } from "@lifesg/react-icons";
 
 const meta: Meta = {
 	title: "Element/List",
@@ -114,6 +115,21 @@ export const UnorderedList = Template("list-unordered").bind({});
 UnorderedList.args = {
 	uiType: "unordered-list",
 	children: ["Item one", "Item two with <strong>bold</strong> text"],
+};
+
+export const UnorderedListWithCustomBulletType = Template("list-unordered-with-custom-bullet").bind({});
+UnorderedListWithCustomBulletType.args = {
+	uiType: "unordered-list",
+	children: ["Item one with start icon as bullet point", "Item two with start icon as bullet point"],
+	bulletType: (
+		<StarIcon
+			style={{
+				display: "block",
+				width: "1em",
+				height: "1em",
+			}}
+		/>
+	),
 };
 
 export const NestedUnorderedList = Template("list-nested-unordered").bind({});
