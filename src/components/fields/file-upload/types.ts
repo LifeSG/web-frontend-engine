@@ -18,7 +18,7 @@ export interface IFileUploadValidationRule extends IYupValidationRule {
 
 export interface IFileUploadSchema<V = undefined>
 	extends IBaseFieldSchema<"file-upload", V, IFileUploadValidationRule>,
-		Pick<FileUploadProps, "capture" | "data-testid" | "disabled" | "readOnly" | "styleType"> {
+		Pick<FileUploadProps, "capture" | "customLabels" | "data-testid" | "disabled" | "readOnly" | "styleType"> {
 	className?: string | undefined;
 	description?: string | undefined;
 	label: string;

@@ -55,11 +55,11 @@ const renderComponent = (overrideField?: TOverrideField<IUnitNumberFieldSchema>,
 };
 
 const getFloorInputField = (): HTMLElement => {
-	return getField("textbox", "floor-input");
+	return screen.getByTestId("floor-input");
 };
 
 const getUnitInputField = (): HTMLElement => {
-	return getField("textbox", "unit-input");
+	return screen.getByTestId("unit-input");
 };
 
 const setFieldValue = (floor: string, unit: string) => {
