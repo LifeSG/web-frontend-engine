@@ -120,7 +120,7 @@ UnorderedList.args = {
 export const UnorderedListWithCustomBulletType = Template("list-unordered-with-custom-bullet").bind({});
 UnorderedListWithCustomBulletType.args = {
 	uiType: "unordered-list",
-	children: ["Item one with start icon as bullet point", "Item two with start icon as bullet point"],
+	children: ["Item one with star icon as bullet point", "Item two with star icon as bullet point"],
 	bulletType: (
 		<StarIcon
 			style={{
