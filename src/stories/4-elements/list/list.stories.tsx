@@ -2,7 +2,7 @@ import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { IOrderedListSchema, IUnorderedListSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine } from "../../common";
-import { StarIcon } from "@lifesg/react-icons";
+import { StarIcon } from "@lifesg/react-icons/star";
 
 const meta: Meta = {
 	title: "Element/List",
@@ -58,6 +58,29 @@ const meta: Meta = {
 				type: {
 					summary: "(string | Record<string, IListItemSchema>)[]",
 				},
+			},
+		},
+		bulletType: {
+			description: "The type of bullet to be used for the list items",
+			table: {
+				type: {
+					summary: `"default" | "circle" | "square" | ReactNode`,
+				},
+			},
+			options: ["default", "circle", "square", "custom icon"],
+			mapping: {
+				default: "default",
+				circle: "circle",
+				square: "square",
+				"custom icon": (
+					<StarIcon
+						style={{
+							display: "block",
+							width: "1em",
+							height: "1em",
+						}}
+					/>
+				),
 			},
 		},
 	},
