@@ -81,7 +81,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 const getComponent = (): HTMLElement => {
-	return getField("button", "Select Select");
+	return screen.getByRole("button", { name: /Select/i });
 };
 
 const getRangeSelector = (): HTMLElement => {
@@ -319,7 +319,7 @@ describe(UI_TYPE, () => {
 			renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
 			// Click on the range-select with default values
-			await waitFor(() => fireEvent.click(getField("button", "A C")));
+			await waitFor(() => fireEvent.click(getComponent()));
 			await waitFor(() => fireEvent.click(screen.getAllByText("B")[0]));
 			await waitFor(() => fireEvent.click(screen.getAllByText("D")[0]));
 			await waitFor(() => fireEvent.click(getResetButton()));
