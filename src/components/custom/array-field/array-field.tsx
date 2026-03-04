@@ -36,6 +36,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		schema: {
 			addButton,
 			fieldSchema,
+			initialEntries,
 			removeButton,
 			removeConfirmationModal,
 			sectionInset,
@@ -46,8 +47,8 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		value,
 		warning,
 	} = props;
-	const [stateValue, _setStateValue] = useState<TFrontendEngineValues[]>([{}]);
-	const [stateKeys, setStateKeys] = useState<string[]>(() => [generateRandomId()]);
+	const [stateValue, _setStateValue] = useState<TFrontendEngineValues[]>([]);
+	const [stateKeys, setStateKeys] = useState<string[]>([]);
 	const [showRemovePrompt, setShowRemovePrompt] = useState<boolean>(false);
 	const [indexToRemove, setIndexToRemove] = useState<number>(-1);
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -87,12 +88,12 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				return value.length > 0 && value.some((item) => !isEmpty(item));
 			})
 			.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(min), (value) => {
-				if (!value || min === undefined) return true;
-				return value.length >= min;
+				if (min === undefined) return true;
+				return (value?.length ?? 0) >= min;
 			})
 			.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(max), (value) => {
-				if (!value || max === undefined) return true;
-				return value.length <= max;
+				if (max === undefined) return true;
+				return (value?.length ?? 0) <= max;
 			});
 
 		setFieldValidationConfig(id, validationSchema, validation);
@@ -109,7 +110,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				// triggered from form change, no need to handle again as it may override the form unintentionally
 				return;
 			}
-			const nextValue = padArray(value, length, () => ({}));
+			const nextValue = initialEntries !== undefined ? value : padArray(value, length, () => ({}));
 			const nextKeys = padArray(stateKeys, nextValue.length, generateRandomId);
 
 			setStateValue(nextValue);
@@ -122,7 +123,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		} else {
 			isInitialisedValue.current = true;
 
-			const nextValue = initValue(length || 1);
+			const nextValue = initValue(initialEntries ?? length ?? 1);
 			const nextKeys = nextValue.map(() => generateRandomId());
 
 			setStateValue(nextValue);
@@ -130,7 +131,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			resetField(id, { defaultValue: nextValue, keepDirty: true });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value, length, setValue, id]);
+	}, [value, length, initialEntries, setValue, id]);
 
 	useEffect(() => {
 		try {
