@@ -28,6 +28,7 @@ const CUSTOM_BUTTON_LABEL = "Custom Button";
 const NESTED_ARRAY_FIELD_ID = "nested-array-field";
 const NESTED_TEXT_FIELD_ID = "nestedInput";
 const NESTED_TEXT_FIELD_LABEL = "NestedTextField";
+const UNIQUE_ITEM_ERROR = "Use a different value from the other entries";
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
@@ -833,6 +834,87 @@ describe(UI_TYPE, () => {
 			expect(screen.getByText("Array field error message")).toBeInTheDocument();
 			expect(screen.getByText("Nested custom error field")).toBeInTheDocument();
 			expect(screen.getByText("Nested array field error message")).toBeInTheDocument();
+		});
+	});
+
+	describe("uniqueItem", () => {
+		const UNIQUE_FIELD_SCHEMA = {
+			fieldSchema: {
+				[TEXT_FIELD_ID]: {
+					uiType: "text-field",
+					label: TEXT_FIELD_LABEL,
+					validation: [{ uniqueItem: true, errorMessage: UNIQUE_ITEM_ERROR } as any],
+				},
+			},
+		};
+
+		it("should show error when duplicate values are entered across sections", async () => {
+			renderComponent(UNIQUE_FIELD_SCHEMA as TOverrideField<IArrayFieldSchema>, {
+				defaultValues: { [COMPONENT_ID]: [{}, {}] },
+			});
+
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "Hello" } }));
+
+			await waitFor(() => {
+				expect(screen.queryByText(UNIQUE_ITEM_ERROR)).toBeInTheDocument();
+			});
+		});
+
+		it("should not show error when values are different", async () => {
+			renderComponent(UNIQUE_FIELD_SCHEMA as TOverrideField<IArrayFieldSchema>, {
+				defaultValues: { [COMPONENT_ID]: [{}, {}] },
+			});
+
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "World" } }));
+
+			await waitFor(() => {
+				expect(screen.queryByText(UNIQUE_ITEM_ERROR)).not.toBeInTheDocument();
+			});
+		});
+
+		it("should not show error for empty values", async () => {
+			renderComponent(UNIQUE_FIELD_SCHEMA as TOverrideField<IArrayFieldSchema>, {
+				defaultValues: { [COMPONENT_ID]: [{}, {}] },
+			});
+
+			await waitFor(() => {
+				expect(screen.queryByText(UNIQUE_ITEM_ERROR)).not.toBeInTheDocument();
+			});
+		});
+
+		it("should clear error when duplicate value is changed", async () => {
+			renderComponent(UNIQUE_FIELD_SCHEMA as TOverrideField<IArrayFieldSchema>, {
+				defaultValues: { [COMPONENT_ID]: [{}, {}] },
+			});
+
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "Hello" } }));
+
+			await waitFor(() => {
+				expect(screen.queryByText(UNIQUE_ITEM_ERROR)).toBeInTheDocument();
+			});
+
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "World" } }));
+
+			await waitFor(() => {
+				expect(screen.queryByText(UNIQUE_ITEM_ERROR)).not.toBeInTheDocument();
+			});
+		});
+
+		it("should show error only on the second occurrence of duplicate", async () => {
+			renderComponent(UNIQUE_FIELD_SCHEMA as TOverrideField<IArrayFieldSchema>, {
+				defaultValues: { [COMPONENT_ID]: [{}, {}] },
+			});
+
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "Hello" } }));
+
+			await waitFor(() => {
+				const errors = screen.queryAllByText(UNIQUE_ITEM_ERROR);
+				expect(errors).toHaveLength(1);
+			});
 		});
 	});
 
