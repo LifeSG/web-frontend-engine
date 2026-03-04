@@ -70,40 +70,38 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		const minRule = validation?.find((rule) => "min" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
-		const min = minRule?.["min"] ?? undefined;
-		const max = maxRule?.["max"] ?? undefined;
 		const length = lengthRule?.["length"] ?? undefined;
-		setMin(min ?? length);
-		setMax(max ?? length);
+		const min = minRule?.["min"] ?? length;
+		const max = maxRule?.["max"] ?? length;
+		setMin(min);
+		setMax(max);
 		setLength(length);
 
-		setFieldValidationConfig(
-			id,
-			Yup.array()
-				.test("is-array-valid", validRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.INVALID, () => {
-					return stateValueRef.current.every((_, i) => formRefs.current[i].isValid());
-				})
-				.test(
-					"is-empty-array",
-					isRequiredRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.REQUIRED,
-					(value) => {
-						if (!value || !isRequiredRule?.required) return true;
+		const validationSchema = Yup.array()
+			.test("is-array-valid", validRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.INVALID, () => {
+				return stateValueRef.current.every((_, i) => formRefs.current[i].isValid());
+			})
+			.test("is-empty-array", isRequiredRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.REQUIRED, (value) => {
+				if (!value || !isRequiredRule?.required) return true;
 
-						return value.length > 0 && value.some((item) => !isEmpty(item));
-					}
-				)
-				.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(min), (value) => {
-					if (!value || min === undefined) return true;
-					return value.length >= min;
-				})
-				.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(max), (value) => {
-					if (!value || max === undefined) return true;
-					return value.length <= max;
-				}),
-			validation
-		);
+				return value.length > 0 && value.some((item) => !isEmpty(item));
+			})
+			.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(min), (value) => {
+				if (!value || min === undefined) return true;
+				return value.length >= min;
+			})
+			.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(max), (value) => {
+				if (!value || max === undefined) return true;
+				return value.length <= max;
+			});
+
+		setFieldValidationConfig(id, validationSchema, validation);
+
+		// setTimeout to let inner fields mount first before validating again
+		const timer = setTimeout(() => setFieldValidationConfig(id, validationSchema, validation), 0);
+		return () => clearTimeout(timer);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
+	}, [validation, stateValue.length]);
 
 	useEffect(() => {
 		if (value) {
