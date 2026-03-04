@@ -14,6 +14,8 @@ export interface IFileUploadValidationRule extends IYupValidationRule {
 	fileType?: string[] | undefined;
 	/** max acceptable file size in kb */
 	maxSizeInKb?: number | undefined;
+	/** To be used with file types. When TRUE, checks that uploaded file extensions are within accepted file types  */
+	fileExtension?: string[] | undefined;
 }
 
 export interface IFileUploadSchema<V = undefined>
