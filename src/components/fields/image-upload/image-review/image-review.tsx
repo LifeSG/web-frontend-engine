@@ -5,7 +5,14 @@ import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
-import { EImageStatus, IDismissReviewModalEvent, IImage, ISharedImageProps, TFileCapture } from "../types";
+import {
+	EImageStatus,
+	IDismissReviewModalEvent,
+	IImage,
+	IImageUploadValidationRule,
+	ISharedImageProps,
+	TFileCapture,
+} from "../types";
 import { IImageEditorRef } from "./image-editor";
 import { ImageError } from "./image-error";
 import { ImagePrompts } from "./image-prompts";
@@ -56,6 +63,7 @@ interface IProps extends ISharedImageProps {
 	multiple?: boolean | undefined;
 	maxFilesErrorMessage?: string | undefined;
 	imageReviewModalStyles?: string | undefined;
+	validation?: IImageUploadValidationRule[] | undefined;
 }
 
 export const ImageReview = (props: IProps) => {
@@ -77,8 +85,9 @@ export const ImageReview = (props: IProps) => {
 		multiple,
 		maxFilesErrorMessage,
 		imageReviewModalStyles,
+		validation,
 	} = props;
-	const { images, setImages } = useContext(ImageContext);
+	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	const previousShow = usePrevious(show);
 
@@ -116,6 +125,20 @@ export const ImageReview = (props: IProps) => {
 	);
 
 	const handleSelectFile = (selectedFiles: File[]) => {
+		// resolve pattern rule from validation
+		const patternRuleRaw = validation?.find((r) => "matches" in r) as any;
+		let fileNamePattern: RegExp | undefined;
+		let fileNamePatternError: string | undefined;
+		if (patternRuleRaw) {
+			const raw = patternRuleRaw.matches;
+			try {
+				fileNamePattern = raw instanceof RegExp ? raw : new RegExp(raw);
+			} catch {
+				fileNamePattern = undefined;
+			}
+			fileNamePatternError = patternRuleRaw.errorMessage;
+		}
+
 		if (
 			!maxFiles ||
 			selectedFiles.length +
@@ -124,6 +147,7 @@ export const ImageReview = (props: IProps) => {
 				maxFiles
 		) {
 			selectedFiles.forEach((selectedFile) => {
+				const isInvalidName = fileNamePattern && !fileNamePattern.test(selectedFile.name);
 				setImages((prev) => {
 					const slot = ImageUploadHelper.findAvailableSlot(prev);
 					return [
@@ -133,13 +157,15 @@ export const ImageReview = (props: IProps) => {
 							file: selectedFile,
 							name: selectedFile.name,
 							dimensions,
-							status: EImageStatus.NONE,
+							status: isInvalidName ? EImageStatus.ERROR_CUSTOM : EImageStatus.NONE,
+							...(isInvalidName && { customErrorMessage: fileNamePatternError || "Invalid filename" }),
 							uploadProgress: 0,
 							addedFrom: "reviewModal",
 							slot,
 						},
 					];
 				});
+				if (isInvalidName) setErrorCount((prev) => prev + 1);
 			});
 		} else {
 			setImages((prev) => {

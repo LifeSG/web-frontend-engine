@@ -33,7 +33,7 @@ interface IYupRule {
 	length?: number | undefined;
 	min?: number | undefined;
 	max?: number | undefined;
-	matches?: string | undefined;
+	matches?: string | RegExp | undefined;
 	notMatches?: string | undefined;
 	email?: boolean | undefined;
 	url?: boolean | undefined;

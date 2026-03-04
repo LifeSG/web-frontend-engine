@@ -193,12 +193,17 @@ export namespace YupHelper {
 					break;
 				case !!rule.matches:
 					{
-						const matches = rule.matches.match(/\/(.*)\/([a-z]+)?/);
 						try {
-							yupSchema = (yupSchema as Yup.StringSchema).matches(
-								new RegExp(matches[1], matches[2]),
-								rule.errorMessage
-							);
+							let regex: RegExp;
+							if (rule.matches instanceof RegExp) {
+								regex = rule.matches;
+							} else {
+								const parsed = (rule.matches as string).match(/\/(.*)\/([a-z]+)?/);
+								regex = parsed
+									? new RegExp(parsed[1], parsed[2] || "")
+									: new RegExp(rule.matches as string);
+							}
+							yupSchema = (yupSchema as Yup.StringSchema).matches(regex, rule.errorMessage);
 						} catch (error) {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
 						}
