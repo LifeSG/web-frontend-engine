@@ -25,7 +25,6 @@ export type IArrayFieldRemoveConfirmationModal =
 
 export interface IArrayFieldSchema<V = undefined, C = undefined>
 	extends IBaseCustomFieldSchema<"array-field", V, IArrayFieldValidationRule> {
-	// TODO: introduce unique rule for children of fieldSchema
 	fieldSchema: Record<string, TFrontendEngineFieldSchema<V, C>>;
 	initialEntries?: number | undefined;
 	sectionInset?: number | string | undefined;
