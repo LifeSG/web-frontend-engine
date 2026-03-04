@@ -216,6 +216,30 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 	},
 };
 
+const SCHEMA_UNIQUE_ITEM: Record<string, TFrontendEngineFieldSchema> = {
+	grid: {
+		uiType: "grid",
+		style: { marginTop: 16, marginBottom: 16 },
+		children: {
+			name: {
+				uiType: "text-field",
+				label: "Name",
+				columns: { mobile: 4, tablet: 8, desktop: 12 },
+				validation: [
+					{ required: true },
+					{ uniqueItem: true, errorMessage: "Use a different name from the other entries" } as any,
+				],
+			},
+			colour: {
+				uiType: "select",
+				label: "Colour",
+				options: [{ label: "Red", value: "Red" }],
+				columns: { mobile: 4, tablet: 4, desktop: 6 },
+			},
+		},
+	},
+};
+
 export const Default = DefaultStoryTemplate<IArrayFieldSchema>("array-field-default").bind({});
 Default.args = {
 	referenceKey: "array-field",
@@ -283,6 +307,14 @@ Customisation.args = {
 	removeButton: { label: "Remove fruit", icon: "CalendarCrossFillIcon" },
 	removeConfirmationModal: { title: "Remove fruit?" },
 	sectionInset: "1rem",
+};
+
+export const UniqueItem = DefaultStoryTemplate<IArrayFieldSchema, object[]>("array-field-unique-item").bind({});
+UniqueItem.args = {
+	referenceKey: "array-field",
+	sectionTitle: "New fruit",
+	fieldSchema: SCHEMA_UNIQUE_ITEM,
+	defaultValues: [{ name: "Apple" }, { name: "" }],
 };
 
 export const HideDivider = DefaultStoryTemplate<IArrayFieldSchema>("array-field-hide-divider").bind({});
