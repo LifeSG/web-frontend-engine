@@ -25,6 +25,29 @@ import {
 } from "./array-field.styles";
 import { IArrayFieldSchema } from "./types";
 
+/**
+ * Recursively scans fieldSchema for fields whose validation array
+ * contains a `{ uniqueItem: true }` rule, and returns their keys.
+ */
+const extractUniqueFieldKeys = (schema: Record<string, any>): string[] => {
+	const keys: string[] = [];
+	for (const [key, value] of Object.entries(schema)) {
+		if (value?.validation) {
+			const hasUniqueItem = value.validation.some((rule: Record<string, unknown>) => "uniqueItem" in rule);
+			if (hasUniqueItem) {
+				keys.push(key);
+			}
+		}
+		if (value?.children) {
+			keys.push(...extractUniqueFieldKeys(value.children));
+		}
+		if (value?.fieldSchema) {
+			keys.push(...extractUniqueFieldKeys(value.fieldSchema));
+		}
+	}
+	return keys;
+};
+
 export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -47,6 +70,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		value,
 		warning,
 	} = props;
+	const uniqueFields = extractUniqueFieldKeys(fieldSchema);
 	const [stateValue, _setStateValue] = useState<TFrontendEngineValues[]>([]);
 	const [stateKeys, setStateKeys] = useState<string[]>([]);
 	const [showRemovePrompt, setShowRemovePrompt] = useState<boolean>(false);
@@ -162,6 +186,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			const newSectionValue = [...stateValue];
 			newSectionValue[index] = data;
 			setStateValue(newSectionValue);
+			checkUniqueFields(newSectionValue);
 			onChange({ target: { value: newSectionValue } });
 		};
 
@@ -203,6 +228,25 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	// =============================================================================
 	// HELPERS
 	// =============================================================================
+	const checkUniqueFields = (values: TFrontendEngineValues[]) => {
+		if (!uniqueFields.length) return;
+
+		uniqueFields.forEach((fieldKey) => {
+			const fieldValues = values.map((item) => item?.[fieldKey]);
+			const duplicates = fieldValues.map((val, idx) => {
+				if (!val) return false;
+				return fieldValues.findIndex((v) => v === val) !== idx;
+			});
+			duplicates.forEach((isDuplicate, idx) => {
+				const ref = formRefs.current[idx];
+				if (!ref) return;
+
+				ref.addCustomValidation("mixed", "uniqueItem", () => !isDuplicate, true);
+				ref.validate(fieldKey);
+			});
+		});
+	};
+
 	const initValue = (len: number) => {
 		return Array(len)
 			.fill(null)
