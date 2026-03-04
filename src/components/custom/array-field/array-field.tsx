@@ -71,12 +71,13 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		const minRule = validation?.find((rule) => "min" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
-		const length = lengthRule?.["length"] ?? undefined;
-		const min = minRule?.["min"] ?? length;
-		const max = maxRule?.["max"] ?? length;
-		setMin(min);
-		setMax(max);
-		setLength(length);
+
+		const minValue = minRule?.["min"] ?? undefined;
+		const maxValue = maxRule?.["max"] ?? undefined;
+		const lengthValue = lengthRule?.["length"] ?? undefined;
+		setMin(minValue ?? lengthValue);
+		setMax(maxValue ?? lengthValue);
+		setLength(lengthValue);
 
 		const validationSchema = Yup.array()
 			.test("is-array-valid", validRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.INVALID, () => {
@@ -87,13 +88,19 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 				return value.length > 0 && value.some((item) => !isEmpty(item));
 			})
-			.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(min), (value) => {
-				if (min === undefined) return true;
-				return (value?.length ?? 0) >= min;
+			.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(minValue), (value) => {
+				if (minValue === undefined) return true;
+				return (value?.length ?? 0) >= minValue;
 			})
-			.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(max), (value) => {
-				if (max === undefined) return true;
-				return (value?.length ?? 0) <= max;
+			.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(maxValue), (value) => {
+				if (maxValue === undefined) return true;
+				return (value?.length ?? 0) <= maxValue;
+			})
+			.test("length-exact", "", function (value) {
+				if (lengthValue === undefined || (value?.length ?? 0) === lengthValue) return true;
+				return this.createError({
+					message: lengthRule?.errorMessage ?? ERROR_MESSAGES.ARRAY_FIELD.LENGTH(this.path, lengthValue),
+				});
 			});
 
 		setFieldValidationConfig(id, validationSchema, validation);

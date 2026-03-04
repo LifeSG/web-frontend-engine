@@ -461,7 +461,7 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByText("At least 2 entries must be provided")).toBeInTheDocument();
+			expect(getErrorMessage()).toBeInTheDocument();
 		});
 
 		it("should show error when default values exceed length rule", async () => {
@@ -474,7 +474,7 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByText("No more than 2 entries can be provided")).toBeInTheDocument();
+			expect(getErrorMessage()).toBeInTheDocument();
 		});
 	});
 
@@ -517,7 +517,7 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(screen.getByText("At least 2 entries must be provided")).toBeInTheDocument();
+			expect(getErrorMessage()).toBeInTheDocument();
 		});
 
 		it("should reset to initialEntries count on reset", async () => {

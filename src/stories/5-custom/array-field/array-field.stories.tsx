@@ -239,7 +239,7 @@ InitialEntries.args = {
 	sectionTitle: "New fruit",
 	fieldSchema: SCHEMA,
 	initialEntries: 0,
-	validation: [{ min: 1 }, { max: 2 }],
+	validation: [{ length: 2 }],
 };
 
 export const DefaultValue = DefaultStoryTemplate<IArrayFieldSchema, object[]>("array-field-default-value").bind({});
@@ -248,6 +248,7 @@ DefaultValue.args = {
 	sectionTitle: "New fruit",
 	fieldSchema: SCHEMA,
 	defaultValues: [{ name: "Apple", colour: "Red" }, { name: "Berry" }],
+	validation: [{ length: 1 }],
 };
 DefaultValue.argTypes = {
 	defaultValues: {
