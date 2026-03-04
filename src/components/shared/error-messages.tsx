@@ -71,7 +71,13 @@ export const ERROR_MESSAGES = {
 			`Upload failed. ${capitalize(unit)} exceeds the maximum size of ${maxSize} KB.`,
 		GENERIC: "Upload failed. Please try again.",
 		FILE_TYPE: (acceptedFileTypes: string[]) =>
-			`Upload failed. Only ${FileHelper.extensionsToSentence(acceptedFileTypes)} files are accepted.`,
+			`Upload failed. Only ${FileHelper.extensionsToSentence(acceptedFileTypes, {
+				setBothJpegAndJpgIfEitherExists: true,
+			})} files are accepted.`,
+		FILE_EXTENSION: (fileExtensions: string[]) =>
+			`Upload failed. Only files with the following file extensions are accepted: ${FileHelper.extensionsToSentence(
+				fileExtensions
+			)}.`,
 		UPLOADING: `Please wait for all ${unitPlural} to finish uploading.`,
 		MODAL: {
 			FILE_TYPE: {
