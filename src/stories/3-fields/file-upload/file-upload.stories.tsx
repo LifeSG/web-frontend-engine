@@ -381,6 +381,16 @@ AcceptedFileTypes.args = {
 	validation: [{ fileType: ["png"], errorMessage: "Accepts only png format" }],
 };
 
+export const AcceptedFileExtensions = DefaultStoryTemplate<IFileUploadSchema>("upload-file-extension").bind({});
+AcceptedFileExtensions.args = {
+	...COMMON_STORY_ARGS,
+	description: "Accepts only .png extensions",
+	validation: [
+		{ fileType: ["jpg"], errorMessage: "Accepts only jpg format" },
+		{ fileExtension: ["jpg"], errorMessage: "Accepts only .jpg extensions" },
+	],
+};
+
 export const Length = DefaultStoryTemplate<IFileUploadSchema>("upload-length").bind({});
 Length.args = {
 	...COMMON_STORY_ARGS,
