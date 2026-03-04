@@ -457,7 +457,7 @@ describe(UI_TYPE, () => {
 			});
 		});
 
-		it("should use the default file extension error message if not provided through options", async () => {
+		it("should use the default file extension error message if not provided", async () => {
 			await renderComponent({
 				files: [
 					new File(["file"], "test", {
@@ -475,7 +475,7 @@ describe(UI_TYPE, () => {
 			});
 		});
 
-		it("should not validate file extension if not fileType validation not provided through options", async () => {
+		it("should not validate file extension if fileType validation is not provided", async () => {
 			const errorMessage = "invalid file extension";
 			await renderComponent({
 				files: [

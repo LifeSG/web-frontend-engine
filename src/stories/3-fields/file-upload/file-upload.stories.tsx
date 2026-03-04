@@ -384,7 +384,7 @@ AcceptedFileTypes.args = {
 export const AcceptedFileExtensions = DefaultStoryTemplate<IFileUploadSchema>("upload-file-extension").bind({});
 AcceptedFileExtensions.args = {
 	...COMMON_STORY_ARGS,
-	description: "Accepts only .png extensions",
+	description: "Accepts only .jpg extensions",
 	validation: [
 		{ fileType: ["jpg"], errorMessage: "Accepts only jpg format" },
 		{ fileExtension: ["jpg"], errorMessage: "Accepts only .jpg extensions" },
