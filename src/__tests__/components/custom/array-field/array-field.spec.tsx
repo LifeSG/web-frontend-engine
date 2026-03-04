@@ -465,6 +465,58 @@ describe(UI_TYPE, () => {
 		});
 	});
 
+	describe("initialEntries", () => {
+		it("should render 1 entry by default", () => {
+			renderComponent();
+
+			expect(screen.queryAllByText("Section title")).toHaveLength(1);
+		});
+
+		it("should render 0 entries when initialEntries is 0", () => {
+			renderComponent({ initialEntries: 0 });
+
+			expect(screen.queryAllByText("Section title")).toHaveLength(0);
+		});
+
+		it("should render the specified number of entries", () => {
+			renderComponent({ initialEntries: 3 });
+
+			expect(screen.queryAllByText("Section title")).toHaveLength(3);
+		});
+
+		it("should be ignored when defaultValues is provided", () => {
+			renderComponent(
+				{ initialEntries: 3 },
+				{ defaultValues: { [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }] } }
+			);
+
+			expect(screen.queryAllByText("Section title")).toHaveLength(1);
+		});
+
+		it("should take precedence over length rule for initial count", () => {
+			renderComponent({ initialEntries: 0, validation: [{ length: 3 }] });
+
+			expect(screen.queryAllByText("Section title")).toHaveLength(0);
+		});
+
+		it("should fail length validation when initialEntries is less than length", async () => {
+			renderComponent({ initialEntries: 0, validation: [{ length: 3, errorMessage: ERROR_MESSAGE }] });
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(getErrorMessage()).toBeInTheDocument();
+		});
+
+		it("should reset to initialEntries count on reset", async () => {
+			renderComponent({ initialEntries: 0 });
+
+			fireEvent.click(getAddButton());
+			fireEvent.click(getResetButton());
+
+			await waitFor(() => expect(screen.queryAllByText("Section title")).toHaveLength(0));
+		});
+	});
+
 	describe("reset", () => {
 		it("should clear selection on reset", async () => {
 			renderComponent();
