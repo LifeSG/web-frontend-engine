@@ -451,7 +451,7 @@ describe(UI_TYPE, () => {
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
 
-		it("should show error when length rule is not fulfilled", async () => {
+		it("should show error when default values are below length rule", async () => {
 			renderComponent(
 				{ validation: [{ length: 2, errorMessage: ERROR_MESSAGE }] },
 				{
@@ -461,7 +461,20 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getErrorMessage()).toBeInTheDocument();
+			expect(screen.getByText("At least 2 entries must be provided")).toBeInTheDocument();
+		});
+
+		it("should show error when default values exceed length rule", async () => {
+			renderComponent(
+				{ validation: [{ length: 2, errorMessage: ERROR_MESSAGE }] },
+				{
+					defaultValues: { [COMPONENT_ID]: [{}, {}, {}] },
+				}
+			);
+
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(screen.getByText("No more than 2 entries can be provided")).toBeInTheDocument();
 		});
 	});
 
@@ -500,11 +513,11 @@ describe(UI_TYPE, () => {
 		});
 
 		it("should fail length validation when initialEntries is less than length", async () => {
-			renderComponent({ initialEntries: 0, validation: [{ length: 3, errorMessage: ERROR_MESSAGE }] });
+			renderComponent({ initialEntries: 0, validation: [{ length: 2, errorMessage: ERROR_MESSAGE }] });
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(getErrorMessage()).toBeInTheDocument();
+			expect(screen.getByText("At least 2 entries must be provided")).toBeInTheDocument();
 		});
 
 		it("should reset to initialEntries count on reset", async () => {
