@@ -105,10 +105,10 @@ export const ImageInput = (props: IImageInputProps) => {
 					file: inputFile,
 					name: inputFile.name,
 					dimensions,
+					status: EImageStatus.NONE,
 					uploadProgress: 0,
 					addedFrom: "dragInput",
 					slot,
-					status: EImageStatus.NONE,
 				} as IImage);
 			});
 			setImages(updatedImages);
