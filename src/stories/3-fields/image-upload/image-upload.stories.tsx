@@ -329,7 +329,7 @@ FileNameValidation.args = {
 	validation: [
 		{ required: true },
 		{
-			matches: "/^[a-zA-Z0-9 !_.*'()-]+$/",
+			matches: "/^[a-zA-Z0-9 \u202F!_.*'()-]+$/",
 			errorMessage: "Invalid filename — only letters, numbers, single spaces and ! - _ . * ' ( ) allowed",
 		},
 	],
