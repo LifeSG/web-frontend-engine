@@ -255,6 +255,21 @@ EditImage.args = {
 	editImage: true,
 };
 
+export const FileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
+FileNameValidation.args = {
+	label: "Provide images",
+	description: "Only filenames containing letters, numbers, single spaces or ! - _ . * ' ( ) are allowed",
+	uiType: "image-upload",
+	editImage: true,
+	validation: [
+		{ required: true },
+		{
+			matches: "/^[a-zA-Z0-9 \u202F!_.*'()-]+$/",
+			errorMessage: "Invalid filename — only letters, numbers, single spaces and ! - _ . * ' ( ) allowed",
+		},
+	],
+};
+
 export const Length = DefaultStoryTemplate<IImageUploadSchema>("upload-length").bind({});
 Length.args = {
 	label: "Provide images",
@@ -299,13 +314,6 @@ UploadOnAdd.args = {
 };
 
 export const WithValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-with-validation").bind({});
-WithValidation.args = {
-	label: "Provide images",
-	uiType: "image-upload",
-	description: "Required field",
-	validation: [{ required: true }],
-};
-
 WithValidation.args = {
 	label: "Provide images",
 	uiType: "image-upload",
