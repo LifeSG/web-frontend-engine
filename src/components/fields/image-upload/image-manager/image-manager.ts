@@ -259,7 +259,7 @@ export const ImageManager = (props: IProps) => {
 	 */
 	const resolveMatchesPattern = (matches: string): RegExp | undefined => {
 		try {
-			const parsed = matches.match(/^\/(.+)\/([gimsuy]*)$/);
+			const parsed = matches.match(/^\/(.+)\/$/);
 			return parsed ? new RegExp(parsed[1], parsed[2] || "") : new RegExp(matches);
 		} catch {
 			return undefined;
