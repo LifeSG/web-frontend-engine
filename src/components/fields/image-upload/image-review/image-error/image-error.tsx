@@ -21,7 +21,7 @@ export const ImageError = (props: IProps) => {
 	//  =============================================================================
 	const {
 		id = "photo-error",
-		image: { name, status, customErrorMessage },
+		image: { name, status },
 		accepts,
 		maxSizeInKb,
 		onClickOk,
@@ -55,7 +55,7 @@ export const ImageError = (props: IProps) => {
 				break;
 			case EImageStatus.ERROR_FILENAME:
 				setErrorTitle(ERROR_MESSAGES.UPLOAD("file").MODAL.GENERIC_ERROR.INVALID_FILE_NAME);
-				setErrorDescription(<>{customErrorMessage}</>);
+				setErrorDescription(<>{ERROR_MESSAGES.UPLOAD("file").MODAL.GENERIC_ERROR.INVALID_FILE_NAME}</>);
 				break;
 			case EImageStatus.ERROR_GENERIC:
 				setErrorTitle(ERROR_MESSAGES.UPLOAD("photo").MODAL.GENERIC_ERROR.TITLE);

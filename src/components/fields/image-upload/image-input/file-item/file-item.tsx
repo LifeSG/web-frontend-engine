@@ -95,13 +95,15 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				setErrorMessage(_errorMessage);
 				break;
 			}
-			case EImageStatus.ERROR_CUSTOM: {
-				const _errorMessage = fileItem.customErrorMessage;
+			case EImageStatus.ERROR_FILENAME: {
+				const uploadRule = validation?.find((rule) => "matches" in rule);
+				const _errorMessage =
+					uploadRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MODAL.GENERIC_ERROR.INVALID_FILE_NAME;
 				setError(true);
 				setErrorMessage(_errorMessage);
 				break;
 			}
-			case EImageStatus.ERROR_FILENAME: {
+			case EImageStatus.ERROR_CUSTOM: {
 				const _errorMessage = fileItem.customErrorMessage;
 				setError(true);
 				setErrorMessage(_errorMessage);
