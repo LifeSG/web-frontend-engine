@@ -272,6 +272,67 @@ describe("image-upload", () => {
 
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
+
+		describe("matches (filename pattern validation)", () => {
+			const MATCHES_PATTERN = "/^[a-z0-9.]+$/";
+			const INVALID_FILE = new File(["file"], "test@invalid.jpg", { type: "image/jpeg" });
+
+			it("should show inline error when filename does not match the pattern", async () => {
+				await renderComponent({
+					files: [INVALID_FILE],
+					overrideField: { validation: [{ matches: MATCHES_PATTERN, errorMessage: ERROR_MESSAGE }] },
+					uploadType: "input",
+				});
+
+				await waitFor(() => expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument());
+				expect(uploadSpy).not.toBeCalled();
+			});
+
+			it("should not show error when filename matches the pattern", async () => {
+				await renderComponent({
+					files: [FILE_1], // "test.jpg" — lowercase alphanumeric + dot
+					overrideField: { validation: [{ matches: MATCHES_PATTERN, errorMessage: ERROR_MESSAGE }] },
+					uploadType: "input",
+				});
+
+				expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
+				await waitFor(() => expect(uploadSpy).toBeCalledTimes(1));
+			});
+
+			it("should exclude invalid filename files from form submission", async () => {
+				await renderComponent({
+					files: [INVALID_FILE],
+					overrideField: { validation: [{ matches: MATCHES_PATTERN, errorMessage: ERROR_MESSAGE }] },
+					uploadType: "input",
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						field: [],
+					})
+				);
+			});
+
+			it("should only submit files that pass the filename pattern", async () => {
+				const INVALID_FILE_2 = new File(["file"], "bad@file.jpg", { type: "image/jpeg" });
+				await renderComponent({
+					files: [FILE_1, INVALID_FILE_2],
+					overrideField: { validation: [{ matches: MATCHES_PATTERN, errorMessage: ERROR_MESSAGE }] },
+					uploadType: "input",
+				});
+
+				await waitFor(() => expect(uploadSpy).toBeCalledTimes(1));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						field: expect.arrayContaining([
+							expect.objectContaining({ fileName: FILE_1.name }),
+						]),
+					})
+				);
+			});
+		});
 	});
 
 	describe.each`

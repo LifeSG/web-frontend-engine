@@ -23,6 +23,8 @@ interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 		url: string;
 		sessionId?: string | undefined;
 	};
+	filenameMatches?: string | undefined;
+	filenameMatchesErrorMessage?: string | undefined;
 	value: any;
 }
 
@@ -34,7 +36,20 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { accepts, compress, crop, dimensions, editImage, id, maxSizeInKb, outputType, upload, value } = props;
+	const {
+		accepts,
+		compress,
+		crop,
+		dimensions,
+		editImage,
+		id,
+		maxSizeInKb,
+		outputType,
+		upload,
+		filenameMatches,
+		filenameMatchesErrorMessage,
+		value,
+	} = props;
 	const { images, setImages, setErrorCount, setCurrentFileIds } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const previousValue = usePrevious(value);
@@ -93,6 +108,21 @@ export const ImageManager = (props: IProps) => {
 							});
 						break;
 					case EImageStatus.NONE:
+						if (filenameMatches) {
+							const pattern = resolveMatchesPattern(filenameMatches);
+							if (pattern && !pattern.test(image.name)) {
+								setImages((prev) => {
+									const updatedImages = [...prev];
+									updatedImages[index] = {
+										...image,
+										status: EImageStatus.ERROR_FILENAME,
+										customErrorMessage: filenameMatchesErrorMessage,
+									};
+									return updatedImages;
+								});
+								break;
+							}
+						}
 						FileHelper.getType(image.file).then((fileType) => {
 							const mimeType = fileType.mime;
 							if (mimeType && accepts.map(FileHelper.fileExtensionToMimeType).includes(mimeType)) {
@@ -165,7 +195,9 @@ export const ImageManager = (props: IProps) => {
 		images.forEach((image) => {
 			if (
 				(image.type && !accepts.map(FileHelper.fileExtensionToMimeType).includes(image.type)) ||
-				[EImageStatus.ERROR_GENERIC, EImageStatus.ERROR_SIZE].includes(image.status)
+				[EImageStatus.ERROR_GENERIC, EImageStatus.ERROR_SIZE, EImageStatus.ERROR_FILENAME].includes(
+					image.status
+				)
 			) {
 				updatedManagerErrorCount++;
 			}
@@ -219,6 +251,19 @@ export const ImageManager = (props: IProps) => {
 			scale = dimensions.height / origHeight;
 		}
 		return scale;
+	};
+
+	/**
+	 * Converts a matches string (e.g. "/^abc$/i" or "^abc$") to a RegExp.
+	 * Returns undefined if the string is invalid.
+	 */
+	const resolveMatchesPattern = (matches: string): RegExp | undefined => {
+		try {
+			const parsed = matches.match(/^\/(.+)\/([gimsuy]*)$/);
+			return parsed ? new RegExp(parsed[1], parsed[2] || "") : new RegExp(matches);
+		} catch {
+			return undefined;
+		}
 	};
 
 	const convertImage = async (index: number, image: IImage) => {
