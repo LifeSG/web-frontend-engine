@@ -20,7 +20,6 @@ import {
 // lazy load to fix next.js SSR errors
 const ImageManager = lazy(() => import("./image-manager"));
 
-// regex for allowd characters ->
 export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) => {
 	//  =============================================================================
 	// CONST, STATE, REFS
@@ -124,32 +123,15 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			setMaxFiles(maxFilesRule.maxFiles);
 		}
 
-		// no need to add validation for file type because it will be validated in image-manager, even when value is set from `defaultValue`
-		// support matches rule for file name validation
-		const patternRule = validation?.find((rule) => "pattern" in rule || "matches" in rule) as any;
-		let fileNamePattern: RegExp | undefined;
-		let fileNamePatternError: string | undefined;
-		if (patternRule) {
-			const raw = patternRule.pattern ?? patternRule.matches;
-			try {
-				fileNamePattern = raw instanceof RegExp ? raw : new RegExp(raw);
-			} catch (e) {
-				fileNamePattern = undefined;
-			}
-			fileNamePatternError = patternRule.errorMessage;
-		}
-
-		const fileItemSchema = Yup.object().shape({
-			fileName: fileNamePattern
-				? Yup.string().matches(fileNamePattern, fileNamePatternError || ERROR_MESSAGES.GENERIC.INVALID)
-				: Yup.string(),
-			dataURL: Yup.string(),
-		});
-
 		setFieldValidationConfig(
 			id,
 			Yup.array()
-				.of(fileItemSchema)
+				.of(
+					Yup.object().shape({
+						fileName: Yup.string(),
+						dataURL: Yup.string(),
+					})
+				)
 				.test(
 					"is-empty-array",
 					isRequiredRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").REQUIRED,
@@ -271,7 +253,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				multiple={multiple}
 				capture={capture}
 				imageReviewModalStyles={imageReviewModalStyles}
-				validation={validation}
 			/>
 		);
 	};
@@ -289,6 +270,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					maxSizeInKb={maxFileSize}
 					outputType={outputType}
 					upload={uploadOnAddingFile}
+					validation={validation}
 					value={value}
 				/>
 			</Suspense>

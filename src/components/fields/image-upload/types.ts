@@ -45,6 +45,7 @@ export interface ISharedImageProps {
 export enum EImageStatus {
 	INJECTED = -99,
 	ERROR_CUSTOM_MUTED = -7,
+	ERROR_FILENAME = -8,
 	ERROR_EXCEED = -6,
 	ERROR_CUSTOM = -5,
 	TO_DELETE = -4,

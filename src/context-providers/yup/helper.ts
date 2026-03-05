@@ -85,11 +85,6 @@ export namespace YupHelper {
 					when: fieldValidationConfig.when ? { ...fieldValidationConfig.when } : undefined,
 				};
 				Object.keys(parsedConfig.when).forEach((whenFieldId) => {
-					if (!fieldConfigs[whenFieldId]) {
-						console.warn(`field "${whenFieldId}" was not found, when condition on "${id}" was not applied`);
-						return;
-					}
-
 					// when
 					whenPairIds.push([id, whenFieldId]);
 					parsedConfig.when[whenFieldId] = {
@@ -193,17 +188,12 @@ export namespace YupHelper {
 					break;
 				case !!rule.matches:
 					{
+						const matches = rule.matches.match(/\/(.*)\/([a-z]+)?/);
 						try {
-							let regex: RegExp;
-							if (rule.matches instanceof RegExp) {
-								regex = rule.matches;
-							} else {
-								const parsed = (rule.matches as string).match(/\/(.*)\/([a-z]+)?/);
-								regex = parsed
-									? new RegExp(parsed[1], parsed[2] || "")
-									: new RegExp(rule.matches as string);
-							}
-							yupSchema = (yupSchema as Yup.StringSchema).matches(regex, rule.errorMessage);
+							yupSchema = (yupSchema as Yup.StringSchema).matches(
+								new RegExp(matches[1], matches[2]),
+								rule.errorMessage
+							);
 						} catch (error) {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
 						}
@@ -212,14 +202,6 @@ export namespace YupHelper {
 				case !!rule.when:
 					{
 						Object.keys(rule.when).forEach((fieldId) => {
-							const whenYupSchema = rule.when[fieldId]?.yupSchema;
-							if (!whenYupSchema) {
-								console.warn(
-									`[mapRules] Unexpected: yupSchema missing for field "${fieldId}" in when condition. `
-								);
-								return;
-							}
-
 							const isRule = rule.when[fieldId].is;
 							const thenRule = mapRules(yupSchema, rule.when[fieldId].then);
 							const otherwiseRule =
@@ -228,7 +210,7 @@ export namespace YupHelper {
 							if (Array.isArray(isRule) && (isRule as unknown[]).every((r) => typeof r === "object")) {
 								yupSchema = yupSchema.when(fieldId, (value: unknown) => {
 									const localYupSchema = mapRules(
-										whenYupSchema.clone(),
+										rule.when[fieldId].yupSchema?.clone(),
 										isRule as IYupConditionalValidationRule[]
 									);
 									let fulfilled = false;

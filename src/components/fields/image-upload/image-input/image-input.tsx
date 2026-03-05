@@ -96,23 +96,11 @@ export const ImageInput = (props: IImageInputProps) => {
 
 	const handleInput = (inputFiles: File[]): void => {
 		if (!inputFiles || !inputFiles.length) return;
-		// pattern matcher from validation rules
-		const getPattern = () => {
-			const rule = validation?.find((r) => "matches" in r) as any;
-			if (!rule) return { regex: undefined as RegExp | undefined, message: undefined as string | undefined };
-			const raw = rule.matches;
-			try {
-				return { regex: raw instanceof RegExp ? raw : new RegExp(raw), message: rule.errorMessage };
-			} catch {
-				return { regex: undefined, message: rule.errorMessage };
-			}
-		};
-		const { regex: fileNamePattern, message: fileNamePatternError } = getPattern();
 		if (!maxFiles || inputFiles.length + images.length <= maxFiles) {
 			const updatedImages: IImage[] = [...images];
 			inputFiles.forEach((inputFile) => {
 				const slot = ImageUploadHelper.findAvailableSlot(updatedImages);
-				const base = {
+				updatedImages.push({
 					id: generateRandomId(),
 					file: inputFile,
 					name: inputFile.name,
@@ -120,17 +108,8 @@ export const ImageInput = (props: IImageInputProps) => {
 					uploadProgress: 0,
 					addedFrom: "dragInput",
 					slot,
-				} as IImage;
-				if (fileNamePattern && !fileNamePattern.test(inputFile.name)) {
-					updatedImages.push({
-						...base,
-						status: EImageStatus.ERROR_CUSTOM,
-						customErrorMessage: fileNamePatternError || ERROR_MESSAGES.GENERIC.INVALID,
-					});
-					setErrorCount((prev) => prev + 1);
-				} else {
-					updatedImages.push({ ...base, status: EImageStatus.NONE });
-				}
+					status: EImageStatus.NONE,
+				} as IImage);
 			});
 			setImages(updatedImages);
 			setExceedError(false);

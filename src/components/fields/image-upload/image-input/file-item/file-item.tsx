@@ -101,6 +101,12 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				setErrorMessage(_errorMessage);
 				break;
 			}
+			case EImageStatus.ERROR_FILENAME: {
+				const _errorMessage = fileItem.customErrorMessage;
+				setError(true);
+				setErrorMessage(_errorMessage);
+				break;
+			}
 			case EImageStatus.ERROR_CUSTOM_MUTED: {
 				const _errorMessage = fileItem.customErrorMessage;
 				setError(false);

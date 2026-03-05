@@ -253,10 +253,18 @@ EditImage.args = {
 	description: "Brings up the image review modal on selecting an image",
 	uiType: "image-upload",
 	editImage: true,
+};
+
+export const EditImageWithFileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
+EditImageWithFileNameValidation.args = {
+	label: "Provide images",
+	description: "Brings up the image review modal on selecting an image",
+	uiType: "image-upload",
+	editImage: true,
 	validation: [
 		{ required: true },
 		{
-			matches: /^[a-zA-Z0-9 !\-_.*'()]+$/,
+			matches: "/^[a-zA-Z0-9 !_.*'()-]+$/",
 			errorMessage: "Invalid filename — only letters, numbers, single spaces and ! - _ . * ' ( ) allowed",
 		},
 	],
@@ -309,11 +317,19 @@ export const WithValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-w
 WithValidation.args = {
 	label: "Provide images",
 	uiType: "image-upload",
+	description: "Required field",
+	validation: [{ required: true }],
+};
+
+export const WithFileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-with-validation").bind({});
+WithFileNameValidation.args = {
+	label: "Provide images",
+	uiType: "image-upload",
 	description: "Required field. Filenames only allow letters, numbers, single spaces and ! - _ . * '\u0027()",
 	validation: [
 		{ required: true },
 		{
-			matches: /^[a-zA-Z0-9 !\-_.*'()]+$/,
+			matches: "/^[a-zA-Z0-9 !_.*'()-]+$/",
 			errorMessage: "Invalid filename — only letters, numbers, single spaces and ! - _ . * ' ( ) allowed",
 		},
 	],
