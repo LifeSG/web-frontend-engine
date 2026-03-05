@@ -111,6 +111,6 @@ export const ERROR_MESSAGES = {
 		REQUIRED: "At least one section must be filled in",
 		MIN: (min: number) => `At least ${min} ${min === 1 ? "entry" : "entries"} must be provided`,
 		MAX: (max: number) => `No more than ${max} ${max === 1 ? "entry" : "entries"} can be provided`,
-		LENGTH: (path: string, length: number) => `${path} must have ${length} ${length === 1 ? "item" : "items"}`,
+		LENGTH: (length: number) => `Exactly ${length} ${length === 1 ? "entry" : "entries"} must be provided`,
 	},
 };

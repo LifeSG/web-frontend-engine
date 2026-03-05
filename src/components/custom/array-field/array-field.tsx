@@ -99,7 +99,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			.test("length-exact", "", function (value) {
 				if (lengthValue === undefined || (value?.length ?? 0) === lengthValue) return true;
 				return this.createError({
-					message: lengthRule?.errorMessage ?? ERROR_MESSAGES.ARRAY_FIELD.LENGTH(this.path, lengthValue),
+					message: lengthRule?.errorMessage ?? ERROR_MESSAGES.ARRAY_FIELD.LENGTH(lengthValue),
 				});
 			});
 
