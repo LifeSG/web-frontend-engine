@@ -435,6 +435,65 @@ describe(UI_TYPE, () => {
 			});
 		});
 
+		it("should be able to validate by file extensions", async () => {
+			const errorMessage = "invalid file extension";
+			await renderComponent({
+				files: [
+					new File(["file"], "test", {
+						type: "image/jpeg",
+					}),
+				],
+				overrideField: {
+					validation: [
+						{ fileExtension: ["jpg"], errorMessage },
+						{ fileType: ["jpg"], errorMessage: ERROR_MESSAGE },
+					],
+				},
+				inputType: "input",
+			});
+
+			await waitFor(() => {
+				expect(screen.getAllByText(errorMessage).length > 1).toBeTruthy();
+			});
+		});
+
+		it("should use the default file extension error message if not provided", async () => {
+			await renderComponent({
+				files: [
+					new File(["file"], "test", {
+						type: "image/jpeg",
+					}),
+				],
+				overrideField: {
+					validation: [{ fileExtension: ["jpg"] }, { fileType: ["jpg"], errorMessage: ERROR_MESSAGE }],
+				},
+				inputType: "input",
+			});
+
+			await waitFor(() => {
+				expect(screen.getAllByText(ERROR_MESSAGES.UPLOAD().FILE_EXTENSION(["jpg"])).length > 0).toBeTruthy();
+			});
+		});
+
+		it("should not validate file extension if fileType validation is not provided", async () => {
+			const errorMessage = "invalid file extension";
+			await renderComponent({
+				files: [
+					new File(["file"], "test", {
+						type: "image/jpeg",
+					}),
+				],
+				overrideField: {
+					validation: [{ fileExtension: ["jpg"], errorMessage }],
+				},
+				inputType: "input",
+			});
+
+			await waitFor(() => {
+				expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+			});
+		});
+
 		it("should allow customisation of the upload failed error message", async () => {
 			uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue("error");
 			await renderComponent({

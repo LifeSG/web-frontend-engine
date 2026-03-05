@@ -46,6 +46,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	} = props;
 	const { files, currentFileIds, setFiles } = useContext(FileUploadContext);
 	const fileTypeRuleRef = useRef<IFileUploadValidationRule>({});
+	const fileExtensionRuleRef = useRef<IFileUploadValidationRule>({});
 	const maxFilesRuleRef = useRef<IYupValidationRule>({});
 	const maxFileSizeRuleRef = useRef<IFileUploadValidationRule>({});
 	const uploadRuleRef = useRef<IFileUploadValidationRule>({});
@@ -91,6 +92,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 		const acceptedFileTypeRule: IFileUploadValidationRule = validation?.find((rule) => "fileType" in rule);
+		const fileExtensionRule: IFileUploadValidationRule = validation?.find((rule) => "fileExtension" in rule);
 		const matchedMaxFileSizeRule: IFileUploadValidationRule = validation?.find((rule) => "maxSizeInKb" in rule);
 		const uploadRule: IFileUploadValidationRule = validation?.find((rule) => "upload" in rule && rule.upload);
 		if (acceptedFileTypeRule?.["fileType"]) {
@@ -98,11 +100,19 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		} else {
 			fileTypeRuleRef.current = {};
 		}
+
+		if (acceptedFileTypeRule?.["fileType"] && fileExtensionRule?.["fileExtension"]) {
+			fileExtensionRuleRef.current = fileExtensionRule;
+		} else {
+			fileExtensionRuleRef.current = {};
+		}
+
 		if (matchedMaxFileSizeRule?.["maxSizeInKb"] > 0) {
 			maxFileSizeRuleRef.current = matchedMaxFileSizeRule;
 		} else {
 			maxFileSizeRuleRef.current = {};
 		}
+
 		uploadRuleRef.current = uploadRule || {};
 
 		const lengthRule = validation?.find((rule) => "length" in rule);
@@ -307,6 +317,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				<FileUploadManager
 					compressImages={!!compressImages}
 					fileTypeRule={fileTypeRuleRef.current}
+					fileExtensionRule={fileExtensionRuleRef.current}
 					hideThumbnail={hideThumbnail}
 					id={id}
 					maxFileSizeRule={maxFileSizeRuleRef.current}
