@@ -255,8 +255,8 @@ EditImage.args = {
 	editImage: true,
 };
 
-export const EditImageWithFileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
-EditImageWithFileNameValidation.args = {
+export const EditImageFileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
+EditImageFileNameValidation.args = {
 	label: "Provide images",
 	description: "Brings up the image review modal on selecting an image",
 	uiType: "image-upload",
@@ -321,8 +321,8 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const WithFileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-with-validation").bind({});
-WithFileNameValidation.args = {
+export const FileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-with-validation").bind({});
+FileNameValidation.args = {
 	label: "Provide images",
 	uiType: "image-upload",
 	description: "Required field. Filenames only allow letters, numbers, single spaces and ! - _ . * '\u0027()",

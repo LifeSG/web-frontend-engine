@@ -29,20 +29,6 @@ interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 }
 
 /**
- * Converts a matches string (e.g. "/^abc$/i" or "^abc$") to a RegExp.
- * Returns undefined if the string is invalid.
- */
-const resolveMatchesPattern = (matches: string): RegExp | undefined => {
-	try {
-		// const parsed = matches.match(/^\/(.*)\/([a-z]*)$/i);
-		const parsed = matches.match(/^\/(.+)\/([gimsuy]*)$/);
-		return parsed ? new RegExp(parsed[1], parsed[2] || "") : new RegExp(matches);
-	} catch {
-		return undefined;
-	}
-};
-
-/**
  * manages selected images by listening to images from context provider
  * rename / compress / upload
  */
@@ -50,8 +36,20 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { accepts, compress, crop, dimensions, editImage, id, maxSizeInKb, outputType, upload, filenameMatches, filenameMatchesErrorMessage, value } =
-		props;
+	const {
+		accepts,
+		compress,
+		crop,
+		dimensions,
+		editImage,
+		id,
+		maxSizeInKb,
+		outputType,
+		upload,
+		filenameMatches,
+		filenameMatchesErrorMessage,
+		value,
+	} = props;
 	const { images, setImages, setErrorCount, setCurrentFileIds } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
 	const previousValue = usePrevious(value);
@@ -253,6 +251,19 @@ export const ImageManager = (props: IProps) => {
 			scale = dimensions.height / origHeight;
 		}
 		return scale;
+	};
+
+	/**
+	 * Converts a matches string (e.g. "/^abc$/i" or "^abc$") to a RegExp.
+	 * Returns undefined if the string is invalid.
+	 */
+	const resolveMatchesPattern = (matches: string): RegExp | undefined => {
+		try {
+			const parsed = matches.match(/^\/(.+)\/([gimsuy]*)$/);
+			return parsed ? new RegExp(parsed[1], parsed[2] || "") : new RegExp(matches);
+		} catch {
+			return undefined;
+		}
 	};
 
 	const convertImage = async (index: number, image: IImage) => {
