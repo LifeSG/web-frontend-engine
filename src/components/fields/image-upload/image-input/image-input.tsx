@@ -109,7 +109,7 @@ export const ImageInput = (props: IImageInputProps) => {
 					uploadProgress: 0,
 					addedFrom: "dragInput",
 					slot,
-				} as IImage);
+				});
 			});
 			setImages(updatedImages);
 			setExceedError(false);
