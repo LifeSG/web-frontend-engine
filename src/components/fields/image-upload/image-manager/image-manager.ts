@@ -6,7 +6,6 @@ import { ImageContext } from "../image-context";
 import {
 	EImageStatus,
 	IImage,
-	IImageUploadValidationRule,
 	ISharedImageProps,
 	IUpdateImageStatus,
 	TImageUploadOutputFileType,
@@ -24,7 +23,8 @@ interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 		url: string;
 		sessionId?: string | undefined;
 	};
-	validation?: IImageUploadValidationRule[] | undefined;
+	filenameMatches?: string | undefined;
+	filenameMatchesErrorMessage?: string | undefined;
 	value: any;
 }
 
@@ -50,7 +50,7 @@ export const ImageManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { accepts, compress, crop, dimensions, editImage, id, maxSizeInKb, outputType, upload, validation, value } =
+	const { accepts, compress, crop, dimensions, editImage, id, maxSizeInKb, outputType, upload, filenameMatches, filenameMatchesErrorMessage, value } =
 		props;
 	const { images, setImages, setErrorCount, setCurrentFileIds } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
@@ -110,16 +110,15 @@ export const ImageManager = (props: IProps) => {
 							});
 						break;
 					case EImageStatus.NONE:
-						const matchesRule = validation?.find((rule) => "matches" in rule);
-						if (matchesRule?.matches) {
-							const pattern = resolveMatchesPattern(matchesRule.matches);
+						if (filenameMatches) {
+							const pattern = resolveMatchesPattern(filenameMatches);
 							if (pattern && !pattern.test(image.name)) {
 								setImages((prev) => {
 									const updatedImages = [...prev];
 									updatedImages[index] = {
 										...image,
 										status: EImageStatus.ERROR_FILENAME,
-										customErrorMessage: matchesRule.errorMessage,
+										customErrorMessage: filenameMatchesErrorMessage,
 									};
 									return updatedImages;
 								});

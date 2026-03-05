@@ -123,6 +123,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			setMaxFiles(maxFilesRule.maxFiles);
 		}
 
+		// no need to add validation for file type because it will be validated in image-manager, even when value is set from `defaultValue`
 		setFieldValidationConfig(
 			id,
 			Yup.array()
@@ -270,7 +271,8 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					maxSizeInKb={maxFileSize}
 					outputType={outputType}
 					upload={uploadOnAddingFile}
-					validation={validation}
+					filenameMatches={validation?.find((rule) => "matches" in rule)?.matches}
+					filenameMatchesErrorMessage={validation?.find((rule) => "matches" in rule)?.errorMessage}
 					value={value}
 				/>
 			</Suspense>
