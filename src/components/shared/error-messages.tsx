@@ -92,6 +92,7 @@ export const ERROR_MESSAGES = {
 			GENERIC_ERROR: {
 				TITLE: `${capitalize(unit)} not uploaded`,
 				DESCRIPTION: (filename: ReactNode) => <>There was a problem uploading {filename}. Please try again.</>,
+				INVALID_FILE_NAME: `Invalid ${unit} name`,
 			},
 			MAX_FILE_SIZE: {
 				TITLE: `${capitalize(unit)} exceeds maximum size`,

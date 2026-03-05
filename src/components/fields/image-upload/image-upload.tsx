@@ -138,7 +138,6 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					isRequiredRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").REQUIRED,
 					(value) => {
 						if (!value || !isRequiredRule?.required) return true;
-
 						return value.length > 0;
 					}
 				)
@@ -272,6 +271,8 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					maxSizeInKb={maxFileSize}
 					outputType={outputType}
 					upload={uploadOnAddingFile}
+					filenameMatches={validation?.find((rule) => "matches" in rule)?.matches}
+					filenameMatchesErrorMessage={validation?.find((rule) => "matches" in rule)?.errorMessage}
 					value={value}
 				/>
 			</Suspense>
