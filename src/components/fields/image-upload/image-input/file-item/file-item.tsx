@@ -96,9 +96,9 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 				break;
 			}
 			case EImageStatus.ERROR_FILENAME: {
-				const uploadRule = validation?.find((rule) => "matches" in rule);
+				const matchesRule = validation?.find((rule) => "matches" in rule);
 				const _errorMessage =
-					uploadRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MODAL.GENERIC_ERROR.INVALID_FILE_NAME;
+					matchesRule?.errorMessage || ERROR_MESSAGES.UPLOAD("photo").MODAL.GENERIC_ERROR.INVALID_FILE_NAME;
 				setError(true);
 				setErrorMessage(_errorMessage);
 				break;

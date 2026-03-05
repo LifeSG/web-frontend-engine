@@ -255,8 +255,8 @@ EditImage.args = {
 	editImage: true,
 };
 
-export const EditImageFileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
-EditImageFileNameValidation.args = {
+export const FileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
+FileNameValidation.args = {
 	label: "Provide images",
 	description: "Brings up the image review modal on selecting an image",
 	uiType: "image-upload",
@@ -264,7 +264,7 @@ EditImageFileNameValidation.args = {
 	validation: [
 		{ required: true },
 		{
-			matches: "/^[a-zA-Z0-9 !_.*'()-]+$/",
+			matches: "/^[a-zA-Z0-9 \u202F!_.*'()-]+$/",
 			errorMessage: "Invalid filename — only letters, numbers, single spaces and ! - _ . * ' ( ) allowed",
 		},
 	],
@@ -319,20 +319,6 @@ WithValidation.args = {
 	uiType: "image-upload",
 	description: "Required field",
 	validation: [{ required: true }],
-};
-
-export const FileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-with-validation").bind({});
-FileNameValidation.args = {
-	label: "Provide images",
-	uiType: "image-upload",
-	description: "Required field. Filenames only allow letters, numbers, single spaces and ! - _ . * '\u0027()",
-	validation: [
-		{ required: true },
-		{
-			matches: "/^[a-zA-Z0-9 \u202F!_.*'()-]+$/",
-			errorMessage: "Invalid filename — only letters, numbers, single spaces and ! - _ . * ' ( ) allowed",
-		},
-	],
 };
 
 export const Warning = WarningStoryTemplate<IImageUploadSchema>("upload-with-warning").bind({});
