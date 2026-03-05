@@ -258,7 +258,7 @@ EditImage.args = {
 export const FileNameValidation = DefaultStoryTemplate<IImageUploadSchema>("upload-edit-image").bind({});
 FileNameValidation.args = {
 	label: "Provide images",
-	description: "Brings up the image review modal on selecting an image",
+	description: "Only filenames containing letters, numbers, single spaces or ! - _ . * ' ( ) are allowed",
 	uiType: "image-upload",
 	editImage: true,
 	validation: [
