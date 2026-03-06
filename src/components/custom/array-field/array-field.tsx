@@ -36,6 +36,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		schema: {
 			addButton,
 			fieldSchema,
+			initialEntries,
 			removeButton,
 			removeConfirmationModal,
 			sectionInset,
@@ -46,8 +47,8 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		value,
 		warning,
 	} = props;
-	const [stateValue, _setStateValue] = useState<TFrontendEngineValues[]>([{}]);
-	const [stateKeys, setStateKeys] = useState<string[]>(() => [generateRandomId()]);
+	const [stateValue, _setStateValue] = useState<TFrontendEngineValues[]>([]);
+	const [stateKeys, setStateKeys] = useState<string[]>([]);
 	const [showRemovePrompt, setShowRemovePrompt] = useState<boolean>(false);
 	const [indexToRemove, setIndexToRemove] = useState<number>(-1);
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -70,40 +71,47 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		const minRule = validation?.find((rule) => "min" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
-		const min = minRule?.["min"] ?? undefined;
-		const max = maxRule?.["max"] ?? undefined;
-		const length = lengthRule?.["length"] ?? undefined;
-		setMin(min ?? length);
-		setMax(max ?? length);
-		setLength(length);
 
-		setFieldValidationConfig(
-			id,
-			Yup.array()
-				.test("is-array-valid", validRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.INVALID, () => {
-					return stateValueRef.current.every((_, i) => formRefs.current[i].isValid());
-				})
-				.test(
-					"is-empty-array",
-					isRequiredRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.REQUIRED,
-					(value) => {
-						if (!value || !isRequiredRule?.required) return true;
+		const minValue = minRule?.["min"] ?? undefined;
+		const maxValue = maxRule?.["max"] ?? undefined;
+		const lengthValue = lengthRule?.["length"] ?? undefined;
+		setMin(minValue ?? lengthValue);
+		setMax(maxValue ?? lengthValue);
+		setLength(lengthValue);
 
-						return value.length > 0 && value.some((item) => !isEmpty(item));
-					}
-				)
-				.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(min), (value) => {
-					if (!value || min === undefined) return true;
-					return value.length >= min;
-				})
-				.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(max), (value) => {
-					if (!value || max === undefined) return true;
-					return value.length <= max;
-				}),
-			validation
-		);
+		const validationSchema = Yup.array()
+			.test("is-array-valid", validRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.INVALID, () => {
+				return stateValueRef.current.every((_, i) => formRefs.current[i].isValid());
+			})
+			.test("is-empty-array", isRequiredRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.REQUIRED, (value) => {
+				if (!value || !isRequiredRule?.required) return true;
+
+				return value.length > 0 && value.some((item) => !isEmpty(item));
+			})
+			.test("min-length", minRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MIN(minValue), (value) => {
+				if (minValue === undefined) return true;
+				return (value?.length ?? 0) >= minValue;
+			})
+			.test("max-length", maxRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.MAX(maxValue), (value) => {
+				if (maxValue === undefined) return true;
+				return (value?.length ?? 0) <= maxValue;
+			})
+			.test(
+				"length-exact",
+				lengthRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.LENGTH(lengthValue),
+				(value) => {
+					if (lengthValue === undefined) return true;
+					return (value?.length ?? 0) === lengthValue;
+				}
+			);
+
+		setFieldValidationConfig(id, validationSchema, validation);
+
+		// setTimeout to let inner fields mount first before validating again
+		const timer = setTimeout(() => setFieldValidationConfig(id, validationSchema, validation), 0);
+		return () => clearTimeout(timer);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
+	}, [validation, stateValue.length]);
 
 	useEffect(() => {
 		if (value) {
@@ -111,7 +119,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				// triggered from form change, no need to handle again as it may override the form unintentionally
 				return;
 			}
-			const nextValue = padArray(value, length, () => ({}));
+			const nextValue = initialEntries !== undefined ? value : padArray(value, length, () => ({}));
 			const nextKeys = padArray(stateKeys, nextValue.length, generateRandomId);
 
 			setStateValue(nextValue);
@@ -124,7 +132,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		} else {
 			isInitialisedValue.current = true;
 
-			const nextValue = initValue(length || 1);
+			const nextValue = initValue(initialEntries ?? length ?? 1);
 			const nextKeys = nextValue.map(() => generateRandomId());
 
 			setStateValue(nextValue);
@@ -132,7 +140,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			resetField(id, { defaultValue: nextValue, keepDirty: true });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value, length, setValue, id]);
+	}, [value, length, initialEntries, setValue, id]);
 
 	useEffect(() => {
 		try {
