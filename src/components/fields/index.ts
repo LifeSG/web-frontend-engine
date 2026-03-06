@@ -13,6 +13,7 @@ export * from "./image-upload";
 export * from "./location-field";
 export * from "./masked-field";
 export * from "./multi-select";
+export * from "./otp-verification-field";
 export * from "./nested-multi-select";
 export * from "./radio-button";
 export * from "./range-select";
