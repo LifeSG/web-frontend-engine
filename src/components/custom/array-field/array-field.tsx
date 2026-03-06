@@ -96,12 +96,14 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				if (maxValue === undefined) return true;
 				return (value?.length ?? 0) <= maxValue;
 			})
-			.test("length-exact", "", function (value) {
-				if (lengthValue === undefined || (value?.length ?? 0) === lengthValue) return true;
-				return this.createError({
-					message: lengthRule?.errorMessage ?? ERROR_MESSAGES.ARRAY_FIELD.LENGTH(lengthValue),
-				});
-			});
+			.test(
+				"length-exact",
+				lengthRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.LENGTH(lengthValue),
+				(value) => {
+					if (lengthValue === undefined) return true;
+					return (value?.length ?? 0) === lengthValue;
+				}
+			);
 
 		setFieldValidationConfig(id, validationSchema, validation);
 
