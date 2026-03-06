@@ -17,6 +17,7 @@ import {
 interface IProps {
 	compressImages: boolean;
 	fileTypeRule: IFileUploadValidationRule;
+	fileExtensionRule: IFileUploadValidationRule;
 	hideThumbnail?: boolean | undefined;
 	id: string;
 	maxFileSizeRule: IFileUploadValidationRule;
@@ -31,7 +32,17 @@ const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { compressImages, fileTypeRule, hideThumbnail, id, maxFileSizeRule, upload, uploadRule, value } = props;
+	const {
+		compressImages,
+		fileTypeRule,
+		fileExtensionRule,
+		hideThumbnail,
+		id,
+		maxFileSizeRule,
+		upload,
+		uploadRule,
+		value,
+	} = props;
 	const { files, setFiles, setCurrentFileIds } = useContext(FileUploadContext);
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
@@ -147,6 +158,13 @@ const FileUploadManager = (props: IProps) => {
 			return fileTypeResult;
 		}
 
+		if (fileTypeRule.fileType && fileExtensionRule.fileExtension) {
+			const fileExtensionResult = validateFileExtension(rawFile.name);
+			if (fileExtensionResult?.status < 0) {
+				return { ...fileExtensionResult, fileType };
+			}
+		}
+
 		const fileSize = upload.type === "base64" ? FileHelper.getFilesizeFromBase64(dataURL) : rawFile.size;
 		const { errorMessage, status } = validateFileSize(fileSize);
 		if (status < 0) {
@@ -178,6 +196,21 @@ const FileUploadManager = (props: IProps) => {
 			};
 		}
 
+		return {};
+	};
+
+	const validateFileExtension = (fileName: string) => {
+		const extensionFromFilename = fileName?.includes(".") ? fileName.split(".").pop().toLowerCase() : undefined;
+
+		if (!extensionFromFilename || !fileExtensionRule?.fileExtension?.includes(extensionFromFilename)) {
+			return {
+				errorMessage:
+					fileExtensionRule.errorMessage ||
+					ERROR_MESSAGES.UPLOAD().FILE_EXTENSION(fileTypeRule.fileType || []),
+				fileName,
+				status: EFileStatus.ERROR_FORMAT,
+			};
+		}
 		return {};
 	};
 
