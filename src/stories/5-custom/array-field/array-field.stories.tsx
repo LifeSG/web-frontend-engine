@@ -42,6 +42,16 @@ const meta: Meta = {
 			},
 			type: { name: "object", value: {}, required: true },
 		},
+		initialEntries: {
+			description:
+				"The number of entries to pre-populate on initial load. Ignored when `defaultValues` is provided. `min`/`max`/`length` rules do not affect the initial count and are only enforced on validation.",
+			table: {
+				type: {
+					summary: "number",
+				},
+				defaultValue: { summary: "1" },
+			},
+		},
 		sectionTitle: {
 			description: "The title shown at the top of each section",
 			table: {
@@ -221,6 +231,15 @@ Default.args = {
 	referenceKey: "array-field",
 	sectionTitle: "New fruit",
 	fieldSchema: SCHEMA,
+};
+
+export const InitialEntries = DefaultStoryTemplate<IArrayFieldSchema>("array-field-initial-entries").bind({});
+InitialEntries.args = {
+	referenceKey: "array-field",
+	sectionTitle: "New fruit",
+	fieldSchema: SCHEMA,
+	initialEntries: 0,
+	validation: [{ min: 1 }, { max: 2 }],
 };
 
 export const DefaultValue = DefaultStoryTemplate<IArrayFieldSchema, object[]>("array-field-default-value").bind({});
