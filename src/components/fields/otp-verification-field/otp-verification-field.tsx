@@ -51,9 +51,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	const otpRule = validation?.find((rule) => "otp-type" in rule);
 	const isRequiredRule = validation?.find((rule) => "required" in rule);
 	const { setFieldValidationConfig } = useValidationConfig();
-	const { clearErrors, formState, setError } = useFormContext();
-
-	console.log({ formState });
+	const { formState, setError } = useFormContext();
 
 	// =============================================================================
 	// EFFECTS
@@ -71,8 +69,6 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 					}
 				)
 				.test("is-email-valid", otpRule?.errorMessage || ERROR_MESSAGES.EMAIL.INVALID, (val) => {
-					console.log({ val, validation, isValid: isValidEmail(val?.contact ?? "") });
-
 					if (otpRule?.["otp-type"] !== "email") return true;
 					return isValidEmail(val?.contact ?? "");
 				})
@@ -99,7 +95,13 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		const phoneNo = `${phoneNumberValue.countryCode}${phoneNumberValue.number}`;
 		const contact = otpValidationType === "email" ? emailValue : phoneNo;
 
-		if (formState.errors[id].type === "is-email-valid" || formState.errors[id].type === "is-phone-number-valid") {
+		if (otpValidationType === "email" && !isValidEmail(emailValue)) {
+			setError(id, { type: "is-email-valid", message: otpRule?.errorMessage || ERROR_MESSAGES.EMAIL.INVALID });
+			throw new Error();
+		}
+
+		if (otpValidationType === "phone-number" && !isValidPhoneNumber(phoneNo)) {
+			setError(id, { type: "is-phone-number-valid", message: otpRule?.errorMessage || ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER });
 			throw new Error();
 		}
 
@@ -204,6 +206,16 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const getSendOtpError = (): string | undefined => {
+		const isContactError = error?.type === "is-email-valid" || error?.type === "is-phone-number-valid";
+		if (isContactError) return error?.message;
+
+		const isOtpRequiredOnSubmit = formState.isSubmitted && error?.type === "is-otp-verified";
+		if (isOtpRequiredOnSubmit) return error?.message;
+
+		return undefined;
+	};
+
 	const commonProps = {
 		id,
 		"data-testid": TestHelper.generateId(id, "otp-verification-field"),
@@ -215,7 +227,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		onSendOtp: handleSendOtp,
 		onResendOtp: handleSendOtp,
 		onVerifyOtp: handleVerifyOtp,
-		sendOtpError: error?.message,
+		sendOtpError: getSendOtpError(),
 		verifyOtpError: verifyError,
 		otpValue: { value: otpCode, ...(otpPrefix && { prefix: otpPrefix }) },
 		onOtpChange: handleOtpChange,
