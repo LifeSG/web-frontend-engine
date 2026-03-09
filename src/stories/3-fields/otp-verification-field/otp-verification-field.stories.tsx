@@ -7,13 +7,6 @@ import { ThemeProvider } from "styled-components";
 
 const meta: Meta = {
 	title: "Field/OtpVerificationField",
-	decorators: [
-		(Story) => (
-			<ThemeProvider theme={LifeSGTheme}>
-				<Story />
-			</ThemeProvider>
-		),
-	],
 	parameters: {
 		docs: {
 			page: () => (
@@ -89,36 +82,51 @@ export default meta;
 export const PhoneNumber = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-phone-number").bind({});
 PhoneNumber.args = {
 	uiType: "otp-verification-field",
+	type: "phone-number",
 	label: "Mobile Number Verification",
 	sendOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/send-otp" },
 	verifyOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/verify-otp" },
-	validation: [{ "otp-type": "phone-number" }],
+	showVerifyOtpThumbnail: true,
+	verifyOtpTitle: "Verify your mobile number",
+	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	validation: [{ "otp-type": "phone-number" }, { required: true, errorMessage: "OTP verification is required." }],
 };
 
 export const Email = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-email").bind({});
 Email.args = {
 	uiType: "otp-verification-field",
 	label: "Email Verification",
+	type: "email",
 	sendOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/send-otp" },
 	verifyOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/verify-otp" },
-	validation: [{ "otp-type": "email" }],
+	showVerifyOtpThumbnail: true,
+	verifyOtpTitle: "Verify your email address",
+	verifyOtpMessage: "Enter the OTP sent to your email address to verify.",
+	validation: [{ "otp-type": "email" }, { required: true, errorMessage: "OTP verification is required." }],
 };
 
 export const Required = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-required").bind({});
 Required.args = {
 	uiType: "otp-verification-field",
+	type: "phone-number",
 	label: "Mobile Number Verification (Required)",
 	sendOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/send-otp" },
 	verifyOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/verify-otp" },
+	showVerifyOtpThumbnail: true,
+	verifyOtpTitle: "Verify your mobile number",
+	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
 	validation: [{ "otp-type": "phone-number" }, { required: true, errorMessage: "OTP verification is required." }],
 };
 
 export const CustomTimer = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-custom-timer").bind({});
 CustomTimer.args = {
 	uiType: "otp-verification-field",
+	type: "phone-number",
 	label: "Mobile Number Verification",
 	sendOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/send-otp" },
 	verifyOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/verify-otp" },
+	verifyOtpTitle: "Verify your mobile number",
+	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
 	validation: [{ "otp-type": "phone-number" }],
 	verifyOtpCountdownTimer: 30,
 };
@@ -126,9 +134,11 @@ CustomTimer.args = {
 export const Disabled = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-disabled").bind({});
 Disabled.args = {
 	uiType: "otp-verification-field",
+	type: "phone-number",
 	label: "Mobile Number Verification",
 	sendOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/send-otp" },
 	verifyOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/verify-otp" },
+	showVerifyOtpThumbnail: true,
 	validation: [{ "otp-type": "phone-number" }],
 	disabled: true,
 };
@@ -136,12 +146,18 @@ Disabled.args = {
 export const Overrides = OverrideStoryTemplate<IOtpVerificationFieldSchema>("otp-overrides").bind({});
 Overrides.args = {
 	uiType: "otp-verification-field",
+	type: "phone-number",
 	label: "Mobile Number Verification",
 	sendOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/send-otp" },
 	verifyOtpRequest: { url: "https://ba8f82df-a2b3-460a-8e96-b98043e3b10d.mock.pstmn.io/webhook/verify-otp" },
+	showVerifyOtpThumbnail: true,
+	verifyOtpTitle: "Verify your mobile number",
+	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
 	validation: [{ "otp-type": "phone-number" }],
 	overrides: {
 		label: "Overriden Mobile Number Verification",
+		verifyOtpTitle: "Overriden OTP title",
+		verifyOtpMessage: "Overriden OTP message",
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;

@@ -1,11 +1,12 @@
 import { AxiosRequestConfig } from "axios";
+import { IYupValidationRule } from "../../types";
 import { IBaseFieldSchema } from "../types";
 
 export type TOtpVerificationType = "phone-number" | "email";
 
 export type TOtpVerificationState = "default" | "sent" | "verified";
 
-export interface IOtpVerificationFieldValidationRule {
+export interface IOtpVerificationFieldValidationRule extends IYupValidationRule {
 	"otp-type"?: TOtpVerificationType | undefined;
 }
 
@@ -20,6 +21,7 @@ export interface IOtpVerificationFieldSchema<V = undefined>
 	extends IBaseFieldSchema<"otp-verification-field", V, IOtpVerificationFieldValidationRule> {
 	sendOtpRequest: IOtpVerificationFieldApiRequest;
 	verifyOtpRequest: IOtpVerificationFieldApiRequest;
+	type: TOtpVerificationType;
 	disabled?: boolean | undefined;
 	readOnly?: boolean | undefined;
 	className?: string | undefined;
