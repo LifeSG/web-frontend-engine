@@ -30,6 +30,7 @@ import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./text
 import { ITextareaSchema } from "./textarea";
 import { ITimeFieldSchema } from "./time-field";
 import { IUnitNumberFieldSchema } from "./unit-number-field";
+import { TTabEvents } from "../elements";
 
 /**
  * field types
@@ -107,7 +108,7 @@ export type TFieldSchema<V = undefined, C = undefined> =
 /**
  * intersection type to represent all field events
  */
-export type TFieldEvents = TButtonEvents & TFileUploadEvents & TImageUploadEvents & TLocationEvents;
+export type TFieldEvents = TButtonEvents & TFileUploadEvents & TImageUploadEvents & TLocationEvents & TTabEvents;
 
 /**
  * intersection type to represent all field triggers

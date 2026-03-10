@@ -2,7 +2,7 @@ import { Button } from "@lifesg/react-design-system/button";
 import * as Icons from "@lifesg/react-icons";
 import styled from "styled-components";
 import { IGenericFieldProps } from "..";
-import { IButtonSchema, TLinkTarget } from "./types";
+import { IButtonSchema } from "./types";
 import { useFieldEvent } from "../../../utils/hooks";
 import { Spacing } from "@lifesg/react-design-system/theme";
 

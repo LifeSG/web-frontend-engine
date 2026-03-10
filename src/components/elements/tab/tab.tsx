@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import { TestHelper } from "../../../utils";
-import { useValidationConfig } from "../../../utils/hooks";
+import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
@@ -22,6 +22,7 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	const [currentTabIndex, setCurrentTabIndex] = useState(getCurrentTabIndex());
 	const { removeFieldValidationConfig } = useValidationConfig();
 	const { unregister } = useFormContext();
+	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =========================================================================
 	// EFFECTS
@@ -49,7 +50,12 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	// EVENT HANDLERS
 	// =========================================================================
 	const handleTabClick = (_title: string, index: number) => {
+		// Avoid unnecessary state updates when user clicks on the active tab
+		if (index === currentTabIndex) {
+			return;
+		}
 		setCurrentTabIndex(index);
+		dispatchFieldEvent("change", id);
 	};
 
 	// =========================================================================
