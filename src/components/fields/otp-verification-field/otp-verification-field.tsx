@@ -9,7 +9,12 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
 import { PhoneHelper } from "../contact-field/utils";
 import { IGenericFieldProps } from "../types";
-import { IOtpVerificationFieldSchema, TOtpVerificationState, TOtpVerificationType } from "./types";
+import {
+	EOtpVerificationErrorType,
+	IOtpVerificationFieldSchema,
+	TOtpVerificationState,
+	TOtpVerificationType,
+} from "./types";
 import { useFormContext } from "react-hook-form";
 
 const isValidEmail = (contact: string) => Yup.string().email().isValidSync(contact);
@@ -32,6 +37,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 			verifyOtpCountdownTimer,
 			disabled,
 			readOnly,
+			prefixSeparator,
 			type,
 			...otherSchema
 		},
@@ -45,13 +51,12 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	});
 	const [otpCode, setOtpCode] = useState<string>("");
 	const [otpPrefix, setOtpPrefix] = useState<string | undefined>(undefined);
-	const [verifyError, setVerifyError] = useState<string | undefined>(undefined);
 	const transactionIdRef = useRef<string | undefined>(undefined);
 
 	const otpRule = validation?.find((rule) => "otp-type" in rule);
 	const isRequiredRule = validation?.find((rule) => "required" in rule);
 	const { setFieldValidationConfig } = useValidationConfig();
-	const { formState, setError } = useFormContext();
+	const { formState, setError, clearErrors } = useFormContext();
 
 	// =============================================================================
 	// EFFECTS
@@ -59,27 +64,14 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	useEffect(() => {
 		setFieldValidationConfig(
 			id,
-			Yup.object()
-				.test(
-					"is-phone-number-valid",
-					otpRule?.errorMessage || ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER,
-					(val) => {
-						if (otpRule?.["otp-type"] !== "phone-number") return true;
-						return isValidPhoneNumber(val?.contact ?? "");
-					}
-				)
-				.test("is-email-valid", otpRule?.errorMessage || ERROR_MESSAGES.EMAIL.INVALID, (val) => {
-					if (otpRule?.["otp-type"] !== "email") return true;
-					return isValidEmail(val?.contact ?? "");
-				})
-				.test(
-					"is-otp-verified",
-					isRequiredRule?.errorMessage || ERROR_MESSAGES.COMMON.FIELD_REQUIRED,
-					(val) => {
-						if (!isRequiredRule?.required) return true;
-						return val?.state === "verified";
-					}
-				),
+			Yup.object().test(
+				EOtpVerificationErrorType.IS_OTP_VERIFIED,
+				isRequiredRule?.errorMessage || getOtpVerificationErr(),
+				(val) => {
+					if (!isRequiredRule?.required) return true;
+					return val?.state === "verified";
+				}
+			),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,12 +88,18 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		const contact = otpValidationType === "email" ? emailValue : phoneNo;
 
 		if (otpValidationType === "email" && !isValidEmail(emailValue)) {
-			setError(id, { type: "is-email-valid", message: otpRule?.errorMessage || ERROR_MESSAGES.EMAIL.INVALID });
+			setError(id, {
+				type: EOtpVerificationErrorType.IS_EMAIL_VALID,
+				message: otpRule?.errorMessage || ERROR_MESSAGES.OTP_VERIFICATION.INVALID_EMAIL,
+			});
 			throw new Error();
 		}
 
 		if (otpValidationType === "phone-number" && !isValidPhoneNumber(phoneNo)) {
-			setError(id, { type: "is-phone-number-valid", message: otpRule?.errorMessage || ERROR_MESSAGES.CONTACT.INVALID_SINGAPORE_NUMBER });
+			setError(id, {
+				type: EOtpVerificationErrorType.IS_PHONE_NUMBER_VALID,
+				message: otpRule?.errorMessage || ERROR_MESSAGES.OTP_VERIFICATION.INVALID_PHONE,
+			});
 			throw new Error();
 		}
 
@@ -112,10 +110,10 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		};
 
 		const response = await new AxiosApiClient("", undefined, undefined, true)
-			.post<Record<string, unknown>>(sendOtpRequest.url, sendBody, { headers: sendOtpRequest.headers })
-			.catch(() => {
-				const errorMsg = ERROR_MESSAGES.OTP_VERIFICATION.SEND_FAILED;
-				setError(id, { message: errorMsg });
+			.post<Record<string, unknown>>(sendOtpRequest.url, sendBody)
+			.catch((error) => {
+				const errorMsg = error?.message || ERROR_MESSAGES.OTP_VERIFICATION.SEND_OTP_FAILED;
+				setError(id, { type: EOtpVerificationErrorType.SEND_OTP_FAILED, message: errorMsg });
 				throw new Error(errorMsg);
 			});
 
@@ -131,7 +129,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 			target: {
 				value: {
 					contact,
-					otpPrefix,
+					otpPrefix: prefix ?? otpPrefix,
 					type,
 					state: "sent",
 				},
@@ -140,23 +138,18 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handleVerifyOtp = async (otp: string): Promise<void> => {
-		setVerifyError(undefined);
-
 		const contact = type === "email" ? emailValue : `${phoneNumberValue.countryCode}${phoneNumberValue.number}`;
 
 		const response = await new AxiosApiClient("", undefined, undefined, true)
-			.post<Record<string, unknown>>(
-				verifyOtpRequest.url,
-				{
-					transactionId: transactionIdRef.current,
-					otp,
-					otpPrefix,
-				},
-				{ headers: verifyOtpRequest.headers }
-			)
-			.catch(() => {
-				const errorMsg = ERROR_MESSAGES.OTP_VERIFICATION.VERIFY_FAILED;
-				setVerifyError(errorMsg);
+			.post<Record<string, unknown>>(verifyOtpRequest.url, {
+				transactionId: transactionIdRef.current,
+				otp,
+				otpPrefix,
+			})
+			.catch((error) => {
+				// base on status
+				const errorMsg = error?.message || ERROR_MESSAGES.OTP_VERIFICATION.OTP_VERIFICATION_FAILED;
+				setError(id, { type: EOtpVerificationErrorType.OTP_VERIFICATION_FAILED, message: errorMsg });
 				throw new Error(errorMsg);
 			});
 
@@ -177,6 +170,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 
 	const handleEmailChange = (input: string): void => {
 		setEmailValue(input);
+		clearErrors(id);
 		onChange({
 			target: {
 				value: {
@@ -189,6 +183,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 
 	const handlePhoneNumberChange = (val: PhoneNumberInputValue): void => {
 		setPhoneNumberValue(val);
+		clearErrors(id);
 		onChange({
 			target: {
 				value: {
@@ -203,17 +198,46 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		setOtpCode(val);
 	};
 
+	const getOtpVerificationErr = () => {
+		if (otpState === "default") {
+			if (type === "email") {
+				return ERROR_MESSAGES.OTP_VERIFICATION.EMAIL_VERIFICATION_REQUIRED;
+			} else {
+				return ERROR_MESSAGES.OTP_VERIFICATION.PHONE_VERIFICATION_REQUIRED;
+			}
+		} else if (otpState === "sent") {
+			return ERROR_MESSAGES.OTP_VERIFICATION.OTP_REQUIRED;
+		}
+	};
+
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const getSendOtpError = (): string | undefined => {
-		const isContactError = error?.type === "is-email-valid" || error?.type === "is-phone-number-valid";
-		if (isContactError) return error?.message;
+		if (otpState === "sent") return;
 
-		const isOtpRequiredOnSubmit = formState.isSubmitted && error?.type === "is-otp-verified";
+		const isSendError =
+			error?.type === EOtpVerificationErrorType.IS_EMAIL_VALID ||
+			error?.type === EOtpVerificationErrorType.IS_PHONE_NUMBER_VALID ||
+			error?.type === EOtpVerificationErrorType.SEND_OTP_FAILED;
+		if (isSendError) return error?.message;
+
+		const isOtpRequiredOnSubmit =
+			formState.isSubmitted && error?.type === EOtpVerificationErrorType.IS_OTP_VERIFIED;
 		if (isOtpRequiredOnSubmit) return error?.message;
 
-		return undefined;
+		return;
+	};
+
+	const getVerifyOtpError = (): string | undefined => {
+		if (otpState !== "sent") return;
+
+		const isVerificationError =
+			error?.type === EOtpVerificationErrorType.IS_OTP_VERIFIED ||
+			error?.type === EOtpVerificationErrorType.OTP_VERIFICATION_FAILED;
+		if (isVerificationError) return error?.message;
+
+		return;
 	};
 
 	const commonProps = {
@@ -228,8 +252,12 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		onResendOtp: handleSendOtp,
 		onVerifyOtp: handleVerifyOtp,
 		sendOtpError: getSendOtpError(),
-		verifyOtpError: verifyError,
-		otpValue: { value: otpCode, ...(otpPrefix && { prefix: otpPrefix }) },
+		verifyOtpError: getVerifyOtpError(),
+		otpValue: {
+			value: otpCode,
+			...(otpPrefix && { prefix: otpPrefix }),
+			...(prefixSeparator && { prefixSeparator }),
+		},
 		onOtpChange: handleOtpChange,
 		...(verifyOtpCountdownTimer !== undefined && { verifyOtpCountdownTimer }),
 		...otherSchema,

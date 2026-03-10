@@ -1,8 +1,15 @@
-import { AxiosRequestConfig } from "axios";
 import { IYupValidationRule } from "../../types";
 import { IBaseFieldSchema } from "../types";
 
 export type TOtpVerificationType = "phone-number" | "email";
+
+export enum EOtpVerificationErrorType {
+	IS_EMAIL_VALID = "is-email-valid",
+	IS_PHONE_NUMBER_VALID = "is-phone-number-valid",
+	SEND_OTP_FAILED = "send-otp-failed",
+	OTP_VERIFICATION_FAILED = "otp-verification-failed",
+	IS_OTP_VERIFIED = "is-otp-verified",
+}
 
 export type TOtpVerificationState = "default" | "sent" | "verified";
 
@@ -12,8 +19,6 @@ export interface IOtpVerificationFieldValidationRule extends IYupValidationRule 
 
 export interface IOtpVerificationFieldApiRequest {
 	url: string;
-	headers?: AxiosRequestConfig["headers"] | undefined;
-	/** Whether the backend should generate a prefix for the OTP. Sent in the request body to the backend service. */
 	withPrefix?: boolean | undefined;
 }
 
@@ -25,6 +30,7 @@ export interface IOtpVerificationFieldSchema<V = undefined>
 	disabled?: boolean | undefined;
 	readOnly?: boolean | undefined;
 	className?: string | undefined;
+	prefixSeparator?: string | undefined;
 	verifyOtpCountdownTimer?: number | undefined;
 	sendOtpPlaceholder?: string | undefined;
 	showVerifyOtpThumbnail?: boolean | undefined;

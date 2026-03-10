@@ -60,9 +60,14 @@ export const ERROR_MESSAGES = {
 		UNSUPPORTED: "This component is not supported by the engine.",
 	},
 	OTP_VERIFICATION: {
-		MUST_BE_VERIFIED: "Please complete OTP verification.",
-		SEND_FAILED: "Failed to send OTP. Please try again.",
-		VERIFY_FAILED: "Invalid OTP. Please try again.",
+		EMAIL_VERIFICATION_REQUIRED: "Please verify your email.",
+		PHONE_VERIFICATION_REQUIRED: "Please verify your contact number.",
+		OTP_REQUIRED: "OTP is required.",
+		INVALID_EMAIL: "Enter a valid email address.",
+		INVALID_PHONE: "Enter a valid contact number.",
+		INVALID_OTP: "Wrong OTP. Please try again.",
+		SEND_OTP_FAILED: "Failed to send OTP. Please try again.",
+		OTP_VERIFICATION_FAILED: "Something went wrong. Please try entering your OTP again, or request a new one.",
 	},
 	UPLOAD: (unit = "file", unitPlural = `${unit}s`) => ({
 		REQUIRED: `Upload at least 1 ${unit}.`,
