@@ -192,7 +192,7 @@ describe("Tab", () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
 	});
 
-	it("should not switch if user clicked on the active", () => {
+	it("should not switch if user clicked on the active tab", () => {
 		renderComponent({ currentActiveTabId: "tabItem2" });
 
 		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 2" }));
