@@ -1,7 +1,8 @@
-import { LifeSGTheme } from "@lifesg/react-design-system";
+import { Button, LifeSGTheme } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
 import { PhoneNumberInputValue } from "@lifesg/react-design-system/phone-number-input";
 import { useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { ThemeProvider } from "styled-components";
 import * as Yup from "yup";
 import { AxiosApiClient, TestHelper } from "../../../utils";
@@ -15,7 +16,6 @@ import {
 	TOtpVerificationState,
 	TOtpVerificationType,
 } from "./types";
-import { useFormContext } from "react-hook-form";
 
 const isValidEmail = (contact: string) => Yup.string().email().isValidSync(contact);
 const isValidPhoneNumber = (contact: string) => PhoneHelper.isSingaporeNumber(contact);
@@ -43,15 +43,14 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		},
 	} = props;
 
-	const [otpState, setOtpState] = useState<TOtpVerificationState>("default");
-	const [emailValue, setEmailValue] = useState<string>("");
-	const [phoneNumberValue, setPhoneNumberValue] = useState<PhoneNumberInputValue>({
-		number: "",
-		countryCode: "+65",
-	});
-	const [otpCode, setOtpCode] = useState<string>("");
-	const [otpPrefix, setOtpPrefix] = useState<string | undefined>(undefined);
-	const transactionIdRef = useRef<string | undefined>(undefined);
+	const [otpCode, setOtpCode] = useState<string>(value?.otpCode || "");
+	const [otpPrefix, setOtpPrefix] = useState<string | undefined>(value?.otpPrefix);
+	const transactionIdRef = useRef<string | undefined>(value?.transactionId);
+
+	const otpState: TOtpVerificationState = value?.state || "default";
+
+	const contactValue = value?.contact || "";
+	const phoneNumberValue: PhoneNumberInputValue = { number: type === "phone-number" ? contactValue : "", countryCode: "+65" };
 
 	const otpRule = validation?.find((rule) => "otp-type" in rule);
 	const isRequiredRule = validation?.find((rule) => "required" in rule);
@@ -75,7 +74,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
+	}, [validation, otpState]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -85,9 +84,9 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		const otpValidationType: TOtpVerificationType = otpRule?.["otp-type"] ?? undefined;
 
 		const phoneNo = `${phoneNumberValue.countryCode}${phoneNumberValue.number}`;
-		const contact = otpValidationType === "email" ? emailValue : phoneNo;
+		const contact = otpValidationType === "email" ? contactValue : phoneNo;
 
-		if (otpValidationType === "email" && !isValidEmail(emailValue)) {
+		if (otpValidationType === "email" && !isValidEmail(contactValue)) {
 			setError(id, {
 				type: EOtpVerificationErrorType.IS_EMAIL_VALID,
 				message: otpRule?.errorMessage || ERROR_MESSAGES.OTP_VERIFICATION.INVALID_EMAIL,
@@ -105,7 +104,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 
 		const sendBody: Record<string, unknown> = {
 			type,
-			...(type === "email" ? { email: emailValue } : { phoneNo }),
+			...(type === "email" ? { email: contactValue } : { phoneNo }),
 			...(sendOtpRequest.withPrefix !== undefined && { withPrefix: sendOtpRequest.withPrefix }),
 		};
 
@@ -128,7 +127,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		onChange({
 			target: {
 				value: {
-					contact,
+					contact: otpValidationType === "email" ? contactValue : phoneNumberValue.number,
 					otpPrefix: prefix ?? otpPrefix,
 					type,
 					state: "sent",
@@ -138,7 +137,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handleVerifyOtp = async (otp: string): Promise<void> => {
-		const contact = type === "email" ? emailValue : `${phoneNumberValue.countryCode}${phoneNumberValue.number}`;
+		const contact = type === "email" ? contactValue : phoneNumberValue.number;
 
 		const response = await new AxiosApiClient("", undefined, undefined, true)
 			.post<Record<string, unknown>>(verifyOtpRequest.url, {
@@ -169,7 +168,6 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handleEmailChange = (input: string): void => {
-		setEmailValue(input);
 		clearErrors(id);
 		onChange({
 			target: {
@@ -182,13 +180,17 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handlePhoneNumberChange = (val: PhoneNumberInputValue): void => {
-		setPhoneNumberValue(val);
 		clearErrors(id);
+		let finalContact = val.number;
+		// if number is empty we should just pass an empty string so required validation can kick in natively if needed
+		if (!val.number) {
+			finalContact = "";
+		}
 		onChange({
 			target: {
 				value: {
 					...value,
-					contact: `${val.countryCode}${val.number}`,
+					contact: finalContact,
 				},
 			},
 		});
@@ -196,6 +198,24 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 
 	const handleOtpChange = (val: string): void => {
 		setOtpCode(val);
+	};
+
+	const handleOtpStateChange = (newState: TOtpVerificationState): void => {
+		if (newState === "default") {
+			setOtpCode("");
+			setOtpPrefix(undefined);
+			transactionIdRef.current = undefined;
+			onChange({
+				target: {
+					value: {
+						...value,
+						state: undefined,
+						additionalData: undefined,
+						otpPrefix: undefined,
+					},
+				},
+			});
+		}
 	};
 
 	const getOtpVerificationErr = () => {
@@ -247,7 +267,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		disabled,
 		readOnly,
 		otpState,
-		onOtpStateChange: setOtpState,
+		onOtpStateChange: handleOtpStateChange,
 		onSendOtp: handleSendOtp,
 		onResendOtp: handleSendOtp,
 		onVerifyOtp: handleVerifyOtp,
@@ -269,7 +289,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 				<Form.OtpVerification
 					{...commonProps}
 					type="email"
-					emailValue={emailValue}
+					emailValue={contactValue}
 					onEmailChange={handleEmailChange}
 				/>
 			) : (
