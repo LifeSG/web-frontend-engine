@@ -67,7 +67,7 @@ export const ERROR_MESSAGES = {
 		INVALID_PHONE: "Enter a valid contact number.",
 		INVALID_OTP: "Wrong OTP. Please try again.",
 		SEND_OTP_FAILED: "Failed to send OTP. Please try again.",
-		OTP_VERIFICATION_FAILED: "Something went wrong. Please try entering your OTP again, or request a new one.",
+		OTP_VERIFICATION_FAILED: "Something went wrong. Please request another OTP.",
 	},
 	UPLOAD: (unit = "file", unitPlural = `${unit}s`) => ({
 		REQUIRED: `Upload at least 1 ${unit}.`,

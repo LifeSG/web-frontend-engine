@@ -10,7 +10,7 @@ import {
 	FRONTEND_ENGINE_ID,
 	TOverrideField,
 	TOverrideSchema,
-	getResetButton,
+	getField,
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
@@ -61,9 +61,10 @@ const renderComponent = (
 	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-const getSendOtpButton = () => screen.getByTestId("field__otp-verification-field-base-contact-contact-button");
-const getVerifyOtpButton = () => screen.getByTestId("field__otp-verification-field-base-verification-verify-button");
-const getComponent = () => screen.getByLabelText(COMPONENT_LABEL);
+const getPhoneNoInput = () => getField("textbox", "Enter phone number");
+const getOtpInput = () => getField("spinbutton", "Enter OTP code");
+const getSendOtpButton = () => getField("button", { name: "Send OTP" });
+const getVerifyOtpButton = () => getField("button", { name: "Verify" });
 
 describe(UI_TYPE, () => {
 	afterEach(() => {
@@ -72,192 +73,205 @@ describe(UI_TYPE, () => {
 
 	it("should be able to render the phone-number OTP field", () => {
 		renderComponent();
-		expect(getComponent()).toBeInTheDocument();
+		expect(getPhoneNoInput()).toBeInTheDocument();
 	});
 
 	it("should be able to render the email OTP field", () => {
 		renderComponent({ type: "email", validation: [{ "otp-type": "email" }] });
-		expect(getComponent()).toBeInTheDocument();
+		expect(getField("textbox", "OTP Verification")).toBeInTheDocument();
 	});
 
-	fit("should call the send OTP API with the contact number when send OTP button is clicked", async () => {
-		const postSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ transactionId: "txn-123" });
+	it("should call the send OTP API with the contact number when send OTP button is clicked", async () => {
+		const postSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ transactionId: MOCK_TXN_ID });
 
 		renderComponent();
-		fireEvent.change(getComponent(), {
-			target: { value: { contact: "81234567", state: "default" } },
+
+		fireEvent.change(getPhoneNoInput(), {
+			target: { value: MOCK_VALID_PHONE_NO },
 		});
 
 		fireEvent.click(getSendOtpButton());
 
 		await waitFor(() => {
-			expect(postSpy).toHaveBeenCalledWith(
-				SEND_OTP_URL,
-				expect.objectContaining({ type: "phone-number", phoneNo: expect.any(String) }),
-				expect.anything()
+			expect(postSpy).toHaveBeenCalledWith(SEND_OTP_URL, {
+				type: "phone-number",
+				phoneNo: `+65${MOCK_VALID_PHONE_NO}`,
+			});
+		});
+	});
+
+	it("should show send OTP error on API failure", async () => {
+		jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue(new Error());
+
+		renderComponent();
+
+		fireEvent.change(getPhoneNoInput(), {
+			target: { value: MOCK_VALID_PHONE_NO },
+		});
+
+		fireEvent.click(getSendOtpButton());
+
+		await waitFor(() => {
+			expect(screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.SEND_OTP_FAILED)).toBeInTheDocument();
+		});
+	});
+
+	it("should transition to sent state and show OTP input after successful send", async () => {
+		jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ transactionId: MOCK_TXN_ID });
+
+		renderComponent();
+
+		fireEvent.change(getPhoneNoInput(), {
+			target: { value: MOCK_VALID_PHONE_NO },
+		});
+
+		fireEvent.click(getSendOtpButton());
+
+		await waitFor(() => {
+			expect(getVerifyOtpButton()).toBeInTheDocument();
+		});
+	});
+
+	it("should call the verify OTP API with the transaction ID and OTP on verify", async () => {
+		const postSpy = jest
+			.spyOn(AxiosApiClient.prototype, "post")
+			.mockResolvedValueOnce({ transactionId: MOCK_TXN_ID })
+			.mockResolvedValueOnce({ additionalData: { token: "mock-token" } });
+
+		renderComponent();
+
+		fireEvent.change(getPhoneNoInput(), {
+			target: { value: MOCK_VALID_PHONE_NO },
+		});
+
+		fireEvent.click(getSendOtpButton());
+
+		await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
+
+		fireEvent.change(getOtpInput(), {
+			target: { value: MOCK_OTP },
+		});
+
+		fireEvent.click(getVerifyOtpButton());
+
+		await waitFor(() => {
+			expect(postSpy).toHaveBeenNthCalledWith(
+				2,
+				VERIFY_OTP_URL,
+				expect.objectContaining({ otp: MOCK_OTP, transactionId: MOCK_TXN_ID })
 			);
 		});
 	});
 
-	// it("should show send OTP error on API failure", async () => {
-	// 	jest.spyOn(AxiosApiClient.prototype, "post").mockRejectedValue(new Error());
+	it("should show verify OTP error on API failure", async () => {
+		jest.spyOn(AxiosApiClient.prototype, "post")
+			.mockResolvedValueOnce({ transactionId: MOCK_TXN_ID })
+			.mockRejectedValueOnce(new Error());
 
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
+		renderComponent();
 
-	// 	await waitFor(() => {
-	// 		expect(screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.SEND_OTP_FAILED)).toBeInTheDocument();
-	// 	});
-	// });
+		fireEvent.change(getPhoneNoInput(), {
+			target: { value: MOCK_VALID_PHONE_NO },
+		});
 
-	// it("should transition to sent state and show OTP input after successful send", async () => {
-	// 	jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ transactionId: "txn-123" });
+		fireEvent.click(getSendOtpButton());
 
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
+		await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
 
-	// 	await waitFor(() => {
-	// 		expect(getVerifyOtpButton()).toBeInTheDocument();
-	// 	});
-	// });
+		fireEvent.change(getOtpInput(), {
+			target: { value: MOCK_OTP },
+		});
 
-	// it("should call the verify OTP API with the transaction ID and OTP on verify", async () => {
-	// 	const postSpy = jest
-	// 		.spyOn(AxiosApiClient.prototype, "post")
-	// 		.mockResolvedValueOnce({ transactionId: "txn-abc" })
-	// 		.mockResolvedValueOnce({ additionalData: { userId: "u1" } });
+		fireEvent.click(getVerifyOtpButton());
 
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
+		await waitFor(() => {
+			expect(screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.OTP_VERIFICATION_FAILED)).toBeInTheDocument();
+		});
+	});
 
-	// 	await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
+	it("should submit verified value with correct shape", async () => {
+		jest.spyOn(AxiosApiClient.prototype, "post")
+			.mockResolvedValueOnce({ transactionId: MOCK_TXN_ID })
+			.mockResolvedValueOnce({ additionalData: { token: "mock-token" } });
 
-	// 	fireEvent.click(getVerifyOtpButton());
+		renderComponent();
 
-	// 	await waitFor(() => {
-	// 		expect(postSpy).toHaveBeenNthCalledWith(
-	// 			2,
-	// 			VERIFY_OTP_URL,
-	// 			expect.objectContaining({ transactionId: "txn-abc" }),
-	// 			expect.anything()
-	// 		);
-	// 	});
-	// });
+		fireEvent.change(getPhoneNoInput(), {
+			target: { value: MOCK_VALID_PHONE_NO },
+		});
 
-	// it("should show verify OTP error on API failure", async () => {
-	// 	jest.spyOn(AxiosApiClient.prototype, "post")
-	// 		.mockResolvedValueOnce({ transactionId: "txn-123" })
-	// 		.mockRejectedValueOnce(new Error());
+		fireEvent.click(getSendOtpButton());
 
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
+		await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
 
-	// 	await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
+		fireEvent.change(getOtpInput(), {
+			target: { value: MOCK_OTP },
+		});
 
-	// 	fireEvent.click(getVerifyOtpButton());
+		fireEvent.click(getVerifyOtpButton());
 
-	// 	await waitFor(() => {
-	// 		expect(screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.OTP_VERIFICATION_FAILED)).toBeInTheDocument();
-	// 	});
-	// });
+		await waitFor(() => expect(screen.queryByRole("button", { name: "Verify" })).not.toBeInTheDocument());
 
-	// it("should submit verified value with correct shape", async () => {
-	// 	jest.spyOn(AxiosApiClient.prototype, "post")
-	// 		.mockResolvedValueOnce({ transactionId: "txn-123" })
-	// 		.mockResolvedValueOnce({ additionalData: { token: "abc" } });
+		fireEvent.click(getSubmitButton());
 
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
+		await waitFor(() => {
+			expect(SUBMIT_FN).toHaveBeenCalledWith(
+				expect.objectContaining({
+					[COMPONENT_ID]: expect.objectContaining({
+						type: "phone-number",
+						state: "verified",
+						additionalData: { token: "mock-token" },
+					}),
+				})
+			);
+		});
+	});
 
-	// 	await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
+	it("should support required validation - reject submission and show PHONE_VERIFICATION_REQUIRED when not verified", async () => {
+		renderComponent();
 
-	// 	fireEvent.click(getVerifyOtpButton());
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-	// 	await waitFor(() => fireEvent.click(getSubmitButton()));
+		await waitFor(() => {
+			expect(screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.PHONE_VERIFICATION_REQUIRED)).toBeInTheDocument();
+		});
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
+	});
 
-	// 	await waitFor(() => {
-	// 		expect(SUBMIT_FN).toHaveBeenCalledWith(
-	// 			expect.objectContaining({
-	// 				[COMPONENT_ID]: expect.objectContaining({
-	// 					type: "phone-number",
-	// 					state: "verified",
-	// 					additionalData: { token: "abc" },
-	// 				}),
-	// 			}),
-	// 			expect.anything()
-	// 		);
-	// 	});
-	// });
+	it("should show EMAIL_VERIFICATION_REQUIRED when email type is not verified on submit", async () => {
+		renderComponent({
+			type: "email",
+			validation: [{ "otp-type": "email" }, { required: true }],
+		});
 
-	// it("should support required validation - reject submission and show PHONE_VERIFICATION_REQUIRED when not verified", async () => {
-	// 	renderComponent();
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-	// 	await waitFor(() => fireEvent.click(getSubmitButton()));
+		await waitFor(() => {
+			expect(screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.EMAIL_VERIFICATION_REQUIRED)).toBeInTheDocument();
+		});
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
+	});
 
-	// 	await waitFor(() => {
-	// 		expect(
-	// 			screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.PHONE_VERIFICATION_REQUIRED)
-	// 		).toBeInTheDocument();
-	// 	});
-	// 	expect(SUBMIT_FN).not.toHaveBeenCalled();
-	// });
+	it("should show OTP_REQUIRED error when only send OTP was completed but not verify", async () => {
+		jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ transactionId: "txn-123" });
 
-	// it("should show EMAIL_VERIFICATION_REQUIRED when email type is not verified on submit", async () => {
-	// 	renderComponent({
-	// 		type: "email",
-	// 		validation: [{ "otp-type": "email" }, { required: true }],
-	// 	});
+		renderComponent();
 
-	// 	await waitFor(() => fireEvent.click(getSubmitButton()));
+		fireEvent.change(getPhoneNoInput(), {
+			target: { value: MOCK_VALID_PHONE_NO },
+		});
 
-	// 	await waitFor(() => {
-	// 		expect(
-	// 			screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.EMAIL_VERIFICATION_REQUIRED)
-	// 		).toBeInTheDocument();
-	// 	});
-	// 	expect(SUBMIT_FN).not.toHaveBeenCalled();
-	// });
+		fireEvent.click(getSendOtpButton());
 
-	// it("should allow submission without verification when not required", async () => {
-	// 	renderComponent({ validation: [{ "otp-type": "phone-number" }] });
+		await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
 
-	// 	await waitFor(() => fireEvent.click(getSubmitButton()));
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-	// 	await waitFor(() => {
-	// 		expect(SUBMIT_FN).toHaveBeenCalled();
-	// 	});
-	// });
-
-	// it("should show OTP_REQUIRED error when only send OTP was completed but not verify", async () => {
-	// 	jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ transactionId: "txn-123" });
-
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
-
-	// 	await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
-
-	// 	await waitFor(() => fireEvent.click(getSubmitButton()));
-
-	// 	await waitFor(() => {
-	// 		expect(screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.OTP_REQUIRED)).toBeInTheDocument();
-	// 	});
-	// 	expect(SUBMIT_FN).not.toHaveBeenCalled();
-	// });
-
-	// it("should reset correctly when reset button is clicked", async () => {
-	// 	jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ transactionId: "txn-123" });
-
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
-
-	// 	await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
-
-	// 	fireEvent.click(getResetButton());
-
-	// 	await waitFor(() => {
-	// 		expect(getSendOtpButton()).toBeInTheDocument();
-	// 	});
-	// });
+		await waitFor(() => {
+			expect(screen.getByText(ERROR_MESSAGES.OTP_VERIFICATION.OTP_REQUIRED)).toBeInTheDocument();
+		});
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
+	});
 
 	// it("should store prefix from send OTP response in the value", async () => {
 	// 	jest.spyOn(AxiosApiClient.prototype, "post")
@@ -315,3 +329,11 @@ describe(UI_TYPE, () => {
 	// 	expect(getSendOtpButton()).toBeDisabled();
 	// });
 });
+
+// =============================================================================
+// MOCKS
+// =============================================================================
+
+const MOCK_VALID_PHONE_NO = "86754231";
+const MOCK_TXN_ID = "txn-123";
+const MOCK_OTP = "123456";

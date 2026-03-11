@@ -9,6 +9,7 @@ export enum EOtpVerificationErrorType {
 	SEND_OTP_FAILED = "send-otp-failed",
 	OTP_VERIFICATION_FAILED = "otp-verification-failed",
 	IS_OTP_VERIFIED = "is-otp-verified",
+	API_ERROR = "api",
 }
 
 export type TOtpVerificationState = "default" | "sent" | "verified";

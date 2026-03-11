@@ -36,6 +36,77 @@ const meta: Meta = {
 							</li>
 						</ul>
 					</p>
+					<h2>API Contracts</h2>
+					<p>
+						Send OTP request (<code>POST sendOtpRequest.url</code>):
+						<ul>
+							<li>
+								<strong>type</strong> — <code>&quot;phone-number&quot;</code> or{" "}
+								<code>&quot;email&quot;</code>
+							</li>
+							<li>
+								<strong>phoneNo</strong> — present when type is <code>phone-number</code>; includes
+								country code (e.g. <code>+6591234567</code>)
+							</li>
+							<li>
+								<strong>email</strong> — present when type is <code>email</code>
+							</li>
+							<li>
+								<strong>withPrefix</strong> — optional; only included when{" "}
+								<code>sendOtpRequest.withPrefix</code> is set
+							</li>
+						</ul>
+					</p>
+					<p>
+						Send OTP response:
+						<ul>
+							<li>
+								<strong>transactionId</strong> — required; used to correlate the subsequent verify call
+							</li>
+							<li>
+								<strong>prefix</strong> — optional; returned when <code>withPrefix</code> is true
+							</li>
+						</ul>
+					</p>
+					<p>
+						Send OTP error response (4xx / 5xx):
+						<ul>
+							<li>
+								<strong>message</strong> — optional; displayed to the user as the field error message
+							</li>
+						</ul>
+					</p>
+					<p>
+						Verify OTP request (<code>POST verifyOtpRequest.url</code>):
+						<ul>
+							<li>
+								<strong>transactionId</strong> — value returned by the Send OTP response
+							</li>
+							<li>
+								<strong>otp</strong> — OTP entered by the user
+							</li>
+							<li>
+								<strong>otpPrefix</strong> — OTP prefix displayed to the user (empty string when no
+								prefix)
+							</li>
+						</ul>
+					</p>
+					<p>
+						Verify OTP response:
+						<ul>
+							<li>
+								<strong>additionalData</strong> — optional; any extra data to include in the field value
+							</li>
+						</ul>
+					</p>
+					<p>
+						Verify OTP error response (4xx / 5xx):
+						<ul>
+							<li>
+								<strong>message</strong> — optional; displayed to the user as the field error message
+							</li>
+						</ul>
+					</p>
 					<ArgTypes of={PhoneNumber} />
 					<Stories includePrimary={true} title="Examples" />
 				</>

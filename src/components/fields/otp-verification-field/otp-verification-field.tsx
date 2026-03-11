@@ -1,9 +1,7 @@
-import { Button, LifeSGTheme } from "@lifesg/react-design-system";
 import { Form } from "@lifesg/react-design-system/form";
 import { PhoneNumberInputValue } from "@lifesg/react-design-system/phone-number-input";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { ThemeProvider } from "styled-components";
 import * as Yup from "yup";
 import { AxiosApiClient, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
@@ -50,7 +48,10 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	const otpState: TOtpVerificationState = value?.state || "default";
 
 	const contactValue = value?.contact || "";
-	const phoneNumberValue: PhoneNumberInputValue = { number: type === "phone-number" ? contactValue : "", countryCode: "+65" };
+	const phoneNumberValue: PhoneNumberInputValue = {
+		number: type === "phone-number" ? contactValue : "",
+		countryCode: "+65",
+	};
 
 	const otpRule = validation?.find((rule) => "otp-type" in rule);
 	const isRequiredRule = validation?.find((rule) => "required" in rule);
@@ -76,15 +77,19 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation, otpState]);
 
+	useEffect(() => {
+		if (error?.type === EOtpVerificationErrorType.API_ERROR && otpState !== "sent") {
+			handleOtpStateChange("sent");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [error]);
+
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
 
 	const handleSendOtp = async (): Promise<void> => {
 		const otpValidationType: TOtpVerificationType = otpRule?.["otp-type"] ?? undefined;
-
-		const phoneNo = `${phoneNumberValue.countryCode}${phoneNumberValue.number}`;
-		const contact = otpValidationType === "email" ? contactValue : phoneNo;
 
 		if (otpValidationType === "email" && !isValidEmail(contactValue)) {
 			setError(id, {
@@ -93,6 +98,8 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 			});
 			throw new Error();
 		}
+
+		const phoneNo = `${phoneNumberValue.countryCode}${phoneNumberValue.number}`;
 
 		if (otpValidationType === "phone-number" && !isValidPhoneNumber(phoneNo)) {
 			setError(id, {
@@ -254,7 +261,8 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 
 		const isVerificationError =
 			error?.type === EOtpVerificationErrorType.IS_OTP_VERIFIED ||
-			error?.type === EOtpVerificationErrorType.OTP_VERIFICATION_FAILED;
+			error?.type === EOtpVerificationErrorType.OTP_VERIFICATION_FAILED ||
+			error?.type === EOtpVerificationErrorType.API_ERROR;
 		if (isVerificationError) return error?.message;
 
 		return;
@@ -284,7 +292,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	return (
-		<ThemeProvider theme={LifeSGTheme}>
+		<>
 			{type === "email" ? (
 				<Form.OtpVerification
 					{...commonProps}
@@ -301,6 +309,6 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 					fixedCountry={true}
 				/>
 			)}
-		</ThemeProvider>
+		</>
 	);
 };
