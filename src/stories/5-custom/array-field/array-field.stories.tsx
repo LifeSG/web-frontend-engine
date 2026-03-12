@@ -235,15 +235,16 @@ const SCHEMA_UNIQUE_ITEM: Record<string, TFrontendEngineFieldSchema> = {
 				uiType: "text-field",
 				label: "Name",
 				columns: { mobile: 4, tablet: 8, desktop: 12 },
-				validation: [
-					{ required: true },
-					{ uniqueItem: true, errorMessage: "Use a different name from the other entries" } as any,
-				],
+				validation: [{ required: true }],
 			},
 			colour: {
 				uiType: "select",
 				label: "Colour",
-				options: [{ label: "Red", value: "Red" }],
+				options: [
+					{ label: "Red", value: "Red" },
+					{ label: "Blue", value: "Blue" },
+					{ label: "Green", value: "Green" },
+				],
 				columns: { mobile: 4, tablet: 4, desktop: 6 },
 			},
 		},
@@ -333,7 +334,15 @@ UniqueItem.args = {
 	referenceKey: "array-field",
 	sectionTitle: "New fruit",
 	fieldSchema: SCHEMA_UNIQUE_ITEM,
-	defaultValues: [{ name: "Apple" }, { name: "" }],
+	validation: [
+		{
+			uniqueItems: [
+				{ field: "name", errorMessage: "Use a different name from the other entries" },
+				{ field: "colour", errorMessage: "Use a different colour from the other entries" },
+			],
+		},
+	],
+	defaultValues: [{ name: "Apple", colour: "Red" }, { name: "" }],
 };
 
 export const HideDivider = DefaultStoryTemplate<IArrayFieldSchema>("array-field-hide-divider").bind({});

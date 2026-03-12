@@ -3,9 +3,16 @@ import * as Icons from "@lifesg/react-icons";
 import { IYupValidationRule, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { IBaseCustomFieldSchema } from "../types";
 
+export interface IArrayFieldUniqueItemRule {
+	field: string;
+	errorMessage: string;
+}
+
 export interface IArrayFieldValidationRule extends IYupValidationRule {
 	/** for customising error message when one section is invalid */
 	valid?: boolean | undefined;
+	/** Specify child fields that must be unique across all array items, with a custom error message per field. */
+	uniqueItems?: IArrayFieldUniqueItemRule[] | undefined;
 }
 
 export interface IArrayFieldButton {

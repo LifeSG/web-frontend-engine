@@ -23,30 +23,7 @@ import {
 	SectionHeader,
 	WarningAlert,
 } from "./array-field.styles";
-import { IArrayFieldSchema } from "./types";
-
-/**
- * Recursively scans fieldSchema for fields whose validation array
- * contains a `{ uniqueItem: true }` rule, and returns their keys.
- */
-const extractUniqueFieldKeys = (schema: Record<string, any>): string[] => {
-	const keys: string[] = [];
-	for (const [key, value] of Object.entries(schema)) {
-		if (value?.validation) {
-			const hasUniqueItem = value.validation.some((rule: Record<string, unknown>) => "uniqueItem" in rule);
-			if (hasUniqueItem) {
-				keys.push(key);
-			}
-		}
-		if (value?.children) {
-			keys.push(...extractUniqueFieldKeys(value.children));
-		}
-		if (value?.fieldSchema) {
-			keys.push(...extractUniqueFieldKeys(value.fieldSchema));
-		}
-	}
-	return keys;
-};
+import { IArrayFieldSchema, IArrayFieldUniqueItemRule, IArrayFieldValidationRule } from "./types";
 
 export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) => {
 	// =============================================================================
@@ -70,7 +47,6 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		value,
 		warning,
 	} = props;
-	const uniqueFields = extractUniqueFieldKeys(fieldSchema);
 	const [stateValue, _setStateValue] = useState<TFrontendEngineValues[]>([]);
 	const [stateKeys, setStateKeys] = useState<string[]>([]);
 	const [showRemovePrompt, setShowRemovePrompt] = useState<boolean>(false);
@@ -95,6 +71,9 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		const minRule = validation?.find((rule) => "min" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
+		const uniqueItemsRule = validation?.find((rule) => "uniqueItems" in rule) as
+			| IArrayFieldValidationRule
+			| undefined;
 
 		const minValue = minRule?.["min"] ?? undefined;
 		const maxValue = maxRule?.["max"] ?? undefined;
@@ -126,6 +105,32 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				(value) => {
 					if (lengthValue === undefined) return true;
 					return (value?.length ?? 0) === lengthValue;
+				})
+				.test("unique-items", uniqueItemsRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.UNIQUE, (value) => {
+					if (!value || !uniqueItemsRule?.uniqueItems?.length) return true;
+
+					const errors: TErrorPayload[] = value.map(() => ({}));
+					let hasError = false;
+
+					uniqueItemsRule.uniqueItems.forEach(({ field, errorMessage }) => {
+						const fieldValues = value.map((item) => item?.[field]);
+						fieldValues.forEach((val, idx) => {
+							if (!val) return;
+							const isDuplicate = fieldValues.findIndex((v) => v === val) !== idx;
+							if (isDuplicate) {
+								errors[idx] = { ...errors[idx], [field]: errorMessage };
+								hasError = true;
+							}
+						});
+					});
+
+					if (hasError) {
+						setFieldErrors(errors);
+					} else {
+						setFieldErrors(undefined);
+					}
+
+					return !hasError;
 				}
 			);
 
@@ -186,7 +191,6 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 			const newSectionValue = [...stateValue];
 			newSectionValue[index] = data;
 			setStateValue(newSectionValue);
-			checkUniqueFields(newSectionValue);
 			onChange({ target: { value: newSectionValue } });
 		};
 
@@ -228,25 +232,6 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	// =============================================================================
 	// HELPERS
 	// =============================================================================
-	const checkUniqueFields = (values: TFrontendEngineValues[]) => {
-		if (!uniqueFields.length) return;
-
-		uniqueFields.forEach((fieldKey) => {
-			const fieldValues = values.map((item) => item?.[fieldKey]);
-			const duplicates = fieldValues.map((val, idx) => {
-				if (!val) return false;
-				return fieldValues.findIndex((v) => v === val) !== idx;
-			});
-			duplicates.forEach((isDuplicate, idx) => {
-				const ref = formRefs.current[idx];
-				if (!ref) return;
-
-				ref.addCustomValidation("mixed", "uniqueItem", () => !isDuplicate, true);
-				ref.validate(fieldKey);
-			});
-		});
-	};
-
 	const initValue = (len: number) => {
 		return Array(len)
 			.fill(null)
