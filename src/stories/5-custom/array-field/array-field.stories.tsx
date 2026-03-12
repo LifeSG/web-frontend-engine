@@ -235,7 +235,13 @@ const SCHEMA_UNIQUE_ITEM: Record<string, TFrontendEngineFieldSchema> = {
 				uiType: "text-field",
 				label: "Name",
 				columns: { mobile: 4, tablet: 8, desktop: 12 },
-				validation: [{ required: true }],
+				validation: [
+					{ required: true },
+					{
+						min: 5,
+						errorMessage: "Must have min 5 characters.",
+					},
+				],
 			},
 			colour: {
 				uiType: "select",
