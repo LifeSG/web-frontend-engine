@@ -234,6 +234,7 @@ export const LocationPicker = ({
 			<LeafletWrapper ref={leafletWrapperRef} />
 			<ButtonLocation
 				data-testid={TestHelper.generateId(id, "refresh-current-location-button")}
+				aria-label="Refresh current location"
 				onClick={() => {
 					if (locationAvailable) {
 						const shouldPreventDefault = !dispatchFieldEvent("click-refresh-current-location", id);
