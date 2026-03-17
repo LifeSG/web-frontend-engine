@@ -9,7 +9,7 @@ import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
-import { ITabSchema } from "./types";
+import { ITabEventDetails, ITabSchema } from "./types";
 
 export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	// =========================================================================
@@ -55,7 +55,10 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 			return;
 		}
 		setCurrentTabIndex(index);
-		dispatchFieldEvent("change", id);
+		dispatchFieldEvent<ITabEventDetails>("change", id, {
+			previousTabId: Object.keys(children)[currentTabIndex],
+			currentTabId: Object.keys(children)[index],
+		});
 	};
 
 	// =========================================================================

@@ -6,6 +6,11 @@ import { TFieldEventListener } from "../../../utils";
 
 type TTabProps = Pick<TabProps, "fullWidthIndicatorLine">;
 
+export type ITabEventDetails = {
+	previousTabId: string;
+	currentTabId: string;
+};
+
 export interface ITabSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"tab">,
 		TComponentOmitProps<TWrapperSchema>,
@@ -32,7 +37,7 @@ function tabChangeEvent(
 	uiType: "tab",
 	type: "change",
 	id: string,
-	listener: TFieldEventListener,
+	listener: TFieldEventListener<ITabEventDetails>,
 	options?: boolean | AddEventListenerOptions | undefined
 ): void;
 function tabChangeEvent() {

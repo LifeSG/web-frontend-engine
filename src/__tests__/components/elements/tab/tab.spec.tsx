@@ -1,9 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { FrontendEngine } from "../../../../components";
 import { ITabItemSchema, ITabSchema } from "../../../../components/elements";
-import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/frontend-engine";
-import { FRONTEND_ENGINE_ID, TOverrideField, getField, getSubmitButton, getSubmitButtonProps } from "../../../common";
-import { useEffect, useRef } from "react";
+import { IFrontendEngineData } from "../../../../components/frontend-engine";
+import {
+	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	getField,
+	getSubmitButton,
+	getSubmitButtonProps,
+	FrontendEngineWithEventListener,
+} from "../../../common";
 
 const SUBMIT_FN = jest.fn();
 
@@ -16,24 +21,6 @@ const FIELD_TWO_LABEL = "Field two";
 const FIELD_ONE_ERROR = "Error message one";
 const FIELD_TWO_ERROR = "Error message two";
 
-interface ICustomFrontendEngineProps extends IFrontendEngineProps {
-	eventType?: string | undefined;
-	eventListener?: ((this: Element, ev: Event) => void) | undefined;
-}
-
-const FrontendEngineWithEventListener = (props: ICustomFrontendEngineProps) => {
-	const { eventType, eventListener, ...otherProps } = props || {};
-	const formRef = useRef<IFrontendEngineRef>();
-	useEffect(() => {
-		if (eventType && eventListener) {
-			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("tab", "change", PARENT_ID, eventListener);
-			return () => currentFormRef.removeFieldEventListener("tab", "change", PARENT_ID, eventListener);
-		}
-	}, [eventListener, eventType]);
-
-	return <FrontendEngine {...otherProps} ref={formRef} onSubmit={SUBMIT_FN} />;
-};
 const renderComponent = (
 	overrideField?: TOverrideField<ITabSchema>,
 	children?: Record<string, ITabItemSchema>,
@@ -80,13 +67,17 @@ const renderComponent = (
 		},
 		defaultValues,
 	};
-	if (eventType && eventListener) {
-		return render(
-			<FrontendEngineWithEventListener data={json} eventType={eventType} eventListener={eventListener} />
-		);
-	}
 
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+	return render(
+		<FrontendEngineWithEventListener
+			data={json}
+			onSubmit={SUBMIT_FN}
+			eventType={eventType}
+			eventListener={eventListener}
+			uiType={"tab"}
+			componentId={PARENT_ID}
+		/>
+	);
 };
 
 const getFieldOne = (): HTMLElement => {
@@ -193,12 +184,14 @@ describe("Tab", () => {
 	});
 
 	it("should not switch if user clicked on the active tab", () => {
-		renderComponent({ currentActiveTabId: "tabItem2" });
+		const handeTabChange = jest.fn();
+		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handeTabChange);
 
 		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 2" }));
 
 		expect(screen.queryByText("Tab Body 1")).not.toBeInTheDocument();
 		expect(screen.queryByText("Tab Body 2")).toBeInTheDocument();
+		expect(handeTabChange).not.toHaveBeenCalled();
 	});
 
 	it("should fire change event when switching tabs", () => {
