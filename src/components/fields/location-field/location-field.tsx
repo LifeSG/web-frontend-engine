@@ -22,7 +22,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 		id,
 		schema: {
 			className = "location",
-			convertLatLngToXYEndpoint,
+			mapApi,
 			disabled,
 			gettingCurrentLocationFetchMessage,
 			interactiveMapPinIconUrl,
@@ -34,7 +34,6 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			mapPanZoom,
 			mustHavePostalCode,
 			readOnly,
-			reverseGeoCodeEndpoint,
 			staticMapPinColor,
 			validation,
 			hasExplicitEdit,
@@ -181,8 +180,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						onConfirm={updateFormValues}
 						updateFormValues={updateFormValues}
 						mapPanZoom={mapPanZoom}
-						reverseGeoCodeEndpoint={reverseGeoCodeEndpoint}
-						convertLatLngToXYEndpoint={convertLatLngToXYEndpoint}
+						mapApi={mapApi}
 						interactiveMapPinIconUrl={interactiveMapPinIconUrl}
 						gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 						mustHavePostalCode={mustHavePostalCode}
