@@ -35,18 +35,12 @@ interface IRecaptchaProviderProps {
 	children: React.ReactNode;
 	/** reCAPTCHA v3 Enterprise site key. When omitted the provider is a no-op. */
 	recaptchaSiteKey?: string | undefined;
-	/** Default action label reported to reCAPTCHA. Defaults to "location_search". */
-	action?: string | undefined;
 }
 
 // =============================================================================
 // CONTEXT PROVIDER
 // =============================================================================
-export const RecaptchaProvider = ({
-	children,
-	recaptchaSiteKey,
-	action = "location_search",
-}: IRecaptchaProviderProps) => {
+export const RecaptchaProvider = ({ children, recaptchaSiteKey }: IRecaptchaProviderProps) => {
 	const [recaptchaState, dispatch] = useReducer(recaptchaStateReducer, DEFAULT_STATE);
 	// =========================================================================
 	// EFFECTS
@@ -86,7 +80,7 @@ export const RecaptchaProvider = ({
 	 * Returns `undefined` when no site key is configured or the script has not
 	 * loaded yet.
 	 */
-	const getToken = (overrideAction?: string): Promise<string | undefined> => {
+	const getToken = (action: string): Promise<string | undefined> => {
 		return new Promise((resolve) => {
 			if (!recaptchaSiteKey || typeof window === "undefined" || !window.grecaptcha?.enterprise) {
 				resolve(undefined);
@@ -95,7 +89,7 @@ export const RecaptchaProvider = ({
 			window.grecaptcha.enterprise.ready(async () => {
 				try {
 					const token = await window.grecaptcha.enterprise.execute(recaptchaSiteKey, {
-						action: overrideAction ?? action,
+						action,
 					});
 					resolve(token);
 				} catch {

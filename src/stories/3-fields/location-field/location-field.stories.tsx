@@ -1,18 +1,24 @@
-import { Button } from "@lifesg/react-design-system/button";
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
-import { ReactElement, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ILocationCoord, ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
-import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
-import { RecursivePartial } from "../../../utils";
-import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { IFrontendEngineRef } from "../../../components/frontend-engine";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	FrontendEngine,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	RECAPTCHA_SITE_KEY,
+	SUBMIT_BUTTON_SCHEMA,
+	WarningStoryTemplate,
+} from "../../common";
 
 const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
 const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
 const search = "https://api.dev.lifesg.io/onemap/search";
 
-const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
 const defaultMapApi = {
 	reverseGeocode,
 	convertLatLngToXY,
@@ -21,91 +27,6 @@ const defaultMapApi = {
 		"x-client-app": "LifeSG",
 	},
 };
-
-const DefaultLocationStoryTemplate = <T, U = string>(id: string, hideSubmit = false) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			recaptchaSiteKey={recaptchaSiteKey}
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args as unknown as TFrontendEngineFieldSchema,
-							...(!hideSubmit ? SUBMIT_BUTTON_SCHEMA : {}),
-						},
-					},
-				},
-				...(!!defaultValues && {
-					defaultValues: {
-						[id]: defaultValues,
-					},
-				}),
-			}}
-		/>
-	)) as StoryFn<(args: T & { defaultValues?: U | undefined }) => ReactElement>;
-
-const OverrideLocationStoryTemplate = <T,>(id: string, showSubmitButton = true) =>
-	(({ overrides, ...args }) => (
-		<FrontendEngine
-			recaptchaSiteKey={recaptchaSiteKey}
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args as unknown as TFrontendEngineFieldSchema,
-							...(showSubmitButton && { ...SUBMIT_BUTTON_SCHEMA }),
-						},
-					},
-				},
-				...(!!overrides && {
-					overrides: {
-						[id]: overrides,
-					},
-				}),
-			}}
-		/>
-	)) as StoryFn<(args: T & { overrides?: RecursivePartial<T> | undefined }) => ReactElement>;
-
-const FrontendEngineWithWarning = ({ id, fieldSchema }: { id: string; fieldSchema: TFrontendEngineFieldSchema }) => {
-	const formRef = useRef<IFrontendEngineRef>(null);
-
-	return (
-		<>
-			<FrontendEngine
-				recaptchaSiteKey={recaptchaSiteKey}
-				ref={formRef}
-				data={{
-					sections: {
-						section: {
-							uiType: "section",
-							children: {
-								[id]: fieldSchema,
-								...SUBMIT_BUTTON_SCHEMA,
-							},
-						},
-					},
-				}}
-			/>
-			<Button.Default
-				onClick={() =>
-					formRef.current?.setWarnings({
-						[id]: "This is a warning message, it is set via `setWarnings()` from Frontend Engine.",
-					})
-				}
-				style={{ marginTop: "2rem" }}
-			>
-				Show warning
-			</Button.Default>
-		</>
-	);
-};
-
-const WarningLocationStoryTemplate = <T,>(id: string) =>
-	((args) => (
-		<FrontendEngineWithWarning id={id} fieldSchema={args as unknown as TFrontendEngineFieldSchema} />
-	)) as StoryFn<(args: T & { overrides?: RecursivePartial<T> | undefined }) => ReactElement>;
 
 const meta: Meta = {
 	title: "Field/LocationField",
@@ -243,15 +164,16 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = DefaultLocationStoryTemplate<ILocationFieldSchema>("location-field-default").bind({});
+export const Default = DefaultStoryTemplate<ILocationFieldSchema>("location-field-default", false).bind({});
 Default.args = {
 	uiType: "location-field",
 	label: "Default",
 	mapApi: defaultMapApi,
 };
 
-export const LabelCustomisation = DefaultLocationStoryTemplate<ILocationFieldSchema>(
-	"location-label-customisation"
+export const LabelCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-label-customisation",
+	false
 ).bind({});
 LabelCustomisation.args = {
 	uiType: "location-field",
@@ -262,8 +184,9 @@ LabelCustomisation.args = {
 	},
 };
 
-export const InitialAddress = DefaultLocationStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address"
+export const InitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
+	"location-field-initial-address",
+	false
 ).bind({});
 InitialAddress.args = {
 	uiType: "location-field",
@@ -281,7 +204,7 @@ InitialAddress.parameters = {
 	},
 };
 
-export const InitialLatLng = DefaultLocationStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
+export const InitialLatLng = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
 	"location-field-initial-address"
 ).bind({});
 InitialLatLng.args = {
@@ -296,13 +219,14 @@ InitialLatLng.args = {
 InitialLatLng.parameters = {
 	docs: {
 		description: {
-			story: "If only latlng is present, the location will be reverse geo located if reverseGeoCodeEndpoint is provided. The first search result will be selected.",
+			story: "If only latlng is present, the location will be reverse geocoded when mapApi.reverseGeocode is provided. The first search result will be selected.",
 		},
 	},
 };
 
-export const FullInitialAddress = DefaultLocationStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address"
+export const FullInitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
+	"location-field-initial-address",
+	false
 ).bind({});
 FullInitialAddress.args = {
 	uiType: "location-field",
@@ -328,7 +252,7 @@ FullInitialAddress.parameters = {
 	},
 };
 
-export const MustHavePostalCode = DefaultLocationStoryTemplate<ILocationFieldSchema>("location-field-postal-code").bind(
+export const MustHavePostalCode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-postal-code", false).bind(
 	{}
 );
 MustHavePostalCode.args = {
@@ -338,14 +262,14 @@ MustHavePostalCode.args = {
 	mapApi: defaultMapApi,
 };
 
-export const Warning = WarningLocationStoryTemplate<ILocationFieldSchema>("location-field-with-warning").bind({});
+export const Warning = WarningStoryTemplate<ILocationFieldSchema>("location-field-with-warning").bind({});
 Warning.args = {
 	uiType: "location-field",
 	label: "Default",
 	mapApi: defaultMapApi,
 };
 
-export const Disabled = DefaultLocationStoryTemplate<ILocationFieldSchema>("location-field-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>("location-field-disabled", false).bind({});
 Disabled.args = {
 	uiType: "location-field",
 	label: "Disabled ",
@@ -353,8 +277,9 @@ Disabled.args = {
 	disabled: true,
 };
 
-export const BannerCustomisation = DefaultLocationStoryTemplate<ILocationFieldSchema>(
-	"location-field-banner-customisation"
+export const BannerCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-banner-customisation",
+	false
 ).bind({});
 BannerCustomisation.args = {
 	uiType: "location-field",
@@ -363,7 +288,7 @@ BannerCustomisation.args = {
 	mapBannerText: "This is some banner text",
 };
 
-export const WithCustomStyles = DefaultLocationStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind(
+export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles", false).bind(
 	{}
 );
 WithCustomStyles.args = {
@@ -373,7 +298,7 @@ WithCustomStyles.args = {
 	mapApi: defaultMapApi,
 };
 
-export const Overrides = OverrideLocationStoryTemplate<ILocationFieldSchema>("location-field-overrides").bind({});
+export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>("location-field-overrides", true).bind({});
 Overrides.args = {
 	uiType: "location-field",
 	label: "Location",
@@ -384,8 +309,9 @@ Overrides.args = {
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
-export const LocationListTitle = DefaultLocationStoryTemplate<ILocationFieldSchema>(
-	"location-field-location-list-title"
+export const LocationListTitle = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-location-list-title",
+	false
 ).bind({});
 LocationListTitle.args = {
 	uiType: "location-field",
@@ -394,8 +320,9 @@ LocationListTitle.args = {
 	mapApi: defaultMapApi,
 };
 
-export const WithCustomMapPanZoom = DefaultLocationStoryTemplate<ILocationFieldSchema>(
-	"location-field-custom-map-pan-zoom"
+export const WithCustomMapPanZoom = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-custom-map-pan-zoom",
+	false
 ).bind({});
 WithCustomMapPanZoom.args = {
 	uiType: "location-field",
@@ -404,7 +331,7 @@ WithCustomMapPanZoom.args = {
 	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14, duration: 1 },
 };
 
-export const DisableSearch = DefaultLocationStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
+export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search", false).bind({});
 DisableSearch.args = {
 	uiType: "location-field",
 	label: "DisableSearch",
@@ -412,8 +339,9 @@ DisableSearch.args = {
 	disableSearch: "disabled",
 };
 
-export const locationSelectionMode = DefaultLocationStoryTemplate<ILocationFieldSchema>(
-	"location-field-selection-mode"
+export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-selection-mode",
+	false
 ).bind({});
 locationSelectionMode.args = {
 	uiType: "location-field",
@@ -470,7 +398,7 @@ const IndicateCurrentLocationTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={recaptchaSiteKey}
+					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 					ref={formRef}
 					data={{
 						sections: {

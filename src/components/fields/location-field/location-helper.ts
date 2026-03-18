@@ -90,12 +90,12 @@ export namespace LocationHelper {
 		onSuccess?: (results: IResultsMetaData) => void,
 		onFail?: (error: unknown) => void,
 		searchEndpoint?: string,
-		getToken?: () => Promise<string | undefined>,
+		getToken?: (action: string) => Promise<string | undefined>,
 		headers?: Record<string, string>
 	) => {
 		if (!query) return;
 		try {
-			const recaptchaToken = getToken ? await getToken() : undefined;
+			const recaptchaToken = getToken ? await getToken("location_search") : undefined;
 			const { results, pageNum, totalNumPages } = await searchByAddress(
 				{
 					searchValue: query,
@@ -200,7 +200,7 @@ export namespace LocationHelper {
 			}
 		}
 
-		const recaptchaToken = getToken ? await getToken() : undefined;
+		const recaptchaToken = getToken ? await getToken("location_search") : undefined;
 		const locationList = await mapService.reverseGeocode({
 			bufferRadius: clampedBufferRadius,
 			recaptchaToken,
@@ -279,7 +279,7 @@ export namespace LocationHelper {
 					mustHavePostalCode
 				);
 
-				const recaptchaToken = getToken ? await getToken() : undefined;
+				const recaptchaToken = getToken ? await getToken("location_search") : undefined;
 				const { X, Y } = await OneMapService.convertLatLngToXY(
 					convertLatLngToXYEndpoint,
 					lat,

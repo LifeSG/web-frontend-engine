@@ -1,4 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
+import { Breakpoint, MediaQuery } from "@lifesg/react-design-system/theme";
 import { action } from "@storybook/addon-actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef, useRef } from "react";
@@ -7,7 +8,8 @@ import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFro
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../components/frontend-engine";
 import { RecursivePartial, TNoInfer } from "../utils";
-import { Breakpoint, MediaQuery } from "@lifesg/react-design-system/theme";
+
+export const RECAPTCHA_SITE_KEY = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
 
 const EXCLUDED_STORY_PROPS: ArgTypes = {
 	invalid: { table: { disable: true } },
@@ -252,6 +254,7 @@ export const LOREM_IPSUM = (prefix: string) => {
 export const DefaultStoryTemplate = <T, U = string>(id: string, hideSubmit = false) =>
 	(({ defaultValues, ...args }) => (
 		<FrontendEngine
+			recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 			data={{
 				sections: {
 					section: {
@@ -281,6 +284,7 @@ export const DefaultStoryTemplate = <T, U = string>(id: string, hideSubmit = fal
 export const ResetStoryTemplate = <T, U = string>(id: string) =>
 	(({ defaultValues, ...args }) => (
 		<FrontendEngine
+			recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 			data={{
 				sections: {
 					section: {
@@ -316,6 +320,7 @@ export const OverrideStoryTemplate = <T,>(id: string, showSubmitButton = true) =
 	(({ overrides, ...args }) => {
 		return (
 			<FrontendEngine
+				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 				data={{
 					sections: {
 						section: {
@@ -352,6 +357,7 @@ const FrontendEngineWithWarning = ({ id, fieldSchema }: { id: string; fieldSchem
 	return (
 		<>
 			<FrontendEngine
+				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 				ref={formRef}
 				data={{
 					sections: {

@@ -582,7 +582,7 @@ export const LocationSearch = ({
 			lng: addressLng,
 		};
 		if (convertLatLngToXYUrl) {
-			const recaptchaToken = getToken ? await getToken() : undefined;
+			const recaptchaToken = getToken ? await getToken("location_search") : undefined;
 			const { X, Y } = await OneMapService.convertLatLngToXY(
 				convertLatLngToXYUrl,
 				addressLat,

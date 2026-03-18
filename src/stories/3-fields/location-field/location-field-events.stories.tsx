@@ -17,14 +17,13 @@ import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { Prompt } from "../../../components/shared";
 import { Description } from "../../../components/shared/prompt/prompt.styles";
 import { TestHelper } from "../../../utils";
-import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { FrontendEngine, RECAPTCHA_SITE_KEY, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-field.stories";
 
 const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
 const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
 const search = "https://api.dev.lifesg.io/onemap/search";
 
-const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
 const defaultMapApi = {
 	reverseGeocode,
 	convertLatLngToXY,
@@ -70,7 +69,7 @@ const Template = (eventName: string) =>
 
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={recaptchaSiteKey}
+				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 				ref={formRef}
 				data={{
 					sections: {
@@ -127,7 +126,7 @@ const EditPromptTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={recaptchaSiteKey}
+					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 					ref={formRef}
 					data={{
 						sections: {
@@ -202,7 +201,7 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={recaptchaSiteKey}
+				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 				ref={formRef}
 				data={{
 					sections: {
@@ -261,7 +260,7 @@ const ConfirmLocationPromptTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={recaptchaSiteKey}
+					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 					ref={formRef}
 					data={{
 						sections: {
@@ -548,7 +547,7 @@ const ErrorEventsTemplate = () =>
 		return (
 			<div>
 				<FrontendEngine
-					recaptchaSiteKey={recaptchaSiteKey}
+					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 					ref={formRef}
 					data={{
 						sections: {
@@ -608,7 +607,7 @@ const StrictLocationTemplate = () =>
 
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={recaptchaSiteKey}
+				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 				ref={formRef}
 				data={{
 					sections: {
@@ -662,7 +661,7 @@ const HidePermissionModalTemplate = () =>
 
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={recaptchaSiteKey}
+				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 				ref={formRef}
 				data={{
 					sections: {
