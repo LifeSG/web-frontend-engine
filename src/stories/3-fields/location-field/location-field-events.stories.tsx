@@ -17,9 +17,10 @@ import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import { Prompt } from "../../../components/shared";
 import { Description } from "../../../components/shared/prompt/prompt.styles";
 import { TestHelper } from "../../../utils";
-import { FrontendEngine, RECAPTCHA_SITE_KEY, SUBMIT_BUTTON_SCHEMA } from "../../common";
+import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-field.stories";
 
+const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
 const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
 const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
 const search = "https://api.dev.lifesg.io/onemap/search";
@@ -69,7 +70,7 @@ const Template = (eventName: string) =>
 
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {
@@ -126,7 +127,7 @@ const EditPromptTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -201,7 +202,7 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {
@@ -260,7 +261,7 @@ const ConfirmLocationPromptTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -547,7 +548,7 @@ const ErrorEventsTemplate = () =>
 		return (
 			<div>
 				<FrontendEngine
-					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -607,7 +608,7 @@ const StrictLocationTemplate = () =>
 
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {
@@ -661,7 +662,7 @@ const HidePermissionModalTemplate = () =>
 
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {
@@ -732,7 +733,7 @@ const SetSelectablePinsTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -794,7 +795,7 @@ const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {

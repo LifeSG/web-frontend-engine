@@ -9,8 +9,6 @@ import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../components/frontend-engine";
 import { RecursivePartial, TNoInfer } from "../utils";
 
-export const RECAPTCHA_SITE_KEY = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
-
 const EXCLUDED_STORY_PROPS: ArgTypes = {
 	invalid: { table: { disable: true } },
 	isTouched: { table: { disable: true } },
@@ -251,10 +249,10 @@ export const LOREM_IPSUM = (prefix: string) => {
  *
  * &lt;U&gt; generic: default value typing
  */
-export const DefaultStoryTemplate = <T, U = string>(id: string, hideSubmit = false) =>
+export const DefaultStoryTemplate = <T, U = string>(id: string, hideSubmit = false, recaptchaSiteKey?: string) =>
 	(({ defaultValues, ...args }) => (
 		<FrontendEngine
-			recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+			recaptchaSiteKey={recaptchaSiteKey}
 			data={{
 				sections: {
 					section: {
@@ -281,10 +279,10 @@ export const DefaultStoryTemplate = <T, U = string>(id: string, hideSubmit = fal
  *
  * &lt;U&gt; generic: default value typing
  */
-export const ResetStoryTemplate = <T, U = string>(id: string) =>
+export const ResetStoryTemplate = <T, U = string>(id: string, recaptchaSiteKey?: string) =>
 	(({ defaultValues, ...args }) => (
 		<FrontendEngine
-			recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+			recaptchaSiteKey={recaptchaSiteKey}
 			data={{
 				sections: {
 					section: {
@@ -316,11 +314,11 @@ export const ResetStoryTemplate = <T, U = string>(id: string) =>
  *
  * &lt;T&gt; generic: component schema definition
  */
-export const OverrideStoryTemplate = <T,>(id: string, showSubmitButton = true) =>
+export const OverrideStoryTemplate = <T,>(id: string, showSubmitButton = true, recaptchaSiteKey?: string) =>
 	(({ overrides, ...args }) => {
 		return (
 			<FrontendEngine
-				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+				recaptchaSiteKey={recaptchaSiteKey}
 				data={{
 					sections: {
 						section: {
@@ -346,18 +344,32 @@ export const OverrideStoryTemplate = <T,>(id: string, showSubmitButton = true) =
  *
  * &lt;T&gt; generic: component schema definition
  */
-export const WarningStoryTemplate = <T,>(id: string) =>
+export const WarningStoryTemplate = <T,>(id: string, recaptchaSiteKey?: string) =>
 	((args) => {
-		return <FrontendEngineWithWarning id={id} fieldSchema={args as unknown as TFrontendEngineFieldSchema} />;
+		return (
+			<FrontendEngineWithWarning
+				id={id}
+				fieldSchema={args as unknown as TFrontendEngineFieldSchema}
+				recaptchaSiteKey={recaptchaSiteKey}
+			/>
+		);
 	}) as StoryFn<(args: T & { overrides?: RecursivePartial<T> | undefined }) => ReactElement>;
 
-const FrontendEngineWithWarning = ({ id, fieldSchema }: { id: string; fieldSchema: TFrontendEngineFieldSchema }) => {
+const FrontendEngineWithWarning = ({
+	id,
+	fieldSchema,
+	recaptchaSiteKey,
+}: {
+	id: string;
+	fieldSchema: TFrontendEngineFieldSchema;
+	recaptchaSiteKey?: string;
+}) => {
 	const formRef = useRef<IFrontendEngineRef>(null);
 
 	return (
 		<>
 			<FrontendEngine
-				recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {

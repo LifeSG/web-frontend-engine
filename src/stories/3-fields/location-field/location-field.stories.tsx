@@ -10,10 +10,11 @@ import {
 	FrontendEngine,
 	OVERRIDES_ARG_TYPE,
 	OverrideStoryTemplate,
-	RECAPTCHA_SITE_KEY,
 	SUBMIT_BUTTON_SCHEMA,
 	WarningStoryTemplate,
 } from "../../common";
+
+const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
 
 const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
 const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
@@ -164,14 +165,22 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = DefaultStoryTemplate<ILocationFieldSchema>("location-field-default").bind({});
+export const Default = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-default",
+	false,
+	recaptchaSiteKey
+).bind({});
 Default.args = {
 	uiType: "location-field",
 	label: "Default",
 	mapApi: defaultMapApi,
 };
 
-export const LabelCustomisation = DefaultStoryTemplate<ILocationFieldSchema>("location-label-customisation").bind({});
+export const LabelCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-label-customisation",
+	false,
+	recaptchaSiteKey
+).bind({});
 LabelCustomisation.args = {
 	uiType: "location-field",
 	label: {
@@ -182,7 +191,9 @@ LabelCustomisation.args = {
 };
 
 export const InitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address"
+	"location-field-initial-address",
+	false,
+	recaptchaSiteKey
 ).bind({});
 InitialAddress.args = {
 	uiType: "location-field",
@@ -201,7 +212,9 @@ InitialAddress.parameters = {
 };
 
 export const InitialLatLng = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address"
+	"location-field-initial-address",
+	false,
+	recaptchaSiteKey
 ).bind({});
 InitialLatLng.args = {
 	uiType: "location-field",
@@ -221,7 +234,9 @@ InitialLatLng.parameters = {
 };
 
 export const FullInitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address"
+	"location-field-initial-address",
+	false,
+	recaptchaSiteKey
 ).bind({});
 FullInitialAddress.args = {
 	uiType: "location-field",
@@ -247,7 +262,11 @@ FullInitialAddress.parameters = {
 	},
 };
 
-export const MustHavePostalCode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-postal-code").bind({});
+export const MustHavePostalCode = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-postal-code",
+	false,
+	recaptchaSiteKey
+).bind({});
 MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",
@@ -255,14 +274,20 @@ MustHavePostalCode.args = {
 	mapApi: defaultMapApi,
 };
 
-export const Warning = WarningStoryTemplate<ILocationFieldSchema>("location-field-with-warning").bind({});
+export const Warning = WarningStoryTemplate<ILocationFieldSchema>("location-field-with-warning", recaptchaSiteKey).bind(
+	{}
+);
 Warning.args = {
 	uiType: "location-field",
 	label: "Default",
 	mapApi: defaultMapApi,
 };
 
-export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>("location-field-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-disabled",
+	false,
+	recaptchaSiteKey
+).bind({});
 Disabled.args = {
 	uiType: "location-field",
 	label: "Disabled ",
@@ -271,7 +296,9 @@ Disabled.args = {
 };
 
 export const BannerCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-banner-customisation"
+	"location-field-banner-customisation",
+	false,
+	recaptchaSiteKey
 ).bind({});
 BannerCustomisation.args = {
 	uiType: "location-field",
@@ -280,7 +307,11 @@ BannerCustomisation.args = {
 	mapBannerText: "This is some banner text",
 };
 
-export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind({});
+export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-custom-styles",
+	false,
+	recaptchaSiteKey
+).bind({});
 WithCustomStyles.args = {
 	uiType: "location-field",
 	label: "WithCustomStyles",
@@ -288,7 +319,11 @@ WithCustomStyles.args = {
 	mapApi: defaultMapApi,
 };
 
-export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>("location-field-overrides").bind({});
+export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>(
+	"location-field-overrides",
+	false,
+	recaptchaSiteKey
+).bind({});
 Overrides.args = {
 	uiType: "location-field",
 	label: "Location",
@@ -299,9 +334,11 @@ Overrides.args = {
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
-export const LocationListTitle = DefaultStoryTemplate<ILocationFieldSchema>("location-field-location-list-title").bind(
-	{}
-);
+export const LocationListTitle = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-location-list-title",
+	false,
+	recaptchaSiteKey
+).bind({});
 LocationListTitle.args = {
 	uiType: "location-field",
 	label: "Location List Title",
@@ -310,7 +347,9 @@ LocationListTitle.args = {
 };
 
 export const WithCustomMapPanZoom = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-custom-map-pan-zoom"
+	"location-field-custom-map-pan-zoom",
+	false,
+	recaptchaSiteKey
 ).bind({});
 WithCustomMapPanZoom.args = {
 	uiType: "location-field",
@@ -319,7 +358,11 @@ WithCustomMapPanZoom.args = {
 	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14, duration: 1 },
 };
 
-export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
+export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>(
+	"disable-text-search",
+	false,
+	recaptchaSiteKey
+).bind({});
 DisableSearch.args = {
 	uiType: "location-field",
 	label: "DisableSearch",
@@ -327,9 +370,11 @@ DisableSearch.args = {
 	disableSearch: "disabled",
 };
 
-export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-selection-mode").bind(
-	{}
-);
+export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-selection-mode",
+	false,
+	recaptchaSiteKey
+).bind({});
 locationSelectionMode.args = {
 	uiType: "location-field",
 	label: "Location Selection Mode",
@@ -385,7 +430,7 @@ const IndicateCurrentLocationTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
