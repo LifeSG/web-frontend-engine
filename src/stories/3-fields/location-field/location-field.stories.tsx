@@ -164,17 +164,14 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = DefaultStoryTemplate<ILocationFieldSchema>("location-field-default", false).bind({});
+export const Default = DefaultStoryTemplate<ILocationFieldSchema>("location-field-default").bind({});
 Default.args = {
 	uiType: "location-field",
 	label: "Default",
 	mapApi: defaultMapApi,
 };
 
-export const LabelCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-label-customisation",
-	false
-).bind({});
+export const LabelCustomisation = DefaultStoryTemplate<ILocationFieldSchema>("location-label-customisation").bind({});
 LabelCustomisation.args = {
 	uiType: "location-field",
 	label: {
@@ -185,8 +182,7 @@ LabelCustomisation.args = {
 };
 
 export const InitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address",
-	false
+	"location-field-initial-address"
 ).bind({});
 InitialAddress.args = {
 	uiType: "location-field",
@@ -225,8 +221,7 @@ InitialLatLng.parameters = {
 };
 
 export const FullInitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address",
-	false
+	"location-field-initial-address"
 ).bind({});
 FullInitialAddress.args = {
 	uiType: "location-field",
@@ -252,9 +247,7 @@ FullInitialAddress.parameters = {
 	},
 };
 
-export const MustHavePostalCode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-postal-code", false).bind(
-	{}
-);
+export const MustHavePostalCode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-postal-code").bind({});
 MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",
@@ -269,7 +262,7 @@ Warning.args = {
 	mapApi: defaultMapApi,
 };
 
-export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>("location-field-disabled", false).bind({});
+export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>("location-field-disabled").bind({});
 Disabled.args = {
 	uiType: "location-field",
 	label: "Disabled ",
@@ -278,8 +271,7 @@ Disabled.args = {
 };
 
 export const BannerCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-banner-customisation",
-	false
+	"location-field-banner-customisation"
 ).bind({});
 BannerCustomisation.args = {
 	uiType: "location-field",
@@ -288,9 +280,7 @@ BannerCustomisation.args = {
 	mapBannerText: "This is some banner text",
 };
 
-export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles", false).bind(
-	{}
-);
+export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind({});
 WithCustomStyles.args = {
 	uiType: "location-field",
 	label: "WithCustomStyles",
@@ -298,7 +288,7 @@ WithCustomStyles.args = {
 	mapApi: defaultMapApi,
 };
 
-export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>("location-field-overrides", true).bind({});
+export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>("location-field-overrides").bind({});
 Overrides.args = {
 	uiType: "location-field",
 	label: "Location",
@@ -309,10 +299,9 @@ Overrides.args = {
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
-export const LocationListTitle = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-location-list-title",
-	false
-).bind({});
+export const LocationListTitle = DefaultStoryTemplate<ILocationFieldSchema>("location-field-location-list-title").bind(
+	{}
+);
 LocationListTitle.args = {
 	uiType: "location-field",
 	label: "Location List Title",
@@ -321,8 +310,7 @@ LocationListTitle.args = {
 };
 
 export const WithCustomMapPanZoom = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-custom-map-pan-zoom",
-	false
+	"location-field-custom-map-pan-zoom"
 ).bind({});
 WithCustomMapPanZoom.args = {
 	uiType: "location-field",
@@ -331,7 +319,7 @@ WithCustomMapPanZoom.args = {
 	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14, duration: 1 },
 };
 
-export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search", false).bind({});
+export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
 DisableSearch.args = {
 	uiType: "location-field",
 	label: "DisableSearch",
@@ -339,10 +327,9 @@ DisableSearch.args = {
 	disableSearch: "disabled",
 };
 
-export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-selection-mode",
-	false
-).bind({});
+export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-selection-mode").bind(
+	{}
+);
 locationSelectionMode.args = {
 	uiType: "location-field",
 	label: "Location Selection Mode",

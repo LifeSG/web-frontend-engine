@@ -732,7 +732,7 @@ const SetSelectablePinsTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={recaptchaSiteKey}
+					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 					ref={formRef}
 					data={{
 						sections: {
@@ -794,7 +794,7 @@ const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
-					recaptchaSiteKey={recaptchaSiteKey}
+					recaptchaSiteKey={RECAPTCHA_SITE_KEY}
 					ref={formRef}
 					data={{
 						sections: {
