@@ -2,13 +2,7 @@ import { Breakpoint, LifeSGTheme } from "@lifesg/react-design-system/theme";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { useEffect, useRef, useState } from "react";
-import {
-	FrontendEngine,
-	IFrontendEngineData,
-	IFrontendEngineProps,
-	IFrontendEngineRef,
-	IYupValidationRule,
-} from "../../../../components";
+import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { ERROR_SVG } from "../../../../components/fields/location-field/location-modal/location-modal.data";
@@ -72,7 +66,7 @@ interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
 	withEvents?: boolean;
 	eventType?: string;
-	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
+	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => unknown;
 }
 
 const FrontendEngineWithEventListener = ({
@@ -147,8 +141,10 @@ const FrontendEngineWithEventListener = ({
 		if (eventType && eventListener) {
 			const currentFormRef = formRef.current;
 			const eventListenerWithFormRef = eventListener(currentFormRef);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			currentFormRef.addFieldEventListener(UI_TYPE, eventType as any, "field", eventListenerWithFormRef);
 			return () =>
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				currentFormRef.removeFieldEventListener(UI_TYPE, eventType as any, "field", eventListenerWithFormRef);
 		}
 	}, [eventListener, eventType]);
@@ -225,7 +221,7 @@ interface IRenderProps {
 	locationDetails?: TSetCurrentLocationDetail;
 	validation?: ILocationFieldSchema["validation"];
 	eventType?: string;
-	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
+	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => unknown;
 }
 
 const renderComponent = (
@@ -1018,7 +1014,9 @@ describe("location-input-group", () => {
 								},
 							},
 							overrideField: {
-								reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+								mapApi: {
+									reverseGeocode: "https://www.mock.com/reverse-geo-code",
+								},
 							},
 						});
 
@@ -1069,7 +1067,9 @@ describe("location-input-group", () => {
 								},
 							},
 							overrideField: {
-								reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+								mapApi: {
+									reverseGeocode: "https://www.mock.com/reverse-geo-code",
+								},
 							},
 						});
 
@@ -1697,7 +1697,9 @@ describe("location-input-group", () => {
 				fetchLocationListSpy.mockImplementation(() => mockReverseGeoCodeResponse);
 				renderComponent({
 					overrideField: {
-						reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
 						locationSelectionMode: "pins-only",
 					},
 				});
@@ -1978,7 +1980,9 @@ describe("location-input-group", () => {
 					},
 				},
 				overrideField: {
-					reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+					mapApi: {
+						reverseGeocode: "https://www.mock.com/reverse-geo-code",
+					},
 				},
 			});
 			await waitFor(() => {
@@ -1999,7 +2003,9 @@ describe("location-input-group", () => {
 					},
 				},
 				overrideField: {
-					reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+					mapApi: {
+						reverseGeocode: "https://www.mock.com/reverse-geo-code",
+					},
 					locationListTitle: "Nearest car parks",
 				},
 			});
@@ -2020,7 +2026,7 @@ describe("location-input-group", () => {
 					},
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
-				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+				eventListener: (formRef: IFrontendEngineRef) => () => {
 					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.DISMISS_LOCATION_MODAL, COMPONENT_ID);
 				},
 			});
@@ -2050,7 +2056,7 @@ describe("location-input-group", () => {
 					},
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
-				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+				eventListener: (formRef: IFrontendEngineRef) => () => {
 					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
 				},
 			});
