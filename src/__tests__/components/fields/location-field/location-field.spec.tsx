@@ -66,7 +66,7 @@ interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
 	withEvents?: boolean;
 	eventType?: string;
-	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => unknown;
+	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
 
 const FrontendEngineWithEventListener = ({
@@ -141,10 +141,8 @@ const FrontendEngineWithEventListener = ({
 		if (eventType && eventListener) {
 			const currentFormRef = formRef.current;
 			const eventListenerWithFormRef = eventListener(currentFormRef);
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			currentFormRef.addFieldEventListener(UI_TYPE, eventType as any, "field", eventListenerWithFormRef);
 			return () =>
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				currentFormRef.removeFieldEventListener(UI_TYPE, eventType as any, "field", eventListenerWithFormRef);
 		}
 	}, [eventListener, eventType]);
@@ -221,7 +219,7 @@ interface IRenderProps {
 	locationDetails?: TSetCurrentLocationDetail;
 	validation?: ILocationFieldSchema["validation"];
 	eventType?: string;
-	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => unknown;
+	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
 
 const renderComponent = (
@@ -2026,7 +2024,7 @@ describe("location-input-group", () => {
 					},
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
-				eventListener: (formRef: IFrontendEngineRef) => () => {
+				eventListener: (formRef: IFrontendEngineRef) => (e) => {
 					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.DISMISS_LOCATION_MODAL, COMPONENT_ID);
 				},
 			});
@@ -2056,7 +2054,7 @@ describe("location-input-group", () => {
 					},
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
-				eventListener: (formRef: IFrontendEngineRef) => () => {
+				eventListener: (formRef: IFrontendEngineRef) => (e) => {
 					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
 				},
 			});
