@@ -11,13 +11,19 @@ export interface ILocationFieldValidation extends IYupValidationRule {
 	postalCode?: boolean | undefined;
 }
 
+export interface ILocationMapApi {
+	reverseGeocode?: string | undefined;
+	convertLatLngToXY?: string | undefined;
+	search?: string | undefined;
+	headers?: Record<string, string> | undefined;
+}
+
 export interface ILocationFieldSchema<V = undefined>
 	extends IBaseFieldSchema<"location-field", V, ILocationFieldValidation>,
 		Pick<ILocationPickerProps, "interactiveMapPinIconUrl" | "mapPanZoom">,
 		Pick<
 			ILocationSearchProps,
-			| "reverseGeoCodeEndpoint"
-			| "convertLatLngToXYEndpoint"
+			| "mapApi"
 			// TODO: deprecate key and rely on postalCode validation rule
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
