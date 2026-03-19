@@ -19,7 +19,7 @@ type TReverseGeocodeParams = {
 	bufferRadius?: number;
 	otherFeatures?: OneMapBoolean;
 	headers?: Record<string, string>;
-	getToken?: () => Promise<string | undefined>;
+	getToken?: (action: string) => Promise<string | undefined>;
 	options?: {
 		excludeNonSG: boolean;
 	};
@@ -49,7 +49,7 @@ export namespace LocationHelper {
 		onError: (error: any) => void,
 		excludeNonSG?: boolean,
 		bufferRadius?: number,
-		getToken?: () => Promise<string | undefined>,
+		getToken?: (action: string) => Promise<string | undefined>,
 		headers?: Record<string, string>
 	): Promise<IResultListItem[]> => {
 		let onemapLocationList: IResultListItem[];
@@ -160,7 +160,7 @@ export namespace LocationHelper {
 		onSuccess: (resultListItem: IResultListItem | undefined) => void,
 		onError: (e: any) => void,
 		searchEndpoint?: string,
-		getToken?: () => Promise<string | undefined>,
+		getToken?: (action: string) => Promise<string | undefined>,
 		headers?: Record<string, string>
 	) => {
 		await debounceFetchAddress(
@@ -257,7 +257,7 @@ export namespace LocationHelper {
 		onSuccess: (resultListItem: IResultListItem | undefined) => void,
 		onError: (e: any) => void,
 		mustHavePostalCode?: boolean,
-		getToken?: () => Promise<string | undefined>,
+		getToken?: (action: string) => Promise<string | undefined>,
 		headers?: Record<string, string>
 	) => {
 		(async () => {
