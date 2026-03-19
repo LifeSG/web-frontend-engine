@@ -12,7 +12,7 @@ import { IDaysRangeRule, IWhitespaceRule } from "../types";
 /**
  * empty check that is applicable to numbers too
  */
-const isEmptyValue = (value: unknown) => (!isNumber(value) ? isEmpty(value) && !isBoolean(value) : isNil(value));
+export const isEmptyValue = (value: unknown) => (!isNumber(value) ? isEmpty(value) && !isBoolean(value) : isNil(value));
 
 YupHelper.addCondition("mixed", "filled", (value) => !isEmptyValue(value));
 YupHelper.addCondition("mixed", "empty", (value) => isEmptyValue(value));

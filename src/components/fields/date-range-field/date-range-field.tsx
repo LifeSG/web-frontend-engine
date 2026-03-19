@@ -2,11 +2,12 @@ import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { DateRangeInputProps } from "@lifesg/react-design-system/date-range-input";
 import { Form } from "@lifesg/react-design-system/form";
-import { isEmpty } from "lodash";
-import { useEffect, useState } from "react";
+import { isEmpty, isEqual } from "lodash";
+import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { DateTimeHelper, TestHelper } from "../../../utils";
+import { isEmptyValue } from "../../../context-providers/yup/custom-conditions";
 import { useFormValues, useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IDateRangeFieldValidationRule, TDateRangeFieldSchema, TDateRangeInputType } from "./types";
@@ -16,10 +17,20 @@ const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)
 	.withResolverStyle(ResolverStyle.STRICT)
 	.withLocale(Locale.ENGLISH);
 
+const evaluateObjectCondition = (fieldValue: unknown, condition: Record<string, unknown>): boolean => {
+	if ("filled" in condition) return condition.filled ? !isEmptyValue(fieldValue) : isEmptyValue(fieldValue);
+	if ("empty" in condition) return condition.empty ? isEmptyValue(fieldValue) : !isEmptyValue(fieldValue);
+	if ("equals" in condition) return !isEmptyValue(fieldValue) && isEqual(fieldValue, condition.equals);
+	if ("notEquals" in condition) return !isEmptyValue(fieldValue) && !isEqual(fieldValue, condition.notEquals);
+	return false;
+};
+
 const evaluateWhenCondition = (fieldValue: unknown, isCondition: unknown): boolean => {
 	if (Array.isArray(isCondition)) {
 		if ((isCondition as unknown[]).every((item) => item !== null && typeof item === "object")) {
-			return false;
+			return (isCondition as Record<string, unknown>[]).every((condition) =>
+				evaluateObjectCondition(fieldValue, condition)
+			);
 		}
 		return (isCondition as (string | number | boolean)[]).includes(fieldValue as string | number | boolean);
 	}
@@ -63,6 +74,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	const [stateValue, setStateValue] = useState<string>(value.from || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [stateValueEnd, setStateValueEnd] = useState<string>(value.to || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [derivedProps, setDerivedProps] = useState<DateRangeInputProps>();
+	const staticDerivedPropsRef = useRef<Partial<DateRangeInputProps>>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { formValues } = useFormValues();
 
@@ -317,13 +329,20 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		]);
 		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
 		const noOfDaysProp = noOfDaysRule?.["numberOfDays"];
+		const staticProps: Partial<DateRangeInputProps> = {
+			minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
+			maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
+			disabledDates: disabledDatesProps,
+			numberOfDays: noOfDaysProp,
+		};
+		staticDerivedPropsRef.current = staticProps;
 		if (minDateProp || maxDateProp || disabledDatesProps || noOfDaysProp) {
 			setDerivedProps((props) => ({
 				...props,
-				minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
-				maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
-				disabledDates: disabledDatesProps,
-				numberOfDays: noOfDaysProp,
+				minDate: staticProps.minDate,
+				maxDate: staticProps.maxDate,
+				disabledDates: staticProps.disabledDates,
+				numberOfDays: staticProps.numberOfDays,
 			}));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -340,17 +359,27 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		const whenExcludedDatesRule = getWhenRule(validation, "excludedDates", currentValues);
 		const whenNoOfDaysRule = getWhenRule(validation, "numberOfDays", currentValues);
 
-		if (
-			!whenMinDateRule &&
-			!whenMaxDateRule &&
-			!whenFutureRule &&
-			!whenPastRule &&
-			!whenNotFutureRule &&
-			!whenNotPastRule &&
-			!whenExcludedDatesRule &&
-			!whenNoOfDaysRule
-		)
-			return;
+		// Only run if any when rules for UI-affecting props exist in the schema
+		const hasWhenRulesForDerivedProps = validation?.some(
+			(rule) =>
+				rule?.when &&
+				Object.values(rule.when).some((cond) =>
+					cond.then?.some(
+						(r): r is IDateRangeFieldValidationRule =>
+							Boolean(r) &&
+							typeof r === "object" &&
+							("minDate" in r ||
+								"maxDate" in r ||
+								"future" in r ||
+								"past" in r ||
+								"notFuture" in r ||
+								"notPast" in r ||
+								"excludedDates" in r ||
+								"numberOfDays" in r)
+					)
+				)
+		);
+		if (!hasWhenRulesForDerivedProps) return;
 
 		const effectiveMinDate = whenMinDateRule?.minDate
 			? DateTimeHelper.toLocalDateOrTime(whenMinDateRule.minDate, dateFormat, "date")
@@ -370,13 +399,29 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 			whenNotFutureRule?.notFuture && LocalDate.now(),
 		]);
 
-		setDerivedProps((prev) => ({
-			...prev,
-			...(minDateProp !== undefined && { minDate: minDateProp.format(DEFAULT_DATE_FORMATTER) }),
-			...(maxDateProp !== undefined && { maxDate: maxDateProp.format(DEFAULT_DATE_FORMATTER) }),
-			...(whenExcludedDatesRule && { disabledDates: whenExcludedDatesRule.excludedDates }),
-			...(whenNoOfDaysRule && { numberOfDays: whenNoOfDaysRule.numberOfDays }),
-		}));
+		const resolvedMinDate = minDateProp
+			? minDateProp.format(DEFAULT_DATE_FORMATTER)
+			: staticDerivedPropsRef.current.minDate;
+		const resolvedMaxDate = maxDateProp
+			? maxDateProp.format(DEFAULT_DATE_FORMATTER)
+			: staticDerivedPropsRef.current.maxDate;
+		const resolvedDisabledDates = whenExcludedDatesRule
+			? whenExcludedDatesRule.excludedDates
+			: staticDerivedPropsRef.current.disabledDates;
+		const resolvedNumberOfDays = whenNoOfDaysRule
+			? whenNoOfDaysRule.numberOfDays
+			: staticDerivedPropsRef.current.numberOfDays;
+
+		setDerivedProps((prev) => {
+			const next = { ...prev };
+			resolvedMinDate !== undefined ? (next.minDate = resolvedMinDate) : delete next.minDate;
+			resolvedMaxDate !== undefined ? (next.maxDate = resolvedMaxDate) : delete next.maxDate;
+			resolvedDisabledDates !== undefined
+				? (next.disabledDates = resolvedDisabledDates)
+				: delete next.disabledDates;
+			resolvedNumberOfDays !== undefined ? (next.numberOfDays = resolvedNumberOfDays) : delete next.numberOfDays;
+			return next;
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formValues]);
 
