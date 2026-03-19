@@ -383,4 +383,221 @@ describe(uiType, () => {
 
 	labelTestSuite(renderComponent);
 	warningTestSuite<TDateRangeFieldSchema>({ uiType, label, variant });
+
+	describe("when condition", () => {
+		const FIELD_ONE_ID = "field1";
+
+		const renderWhenComponent = (
+			validation: TDateRangeFieldSchema["validation"],
+			overrideSchema?: TOverrideSchema
+		) => {
+			const json: IFrontendEngineData = {
+				id: FRONTEND_ENGINE_ID,
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[FIELD_ONE_ID]: {
+								uiType: "text-field",
+								label: "Field 1",
+							},
+							[COMPONENT_ID]: {
+								uiType,
+								label,
+								variant,
+								validation,
+							},
+							...getSubmitButtonProps(),
+						},
+					},
+				},
+				...overrideSchema,
+			};
+			return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+		};
+
+		beforeEach(() => {
+			jest.spyOn(LocalDate, "now").mockReturnValue(LocalDate.parse("2022-01-01"));
+		});
+
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		describe("required", () => {
+			const validation: TDateRangeFieldSchema["validation"] = [
+				{
+					when: {
+						[FIELD_ONE_ID]: {
+							is: [{ filled: true }],
+							then: [{ required: true, errorMessage: ERROR_MESSAGE }],
+						},
+					},
+				},
+			];
+
+			it("should validate as required when condition is met", async () => {
+				renderWhenComponent(validation, { defaultValues: { [FIELD_ONE_ID]: "hello" } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).not.toBeCalled();
+				expect(getErrorMessage()).toBeInTheDocument();
+			});
+
+			it("should not validate as required when condition is not met", async () => {
+				renderWhenComponent(validation);
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toBeCalled();
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			});
+
+			it("should remove required constraint when condition is no longer met", async () => {
+				renderWhenComponent(validation);
+
+				fireEvent.change(getField("textbox", "Field 1"), { target: { value: "hello" } });
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(getErrorMessage()).toBeInTheDocument();
+
+				fireEvent.change(getField("textbox", "Field 1"), { target: { value: "" } });
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toBeCalled();
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			});
+		});
+
+		describe.each`
+			condition          | config                               | invalidDefault                              | validDefault
+			${"future"}        | ${{ future: true }}                  | ${{ from: "2021-01-01", to: "2021-06-01" }} | ${{ from: "2023-01-01", to: "2023-06-01" }}
+			${"past"}          | ${{ past: true }}                    | ${{ from: "2023-01-01", to: "2023-06-01" }} | ${{ from: "2020-01-01", to: "2021-06-01" }}
+			${"notFuture"}     | ${{ notFuture: true }}               | ${{ from: "2023-01-01", to: "2023-06-01" }} | ${{ from: "2020-01-01", to: "2022-01-01" }}
+			${"notPast"}       | ${{ notPast: true }}                 | ${{ from: "2021-01-01", to: "2021-06-01" }} | ${{ from: "2022-01-01", to: "2023-06-01" }}
+			${"minDate"}       | ${{ minDate: "2022-01-05" }}         | ${{ from: "2021-01-01", to: "2021-06-01" }} | ${{ from: "2022-01-05", to: "2022-06-01" }}
+			${"maxDate"}       | ${{ maxDate: "2022-06-01" }}         | ${{ from: "2023-01-01", to: "2023-06-01" }} | ${{ from: "2021-01-01", to: "2022-06-01" }}
+			${"excludedDates"} | ${{ excludedDates: ["2022-01-05"] }} | ${{ from: "2022-01-05", to: "2022-06-01" }} | ${{ from: "2022-01-01", to: "2022-01-04" }}
+			${"numberOfDays"}  | ${{ numberOfDays: 5 }}               | ${{ from: "2022-01-01", to: "2022-01-10" }} | ${{ from: "2022-01-01", to: "2022-01-05" }}
+		`("$condition validation", ({ condition, config, invalidDefault, validDefault }) => {
+			it(`should validate ${condition} when condition is met`, async () => {
+				renderWhenComponent(
+					[
+						{
+							when: {
+								[FIELD_ONE_ID]: {
+									is: [{ filled: true }],
+									then: [{ errorMessage: ERROR_MESSAGE, ...config }],
+								},
+							},
+						},
+					],
+					{ defaultValues: { [FIELD_ONE_ID]: "hello", [COMPONENT_ID]: invalidDefault } }
+				);
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).not.toBeCalled();
+				expect(getErrorMessage()).toBeInTheDocument();
+			});
+
+			it(`should not validate ${condition} when condition is not met`, async () => {
+				renderWhenComponent(
+					[
+						{
+							when: {
+								[FIELD_ONE_ID]: {
+									is: [{ filled: true }],
+									then: [{ errorMessage: ERROR_MESSAGE, ...config }],
+								},
+							},
+						},
+					],
+					{ defaultValues: { [COMPONENT_ID]: invalidDefault } }
+				);
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toBeCalled();
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			});
+
+			it(`should pass valid values for ${condition} when condition is met`, async () => {
+				renderWhenComponent(
+					[
+						{
+							when: {
+								[FIELD_ONE_ID]: {
+									is: [{ filled: true }],
+									then: [{ errorMessage: ERROR_MESSAGE, ...config }],
+								},
+							},
+						},
+					],
+					{ defaultValues: { [FIELD_ONE_ID]: "hello", [COMPONENT_ID]: validDefault } }
+				);
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			});
+		});
+
+		describe.each`
+			condition          | config                               | invalidInput
+			${"future"}        | ${{ future: true }}                  | ${{ from: ["01", "01", "2021"], to: ["01", "06", "2021"] }}
+			${"past"}          | ${{ past: true }}                    | ${{ from: ["01", "01", "2023"], to: ["01", "06", "2023"] }}
+			${"notFuture"}     | ${{ notFuture: true }}               | ${{ from: ["01", "01", "2023"], to: ["01", "06", "2023"] }}
+			${"notPast"}       | ${{ notPast: true }}                 | ${{ from: ["01", "01", "2021"], to: ["01", "06", "2021"] }}
+			${"minDate"}       | ${{ minDate: "2022-01-05" }}         | ${{ from: ["01", "01", "2021"], to: ["01", "06", "2021"] }}
+			${"maxDate"}       | ${{ maxDate: "2022-06-01" }}         | ${{ from: ["01", "01", "2023"], to: ["01", "06", "2023"] }}
+			${"excludedDates"} | ${{ excludedDates: ["2022-01-05"] }} | ${{ from: ["05", "01", "2022"], to: ["01", "06", "2022"] }}
+		`("$condition calendar prop", ({ condition, config, invalidInput }) => {
+			it(`should disable invalid dates in the calendar picker when condition is met`, async () => {
+				renderWhenComponent([{ when: { [FIELD_ONE_ID]: { is: [{ filled: true }], then: [{ ...config }] } } }], {
+					defaultValues: { [FIELD_ONE_ID]: "hello" },
+				});
+
+				fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: invalidInput.from[0] } });
+				fireEvent.change(getMonthInput(TDateRangeInputType.START), {
+					target: { value: invalidInput.from[1] },
+				});
+				fireEvent.change(getYearInput(TDateRangeInputType.START), { target: { value: invalidInput.from[2] } });
+				fireEvent.click(getField("button", "Done"));
+				fireEvent.change(getDayInput(TDateRangeInputType.END), { target: { value: invalidInput.to[0] } });
+				fireEvent.change(getMonthInput(TDateRangeInputType.END), { target: { value: invalidInput.to[1] } });
+				fireEvent.change(getYearInput(TDateRangeInputType.END), { target: { value: invalidInput.to[2] } });
+				fireEvent.click(getField("button", "Done"));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: { from: undefined, to: undefined } })
+				);
+			});
+
+			it(`should not disable dates in the calendar picker when condition is not met`, async () => {
+				renderWhenComponent([{ when: { [FIELD_ONE_ID]: { is: [{ filled: true }], then: [{ ...config }] } } }]);
+
+				fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: invalidInput.from[0] } });
+				fireEvent.change(getMonthInput(TDateRangeInputType.START), {
+					target: { value: invalidInput.from[1] },
+				});
+				fireEvent.change(getYearInput(TDateRangeInputType.START), { target: { value: invalidInput.from[2] } });
+				fireEvent.click(getField("button", "Done"));
+				fireEvent.change(getDayInput(TDateRangeInputType.END), { target: { value: invalidInput.to[0] } });
+				fireEvent.change(getMonthInput(TDateRangeInputType.END), { target: { value: invalidInput.to[1] } });
+				fireEvent.change(getYearInput(TDateRangeInputType.END), { target: { value: invalidInput.to[2] } });
+				fireEvent.click(getField("button", "Done"));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						[COMPONENT_ID]: {
+							from: expect.any(String),
+							to: expect.any(String),
+						},
+					})
+				);
+			});
+		});
+	});
 });
