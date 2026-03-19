@@ -1,4 +1,3 @@
-import intersection from "lodash/intersection";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { ERROR_MESSAGES } from "../../components/shared";
@@ -121,12 +120,7 @@ export namespace YupHelper {
 		yupSchemaField: Yup.AnySchema,
 		fieldValidationConfig: IYupCombinedRule[]
 	): Yup.AnySchema => {
-		const validationRules = fieldValidationConfig.filter(
-			(config) =>
-				intersection(YUP_CONDITIONS, Object.keys(config)).length > 0 ||
-				intersection(customYupConditions, Object.keys(config)).length > 0
-		);
-		return mapRules(yupSchemaField, validationRules);
+		return mapRules(yupSchemaField, fieldValidationConfig);
 	};
 
 	/**
@@ -259,10 +253,9 @@ export namespace YupHelper {
 			}
 
 			// record all conditions, regardless valid or not, to meta for reference in validation phase
-			Object.entries(rule).forEach(([key, value]) => {
+			Object.keys(rule).forEach((_) => {
 				yupSchema = yupSchema.meta({
-					...yupSchema.describe().meta,
-					[key]: value,
+					rules: [...(yupSchema.describe().meta?.["rules"] || []), rule],
 				});
 			});
 

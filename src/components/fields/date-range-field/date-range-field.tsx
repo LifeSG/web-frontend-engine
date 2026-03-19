@@ -95,6 +95,12 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
+		const getMetaRules = (context: Yup.TestContext): Array<Record<string, unknown>> =>
+			(context.schema.describe().meta?.rules as Array<Record<string, unknown>> | undefined) ?? [];
+		const getMetaRule = (context: Yup.TestContext, key: string): unknown =>
+			getMetaRules(context).find((rule) => key in rule)?.[key];
+		const getMetaRuleErrorMessage = (context: Yup.TestContext, key: string): string | undefined =>
+			getMetaRules(context).find((rule) => key in rule)?.errorMessage as string | undefined;
 
 		setFieldValidationConfig(
 			id,
@@ -106,13 +112,14 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				.test({
 					name: "is-empty-string",
 					test(value, context) {
-						if (!value || (!isRequiredRule && !context.schema.describe().meta?.required)) return true;
+						const requiredRuleFromMeta = getMetaRule(context, "required") as boolean | undefined;
+						if (!value || (!isRequiredRule && !requiredRuleFromMeta)) return true;
 						const isValid = value.from?.length > 0 && value.to?.length > 0;
 						if (isValid) return true;
 						return context.createError({
 							message:
 								isRequiredRule?.errorMessage ??
-								context.schema.describe().meta?.errorMessage ??
+								getMetaRuleErrorMessage(context, "required") ??
 								ERROR_MESSAGES.DATE_RANGE.REQUIRED,
 						});
 					},
@@ -131,7 +138,8 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					test(value, context) {
 						if (variant === "week") return true;
 						const effectiveNoOfDays =
-							noOfDaysRule?.["numberOfDays"] ?? context.schema.describe().meta?.numberOfDays;
+							noOfDaysRule?.["numberOfDays"] ??
+							(getMetaRule(context, "numberOfDays") as number | undefined);
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !effectiveNoOfDays) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
@@ -140,7 +148,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return context.createError({
 							message:
 								noOfDaysRule?.errorMessage ??
-								context.schema.describe().meta?.errorMessage ??
+								getMetaRuleErrorMessage(context, "numberOfDays") ??
 								ERROR_MESSAGES.DATE_RANGE.MUST_HAVE_NUMBER_OF_DAYS(effectiveNoOfDays),
 						});
 					},
@@ -152,7 +160,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						if (
 							!isValidDate(value.from) ||
 							!isValidDate(value.to) ||
-							(!futureRule?.["future"] && !context.schema.describe().meta?.future)
+							(!futureRule?.["future"] && !(getMetaRule(context, "future") as boolean | undefined))
 						)
 							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
@@ -163,7 +171,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return context.createError({
 							message:
 								futureRule?.errorMessage ??
-								context.schema.describe().meta?.errorMessage ??
+								getMetaRuleErrorMessage(context, "future") ??
 								ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE,
 						});
 					},
@@ -175,7 +183,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						if (
 							!isValidDate(value.from) ||
 							!isValidDate(value.to) ||
-							(!pastRule?.["past"] && !context.schema.describe().meta?.past)
+							(!pastRule?.["past"] && !(getMetaRule(context, "past") as boolean | undefined))
 						)
 							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
@@ -186,7 +194,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return context.createError({
 							message:
 								pastRule?.errorMessage ??
-								context.schema.describe().meta?.errorMessage ??
+								getMetaRuleErrorMessage(context, "past") ??
 								ERROR_MESSAGES.DATE_RANGE.MUST_BE_PAST,
 						});
 					},
@@ -198,7 +206,8 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						if (
 							!isValidDate(value.from) ||
 							!isValidDate(value.to) ||
-							(!notFutureRule?.["notFuture"] && !context.schema.describe().meta?.notFuture)
+							(!notFutureRule?.["notFuture"] &&
+								!(getMetaRule(context, "notFuture") as boolean | undefined))
 						)
 							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
@@ -209,7 +218,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return context.createError({
 							message:
 								notFutureRule?.errorMessage ??
-								context.schema.describe().meta?.errorMessage ??
+								getMetaRuleErrorMessage(context, "notFuture") ??
 								ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_FUTURE,
 						});
 					},
@@ -221,7 +230,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						if (
 							!isValidDate(value.from) ||
 							!isValidDate(value.to) ||
-							(!notPastRule?.["notPast"] && !context.schema.describe().meta?.notPast)
+							(!notPastRule?.["notPast"] && !(getMetaRule(context, "notPast") as boolean | undefined))
 						)
 							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
@@ -232,7 +241,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return context.createError({
 							message:
 								notPastRule?.errorMessage ??
-								context.schema.describe().meta?.errorMessage ??
+								getMetaRuleErrorMessage(context, "notPast") ??
 								ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_PAST,
 						});
 					},
@@ -241,7 +250,8 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "min-date",
 					test(value, context) {
 						if (variant === "week") return true;
-						const effectiveMinDateStr = minDateRule?.["minDate"] ?? context.schema.describe().meta?.minDate;
+						const effectiveMinDateStr =
+							minDateRule?.["minDate"] ?? (getMetaRule(context, "minDate") as string | undefined);
 						const effectiveMinDate = effectiveMinDateStr
 							? DateTimeHelper.toLocalDateOrTime(effectiveMinDateStr, dateFormat, "date")
 							: minDate;
@@ -254,7 +264,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return context.createError({
 							message:
 								minDateRule?.errorMessage ??
-								context.schema.describe().meta?.errorMessage ??
+								getMetaRuleErrorMessage(context, "minDate") ??
 								ERROR_MESSAGES.DATE_RANGE.MIN_DATE(
 									DateTimeHelper.formatDateTime(effectiveMinDateStr, "dd/MM/uuuu", "date")
 								),
@@ -265,7 +275,8 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "max-date",
 					test(value, context) {
 						if (variant === "week") return true;
-						const effectiveMaxDateStr = maxDateRule?.["maxDate"] ?? context.schema.describe().meta?.maxDate;
+						const effectiveMaxDateStr =
+							maxDateRule?.["maxDate"] ?? (getMetaRule(context, "maxDate") as string | undefined);
 						const effectiveMaxDate = effectiveMaxDateStr
 							? DateTimeHelper.toLocalDateOrTime(effectiveMaxDateStr, dateFormat, "date")
 							: maxDate;
@@ -278,7 +289,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						return context.createError({
 							message:
 								maxDateRule?.errorMessage ??
-								context.schema.describe().meta?.errorMessage ??
+								getMetaRuleErrorMessage(context, "maxDate") ??
 								ERROR_MESSAGES.DATE_RANGE.MAX_DATE(
 									DateTimeHelper.formatDateTime(effectiveMaxDateStr, "dd/MM/uuuu", "date")
 								),
@@ -290,7 +301,8 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					test(value, context) {
 						if (variant === "week") return true;
 						const effectiveExcludedDates =
-							excludedDatesRule?.["excludedDates"] ?? context.schema.describe().meta?.excludedDates;
+							excludedDatesRule?.["excludedDates"] ??
+							(getMetaRule(context, "excludedDates") as string[] | undefined);
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !effectiveExcludedDates) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
@@ -303,7 +315,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 									return context.createError({
 										message:
 											excludedDatesRule?.errorMessage ??
-											context.schema.describe().meta?.errorMessage ??
+											getMetaRuleErrorMessage(context, "excludedDates") ??
 											ERROR_MESSAGES.DATE_RANGE.DISABLED_DATES,
 									});
 							}
