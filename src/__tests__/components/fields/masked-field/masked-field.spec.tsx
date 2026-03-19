@@ -100,16 +100,20 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
-	it("should pass other props into the field", () => {
+	it("should pass disabled and placeholder props into the field", () => {
 		renderComponent({
 			placeholder: "placeholder",
-			readOnly: true,
 			disabled: true,
 		});
 
 		expect(getMaskedField()).toHaveAttribute("placeholder", "placeholder");
-		expect(getMaskedField()).toHaveAttribute("readonly");
 		expect(getMaskedField()).toHaveAttribute("aria-disabled", "true");
+	});
+
+	it("should render masked readonly state when readOnly is true", () => {
+		renderComponent({ readOnly: true });
+
+		expect(screen.getByTestId("masked-input-readonly-button")).toBeInTheDocument();
 	});
 
 	it("should mask based on regex", async () => {
