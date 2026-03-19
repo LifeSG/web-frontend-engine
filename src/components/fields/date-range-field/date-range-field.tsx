@@ -91,14 +91,20 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					from: Yup.string(),
 					to: Yup.string(),
 				})
-				.test(
-					"is-empty-string",
-					isRequiredRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.REQUIRED,
-					(value, context) => {
+				.test({
+					name: "is-empty-string",
+					test(value, context) {
 						if (!value || (!isRequiredRule && !context.schema.describe().meta?.required)) return true;
-						return value.from?.length > 0 && value.to?.length > 0;
-					}
-				)
+						const isValid = value.from?.length > 0 && value.to?.length > 0;
+						if (isValid) return true;
+						return context.createError({
+							message:
+								isRequiredRule?.errorMessage ??
+								context.schema.describe().meta?.errorMessage ??
+								ERROR_MESSAGES.DATE_RANGE.REQUIRED,
+						});
+					},
+				})
 				.test("is-date", dateFormatRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.INVALID, (value) => {
 					if (isEmpty(value?.from) || isEmpty(value?.to)) return true;
 					return (
@@ -108,24 +114,28 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						!!DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date")
 					);
 				})
-				.test(
-					"number-of-days",
-					noOfDaysRule?.errorMessage ||
-						ERROR_MESSAGES.DATE_RANGE.MUST_HAVE_NUMBER_OF_DAYS(noOfDaysRule?.["numberOfDays"]),
-					(value, context) => {
+				.test({
+					name: "number-of-days",
+					test(value, context) {
 						if (variant === "week") return true;
 						const effectiveNoOfDays =
 							noOfDaysRule?.["numberOfDays"] ?? context.schema.describe().meta?.numberOfDays;
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !effectiveNoOfDays) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						return localDateTo.equals(localDateFrom.plusDays(effectiveNoOfDays - 1));
-					}
-				)
-				.test(
-					"future",
-					futureRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE,
-					(value, context) => {
+						const isValid = localDateTo.equals(localDateFrom.plusDays(effectiveNoOfDays - 1));
+						if (isValid) return true;
+						return context.createError({
+							message:
+								noOfDaysRule?.errorMessage ??
+								context.schema.describe().meta?.errorMessage ??
+								ERROR_MESSAGES.DATE_RANGE.MUST_HAVE_NUMBER_OF_DAYS(effectiveNoOfDays),
+						});
+					},
+				})
+				.test({
+					name: "future",
+					test(value, context) {
 						if (variant === "week") return true;
 						if (
 							!isValidDate(value.from) ||
@@ -135,25 +145,43 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						return !!localDateFrom?.isAfter(LocalDate.now()) && !!localDateTo?.isAfter(LocalDate.now());
-					}
-				)
-				.test("past", pastRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.MUST_BE_PAST, (value, context) => {
-					if (variant === "week") return true;
-					if (
-						!isValidDate(value.from) ||
-						!isValidDate(value.to) ||
-						(!pastRule?.["past"] && !context.schema.describe().meta?.past)
-					)
-						return true;
-					const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
-					const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-					return !!localDateFrom?.isBefore(LocalDate.now()) && !!localDateTo?.isBefore(LocalDate.now());
+						const isValid =
+							!!localDateFrom?.isAfter(LocalDate.now()) && !!localDateTo?.isAfter(LocalDate.now());
+						if (isValid) return true;
+						return context.createError({
+							message:
+								futureRule?.errorMessage ??
+								context.schema.describe().meta?.errorMessage ??
+								ERROR_MESSAGES.DATE_RANGE.MUST_BE_FUTURE,
+						});
+					},
 				})
-				.test(
-					"not-future",
-					notFutureRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_FUTURE,
-					(value, context) => {
+				.test({
+					name: "past",
+					test(value, context) {
+						if (variant === "week") return true;
+						if (
+							!isValidDate(value.from) ||
+							!isValidDate(value.to) ||
+							(!pastRule?.["past"] && !context.schema.describe().meta?.past)
+						)
+							return true;
+						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
+						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
+						const isValid =
+							!!localDateFrom?.isBefore(LocalDate.now()) && !!localDateTo?.isBefore(LocalDate.now());
+						if (isValid) return true;
+						return context.createError({
+							message:
+								pastRule?.errorMessage ??
+								context.schema.describe().meta?.errorMessage ??
+								ERROR_MESSAGES.DATE_RANGE.MUST_BE_PAST,
+						});
+					},
+				})
+				.test({
+					name: "not-future",
+					test(value, context) {
 						if (variant === "week") return true;
 						if (
 							!isValidDate(value.from) ||
@@ -163,13 +191,20 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						return !localDateFrom?.isAfter(LocalDate.now()) && !localDateTo?.isAfter(LocalDate.now());
-					}
-				)
-				.test(
-					"not-past",
-					notPastRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_PAST,
-					(value, context) => {
+						const isValid =
+							!localDateFrom?.isAfter(LocalDate.now()) && !localDateTo?.isAfter(LocalDate.now());
+						if (isValid) return true;
+						return context.createError({
+							message:
+								notFutureRule?.errorMessage ??
+								context.schema.describe().meta?.errorMessage ??
+								ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_FUTURE,
+						});
+					},
+				})
+				.test({
+					name: "not-past",
+					test(value, context) {
 						if (variant === "week") return true;
 						if (
 							!isValidDate(value.from) ||
@@ -179,59 +214,68 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 							return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						return !localDateFrom?.isBefore(LocalDate.now()) && !localDateTo?.isBefore(LocalDate.now());
-					}
-				)
-				.test(
-					"min-date",
-					minDateRule?.errorMessage ||
-						ERROR_MESSAGES.DATE_RANGE.MIN_DATE(
-							DateTimeHelper.formatDateTime(minDateRule?.["minDate"], "dd/MM/uuuu", "date")
-						),
-					(value, context) => {
+						const isValid =
+							!localDateFrom?.isBefore(LocalDate.now()) && !localDateTo?.isBefore(LocalDate.now());
+						if (isValid) return true;
+						return context.createError({
+							message:
+								notPastRule?.errorMessage ??
+								context.schema.describe().meta?.errorMessage ??
+								ERROR_MESSAGES.DATE_RANGE.CANNOT_BE_PAST,
+						});
+					},
+				})
+				.test({
+					name: "min-date",
+					test(value, context) {
 						if (variant === "week") return true;
-						const effectiveMinDate =
-							minDate ??
-							(context.schema.describe().meta?.minDate
-								? DateTimeHelper.toLocalDateOrTime(
-										context.schema.describe().meta.minDate,
-										dateFormat,
-										"date"
-								  )
-								: undefined);
+						const effectiveMinDateStr = minDateRule?.["minDate"] ?? context.schema.describe().meta?.minDate;
+						const effectiveMinDate = effectiveMinDateStr
+							? DateTimeHelper.toLocalDateOrTime(effectiveMinDateStr, dateFormat, "date")
+							: minDate;
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !effectiveMinDate) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						return !localDateFrom?.isBefore(effectiveMinDate) && !localDateTo?.isBefore(effectiveMinDate);
-					}
-				)
-				.test(
-					"max-date",
-					maxDateRule?.errorMessage ||
-						ERROR_MESSAGES.DATE_RANGE.MAX_DATE(
-							DateTimeHelper.formatDateTime(maxDateRule?.["maxDate"], "dd/MM/uuuu", "date")
-						),
-					(value, context) => {
+						const isValid =
+							!localDateFrom?.isBefore(effectiveMinDate) && !localDateTo?.isBefore(effectiveMinDate);
+						if (isValid) return true;
+						return context.createError({
+							message:
+								minDateRule?.errorMessage ??
+								context.schema.describe().meta?.errorMessage ??
+								ERROR_MESSAGES.DATE_RANGE.MIN_DATE(
+									DateTimeHelper.formatDateTime(effectiveMinDateStr, "dd/MM/uuuu", "date")
+								),
+						});
+					},
+				})
+				.test({
+					name: "max-date",
+					test(value, context) {
 						if (variant === "week") return true;
-						const effectiveMaxDate =
-							maxDate ??
-							(context.schema.describe().meta?.maxDate
-								? DateTimeHelper.toLocalDateOrTime(
-										context.schema.describe().meta.maxDate,
-										dateFormat,
-										"date"
-								  )
-								: undefined);
+						const effectiveMaxDateStr = maxDateRule?.["maxDate"] ?? context.schema.describe().meta?.maxDate;
+						const effectiveMaxDate = effectiveMaxDateStr
+							? DateTimeHelper.toLocalDateOrTime(effectiveMaxDateStr, dateFormat, "date")
+							: maxDate;
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !effectiveMaxDate) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
-						return !localDateFrom?.isAfter(effectiveMaxDate) && !localDateTo?.isAfter(effectiveMaxDate);
-					}
-				)
-				.test(
-					"excluded-dates",
-					excludedDatesRule?.errorMessage || ERROR_MESSAGES.DATE_RANGE.DISABLED_DATES,
-					(value, context) => {
+						const isValid =
+							!localDateFrom?.isAfter(effectiveMaxDate) && !localDateTo?.isAfter(effectiveMaxDate);
+						if (isValid) return true;
+						return context.createError({
+							message:
+								maxDateRule?.errorMessage ??
+								context.schema.describe().meta?.errorMessage ??
+								ERROR_MESSAGES.DATE_RANGE.MAX_DATE(
+									DateTimeHelper.formatDateTime(effectiveMaxDateStr, "dd/MM/uuuu", "date")
+								),
+						});
+					},
+				})
+				.test({
+					name: "excluded-dates",
+					test(value, context) {
 						if (variant === "week") return true;
 						const effectiveExcludedDates =
 							excludedDatesRule?.["excludedDates"] ?? context.schema.describe().meta?.excludedDates;
@@ -244,14 +288,19 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 							);
 							for (const excludedDate of mappedexcludedDates) {
 								if (localDateFrom.isEqual(excludedDate) || localDateTo.isEqual(excludedDate))
-									return false;
+									return context.createError({
+										message:
+											excludedDatesRule?.errorMessage ??
+											context.schema.describe().meta?.errorMessage ??
+											ERROR_MESSAGES.DATE_RANGE.DISABLED_DATES,
+									});
 							}
 							return true;
 						} catch {
 							return false;
 						}
-					}
-				),
+					},
+				}),
 			validation
 		);
 
