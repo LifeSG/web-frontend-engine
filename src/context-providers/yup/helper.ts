@@ -257,6 +257,15 @@ export namespace YupHelper {
 					console.warn(`error applying "${customRuleKey}" condition to ${yupSchema.type} schema`);
 				}
 			}
+
+			// record all conditions, regardless valid or not, to meta for reference in validation phase
+			Object.entries(rule).forEach(([key, value]) => {
+				yupSchema = yupSchema.meta({
+					...yupSchema.describe().meta,
+					[key]: value,
+				});
+			});
+
 			// prevent applying non-required validation for empty fields
 			if (yupSchema) {
 				yupSchema = yupSchema.transform((value) => {
