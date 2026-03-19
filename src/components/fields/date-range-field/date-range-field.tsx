@@ -7,14 +7,43 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { DateTimeHelper, TestHelper } from "../../../utils";
-import { useValidationConfig } from "../../../utils/hooks";
+import { useFormValues, useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
-import { TDateRangeFieldSchema, TDateRangeInputType } from "./types";
+import { IDateRangeFieldValidationRule, TDateRangeFieldSchema, TDateRangeInputType } from "./types";
 
 const DEFAULT_DATE_FORMAT = "uuuu-MM-dd";
 const DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)
 	.withResolverStyle(ResolverStyle.STRICT)
 	.withLocale(Locale.ENGLISH);
+
+const evaluateWhenCondition = (fieldValue: unknown, isCondition: unknown): boolean => {
+	if (Array.isArray(isCondition)) {
+		if ((isCondition as unknown[]).every((item) => item !== null && typeof item === "object")) {
+			return false;
+		}
+		return (isCondition as (string | number | boolean)[]).includes(fieldValue as string | number | boolean);
+	}
+	return fieldValue === isCondition;
+};
+
+const getWhenRule = (
+	validation: TDateRangeFieldSchema["validation"],
+	key: keyof IDateRangeFieldValidationRule,
+	parentValues: Record<string, unknown>
+): IDateRangeFieldValidationRule | undefined => {
+	for (const rule of validation ?? []) {
+		if (!rule?.when) continue;
+		for (const [fieldId, whenCond] of Object.entries(rule.when)) {
+			if (evaluateWhenCondition(parentValues?.[fieldId], whenCond.is)) {
+				const found = whenCond.then?.find(
+					(r): r is IDateRangeFieldValidationRule => Boolean(r) && typeof r === "object" && key in r
+				);
+				if (found) return found;
+			}
+		}
+	}
+	return undefined;
+};
 
 export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>) => {
 	// =============================================================================
@@ -35,6 +64,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	const [stateValueEnd, setStateValueEnd] = useState<string>(value.to || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [derivedProps, setDerivedProps] = useState<DateRangeInputProps>();
 	const { setFieldValidationConfig } = useValidationConfig();
+	const { formValues } = useFormValues();
 
 	// =============================================================================
 	// EFFECTS
@@ -201,6 +231,57 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
+
+	useEffect(() => {
+		const currentValues = (formValues ?? {}) as Record<string, unknown>;
+		const whenMinDateRule = getWhenRule(validation, "minDate", currentValues);
+		const whenMaxDateRule = getWhenRule(validation, "maxDate", currentValues);
+		const whenFutureRule = getWhenRule(validation, "future", currentValues);
+		const whenPastRule = getWhenRule(validation, "past", currentValues);
+		const whenNotFutureRule = getWhenRule(validation, "notFuture", currentValues);
+		const whenNotPastRule = getWhenRule(validation, "notPast", currentValues);
+		const whenExcludedDatesRule = getWhenRule(validation, "excludedDates", currentValues);
+		const whenNoOfDaysRule = getWhenRule(validation, "numberOfDays", currentValues);
+
+		if (
+			!whenMinDateRule &&
+			!whenMaxDateRule &&
+			!whenFutureRule &&
+			!whenPastRule &&
+			!whenNotFutureRule &&
+			!whenNotPastRule &&
+			!whenExcludedDatesRule &&
+			!whenNoOfDaysRule
+		)
+			return;
+
+		const effectiveMinDate = whenMinDateRule?.minDate
+			? DateTimeHelper.toLocalDateOrTime(whenMinDateRule.minDate, dateFormat, "date")
+			: undefined;
+		const effectiveMaxDate = whenMaxDateRule?.maxDate
+			? DateTimeHelper.toLocalDateOrTime(whenMaxDateRule.maxDate, dateFormat, "date")
+			: undefined;
+
+		const minDateProp = getLatestDate([
+			effectiveMinDate,
+			whenFutureRule?.future && LocalDate.now().plusDays(1),
+			whenNotPastRule?.notPast && LocalDate.now(),
+		]);
+		const maxDateProp = getEarliestDate([
+			effectiveMaxDate,
+			whenPastRule?.past && LocalDate.now().minusDays(1),
+			whenNotFutureRule?.notFuture && LocalDate.now(),
+		]);
+
+		setDerivedProps((prev) => ({
+			...prev,
+			...(minDateProp !== undefined && { minDate: minDateProp.format(DEFAULT_DATE_FORMATTER) }),
+			...(maxDateProp !== undefined && { maxDate: maxDateProp.format(DEFAULT_DATE_FORMATTER) }),
+			...(whenExcludedDatesRule && { disabledDates: whenExcludedDatesRule.excludedDates }),
+			...(whenNoOfDaysRule && { numberOfDays: whenNoOfDaysRule.numberOfDays }),
+		}));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [formValues]);
 
 	/**
 	 * update local state according to various scenarios
