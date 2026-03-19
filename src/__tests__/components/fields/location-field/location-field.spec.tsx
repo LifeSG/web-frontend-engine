@@ -2,13 +2,7 @@ import { MediaWidths } from "@lifesg/react-design-system";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { useEffect, useRef, useState } from "react";
-import {
-	FrontendEngine,
-	IFrontendEngineData,
-	IFrontendEngineProps,
-	IFrontendEngineRef,
-	IYupValidationRule,
-} from "../../../../components";
+import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { ERROR_SVG } from "../../../../components/fields/location-field/location-modal/location-modal.data";
@@ -1003,7 +997,7 @@ describe("location-input-group", () => {
 							onSuccess(mock1PageFetchAddressResponse);
 						});
 						fetchSingleLocationByLatLngSpy.mockImplementation(
-							(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
+							(_reverseGeocodeUrl, _convertLatLngToXYUrl, _lat, _lng, handleResult) => {
 								handleResult(fetchSingleLocationByLatLngSingleReponse);
 							}
 						);
@@ -1018,7 +1012,7 @@ describe("location-input-group", () => {
 								},
 							},
 							overrideField: {
-								reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+								mapApi: { reverseGeocode: "https://www.mock.com/reverse-geo-code" },
 							},
 						});
 
@@ -1053,7 +1047,7 @@ describe("location-input-group", () => {
 				describe("when location is a pin location with only latlng values", () => {
 					beforeEach(async () => {
 						fetchSingleLocationByLatLngSpy.mockImplementation(
-							(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
+							(_reverseGeocodeUrl, _convertLatLngToXYUrl, _lat, _lng, handleResult) => {
 								handleResult(fetchSingleLocationByLatLngSingleReponse);
 							}
 						);
@@ -1069,7 +1063,7 @@ describe("location-input-group", () => {
 								},
 							},
 							overrideField: {
-								reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+								mapApi: { reverseGeocode: "https://www.mock.com/reverse-geo-code" },
 							},
 						});
 
@@ -1694,7 +1688,7 @@ describe("location-input-group", () => {
 				fetchLocationListSpy.mockImplementation(() => mockReverseGeoCodeResponse);
 				renderComponent({
 					overrideField: {
-						reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+						mapApi: { reverseGeocode: "https://www.mock.com/reverse-geo-code" },
 						locationSelectionMode: "pins-only",
 					},
 				});
@@ -1957,7 +1951,7 @@ describe("location-input-group", () => {
 				onSuccess(mock1PageFetchAddressResponse);
 			});
 			fetchSingleLocationByLatLngSpy.mockImplementation(
-				(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
+				(_reverseGeocodeUrl, _convertLatLngToXYUrl, _lat, _lng, handleResult) => {
 					handleResult(fetchSingleLocationByLatLngSingleReponse);
 				}
 			);
@@ -1975,7 +1969,7 @@ describe("location-input-group", () => {
 					},
 				},
 				overrideField: {
-					reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+					mapApi: { reverseGeocode: "https://www.mock.com/reverse-geo-code" },
 				},
 			});
 			await waitFor(() => {
@@ -1996,7 +1990,7 @@ describe("location-input-group", () => {
 					},
 				},
 				overrideField: {
-					reverseGeoCodeEndpoint: "https://www.mock.com/reverse-geo-code",
+					mapApi: { reverseGeocode: "https://www.mock.com/reverse-geo-code" },
 					locationListTitle: "Nearest car parks",
 				},
 			});
