@@ -35,8 +35,7 @@ const LocationModal = ({
 	showLocationModal,
 	mapPanZoom,
 	interactiveMapPinIconUrl,
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi,
 	gettingCurrentLocationFetchMessage,
 	mapBannerText,
 	mustHavePostalCode,
@@ -473,8 +472,7 @@ const LocationModal = ({
 								onGetLocationCallback={handleGetLocationCallback}
 								setSinglePanelMode={setSinglePanelMode}
 								showLocationModal={showLocationModal}
-								reverseGeoCodeEndpoint={reverseGeoCodeEndpoint}
-								convertLatLngToXYEndpoint={convertLatLngToXYEndpoint}
+								mapApi={mapApi}
 								gettingCurrentLocationFetchMessage={gettingCurrentLocationFetchMessage}
 								mustHavePostalCode={mustHavePostalCode}
 								locationListTitle={locationListTitle}

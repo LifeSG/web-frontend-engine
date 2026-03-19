@@ -6,8 +6,7 @@ export interface ILocationModalProps
 	extends Pick<ILocationPickerProps, "mapPanZoom" | "interactiveMapPinIconUrl">,
 		Pick<
 			ILocationSearchProps,
-			| "reverseGeoCodeEndpoint"
-			| "convertLatLngToXYEndpoint"
+			| "mapApi"
 			| "mustHavePostalCode"
 			| "gettingCurrentLocationFetchMessage"
 			| "disableSearch"
