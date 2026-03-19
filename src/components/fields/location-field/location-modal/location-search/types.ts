@@ -1,6 +1,7 @@
 import {
 	ILocationCoord,
 	ILocationFieldValues,
+	ILocationMapApi,
 	TExplicitEditMode,
 	TPanelInputMode,
 	TSinglePanelInputMode,
@@ -21,8 +22,7 @@ export interface ILocationSearchProps {
 	onChangeSelectedAddressInfo: (addressInfo: ILocationFieldValues) => void;
 	handleApiErrors: (error: any) => void;
 	mustHavePostalCode?: boolean | undefined;
-	reverseGeoCodeEndpoint?: string | undefined;
-	convertLatLngToXYEndpoint?: string | undefined;
+	mapApi?: ILocationMapApi | undefined;
 	onGetLocationCallback: (lat?: number | undefined, lng?: number | undefined) => void;
 	showLocationModal: boolean;
 	mapPickedLatLng?: ILocationCoord | undefined;

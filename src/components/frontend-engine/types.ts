@@ -39,6 +39,8 @@ export interface IFrontendEngineProps<V = undefined, C = undefined> {
 	onSubmitError?: (errors: TFrontendEngineValues) => unknown | undefined;
 	/** Fires every time a value changes in any fields */
 	onValueChange?: ((values: TFrontendEngineValues, isValid?: boolean | undefined) => unknown) | undefined;
+	/** reCAPTCHA public site key. Only required if you are using reCAPTCHA with LocationField*/
+	recaptchaSiteKey?: string | undefined;
 	/** Indicates whether to wrap Frontend Engine fields within the `<form>` element, by default, fields will be rendered within the `<form>` element
 	 *
 	 * When false, the fields will be rendered within the `<div>` element instead

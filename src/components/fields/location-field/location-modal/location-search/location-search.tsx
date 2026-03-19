@@ -1,6 +1,7 @@
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { isEmpty } from "lodash";
 import { ReactElement, useEffect, useRef, useState } from "react";
+import { useRecaptcha } from "../../../../../context-providers/recaptcha";
 import { OneMapService } from "../../../../../services";
 import { OneMapBoolean, OneMapError } from "../../../../../services/onemap/types";
 import { TestHelper } from "../../../../../utils";
@@ -52,8 +53,7 @@ export const LocationSearch = ({
 	selectedAddressInfo,
 	mapPickedLatLng,
 
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi,
 	addressFieldPlaceholder = "Street Name, Postal Code",
 	gettingCurrentLocationFetchMessage = "Getting current location...",
 	locationListTitle = "Select location",
@@ -83,6 +83,11 @@ export const LocationSearch = ({
 	// CONST, STATE, REFS
 	// =============================================================================
 	const { addFieldEventListener, removeFieldEventListener, dispatchFieldEvent } = useFieldEvent();
+	const { getToken } = useRecaptcha();
+	const reverseGeocodeUrl = mapApi?.reverseGeocode;
+	const convertLatLngToXYUrl = mapApi?.convertLatLngToXY;
+	const searchUrl = mapApi?.search;
+	const mapApiHeaders = mapApi?.headers;
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const resultRef = useRef<HTMLDivElement>(null);
@@ -133,19 +138,24 @@ export const LocationSearch = ({
 		// the map should not be usable if any of these services fail
 		const reverseGeoCodeCheck = async () => {
 			try {
-				LocationHelper.reverseGeocode({
-					route: reverseGeoCodeEndpoint,
+				await LocationHelper.reverseGeocode({
+					route: reverseGeocodeUrl,
 					latitude: 1.29994179707526,
 					longitude: 103.789404349716,
 					bufferRadius: 1,
 					abortSignal: reverseGeocodeAborter.current.signal,
 					otherFeatures: OneMapBoolean.YES,
+					getToken,
+					headers: mapApiHeaders,
 				});
 			} catch (error) {
 				handleApiErrors(new OneMapError(error));
 			}
 		};
-		Promise.all([debounceFetchAddress("singapore", 1, undefined, handleApiErrors), reverseGeoCodeCheck()]);
+		Promise.all([
+			debounceFetchAddress("singapore", 1, undefined, handleApiErrors, searchUrl, getToken, mapApiHeaders),
+			reverseGeoCodeCheck(),
+		]);
 	}, []);
 
 	useEffect(() => {
@@ -210,10 +220,24 @@ export const LocationSearch = ({
 
 		if (formValues?.lat && formValues?.lng && validAddressString) {
 			// TODO: trust input or validate formvalue?
-			fetchSingleLocationByAddress(formValues.address, handleResult, handleApiErrors);
+			fetchSingleLocationByAddress(
+				formValues.address,
+				handleResult,
+				handleApiErrors,
+				searchUrl,
+				getToken,
+				mapApiHeaders
+			);
 		} else if (validAddressString && !formValues?.lat && !formValues?.lng) {
-			fetchSingleLocationByAddress(formValues.address, handleResult, handleApiErrors);
-		} else if (reverseGeoCodeEndpoint && !validAddressString) {
+			fetchSingleLocationByAddress(
+				formValues.address,
+				handleResult,
+				handleApiErrors,
+				searchUrl,
+				getToken,
+				mapApiHeaders
+			);
+		} else if (reverseGeocodeUrl && !validAddressString) {
 			let reverseGeoCodeLat = formValues?.lat;
 			let reverseGeoCodeLng = formValues?.lng;
 			// extract latlng
@@ -233,13 +257,15 @@ export const LocationSearch = ({
 			}
 
 			fetchSingleLocationByLatLng(
-				reverseGeoCodeEndpoint,
-				convertLatLngToXYEndpoint,
+				reverseGeocodeUrl,
+				convertLatLngToXYUrl,
 				reverseGeoCodeLat,
 				reverseGeoCodeLng,
 				handleResult,
 				handleApiErrors,
-				mustHavePostalCode
+				mustHavePostalCode,
+				getToken,
+				mapApiHeaders
 			);
 		}
 	}, []);
@@ -302,7 +328,10 @@ export const LocationSearch = ({
 					resetResultsList();
 					handleApiErrors(new OneMapError(error));
 				}
-			}
+			},
+			searchUrl,
+			getToken,
+			mapApiHeaders
 		);
 	}, [PAGE_SIZE, queryString]);
 
@@ -462,7 +491,10 @@ export const LocationSearch = ({
 				(error) => {
 					resetResultsList();
 					handleApiErrors(new OneMapError(error));
-				}
+				},
+				searchUrl,
+				getToken,
+				mapApiHeaders
 			);
 		}
 	};
@@ -474,7 +506,7 @@ export const LocationSearch = ({
 	 * - map picked latlng
 	 */
 	const displayResultsFromLatLng = async (addressLat: number, addressLng: number) => {
-		if (!reverseGeoCodeEndpoint) return;
+		if (!reverseGeocodeUrl) return;
 		const onError = (error: any) => {
 			setQueryString("");
 			handleApiErrors(error);
@@ -495,14 +527,16 @@ export const LocationSearch = ({
 		let resultListItem: IResultListItem[];
 		try {
 			resultListItem = await fetchLocationList(
-				reverseGeoCodeEndpoint,
+				reverseGeocodeUrl,
 				addressLat,
 				addressLng,
 				mustHavePostalCode,
 				reverseGeocodeAborter,
 				onError,
 				true,
-				bufferRadius
+				bufferRadius,
+				getToken,
+				mapApiHeaders
 			);
 		} catch (error) {
 			return;
@@ -548,8 +582,15 @@ export const LocationSearch = ({
 			lat: addressLat,
 			lng: addressLng,
 		};
-		if (convertLatLngToXYEndpoint) {
-			const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, addressLat, addressLng);
+		if (convertLatLngToXYUrl) {
+			const recaptchaToken = getToken ? await getToken("location_search") : undefined;
+			const { X, Y } = await OneMapService.convertLatLngToXY(
+				convertLatLngToXYUrl,
+				addressLat,
+				addressLng,
+				recaptchaToken,
+				mapApiHeaders
+			);
 			locationFieldValue.x = X;
 			locationFieldValue.y = Y;
 		}
