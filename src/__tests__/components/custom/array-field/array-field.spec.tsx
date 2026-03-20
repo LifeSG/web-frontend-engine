@@ -843,9 +843,18 @@ describe(UI_TYPE, () => {
 				[TEXT_FIELD_ID]: {
 					uiType: "text-field",
 					label: TEXT_FIELD_LABEL,
-					validation: [{ uniqueItem: true, errorMessage: UNIQUE_ITEM_ERROR } as any],
 				},
 			},
+			validation: [
+				{
+					uniqueItems: [
+						{
+							field: TEXT_FIELD_ID,
+							errorMessage: UNIQUE_ITEM_ERROR,
+						},
+					],
+				},
+			],
 		};
 
 		it("should show error when duplicate values are entered across sections", async () => {
