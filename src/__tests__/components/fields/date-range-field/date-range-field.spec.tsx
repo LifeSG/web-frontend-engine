@@ -556,6 +556,7 @@ describe(uiType, () => {
 				renderWhenComponent([{ when: { [FIELD_ONE_ID]: { is: [{ filled: true }], then: [{ ...config }] } } }], {
 					defaultValues: { [FIELD_ONE_ID]: "hello" },
 				});
+				await waitFor(() => fireEvent.click(getSubmitButton()));
 
 				fireEvent.change(getDayInput(TDateRangeInputType.START), { target: { value: invalidInput.from[0] } });
 				fireEvent.change(getMonthInput(TDateRangeInputType.START), {

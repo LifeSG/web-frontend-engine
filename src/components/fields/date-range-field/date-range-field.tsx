@@ -2,7 +2,7 @@ import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { DateRangeInputProps } from "@lifesg/react-design-system/date-range-input";
 import { Form } from "@lifesg/react-design-system/form";
-import { isBoolean, isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
@@ -51,7 +51,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				.test({
 					name: "is-empty-string",
 					test(value, context) {
-						setAppliedValidationRules(context.schema.describe().meta.rules);
+						setAppliedValidationRules(context.schema.describe().meta?.rules ?? []);
 						const isRequiredRule = getAppliedRule(context.schema.describe().meta?.rules, "required");
 						if (!value || !isRequiredRule) return true;
 						const isValid = value.from?.length > 0 && value.to?.length > 0;
@@ -265,18 +265,12 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		]);
 		const disabledDatesProps = excludedDatesRule?.["excludedDates"];
 		const noOfDaysProp = noOfDaysRule?.["numberOfDays"];
-		const staticProps: Partial<DateRangeInputProps> = {
+		setDerivedProps((props) => ({
+			...props,
 			minDate: minDateProp?.format(DEFAULT_DATE_FORMATTER),
 			maxDate: maxDateProp?.format(DEFAULT_DATE_FORMATTER),
 			disabledDates: disabledDatesProps,
 			numberOfDays: noOfDaysProp,
-		};
-		setDerivedProps((props) => ({
-			...props,
-			minDate: staticProps.minDate,
-			maxDate: staticProps.maxDate,
-			disabledDates: staticProps.disabledDates,
-			numberOfDays: staticProps.numberOfDays,
 		}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation, appliedValidationRules]);
@@ -359,10 +353,10 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		appliedRules: IDateRangeFieldValidationRule[],
 		key: string
 	): IDateRangeFieldValidationRule | undefined => {
-		const metaRule = appliedRules.find((rule: IDateRangeFieldValidationRule) => key in rule);
+		const metaRule = appliedRules?.find((rule: IDateRangeFieldValidationRule) => key in rule);
 		const validationRule = validation?.find((rule) => !!rule && key in rule);
-		if (isBoolean(metaRule?.[key])) return metaRule;
-		else if (isBoolean(validationRule?.[key])) return validationRule;
+		if (!isEmpty(metaRule)) return metaRule;
+		else if (!isEmpty(validationRule)) return validationRule;
 		return undefined;
 	};
 
