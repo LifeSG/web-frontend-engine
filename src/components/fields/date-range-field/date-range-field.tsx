@@ -8,7 +8,6 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { DateTimeHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { IYupValidationRule } from "../../frontend-engine";
 import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IDateRangeFieldValidationRule, TDateRangeFieldSchema, TDateRangeInputType } from "./types";
 
@@ -42,14 +41,6 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		const getAppliedRule = (appliedRules: IYupValidationRule[], key: string): IYupValidationRule | undefined => {
-			const metaRule = appliedRules.find((rule: IYupValidationRule) => key in rule);
-			const validationRule = validation?.find((rule) => !!rule && key in rule);
-			if (isBoolean((metaRule as Record<string, unknown>)?.[key])) return metaRule;
-			else if (isBoolean((validationRule as Record<string, unknown>)?.[key])) return validationRule;
-			return undefined;
-		};
-
 		setFieldValidationConfig(
 			id,
 			Yup.object()
@@ -74,9 +65,8 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "is-date",
 					test(value, context) {
 						const dateFormatRule = validation?.find(
-							(rule) =>
-								!!rule && "dateFormat" in rule && (rule as IDateRangeFieldValidationRule).dateFormat
-						) as IDateRangeFieldValidationRule | undefined;
+							(rule) => !!rule && "dateFormat" in rule && rule.dateFormat
+						);
 						if (isEmpty(value?.from) || isEmpty(value?.to)) return true;
 						const isValid =
 							isValidDate(value.from) &&
@@ -93,9 +83,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "number-of-days",
 					test(value, context) {
 						if (variant === "week") return true;
-						const noOfDaysRule = getAppliedRule(context.schema.describe().meta?.rules, "numberOfDays") as
-							| IDateRangeFieldValidationRule
-							| undefined;
+						const noOfDaysRule = getAppliedRule(context.schema.describe().meta?.rules, "numberOfDays");
 						const effectiveNoOfDays = noOfDaysRule?.numberOfDays;
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !effectiveNoOfDays) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
@@ -113,9 +101,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "future",
 					test(value, context) {
 						if (variant === "week") return true;
-						const futureRule = getAppliedRule(context.schema.describe().meta?.rules, "future") as
-							| IDateRangeFieldValidationRule
-							| undefined;
+						const futureRule = getAppliedRule(context.schema.describe().meta?.rules, "future");
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !futureRule) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
@@ -131,9 +117,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "past",
 					test(value, context) {
 						if (variant === "week") return true;
-						const pastRule = getAppliedRule(context.schema.describe().meta?.rules, "past") as
-							| IDateRangeFieldValidationRule
-							| undefined;
+						const pastRule = getAppliedRule(context.schema.describe().meta?.rules, "past");
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !pastRule) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
@@ -149,9 +133,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "not-future",
 					test(value, context) {
 						if (variant === "week") return true;
-						const notFutureRule = getAppliedRule(context.schema.describe().meta?.rules, "notFuture") as
-							| IDateRangeFieldValidationRule
-							| undefined;
+						const notFutureRule = getAppliedRule(context.schema.describe().meta?.rules, "notFuture");
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !notFutureRule) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
@@ -167,9 +149,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "not-past",
 					test(value, context) {
 						if (variant === "week") return true;
-						const notPastRule = getAppliedRule(context.schema.describe().meta?.rules, "notPast") as
-							| IDateRangeFieldValidationRule
-							| undefined;
+						const notPastRule = getAppliedRule(context.schema.describe().meta?.rules, "notPast");
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !notPastRule) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
 						const localDateTo = DateTimeHelper.toLocalDateOrTime(value.to, dateFormat, "date");
@@ -185,9 +165,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "min-date",
 					test(value, context) {
 						if (variant === "week") return true;
-						const minDateRule = getAppliedRule(context.schema.describe().meta?.rules, "minDate") as
-							| IDateRangeFieldValidationRule
-							| undefined;
+						const minDateRule = getAppliedRule(context.schema.describe().meta?.rules, "minDate");
 						const effectiveMinDateStr = minDateRule?.minDate;
 						const effectiveMinDate = effectiveMinDateStr
 							? DateTimeHelper.toLocalDateOrTime(effectiveMinDateStr, dateFormat, "date")
@@ -211,9 +189,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 					name: "max-date",
 					test(value, context) {
 						if (variant === "week") return true;
-						const maxDateRule = getAppliedRule(context.schema.describe().meta?.rules, "maxDate") as
-							| IDateRangeFieldValidationRule
-							| undefined;
+						const maxDateRule = getAppliedRule(context.schema.describe().meta?.rules, "maxDate");
 						const effectiveMaxDateStr = maxDateRule?.maxDate;
 						const effectiveMaxDate = effectiveMaxDateStr
 							? DateTimeHelper.toLocalDateOrTime(effectiveMaxDateStr, dateFormat, "date")
@@ -240,7 +216,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 						const excludedDatesRule = getAppliedRule(
 							context.schema.describe().meta?.rules,
 							"excludedDates"
-						) as IDateRangeFieldValidationRule | undefined;
+						);
 						const effectiveExcludedDates = excludedDatesRule?.excludedDates;
 						if (!isValidDate(value.from) || !isValidDate(value.to) || !effectiveExcludedDates) return true;
 						const localDateFrom = DateTimeHelper.toLocalDateOrTime(value.from, dateFormat, "date");
@@ -267,28 +243,14 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 
 		// set minDate / maxDate / disabledDates props
 
-		const futureRule = getAppliedRule(appliedValidationRules, "future") as
-			| IDateRangeFieldValidationRule
-			| undefined;
-		const pastRule = getAppliedRule(appliedValidationRules, "past") as IDateRangeFieldValidationRule | undefined;
-		const notFutureRule = getAppliedRule(appliedValidationRules, "notFuture") as
-			| IDateRangeFieldValidationRule
-			| undefined;
-		const notPastRule = getAppliedRule(appliedValidationRules, "notPast") as
-			| IDateRangeFieldValidationRule
-			| undefined;
-		const minDateRule = getAppliedRule(appliedValidationRules, "minDate") as
-			| IDateRangeFieldValidationRule
-			| undefined;
-		const maxDateRule = getAppliedRule(appliedValidationRules, "maxDate") as
-			| IDateRangeFieldValidationRule
-			| undefined;
-		const excludedDatesRule = getAppliedRule(appliedValidationRules, "excludedDates") as
-			| IDateRangeFieldValidationRule
-			| undefined;
-		const noOfDaysRule = getAppliedRule(appliedValidationRules, "numberOfDays") as
-			| IDateRangeFieldValidationRule
-			| undefined;
+		const futureRule = getAppliedRule(appliedValidationRules, "future");
+		const pastRule = getAppliedRule(appliedValidationRules, "past");
+		const notFutureRule = getAppliedRule(appliedValidationRules, "notFuture");
+		const notPastRule = getAppliedRule(appliedValidationRules, "notPast");
+		const minDateRule = getAppliedRule(appliedValidationRules, "minDate");
+		const maxDateRule = getAppliedRule(appliedValidationRules, "maxDate");
+		const excludedDatesRule = getAppliedRule(appliedValidationRules, "excludedDates");
+		const noOfDaysRule = getAppliedRule(appliedValidationRules, "numberOfDays");
 		const minDate = DateTimeHelper.toLocalDateOrTime(minDateRule?.["minDate"], dateFormat, "date");
 		const maxDate = DateTimeHelper.toLocalDateOrTime(maxDateRule?.["maxDate"], dateFormat, "date");
 		const minDateProp = getLatestDate([
@@ -391,6 +353,17 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 				)
 			);
 		}
+	};
+
+	const getAppliedRule = (
+		appliedRules: IDateRangeFieldValidationRule[],
+		key: string
+	): IDateRangeFieldValidationRule | undefined => {
+		const metaRule = appliedRules.find((rule: IDateRangeFieldValidationRule) => key in rule);
+		const validationRule = validation?.find((rule) => !!rule && key in rule);
+		if (isBoolean(metaRule?.[key])) return metaRule;
+		else if (isBoolean(validationRule?.[key])) return validationRule;
+		return undefined;
 	};
 
 	// =============================================================================
