@@ -4,6 +4,7 @@ import { DateRangeInputProps } from "@lifesg/react-design-system/date-range-inpu
 import { Form } from "@lifesg/react-design-system/form";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
+import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { DateTimeHelper, TestHelper } from "../../../utils";
@@ -40,7 +41,7 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-	useEffect(() => {
+	useDeepCompareEffect(() => {
 		setFieldValidationConfig(
 			id,
 			Yup.object()
