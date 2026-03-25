@@ -272,62 +272,6 @@ describe(UI_TYPE, () => {
 		});
 		expect(SUBMIT_FN).not.toHaveBeenCalled();
 	});
-
-	// it("should store prefix from send OTP response in the value", async () => {
-	// 	jest.spyOn(AxiosApiClient.prototype, "post")
-	// 		.mockResolvedValueOnce({ transactionId: "txn-123", prefix: "SG" })
-	// 		.mockResolvedValueOnce({});
-
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
-
-	// 	await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
-
-	// 	fireEvent.click(getVerifyOtpButton());
-
-	// 	await waitFor(() => fireEvent.click(getSubmitButton()));
-
-	// 	await waitFor(() => {
-	// 		expect(SUBMIT_FN).toHaveBeenCalledWith(
-	// 			expect.objectContaining({
-	// 				[COMPONENT_ID]: expect.objectContaining({
-	// 					otpPrefix: "SG",
-	// 					type: "phone-number",
-	// 					state: "verified",
-	// 				}),
-	// 			}),
-	// 			expect.anything()
-	// 		);
-	// 	});
-	// });
-
-	// it("should extract transactionId from data.transactionId response shape", async () => {
-	// 	const postSpy = jest
-	// 		.spyOn(AxiosApiClient.prototype, "post")
-	// 		.mockResolvedValueOnce({ data: { transactionId: "nested-txn" } })
-	// 		.mockResolvedValueOnce({});
-
-	// 	renderComponent();
-	// 	fireEvent.click(getSendOtpButton());
-
-	// 	await waitFor(() => expect(getVerifyOtpButton()).toBeInTheDocument());
-
-	// 	fireEvent.click(getVerifyOtpButton());
-
-	// 	await waitFor(() => {
-	// 		expect(postSpy).toHaveBeenNthCalledWith(
-	// 			2,
-	// 			VERIFY_OTP_URL,
-	// 			expect.objectContaining({ transactionId: "nested-txn" }),
-	// 			expect.anything()
-	// 		);
-	// 	});
-	// });
-
-	// it("should be disabled when disabled prop is set", () => {
-	// 	renderComponent({ disabled: true });
-	// 	expect(getSendOtpButton()).toBeDisabled();
-	// });
 });
 
 // =============================================================================
