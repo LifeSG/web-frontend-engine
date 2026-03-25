@@ -8,8 +8,8 @@ import {
 	OneMapGeocodeInfo,
 	OneMapSearchBuildingResult,
 } from "../../../services/onemap/types";
-import { ILocationCoord, IResultListItem, IResultsMetaData } from "./types";
 import { MathHelper } from "../../../utils";
+import { ILocationCoord, IResultListItem, IResultsMetaData } from "./types";
 
 type TReverseGeocodeParams = {
 	route: string;
@@ -18,6 +18,8 @@ type TReverseGeocodeParams = {
 	abortSignal?: AbortSignal;
 	bufferRadius?: number;
 	otherFeatures?: OneMapBoolean;
+	headers?: Record<string, string>;
+	getToken?: (action: string) => Promise<string | undefined>;
 	options?: {
 		excludeNonSG: boolean;
 	};
@@ -46,7 +48,9 @@ export namespace LocationHelper {
 		reverseGeocodeAborter: MutableRefObject<AbortController>,
 		onError: (error: any) => void,
 		excludeNonSG?: boolean,
-		bufferRadius?: number
+		bufferRadius?: number,
+		getToken?: (action: string) => Promise<string | undefined>,
+		headers?: Record<string, string>
 	): Promise<IResultListItem[]> => {
 		let onemapLocationList: IResultListItem[];
 
@@ -61,6 +65,8 @@ export namespace LocationHelper {
 					abortSignal: reverseGeocodeAborter.current.signal,
 					bufferRadius,
 					otherFeatures: OneMapBoolean.YES,
+					getToken,
+					headers,
 					options: {
 						excludeNonSG,
 					},
@@ -82,16 +88,25 @@ export namespace LocationHelper {
 		query: string,
 		pageNumber: number,
 		onSuccess?: (results: IResultsMetaData) => void,
-		onFail?: (error: unknown) => void
+		onFail?: (error: unknown) => void,
+		searchEndpoint?: string,
+		getToken?: (action: string) => Promise<string | undefined>,
+		headers?: Record<string, string>
 	) => {
 		if (!query) return;
 		try {
-			const { results, pageNum, totalNumPages } = await searchByAddress({
-				searchValue: query,
-				getAddressDetails: OneMapBoolean.YES,
-				returnGeom: OneMapBoolean.YES,
-				pageNum: pageNumber,
-			});
+			const recaptchaToken = getToken ? await getToken("location_search") : undefined;
+			const { results, pageNum, totalNumPages } = await searchByAddress(
+				{
+					searchValue: query,
+					getAddressDetails: OneMapBoolean.YES,
+					returnGeom: OneMapBoolean.YES,
+					pageNum: pageNumber,
+				},
+				searchEndpoint,
+				recaptchaToken,
+				headers
+			);
 
 			const parsedResults = results.map((obj) => {
 				const address = formatAddressFromGeocodeInfo(obj, true);
@@ -143,7 +158,10 @@ export namespace LocationHelper {
 	export const fetchSingleLocationByAddress = async (
 		address: string,
 		onSuccess: (resultListItem: IResultListItem | undefined) => void,
-		onError: (e: any) => void
+		onError: (e: any) => void,
+		searchEndpoint?: string,
+		getToken?: (action: string) => Promise<string | undefined>,
+		headers?: Record<string, string>
 	) => {
 		await debounceFetchAddress(
 			address,
@@ -151,7 +169,10 @@ export namespace LocationHelper {
 			(res) => {
 				onSuccess(res.results?.[0] || undefined);
 			},
-			onError
+			onError,
+			searchEndpoint,
+			getToken,
+			headers
 		);
 	};
 
@@ -162,6 +183,8 @@ export namespace LocationHelper {
 	// =========================================================================
 	export const reverseGeocode = async ({
 		bufferRadius,
+		headers,
+		getToken,
 		options,
 		...others
 	}: TReverseGeocodeParams): Promise<IResultsMetaData> => {
@@ -177,7 +200,13 @@ export namespace LocationHelper {
 			}
 		}
 
-		const locationList = await mapService.reverseGeocode({ bufferRadius: clampedBufferRadius, ...others });
+		const recaptchaToken = getToken ? await getToken("location_search") : undefined;
+		const locationList = await mapService.reverseGeocode({
+			bufferRadius: clampedBufferRadius,
+			recaptchaToken,
+			headers,
+			...others,
+		});
 		const lat = others.latitude;
 		const lng = others.longitude;
 
@@ -227,7 +256,9 @@ export namespace LocationHelper {
 		lng: number,
 		onSuccess: (resultListItem: IResultListItem | undefined) => void,
 		onError: (e: any) => void,
-		mustHavePostalCode?: boolean
+		mustHavePostalCode?: boolean,
+		getToken?: (action: string) => Promise<string | undefined>,
+		headers?: Record<string, string>
 	) => {
 		(async () => {
 			try {
@@ -236,6 +267,8 @@ export namespace LocationHelper {
 						route: reverseGeoCodeEndpoint,
 						latitude: lat,
 						longitude: lng,
+						getToken,
+						headers,
 					})
 				).results;
 
@@ -246,9 +279,17 @@ export namespace LocationHelper {
 					mustHavePostalCode
 				);
 
-				const { X, Y } = await OneMapService.convertLatLngToXY(convertLatLngToXYEndpoint, lat, lng);
+				const recaptchaToken = getToken ? await getToken("location_search") : undefined;
+				const { X, Y } = await OneMapService.convertLatLngToXY(
+					convertLatLngToXYEndpoint,
+					lat,
+					lng,
+					recaptchaToken,
+					headers
+				);
+				const nearestLocation = locationList[nearestLocationIndex];
 
-				onSuccess({ ...locationList[nearestLocationIndex], lat, lng, x: X, y: Y } || undefined);
+				onSuccess(nearestLocation ? { ...nearestLocation, lat, lng, x: X, y: Y } : undefined);
 			} catch (error) {
 				const oneMapError = new OneMapError(error);
 				onError(oneMapError);

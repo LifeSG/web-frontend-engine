@@ -20,6 +20,20 @@ import { TestHelper } from "../../../utils";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
 import Default from "./location-field.stories";
 
+const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
+const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
+const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
+const search = "https://api.dev.lifesg.io/onemap/search";
+
+const defaultMapApi = {
+	reverseGeocode,
+	convertLatLngToXY,
+	search,
+	headers: {
+		"x-client-app": "LifeSG",
+	},
+};
+
 const meta: Meta = {
 	title: "Field/LocationField/Events",
 	parameters: {
@@ -56,6 +70,7 @@ const Template = (eventName: string) =>
 
 		return (
 			<FrontendEngine
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {
@@ -112,6 +127,7 @@ const EditPromptTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -186,6 +202,7 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 
 		return (
 			<FrontendEngine
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {
@@ -244,6 +261,7 @@ const ConfirmLocationPromptTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -273,12 +291,14 @@ export const ShowModal = Template("show-location-modal").bind({});
 ShowModal.args = {
 	uiType: "location-field",
 	label: "Show Modal",
+	mapApi: defaultMapApi,
 };
 
 export const HideModal = Template("hide-location-modal").bind({});
 HideModal.args = {
 	uiType: "location-field",
 	label: "Hide Modal",
+	mapApi: defaultMapApi,
 };
 
 export const ShowEditPrompt = EditPromptTemplate().bind({});
@@ -286,6 +306,7 @@ ShowEditPrompt.args = {
 	uiType: "location-field",
 	label: "Has Explicit Edit",
 	hasExplicitEdit: "explicit",
+	mapApi: defaultMapApi,
 };
 
 export const GeolocationWithErrors = GeolocationTemplate({
@@ -296,12 +317,14 @@ export const GeolocationWithErrors = GeolocationTemplate({
 GeolocationWithErrors.args = {
 	uiType: "location-field",
 	label: "Geolocation with errors",
+	mapApi: defaultMapApi,
 };
 
 export const ConfirmLocation = ConfirmLocationPromptTemplate().bind({});
 ConfirmLocation.args = {
 	uiType: "location-field",
 	label: "Confirm Location",
+	mapApi: defaultMapApi,
 };
 
 interface HotlineContent {
@@ -525,6 +548,7 @@ const ErrorEventsTemplate = () =>
 		return (
 			<div>
 				<FrontendEngine
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -549,7 +573,9 @@ CustomErrorHandling.args = {
 	uiType: "location-field",
 	label: "Custom error handling",
 	mustHavePostalCode: true,
-	reverseGeoCodeEndpoint: "willBreak",
+	mapApi: {
+		reverseGeocode: "willBreak",
+	},
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -582,6 +608,7 @@ const StrictLocationTemplate = () =>
 
 		return (
 			<FrontendEngine
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {
@@ -602,6 +629,7 @@ export const StrictLocation = StrictLocationTemplate().bind({});
 StrictLocation.args = {
 	uiType: "location-field",
 	label: "Strict Location",
+	mapApi: defaultMapApi,
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -634,6 +662,7 @@ const HidePermissionModalTemplate = () =>
 
 		return (
 			<FrontendEngine
+				recaptchaSiteKey={recaptchaSiteKey}
 				ref={formRef}
 				data={{
 					sections: {
@@ -654,6 +683,7 @@ export const HidePermissionModal = HidePermissionModalTemplate().bind({});
 HidePermissionModal.args = {
 	uiType: "location-field",
 	label: "Hide Permission Modal",
+	mapApi: defaultMapApi,
 };
 
 const SetSelectablePinsTemplate = () =>
@@ -703,6 +733,7 @@ const SetSelectablePinsTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -711,8 +742,7 @@ const SetSelectablePinsTemplate = () =>
 								children: {
 									[id]: {
 										...args,
-										reverseGeoCodeEndpoint:
-											"https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code",
+										mapApi: defaultMapApi,
 									},
 									...SUBMIT_BUTTON_SCHEMA,
 								},
@@ -729,6 +759,7 @@ export const SetSelectablePins = SetSelectablePinsTemplate().bind({});
 SetSelectablePins.args = {
 	uiType: "location-field",
 	label: "Set Selectable Pins",
+	mapApi: defaultMapApi,
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -764,6 +795,7 @@ const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -772,8 +804,7 @@ const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 								children: {
 									[id]: {
 										...args,
-										reverseGeoCodeEndpoint:
-											"https://www.dev.lifesg.io/book-facilities/api/v1/one-map/reverse-geo-code",
+										mapApi: defaultMapApi,
 									},
 									...SUBMIT_BUTTON_SCHEMA,
 								},
@@ -817,4 +848,5 @@ export const RefreshLocationAndTriggerGetCurrentLocation = RefreshLocationAndTri
 RefreshLocationAndTriggerGetCurrentLocation.args = {
 	uiType: "location-field",
 	label: "Refresh current location and trigger get current location",
+	mapApi: defaultMapApi,
 };

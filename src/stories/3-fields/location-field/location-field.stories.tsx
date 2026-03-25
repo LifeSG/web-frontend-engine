@@ -1,6 +1,9 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
+import { useEffect, useRef } from "react";
 import { ILocationCoord, ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
+import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
+import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
@@ -10,12 +13,22 @@ import {
 	SUBMIT_BUTTON_SCHEMA,
 	WarningStoryTemplate,
 } from "../../common";
-import { useEffect, useRef } from "react";
-import { IFrontendEngineRef } from "../../../components/frontend-engine";
-import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 
-const reverseGeoCodeEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/reverse-geo-code";
-const convertLatLngToXYEndpoint = "https://www.dev.lifesg.io/oneservice/api/v1/one-map/convert-latlng-to-xy";
+const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
+
+const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
+const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
+const search = "https://api.dev.lifesg.io/onemap/search";
+
+const defaultMapApi = {
+	reverseGeocode,
+	convertLatLngToXY,
+	search,
+	headers: {
+		"x-client-app": "LifeSG",
+	},
+};
+
 const meta: Meta = {
 	title: "Field/LocationField",
 	parameters: {
@@ -152,15 +165,22 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default = DefaultStoryTemplate<ILocationFieldSchema>("location-field-default").bind({});
+export const Default = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-default",
+	false,
+	recaptchaSiteKey
+).bind({});
 Default.args = {
 	uiType: "location-field",
 	label: "Default",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 
-export const LabelCustomisation = DefaultStoryTemplate<ILocationFieldSchema>("location-label-customisation").bind({});
+export const LabelCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-label-customisation",
+	false,
+	recaptchaSiteKey
+).bind({});
 LabelCustomisation.args = {
 	uiType: "location-field",
 	label: {
@@ -171,7 +191,9 @@ LabelCustomisation.args = {
 };
 
 export const InitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address"
+	"location-field-initial-address",
+	false,
+	recaptchaSiteKey
 ).bind({});
 InitialAddress.args = {
 	uiType: "location-field",
@@ -179,8 +201,7 @@ InitialAddress.args = {
 	defaultValues: {
 		address: "Fusionopolis View",
 	},
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 InitialAddress.parameters = {
 	docs: {
@@ -191,7 +212,9 @@ InitialAddress.parameters = {
 };
 
 export const InitialLatLng = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address"
+	"location-field-initial-address",
+	false,
+	recaptchaSiteKey
 ).bind({});
 InitialLatLng.args = {
 	uiType: "location-field",
@@ -200,19 +223,20 @@ InitialLatLng.args = {
 		lat: 1.2418352709904754,
 		lng: 103.61478567123413,
 	},
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 InitialLatLng.parameters = {
 	docs: {
 		description: {
-			story: "If only latlng is present, the location will be reverse geo located if reverseGeoCodeEndpoint is provided. The first search result will be selected.",
+			story: "If only latlng is present, the location will be reverse geocoded when mapApi.reverseGeocode is provided. The first search result will be selected.",
 		},
 	},
 };
 
 export const FullInitialAddress = DefaultStoryTemplate<ILocationFieldSchema, ILocationFieldValues>(
-	"location-field-initial-address"
+	"location-field-initial-address",
+	false,
+	recaptchaSiteKey
 ).bind({});
 FullInitialAddress.args = {
 	uiType: "location-field",
@@ -228,8 +252,7 @@ FullInitialAddress.args = {
 		x: 23112.7395757,
 		y: 31366.5202628,
 	},
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 FullInitialAddress.parameters = {
 	docs: {
@@ -239,103 +262,123 @@ FullInitialAddress.parameters = {
 	},
 };
 
-export const MustHavePostalCode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-postal-code").bind({});
+export const MustHavePostalCode = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-postal-code",
+	false,
+	recaptchaSiteKey
+).bind({});
 MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",
 	mustHavePostalCode: true,
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 
-export const Warning = WarningStoryTemplate<ILocationFieldSchema>("location-field-with-warning").bind({});
+export const Warning = WarningStoryTemplate<ILocationFieldSchema>("location-field-with-warning", recaptchaSiteKey).bind(
+	{}
+);
 Warning.args = {
 	uiType: "location-field",
 	label: "Default",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 
-export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>("location-field-disabled").bind({});
+export const Disabled = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-disabled",
+	false,
+	recaptchaSiteKey
+).bind({});
 Disabled.args = {
 	uiType: "location-field",
 	label: "Disabled ",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 	disabled: true,
 };
 
 export const BannerCustomisation = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-banner-customisation"
+	"location-field-banner-customisation",
+	false,
+	recaptchaSiteKey
 ).bind({});
 BannerCustomisation.args = {
 	uiType: "location-field",
 	label: "Banner Customisation",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 	mapBannerText: "This is some banner text",
 };
 
-export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>("location-field-custom-styles").bind({});
+export const WithCustomStyles = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-custom-styles",
+	false,
+	recaptchaSiteKey
+).bind({});
 WithCustomStyles.args = {
 	uiType: "location-field",
 	label: "WithCustomStyles",
 	locationModalStyles: "padding-top: 50px; margin-right: 10px;",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 
-export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>("location-field-overrides").bind({});
+export const Overrides = OverrideStoryTemplate<ILocationFieldSchema>(
+	"location-field-overrides",
+	false,
+	recaptchaSiteKey
+).bind({});
 Overrides.args = {
 	uiType: "location-field",
 	label: "Location",
 	overrides: {
 		label: "Overridden",
 	},
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
-export const LocationListTitle = DefaultStoryTemplate<ILocationFieldSchema>("location-field-location-list-title").bind(
-	{}
-);
+export const LocationListTitle = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-location-list-title",
+	false,
+	recaptchaSiteKey
+).bind({});
 LocationListTitle.args = {
 	uiType: "location-field",
 	label: "Location List Title",
 	locationListTitle: "Nearest car parks",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 };
 
 export const WithCustomMapPanZoom = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-custom-map-pan-zoom"
+	"location-field-custom-map-pan-zoom",
+	false,
+	recaptchaSiteKey
 ).bind({});
 WithCustomMapPanZoom.args = {
 	uiType: "location-field",
 	label: "WithCustomMapPanZoom",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 	mapPanZoom: { mobile: 17, nonMobile: 17, min: 12, max: 14, duration: 1 },
 };
 
-export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>("disable-text-search").bind({});
+export const DisableSearch = DefaultStoryTemplate<ILocationFieldSchema>(
+	"disable-text-search",
+	false,
+	recaptchaSiteKey
+).bind({});
 DisableSearch.args = {
 	uiType: "location-field",
 	label: "DisableSearch",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 	disableSearch: "disabled",
 };
 
-export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>("location-field-selection-mode").bind(
-	{}
-);
+export const locationSelectionMode = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-selection-mode",
+	false,
+	recaptchaSiteKey
+).bind({});
 locationSelectionMode.args = {
 	uiType: "location-field",
 	label: "Location Selection Mode",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 	locationSelectionMode: "pins-only",
 };
 
@@ -387,6 +430,7 @@ const IndicateCurrentLocationTemplate = () =>
 		return (
 			<>
 				<FrontendEngine
+					recaptchaSiteKey={recaptchaSiteKey}
 					ref={formRef}
 					data={{
 						sections: {
@@ -410,8 +454,7 @@ export const pinsOnlyIndicateCurrentLocation = IndicateCurrentLocationTemplate()
 pinsOnlyIndicateCurrentLocation.args = {
 	uiType: "location-field",
 	label: "Indicate Current Location",
-	reverseGeoCodeEndpoint,
-	convertLatLngToXYEndpoint,
+	mapApi: defaultMapApi,
 	locationSelectionMode: "pins-only",
 	pinsOnlyIndicateCurrentLocation: true,
 	interactiveMapPinIconUrl:
