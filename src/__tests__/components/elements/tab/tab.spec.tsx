@@ -200,6 +200,13 @@ describe("Tab", () => {
 		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 1" }));
 		expect(screen.queryByText("Tab Body 1")).toBeInTheDocument();
 		expect(screen.queryByText("Tab Body 2")).not.toBeInTheDocument();
-		expect(handeTabChange).toHaveBeenCalled();
+		expect(handeTabChange).toHaveBeenCalledTimes(1);
+
+		const event = handeTabChange.mock.calls[0][0] as CustomEvent<{
+			previousTabId: string;
+			currentTabId: string;
+		}>;
+
+		expect(event.detail).toEqual(expect.objectContaining({ previousTabId: "tabItem2", currentTabId: "tabItem1" }));
 	});
 });

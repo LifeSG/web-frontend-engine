@@ -23,6 +23,7 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	const { removeFieldValidationConfig } = useValidationConfig();
 	const { unregister } = useFormContext();
 	const { dispatchFieldEvent } = useFieldEvent();
+	const tabIds = Object.keys(children);
 
 	// =========================================================================
 	// EFFECTS
@@ -56,8 +57,8 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 		}
 		setCurrentTabIndex(index);
 		dispatchFieldEvent<ITabEventDetails>("change", id, {
-			previousTabId: Object.keys(children)[currentTabIndex],
-			currentTabId: Object.keys(children)[index],
+			previousTabId: tabIds[currentTabIndex],
+			currentTabId: tabIds[index],
 		});
 	};
 
