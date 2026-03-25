@@ -114,6 +114,7 @@ const Template = (id: string) =>
 			/>
 		);
 	}) as StoryFn<ITabSchema & { defaultValues?: Record<string, unknown> | undefined }>;
+/* eslint-enable react-hooks/rules-of-hooks */
 
 export const Default = Template("tab-default").bind({});
 Default.args = {

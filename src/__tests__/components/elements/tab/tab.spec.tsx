@@ -184,29 +184,29 @@ describe("Tab", () => {
 	});
 
 	it("should not switch if user clicked on the active tab", () => {
-		const handeTabChange = jest.fn();
-		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handeTabChange);
+		const handleTabChange = jest.fn();
+		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handleTabChange);
 
 		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 2" }));
 
 		expect(screen.queryByText("Tab Body 1")).not.toBeInTheDocument();
 		expect(screen.queryByText("Tab Body 2")).toBeInTheDocument();
-		expect(handeTabChange).not.toHaveBeenCalled();
+		expect(handleTabChange).not.toHaveBeenCalled();
 	});
 
 	it("should fire change event when switching tabs", () => {
-		const handeTabChange = jest.fn();
-		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handeTabChange);
+		const handleTabChange = jest.fn();
+		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handleTabChange);
 		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 1" }));
 		expect(screen.queryByText("Tab Body 1")).toBeInTheDocument();
 		expect(screen.queryByText("Tab Body 2")).not.toBeInTheDocument();
-		expect(handeTabChange).toHaveBeenCalledTimes(1);
-
-		const event = handeTabChange.mock.calls[0][0] as CustomEvent<{
-			previousTabId: string;
-			currentTabId: string;
-		}>;
-
-		expect(event.detail).toEqual(expect.objectContaining({ previousTabId: "tabItem2", currentTabId: "tabItem1" }));
+		expect(handleTabChange).toHaveBeenCalledWith(
+			expect.objectContaining({
+				detail: expect.objectContaining({
+					previousTabId: "tabItem2",
+					currentTabId: "tabItem1",
+				}),
+			})
+		);
 	});
 });
