@@ -4,6 +4,7 @@ import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IArrayFieldSchema } from "../../../../components/custom";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
+import { ERROR_MESSAGES } from "../../../../components/shared/error-messages";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -847,7 +848,7 @@ describe(UI_TYPE, () => {
 			},
 			validation: [
 				{
-					uniqueItems: [
+					unique: [
 						{
 							field: TEXT_FIELD_ID,
 							errorMessage: UNIQUE_ITEM_ERROR,
@@ -856,7 +857,6 @@ describe(UI_TYPE, () => {
 				},
 			],
 		};
-
 		it("should show error when duplicate values are entered across sections", async () => {
 			renderComponent(UNIQUE_FIELD_SCHEMA as TOverrideField<IArrayFieldSchema>, {
 				defaultValues: { [COMPONENT_ID]: [{}, {}] },
@@ -923,6 +923,37 @@ describe(UI_TYPE, () => {
 			await waitFor(() => {
 				const errors = screen.queryAllByText(UNIQUE_ITEM_ERROR);
 				expect(errors).toHaveLength(1);
+			});
+		});
+
+		it("should use default error message when errorMessage is not provided", async () => {
+			const SCHEMA_WITHOUT_CUSTOM_MESSAGE = {
+				fieldSchema: {
+					[TEXT_FIELD_ID]: {
+						uiType: "text-field",
+						label: TEXT_FIELD_LABEL,
+					},
+				},
+				validation: [
+					{
+						unique: [
+							{
+								field: TEXT_FIELD_ID,
+							},
+						],
+					},
+				],
+			};
+
+			renderComponent(SCHEMA_WITHOUT_CUSTOM_MESSAGE as TOverrideField<IArrayFieldSchema>, {
+				defaultValues: { [COMPONENT_ID]: [{}, {}] },
+			});
+
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
+			await waitFor(() => fireEvent.change(getTextField(1), { target: { value: "Hello" } }));
+
+			await waitFor(() => {
+				expect(screen.queryByText(ERROR_MESSAGES.ARRAY_FIELD.UNIQUE)).toBeInTheDocument();
 			});
 		});
 	});
