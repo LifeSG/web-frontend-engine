@@ -119,5 +119,6 @@ export const ERROR_MESSAGES = {
 		MIN: (min: number) => `At least ${min} ${min === 1 ? "entry" : "entries"} must be provided`,
 		MAX: (max: number) => `No more than ${max} ${max === 1 ? "entry" : "entries"} can be provided`,
 		LENGTH: (length: number) => `Exactly ${length} ${length === 1 ? "entry" : "entries"} must be provided`,
+		UNIQUE: "One or more fields are not unique",
 	},
 };
