@@ -18,25 +18,33 @@ export interface IOtpVerificationFieldValidationRule extends IYupValidationRule 
 	"otp-type"?: TOtpVerificationType | undefined;
 }
 
-export interface IOtpVerificationFieldApiRequest {
+export interface IOtpVerificationFieldEndpoint {
 	url: string;
-	withPrefix?: boolean | undefined;
+}
+
+export interface IOtpVerificationFieldRequest {
+	endpoint: IOtpVerificationFieldEndpoint;
+}
+
+export interface IOtpVerificationFieldVerification {
+	endpoint: IOtpVerificationFieldEndpoint;
+	showThumbnail?: boolean | undefined;
+	title?: string | undefined;
+	message?: string | undefined;
 }
 
 export interface IOtpVerificationFieldSchema<V = undefined>
 	extends IBaseFieldSchema<"otp-verification-field", V, IOtpVerificationFieldValidationRule> {
-	sendOtpRequest: IOtpVerificationFieldApiRequest;
-	verifyOtpRequest: IOtpVerificationFieldApiRequest;
+	request: IOtpVerificationFieldRequest;
+	verification: IOtpVerificationFieldVerification;
 	type: TOtpVerificationType;
+	withPrefix?: boolean | undefined;
 	disabled?: boolean | undefined;
 	readOnly?: boolean | undefined;
 	className?: string | undefined;
 	prefixSeparator?: string | undefined;
 	verifyOtpCountdownTimer?: number | undefined;
 	sendOtpPlaceholder?: string | undefined;
-	showVerifyOtpThumbnail?: boolean | undefined;
-	verifyOtpTitle?: string | undefined;
-	verifyOtpMessage?: string | undefined;
 }
 
 export interface IOtpVerificationValue {

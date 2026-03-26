@@ -15,7 +15,7 @@ import {
 	TOtpVerificationType,
 } from "./types";
 
-const isValidEmail = (contact: string) => Yup.string().email().isValidSync(contact);
+const isValidEmail = (contact: string) => Yup.string().required().email().isValidSync(contact);
 const isValidPhoneNumber = (contact: string) => PhoneHelper.isSingaporeNumber(contact);
 
 export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationFieldSchema>) => {
@@ -30,11 +30,10 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		onChange,
 		schema: {
 			validation,
-			sendOtpRequest,
-			verifyOtpRequest,
+			request,
+			verification,
+			withPrefix,
 			verifyOtpCountdownTimer,
-			disabled,
-			readOnly,
 			prefixSeparator,
 			type,
 			...otherSchema
@@ -44,6 +43,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	const [otpCode, setOtpCode] = useState<string>(value?.otpCode || "");
 	const [otpPrefix, setOtpPrefix] = useState<string | undefined>(value?.otpPrefix);
 	const transactionIdRef = useRef<string | undefined>(value?.transactionId);
+	const sentOtpAtSubmitCountRef = useRef<number>(-1);
 
 	const otpState: TOtpVerificationState = value?.state || "default";
 
@@ -57,6 +57,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	const isRequiredRule = validation?.find((rule) => "required" in rule);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { formState, setError, clearErrors } = useFormContext();
+	const { submitCount } = formState;
 
 	// =============================================================================
 	// EFFECTS
@@ -76,13 +77,6 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation, otpState]);
-
-	useEffect(() => {
-		if (error?.type === EOtpVerificationErrorType.API_ERROR && otpState !== "sent") {
-			handleOtpStateChange("sent");
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [error]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -112,11 +106,11 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		const sendBody: Record<string, unknown> = {
 			type,
 			...(type === "email" ? { email: contactValue } : { phoneNo }),
-			...(sendOtpRequest.withPrefix !== undefined && { withPrefix: sendOtpRequest.withPrefix }),
+			...(withPrefix !== undefined && { withPrefix }),
 		};
 
 		const response = await new AxiosApiClient("", undefined, undefined, true)
-			.post<Record<string, unknown>>(sendOtpRequest.url, sendBody)
+			.post<Record<string, unknown>>(request.endpoint.url, sendBody)
 			.catch((error) => {
 				const errorMsg = error?.message || ERROR_MESSAGES.OTP_VERIFICATION.SEND_OTP_FAILED;
 				setError(id, { type: EOtpVerificationErrorType.SEND_OTP_FAILED, message: errorMsg });
@@ -131,6 +125,8 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		transactionIdRef.current = txId;
 		if (prefix) setOtpPrefix(prefix);
 
+		clearErrors(id);
+		sentOtpAtSubmitCountRef.current = submitCount;
 		onChange({
 			target: {
 				value: {
@@ -147,7 +143,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		const contact = type === "email" ? contactValue : phoneNumberValue.number;
 
 		const response = await new AxiosApiClient("", undefined, undefined, true)
-			.post<Record<string, unknown>>(verifyOtpRequest.url, {
+			.post<Record<string, unknown>>(verification.endpoint.url, {
 				transactionId: transactionIdRef.current,
 				otp,
 				otpPrefix,
@@ -175,7 +171,6 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handleEmailChange = (input: string): void => {
-		clearErrors(id);
 		onChange({
 			target: {
 				value: {
@@ -187,7 +182,6 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handlePhoneNumberChange = (val: PhoneNumberInputValue): void => {
-		clearErrors(id);
 		let finalContact = val.number;
 		// if number is empty we should just pass an empty string so required validation can kick in natively if needed
 		if (!val.number) {
@@ -225,6 +219,9 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		}
 	};
 
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
 	const getOtpVerificationErr = () => {
 		if (otpState === "default") {
 			if (type === "email") {
@@ -260,7 +257,8 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		if (otpState !== "sent") return;
 
 		const isVerificationError =
-			error?.type === EOtpVerificationErrorType.IS_OTP_VERIFIED ||
+			(error?.type === EOtpVerificationErrorType.IS_OTP_VERIFIED &&
+				submitCount > sentOtpAtSubmitCountRef.current) ||
 			error?.type === EOtpVerificationErrorType.OTP_VERIFICATION_FAILED ||
 			error?.type === EOtpVerificationErrorType.API_ERROR;
 		if (isVerificationError) return error?.message;
@@ -272,8 +270,6 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		id,
 		"data-testid": TestHelper.generateId(id, "otp-verification-field"),
 		label: formattedLabel,
-		disabled,
-		readOnly,
 		otpState,
 		onOtpStateChange: handleOtpStateChange,
 		onSendOtp: handleSendOtp,
@@ -288,6 +284,9 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		},
 		onOtpChange: handleOtpChange,
 		...(verifyOtpCountdownTimer !== undefined && { verifyOtpCountdownTimer }),
+		...(verification.showThumbnail !== undefined && { showVerifyOtpThumbnail: verification.showThumbnail }),
+		...(verification.title !== undefined && { verifyOtpTitle: verification.title }),
+		...(verification.message !== undefined && { verifyOtpMessage: verification.message }),
 		...otherSchema,
 	};
 

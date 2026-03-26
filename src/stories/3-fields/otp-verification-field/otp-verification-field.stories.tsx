@@ -36,77 +36,6 @@ const meta: Meta = {
 							</li>
 						</ul>
 					</p>
-					<h2>API Contracts</h2>
-					<p>
-						Send OTP request (<code>POST sendOtpRequest.url</code>):
-						<ul>
-							<li>
-								<strong>type</strong> — <code>&quot;phone-number&quot;</code> or{" "}
-								<code>&quot;email&quot;</code>
-							</li>
-							<li>
-								<strong>phoneNo</strong> — present when type is <code>phone-number</code>; includes
-								country code (e.g. <code>+6591234567</code>)
-							</li>
-							<li>
-								<strong>email</strong> — present when type is <code>email</code>
-							</li>
-							<li>
-								<strong>withPrefix</strong> — optional; only included when{" "}
-								<code>sendOtpRequest.withPrefix</code> is set
-							</li>
-						</ul>
-					</p>
-					<p>
-						Send OTP response:
-						<ul>
-							<li>
-								<strong>transactionId</strong> — required; used to correlate the subsequent verify call
-							</li>
-							<li>
-								<strong>prefix</strong> — optional; returned when <code>withPrefix</code> is true
-							</li>
-						</ul>
-					</p>
-					<p>
-						Send OTP error response (4xx / 5xx):
-						<ul>
-							<li>
-								<strong>message</strong> — optional; displayed to the user as the field error message
-							</li>
-						</ul>
-					</p>
-					<p>
-						Verify OTP request (<code>POST verifyOtpRequest.url</code>):
-						<ul>
-							<li>
-								<strong>transactionId</strong> — value returned by the Send OTP response
-							</li>
-							<li>
-								<strong>otp</strong> — OTP entered by the user
-							</li>
-							<li>
-								<strong>otpPrefix</strong> — OTP prefix displayed to the user (empty string when no
-								prefix)
-							</li>
-						</ul>
-					</p>
-					<p>
-						Verify OTP response:
-						<ul>
-							<li>
-								<strong>additionalData</strong> — optional; any extra data to include in the field value
-							</li>
-						</ul>
-					</p>
-					<p>
-						Verify OTP error response (4xx / 5xx):
-						<ul>
-							<li>
-								<strong>message</strong> — optional; displayed to the user as the field error message
-							</li>
-						</ul>
-					</p>
 					<ArgTypes of={PhoneNumber} />
 					<Stories includePrimary={true} title="Examples" />
 				</>
@@ -123,22 +52,53 @@ const meta: Meta = {
 			options: ["phone-number", "email"],
 			control: { type: "select" },
 		},
-		sendOtpRequest: {
-			description:
-				"Configuration for the Send OTP API endpoint. Set `withPrefix: true` to request the backend to generate an OTP prefix, which will be displayed to the user alongside the OTP input.",
+		request: {
+			description: `Configuration for the Send OTP API endpoint.
+
+**Request body** (\`POST request.endpoint.url\`):
+- \`type\` — \`"phone-number"\` or \`"email"\`
+- \`phoneNo\` — present when type is \`phone-number\`; includes country code (e.g. \`+6591234567\`)
+- \`email\` — present when type is \`email\`
+- \`withPrefix\` — optional; only included when \`withPrefix\` is set
+
+**Response:**
+- \`transactionId\` — required; used to correlate the subsequent verify call
+- \`prefix\` — optional; returned when \`withPrefix\` is true
+
+**Error response (4xx / 5xx):**
+- \`message\` — optional; displayed to the user as the field error message`,
 			table: {
 				type: {
-					summary: "{ url: string; withPrefix?: boolean }",
+					summary: "{ endpoint: { url: string } }",
 				},
 			},
 		},
-		verifyOtpRequest: {
-			description: "Configuration for the Verify OTP API endpoint",
+		verification: {
+			description: `Configuration for the Verify OTP API endpoint and verification step display.
+
+**Request body** (\`POST verification.endpoint.url\`):
+- \`transactionId\` — value returned by the Send OTP response
+- \`otp\` — OTP entered by the user
+- \`otpPrefix\` — OTP prefix displayed to the user (empty string when no prefix)
+
+**Response:**
+- \`additionalData\` — optional; any extra data to include in the field value
+
+**Error response (4xx / 5xx):**
+- \`message\` — optional; displayed to the user as the field error message`,
 			table: {
 				type: {
-					summary: "{ url: string }",
+					summary: "{ endpoint: { url: string }; showThumbnail?: boolean; title?: string; message?: string }",
 				},
 			},
+		},
+		withPrefix: {
+			description:
+				"Set to `true` to request the backend to generate an OTP prefix, which will be displayed to the user alongside the OTP input.",
+			table: {
+				type: { summary: "boolean" },
+			},
+			control: { type: "boolean" },
 		},
 		disabled: {
 			description: "Disables the component",
@@ -167,28 +127,6 @@ const meta: Meta = {
 		},
 		sendOtpPlaceholder: {
 			description: "Placeholder text for the contact input (phone number or email)",
-			table: {
-				type: { summary: "string" },
-			},
-			control: { type: "text" },
-		},
-		showVerifyOtpThumbnail: {
-			description: "Whether to show a thumbnail/illustration on the OTP verification step",
-			table: {
-				type: { summary: "boolean" },
-				defaultValue: { summary: "false" },
-			},
-			control: { type: "boolean" },
-		},
-		verifyOtpTitle: {
-			description: "Title displayed on the OTP verification step",
-			table: {
-				type: { summary: "string" },
-			},
-			control: { type: "text" },
-		},
-		verifyOtpMessage: {
-			description: "Message displayed on the OTP verification step",
 			table: {
 				type: { summary: "string" },
 			},
@@ -265,11 +203,13 @@ PhoneNumber.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
 	validation: [{ "otp-type": "phone-number" }, { required: true }],
 };
 PhoneNumber.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
@@ -279,11 +219,13 @@ Email.args = {
 	uiType: "otp-verification-field",
 	label: "Email Verification",
 	type: "email",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
-	verifyOtpTitle: "Verify your email address",
-	verifyOtpMessage: "Enter the OTP sent to your email address to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your email address",
+		message: "Enter the OTP sent to your email address to verify.",
+	},
 	validation: [{ "otp-type": "email" }, { required: true }],
 };
 Email.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
@@ -298,11 +240,13 @@ SendOtpFailed.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
 	validation: [{ "otp-type": "phone-number" }],
 };
 SendOtpFailed.decorators = [withMockOtpApi({ ...MOCK_SEND_ERROR, ...MOCK_VERIFY_OK })];
@@ -313,11 +257,13 @@ VerifyOtpFailed.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
 	validation: [{ "otp-type": "phone-number" }],
 };
 VerifyOtpFailed.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_ERROR })];
@@ -333,11 +279,14 @@ WithPrefix.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_PREFIXED_URL, withPrefix: true },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_PREFIXED_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
+	withPrefix: true,
 	validation: [{ "otp-type": "phone-number" }],
 };
 WithPrefix.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
@@ -350,11 +299,14 @@ WithPrefixSeparator.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_PREFIXED_URL, withPrefix: true },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_PREFIXED_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
+	withPrefix: true,
 	prefixSeparator: ":",
 	validation: [{ "otp-type": "phone-number" }],
 };
@@ -366,10 +318,12 @@ WithoutThumbnail.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
 	validation: [{ "otp-type": "phone-number" }],
 };
 WithoutThumbnail.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
@@ -384,12 +338,14 @@ WithPlaceholder.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
 	sendOtpPlaceholder: "Enter your mobile number",
-	showVerifyOtpThumbnail: true,
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
 	validation: [{ "otp-type": "phone-number" }],
 };
 WithPlaceholder.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
@@ -400,10 +356,12 @@ CustomTimer.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
 	validation: [{ "otp-type": "phone-number" }],
 	verifyOtpCountdownTimer: 30,
 };
@@ -418,9 +376,8 @@ Disabled.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: { endpoint: { url: MOCK_VERIFY_OTP_URL }, showThumbnail: true },
 	validation: [{ "otp-type": "phone-number" }],
 	disabled: true,
 };
@@ -430,9 +387,8 @@ ReadOnly.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: { endpoint: { url: MOCK_VERIFY_OTP_URL }, showThumbnail: true },
 	validation: [{ "otp-type": "phone-number" }],
 	readOnly: true,
 };
@@ -446,16 +402,20 @@ Overrides.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	sendOtpRequest: { url: MOCK_SEND_OTP_URL },
-	verifyOtpRequest: { url: MOCK_VERIFY_OTP_URL },
-	showVerifyOtpThumbnail: true,
-	verifyOtpTitle: "Verify your mobile number",
-	verifyOtpMessage: "Enter the OTP sent to your mobile number to verify.",
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
 	validation: [{ "otp-type": "phone-number" }],
 	overrides: {
 		label: "Overridden Mobile Number Verification",
-		verifyOtpTitle: "Overridden OTP title",
-		verifyOtpMessage: "Overridden OTP message",
+		verification: {
+			title: "Overridden OTP title",
+			message: "Overridden OTP message",
+		},
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
