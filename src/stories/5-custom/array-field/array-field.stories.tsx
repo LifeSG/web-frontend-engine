@@ -226,7 +226,7 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 	},
 };
 
-const SCHEMA_UNIQUE_ITEM: Record<string, TFrontendEngineFieldSchema> = {
+const SCHEMA_UNIQUE: Record<string, TFrontendEngineFieldSchema> = {
 	grid: {
 		uiType: "grid",
 		style: { marginTop: 16, marginBottom: 16 },
@@ -335,14 +335,14 @@ Customisation.args = {
 	sectionInset: "1rem",
 };
 
-export const UniqueItem = DefaultStoryTemplate<IArrayFieldSchema, object[]>("array-field-unique-item").bind({});
-UniqueItem.args = {
+export const Unique = DefaultStoryTemplate<IArrayFieldSchema, object[]>("array-field-unique").bind({});
+Unique.args = {
 	referenceKey: "array-field",
 	sectionTitle: "New fruit",
-	fieldSchema: SCHEMA_UNIQUE_ITEM,
+	fieldSchema: SCHEMA_UNIQUE,
 	validation: [
 		{
-			uniqueItems: [
+			unique: [
 				{ field: "name", errorMessage: "Use a different name from the other entries" },
 				{ field: "colour", errorMessage: "Use a different colour from the other entries" },
 			],

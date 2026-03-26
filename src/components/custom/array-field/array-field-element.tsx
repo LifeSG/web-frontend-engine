@@ -104,7 +104,7 @@ const Component = (
 				defaultValues,
 				restoreMode,
 				revalidationMode,
-				validationMode: "onSubmit", // prevent blur from clearing injected errors
+				validationMode: validationMode ?? "onSubmit", // use onSubmit to prevent blur from clearing injected errors from `unique` validation
 				stripUnknown,
 			}}
 			onValueChange={handleChange}
