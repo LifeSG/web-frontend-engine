@@ -1,8 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { FrontendEngine } from "../../../../components";
 import { ITabItemSchema, ITabSchema } from "../../../../components/elements";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { FRONTEND_ENGINE_ID, TOverrideField, getField, getSubmitButton, getSubmitButtonProps } from "../../../common";
+import {
+	FRONTEND_ENGINE_ID,
+	TOverrideField,
+	getField,
+	getSubmitButton,
+	getSubmitButtonProps,
+	FrontendEngineWithEventListener,
+} from "../../../common";
 
 const SUBMIT_FN = jest.fn();
 
@@ -18,7 +24,9 @@ const FIELD_TWO_ERROR = "Error message two";
 const renderComponent = (
 	overrideField?: TOverrideField<ITabSchema>,
 	children?: Record<string, ITabItemSchema>,
-	defaultValues?: Record<string, unknown>
+	defaultValues?: Record<string, unknown>,
+	eventType?: string | undefined,
+	eventListener?: ((this: Element, ev: Event) => void) | undefined
 ) => {
 	const defaultChildren: Record<string, ITabItemSchema> = {
 		tabItem1: {
@@ -59,7 +67,17 @@ const renderComponent = (
 		},
 		defaultValues,
 	};
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+
+	return render(
+		<FrontendEngineWithEventListener
+			data={json}
+			onSubmit={SUBMIT_FN}
+			eventType={eventType}
+			eventListener={eventListener}
+			uiType={"tab"}
+			componentId={PARENT_ID}
+		/>
+	);
 };
 
 const getFieldOne = (): HTMLElement => {
@@ -163,5 +181,32 @@ describe("Tab", () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [FIELD_ONE_ID]: "hello1" }));
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.not.objectContaining({ [FIELD_TWO_ID]: expect.anything() }));
+	});
+
+	it("should not switch if user clicked on the active tab", () => {
+		const handleTabChange = jest.fn();
+		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handleTabChange);
+
+		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 2" }));
+
+		expect(screen.queryByText("Tab Body 1")).not.toBeInTheDocument();
+		expect(screen.queryByText("Tab Body 2")).toBeInTheDocument();
+		expect(handleTabChange).not.toHaveBeenCalled();
+	});
+
+	it("should fire change event when switching tabs", () => {
+		const handleTabChange = jest.fn();
+		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handleTabChange);
+		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 1" }));
+		expect(screen.queryByText("Tab Body 1")).toBeInTheDocument();
+		expect(screen.queryByText("Tab Body 2")).not.toBeInTheDocument();
+		expect(handleTabChange).toHaveBeenCalledWith(
+			expect.objectContaining({
+				detail: expect.objectContaining({
+					previousTabId: "tabItem2",
+					currentTabId: "tabItem1",
+				}),
+			})
+		);
 	});
 });

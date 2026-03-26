@@ -1,4 +1,5 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
+import { action } from "@storybook/addon-actions";
 import { Meta, StoryFn } from "@storybook/react";
 import { ITabSchema } from "../../../components/elements";
 import {
@@ -8,6 +9,8 @@ import {
 	OverrideStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
+import { useRef, useEffect } from "react";
+import { IFrontendEngineRef } from "../../../components";
 
 const meta: Meta = {
 	title: "Element/Tab",
@@ -81,23 +84,37 @@ const meta: Meta = {
 };
 export default meta;
 
+/* eslint-disable react-hooks/rules-of-hooks */
 const Template = (id: string) =>
-	(({ defaultValues, ...args }) => (
-		<FrontendEngine
-			data={{
-				sections: {
-					section: {
-						uiType: "section",
-						children: {
-							[id]: args,
-							...SUBMIT_BUTTON_SCHEMA,
+	(({ defaultValues, ...args }) => {
+		const formRef = useRef<IFrontendEngineRef>();
+		const handleEvent = (e: unknown) => action("change")(e);
+
+		useEffect(() => {
+			const currentFormRef = formRef.current;
+			currentFormRef.addFieldEventListener("tab", "change" as any, id, handleEvent);
+			return () => currentFormRef.removeFieldEventListener("tab", "change" as any, id, handleEvent);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+		return (
+			<FrontendEngine
+				data={{
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[id]: args,
+								...SUBMIT_BUTTON_SCHEMA,
+							},
 						},
 					},
-				},
-				defaultValues,
-			}}
-		/>
-	)) as StoryFn<ITabSchema & { defaultValues?: Record<string, unknown> | undefined }>;
+					defaultValues,
+				}}
+				ref={formRef}
+			/>
+		);
+	}) as StoryFn<ITabSchema & { defaultValues?: Record<string, unknown> | undefined }>;
+/* eslint-enable react-hooks/rules-of-hooks */
 
 export const Default = Template("tab-default").bind({});
 Default.args = {
@@ -293,3 +310,43 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const TabChangeEvent = Template("tab-change-event").bind({});
+
+TabChangeEvent.args = {
+	uiType: "tab",
+	children: {
+		tabItemA: {
+			title: "Section A",
+			uiType: "tab-item",
+			children: {
+				wrapper1: {
+					uiType: "div",
+					style: { marginTop: "1rem", marginBottom: "1rem" },
+					children: {
+						text: {
+							uiType: "text-body",
+							children: "This is tab item A",
+						},
+					},
+				},
+			},
+		},
+		tabItemB: {
+			title: "Section B",
+			uiType: "tab-item",
+			children: {
+				wrapper2: {
+					uiType: "div",
+					style: { marginTop: "1rem", marginBottom: "1rem" },
+					children: {
+						text: {
+							uiType: "text-body",
+							children: "This is tab item B",
+						},
+					},
+				},
+			},
+		},
+	},
+};
