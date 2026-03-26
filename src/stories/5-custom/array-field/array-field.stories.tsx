@@ -226,6 +226,37 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 	},
 };
 
+const SCHEMA_UNIQUE: Record<string, TFrontendEngineFieldSchema> = {
+	grid: {
+		uiType: "grid",
+		style: { marginTop: 16, marginBottom: 16 },
+		children: {
+			name: {
+				uiType: "text-field",
+				label: "Name",
+				columns: { mobile: 4, tablet: 8, desktop: 12 },
+				validation: [
+					{ required: true },
+					{
+						min: 5,
+						errorMessage: "Must have min 5 characters.",
+					},
+				],
+			},
+			colour: {
+				uiType: "select",
+				label: "Colour",
+				options: [
+					{ label: "Red", value: "Red" },
+					{ label: "Blue", value: "Blue" },
+					{ label: "Green", value: "Green" },
+				],
+				columns: { mobile: 4, tablet: 4, desktop: 6 },
+			},
+		},
+	},
+};
+
 export const Default = DefaultStoryTemplate<IArrayFieldSchema>("array-field-default").bind({});
 Default.args = {
 	referenceKey: "array-field",
@@ -302,6 +333,22 @@ Customisation.args = {
 	removeButton: { label: "Remove fruit", icon: "CalendarCrossFillIcon" },
 	removeConfirmationModal: { title: "Remove fruit?" },
 	sectionInset: "1rem",
+};
+
+export const Unique = DefaultStoryTemplate<IArrayFieldSchema, object[]>("array-field-unique").bind({});
+Unique.args = {
+	referenceKey: "array-field",
+	sectionTitle: "New fruit",
+	fieldSchema: SCHEMA_UNIQUE,
+	validation: [
+		{
+			unique: [
+				{ field: "name", errorMessage: "Use a different name from the other entries" },
+				{ field: "colour", errorMessage: "Use a different colour from the other entries" },
+			],
+		},
+	],
+	defaultValues: [{ name: "Apple", colour: "Red" }, { name: "" }],
 };
 
 export const HideDivider = DefaultStoryTemplate<IArrayFieldSchema>("array-field-hide-divider").bind({});

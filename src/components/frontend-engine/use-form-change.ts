@@ -165,6 +165,5 @@ export const useFormChange = (props: IFrontendEngineProps, formMethods: UseFormR
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formState, watch]);
-
 	return { checkIsFormValid };
 };

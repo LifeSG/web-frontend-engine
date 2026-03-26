@@ -23,7 +23,7 @@ import {
 	SectionHeader,
 	WarningAlert,
 } from "./array-field.styles";
-import { IArrayFieldSchema } from "./types";
+import { IArrayFieldSchema, IArrayFieldValidationRule } from "./types";
 
 export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) => {
 	// =============================================================================
@@ -71,6 +71,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 		const minRule = validation?.find((rule) => "min" in rule);
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
+		const uniqueRule = validation?.find((rule) => "unique" in rule) as IArrayFieldValidationRule | undefined;
 
 		const minValue = minRule?.["min"] ?? undefined;
 		const maxValue = maxRule?.["max"] ?? undefined;
@@ -103,7 +104,36 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 					if (lengthValue === undefined) return true;
 					return (value?.length ?? 0) === lengthValue;
 				}
-			);
+			)
+			.test("unique-items", uniqueRule?.errorMessage || ERROR_MESSAGES.ARRAY_FIELD.UNIQUE, (value) => {
+				if (!value || !uniqueRule?.unique?.length) return true;
+
+				const errors: TErrorPayload[] = value.map(() => ({}));
+				let hasError = false;
+
+				uniqueRule.unique.forEach(({ field, errorMessage }) => {
+					const fieldValues = value.map((item) => item?.[field]);
+					fieldValues.forEach((val, idx) => {
+						if (!val) return;
+						const isDuplicate = fieldValues.findIndex((v) => v === val) !== idx;
+						if (isDuplicate) {
+							errors[idx] = {
+								...errors[idx],
+								[field]: errorMessage || ERROR_MESSAGES.ARRAY_FIELD.UNIQUE,
+							};
+							hasError = true;
+						}
+					});
+				});
+
+				if (hasError) {
+					setFieldErrors(errors);
+				} else {
+					setFieldErrors(undefined);
+				}
+
+				return !hasError;
+			});
 
 		setFieldValidationConfig(id, validationSchema, validation);
 

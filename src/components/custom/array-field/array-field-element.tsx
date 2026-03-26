@@ -20,6 +20,7 @@ const Component = (
 	// CONST, STATE, REFS
 	// =============================================================================
 	const formRef = useRef<IFrontendEngineRef>(null);
+	const errorRef = useRef<TErrorPayload | undefined>(undefined);
 	const { customComponents } = useCustomComponents();
 	const [sectionValues, setSectionValues] = useState<TFrontendEngineValues>({});
 	const [defaultValues, setDefaultValues] = useState<TFrontendEngineValues>();
@@ -58,12 +59,27 @@ const Component = (
 
 	useEffect(() => {
 		if (isSubmitting) {
-			formRef.current?.validate();
+			const handleValidation = async () => {
+				// Validate child field rules
+				await formRef.current?.validate();
+
+				// Re-apply uniqueness errors after validate() clears them
+				if (errorRef.current) {
+					formRef.current?.setErrors(errorRef.current);
+				}
+			};
+
+			handleValidation();
 		}
 	}, [isSubmitting]);
 
 	useEffect(() => {
-		error && formRef.current?.setErrors(error);
+		errorRef.current = error;
+		if (error) {
+			formRef.current?.setErrors(error);
+		} else {
+			formRef.current?.clearErrors();
+		}
 	}, [error]);
 
 	// =============================================================================
@@ -88,7 +104,7 @@ const Component = (
 				defaultValues,
 				restoreMode,
 				revalidationMode,
-				validationMode,
+				validationMode: validationMode ?? "onSubmit", // use onSubmit to prevent blur from clearing injected errors from `unique` validation
 				stripUnknown,
 			}}
 			onValueChange={handleChange}
