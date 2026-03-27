@@ -98,6 +98,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
+							aria-disabled={disabled ?? option.disabled}
+							focusableWhenDisabled={disabled}
 							name={id}
 							value={option.value}
 							checked={isRadioButtonChecked(option.value)}
@@ -132,6 +134,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								className={className ? `${className}-radio` : undefined}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
+								aria-disabled={disabled ?? option.disabled}
+								focusableWhenDisabled={disabled}
 								name={id}
 								indicator={customOptions?.indicator}
 								styleType={customOptions?.border === false ? "no-border" : "default"}
@@ -175,6 +179,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								className={className ? `${className}-radio` : undefined}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
+								aria-disabled={disabled ?? option.disabled}
+								focusableWhenDisabled={disabled}
 								name={id}
 								selected={isRadioButtonChecked(option.value)}
 								onClick={() => handleChangeOrClick(option.value)}
