@@ -1,7 +1,9 @@
 import { Breakpoint, Colour } from "@lifesg/react-design-system/theme";
+import { PopoverTrigger } from "@lifesg/react-design-system/popover-v2";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
+import { ICircleFillIcon } from "@lifesg/react-icons";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -13,9 +15,11 @@ import { useFieldEvent } from "../../../../../utils/hooks";
 import { LocationHelper } from "../../location-helper";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
+import { Legend } from "./legend";
 import {
 	Banner,
 	BannerWrapper,
+	ButtonLegend,
 	ButtonLocation,
 	ButtonLocationImage,
 	LeafletWrapper,
@@ -54,6 +58,7 @@ export const LocationPicker = ({
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
 	const markersRef = useRef<L.Marker[]>();
+	const legendTriggerRef = useRef<HTMLButtonElement>(null);
 	const isMobile = window.matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`).matches;
 	const leafletConfig: L.MapOptions = {
 		minZoom: 11,
@@ -248,6 +253,27 @@ export const LocationPicker = ({
 					{locationAvailable ? <NavigationFillIcon /> : <NavigationIcon />}
 				</ButtonLocationImage>
 			</ButtonLocation>
+			<PopoverTrigger
+				popoverContent={() => {
+					const handleClose = () => {
+						// Click the trigger button to close the popover
+						legendTriggerRef.current?.click();
+					};
+					return <Legend onClose={handleClose} />;
+				}}
+				isModal={false}
+				position="top-end"
+			>
+				<ButtonLegend
+					ref={legendTriggerRef}
+					data-testid={TestHelper.generateId(id, "legend")}
+					aria-label="Show legend"
+				>
+					<ButtonLocationImage>
+						<ICircleFillIcon />
+					</ButtonLocationImage>
+				</ButtonLegend>
+			</PopoverTrigger>
 		</LocationPickerWrapper>
 	);
 };

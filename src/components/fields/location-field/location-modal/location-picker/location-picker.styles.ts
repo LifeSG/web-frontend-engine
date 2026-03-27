@@ -78,6 +78,11 @@ export const ButtonLocation = styled.button`
 	box-shadow: 0 0 4px rgb(from ${Colour.Primitive["neutral-20"]} r g b / 40%);
 `;
 
+export const ButtonLegend = styled(ButtonLocation)`
+	left: 1.5rem;
+	right: auto;
+`;
+
 export const ButtonLocationImage = styled.span`
 	width: 1.5rem;
 	height: 1.5rem;
