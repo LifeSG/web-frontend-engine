@@ -35,7 +35,7 @@ export const Sanitize = (props: IProps) => {
 
 	const formatId = (): string => {
 		if (id) {
-			return TestHelper.generateId(id, "sanitized");
+			return id;
 		}
 		return TestHelper.generateId("sanitized");
 	};

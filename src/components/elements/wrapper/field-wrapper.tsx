@@ -89,7 +89,11 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 		} else if (!!label && typeof label === "object" && label.mainLabel) {
 			return {
 				children: <Sanitize inline>{label.mainLabel}</Sanitize>,
-				subtitle: <StyledSublabel className="sub-label">{label.subLabel}</StyledSublabel>,
+				subtitle: (
+					<StyledSublabel className="sub-label" id={`${id}-label-subtitle`}>
+						{label.subLabel}
+					</StyledSublabel>
+				),
 				// acccept tooltip type when it's ready
 				addon: label.hint?.content
 					? /* eslint-disable indent */
