@@ -1,0 +1,52 @@
+import { IconButton } from "@lifesg/react-design-system/icon-button";
+import { Colour } from "@lifesg/react-design-system/theme";
+import styled from "styled-components";
+
+export const LegendWrapper = styled.div`
+	position: absolute;
+	left: 1.5rem;
+	bottom: 1.5rem;
+	max-width: 250px;
+	padding: 0.5rem 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	background-color: ${Colour["bg"]};
+	box-shadow: 0 0 4px 1px rgb(from ${Colour.Primitive["neutral-50"]} r g b / 50%);
+	border-radius: 0.5rem;
+`;
+
+export const LegendHeader = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+`;
+
+export const LegendContent = styled.div`
+	max-height: 200px;
+	overflow: auto;
+	width: max-content;
+	max-width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1rem;
+`;
+
+export const LegendItem = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+`;
+
+export const CloseButton = styled(IconButton)`
+	padding: 0;
+	background-color: transparent;
+
+	height: 1.25rem;
+	width: 1.25rem;
+
+	> svg {
+		color: ${Colour["icon"]};
+	}
+`;
