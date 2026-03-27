@@ -11,6 +11,12 @@ export interface ILocationFieldValidation extends IYupValidationRule {
 	postalCode?: boolean | undefined;
 }
 
+export interface ILegendItem {
+	id: string;
+	label: string;
+	icon: React.ReactNode;
+}
+
 export interface ILocationMapApi {
 	reverseGeocode?: string | undefined;
 	convertLatLngToXY?: string | undefined;
@@ -41,6 +47,7 @@ export interface ILocationFieldSchema<V = undefined>
 	locationListTitle?: string | undefined;
 	mapBannerText?: string | undefined;
 	pinsOnlyIndicateCurrentLocation?: boolean | undefined;
+	legendItems?: ILegendItem[] | undefined;
 }
 
 export type TSinglePanelInputMode = "search" | "map";

@@ -3,7 +3,7 @@ import { ILocationPickerProps } from "./location-picker/types";
 import { ILocationSearchProps } from "./location-search/types";
 
 export interface ILocationModalProps
-	extends Pick<ILocationPickerProps, "mapPanZoom" | "interactiveMapPinIconUrl">,
+	extends Pick<ILocationPickerProps, "mapPanZoom" | "interactiveMapPinIconUrl" | "legendItems">,
 		Pick<
 			ILocationSearchProps,
 			| "mapApi"

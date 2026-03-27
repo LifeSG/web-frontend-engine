@@ -49,6 +49,7 @@ export const LocationPicker = ({
 	selectablePins,
 	pinsOnlyIndicateCurrentLocation,
 	currentLocation,
+	legendItems,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -253,27 +254,29 @@ export const LocationPicker = ({
 					{locationAvailable ? <NavigationFillIcon /> : <NavigationIcon />}
 				</ButtonLocationImage>
 			</ButtonLocation>
-			<PopoverTrigger
-				popoverContent={() => {
-					const handleClose = () => {
-						// Click the trigger button to close the popover
-						legendTriggerRef.current?.click();
-					};
-					return <Legend onClose={handleClose} />;
-				}}
-				isModal={false}
-				position="top-end"
-			>
-				<ButtonLegend
-					ref={legendTriggerRef}
-					data-testid={TestHelper.generateId(id, "legend")}
-					aria-label="Show legend"
+			{legendItems && legendItems.length > 0 && (
+				<PopoverTrigger
+					popoverContent={() => {
+						const handleClose = () => {
+							// Click the trigger button to close the popover
+							legendTriggerRef.current?.click();
+						};
+						return <Legend onClose={handleClose} items={legendItems} />;
+					}}
+					isModal={false}
+					position="top-end"
 				>
-					<ButtonLocationImage>
-						<ICircleFillIcon />
-					</ButtonLocationImage>
-				</ButtonLegend>
-			</PopoverTrigger>
+					<ButtonLegend
+						ref={legendTriggerRef}
+						data-testid={TestHelper.generateId(id, "legend")}
+						aria-label="Show legend"
+					>
+						<ButtonLocationImage>
+							<ICircleFillIcon />
+						</ButtonLocationImage>
+					</ButtonLegend>
+				</PopoverTrigger>
+			)}
 		</LocationPickerWrapper>
 	);
 };

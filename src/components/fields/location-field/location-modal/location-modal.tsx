@@ -52,6 +52,7 @@ const LocationModal = ({
 	searchBarIcon,
 	bufferRadius,
 	pinsOnlyIndicateCurrentLocation,
+	legendItems,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -494,6 +495,7 @@ const LocationModal = ({
 								locationAvailable={locationAvailable}
 								gettingCurrentLocation={gettingCurrentLocation}
 								showLocationModal={showLocationModal}
+								legendItems={legendItems}
 								selectedLocationCoord={{
 									lat: selectedAddressInfo.lat,
 									lng: selectedAddressInfo.lng,

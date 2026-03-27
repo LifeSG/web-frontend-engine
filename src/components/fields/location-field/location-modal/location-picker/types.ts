@@ -1,4 +1,4 @@
-import { TPanelInputMode } from "../..";
+import { ILegendItem, TPanelInputMode } from "../..";
 import { ILocationCoord } from "../../types";
 
 export interface IMapPin extends ILocationCoord {
@@ -33,4 +33,5 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 	selectablePins: IMapPin[];
 	pinsOnlyIndicateCurrentLocation?: boolean | undefined;
 	currentLocation?: ILocationCoord | undefined;
+	legendItems?: ILegendItem[] | undefined;
 }

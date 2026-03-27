@@ -1,21 +1,18 @@
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Typography } from "@lifesg/react-design-system";
 import { CloseButton, LegendContent, LegendHeader, LegendItem, LegendWrapper } from "./legend.styles";
-import { PinFillIcon } from "@lifesg/react-icons";
-
-const LEGEND_ITEMS = [
-	{ id: "lift-fault", icons: require("./lift.png"), label: "Lift fault" },
-	{ id: "renovation-1", icons: require("./lift.png"), label: "Renovation work" },
-	// { id: "renovation-2", label: "Renovation Work Work Work Work" },
-	// { id: "renovation-3", label: "Renovation Work Work Work Work" },
-	// { id: "renovation-4", label: "Renovation Work Work Work Work" },
-];
+import { ILegendItem } from "../../../types";
 
 interface ILegendProps {
 	onClose?: () => void;
+	items?: ILegendItem[] | undefined;
 }
 
-export const Legend = ({ onClose }: ILegendProps) => {
+export const Legend = ({ onClose, items = [] }: ILegendProps) => {
+	if (!items || items.length === 0) {
+		return null;
+	}
+
 	return (
 		<LegendWrapper>
 			<LegendHeader>
@@ -25,10 +22,9 @@ export const Legend = ({ onClose }: ILegendProps) => {
 				</CloseButton>
 			</LegendHeader>
 			<LegendContent>
-				{LEGEND_ITEMS.map((item) => (
+				{items.map((item) => (
 					<LegendItem key={item.id}>
-						{/* <PinFillIcon /> */}
-						<img src={item.icons} alt={`${item.label} icon`} />
+						{item.icon}
 						<Typography.BodySM>{item.label}</Typography.BodySM>
 					</LegendItem>
 				))}
