@@ -1,9 +1,8 @@
-import { FileUpload as DSFileUpload, FileItemProps } from "@lifesg/react-design-system/file-upload";
+import { FileItemProps, FileUpload as DSFileUpload } from "@lifesg/react-design-system/file-upload";
 import xor from "lodash/xor";
 import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
-import { IGenericFieldProps } from "..";
 import { FileHelper } from "../../../utils";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { IYupValidationRule } from "../../frontend-engine";
@@ -18,6 +17,7 @@ import {
 	IFileUploadValue,
 	TFileUploadErrorObject,
 } from "./types";
+import { IGenericFieldProps } from "../types";
 
 // lazy load to fix next.js SSR errors
 const FileUploadManager = lazy(() => import("./file-upload-manager"));
@@ -40,6 +40,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 			uploadOnAddingFile,
 			validation,
 			warning: schemaWarning,
+			customLabels,
 			...otherSchema
 		},
 		warning,
@@ -338,6 +339,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 				onDelete={handleDelete}
 				title={renderHtmlText(label)}
 				warning={renderHtmlText(warning || schemaWarning)}
+				customLabels={customLabels}
 			/>
 		</>
 	);
