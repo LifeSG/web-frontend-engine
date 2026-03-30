@@ -1,6 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { InputRangeProp } from "@lifesg/react-design-system/input-range-select";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
@@ -30,6 +30,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	const [toStateValue, setToStateValue] = useState<string>(value.from || "");
 	const [fromStateValue, setFromStateValue] = useState<string>(value.to || "");
 	const { setFieldValidationConfig } = useValidationConfig();
+	const skipNextBlurRef = useRef(false);
 
 	// =============================================================================
 	// EFFECTS
@@ -90,10 +91,17 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 		if (option.from === undefined && option.to === undefined)
 			onChange({ target: { value: { from: undefined, to: undefined } } });
 		if (option.from) onChange({ target: { value: { from: option.from.value, to: undefined } } });
-		if (option.to) onChange({ target: { value: { to: option.to.value, from: fromStateValue } } });
+		if (option.to) {
+			skipNextBlurRef.current = true;
+			onChange({ target: { value: { to: option.to.value, from: fromStateValue } } });
+		}
 	};
 
 	const handleBlur = () => {
+		if (skipNextBlurRef.current) {
+			skipNextBlurRef.current = false;
+			return;
+		}
 		if (!value.from || !value.to) {
 			onChange({ target: { value: { from: undefined, to: undefined } } });
 		}

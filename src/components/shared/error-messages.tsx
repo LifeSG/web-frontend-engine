@@ -59,6 +59,16 @@ export const ERROR_MESSAGES = {
 		INVALID: "Invalid input",
 		UNSUPPORTED: "This component is not supported by the engine.",
 	},
+	OTP_VERIFICATION: {
+		EMAIL_VERIFICATION_REQUIRED: "Please verify your email.",
+		PHONE_VERIFICATION_REQUIRED: "Please verify your contact number.",
+		OTP_REQUIRED: "OTP is required.",
+		INVALID_EMAIL: "Enter a valid email address.",
+		INVALID_PHONE: "Enter a valid contact number.",
+		INVALID_OTP: "Wrong OTP. Please try again.",
+		SEND_OTP_FAILED: "Failed to send OTP. Please try again.",
+		OTP_VERIFICATION_FAILED: "Something went wrong. Please request another OTP.",
+	},
 	UPLOAD: (unit = "file", unitPlural = `${unit}s`) => ({
 		REQUIRED: `Upload at least 1 ${unit}.`,
 		MAX_FILES: (max: number) =>
