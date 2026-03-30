@@ -1,5 +1,5 @@
 import isEqual from "lodash/isEqual";
-import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { ForwardedRef, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useFormState } from "react-hook-form";
 import { useCustomComponents, useFormSchema, usePrevious } from "../../../utils/hooks";
 import { FrontendEngine, TErrorPayload } from "../../frontend-engine";
@@ -21,6 +21,7 @@ const Component = (
 	// =============================================================================
 	const formRef = useRef<IFrontendEngineRef>(null);
 	const errorRef = useRef<TErrorPayload | undefined>(undefined);
+	const containerRef = useRef<HTMLDivElement>(null);
 	const { customComponents } = useCustomComponents();
 	const [sectionValues, setSectionValues] = useState<TFrontendEngineValues>({});
 	const [defaultValues, setDefaultValues] = useState<TFrontendEngineValues>();
@@ -59,17 +60,7 @@ const Component = (
 
 	useEffect(() => {
 		if (isSubmitting) {
-			const handleValidation = async () => {
-				// Validate child field rules
-				await formRef.current?.validate();
-
-				// Re-apply uniqueness errors after validate() clears them
-				if (errorRef.current) {
-					formRef.current?.setErrors(errorRef.current);
-				}
-			};
-
-			handleValidation();
+			formRef.current?.validate();
 		}
 	}, [isSubmitting]);
 
@@ -81,6 +72,17 @@ const Component = (
 			formRef.current?.clearErrors();
 		}
 	}, [error]);
+
+	/** Re-apply unique errors after blur, as RHF clears externally injected errors */
+	const handleBlurCapture = useCallback(() => {
+		if (errorRef.current) {
+			setTimeout(() => {
+				if (errorRef.current) {
+					formRef.current?.setErrors(errorRef.current);
+				}
+			}, 0);
+		}
+	}, []);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -97,20 +99,22 @@ const Component = (
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<FrontendEngine
-			ref={formRef}
-			data={{
-				sections: { section: { uiType: "section", children: schema } },
-				defaultValues,
-				restoreMode,
-				revalidationMode,
-				validationMode: validationMode ?? "onSubmit", // use onSubmit to prevent blur from clearing injected errors from `unique` validation
-				stripUnknown,
-			}}
-			onValueChange={handleChange}
-			wrapInForm={false}
-			components={customComponents}
-		/>
+		<div ref={containerRef} onBlurCapture={handleBlurCapture}>
+			<FrontendEngine
+				ref={formRef}
+				data={{
+					sections: { section: { uiType: "section", children: schema } },
+					defaultValues,
+					restoreMode,
+					revalidationMode,
+					validationMode,
+					stripUnknown,
+				}}
+				onValueChange={handleChange}
+				wrapInForm={false}
+				components={customComponents}
+			/>
+		</div>
 	);
 };
 
