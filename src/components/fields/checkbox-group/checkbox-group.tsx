@@ -122,6 +122,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 							disabled={disabled ?? option.disabled}
 							name={checkboxId}
 							value={option.value}
+							focusableWhenDisabled={disabled}
 							checked={isCheckboxChecked(option.value)}
 							onChange={() => handleChange(option.value)}
 						/>
