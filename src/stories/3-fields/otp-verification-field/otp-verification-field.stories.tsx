@@ -55,6 +55,13 @@ const meta: Meta = {
 		request: {
 			description: `Configuration for the Send OTP API endpoint.
 
+\`\`\`ts
+{
+  endpoint: { url: string };
+  placeholder?: string;
+}
+\`\`\`
+
 **Request body** (\`POST request.endpoint.url\`):
 - \`type\` — \`"phone-number"\` or \`"email"\`
 - \`phoneNo\` — present when type is \`phone-number\`; includes country code (e.g. \`+6591234567\`)
@@ -69,12 +76,21 @@ const meta: Meta = {
 - \`message\` — optional; displayed to the user as the field error message`,
 			table: {
 				type: {
-					summary: "{ endpoint: { url: string } }",
+					summary: "{ endpoint: { url: string }; placeholder?: string }",
 				},
 			},
 		},
 		verification: {
 			description: `Configuration for the Verify OTP API endpoint and verification step display.
+
+\`\`\`ts
+{
+  endpoint: { url: string };
+  showThumbnail?: boolean;
+  title?: string;
+  message?: string;
+}
+\`\`\`
 
 **Request body** (\`POST verification.endpoint.url\`):
 - \`transactionId\` — value returned by the Send OTP response
@@ -124,13 +140,6 @@ const meta: Meta = {
 				defaultValue: { summary: "60" },
 			},
 			control: { type: "number" },
-		},
-		sendOtpPlaceholder: {
-			description: "Placeholder text for the contact input (phone number or email)",
-			table: {
-				type: { summary: "string" },
-			},
-			control: { type: "text" },
 		},
 		prefixSeparator: {
 			description:
@@ -338,14 +347,13 @@ WithPlaceholder.args = {
 	uiType: "otp-verification-field",
 	type: "phone-number",
 	label: "Mobile Number Verification",
-	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	request: { endpoint: { url: MOCK_SEND_OTP_URL }, placeholder: "Enter your mobile number" },
 	verification: {
 		endpoint: { url: MOCK_VERIFY_OTP_URL },
 		showThumbnail: true,
 		title: "Verify your mobile number",
 		message: "Enter the OTP sent to your mobile number to verify.",
 	},
-	sendOtpPlaceholder: "Enter your mobile number",
 	validation: [{ "otp-type": "phone-number" }],
 };
 WithPlaceholder.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];

@@ -24,6 +24,7 @@ export interface IOtpVerificationFieldEndpoint {
 
 export interface IOtpVerificationFieldRequest {
 	endpoint: IOtpVerificationFieldEndpoint;
+	placeholder?: string | undefined;
 }
 
 export interface IOtpVerificationFieldVerification {
@@ -44,7 +45,6 @@ export interface IOtpVerificationFieldSchema<V = undefined>
 	className?: string | undefined;
 	prefixSeparator?: string | undefined;
 	verifyOtpCountdownTimer?: number | undefined;
-	sendOtpPlaceholder?: string | undefined;
 }
 
 export interface IOtpVerificationValue {

@@ -44,6 +44,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	const [otpPrefix, setOtpPrefix] = useState<string | undefined>(value?.otpPrefix);
 	const transactionIdRef = useRef<string | undefined>(value?.transactionId);
 	const sentOtpAtSubmitCountRef = useRef<number>(-1);
+	const contactChangedAtSubmitCountRef = useRef<number>(-1);
 
 	const otpState: TOtpVerificationState = value?.state || "default";
 
@@ -171,6 +172,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handleEmailChange = (input: string): void => {
+		contactChangedAtSubmitCountRef.current = submitCount;
 		onChange({
 			target: {
 				value: {
@@ -182,6 +184,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handlePhoneNumberChange = (val: PhoneNumberInputValue): void => {
+		contactChangedAtSubmitCountRef.current = submitCount;
 		let finalContact = val.number;
 		// if number is empty we should just pass an empty string so required validation can kick in natively if needed
 		if (!val.number) {
@@ -198,6 +201,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const handleOtpChange = (val: string): void => {
+		clearErrors(id);
 		setOtpCode(val);
 	};
 
@@ -247,7 +251,9 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		if (isSendError) return error?.message;
 
 		const isOtpRequiredOnSubmit =
-			formState.isSubmitted && error?.type === EOtpVerificationErrorType.IS_OTP_VERIFIED;
+			formState.isSubmitted &&
+			submitCount > contactChangedAtSubmitCountRef.current &&
+			error?.type === EOtpVerificationErrorType.IS_OTP_VERIFIED;
 		if (isOtpRequiredOnSubmit) return error?.message;
 
 		return;
@@ -283,6 +289,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 			...(prefixSeparator && { prefixSeparator }),
 		},
 		onOtpChange: handleOtpChange,
+		...(request.placeholder !== undefined && { sendOtpPlaceholder: request.placeholder }),
 		...(verifyOtpCountdownTimer !== undefined && { verifyOtpCountdownTimer }),
 		...(verification.showThumbnail !== undefined && { showVerifyOtpThumbnail: verification.showThumbnail }),
 		...(verification.title !== undefined && { verifyOtpTitle: verification.title }),
