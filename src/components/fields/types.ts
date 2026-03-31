@@ -9,6 +9,7 @@ import { IContactFieldSchema } from "./contact-field";
 import { IDateFieldSchema } from "./date-field";
 import { TDateRangeFieldSchema } from "./date-range-field";
 import { IESignatureFieldSchema } from "./e-signature-field/types";
+import { IOtpVerificationFieldSchema } from "./otp-verification-field";
 import { IErrorFieldSchema } from "./error-field";
 import { IFileUploadSchema, TFileUploadEvents } from "./file-upload";
 import { THiddenFieldSchema } from "./hidden-field";
@@ -57,6 +58,7 @@ export enum EFieldType {
 	"NESTED-MULTI-SELECT" = "NestedMultiSelect",
 	"RANGE-SELECT" = "RangeSelect",
 	"NUMERIC-FIELD" = "TextField",
+	"OTP-VERIFICATION-FIELD" = "OtpVerificationField",
 	RADIO = "RadioButtonGroup",
 	RESET = "ResetButton",
 	SELECT = "Select",
@@ -91,6 +93,7 @@ export type TFieldSchema<V = undefined, C = undefined> =
 	| IRangeSelectSchema
 	| INestedMultiSelectSchema<V>
 	| INumericFieldSchema<V>
+	| IOtpVerificationFieldSchema<V>
 	| IResetButtonSchema
 	| ISelectSchema<V>
 	| ISelectHistogramSchema<V>
