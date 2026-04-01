@@ -195,7 +195,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				{customOptions?.styleType === "toggle" ? renderToggles() : renderCheckboxes()}
+				<div role="group"> {customOptions?.styleType === "toggle" ? renderToggles() : renderCheckboxes()}</div>
 			</Form.CustomField>
 			<Warning id={id} message={warning} />
 		</>
