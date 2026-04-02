@@ -123,14 +123,26 @@ describe("radio toggle button", () => {
 		expect(getRadioButtonB()).toBeDisabled();
 	});
 
-	it("should be disabled if configured for component", async () => {
+	it("should be aria-disabled if configured for component", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getRadioButtonA()).toBeDisabled();
-		expect(getRadioButtonB()).toBeDisabled();
+		expect(getRadioButtonA()).not.toBeDisabled();
+		expect(getRadioButtonB()).not.toBeDisabled();
+
+		expect(getRadioButtonA()).toHaveAttribute("aria-disabled", "true");
+		expect(getRadioButtonB()).toHaveAttribute("aria-disabled", "true");
+
+		expect(getRadioButtonA()).toHaveAttribute("tabindex", "0");
+		expect(getRadioButtonB()).toHaveAttribute("tabindex", "0");
+
+		fireEvent.click(getRadioButtonA());
+		fireEvent.click(getRadioButtonB());
+
+		expect(getRadioButtonA()).not.toBeChecked();
+		expect(getRadioButtonB()).not.toBeChecked();
 	});
 
-	it("should be disabled if configured for both component/options", async () => {
+	it("should be aria-disabled if configured for both component/options", async () => {
 		renderComponent({
 			options: [
 				{ label: "A", value: "Apple", disabled: false },
@@ -139,8 +151,20 @@ describe("radio toggle button", () => {
 			disabled: true,
 		});
 
-		expect(getRadioButtonA()).toBeDisabled();
-		expect(getRadioButtonB()).toBeDisabled();
+		expect(getRadioButtonA()).not.toBeDisabled();
+		expect(getRadioButtonB()).not.toBeDisabled();
+
+		expect(getRadioButtonA()).toHaveAttribute("aria-disabled", "true");
+		expect(getRadioButtonB()).toHaveAttribute("aria-disabled", "true");
+
+		expect(getRadioButtonA()).toHaveAttribute("tabindex", "0");
+		expect(getRadioButtonB()).toHaveAttribute("tabindex", "0");
+
+		fireEvent.click(getRadioButtonA());
+		fireEvent.click(getRadioButtonB());
+
+		expect(getRadioButtonA()).not.toBeChecked();
+		expect(getRadioButtonB()).not.toBeChecked();
 	});
 
 	describe("update options through schema", () => {
