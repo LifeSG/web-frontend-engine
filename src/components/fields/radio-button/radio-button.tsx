@@ -36,9 +36,6 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const { setFieldValidationConfig } = useValidationConfig();
-	const titleId = `${id}-label`;
-	const subTitleId = `${id}-label-subtitle`;
-	const errorMessageId = `${id}-error-message`;
 
 	// =============================================================================
 	// EFFECTS
@@ -77,10 +74,6 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		return `${id}-${unique}`;
 	};
 
-	const getLabelledBy = () => {
-		return `${titleId} ${subTitleId}`;
-	};
-
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -106,9 +99,6 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
 							aria-disabled={disabled ?? option.disabled}
-							aria-labelledby={getLabelledBy()}
-							aria-errormessage={error ? errorMessageId : undefined}
-							aria-invalid={!!error}
 							focusableWhenDisabled={disabled}
 							name={id}
 							value={option.value}
@@ -145,9 +135,6 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								aria-disabled={disabled ?? option.disabled}
-								aria-labelledby={getLabelledBy()}
-								aria-errormessage={error ? errorMessageId : undefined}
-								aria-invalid={!!error}
 								focusableWhenDisabled={disabled}
 								name={id}
 								indicator={customOptions?.indicator}
@@ -193,9 +180,6 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								aria-disabled={disabled ?? option.disabled}
-								aria-labelledby={getLabelledBy()}
-								aria-errormessage={error ? errorMessageId : undefined}
-								aria-invalid={!!error}
 								focusableWhenDisabled={disabled}
 								name={id}
 								selected={isRadioButtonChecked(option.value)}
