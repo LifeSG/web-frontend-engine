@@ -29,9 +29,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const { setFieldValidationConfig } = useValidationConfig();
-	const titleId = `${id}-label`;
-	const subTitleId = `${id}-label-subtitle`;
-	const errorMessageId = `${id}-error-message`;
 
 	// =============================================================================
 	// EFFECTS
@@ -96,10 +93,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 		return `${id}-${unique}`;
 	};
 
-	const getLabelledBy = () => {
-		return `${titleId} ${subTitleId}`;
-	};
-
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
@@ -127,9 +120,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 							id={checkboxId}
 							className={className}
 							disabled={disabled ?? option.disabled}
-							aria-labelledby={getLabelledBy()}
-							aria-errormessage={error ? errorMessageId : undefined}
-							aria-invalid={!!error}
 							name={checkboxId}
 							value={option.value}
 							focusableWhenDisabled={disabled}
@@ -164,9 +154,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								id={checkboxId}
 								className={className}
 								disabled={disabled ?? option.disabled}
-								aria-labelledby={getLabelledBy()}
-								aria-errormessage={error ? errorMessageId : undefined}
-								aria-invalid={!!error}
 								name={checkboxId}
 								indicator={customOptions?.indicator}
 								styleType={customOptions?.border === false ? "no-border" : "default"}
