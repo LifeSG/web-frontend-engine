@@ -129,20 +129,26 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
-	it("should be disabled if configured", async () => {
+	it("should be aria-disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
 		const checkboxes = getCheckboxes();
+
 		checkboxes.forEach((checkbox) => {
-			expect(checkbox).toBeDisabled();
+			expect(checkbox).not.toBeDisabled();
+			expect(checkbox).toHaveAttribute("aria-disabled", "true");
+			expect(checkbox).toHaveAttribute("tabindex", "0");
 		});
+
+		fireEvent.click(checkboxes[0]);
+		fireEvent.click(checkboxes[1]);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
-	it("should be disabled if configured for both component/options", async () => {
+	it("should be aria-disabled if configured for both component/options", async () => {
 		renderComponent({
 			options: [
 				{ label: "A", value: "Apple", disabled: false },
@@ -151,12 +157,18 @@ describe(UI_TYPE, () => {
 			disabled: true,
 		});
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
 		const checkboxes = getCheckboxes();
+
 		checkboxes.forEach((checkbox) => {
-			expect(checkbox).toBeDisabled();
+			expect(checkbox).not.toBeDisabled();
+			expect(checkbox).toHaveAttribute("aria-disabled", "true");
+			expect(checkbox).toHaveAttribute("tabindex", "0");
 		});
+
+		fireEvent.click(checkboxes[0]);
+		fireEvent.click(checkboxes[1]);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});

@@ -122,6 +122,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 							disabled={disabled ?? option.disabled}
 							name={checkboxId}
 							value={option.value}
+							focusableWhenDisabled={disabled}
 							checked={isCheckboxChecked(option.value)}
 							onChange={() => handleChange(option.value)}
 						/>
@@ -153,6 +154,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								id={checkboxId}
 								className={className}
 								disabled={disabled ?? option.disabled}
+								focusableWhenDisabled={disabled}
 								name={checkboxId}
 								indicator={customOptions?.indicator}
 								styleType={customOptions?.border === false ? "no-border" : "default"}
@@ -181,7 +183,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				{customOptions?.styleType === "toggle" ? renderToggles() : renderCheckboxes()}
+				<div role="group"> {customOptions?.styleType === "toggle" ? renderToggles() : renderCheckboxes()}</div>
 			</Form.CustomField>
 			<Warning id={id} message={warning} />
 		</>
