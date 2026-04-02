@@ -154,6 +154,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								id={checkboxId}
 								className={className}
 								disabled={disabled ?? option.disabled}
+								focusableWhenDisabled={disabled}
 								name={checkboxId}
 								indicator={customOptions?.indicator}
 								styleType={customOptions?.border === false ? "no-border" : "default"}
