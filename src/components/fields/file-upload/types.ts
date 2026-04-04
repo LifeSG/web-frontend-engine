@@ -24,6 +24,7 @@ export interface IFileUploadSchema<V = undefined>
 	className?: string | undefined;
 	description?: string | undefined;
 	label: string;
+	customLabels?: TFileUploadCustomLabels | undefined;
 	hideThumbnail?: boolean | undefined;
 	uploadOnAddingFile: {
 		type: TUploadType;
@@ -85,6 +86,9 @@ export type TUploadErrorDetail = {
 	fileId: string;
 	errorData: unknown;
 };
+
+// Custom labels type for FileUpload
+export type TFileUploadCustomLabels = FileUploadProps extends { customLabels?: infer T } ? T : never;
 
 // =============================================================================
 // EVENTS (fired from FEE)
