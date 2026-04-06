@@ -51,6 +51,6 @@ export interface IOtpVerificationValue {
 	contact: string;
 	prefix?: string | undefined;
 	type: TOtpVerificationType;
-	state: "sent" | "verified";
+	state: "sent" | "verified" | "default";
 	additionalData?: unknown;
 }

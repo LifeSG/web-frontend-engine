@@ -1,12 +1,48 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Decorator, Meta } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import axios from "axios";
-import { useEffect } from "react";
-import { IOtpVerificationFieldSchema } from "../../../components/fields";
-import { CommonFieldStoryProps, DefaultStoryTemplate, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
+import { IOtpVerificationFieldSchema, IOtpVerificationValue } from "../../../components/fields";
+import {
+	CommonFieldStoryProps,
+	DefaultStoryTemplate,
+	OVERRIDES_ARG_TYPE,
+	OverrideStoryTemplate,
+	ResetStoryTemplate,
+	WarningStoryTemplate,
+} from "../../common";
 
 const meta: Meta = {
 	title: "Field/OtpVerificationField",
+	beforeEach: async (context) => {
+		const handlers = context.parameters.otpMockHandlers as Record<string, unknown> | undefined;
+
+		if (!handlers) {
+			axios.defaults.adapter = DEFAULT_AXIOS_ADAPTER;
+			return () => {
+				axios.defaults.adapter = DEFAULT_AXIOS_ADAPTER;
+			};
+		}
+
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		axios.defaults.adapter = async (config: any) => {
+			await new Promise((resolve) => setTimeout(resolve, 400));
+			const match = Object.keys(handlers).find((key) => config.url?.includes(key));
+			if (match) {
+				if (handlers[match] === null) {
+					throw Object.assign(new Error("Request failed with status code 500"), {
+						config,
+						response: { status: 500, data: { message: "Internal server error" }, headers: {}, config },
+					});
+				}
+				return { data: handlers[match], status: 200, statusText: "OK", headers: {}, config, request: {} };
+			}
+			throw Object.assign(new Error(`No mock registered for: ${config.url}`), { config });
+		};
+
+		return () => {
+			axios.defaults.adapter = DEFAULT_AXIOS_ADAPTER;
+		};
+	},
 	parameters: {
 		docs: {
 			page: () => (
@@ -173,36 +209,7 @@ const MOCK_SEND_ERROR: Record<string, unknown> = {
 };
 const MOCK_VERIFY_ERROR: Record<string, unknown> = { [MOCK_VERIFY_OTP_URL]: null };
 
-/**
- * Storybook decorator that intercepts axios requests and returns mocked responses.
- * Matches URLs by substring. null values simulate a 500 server error.
- */
-const withMockOtpApi =
-	(handlers: Record<string, unknown>): Decorator =>
-	(Story) => {
-		useEffect(() => {
-			const originalAdapter = axios.defaults.adapter;
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			axios.defaults.adapter = async (config: any) => {
-				await new Promise((resolve) => setTimeout(resolve, 400));
-				const match = Object.keys(handlers).find((key) => config.url?.includes(key));
-				if (match) {
-					if (handlers[match] === null) {
-						throw Object.assign(new Error("Request failed with status code 500"), {
-							config,
-							response: { status: 500, data: { message: "Internal server error" }, headers: {}, config },
-						});
-					}
-					return { data: handlers[match], status: 200, statusText: "OK", headers: {}, config, request: {} };
-				}
-				throw Object.assign(new Error(`No mock registered for: ${config.url}`), { config });
-			};
-			return () => {
-				axios.defaults.adapter = originalAdapter;
-			};
-		}, []);
-		return <Story />;
-	};
+const DEFAULT_AXIOS_ADAPTER = axios.defaults.adapter;
 
 // =============================================================================
 // BASIC TYPES
@@ -221,7 +228,7 @@ PhoneNumber.args = {
 	},
 	validation: [{ "otp-type": "phone-number" }, { required: true }],
 };
-PhoneNumber.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
+PhoneNumber.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
 
 export const Email = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-email").bind({});
 Email.args = {
@@ -237,7 +244,7 @@ Email.args = {
 	},
 	validation: [{ "otp-type": "email" }, { required: true }],
 };
-Email.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
+Email.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
 
 // =============================================================================
 // ERROR STATES
@@ -258,7 +265,7 @@ SendOtpFailed.args = {
 	},
 	validation: [{ "otp-type": "phone-number" }],
 };
-SendOtpFailed.decorators = [withMockOtpApi({ ...MOCK_SEND_ERROR, ...MOCK_VERIFY_OK })];
+SendOtpFailed.parameters = { otpMockHandlers: { ...MOCK_SEND_ERROR, ...MOCK_VERIFY_OK } };
 
 /** Simulates the verify OTP API returning a server error (send OTP succeeds). */
 export const VerifyOtpFailed = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-verify-failed").bind({});
@@ -275,10 +282,34 @@ VerifyOtpFailed.args = {
 	},
 	validation: [{ "otp-type": "phone-number" }],
 };
-VerifyOtpFailed.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_ERROR })];
+VerifyOtpFailed.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_ERROR } };
 
 // =============================================================================
-// OTP DISPLAY OPTIONS
+// SHARED DATA
+// =============================================================================
+
+const OTP_STORY_BASE_ARGS: IOtpVerificationFieldSchema = {
+	uiType: "otp-verification-field",
+	type: "phone-number",
+	label: "Mobile Number Verification",
+	request: { endpoint: { url: MOCK_SEND_OTP_URL } },
+	verification: {
+		endpoint: { url: MOCK_VERIFY_OTP_URL },
+		showThumbnail: true,
+		title: "Verify your mobile number",
+		message: "Enter the OTP sent to your mobile number to verify.",
+	},
+	validation: [{ "otp-type": "phone-number" }],
+};
+
+const OTP_VERIFIED_DEFAULT_VALUE: IOtpVerificationValue = {
+	contact: "91234567",
+	type: "phone-number",
+	state: "verified",
+};
+
+// =============================================================================
+// DISPLAY OPTIONS
 // =============================================================================
 
 /** The backend returns an OTP prefix (e.g. "SG-") when `withPrefix: true` is sent in the request body.
@@ -298,7 +329,7 @@ WithPrefix.args = {
 	withPrefix: true,
 	validation: [{ "otp-type": "phone-number" }],
 };
-WithPrefix.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
+WithPrefix.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
 
 /** Custom separator between the OTP prefix and the OTP input. Defaults to "-" when not set. */
 export const WithPrefixSeparator = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-with-prefix-separator").bind(
@@ -319,7 +350,7 @@ WithPrefixSeparator.args = {
 	prefixSeparator: ":",
 	validation: [{ "otp-type": "phone-number" }],
 };
-WithPrefixSeparator.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
+WithPrefixSeparator.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
 
 /** Shows the OTP verification step without a thumbnail illustration (default behaviour). */
 export const WithoutThumbnail = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-without-thumbnail").bind({});
@@ -335,7 +366,7 @@ WithoutThumbnail.args = {
 	},
 	validation: [{ "otp-type": "phone-number" }],
 };
-WithoutThumbnail.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
+WithoutThumbnail.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
 
 // =============================================================================
 // CUSTOMISATION
@@ -356,7 +387,7 @@ WithPlaceholder.args = {
 	},
 	validation: [{ "otp-type": "phone-number" }],
 };
-WithPlaceholder.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
+WithPlaceholder.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
 
 /** Custom resend countdown timer duration. */
 export const CustomTimer = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-custom-timer").bind({});
@@ -373,7 +404,44 @@ CustomTimer.args = {
 	validation: [{ "otp-type": "phone-number" }],
 	verifyOtpCountdownTimer: 30,
 };
-CustomTimer.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
+CustomTimer.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
+
+export const LabelCustomisation = DefaultStoryTemplate<IOtpVerificationFieldSchema>("otp-label-customisation").bind({});
+LabelCustomisation.args = {
+	...OTP_STORY_BASE_ARGS,
+	label: {
+		mainLabel: "Mobile Number Verification <strong>with bold text</strong>",
+		subLabel: "Choose how you want customers to complete <strong>OTP verification</strong>.",
+		hint: { content: "OTP is sent by SMS<br>You can customise the instructional copy here" },
+	},
+};
+LabelCustomisation.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
+
+export const Warning = WarningStoryTemplate<IOtpVerificationFieldSchema>("otp-warning").bind({});
+Warning.args = {
+	...OTP_STORY_BASE_ARGS,
+};
+Warning.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
+
+export const DefaultValue = DefaultStoryTemplate<
+	IOtpVerificationFieldSchema<IOtpVerificationValue>,
+	IOtpVerificationValue
+>("otp-default-value").bind({});
+DefaultValue.args = {
+	...OTP_STORY_BASE_ARGS,
+	defaultValues: OTP_VERIFIED_DEFAULT_VALUE,
+};
+DefaultValue.argTypes = {
+	defaultValues: {
+		description: "Default verified OTP value for the field, declared outside `sections`.",
+		table: {
+			type: {
+				summary: "IOtpVerificationValue",
+			},
+		},
+	},
+};
+DefaultValue.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
 
 // =============================================================================
 // STATES
@@ -401,6 +469,32 @@ ReadOnly.args = {
 	readOnly: true,
 };
 
+export const Reset = ResetStoryTemplate<IOtpVerificationFieldSchema>("otp-reset").bind({});
+Reset.args = {
+	...OTP_STORY_BASE_ARGS,
+};
+Reset.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
+
+export const ResetWithDefaultValues = ResetStoryTemplate<
+	IOtpVerificationFieldSchema<IOtpVerificationValue>,
+	IOtpVerificationValue
+>("otp-reset-default-values").bind({});
+ResetWithDefaultValues.args = {
+	...OTP_STORY_BASE_ARGS,
+	defaultValues: OTP_VERIFIED_DEFAULT_VALUE,
+};
+ResetWithDefaultValues.argTypes = {
+	defaultValues: {
+		description: "Reset restores the field to this verified OTP value instead of an empty state.",
+		table: {
+			type: {
+				summary: "IOtpVerificationValue",
+			},
+		},
+	},
+};
+ResetWithDefaultValues.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };
+
 // =============================================================================
 // OVERRIDES
 // =============================================================================
@@ -427,4 +521,4 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
-Overrides.decorators = [withMockOtpApi({ ...MOCK_SEND_OK, ...MOCK_VERIFY_OK })];
+Overrides.parameters = { otpMockHandlers: { ...MOCK_SEND_OK, ...MOCK_VERIFY_OK } };

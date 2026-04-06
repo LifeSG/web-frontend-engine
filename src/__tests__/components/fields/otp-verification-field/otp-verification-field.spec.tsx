@@ -1,20 +1,24 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render as rtlRender, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
-import { IFrontendEngineData } from "../../../../components/frontend-engine";
-import { IOtpVerificationFieldSchema } from "../../../../components/fields";
+import { IOtpVerificationFieldSchema, IOtpVerificationValue } from "../../../../components/fields";
+import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { AxiosApiClient } from "../../../../utils";
 import {
 	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
 	getField,
+	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
+import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -22,6 +26,10 @@ const UI_TYPE = "otp-verification-field";
 const COMPONENT_LABEL = "OTP Verification";
 const SEND_OTP_URL = "https://api.example.com/send-otp";
 const VERIFY_OTP_URL = "https://api.example.com/verify-otp";
+const MOCK_VALID_PHONE_NO = "86754231";
+const MOCK_VALID_EMAIL = "test@example.com";
+const MOCK_TXN_ID = "txn-123";
+const MOCK_OTP = "123456";
 
 const BASE_FIELD = {
 	label: COMPONENT_LABEL,
@@ -36,7 +44,7 @@ const buildSchema = (fieldOverrides: Partial<IOtpVerificationFieldSchema>): IFro
 		section: {
 			uiType: "section",
 			children: {
-				[COMPONENT_ID]: { ...BASE_FIELD, ...fieldOverrides },
+				[COMPONENT_ID]: { ...BASE_FIELD, ...fieldOverrides } as IOtpVerificationFieldSchema,
 				...getSubmitButtonProps(),
 				...getResetButtonProps(),
 			},
@@ -53,7 +61,7 @@ const renderComponent = (
 	merge(json, {
 		sections: { section: { children: { [COMPONENT_ID]: overrideField } } },
 	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+	return rtlRender(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
 const getPhoneNoInput = () => getField("textbox", "Enter phone number");
@@ -61,6 +69,20 @@ const getEmailInput = () => getField("textbox", COMPONENT_LABEL);
 const getOtpInput = () => getField("spinbutton", "Enter OTP code");
 const getSendOtpButton = () => getField("button", { name: "Send OTP" });
 const getVerifyOtpButton = () => getField("button", { name: "Verify" });
+
+const VERIFIED_PHONE_DEFAULT_VALUE: IOtpVerificationValue = {
+	contact: MOCK_VALID_PHONE_NO,
+	type: "phone-number",
+	state: "verified",
+	additionalData: { token: "saved-token" },
+};
+
+const VERIFIED_EMAIL_DEFAULT_VALUE: IOtpVerificationValue = {
+	contact: MOCK_VALID_EMAIL,
+	type: "email",
+	state: "verified",
+	additionalData: { token: "saved-token" },
+};
 
 describe(UI_TYPE, () => {
 	afterEach(() => {
@@ -72,8 +94,14 @@ describe(UI_TYPE, () => {
 			type: "phone-number",
 			validation: [{ "otp-type": "phone-number" }, { required: true }],
 		});
-		const render = (overrideField?: TOverrideField<IOtpVerificationFieldSchema>, overrideSchema?: TOverrideSchema) =>
-			renderComponent(PHONE_SCHEMA, overrideField, overrideSchema);
+		const PHONE_OPTIONAL_SCHEMA = buildSchema({
+			type: "phone-number",
+			validation: [{ "otp-type": "phone-number" }],
+		});
+		const render = (
+			overrideField?: TOverrideField<IOtpVerificationFieldSchema>,
+			overrideSchema?: TOverrideSchema
+		) => renderComponent(PHONE_SCHEMA, overrideField, overrideSchema);
 
 		it("should render the phone number input", () => {
 			render();
@@ -219,6 +247,104 @@ describe(UI_TYPE, () => {
 			});
 			expect(SUBMIT_FN).not.toHaveBeenCalled();
 		});
+
+		describe("defaultValues", () => {
+			it("should support default verified phone OTP value", async () => {
+				render(undefined, { defaultValues: { [COMPONENT_ID]: VERIFIED_PHONE_DEFAULT_VALUE } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: VERIFIED_PHONE_DEFAULT_VALUE })
+				);
+			});
+		});
+
+		describe("reset", () => {
+			it("should clear phone OTP value on reset", async () => {
+				renderComponent(PHONE_OPTIONAL_SCHEMA);
+
+				fireEvent.change(getPhoneNoInput(), { target: { value: MOCK_VALID_PHONE_NO } });
+				fireEvent.click(getResetButton());
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(getPhoneNoInput()).toHaveValue("");
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			});
+
+			it("should revert to default verified phone OTP value on reset", async () => {
+				render(undefined, { defaultValues: { [COMPONENT_ID]: VERIFIED_PHONE_DEFAULT_VALUE } });
+
+				fireEvent.change(getPhoneNoInput(), { target: { value: "98765432" } });
+				fireEvent.click(getResetButton());
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: VERIFIED_PHONE_DEFAULT_VALUE })
+				);
+			});
+		});
+
+		describe("dirty state", () => {
+			let formIsDirty: boolean;
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				formIsDirty = ref.current.isDirty;
+			};
+
+			beforeEach(() => {
+				formIsDirty = undefined;
+			});
+
+			it("should mount without setting field state as dirty", () => {
+				rtlRender(<FrontendEngineWithCustomButton data={PHONE_SCHEMA} onClick={handleClick} />);
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(false);
+			});
+
+			it("should set form state as dirty if user modifies the phone OTP field", () => {
+				rtlRender(<FrontendEngineWithCustomButton data={PHONE_SCHEMA} onClick={handleClick} />);
+				fireEvent.change(getPhoneNoInput(), { target: { value: MOCK_VALID_PHONE_NO } });
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(true);
+			});
+
+			it("should support default verified value without setting form state as dirty", () => {
+				rtlRender(
+					<FrontendEngineWithCustomButton
+						data={{ ...PHONE_SCHEMA, defaultValues: { [COMPONENT_ID]: VERIFIED_PHONE_DEFAULT_VALUE } }}
+						onClick={handleClick}
+					/>
+				);
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(false);
+			});
+
+			it("should reset and revert phone OTP form dirty state to false", () => {
+				rtlRender(<FrontendEngineWithCustomButton data={PHONE_SCHEMA} onClick={handleClick} />);
+				fireEvent.change(getPhoneNoInput(), { target: { value: MOCK_VALID_PHONE_NO } });
+				fireEvent.click(getResetButton());
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(false);
+			});
+
+			it("should reset to default verified value without setting form state as dirty", () => {
+				rtlRender(
+					<FrontendEngineWithCustomButton
+						data={{ ...PHONE_SCHEMA, defaultValues: { [COMPONENT_ID]: VERIFIED_PHONE_DEFAULT_VALUE } }}
+						onClick={handleClick}
+					/>
+				);
+				fireEvent.change(getPhoneNoInput(), { target: { value: "98765432" } });
+				fireEvent.click(getResetButton());
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(false);
+			});
+		});
 	});
 
 	describe("email", () => {
@@ -226,8 +352,14 @@ describe(UI_TYPE, () => {
 			type: "email",
 			validation: [{ "otp-type": "email" }, { required: true }],
 		});
-		const render = (overrideField?: TOverrideField<IOtpVerificationFieldSchema>, overrideSchema?: TOverrideSchema) =>
-			renderComponent(EMAIL_SCHEMA, overrideField, overrideSchema);
+		const EMAIL_OPTIONAL_SCHEMA = buildSchema({
+			type: "email",
+			validation: [{ "otp-type": "email" }],
+		});
+		const render = (
+			overrideField?: TOverrideField<IOtpVerificationFieldSchema>,
+			overrideSchema?: TOverrideSchema
+		) => renderComponent(EMAIL_SCHEMA, overrideField, overrideSchema);
 
 		it("should render the email input", () => {
 			render();
@@ -373,10 +505,120 @@ describe(UI_TYPE, () => {
 			});
 			expect(SUBMIT_FN).not.toHaveBeenCalled();
 		});
+
+		describe("defaultValues", () => {
+			it("should support default verified email OTP value", async () => {
+				render(undefined, { defaultValues: { [COMPONENT_ID]: VERIFIED_EMAIL_DEFAULT_VALUE } });
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: VERIFIED_EMAIL_DEFAULT_VALUE })
+				);
+			});
+		});
+
+		describe("reset", () => {
+			it("should clear email OTP value on reset", async () => {
+				renderComponent(EMAIL_OPTIONAL_SCHEMA);
+
+				fireEvent.change(getEmailInput(), { target: { value: MOCK_VALID_EMAIL } });
+				fireEvent.click(getResetButton());
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(getEmailInput()).toHaveValue("");
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+			});
+
+			it("should revert to default verified email OTP value on reset", async () => {
+				render(undefined, { defaultValues: { [COMPONENT_ID]: VERIFIED_EMAIL_DEFAULT_VALUE } });
+
+				fireEvent.change(getEmailInput(), { target: { value: "updated@example.com" } });
+				fireEvent.click(getResetButton());
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({ [COMPONENT_ID]: VERIFIED_EMAIL_DEFAULT_VALUE })
+				);
+			});
+		});
+
+		describe("dirty state", () => {
+			let formIsDirty: boolean;
+			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				formIsDirty = ref.current.isDirty;
+			};
+
+			beforeEach(() => {
+				formIsDirty = undefined;
+			});
+
+			it("should mount without setting field state as dirty", () => {
+				rtlRender(<FrontendEngineWithCustomButton data={EMAIL_SCHEMA} onClick={handleClick} />);
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(false);
+			});
+
+			it("should set form state as dirty if user modifies the email OTP field", () => {
+				rtlRender(<FrontendEngineWithCustomButton data={EMAIL_SCHEMA} onClick={handleClick} />);
+				fireEvent.change(getEmailInput(), { target: { value: MOCK_VALID_EMAIL } });
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(true);
+			});
+
+			it("should support default verified value without setting form state as dirty", () => {
+				rtlRender(
+					<FrontendEngineWithCustomButton
+						data={{ ...EMAIL_SCHEMA, defaultValues: { [COMPONENT_ID]: VERIFIED_EMAIL_DEFAULT_VALUE } }}
+						onClick={handleClick}
+					/>
+				);
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(false);
+			});
+
+			it("should reset and revert email OTP form dirty state to false", () => {
+				rtlRender(<FrontendEngineWithCustomButton data={EMAIL_SCHEMA} onClick={handleClick} />);
+				fireEvent.change(getEmailInput(), { target: { value: MOCK_VALID_EMAIL } });
+				fireEvent.click(getResetButton());
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(false);
+			});
+
+			it("should reset to default verified value without setting form state as dirty", () => {
+				rtlRender(
+					<FrontendEngineWithCustomButton
+						data={{ ...EMAIL_SCHEMA, defaultValues: { [COMPONENT_ID]: VERIFIED_EMAIL_DEFAULT_VALUE } }}
+						onClick={handleClick}
+					/>
+				);
+				fireEvent.change(getEmailInput(), { target: { value: "updated@example.com" } });
+				fireEvent.click(getResetButton());
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(formIsDirty).toBe(false);
+			});
+		});
+	});
+
+	labelTestSuite((overrideField: unknown) =>
+		renderComponent(
+			buildSchema({
+				type: "phone-number",
+				validation: [{ "otp-type": "phone-number" }, { required: true }],
+			}),
+			overrideField as TOverrideField<IOtpVerificationFieldSchema>
+		)
+	);
+	warningTestSuite({
+		label: COMPONENT_LABEL,
+		uiType: UI_TYPE,
+		type: "phone-number",
+		request: { endpoint: { url: SEND_OTP_URL } },
+		verification: { endpoint: { url: VERIFY_OTP_URL } },
 	});
 });
-
-const MOCK_VALID_PHONE_NO = "86754231";
-const MOCK_VALID_EMAIL = "test@example.com";
-const MOCK_TXN_ID = "txn-123";
-const MOCK_OTP = "123456";

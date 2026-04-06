@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { AxiosApiClient, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { ERROR_MESSAGES } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { PhoneHelper } from "../contact-field/utils";
 import { IGenericFieldProps } from "../types";
 import {
@@ -28,6 +28,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		value,
 		formattedLabel,
 		onChange,
+		warning,
 		schema: {
 			validation,
 			request,
@@ -173,6 +174,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 
 	const handleEmailChange = (input: string): void => {
 		contactChangedAtSubmitCountRef.current = submitCount;
+		clearErrors(id);
 		onChange({
 			target: {
 				value: {
@@ -188,6 +190,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		let finalContact = val.number;
 		// if number is empty we should just pass an empty string so required validation can kick in natively if needed
 		if (!val.number) {
+			clearErrors(id);
 			finalContact = "";
 		}
 		onChange({
@@ -273,6 +276,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 	};
 
 	const commonProps = {
+		...otherSchema,
 		id,
 		"data-testid": TestHelper.generateId(id, "otp-verification-field"),
 		label: formattedLabel,
@@ -294,7 +298,6 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 		...(verification.showThumbnail !== undefined && { showVerifyOtpThumbnail: verification.showThumbnail }),
 		...(verification.title !== undefined && { verifyOtpTitle: verification.title }),
 		...(verification.message !== undefined && { verifyOtpMessage: verification.message }),
-		...otherSchema,
 	};
 
 	return (
@@ -315,6 +318,7 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 					fixedCountry={true}
 				/>
 			)}
+			<Warning id={id} message={warning} />
 		</>
 	);
 };
