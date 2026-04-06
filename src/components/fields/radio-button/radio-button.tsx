@@ -210,7 +210,9 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				<div role="group">{renderOptions()}</div>
+				<div role="radiogroup" tabIndex={0} aria-invalid={!!error?.message}>
+					{renderOptions()}
+				</div>
 			</Form.CustomField>
 			<Warning id={id} message={warning} />
 		</>
