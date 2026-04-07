@@ -187,10 +187,11 @@ export const OtpVerificationField = (props: IGenericFieldProps<IOtpVerificationF
 
 	const handlePhoneNumberChange = (val: PhoneNumberInputValue): void => {
 		contactChangedAtSubmitCountRef.current = submitCount;
+		clearErrors(id);
+
 		let finalContact = val.number;
 		// if number is empty we should just pass an empty string so required validation can kick in natively if needed
 		if (!val.number) {
-			clearErrors(id);
 			finalContact = "";
 		}
 		onChange({
