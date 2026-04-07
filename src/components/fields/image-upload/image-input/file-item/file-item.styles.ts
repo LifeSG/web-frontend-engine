@@ -144,4 +144,5 @@ export const DeleteButton = styled(IconButton)`
 
 export const ErrorCustomMutedThumbnailContainer = styled.div`
 	display: flex;
+	width: 100%;
 `;
