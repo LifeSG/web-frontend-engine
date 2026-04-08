@@ -46,7 +46,7 @@ const JSON_SCHEMA: IFrontendEngineData = {
 							{ label: "D", value: "Date" },
 						],
 					},
-					listStyleWidth: "40rem",
+					// listStyleWidth: "40rem",
 				},
 				...getSubmitButtonProps(),
 				...getResetButtonProps(),
@@ -81,7 +81,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 };
 
 const getComponent = (): HTMLElement => {
-	return screen.getByRole("button", { name: /Select/i });
+	return screen.getAllByRole("combobox", { name: /Select/i })[0];
 };
 
 const getRangeSelector = (): HTMLElement => {
@@ -120,7 +120,7 @@ describe(UI_TYPE, () => {
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValues } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(screen.getByTestId(COMPONENT_ID)).toHaveTextContent("AC");
+		expect(getRangeSelector()).toHaveTextContent("AC");
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
@@ -140,15 +140,15 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getComponent()).toHaveAttribute("disabled");
+		expect(getComponent()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should be able to support custom placeholder", () => {
 		const placeholders = { from: "ABC", to: "DEF" };
 		renderComponent({ placeholders });
 
-		expect(screen.getByText(placeholders.from)).toBeInTheDocument();
-		expect(screen.getByText(placeholders.to)).toBeInTheDocument();
+		expect(screen.getAllByText(placeholders.from)[0]).toBeInTheDocument();
+		expect(screen.getAllByText(placeholders.to)[0]).toBeInTheDocument();
 	});
 
 	it("should be able to select both options", async () => {
@@ -169,7 +169,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getComponent()));
 		await waitFor(() => fireEvent.click(getOptionA()));
-		fireEvent.mouseDown(document.body);
+		fireEvent.pointerDown(document.body);
 		await waitFor(() => fireEvent.click(getComponent()));
 		expect(queryByText(getRangeSelector(), "A")).toBeNull();
 

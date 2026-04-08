@@ -57,7 +57,7 @@ const renderComponent = (overrideField?: TOverrideField<ITimeFieldSchema>, overr
 };
 
 const getTimePicker = (): HTMLElement => {
-	return getField("textbox");
+	return getField("combobox");
 };
 
 const getMinuteButton = (): HTMLElement => {
@@ -69,7 +69,7 @@ const getHourButton = (): HTMLElement => {
 };
 
 const getConfirmButton = (): HTMLElement => {
-	return getField("button", "confirm selection");
+	return getField("button", "Done");
 };
 
 const pickValidTime = async () => {
@@ -110,7 +110,7 @@ describe(UI_TYPE, () => {
 	it("should be disabled if configured", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getTimePicker()).toBeDisabled();
+		expect(getTimePicker()).toHaveAttribute("aria-disabled", "true");
 	});
 
 	it("should be able to support custom placeholder", () => {
