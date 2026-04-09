@@ -850,3 +850,10 @@ RefreshLocationAndTriggerGetCurrentLocation.args = {
 	label: "Refresh current location and trigger get current location",
 	mapApi: defaultMapApi,
 };
+
+export const ListenersReady = Template("listeners-ready").bind({});
+ListenersReady.args = {
+	uiType: "location-field",
+	label: "Listeners Ready",
+	mapApi: defaultMapApi,
+};
