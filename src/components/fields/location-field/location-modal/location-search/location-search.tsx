@@ -143,7 +143,7 @@ export const LocationSearch = ({
 					latitude: 1.29994179707526,
 					longitude: 103.789404349716,
 					bufferRadius: 1,
-					abortSignal: reverseGeocodeAborter.current.signal,
+					abortSignal: reverseGeocodeAborter.current?.signal,
 					otherFeatures: OneMapBoolean.YES,
 					getToken,
 					headers: mapApiHeaders,
