@@ -49,6 +49,7 @@ export const LocationPicker = ({
 	selectablePins,
 	pinsOnlyIndicateCurrentLocation,
 	currentLocation,
+	legendItems,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
