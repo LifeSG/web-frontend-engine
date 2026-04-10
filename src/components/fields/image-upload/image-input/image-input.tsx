@@ -1,4 +1,5 @@
-import React, { createRef, useContext, useEffect, useState } from "react";
+import { createRef, useContext, useEffect, useState } from "react";
+import * as Icons from "@lifesg/react-icons";
 import { TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ERROR_MESSAGES, Sanitize } from "../../../shared";
@@ -13,6 +14,9 @@ import {
 	Content,
 	DropThemHereText,
 	Subtitle,
+	TooltipIcon,
+	TooltipLabel,
+	TooltipWrapper,
 	UploadWrapper,
 	Wrapper,
 } from "./image-input.styles";
@@ -28,6 +32,7 @@ interface IImageInputProps extends ISharedImageProps {
 	validation: IImageUploadValidationRule[];
 	multiple?: boolean | undefined;
 	warning?: string | undefined;
+	tooltip?: { label?: string | undefined; icon?: keyof typeof Icons | undefined; onClick: () => void } | undefined;
 }
 
 /**
@@ -52,6 +57,7 @@ export const ImageInput = (props: IImageInputProps) => {
 		errorMessage,
 		multiple,
 		warning,
+		tooltip,
 	} = props;
 	const { images, setImages, setErrorCount } = useContext(ImageContext);
 	const { dispatchFieldEvent } = useFieldEvent();
@@ -121,6 +127,15 @@ export const ImageInput = (props: IImageInputProps) => {
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const renderTooltipIcon = (icon: keyof typeof Icons) => {
+		const Icon = Icons[icon];
+		return (
+			<TooltipIcon>
+				<Icon />
+			</TooltipIcon>
+		);
+	};
+
 	const renderFiles = () => {
 		if (!images || !images.length) return null;
 		return images.map((fileItem: IImage, i: number) => {
@@ -217,6 +232,16 @@ export const ImageInput = (props: IImageInputProps) => {
 				>
 					{label}
 				</Subtitle>
+				{tooltip && (
+					<TooltipWrapper
+						type="button"
+						data-testid={TestHelper.generateId(id, "tooltip")}
+						onClick={tooltip.onClick}
+					>
+						{tooltip.label && <TooltipLabel>{tooltip.label}</TooltipLabel>}
+						{tooltip.icon && renderTooltipIcon(tooltip.icon)}
+					</TooltipWrapper>
+				)}
 				{description && (
 					<Content>
 						<Sanitize>{description}</Sanitize>

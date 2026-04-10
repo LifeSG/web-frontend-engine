@@ -1,3 +1,4 @@
+import * as Icons from "@lifesg/react-icons";
 import { FabricObject } from "fabric";
 import { IBaseFieldSchema } from "../types";
 import { IYupValidationRule } from "../../../context-providers";
@@ -33,6 +34,7 @@ export interface IImageUploadSchema<V = undefined>
 	capture?: TFileCapture | undefined;
 	multiple?: boolean | undefined;
 	imageReviewModalStyles?: string | undefined;
+	tooltip?: { label?: string | undefined; icon?: keyof typeof Icons | undefined; onClick: () => void } | undefined;
 }
 
 export interface ISharedImageProps {

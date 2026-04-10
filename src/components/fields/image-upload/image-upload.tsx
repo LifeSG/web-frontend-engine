@@ -40,6 +40,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			validation,
 			multiple,
 			imageReviewModalStyles,
+			tooltip,
 		},
 		id,
 		isDirty,
@@ -291,6 +292,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				validation={validation}
 				multiple={multiple}
 				warning={warning}
+				tooltip={tooltip}
 			/>
 
 			{renderReviewPrompt()}
