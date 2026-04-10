@@ -239,6 +239,42 @@ describe("image-upload", () => {
 		);
 	});
 
+	describe("tooltip", () => {
+		const onTooltipClick = jest.fn();
+
+		it("should not render tooltip when tooltip prop is not provided", async () => {
+			await renderComponent();
+
+			expect(screen.queryByTestId("field__tooltip")).not.toBeInTheDocument();
+		});
+
+		it("should render tooltip when tooltip prop is provided", async () => {
+			await renderComponent({ overrideField: { tooltip: { onClick: onTooltipClick } } });
+
+			expect(screen.getByTestId("field__tooltip")).toBeInTheDocument();
+		});
+
+		it("should call onClick when tooltip is clicked", async () => {
+			await renderComponent({ overrideField: { tooltip: { onClick: onTooltipClick } } });
+
+			fireEvent.click(screen.getByTestId("field__tooltip"));
+
+			expect(onTooltipClick).toHaveBeenCalledTimes(1);
+		});
+
+		it("should render label text when label is provided", async () => {
+			await renderComponent({ overrideField: { tooltip: { label: "More info", onClick: onTooltipClick } } });
+
+			expect(screen.getByText("More info")).toBeInTheDocument();
+		});
+
+		it("should render icon when icon is provided", async () => {
+			await renderComponent({ overrideField: { tooltip: { icon: "ICircleFillIcon", onClick: onTooltipClick } } });
+
+			expect(screen.getByTestId("field__tooltip").querySelector("svg")).toBeInTheDocument();
+		});
+	});
+
 	describe("validation", () => {
 		it("should support validation schema", async () => {
 			await renderComponent({
@@ -327,9 +363,7 @@ describe("image-upload", () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
-						field: expect.arrayContaining([
-							expect.objectContaining({ fileName: FILE_1.name }),
-						]),
+						field: expect.arrayContaining([expect.objectContaining({ fileName: FILE_1.name })]),
 					})
 				);
 			});
