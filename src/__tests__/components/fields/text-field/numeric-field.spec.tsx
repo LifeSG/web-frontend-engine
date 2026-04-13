@@ -233,7 +233,8 @@ describe(UI_TYPE, () => {
 				},
 			});
 
-			fireEvent.change(getNumericField(), { target: { value: 1 } });
+			const numericField = screen.getByTestId("input");
+			fireEvent.change(numericField, { target: { value: 1 } });
 
 			expect(screen.getByText("$")).toBeInTheDocument();
 

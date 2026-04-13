@@ -205,7 +205,8 @@ describe(UI_TYPE, () => {
 				},
 			});
 
-			fireEvent.change(getEmailField(), { target: { value: "john@doe.com" } });
+			const emailField = screen.getByTestId("input");
+			fireEvent.change(emailField, { target: { value: "john@doe.com" } });
 
 			expect(screen.getByText("#")).toBeInTheDocument();
 

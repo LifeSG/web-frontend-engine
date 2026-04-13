@@ -204,10 +204,11 @@ describe(UI_TYPE, () => {
 				},
 			});
 
-			fireEvent.change(getTextfield(), { target: { value: "hello" } });
+			const textfield = screen.getByTestId("input");
+			fireEvent.change(textfield, { target: { value: "hello" } });
 
 			expect(screen.getByText("$")).toBeInTheDocument();
-			expect(getTextfield()).toHaveValue("hello");
+			expect(textfield).toHaveValue("hello");
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }));

@@ -42,6 +42,6 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 			});
 			fireEvent.click(screen.getByTestId("field-popover"));
 
-			expect(document.querySelector("form").innerHTML.includes("script")).toBe(false);
+			expect(document.querySelector("form script")).toBeNull();
 		});
 	});
