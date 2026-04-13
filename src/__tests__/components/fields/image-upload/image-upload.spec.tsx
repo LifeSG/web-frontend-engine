@@ -253,10 +253,10 @@ describe("image-upload", () => {
 			expect(screen.getByTestId("field__tooltip")).toBeInTheDocument();
 		});
 
-		it("should fire tooltip-click event when tooltip is clicked", async () => {
+		it("should fire click-tooltip event when tooltip is clicked", async () => {
 			await renderComponent({
 				overrideField: { tooltip: {} },
-				eventType: "tooltip-click",
+				eventType: "click-tooltip",
 				eventListener: onTooltipClick,
 			});
 

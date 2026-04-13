@@ -395,11 +395,11 @@ Multiple.args = {
 export const WithTooltip: StoryFn<IImageUploadSchema> = (args: IImageUploadSchema) => {
 	const id = "upload-with-tooltip";
 	const formRef = useRef<IFrontendEngineRef>();
-	const handleTooltipClick = (e: unknown) => action("tooltip-click")(e);
+	const handleTooltipClick = (e: unknown) => action("click-tooltip")(e);
 	useEffect(() => {
 		const currentFormRef = formRef.current;
-		currentFormRef.addFieldEventListener("image-upload", "tooltip-click", id, handleTooltipClick);
-		return () => currentFormRef.removeFieldEventListener("image-upload", "tooltip-click", id, handleTooltipClick);
+		currentFormRef.addFieldEventListener("image-upload", "click-tooltip", id, handleTooltipClick);
+		return () => currentFormRef.removeFieldEventListener("image-upload", "click-tooltip", id, handleTooltipClick);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (

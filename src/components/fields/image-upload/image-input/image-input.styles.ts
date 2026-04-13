@@ -44,9 +44,6 @@ export const TooltipWrapper = styled.button`
 `;
 
 export const TooltipIcon = styled.span`
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
 	width: 1rem;
 	height: 1rem;
 	color: inherit;

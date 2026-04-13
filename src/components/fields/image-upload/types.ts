@@ -187,7 +187,7 @@ function imageUploadEvent(
 /** fired when the tooltip is clicked */
 function imageUploadEvent(
 	uiType: "image-upload",
-	type: "tooltip-click",
+	type: "click-tooltip",
 	id: string,
 	listener: TFieldEventListener,
 	options?: boolean | AddEventListenerOptions | undefined
