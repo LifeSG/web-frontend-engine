@@ -236,7 +236,7 @@ export const ImageInput = (props: IImageInputProps) => {
 					<TooltipWrapper
 						type="button"
 						data-testid={TestHelper.generateId(id, "tooltip")}
-						onClick={() => dispatchFieldEvent("tooltip-click", id)}
+						onClick={() => dispatchFieldEvent("click-tooltip", id)}
 					>
 						{tooltip.label && <TooltipLabel>{tooltip.label}</TooltipLabel>}
 						{tooltip.icon && renderTooltipIcon(tooltip.icon)}
