@@ -324,6 +324,18 @@ export const ExcludesSingular: Story = {
 	},
 };
 
+export const HtmlSafe: Story = {
+	args: {
+		info: {
+			rule: { htmlSafe: true, errorMessage: "Contains unsupported characters." },
+			ruleName: "htmlSafe",
+			ruleDescription:
+				"Indicates that the value must contain only letters, spaces, and these special characters: <code>, ( ) / . @ - '</code>.",
+		},
+		fields: ["maskedField", "textarea", "textField"],
+	},
+};
+
 export const IncludesArray: Story = {
 	name: "Includes (Array)",
 	args: {
