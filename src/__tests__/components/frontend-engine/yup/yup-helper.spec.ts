@@ -187,6 +187,7 @@ describe("YupHelper", () => {
 			${"string"}  | ${"url"}               | ${{ url: true }}                    | ${"https://www.domain.tld"}               | ${"hello"}
 			${"string"}  | ${"uuid"}              | ${{ uuid: true }}                   | ${"e9949c11-51b6-4c44-9070-623dfb2ca01a"} | ${"hello"}
 			${"string"}  | ${"uinfin"}            | ${{ uinfin: true }}                 | ${"S1234567D"}                            | ${"S1234567A"}
+			${"string"}  | ${"htmlSafe"}          | ${{ htmlSafe: true }}               | ${"O'CONNOR / TAN"}                       | ${"TAN&LEE"}
 			${"string"}  | ${"matches"}           | ${{ matches: "/^(hello)/" }}        | ${"hello world"}                          | ${"hi there"}
 			${"string"}  | ${"notMatches"}        | ${{ notMatches: "/^(hello)/" }}     | ${"hi there"}                             | ${"hello world"}
 			${"string"}  | ${"noWhitespaceOnly"}  | ${{ noWhitespaceOnly: true }}       | ${"  .  "}                                | ${"      "}
