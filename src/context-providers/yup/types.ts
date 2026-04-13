@@ -25,6 +25,7 @@ export const YUP_CONDITIONS = [
 	"uinfin",
 	"equalsField",
 	"withinDays",
+	"htmlSafe",
 ] as const;
 export type TYupSchemaType = (typeof YUP_TYPES)[number];
 export type TYupCondition = (typeof YUP_CONDITIONS)[number];
@@ -53,6 +54,7 @@ interface IYupRule {
 	equalsField?: string | undefined;
 	notEqualsField?: string | undefined;
 	whitespace?: boolean | IWhitespaceRule | undefined;
+	htmlSafe?: boolean | undefined;
 	/**
 	 * @deprecated Use `whitespace` rule instead.
 	 */
