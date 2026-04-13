@@ -249,13 +249,17 @@ describe("image-upload", () => {
 		});
 
 		it("should render tooltip when tooltip prop is provided", async () => {
-			await renderComponent({ overrideField: { tooltip: { onClick: onTooltipClick } } });
+			await renderComponent({ overrideField: { tooltip: {} } });
 
 			expect(screen.getByTestId("field__tooltip")).toBeInTheDocument();
 		});
 
-		it("should call onClick when tooltip is clicked", async () => {
-			await renderComponent({ overrideField: { tooltip: { onClick: onTooltipClick } } });
+		it("should fire tooltip-click event when tooltip is clicked", async () => {
+			await renderComponent({
+				overrideField: { tooltip: {} },
+				eventType: "tooltip-click",
+				eventListener: onTooltipClick,
+			});
 
 			fireEvent.click(screen.getByTestId("field__tooltip"));
 
@@ -263,13 +267,13 @@ describe("image-upload", () => {
 		});
 
 		it("should render label text when label is provided", async () => {
-			await renderComponent({ overrideField: { tooltip: { label: "More info", onClick: onTooltipClick } } });
+			await renderComponent({ overrideField: { tooltip: { label: "More info" } } });
 
 			expect(screen.getByText("More info")).toBeInTheDocument();
 		});
 
 		it("should render icon when icon is provided", async () => {
-			await renderComponent({ overrideField: { tooltip: { icon: "ICircleFillIcon", onClick: onTooltipClick } } });
+			await renderComponent({ overrideField: { tooltip: { icon: "ICircleFillIcon" } } });
 
 			expect(screen.getByTestId("field__tooltip").querySelector("svg")).toBeInTheDocument();
 		});

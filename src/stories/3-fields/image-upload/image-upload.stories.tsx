@@ -1,7 +1,9 @@
 import { action } from "@storybook/addon-actions";
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
+import { useEffect, useRef } from "react";
 import { IImageUploadSchema } from "../../../components/fields";
+import { IFrontendEngineRef } from "../../../components/frontend-engine";
 import {
 	CommonFieldStoryProps,
 	DefaultStoryTemplate,
@@ -182,7 +184,7 @@ const meta: Meta = {
 				"A clickable element rendered between the label and description. `label` sets the button text. `icon` must be a valid icon name from `@lifesg/react-icons` (e.g. `ICircleFillIcon`, `QuestionmarkCircleIcon`). `onClick` is the callback triggered when clicked.",
 			table: {
 				type: {
-					summary: "{ label?: string; icon?: keyof typeof Icons; onClick: () => void }",
+					summary: "{ label?: string; icon?: keyof typeof Icons }",
 				},
 				defaultValue: { summary: null },
 			},
@@ -390,26 +392,33 @@ Multiple.args = {
 	editImage: true,
 };
 
-export const WithTooltip: StoryFn<IImageUploadSchema> = (args: IImageUploadSchema) => (
-	<FrontendEngine
-		data={{
-			sections: {
-				section: {
-					uiType: "section",
-					children: {
-						"upload-with-tooltip": {
-							...args,
-							tooltip: args.tooltip
-								? { ...(args.tooltip as object), onClick: action("tooltip-click") }
-								: undefined,
+export const WithTooltip: StoryFn<IImageUploadSchema> = (args: IImageUploadSchema) => {
+	const id = "upload-with-tooltip";
+	const formRef = useRef<IFrontendEngineRef>();
+	const handleTooltipClick = (e: unknown) => action("tooltip-click")(e);
+	useEffect(() => {
+		const currentFormRef = formRef.current;
+		currentFormRef.addFieldEventListener("image-upload", "tooltip-click", id, handleTooltipClick);
+		return () => currentFormRef.removeFieldEventListener("image-upload", "tooltip-click", id, handleTooltipClick);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+	return (
+		<FrontendEngine
+			ref={formRef}
+			data={{
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[id]: { ...args },
+							...SUBMIT_BUTTON_SCHEMA,
 						},
-						...SUBMIT_BUTTON_SCHEMA,
 					},
 				},
-			},
-		}}
-	/>
-);
+			}}
+		/>
+	);
+};
 WithTooltip.args = {
 	label: "Provide images",
 	uiType: "image-upload",

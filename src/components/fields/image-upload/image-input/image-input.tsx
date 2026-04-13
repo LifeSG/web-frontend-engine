@@ -32,7 +32,7 @@ interface IImageInputProps extends ISharedImageProps {
 	validation: IImageUploadValidationRule[];
 	multiple?: boolean | undefined;
 	warning?: string | undefined;
-	tooltip?: { label?: string | undefined; icon?: keyof typeof Icons | undefined; onClick: () => void } | undefined;
+	tooltip?: { label?: string | undefined; icon?: keyof typeof Icons | undefined } | undefined;
 }
 
 /**
@@ -236,7 +236,7 @@ export const ImageInput = (props: IImageInputProps) => {
 					<TooltipWrapper
 						type="button"
 						data-testid={TestHelper.generateId(id, "tooltip")}
-						onClick={tooltip.onClick}
+						onClick={() => dispatchFieldEvent("tooltip-click", id)}
 					>
 						{tooltip.label && <TooltipLabel>{tooltip.label}</TooltipLabel>}
 						{tooltip.icon && renderTooltipIcon(tooltip.icon)}
