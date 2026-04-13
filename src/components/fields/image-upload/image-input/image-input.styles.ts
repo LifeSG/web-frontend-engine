@@ -36,9 +36,10 @@ export const TooltipWrapper = styled.button`
 	border: none;
 	padding: 0;
 	cursor: pointer;
+	color: ${Colour["text-primary"]};
 
 	&:hover {
-		opacity: 0.8;
+		color: ${Colour["text-hover"]};
 	}
 `;
 
@@ -48,7 +49,7 @@ export const TooltipIcon = styled.span`
 	justify-content: center;
 	width: 1rem;
 	height: 1rem;
-	color: ${Colour["text-primary"]};
+	color: inherit;
 
 	svg {
 		width: 100%;
@@ -57,7 +58,7 @@ export const TooltipIcon = styled.span`
 `;
 
 export const TooltipLabel = styled(Typography.BodyMD)`
-	color: ${Colour["text-primary"]};
+	color: inherit;
 `;
 
 export const Content = styled.div`
