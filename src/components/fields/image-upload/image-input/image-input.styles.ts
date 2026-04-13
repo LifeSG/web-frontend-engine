@@ -24,6 +24,38 @@ export const Subtitle = styled(Typography.BodyBL)<SubtitleProps>`
 	margin-bottom: ${(props) => (props.$hasDescription ? Spacing["spacing-8"] : Spacing["spacing-16"])};
 `;
 
+export const TooltipWrapper = styled.button`
+	display: inline-flex;
+	align-items: center;
+	gap: ${Spacing["spacing-4"]};
+	margin-top: ${Spacing["spacing-8"]};
+	margin-bottom: ${Spacing["spacing-16"]};
+	background: transparent;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	color: ${Colour["text-primary"]};
+
+	&:hover {
+		color: ${Colour["text-hover"]};
+	}
+`;
+
+export const TooltipIcon = styled.span`
+	width: 1rem;
+	height: 1rem;
+	color: inherit;
+
+	svg {
+		width: 100%;
+		height: 100%;
+	}
+`;
+
+export const TooltipLabel = styled(Typography.BodyMD)`
+	color: inherit;
+`;
+
 export const Content = styled.div`
 	${Font["body-md-regular"]};
 	margin-bottom: ${Spacing["spacing-24"]};
