@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom";
 import { fireEvent, render as rtlRender, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
@@ -64,9 +65,9 @@ const renderComponent = (
 	return rtlRender(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
 };
 
-const getPhoneNoInput = () => getField("textbox", "Enter phone number");
+const getPhoneNoInput = () => screen.getByPlaceholderText(/Enter.*mobile number/i);
 const getEmailInput = () => getField("textbox", COMPONENT_LABEL);
-const getOtpInput = () => getField("spinbutton", "Enter OTP code");
+const getOtpInput = () => screen.getByPlaceholderText("Enter OTP");
 const getSendOtpButton = () => getField("button", { name: "Send OTP" });
 const getVerifyOtpButton = () => getField("button", { name: "Verify" });
 

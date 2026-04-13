@@ -60,7 +60,7 @@ const renderComponent = (overrideField?: TOverrideField<IContactFieldSchema>, ov
 };
 
 const getContactField = (): HTMLElement => {
-	return getField("textbox", COMPONENT_LABEL);
+	return screen.getByTestId("input");
 };
 
 const getContactFieldWithPlaceholder = (): HTMLElement => {

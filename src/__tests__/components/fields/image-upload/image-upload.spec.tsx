@@ -327,9 +327,7 @@ describe("image-upload", () => {
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
-						field: expect.arrayContaining([
-							expect.objectContaining({ fileName: FILE_1.name }),
-						]),
+						field: expect.arrayContaining([expect.objectContaining({ fileName: FILE_1.name })]),
 					})
 				);
 			});
