@@ -851,9 +851,9 @@ RefreshLocationAndTriggerGetCurrentLocation.args = {
 	mapApi: defaultMapApi,
 };
 
-export const ListenersReady = Template("listeners-ready").bind({});
-ListenersReady.args = {
+export const ShowLocationModalReady = Template("show-location-modal-ready").bind({});
+ShowLocationModalReady.args = {
 	uiType: "location-field",
-	label: "Listeners Ready",
+	label: "Show Location Modal Ready",
 	mapApi: defaultMapApi,
 };

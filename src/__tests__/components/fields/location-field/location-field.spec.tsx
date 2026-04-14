@@ -52,7 +52,7 @@ enum ELocationInputEvents {
 	"SET_CURRENT_LOCATION" = "set-current-location",
 	"GET_CURRENT_LOCATION" = "get-current-location",
 	"MOUNT" = "mount",
-	"LISTENERS_READY" = "listeners-ready",
+	"SHOW_LOCATION_MODAL_READY" = "show-location-modal-ready",
 	"SHOW_MODAL" = "show-location-modal",
 	"HIDE_MODAL" = "hide-location-modal",
 	"CLICK_EDIT_BUTTON" = "click-edit-button",
@@ -636,18 +636,18 @@ describe("location-input-group", () => {
 		// PostalCodeError
 
 		//Modal Events
-		describe("Listeners-ready events", () => {
-			it("should fire listeners-ready after listeners are registered", async () => {
-				const handleListenersReady = jest.fn();
+		describe("Show Location Modal Ready events", () => {
+			it("should fire show-location-modal-ready after it is registered", async () => {
+				const handleShowLocationModalReady = jest.fn();
 				renderComponent({
-					eventType: ELocationInputEvents.LISTENERS_READY,
+					eventType: ELocationInputEvents.SHOW_LOCATION_MODAL_READY,
 					eventListener: (formRef) => () => {
-						handleListenersReady();
+						handleShowLocationModalReady();
 						formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.SHOW_MODAL, COMPONENT_ID);
 					},
 				});
 				await waitFor(() => {
-					expect(handleListenersReady).toHaveBeenCalled();
+					expect(handleShowLocationModalReady).toHaveBeenCalled();
 					expect(getLocationModal(true)).toBeInTheDocument();
 				});
 			});
