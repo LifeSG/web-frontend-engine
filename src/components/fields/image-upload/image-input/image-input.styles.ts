@@ -26,6 +26,38 @@ export const Subtitle = styled(Text.Body)<SubtitleProps>`
 	margin-bottom: ${(props) => (props.$hasDescription ? "0.5rem" : "1rem")};
 `;
 
+export const TooltipWrapper = styled.button`
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	margin-top: 0.5rem;
+	margin-bottom: 1rem;
+	background: transparent;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	color: ${Color.Primary};
+
+	&:hover {
+		color: ${Color.PrimaryDark};
+	}
+`;
+
+export const TooltipIcon = styled.span`
+	width: 1rem;
+	height: 1rem;
+	color: inherit;
+
+	svg {
+		width: 100%;
+		height: 100%;
+	}
+`;
+
+export const TooltipLabel = styled(Text.BodySmall)`
+	color: inherit;
+`;
+
 export const Content = styled.div`
 	${TextStyleHelper.getTextStyle("BodySmall", "regular")}
 	margin-bottom: 1.5rem;
