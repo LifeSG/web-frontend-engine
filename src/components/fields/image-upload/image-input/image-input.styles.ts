@@ -29,17 +29,17 @@ export const Subtitle = styled(Text.Body)<SubtitleProps>`
 export const TooltipWrapper = styled.button`
 	display: inline-flex;
 	align-items: center;
-	gap: ${Spacing["spacing-4"]};
-	margin-top: ${Spacing["spacing-8"]};
-	margin-bottom: ${Spacing["spacing-16"]};
+	gap: 0.25rem;
+	margin-top: 0.5rem;
+	margin-bottom: 1rem;
 	background: transparent;
 	border: none;
 	padding: 0;
 	cursor: pointer;
-	color: ${Colour["text-primary"]};
+	color: ${Color.Primary};
 
 	&:hover {
-		color: ${Colour["text-hover"]};
+		color: ${Color.PrimaryDark};
 	}
 `;
 
@@ -54,7 +54,7 @@ export const TooltipIcon = styled.span`
 	}
 `;
 
-export const TooltipLabel = styled(Typography.BodyMD)`
+export const TooltipLabel = styled(Text.BodySmall)`
 	color: inherit;
 `;
 
