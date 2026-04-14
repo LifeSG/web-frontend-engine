@@ -39,6 +39,13 @@ export const LegendItem = styled.div`
 	gap: 0.5rem;
 `;
 
+export const LegendIcon = styled.img`
+	width: 1.5rem;
+	height: 1.5rem;
+	object-fit: contain;
+	flex-shrink: 0;
+`;
+
 export const CloseButton = styled(IconButton)`
 	padding: 0;
 	background-color: transparent;

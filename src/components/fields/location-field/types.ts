@@ -14,7 +14,7 @@ export interface ILocationFieldValidation extends IYupValidationRule {
 export interface ILegendItem {
 	id: string;
 	label: string;
-	icon: React.ReactNode;
+	icon: string;
 }
 
 export interface ILocationMapApi {
