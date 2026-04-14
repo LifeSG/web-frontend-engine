@@ -96,7 +96,7 @@ export type TSetCurrentLocationDetail = TLocationFieldDetail<ILocationCoord>;
 export type TLocationFieldErrorDetail = TLocationFieldDetail<TErrorType>;
 
 export type TLocationFieldEvents = {
-	"listeners-ready": CustomEvent;
+	"show-location-modal-ready": CustomEvent;
 	"get-current-location": CustomEvent;
 	"set-current-location": CustomEvent<TSetCurrentLocationDetail>;
 	error: CustomEvent<TLocationFieldErrorDetail>;
@@ -120,7 +120,7 @@ export class GeolocationPositionErrorWrapper extends Error {
 /** fired after the location field registers its internal event listeners and is ready for external triggers */
 function locationFieldEvent(
 	uiType: "location-field",
-	type: "listeners-ready",
+	type: "show-location-modal-ready",
 	id: string,
 	listener: TFieldEventListener,
 	options?: boolean | AddEventListenerOptions | undefined
