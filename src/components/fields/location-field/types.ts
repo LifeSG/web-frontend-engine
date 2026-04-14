@@ -11,6 +11,12 @@ export interface ILocationFieldValidation extends IYupValidationRule {
 	postalCode?: boolean | undefined;
 }
 
+export interface ILegendItem {
+	id: string;
+	label: string;
+	icon: string;
+}
+
 export interface ILocationMapApi {
 	reverseGeocode?: string | undefined;
 	convertLatLngToXY?: string | undefined;
