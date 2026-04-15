@@ -117,7 +117,7 @@ export class GeolocationPositionErrorWrapper extends Error {
 // =============================================================================
 // EVENTS (fired from FEE)
 // =============================================================================
-/** fired after the location field registers its internal event listeners and is ready for external triggers */
+/** fired after the location field registers the `show-location-modal` event listener and is ready for external triggers */
 function locationFieldEvent(
 	uiType: "location-field",
 	type: "show-location-modal-ready",
