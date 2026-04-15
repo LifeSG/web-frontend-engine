@@ -96,6 +96,7 @@ export type TSetCurrentLocationDetail = TLocationFieldDetail<ILocationCoord>;
 export type TLocationFieldErrorDetail = TLocationFieldDetail<TErrorType>;
 
 export type TLocationFieldEvents = {
+	"show-location-modal-ready": CustomEvent;
 	"get-current-location": CustomEvent;
 	"set-current-location": CustomEvent<TSetCurrentLocationDetail>;
 	error: CustomEvent<TLocationFieldErrorDetail>;
@@ -116,6 +117,14 @@ export class GeolocationPositionErrorWrapper extends Error {
 // =============================================================================
 // EVENTS (fired from FEE)
 // =============================================================================
+/** fired after the location field registers the `show-location-modal` event listener and is ready for external triggers */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "show-location-modal-ready",
+	id: string,
+	listener: TFieldEventListener,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
 /** fired on showing location modal */
 function locationFieldEvent(
 	uiType: "location-field",

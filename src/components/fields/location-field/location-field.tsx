@@ -59,6 +59,9 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	useEffect(() => {
 		addFieldEventListener("show-location-modal", id, handleLocationModalShow);
 
+		// Signal that the field has registered its listeners and is ready for external triggers.
+		dispatchFieldEvent("show-location-modal-ready", id);
+
 		return () => {
 			removeFieldEventListener("show-location-modal", id, handleLocationModalShow);
 		};
