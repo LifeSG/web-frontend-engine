@@ -2,22 +2,24 @@ import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Text } from "@lifesg/react-design-system/text";
 import { CloseButton, LegendContent, LegendHeader, LegendItem, LegendWrapper } from "./legend.styles";
 import { ILegendItem } from "../../../types";
+import { TestHelper } from "../../../../../../utils";
 
 interface ILegendProps {
 	onClose?: () => void;
 	items?: ILegendItem[] | undefined;
+	id?: string | undefined;
 }
 
-export const Legend = ({ onClose, items = [] }: ILegendProps) => {
+export const Legend = ({ onClose, items = [], id = "legend" }: ILegendProps) => {
 	if (!items || items.length === 0) {
 		return null;
 	}
 
 	return (
-		<LegendWrapper>
+		<LegendWrapper data-testid={TestHelper.generateId(id, "legend")} aria-label="Map Legend">
 			<LegendHeader>
 				<Text.H5 weight="semibold">Legend</Text.H5>
-				<CloseButton onClick={onClose}>
+				<CloseButton data-testid={TestHelper.generateId(id, "legend-close")} onClick={onClose}>
 					<CrossIcon />
 				</CloseButton>
 			</LegendHeader>

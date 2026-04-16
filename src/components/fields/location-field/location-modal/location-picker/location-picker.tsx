@@ -254,25 +254,27 @@ export const LocationPicker = ({
 					{locationAvailable ? <NavigationFillIcon /> : <NavigationIcon />}
 				</ButtonLocationImage>
 			</ButtonLocation>
-			<PopoverTrigger
-				popoverContent={() => {
-					const handleClose = () => {
-						// Click the trigger button to close the popover
-						legendTriggerRef.current?.click();
-					};
-					return <Legend onClose={handleClose} />;
-				}}
-			>
-				<ButtonLegend
-					ref={legendTriggerRef}
-					data-testid={TestHelper.generateId(id, "legend")}
-					aria-label="Show legend"
+			{legendItems && legendItems.length > 0 && (
+				<PopoverTrigger
+					popoverContent={() => {
+						const handleClose = () => {
+							// Click the trigger button to close the popover
+							legendTriggerRef.current?.click();
+						};
+						return <Legend onClose={handleClose} items={legendItems} />;
+					}}
 				>
-					<ButtonLocationImage>
-						<ICircleFillIcon />
-					</ButtonLocationImage>
-				</ButtonLegend>
-			</PopoverTrigger>
+					<ButtonLegend
+						ref={legendTriggerRef}
+						data-testid={TestHelper.generateId(id, "legend-trigger")}
+						aria-label="Toggle legend"
+					>
+						<ButtonLocationImage>
+							<ICircleFillIcon />
+						</ButtonLocationImage>
+					</ButtonLegend>
+				</PopoverTrigger>
+			)}
 		</LocationPickerWrapper>
 	);
 };
