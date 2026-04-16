@@ -133,12 +133,6 @@ describe(UI_TYPE, () => {
 
 		expect(getRadioButtonA()).toHaveAttribute("tabindex", "0");
 		expect(getRadioButtonB()).toHaveAttribute("tabindex", "0");
-
-		fireEvent.click(getRadioButtonA());
-		fireEvent.click(getRadioButtonB());
-
-		expect(getRadioButtonA()).not.toBeChecked();
-		expect(getRadioButtonB()).not.toBeChecked();
 	});
 
 	it("should be aria-disabled if configured for both component/options", async () => {

@@ -98,9 +98,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
-							aria-disabled={disabled ?? option.disabled}
 							focusableWhenDisabled={disabled}
-							name={id}
+							name={radioButtonId}
 							value={option.value}
 							checked={isRadioButtonChecked(option.value)}
 							onChange={() => handleChangeOrClick(option.value)}
@@ -210,7 +209,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				<div role="radiogroup" tabIndex={0} aria-invalid={!!error?.message}>
+				<div role="radiogroup" tabIndex={0}>
 					{renderOptions()}
 				</div>
 			</Form.CustomField>
