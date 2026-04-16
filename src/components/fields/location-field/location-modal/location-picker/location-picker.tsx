@@ -261,14 +261,14 @@ export const LocationPicker = ({
 							// Click the trigger button to close the popover
 							legendTriggerRef.current?.click();
 						};
-						return <Legend onClose={handleClose} items={legendItems} />;
+						return <Legend id={id} onClose={handleClose} items={legendItems} />;
 					}}
 					isModal={false}
 				>
 					<ButtonLegend
 						ref={legendTriggerRef}
-						data-testid={TestHelper.generateId(id, "legend")}
-						aria-label="Show legend"
+						data-testid={TestHelper.generateId(id, "legend-trigger")}
+						aria-label="Toggle legend"
 					>
 						<ButtonLocationImage>
 							<ICircleFillIcon />

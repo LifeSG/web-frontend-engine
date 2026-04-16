@@ -43,6 +43,10 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "location-field";
 const LABEL = "Location field";
+const LEGEND_ITEMS = [
+	{ id: "lift-fault", label: "Lift fault", icon: "/img/lift.png" },
+	{ id: "renovation", label: "Renovation", icon: "/img/reno.png" },
+];
 
 const setCurrentLocationSpy = jest.fn();
 const editButtonOnClickSpy = jest.fn();
@@ -354,6 +358,12 @@ const getOneMapErrorModal = (query = false) => testIdCmd(query)(TestHelper.gener
 
 const getCurrentLocationButton = (query = false) =>
 	testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "refresh-current-location-button"));
+
+const getLegendTrigger = (query = false) => testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "legend-trigger"));
+
+const getLegendWrapper = (query = false) => testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "legend"));
+
+const getLegendCloseButton = (query = false) => testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "legend-close"));
 
 // assert network error
 
@@ -1582,6 +1592,46 @@ describe("location-input-group", () => {
 						expect(
 							screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "location-banner"))
 						).not.toBeInTheDocument();
+					});
+				});
+
+				describe("when using legend items", () => {
+					it("should render legend trigger and items", async () => {
+						renderComponent({ overrideField: { legendItems: LEGEND_ITEMS } });
+
+						await waitFor(() => window.dispatchEvent(new Event("online")));
+
+						getLocationInput().focus();
+
+						await waitFor(() => {
+							expect(getLocationModal(true)).toBeInTheDocument();
+						});
+
+						fireEvent.click(getLegendTrigger());
+
+						expect(getLegendWrapper()).toBeInTheDocument();
+						expect(screen.getByText("Lift fault")).toBeInTheDocument();
+						expect(screen.getByText("Renovation")).toBeInTheDocument();
+
+						fireEvent.click(getLegendCloseButton());
+
+						await waitFor(() => {
+							expect(getLegendWrapper(true)).not.toBeInTheDocument();
+						});
+					});
+
+					it("should not render legend trigger when legendItems is empty", async () => {
+						renderComponent({ overrideField: { legendItems: [] } });
+
+						await waitFor(() => window.dispatchEvent(new Event("online")));
+
+						getLocationInput().focus();
+
+						await waitFor(() => {
+							expect(getLocationModal(true)).toBeInTheDocument();
+						});
+
+						expect(getLegendTrigger(true)).not.toBeInTheDocument();
 					});
 				});
 
