@@ -850,3 +850,10 @@ RefreshLocationAndTriggerGetCurrentLocation.args = {
 	label: "Refresh current location and trigger get current location",
 	mapApi: defaultMapApi,
 };
+
+export const ShowLocationModalReady = Template("show-location-modal-ready").bind({});
+ShowLocationModalReady.args = {
+	uiType: "location-field",
+	label: "Show Location Modal Ready",
+	mapApi: defaultMapApi,
+};
