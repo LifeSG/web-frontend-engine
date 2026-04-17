@@ -460,3 +460,25 @@ pinsOnlyIndicateCurrentLocation.args = {
 	interactiveMapPinIconUrl:
 		"https://dev.eservices.lifesg.io/report-neighbourhood-issue/img/icons/car-location-pin.svg",
 };
+
+export const LegendComponent = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-legend",
+	false,
+	recaptchaSiteKey
+).bind({});
+LegendComponent.args = {
+	uiType: "location-field",
+	label: "Legend Component",
+	legendItems: [
+		{
+			id: "lift",
+			label: "Lift fault",
+			icon: "/img/lift.png",
+		},
+		{
+			id: "reno",
+			label: "Renovation",
+			icon: "/img/reno.png",
+		},
+	],
+};
