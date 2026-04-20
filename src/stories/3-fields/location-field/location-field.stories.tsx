@@ -160,6 +160,18 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		legendItems: {
+			description: "Specifies the legend items to be displayed in the map legend.",
+			table: {
+				type: {
+					summary: "{ id: string; label: string; icon: string }[] | undefined",
+				},
+				defaultValue: { summary: "[]" },
+			},
+			control: {
+				type: "object",
+			},
+		},
 	},
 };
 export default meta;

@@ -5,7 +5,7 @@ import { ILegendItem } from "../../../types";
 import { TestHelper } from "../../../../../../utils";
 
 interface ILegendProps {
-	onClose?: () => void;
+	onClose?: (() => void) | undefined;
 	items?: ILegendItem[] | undefined;
 	id?: string | undefined;
 }

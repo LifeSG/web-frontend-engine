@@ -3,11 +3,8 @@ import { Color } from "@lifesg/react-design-system/color";
 import styled from "styled-components";
 
 export const LegendWrapper = styled.div`
-	position: absolute;
-	left: 1.5rem;
-	bottom: 1.5rem;
 	max-width: 250px;
-	padding: 0.5rem 1rem;
+	position: absolute;
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
@@ -23,13 +20,13 @@ export const LegendHeader = styled.div`
 `;
 
 export const LegendContent = styled.div`
-	max-height: 200px;
-	overflow: auto;
-	width: max-content;
-	max-width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+	max-height: 200px;
+	max-width: 100%;
+	width: max-content;
+	overflow: auto;
 	gap: 1rem;
 `;
 
