@@ -1,11 +1,11 @@
 import { CrossIcon } from "@lifesg/react-icons/cross";
-import { Typography } from "@lifesg/react-design-system";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { CloseButton, LegendContent, LegendHeader, LegendIcon, LegendItem, LegendWrapper } from "./legend.styles";
 import { ILegendItem } from "../../../types";
 import { TestHelper } from "../../../../../../utils";
 
 interface ILegendProps {
-	onClose?: () => void;
+	onClose?: (() => void) | undefined;
 	items?: ILegendItem[] | undefined;
 	id?: string | undefined;
 }
