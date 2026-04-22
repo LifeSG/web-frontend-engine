@@ -4,6 +4,7 @@ import isEqual from "lodash/isEqual";
 import isNil from "lodash/isNil";
 import isNumber from "lodash/isNumber";
 import { YupHelper } from "../helper";
+import "./html-safe";
 import "./uinfin";
 import "./uen";
 import { DateTimeHelper } from "../../../utils";
