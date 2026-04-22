@@ -132,8 +132,8 @@ describe("radio toggle button", () => {
 		expect(getRadioButtonA()).toHaveAttribute("aria-disabled", "true");
 		expect(getRadioButtonB()).toHaveAttribute("aria-disabled", "true");
 
-		expect(getRadioButtonA()).toHaveAttribute("tabindex", "0");
-		expect(getRadioButtonB()).toHaveAttribute("tabindex", "0");
+		expect(getRadioButtonA()).toHaveProperty("tabIndex", 0);
+		expect(getRadioButtonB()).toHaveProperty("tabIndex", 0);
 
 		fireEvent.click(getRadioButtonA());
 		fireEvent.click(getRadioButtonB());
@@ -157,8 +157,8 @@ describe("radio toggle button", () => {
 		expect(getRadioButtonA()).toHaveAttribute("aria-disabled", "true");
 		expect(getRadioButtonB()).toHaveAttribute("aria-disabled", "true");
 
-		expect(getRadioButtonA()).toHaveAttribute("tabindex", "0");
-		expect(getRadioButtonB()).toHaveAttribute("tabindex", "0");
+		expect(getRadioButtonA()).toHaveProperty("tabIndex", 0);
+		expect(getRadioButtonB()).toHaveProperty("tabIndex", 0);
 
 		fireEvent.click(getRadioButtonA());
 		fireEvent.click(getRadioButtonB());
