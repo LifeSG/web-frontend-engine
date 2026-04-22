@@ -262,7 +262,7 @@ export const LocationPicker = ({
 							// Click the trigger button to close the popover
 							legendTriggerRef.current?.click();
 						};
-						return <Legend onClose={handleClose} items={legendItems} />;
+						return <Legend id={id} onClose={handleClose} items={legendItems} />;
 					}}
 				>
 					<ButtonLegend

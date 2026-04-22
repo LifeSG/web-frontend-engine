@@ -80,7 +80,7 @@ export const ButtonLocation = styled.button`
 `;
 
 export const ButtonLegend = styled(ButtonLocation)`
-	left: ${Spacing["spacing-24"]};
+	left: 1.5rem;
 `;
 
 export const ButtonLocationImage = styled.span`

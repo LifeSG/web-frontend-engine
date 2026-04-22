@@ -8,6 +8,9 @@ export const LegendWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	left: 1.5rem;
+	bottom: 1.5rem;
+	padding: 0.5rem 1rem;
 	background-color: ${Color.Neutral[8]};
 	box-shadow: 0 0 4px 1px rgb(from ${Color.Neutral[3]} r g b / 50%);
 	border-radius: 0.5rem;

@@ -1,6 +1,6 @@
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Text } from "@lifesg/react-design-system/text";
-import { CloseButton, LegendContent, LegendHeader, LegendItem, LegendWrapper } from "./legend.styles";
+import { CloseButton, LegendContent, LegendHeader, LegendIcon, LegendItem, LegendWrapper } from "./legend.styles";
 import { ILegendItem } from "../../../types";
 import { TestHelper } from "../../../../../../utils";
 
@@ -26,8 +26,10 @@ export const Legend = ({ onClose, items = [], id = "legend" }: ILegendProps) => 
 			<LegendContent>
 				{items.map((item) => (
 					<LegendItem key={item.id}>
-						{item.icon}
-						<Text.H6 as="p">{item.label}</Text.H6>
+						<LegendIcon src={item.icon} alt={item.label} />
+						<Text.H6 as="p" weight={"regular"}>
+							{item.label}
+						</Text.H6>
 					</LegendItem>
 				))}
 			</LegendContent>
