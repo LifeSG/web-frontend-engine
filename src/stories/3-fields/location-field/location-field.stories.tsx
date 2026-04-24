@@ -173,9 +173,9 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
-		homeAddress: {
+		defaultAddress: {
 			description:
-				"Specifies a home address coordinate used on refresh. When refresh is clicked and not prevented, the map centers/zooms to this coordinate (if lat/lng are present) instead of using geolocation.",
+				"Specifies a default address coordinate used on refresh. When refresh is clicked and not prevented, the map centers/zooms to this coordinate (if lat/lng are present) instead of using geolocation.",
 			table: {
 				type: {
 					summary: "{ lat: number; lng: number } | undefined",
@@ -508,16 +508,16 @@ LegendComponent.args = {
 	],
 };
 
-export const HomeAddressRefresh = DefaultStoryTemplate<ILocationFieldSchema>(
-	"location-field-home-address-refresh",
+export const DefaultAddressRefresh = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-default-address-refresh",
 	false,
 	recaptchaSiteKey
 ).bind({});
-HomeAddressRefresh.args = {
+DefaultAddressRefresh.args = {
 	uiType: "location-field",
-	label: "Home Address Refresh",
+	label: "Default Address Refresh",
 	mapApi: defaultMapApi,
-	homeAddress: {
+	defaultAddress: {
 		lat: 1.3521,
 		lng: 103.8198,
 	},

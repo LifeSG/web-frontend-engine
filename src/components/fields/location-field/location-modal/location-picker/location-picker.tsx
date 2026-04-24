@@ -50,7 +50,7 @@ export const LocationPicker = ({
 	pinsOnlyIndicateCurrentLocation,
 	currentLocation,
 	legendItems,
-	homeAddress,
+	defaultAddress,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -246,8 +246,8 @@ export const LocationPicker = ({
 					if (locationAvailable) {
 						const shouldPreventDefault = !dispatchFieldEvent("click-refresh-current-location", id);
 						if (!shouldPreventDefault) {
-							if (homeAddress?.lat && homeAddress?.lng) {
-								zoomWithMarkers([homeAddress], false);
+							if (defaultAddress?.lat && defaultAddress?.lng) {
+								zoomWithMarkers([defaultAddress], false);
 								return;
 							}
 							getCurrentLocation();
