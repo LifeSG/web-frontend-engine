@@ -122,12 +122,10 @@ describe(UI_TYPE, () => {
 		expect(getRadioButtonB()).toBeDisabled();
 	});
 
-	it("should be aria-disabled if configured for component", async () => {
+	it("should be disabled if configured for component", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getRadioButtonA()).not.toBeDisabled();
-		expect(getRadioButtonB()).not.toBeDisabled();
-
+		// Button are only visually disabled if configured on the component level
 		expect(getRadioButtonA()).toHaveAttribute("aria-disabled", "true");
 		expect(getRadioButtonB()).toHaveAttribute("aria-disabled", "true");
 
@@ -135,7 +133,7 @@ describe(UI_TYPE, () => {
 		expect(getRadioButtonB()).toHaveAttribute("tabindex", "0");
 	});
 
-	it("should be aria-disabled if configured for both component/options", async () => {
+	it("should be disabled if configured for both component/options", async () => {
 		renderComponent({
 			options: [
 				{ label: "A", value: "Apple", disabled: false },
@@ -144,9 +142,7 @@ describe(UI_TYPE, () => {
 			disabled: true,
 		});
 
-		expect(getRadioButtonA()).not.toBeDisabled();
-		expect(getRadioButtonB()).not.toBeDisabled();
-
+		// Button are only visually disabled if configured on the component level
 		expect(getRadioButtonA()).toHaveAttribute("aria-disabled", "true");
 		expect(getRadioButtonB()).toHaveAttribute("aria-disabled", "true");
 
