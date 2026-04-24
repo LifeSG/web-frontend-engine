@@ -954,10 +954,10 @@ describe("location-input-group", () => {
 				expect(mockRefreshLocation).toHaveBeenCalled();
 			});
 
-			it("should not call geolocation when homeAddress is provided", async () => {
+			it("should not call geolocation when defaultAddress is provided", async () => {
 				renderComponent({
 					overrideField: {
-						homeAddress: {
+						defaultAddress: {
 							lat: 1.3001,
 							lng: 103.8002,
 						},
