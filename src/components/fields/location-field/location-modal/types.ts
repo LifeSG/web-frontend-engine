@@ -1,4 +1,4 @@
-import { ILocationFieldValues } from "../types";
+import { ILocationCoord, ILocationFieldValues } from "../types";
 import { ILocationPickerProps } from "./location-picker/types";
 import { ILocationSearchProps } from "./location-search/types";
 
@@ -26,4 +26,5 @@ export interface ILocationModalProps
 	mapBannerText?: string | undefined;
 	locationSelectionMode?: "default" | "pins-only" | undefined;
 	pinsOnlyIndicateCurrentLocation?: boolean | undefined;
+	homeAddress?: ILocationCoord | undefined;
 }

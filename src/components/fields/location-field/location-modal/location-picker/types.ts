@@ -34,4 +34,5 @@ export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivE
 	pinsOnlyIndicateCurrentLocation?: boolean | undefined;
 	currentLocation?: ILocationCoord | undefined;
 	legendItems?: ILegendItem[] | undefined;
+	homeAddress?: ILocationCoord | undefined;
 }
