@@ -44,6 +44,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			bufferRadius,
 			pinsOnlyIndicateCurrentLocation,
 			legendItems,
+			homeAddress,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -198,6 +199,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						bufferRadius={bufferRadius}
 						pinsOnlyIndicateCurrentLocation={pinsOnlyIndicateCurrentLocation}
 						legendItems={legendItems}
+						homeAddress={homeAddress}
 					/>
 				)}
 			</Suspense>

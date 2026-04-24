@@ -953,6 +953,37 @@ describe("location-input-group", () => {
 
 				expect(mockRefreshLocation).toHaveBeenCalled();
 			});
+
+			it("should not call geolocation when homeAddress is provided", async () => {
+				renderComponent({
+					overrideField: {
+						homeAddress: {
+							lat: 1.3001,
+							lng: 103.8002,
+						},
+					},
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								lat: 1.29994179707526,
+								lng: 103.789404349716,
+							},
+						},
+					},
+				});
+
+				await waitFor(() => window.dispatchEvent(new Event("online")));
+
+				getLocationInput()?.focus();
+
+				const refreshCurrentLocationButton = getCurrentLocationButton();
+
+				expect(refreshCurrentLocationButton).toBeInTheDocument();
+
+				fireEvent.click(refreshCurrentLocationButton);
+
+				expect(getCurrentLocationSpy).not.toHaveBeenCalled();
+			});
 		});
 	});
 
