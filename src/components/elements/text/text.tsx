@@ -78,10 +78,11 @@ export const Text = (props: IGenericElementProps<ITextSchema | ITypographySchema
 		if (isArray(children)) {
 			return children.map((text, index) => {
 				const childrenId = `${id}-${index}`;
+				const childrenContentId = `${childrenId}-content`;
 
 				return (
 					<Element key={index} id={childrenId} data-testid={getTestId(childrenId)}>
-						<Sanitize id={childrenId} inline sanitizeOptions={sanitizeOptions}>
+						<Sanitize id={childrenContentId} inline sanitizeOptions={sanitizeOptions}>
 							{text}
 						</Sanitize>
 					</Element>

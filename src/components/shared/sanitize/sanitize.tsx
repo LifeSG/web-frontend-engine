@@ -33,7 +33,7 @@ export const Sanitize = (props: IProps) => {
 		return sanitize(formatHTMLString(), sanitizeOptions);
 	};
 
-	const formatId = (): string => {
+	const generateTestId = (): string => {
 		if (id) {
 			return TestHelper.generateId(id, "sanitized");
 		}
@@ -48,9 +48,9 @@ export const Sanitize = (props: IProps) => {
 			baseTextColor={baseTextColor}
 			baseTextSize={baseTextSize}
 			inline={inline}
-			id={formatId()}
+			id={id}
 			className={className}
-			data-testid={formatId()}
+			data-testid={generateTestId()}
 			dangerouslySetInnerHTML={{ __html: getSanitizedHtml() }}
 		/>
 	);

@@ -133,8 +133,12 @@ describe("radio toggle button", () => {
 	it("should be disabled if configured for component", async () => {
 		renderComponent({ disabled: true });
 
-		expect(getRadioButtonA()).toBeDisabled();
-		expect(getRadioButtonB()).toBeDisabled();
+		// Button are only visually disabled if configured on the component level
+		expect(getRadioButtonA()).toHaveAttribute("aria-disabled", "true");
+		expect(getRadioButtonB()).toHaveAttribute("aria-disabled", "true");
+
+		expect(getRadioButtonA()).toHaveAttribute("tabindex", "0");
+		expect(getRadioButtonB()).toHaveAttribute("tabindex", "0");
 	});
 
 	it("should be disabled if configured for both component/options", async () => {
@@ -146,8 +150,12 @@ describe("radio toggle button", () => {
 			disabled: true,
 		});
 
-		expect(getRadioButtonA()).toBeDisabled();
-		expect(getRadioButtonB()).toBeDisabled();
+		// Button are only visually disabled if configured on the component level
+		expect(getRadioButtonA()).toHaveAttribute("aria-disabled", "true");
+		expect(getRadioButtonB()).toHaveAttribute("aria-disabled", "true");
+
+		expect(getRadioButtonA()).toHaveAttribute("tabindex", "0");
+		expect(getRadioButtonB()).toHaveAttribute("tabindex", "0");
 	});
 
 	it("should be able to render HTML string in option label", () => {

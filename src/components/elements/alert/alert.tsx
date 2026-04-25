@@ -15,13 +15,14 @@ export const Alert = (props: IGenericElementProps<IAlertSchema>) => {
 		id,
 		schema: { children, ...otherSchema },
 	} = props;
+	const contentId = `${id}-content`;
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderContent = () => {
 		if (typeof children === "string") {
-			return <Sanitize id={id}>{children}</Sanitize>;
+			return <Sanitize id={contentId}>{children}</Sanitize>;
 		}
 
 		if (
