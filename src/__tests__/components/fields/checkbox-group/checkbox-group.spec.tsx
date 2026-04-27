@@ -129,17 +129,17 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 	});
 
-	it("should be disabled if configured", async () => {
+	it("should be disabled if configured for component", async () => {
 		renderComponent({ disabled: true });
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
 		const checkboxes = getCheckboxes();
-		checkboxes.forEach((checkbox) => {
-			expect(checkbox).toBeDisabled();
-		});
 
-		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		// Button are only visually disabled if configured on the component level
+		checkboxes.forEach((checkbox) => {
+			expect(checkbox).not.toBeDisabled();
+			expect(checkbox).toHaveAttribute("aria-disabled", "true");
+			expect(checkbox).toHaveAttribute("tabindex", "0");
+		});
 	});
 
 	it("should be disabled if configured for both component/options", async () => {
@@ -151,14 +151,14 @@ describe(UI_TYPE, () => {
 			disabled: true,
 		});
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-
 		const checkboxes = getCheckboxes();
-		checkboxes.forEach((checkbox) => {
-			expect(checkbox).toBeDisabled();
-		});
 
-		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
+		// Button are only visually disabled if configured on the component level
+		checkboxes.forEach((checkbox) => {
+			expect(checkbox).not.toBeDisabled();
+			expect(checkbox).toHaveAttribute("aria-disabled", "true");
+			expect(checkbox).toHaveAttribute("tabindex", "0");
+		});
 	});
 
 	it("should be able to toggle the checkboxes", async () => {

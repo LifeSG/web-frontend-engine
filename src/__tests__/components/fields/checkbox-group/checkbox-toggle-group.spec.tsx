@@ -137,8 +137,9 @@ describe("checkbox toggle group", () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		const toggles = getToggles();
+		// Button are only visually disabled if configured on the component level
 		toggles.forEach((checkbox) => {
-			expect(checkbox).toBeDisabled();
+			expect(checkbox).toHaveAttribute("aria-disabled", "true");
 		});
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
@@ -156,8 +157,9 @@ describe("checkbox toggle group", () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		const toggles = getToggles();
+		// Button are only visually disabled if configured on the component level
 		toggles.forEach((checkbox) => {
-			expect(checkbox).toBeDisabled();
+			expect(checkbox).toHaveAttribute("aria-disabled", "true");
 		});
 
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
