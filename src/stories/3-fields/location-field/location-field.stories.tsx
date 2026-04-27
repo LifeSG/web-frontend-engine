@@ -515,6 +515,7 @@ export const DefaultAddressRefresh = DefaultStoryTemplate<ILocationFieldSchema>(
 DefaultAddressRefresh.args = {
 	uiType: "location-field",
 	label: "Default Address Refresh",
+	locationSelectionMode: "pins-only",
 	mapApi: defaultMapApi,
 	defaultAddress: {
 		lat: 1.3521,

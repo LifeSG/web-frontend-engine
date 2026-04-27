@@ -134,6 +134,11 @@ export const LocationPicker = ({
 	 */
 	useEffect(() => {
 		if (!selectedLocationCoord?.lat || !selectedLocationCoord?.lng) {
+			// If there is no selected location, zoom to default address if available, else reset to default view
+			if (defaultAddress?.lat && defaultAddress?.lng) {
+				zoomWithMarkers([defaultAddress], false);
+				return;
+			}
 			resetView();
 			return;
 		}
