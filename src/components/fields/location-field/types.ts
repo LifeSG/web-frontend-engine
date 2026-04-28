@@ -48,6 +48,7 @@ export interface ILocationFieldSchema<V = undefined>
 	mapBannerText?: string | undefined;
 	pinsOnlyIndicateCurrentLocation?: boolean | undefined;
 	legendItems?: ILegendItem[] | undefined;
+	defaultAddress?: ILocationCoord | undefined;
 }
 
 export type TSinglePanelInputMode = "search" | "map";

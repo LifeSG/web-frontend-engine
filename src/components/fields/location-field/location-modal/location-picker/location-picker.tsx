@@ -50,6 +50,7 @@ export const LocationPicker = ({
 	pinsOnlyIndicateCurrentLocation,
 	currentLocation,
 	legendItems,
+	defaultAddress,
 }: ILocationPickerProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -133,6 +134,11 @@ export const LocationPicker = ({
 	 */
 	useEffect(() => {
 		if (!selectedLocationCoord?.lat || !selectedLocationCoord?.lng) {
+			// If there is no selected location, zoom to default address if available, else reset to default view
+			if (defaultAddress?.lat && defaultAddress?.lng) {
+				zoomWithMarkers([defaultAddress], false);
+				return;
+			}
 			resetView();
 			return;
 		}
@@ -246,6 +252,10 @@ export const LocationPicker = ({
 					if (locationAvailable) {
 						const shouldPreventDefault = !dispatchFieldEvent("click-refresh-current-location", id);
 						if (!shouldPreventDefault) {
+							if (defaultAddress?.lat && defaultAddress?.lng) {
+								zoomWithMarkers([defaultAddress], false);
+								return;
+							}
 							getCurrentLocation();
 						}
 					}
