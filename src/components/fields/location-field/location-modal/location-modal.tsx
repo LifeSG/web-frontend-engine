@@ -53,6 +53,7 @@ const LocationModal = ({
 	bufferRadius,
 	pinsOnlyIndicateCurrentLocation,
 	legendItems,
+	defaultAddress,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -512,6 +513,7 @@ const LocationModal = ({
 									pinsOnlyIndicateCurrentLocation && locationSelectionMode === "pins-only"
 								}
 								currentLocation={currentLocation}
+								defaultAddress={defaultAddress}
 							/>
 						</>
 					) : (

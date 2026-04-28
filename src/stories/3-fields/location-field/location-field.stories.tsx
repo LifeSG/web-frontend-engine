@@ -173,6 +173,19 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
+		defaultAddress: {
+			description:
+				"Specifies a default address coordinate used on refresh. When refresh is clicked and not prevented, the map centers/zooms to this coordinate (if lat/lng are present) instead of using geolocation.",
+			table: {
+				type: {
+					summary: "{ lat: number; lng: number } | undefined",
+				},
+				defaultValue: { summary: undefined },
+			},
+			control: {
+				type: "object",
+			},
+		},
 	},
 };
 export default meta;
@@ -493,4 +506,20 @@ LegendComponent.args = {
 			icon: "/img/reno.png",
 		},
 	],
+};
+
+export const DefaultAddressRefresh = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-default-address-refresh",
+	false,
+	recaptchaSiteKey
+).bind({});
+DefaultAddressRefresh.args = {
+	uiType: "location-field",
+	label: "Default Address Refresh",
+	locationSelectionMode: "pins-only",
+	mapApi: defaultMapApi,
+	defaultAddress: {
+		lat: 1.3521,
+		lng: 103.8198,
+	},
 };
