@@ -1,6 +1,7 @@
 import { Breakpoint, LifeSGTheme } from "@lifesg/react-design-system/theme";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
+import { Marker } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
@@ -33,6 +34,8 @@ import {
 	mockReverseGeoCodeResponse,
 	mockStaticMapDataUri,
 } from "./mock-values";
+import * as markerHelper from "../../../../components/fields/location-field/location-modal/location-picker/helper";
+
 jest.mock("../../../../services/onemap/onemap-service.ts");
 
 window.HTMLElement.prototype.scrollTo = jest.fn; // required for .scrollTo in location-search
@@ -817,6 +820,12 @@ describe("location-input-group", () => {
 		// Selectable Pin Events
 		describe("Selectable Pin events", () => {
 			const getSelectablePinsEvent = "get-selectable-pins";
+			const createMarkerStub = () =>
+				({
+					addTo: jest.fn().mockReturnThis(),
+					on: jest.fn().mockReturnThis(),
+					remove: jest.fn(),
+				} as unknown as Marker);
 
 			describe("get-selectable-pins", () => {
 				const getSelectablePins = jest.fn();
@@ -826,7 +835,7 @@ describe("location-input-group", () => {
 				};
 
 				beforeEach(() => {
-					jest.clearAllMocks;
+					jest.clearAllMocks();
 				});
 
 				it("should fire get-selectable-pins event if default location is set", async () => {
@@ -870,6 +879,14 @@ describe("location-input-group", () => {
 			});
 
 			describe("set-selectable-pins", () => {
+				let markerFromSpy: jest.SpyInstance;
+				let markerFromHtmlSpy: jest.SpyInstance;
+
+				afterEach(() => {
+					markerFromHtmlSpy?.mockRestore();
+					markerFromSpy?.mockRestore();
+				});
+
 				it("should show error modal if selectable pins is not an array", async () => {
 					renderComponent({
 						eventType: getSelectablePinsEvent,
@@ -929,6 +946,49 @@ describe("location-input-group", () => {
 					await waitFor(() => {
 						expect(screen.queryByText("address 1")).toBeDefined();
 						expect(screen.queryByText("address 2")).toBeDefined();
+					});
+				});
+
+				it("should render custom HTML markers when markerHtml is provided", async () => {
+					const customMarkerHtml = '<div class="custom-marker"><img src="/img/lift.png" alt="Lift" /></div>';
+					markerFromSpy = jest.spyOn(markerHelper, "markerFrom").mockImplementation(() => createMarkerStub());
+					markerFromHtmlSpy = jest
+						.spyOn(markerHelper, "markerFromHtml")
+						.mockImplementation(() => createMarkerStub());
+					renderComponent({
+						eventType: getSelectablePinsEvent,
+						eventListener: (formRef) => () => {
+							formRef.dispatchFieldEvent(UI_TYPE, "set-selectable-pins", COMPONENT_ID, {
+								pins: [
+									{
+										lat: 1.21,
+										lng: 103.78,
+										resultListItemText: "address 1",
+										address: "address 1",
+										markerHtml: customMarkerHtml,
+									},
+								],
+							});
+						},
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: {
+									lat: 1.29994179707526,
+									lng: 103.789404349716,
+								},
+							},
+						},
+					});
+
+					getLocationInput()?.focus();
+
+					await waitFor(() => {
+						expect(markerFromHtmlSpy).toHaveBeenCalledWith(
+							expect.objectContaining({
+								markerHtml: expect.stringContaining(customMarkerHtml),
+							}),
+							expect.any(String)
+						);
 					});
 				});
 			});

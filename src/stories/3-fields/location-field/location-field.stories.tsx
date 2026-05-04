@@ -1,6 +1,7 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
 import { Meta, StoryFn } from "@storybook/react";
 import { useEffect, useRef } from "react";
+import ReactDOMServer from "react-dom/server";
 import { ILocationCoord, ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
@@ -13,12 +14,106 @@ import {
 	SUBMIT_BUTTON_SCHEMA,
 	WarningStoryTemplate,
 } from "../../common";
+import { CustomHomePin, CustomPin } from "./custom-pin";
+
+type TSelectablePinConfig = {
+	name?: string;
+	carParkName?: string;
+	id?: string;
+	carParkNumber?: string;
+	carParkType?: string;
+	parkingSystem?: string;
+	xCoord?: number;
+	yCoord?: number;
+	distanceFromReference?: number;
+	latitude: number;
+	longitude: number;
+	icons?: string[];
+	count?: number;
+	isHomeAddress?: boolean;
+};
 
 const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
 
 const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
 const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
 const search = "https://api.dev.lifesg.io/onemap/search";
+
+const defaultSelectablePins: TSelectablePinConfig[] = [
+	{
+		carParkName: "BLK 120 TO 124 PAYA LEBAR WAY",
+		carParkNumber: "M32",
+		carParkType: "SURFACE CAR PARK",
+		parkingSystem: "ELECTRONIC PARKING",
+		latitude: 1.3223122045708784,
+		longitude: 103.88279263612282,
+		xCoord: 33506.0078,
+		yCoord: 33840.2109,
+		distanceFromReference: 109.9831233911331,
+	},
+];
+
+const pinsWithIcons: TSelectablePinConfig[] = [
+	{
+		carParkName: "KAMPONG UBI VIEW",
+		carParkNumber: "358",
+		carParkType: "SURFACE CAR PARK",
+		parkingSystem: "ELECTRONIC PARKING",
+		xCoord: 35501.9607216,
+		yCoord: 34191.1578935,
+		latitude: 1.325486284730739,
+		longitude: 103.90072773995409,
+		icons: ["/img/home.png"],
+		count: 1,
+		isHomeAddress: true,
+	},
+	{
+		carParkName: "KAMPONG UBI VIEW",
+		carParkNumber: "351",
+		carParkType: "SURFACE CAR PARK",
+		parkingSystem: "ELECTRONIC PARKING",
+		xCoord: 35501.9607216,
+		yCoord: 34191.1578935,
+		latitude: 1.326386284730739,
+		longitude: 103.90162773995409,
+		icons: ["/img/lift.png", "/img/reno.png"],
+		count: 3,
+	},
+	{
+		carParkName: "KAMPONG UBI VIEW",
+		carParkNumber: "349",
+		carParkType: "SURFACE CAR PARK",
+		parkingSystem: "ELECTRONIC PARKING",
+		xCoord: 35485.6405577,
+		yCoord: 34228.9805541,
+		latitude: 1.3258283432645641,
+		longitude: 103.90058110378057,
+		icons: ["/img/lift.png"],
+		count: 2,
+	},
+	{
+		carParkName: "KAMPONG UBI VIEW",
+		carParkNumber: "352",
+		carParkType: "SURFACE CAR PARK",
+		parkingSystem: "ELECTRONIC PARKING",
+		xCoord: 35354.2225417,
+		yCoord: 34162.4855169,
+		latitude: 1.3252270180708603,
+		longitude: 103.89940022649942,
+		icons: ["/img/reno.png"],
+		count: 1,
+	},
+];
+
+const getMarkerHtml = (pin: TSelectablePinConfig) => {
+	return ReactDOMServer.renderToString(
+		pin?.isHomeAddress ? (
+			<CustomHomePin iconUrl={pin ? pin.icons?.[0] : ""} />
+		) : (
+			<CustomPin icons={pin ? pin.icons : []} count={pin?.count} />
+		)
+	);
+};
 
 const defaultMapApi = {
 	reverseGeocode,
@@ -408,46 +503,30 @@ locationSelectionMode.args = {
 };
 
 /* eslint-disable react-hooks/rules-of-hooks */
-const IndicateCurrentLocationTemplate = () =>
+const IndicateCurrentLocationTemplate = (res: TSelectablePinConfig[]) =>
 	((args) => {
 		const id = "location-enable-map-click";
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
+			currentFormRef?.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("location-field", "get-selectable-pins", id, getPins);
+				currentFormRef?.removeFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 			};
 		}, []);
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const getPins = (e: CustomEvent<ILocationCoord>) => {
-			const res = [
-				{
-					carParkName: "BLK 120 TO 124 PAYA LEBAR WAY",
-					carParkNumber: "M32",
-					carParkType: "SURFACE CAR PARK",
-					parkingSystem: "ELECTRONIC PARKING",
-					latitude: 1.3223122045708784,
-					longitude: 103.88279263612282,
-					xCoord: 33506.0078,
-					yCoord: 33840.2109,
-					distanceFromReference: 109.9831233911331,
-				},
-			];
+		const getPins = () => {
 			setTimeout(() => {
-				formRef.current.dispatchFieldEvent("location-field", "set-selectable-pins", id, {
-					pins: res.map(
-						(r) =>
-							({
-								lat: r.latitude,
-								lng: r.longitude,
-								resultListItemText: r.carParkName,
-								address: `${r.carParkName} (${r.carParkNumber})`,
-							} as IMapPin)
-					),
+				formRef.current?.dispatchFieldEvent("location-field", "set-selectable-pins", id, {
+					pins: res.map((r) => ({
+						lat: r.latitude,
+						lng: r.longitude,
+						resultListItemText: r.carParkName,
+						address: `${r.carParkName} (${r.carParkNumber})`,
+						markerHtml: r.icons ? getMarkerHtml(r) : undefined,
+					})),
 				});
 			}, 2000);
 		};
@@ -475,7 +554,7 @@ const IndicateCurrentLocationTemplate = () =>
 		);
 	}) as StoryFn<ILocationFieldSchema>;
 
-export const pinsOnlyIndicateCurrentLocation = IndicateCurrentLocationTemplate().bind({});
+export const pinsOnlyIndicateCurrentLocation = IndicateCurrentLocationTemplate(defaultSelectablePins).bind({});
 pinsOnlyIndicateCurrentLocation.args = {
 	uiType: "location-field",
 	label: "Indicate Current Location",
@@ -484,6 +563,37 @@ pinsOnlyIndicateCurrentLocation.args = {
 	pinsOnlyIndicateCurrentLocation: true,
 	interactiveMapPinIconUrl:
 		"https://dev.eservices.lifesg.io/report-neighbourhood-issue/img/icons/car-location-pin.svg",
+};
+
+export const CustomHtmlMarkers = IndicateCurrentLocationTemplate(pinsWithIcons).bind({});
+CustomHtmlMarkers.args = {
+	uiType: "location-field",
+	label: "Custom HTML Markers",
+	mapApi: defaultMapApi,
+	locationSelectionMode: "pins-only",
+	legendItems: [
+		{
+			id: "lift",
+			label: "Lift fault",
+			icon: "/img/lift.png",
+		},
+		{
+			id: "reno",
+			label: "Renovation",
+			icon: "/img/reno.png",
+		},
+	],
+	defaultAddress: {
+		lat: 1.325486284730739,
+		lng: 103.90072773995409,
+	},
+};
+CustomHtmlMarkers.parameters = {
+	docs: {
+		description: {
+			story: "Custom HTML markers can be rendered by passing a markerHtml property for each marker. This HTML string is used to display a custom marker, enabling dynamic rendering based on pin data—for example, showing different icons or badges for various location types.",
+		},
+	},
 };
 
 export const LegendComponent = DefaultStoryTemplate<ILocationFieldSchema>(
