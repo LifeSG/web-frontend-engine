@@ -135,10 +135,17 @@ export const LocationPicker = ({
 	 */
 	useEffect(() => {
 		if (!selectedLocationCoord?.lat || !selectedLocationCoord?.lng) {
-			// If there is no selected location, zoom to default address if available, else reset to default view
-			if (defaultAddress?.lat && defaultAddress?.lng) {
-				zoomWithMarkers([defaultAddress], false);
-				return;
+			// When no location is selected, center the map on the selectable pin that matches
+			// defaultAddress so we keep the selectable pin markers (including markerHtml) visible.
+			if (selectablePins.length && defaultAddress?.lat && defaultAddress?.lng) {
+				const zoomCenter = selectablePins.find(
+					({ lat, lng }) => lat === defaultAddress.lat && lng === defaultAddress.lng
+				);
+
+				if (zoomCenter) {
+					zoomWithMarkers(selectablePins, true, zoomCenter, true, false);
+					return;
+				}
 			}
 			resetView();
 			return;
