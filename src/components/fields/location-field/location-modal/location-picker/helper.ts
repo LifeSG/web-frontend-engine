@@ -23,3 +23,14 @@ export const removeMarkers = (markers: L.Marker[] | undefined) => {
 	if (!markers) return;
 	markers.forEach((marker) => marker.remove());
 };
+
+export const markerFromHtml = ({ lat, lng }: IMapPin, html: string, className?: string | undefined): L.Marker => {
+	return L.marker([lat, lng], {
+		icon: L.divIcon({
+			html,
+			className: className || "",
+			iconSize: [1, 1],
+			iconAnchor: [0, 0],
+		}),
+	});
+};

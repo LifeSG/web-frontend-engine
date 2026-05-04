@@ -6,6 +6,7 @@ import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
 import { ICircleFillIcon } from "@lifesg/react-icons";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import * as L from "leaflet";
+import sanitizeHtml from "sanitize-html";
 import "leaflet/dist/leaflet.css";
 import { useContext, useEffect, useRef } from "react";
 import ReactDOMServer from "react-dom/server";
@@ -14,7 +15,7 @@ import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { LocationHelper } from "../../location-helper";
 import { ILocationCoord } from "../../types";
-import { markerFrom, removeMarkers } from "./helper";
+import { markerFrom, markerFromHtml, removeMarkers } from "./helper";
 import { Legend } from "./legend";
 import {
 	Banner,
@@ -195,12 +196,17 @@ export const LocationPicker = ({
 			const mapPinIcon =
 				"data:image/svg+xml;base64," +
 				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour["icon-primary"]({ theme })} />));
-			const marker = markerFrom(
-				target,
-				interactiveMapPinIconUrl && !target.isCurrentLocation ? interactiveMapPinIconUrl : mapPinIcon,
-				isSelected,
-				target.isCurrentLocation
-			).addTo(map);
+			const resolvedPinIcon =
+				interactiveMapPinIconUrl && !target.isCurrentLocation ? interactiveMapPinIconUrl : mapPinIcon;
+			const marker = target.markerHtml
+				? markerFromHtml(
+						target,
+						sanitizeHtml(target.markerHtml, {
+							allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+							allowedAttributes: false,
+						})
+				  ).addTo(map)
+				: markerFrom(target, resolvedPinIcon, isSelected, target.isCurrentLocation).addTo(map);
 
 			return shouldSelectOnClick && !target.isCurrentLocation
 				? marker.on("click", () => {

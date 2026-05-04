@@ -5,6 +5,7 @@ export interface IMapPin extends ILocationCoord {
 	address?: string | undefined;
 	resultListItemText?: string | undefined;
 	isCurrentLocation?: boolean | undefined;
+	markerHtml?: string | undefined;
 }
 
 export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivElement> {
