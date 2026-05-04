@@ -51,6 +51,7 @@ const LEGEND_ITEMS = [
 const setCurrentLocationSpy = jest.fn();
 const editButtonOnClickSpy = jest.fn();
 const confirmLocationOnClickSpy = jest.fn();
+const handleClickSelectablePin = jest.fn();
 
 enum ELocationInputEvents {
 	"SET_CURRENT_LOCATION" = "set-current-location",
@@ -66,6 +67,7 @@ enum ELocationInputEvents {
 	"HIDE_PERMISSION_MODAL" = "hide-permission-modal",
 	"DISMISS_LOCATION_MODAL" = "dismiss-location-modal",
 	"CLICK_REFRESH_CURRENT_LOCATION" = "click-refresh-current-location",
+	"CLICK_SELECTABLE_PIN" = "click-selectable-pin",
 }
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	locationDetails?: TSetCurrentLocationDetail;
@@ -124,6 +126,12 @@ const FrontendEngineWithEventListener = ({
 					handleShowConfirmLocationPrompt(e);
 				})
 			);
+			addFieldEventListener(
+				UI_TYPE,
+				ELocationInputEvents.CLICK_SELECTABLE_PIN,
+				COMPONENT_ID,
+				handleClickSelectablePin
+			);
 		};
 
 		const handleRemoveFieldEventListener = () => {
@@ -134,6 +142,7 @@ const FrontendEngineWithEventListener = ({
 				COMPONENT_ID,
 				confirmLocationOnClickSpy
 			);
+			removeFieldEventListener(ELocationInputEvents.CLICK_SELECTABLE_PIN, COMPONENT_ID, handleClickSelectablePin);
 		};
 
 		handleAddFieldEventListener();
@@ -920,6 +929,44 @@ describe("location-input-group", () => {
 					await waitFor(() => {
 						expect(screen.queryByText("address 1")).toBeDefined();
 						expect(screen.queryByText("address 2")).toBeDefined();
+					});
+				});
+			});
+			describe("click-selectable-pin", () => {
+				it("should fire click-selectable-pin event when selectable pin is clicked", async () => {
+					const selectablePin = {
+						lat: 1.21,
+						lng: 103.78,
+						resultListItemText: "address 1",
+						address: "address 1",
+					};
+					renderComponent({
+						withEvents: true,
+						locationDetails: { payload: { lat: 1, lng: 1 } },
+						eventType: getSelectablePinsEvent,
+						eventListener: (formRef) => () => {
+							formRef.dispatchFieldEvent(UI_TYPE, "set-selectable-pins", COMPONENT_ID, {
+								pins: [selectablePin],
+							});
+						},
+						overrideSchema: {
+							defaultValues: {
+								[COMPONENT_ID]: {
+									lat: 1.29994179707526,
+									lng: 103.789404349716,
+								},
+							},
+						},
+					});
+
+					getLocationInput()?.focus();
+
+					await waitFor(() => {
+						const markerIcon = document.querySelector(".leaflet-marker-icon");
+						expect(markerIcon).toBeInTheDocument();
+
+						markerIcon && fireEvent.click(markerIcon);
+						expect(handleClickSelectablePin).toHaveBeenCalled();
 					});
 				});
 			});

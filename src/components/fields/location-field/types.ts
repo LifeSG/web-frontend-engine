@@ -110,6 +110,7 @@ export type TLocationFieldEvents = {
 	error: CustomEvent<TLocationFieldErrorDetail>;
 	"error-end": CustomEvent<TLocationFieldErrorDetail>;
 	"set-selectable-pins": CustomEvent<{ pins: IMapPin[] }>;
+	"click-selectable-pin": CustomEvent<{ pin: IMapPin }>;
 };
 
 export class GeolocationPositionErrorWrapper extends Error {
@@ -240,6 +241,18 @@ function locationFieldEvent(
 	type: "error",
 	id: string,
 	listener: TFieldEventListener<TLocationFieldErrorDetail>,
+	options?: boolean | AddEventListenerOptions | undefined
+): void;
+/**
+ * fired on clicking a selectable pin on the map
+ *
+ * `event.preventDefault()` will stop the default selection behavior
+ * */
+function locationFieldEvent(
+	uiType: "location-field",
+	type: "click-selectable-pin",
+	id: string,
+	listener: TFieldEventListener<{ pin: IMapPin }>,
 	options?: boolean | AddEventListenerOptions | undefined
 ): void;
 function locationFieldEvent() {

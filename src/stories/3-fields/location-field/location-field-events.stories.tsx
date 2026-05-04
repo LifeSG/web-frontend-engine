@@ -686,17 +686,35 @@ HidePermissionModal.args = {
 	mapApi: defaultMapApi,
 };
 
-const SetSelectablePinsTemplate = () =>
+const createSelectablePinsTemplate = (listenClickSelectablePin = false) =>
 	((args) => {
 		const id = "location-enable-map-click";
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
 			const currentFormRef = formRef.current;
-			currentFormRef.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
+			const handleClickSelectablePin = (e: TLocationFieldEvents["click-selectable-pin"]) =>
+				action("click-selectable-pin")(e);
+			if (listenClickSelectablePin) {
+				currentFormRef?.addFieldEventListener(
+					"location-field",
+					"click-selectable-pin",
+					id,
+					handleClickSelectablePin
+				);
+			}
+			currentFormRef?.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 
 			return () => {
-				currentFormRef.removeFieldEventListener("location-field", "get-selectable-pins", id, getPins);
+				currentFormRef?.removeFieldEventListener("location-field", "get-selectable-pins", id, getPins);
+				if (listenClickSelectablePin) {
+					currentFormRef?.removeFieldEventListener(
+						"location-field",
+						"click-selectable-pin",
+						id,
+						handleClickSelectablePin
+					);
+				}
 			};
 		}, []);
 
@@ -716,7 +734,7 @@ const SetSelectablePinsTemplate = () =>
 				},
 			];
 			setTimeout(() => {
-				formRef.current.dispatchFieldEvent("location-field", "set-selectable-pins", id, {
+				formRef.current?.dispatchFieldEvent("location-field", "set-selectable-pins", id, {
 					pins: res.map(
 						(r) =>
 							({
@@ -755,10 +773,17 @@ const SetSelectablePinsTemplate = () =>
 	}) as StoryFn<ILocationFieldSchema>;
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const SetSelectablePins = SetSelectablePinsTemplate().bind({});
+export const SetSelectablePins = createSelectablePinsTemplate().bind({});
 SetSelectablePins.args = {
 	uiType: "location-field",
 	label: "Set Selectable Pins",
+	mapApi: defaultMapApi,
+};
+
+export const ClickSelectablePin = createSelectablePinsTemplate(true).bind({});
+ClickSelectablePin.args = {
+	uiType: "location-field",
+	label: "Click Selectable Pin",
 	mapApi: defaultMapApi,
 };
 

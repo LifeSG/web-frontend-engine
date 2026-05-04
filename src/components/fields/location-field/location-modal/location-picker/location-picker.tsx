@@ -204,6 +204,8 @@ export const LocationPicker = ({
 
 			return shouldSelectOnClick && !target.isCurrentLocation
 				? marker.on("click", () => {
+						const shouldPreventDefault = !dispatchFieldEvent("click-selectable-pin", id, { pin: target });
+						if (shouldPreventDefault) return;
 						// To accurately identify the pin, use the original lat & lng from the pin
 						// instead of the ones from the LeafletMouseEvent.
 						zoomAndCenter(map, { lat: target.lat, lng: target.lng });
