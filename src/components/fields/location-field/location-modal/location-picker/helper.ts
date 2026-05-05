@@ -29,7 +29,6 @@ export const markerFromHtml = ({ lat, lng }: IMapPin, html: string, className?: 
 		icon: L.divIcon({
 			html,
 			className: className || "",
-			iconSize: [1, 1],
 			iconAnchor: [0, 0],
 		}),
 	});
