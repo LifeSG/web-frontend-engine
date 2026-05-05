@@ -137,7 +137,7 @@ export const LocationPicker = ({
 		if (!selectedLocationCoord?.lat || !selectedLocationCoord?.lng) {
 			// When no location is selected, center the map on the selectable pin that matches
 			// defaultAddress so we keep the selectable pin markers (including markerHtml) visible.
-			if (selectablePins.length && defaultAddress?.lat && defaultAddress?.lng) {
+			if (selectablePins.length > 0 && defaultAddress?.lat && defaultAddress?.lng) {
 				const zoomCenter = selectablePins.find(
 					({ lat, lng }) => lat === defaultAddress.lat && lng === defaultAddress.lng
 				);
@@ -267,7 +267,10 @@ export const LocationPicker = ({
 						const shouldPreventDefault = !dispatchFieldEvent("click-refresh-current-location", id);
 						if (!shouldPreventDefault) {
 							if (defaultAddress?.lat && defaultAddress?.lng) {
-								zoomWithMarkers([defaultAddress], false);
+								const zoomCenter = selectablePins.find(
+									({ lat, lng }) => lat === defaultAddress.lat && lng === defaultAddress.lng
+								);
+								zoomWithMarkers(selectablePins, true, zoomCenter ?? defaultAddress, true, false);
 								return;
 							}
 							getCurrentLocation();

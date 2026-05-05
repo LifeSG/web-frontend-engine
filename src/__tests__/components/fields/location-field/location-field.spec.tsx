@@ -8,6 +8,7 @@ import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../com
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { ERROR_SVG } from "../../../../components/fields/location-field/location-modal/location-modal.data";
 import { ErrorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
+import * as markerHelper from "../../../../components/fields/location-field/location-modal/location-picker/helper";
 import { IMapPin } from "../../../../components/fields/location-field/location-modal/location-picker/types";
 import { ERROR_MESSAGES, Prompt } from "../../../../components/shared";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
@@ -34,7 +35,6 @@ import {
 	mockReverseGeoCodeResponse,
 	mockStaticMapDataUri,
 } from "./mock-values";
-import * as markerHelper from "../../../../components/fields/location-field/location-modal/location-picker/helper";
 
 jest.mock("../../../../services/onemap/onemap-service.ts");
 
