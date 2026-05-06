@@ -299,6 +299,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		if (typeof TouchEvent !== "undefined" && e.e instanceof TouchEvent && e.e.touches.length === 2) {
 			if (typeof TouchEvent !== "undefined" && fabricCanvas.current && fabricCanvas.current.isDrawingMode) {
 				fabricCanvas.current.isDrawingMode = false;
+				const objectCountBeforeGesture = fabricCanvas.current.getObjects().length;
 
 				// prevent drawing when gesturing
 				// clear accidental drawings while gesturing
@@ -306,9 +307,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					(fabricCanvas.current.freeDrawingBrush as any).onMouseUp({ e: {} });
 				} catch (e) {}
 				const canvasObjects = fabricCanvas.current.getObjects();
-				if (canvasObjects.length > 1) {
-					fabricCanvas.current.remove(canvasObjects[canvasObjects.length - 1]);
-				}
+				canvasObjects.slice(objectCountBeforeGesture).forEach((obj) => fabricCanvas.current?.remove(obj));
 			}
 		}
 	};
@@ -343,7 +342,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			if (fabricCanvas.current) {
 				fabricCanvas.current.off("mouse:down", handleMouseDown);
 				fabricCanvas.current.off("mouse:up", handleMouseUp);
-				fabricCanvas.current.on("path:created", handlePencilErasable);
+				fabricCanvas.current.off("path:created", handlePencilErasable);
 			}
 		};
 	}, [fabricCanvas.current, color, erase]);
