@@ -4,7 +4,7 @@ import json from "@rollup/plugin-json";
 import postcss from "rollup-plugin-postcss";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 import typescript from "rollup-plugin-typescript2";
 
 const plugins = [

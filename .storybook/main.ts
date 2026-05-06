@@ -4,8 +4,12 @@ import path from "path";
 const config: StorybookConfig = {
 	stories: ["../src/stories/**/*.stories.@(ts|tsx)", "../src/stories/**/*.mdx"],
 	addons: [
-		"@storybook/addon-essentials",
-		"@storybook/addon-a11y",
+		"@storybook/addon-actions",
+		"@storybook/addon-backgrounds",
+		"@storybook/addon-controls",
+		"@storybook/addon-docs",
+		"@storybook/addon-toolbars",
+		"@storybook/addon-viewport",
 		"@mihkeleidast/storybook-addon-source",
 		"@storybook/addon-webpack5-compiler-swc",
 	],
