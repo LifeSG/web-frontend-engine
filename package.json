@@ -50,7 +50,7 @@
 		"libphonenumber-js": "^1.10.14",
 		"lodash": "^4.17.21",
 		"react-dropzone": "^14.2.3",
-		"react-hook-form": "^7.34.2",
+		"react-hook-form": "7.54.2",
 		"react-infinite-scroll-hook": "^4.1.1",
 		"sanitize-html": "^2.8.1",
 		"use-deep-compare-effect": "^1.8.1",

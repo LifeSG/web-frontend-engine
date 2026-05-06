@@ -12,6 +12,7 @@ const plugins = [
 	nodeResolve({ browser: true }),
 	commonjs(), // converts CommonJS to ES6 modules
 	typescript({
+		include: ["**/*.ts", "**/*.tsx", "**/*.cts", "**/*.mts"],
 		useTsconfigDeclarationDir: true,
 		tsconfig: "tsconfig.json",
 		tsconfigOverride: {
