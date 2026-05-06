@@ -83,8 +83,6 @@ interface IRenderAndPerformActionsOptions {
  * optionally go to review modal
  */
 const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) => {
-	jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
-
 	const {
 		overrideField,
 		overrideSchema,
@@ -97,9 +95,11 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		headers = {},
 		onClick,
 	} = options;
+
 	jest.spyOn(FileHelper, "getType").mockImplementation(
 		getFileType || (() => Promise.resolve({ ext: "jpg", mime: "image/jpeg" }))
 	);
+	jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
 
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,

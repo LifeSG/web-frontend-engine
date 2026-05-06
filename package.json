@@ -18,7 +18,7 @@
 		"lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix",
 		"storybook": "storybook dev -p 6006",
 		"prepare": "(test -d ./.git && npx husky install) || true",
-		"postinstall": "node scripts/patch-fabric.js && node scripts/patch-jsdom.js"
+		"postinstall": "node scripts/patch-fabric.js && patch-package"
 	},
 	"repository": {
 		"type": "git",
@@ -120,6 +120,7 @@
 		"jest-junit": "^17.0.0",
 		"jsdom-testing-mocks": "^1.9.0",
 		"lint-staged": "^16.4.0",
+		"patch-package": "^8.0.1",
 		"postcss": "^8.4.41",
 		"postcss-import": "^15.0.0",
 		"postcss-loader": "^7.3.3",
