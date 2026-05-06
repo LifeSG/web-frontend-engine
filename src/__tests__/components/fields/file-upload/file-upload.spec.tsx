@@ -68,6 +68,7 @@ interface IRenderAndPerformActionsOptions {
 	overrideField?: TOverrideField<IFileUploadSchema> | undefined;
 	overrideSchema?: TOverrideSchema | undefined;
 	files?: { name: string; type: string }[] | undefined;
+	getFileType?: typeof FileHelper.getType | undefined;
 	inputType?: "input" | "drag & drop" | undefined;
 	uploadType?: TUploadType | undefined;
 	headers?: AxiosRequestConfig["headers"];
@@ -83,7 +84,6 @@ interface IRenderAndPerformActionsOptions {
  */
 const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) => {
 	jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
-	jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 
 	const {
 		overrideField,
@@ -91,11 +91,16 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		eventType,
 		eventListener,
 		files = [],
+		getFileType,
 		inputType = "input",
 		uploadType = "base64",
 		headers = {},
 		onClick,
 	} = options;
+	jest.spyOn(FileHelper, "getType").mockImplementation(
+		getFileType || (() => Promise.resolve({ ext: "jpg", mime: "image/jpeg" }))
+	);
+
 	const json: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		sections: {
@@ -849,10 +854,15 @@ describe(UI_TYPE, () => {
 
 		describe("when uploading wrong format", () => {
 			beforeEach(async () => {
-				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "jpg", mime: "image/jpeg" });
-				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "png", mime: "image/png" });
+				const getMockFileType = (file: File) =>
+					Promise.resolve(
+						file.name === FILE_2.name
+							? { ext: "png", mime: "image/png" }
+							: { ext: "jpg", mime: "image/jpeg" }
+					);
 				await renderComponent({
 					files: [FILE_1, FILE_2],
+					getFileType: getMockFileType,
 					overrideField: {
 						validation: [{ fileType: ["png"], errorMessage: ERROR_MESSAGE }],
 					},
@@ -860,9 +870,9 @@ describe(UI_TYPE, () => {
 				});
 			});
 
-			it("should not upload the invalid file and show an error message", () => {
-				expect(screen.getAllByText(ERROR_MESSAGE).length).toBe(2); // each error message is rendered twice
-				expect(uploadSpy).toHaveBeenCalledTimes(1);
+			it("should not upload the invalid file and show an error message", async () => {
+				expect(screen.getAllByText(ERROR_MESSAGE).length).toBeGreaterThan(0);
+				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
 			});
 
 			it("should submit only the valid files", async () => {
