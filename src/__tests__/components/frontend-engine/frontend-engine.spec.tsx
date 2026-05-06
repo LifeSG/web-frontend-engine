@@ -423,7 +423,7 @@ describe("frontend-engine", () => {
 					type: expect.anything(),
 				},
 			});
-			expect(onSubmit).not.toBeCalled();
+			expect(onSubmit).not.toHaveBeenCalled();
 		});
 
 		describe("submit", () => {
@@ -1002,7 +1002,7 @@ describe("frontend-engine", () => {
 		fireEvent.click(screen.getByRole("button", { name: "Update schema" }));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(submitFn).toBeCalled();
+		expect(submitFn).toHaveBeenCalled();
 	});
 
 	describe("setErrors", () => {
@@ -1260,15 +1260,15 @@ describe("frontend-engine", () => {
 		render(<FrontendEngineWithEvent />);
 
 		fireEvent.click(screen.getByRole("button", { name: "Dispatch field event listener" }));
-		expect(testFn).not.toBeCalled();
+		expect(testFn).not.toHaveBeenCalled();
 
 		fireEvent.click(screen.getByRole("button", { name: "Add field event listener" }));
 		fireEvent.click(screen.getByRole("button", { name: "Dispatch field event listener" }));
-		expect(testFn).toBeCalledTimes(1);
+		expect(testFn).toHaveBeenCalledTimes(1);
 
 		fireEvent.click(screen.getByRole("button", { name: "Remove field event listener" }));
 		fireEvent.click(screen.getByRole("button", { name: "Dispatch field event listener" }));
-		expect(testFn).toBeCalledTimes(1);
+		expect(testFn).toHaveBeenCalledTimes(1);
 	});
 
 	describe("overrides", () => {
@@ -1401,7 +1401,7 @@ describe("frontend-engine", () => {
 			fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(onSubmit).not.toBeCalled();
+			expect(onSubmit).not.toHaveBeenCalled();
 			expect(getFieldOne().parentElement.nextSibling.textContent).toMatch(ERROR_MESSAGE);
 		});
 

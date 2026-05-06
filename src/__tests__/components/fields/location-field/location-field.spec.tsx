@@ -541,7 +541,7 @@ describe("location-input-group", () => {
 
 				getLocationInput().focus();
 
-				expect(setCurrentLocationSpy).toBeCalled();
+				expect(setCurrentLocationSpy).toHaveBeenCalled();
 
 				// test for side effects
 
@@ -570,7 +570,7 @@ describe("location-input-group", () => {
 
 				screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")).focus();
 
-				expect(setCurrentLocationSpy).toBeCalled();
+				expect(setCurrentLocationSpy).toHaveBeenCalled();
 
 				await waitFor(() => {
 					expect(
@@ -611,7 +611,7 @@ describe("location-input-group", () => {
 
 				screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")).focus();
 
-				expect(setCurrentLocationSpy).toBeCalled();
+				expect(setCurrentLocationSpy).toHaveBeenCalled();
 
 				await waitFor(() => {
 					expect(
@@ -671,7 +671,7 @@ describe("location-input-group", () => {
 					eventListener: () => handleShowReviewModal,
 				});
 				getLocationInput().focus();
-				expect(handleShowReviewModal).toBeCalled();
+				expect(handleShowReviewModal).toHaveBeenCalled();
 			});
 
 			it("should fire hide-location-modal event on hiding location modal", async () => {
@@ -682,7 +682,7 @@ describe("location-input-group", () => {
 				});
 				getLocationInput().focus();
 				await waitFor(() => fireEvent.click(getField("button", "Cancel", false)));
-				expect(handleHideReviewModal).toBeCalled();
+				expect(handleHideReviewModal).toHaveBeenCalled();
 			});
 		});
 
@@ -715,7 +715,7 @@ describe("location-input-group", () => {
 				expect(getLocationInput()).toHaveAttribute("aria-disabled", "true");
 				fireEvent.click(getEditLocationButton());
 
-				expect(editButtonOnClickSpy).toBeCalled();
+				expect(editButtonOnClickSpy).toHaveBeenCalled();
 
 				await waitFor(() => {
 					expect(getEditLocationModal(true)).toBeInTheDocument();
@@ -793,7 +793,7 @@ describe("location-input-group", () => {
 				fireEvent.click(getLocationModalControlButtons("Confirm"));
 
 				await waitFor(() => {
-					expect(confirmLocationOnClickSpy).toBeCalled();
+					expect(confirmLocationOnClickSpy).toHaveBeenCalled();
 					expect(getConfirmLocationModal()).toBeInTheDocument();
 				});
 				act(() => jest.advanceTimersByTime(3500));
@@ -1078,7 +1078,7 @@ describe("location-input-group", () => {
 						});
 
 						await waitFor(() => {
-							expect(fetchSingleLocationByLatLngSpy).toBeCalledTimes(1);
+							expect(fetchSingleLocationByLatLngSpy).toHaveBeenCalledTimes(1);
 							expect(getLocationInput(true)).toBeInTheDocument();
 							expect(getStaticMap(true)).toBeInTheDocument();
 						});
@@ -1131,8 +1131,8 @@ describe("location-input-group", () => {
 						});
 
 						await waitFor(() => {
-							expect(fetchSingleLocationByLatLngSpy).toBeCalledTimes(1);
-							expect(fetchSingleLocationByAddressSpy).not.toBeCalled();
+							expect(fetchSingleLocationByLatLngSpy).toHaveBeenCalledTimes(1);
+							expect(fetchSingleLocationByAddressSpy).not.toHaveBeenCalled();
 							expect(getLocationInput(true)).toBeInTheDocument();
 							expect(getStaticMap(true)).toBeInTheDocument();
 						});
@@ -1823,7 +1823,7 @@ describe("location-input-group", () => {
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalled();
+			expect(SUBMIT_FN).toHaveBeenCalled();
 		});
 
 		describe.each`
@@ -1867,7 +1867,7 @@ describe("location-input-group", () => {
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalled();
+			expect(SUBMIT_FN).toHaveBeenCalled();
 		});
 
 		it("should validate mustHavePostalCode", async () => {
