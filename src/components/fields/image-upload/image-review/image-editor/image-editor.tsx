@@ -10,9 +10,6 @@ import { useWindowHelper } from "../../../../../utils/hooks";
 
 const MAX_ZOOM = 5;
 const PENCIL_BRUSH_SIZE = 10;
-type ErasableFabricObject = FabricObject & {
-	erasable?: boolean;
-};
 
 export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedRef<IImageEditorRef>) => {
 	//  =============================================================================
@@ -234,7 +231,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					}
 					img.selectable = false;
 					img.hoverCursor = "default";
-					(img as ErasableFabricObject).erasable = false;
+					img.erasable = false;
 					fabricCanvas.current.insertAt(0, img); // Insert the image as the lowest object so we can draw on top of it
 					fabricBackground.current = img;
 					resetZoomAndPosition();
@@ -328,7 +325,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 
 	const handlePencilErasable = (e: any) => {
 		const path = e.path as Path;
-		(path as ErasableFabricObject).erasable = true; // Important for @erase2d/fabric
+		path.erasable = true; // Important for @erase2d/fabric
 	};
 
 	useEffect(() => {
