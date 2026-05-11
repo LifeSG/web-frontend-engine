@@ -2,6 +2,7 @@ import { Alert } from "@lifesg/react-design-system/alert";
 import { Color } from "@lifesg/react-design-system/color";
 import { TextStyleHelper } from "@lifesg/react-design-system/text";
 import styled from "styled-components";
+import { Spacing } from "@lifesg/react-design-system/theme";
 
 export const ESignatureWrapper = styled.div`
 	&:not(:last-child) {
@@ -14,6 +15,9 @@ export const ErrorWrapper = styled.div`
 	color: ${Color.Validation.Red.Text};
 	outline: none;
 	${TextStyleHelper.getTextStyle("H6", "semibold")}
+	display: flex;
+	gap: ${Spacing["spacing-4"]};
+	align-items: center;
 `;
 
 export const TryAgain = styled.button`
