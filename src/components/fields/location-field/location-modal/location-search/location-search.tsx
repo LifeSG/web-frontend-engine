@@ -82,7 +82,7 @@ export const LocationSearch = ({
 	// CONST, STATE, REFS
 	// =============================================================================
 	const { addFieldEventListener, removeFieldEventListener, dispatchFieldEvent } = useFieldEvent();
-	const { getToken } = useRecaptcha();
+	const { isRecaptchaReady, getToken } = useRecaptcha();
 	const reverseGeocodeUrl = mapApi?.reverseGeocode;
 	const convertLatLngToXYUrl = mapApi?.convertLatLngToXY;
 	const searchUrl = mapApi?.search;
@@ -130,7 +130,7 @@ export const LocationSearch = ({
 	// =============================================================================
 	// check if any of the services is working
 	useEffect(() => {
-		if (!showLocationModal) return;
+		if (!showLocationModal || !isRecaptchaReady) return;
 		// check if one map or reverse code is working
 		// - get location error
 		// - first load
@@ -155,7 +155,7 @@ export const LocationSearch = ({
 			debounceFetchAddress("singapore", 1, undefined, handleApiErrors, searchUrl, getToken, mapApiHeaders),
 			reverseGeoCodeCheck(),
 		]);
-	}, []);
+	}, [isRecaptchaReady]);
 
 	useEffect(() => {
 		if (!navigator.onLine) return;
@@ -199,6 +199,8 @@ export const LocationSearch = ({
 	 * Prefill based on lat lng or address with the appropriate api
 	 */
 	useEffect(() => {
+		if (!isRecaptchaReady) return;
+
 		const handleResult = ({ displayAddressText, ...locationFieldValue }: IResultListItem) => {
 			const validPostalCode =
 				!mustHavePostalCode || LocationHelper.hasGotAddressValue(locationFieldValue.postalCode);
@@ -267,7 +269,7 @@ export const LocationSearch = ({
 				mapApiHeaders
 			);
 		}
-	}, []);
+	}, [isRecaptchaReady]);
 
 	/**
 	 * Gets the address of the location with lat lng when user clicks on the map
@@ -281,7 +283,7 @@ export const LocationSearch = ({
 	 * Handles query searching and search results display
 	 */
 	useEffect(() => {
-		if (resultState === "found") return;
+		if (resultState === "found" || !isRecaptchaReady) return;
 
 		const parsedString = validateQueryString(queryString);
 		if (!parsedString) return resetResultsList();
@@ -332,7 +334,7 @@ export const LocationSearch = ({
 			getToken,
 			mapApiHeaders
 		);
-	}, [PAGE_SIZE, queryString]);
+	}, [PAGE_SIZE, queryString, isRecaptchaReady]);
 
 	// Determine if there are more items to be fetched
 	useEffect(() => {
@@ -460,6 +462,10 @@ export const LocationSearch = ({
 	 * all the data will be fetched
 	 */
 	const getMoreLocationResults = () => {
+		if (!isRecaptchaReady) {
+			return;
+		}
+
 		setLoading(true);
 
 		if (searchBuildingResults.length < apiResults.length) {
@@ -505,7 +511,7 @@ export const LocationSearch = ({
 	 * - map picked latlng
 	 */
 	const displayResultsFromLatLng = async (addressLat: number, addressLng: number) => {
-		if (!reverseGeocodeUrl) return;
+		if (!isRecaptchaReady || !reverseGeocodeUrl) return;
 		const onError = (error: any) => {
 			setQueryString("");
 			handleApiErrors(error);

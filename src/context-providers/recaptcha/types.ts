@@ -9,6 +9,7 @@ export interface IRecaptchaState {
 
 export interface IRecaptchaContext {
 	recaptchaState: IRecaptchaState;
+	isRecaptchaReady: boolean;
 	dispatch: Dispatch<TRecaptchaActions>;
 	getToken: (action?: string) => Promise<string | undefined>;
 }

@@ -11,6 +11,7 @@ const DEFAULT_STATE: IRecaptchaState = {
 const DEFAULT_CONTEXT_VALUES: IRecaptchaContext = {
 	dispatch: () => undefined,
 	recaptchaState: DEFAULT_STATE,
+	isRecaptchaReady: false,
 	getToken: async () => undefined,
 };
 
@@ -42,6 +43,7 @@ interface IRecaptchaProviderProps {
 // =============================================================================
 export const RecaptchaProvider = ({ children, recaptchaSiteKey }: IRecaptchaProviderProps) => {
 	const [recaptchaState, dispatch] = useReducer(recaptchaStateReducer, DEFAULT_STATE);
+	const isRecaptchaReady = !recaptchaSiteKey || recaptchaState.loaded;
 	// =========================================================================
 	// EFFECTS
 	// =========================================================================
@@ -103,6 +105,8 @@ export const RecaptchaProvider = ({ children, recaptchaSiteKey }: IRecaptchaProv
 	// RENDER
 	// =============================================================================
 	return (
-		<RecaptchaContext.Provider value={{ recaptchaState, dispatch, getToken }}>{children}</RecaptchaContext.Provider>
+		<RecaptchaContext.Provider value={{ recaptchaState, isRecaptchaReady, dispatch, getToken }}>
+			{children}
+		</RecaptchaContext.Provider>
 	);
 };
