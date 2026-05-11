@@ -13,6 +13,9 @@ export const ErrorWrapper = styled.div`
 	color: ${Colour["text-error"]};
 	outline: none;
 	${Font["body-sm-semibold"]}
+	display: flex;
+	gap: ${Spacing["spacing-4"]};
+	align-items: center;
 `;
 
 export const TryAgain = styled.button`

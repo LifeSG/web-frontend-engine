@@ -1,4 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
+import { ExclamationCircleFillIcon } from "@lifesg/react-icons/exclamation-circle-fill";
 import { CanceledError } from "axios";
 import isEmpty from "lodash/isEmpty";
 import { useEffect, useRef, useState } from "react";
@@ -191,10 +192,13 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		if (uploadErrorCount > 0) {
 			return (
 				<ErrorWrapper>
-					{uploadRuleRef.current?.errorMessage || ERROR_MESSAGES.ESIGNATURE.UPLOAD}
-					<TryAgain type="button" onClick={() => handleChange(signatureDataURL)}>
-						Please try again.
-					</TryAgain>
+					<ExclamationCircleFillIcon />
+					<span>
+						{uploadRuleRef.current?.errorMessage || ERROR_MESSAGES.ESIGNATURE.UPLOAD}
+						<TryAgain type="button" onClick={() => handleChange(signatureDataURL)}>
+							Please try again.
+						</TryAgain>
+					</span>
 					{uploadErrorCount >= 3 && (
 						<RefreshAlert type="warning" data-testid="upload-refresh-alert">
 							Refresh this page if you cannot upload your signature.
@@ -207,10 +211,13 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		if (loadErrorCount > 0 && hasValue(value)) {
 			return (
 				<ErrorWrapper>
-					Failed to load.
-					<TryAgain type="button" onClick={() => loadImage(value.fileId, value.fileUrl)}>
-						Please try again.
-					</TryAgain>
+					<ExclamationCircleFillIcon />
+					<span>
+						Failed to load.
+						<TryAgain type="button" onClick={() => loadImage(value.fileId, value.fileUrl)}>
+							Please try again.
+						</TryAgain>
+					</span>
 					{loadErrorCount >= 3 && (
 						<RefreshAlert type="warning" data-testid="load-refresh-alert">
 							Refresh this page if your signature failed to load.
@@ -220,7 +227,12 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 			);
 		}
 
-		return <ErrorWrapper>{error?.message}</ErrorWrapper>;
+		return (
+			<ErrorWrapper>
+				<ExclamationCircleFillIcon />
+				<span>{error?.message}</span>
+			</ErrorWrapper>
+		);
 	};
 
 	return (
