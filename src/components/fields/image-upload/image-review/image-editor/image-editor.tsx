@@ -20,6 +20,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const fabricCanvas = useRef<FabricCanvas>();
 	const fabricBackground = useRef<FabricImage>();
+	const fittedImageBounds = useRef<{ left: number; top: number; width: number; height: number }>();
 	const pencilBrush = useRef<PencilBrush>();
 	const eraserBrush = useRef<EraserBrush>();
 	const gestures = useRef({
@@ -121,10 +122,8 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 
 				syncCanvasDimensions();
 
-				const scale = Math.min(
-					canvasWidth / fabricBackground.current.getScaledWidth(),
-					canvasHeight / fabricBackground.current.getScaledHeight()
-				);
+				const backgroundBounds = fabricBackground.current.getBoundingRect();
+				const scale = Math.min(canvasWidth / backgroundBounds.width, canvasHeight / backgroundBounds.height);
 
 				fitImageToCanvas();
 
@@ -154,25 +153,39 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	const resetZoomAndPosition = () => {
 		if (fabricCanvas.current) {
 			fabricCanvas.current.setZoom(1);
+			gestures.current.pinchStartAmount = 0;
 			gestures.current.pan = new Point(0, 0);
 			fabricCanvas.current.absolutePan(new Point(0, 0));
 			fabricCanvas.current.requestRenderAll();
 		}
 	};
 
-	const clampPanToCanvas = (pan: Point, zoom = fabricCanvas.current?.getZoom() || 1) => {
-		if (!fabricCanvas.current || zoom <= 1) return new Point(0, 0);
+	const clampPanToImageBounds = (pan: Point, zoom = fabricCanvas.current?.getZoom() || 1) => {
+		if (!fabricCanvas.current || !fabricBackground.current || zoom <= 1) return new Point(0, 0);
 
-		const maxPanX = fabricCanvas.current.getWidth() * (zoom - 1);
-		const maxPanY = fabricCanvas.current.getHeight() * (zoom - 1);
+		const imageBounds = fittedImageBounds.current || fabricBackground.current.getBoundingRect();
+		const canvasWidth = fabricCanvas.current.getWidth();
+		const canvasHeight = fabricCanvas.current.getHeight();
 
-		return new Point(Math.min(Math.max(pan.x, 0), maxPanX), Math.min(Math.max(pan.y, 0), maxPanY));
+		const clampAxis = (value: number, imageStart: number, imageSize: number, canvasSize: number) => {
+			const minPan = imageStart * zoom;
+			const maxPan = (imageStart + imageSize) * zoom - canvasSize;
+
+			if (minPan >= maxPan) return (minPan + maxPan) / 2;
+
+			return Math.min(Math.max(value, minPan), maxPan);
+		};
+
+		return new Point(
+			clampAxis(pan.x, imageBounds.left, imageBounds.width, canvasWidth),
+			clampAxis(pan.y, imageBounds.top, imageBounds.height, canvasHeight)
+		);
 	};
 
 	const applyPan = (pan: Point, zoom?: number) => {
 		if (!fabricCanvas.current) return;
 
-		gestures.current.pan = clampPanToCanvas(pan, zoom);
+		gestures.current.pan = clampPanToImageBounds(pan, zoom);
 		fabricCanvas.current.absolutePan(gestures.current.pan);
 	};
 
@@ -215,6 +228,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 			}
 
 			img.setCoords(); // Ensures the internal coordinate system matches the visual state after scaling
+			fittedImageBounds.current = img.getBoundingRect();
 			fabricCanvas.current.requestRenderAll();
 		}
 	};
@@ -304,7 +318,9 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 					(fabricCanvas.current.freeDrawingBrush as any).onMouseUp({ e: {} });
 				} catch (e) {}
 				const canvasObjects = fabricCanvas.current.getObjects();
-				canvasObjects.slice(objectCountBeforeGesture).forEach((obj) => fabricCanvas.current?.remove(obj));
+				if (canvasObjects.length > 1) {
+					fabricCanvas.current.remove(canvasObjects[canvasObjects.length - 1]);
+				}
 			}
 		}
 	};
