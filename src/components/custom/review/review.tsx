@@ -5,7 +5,7 @@ import isEmpty from "lodash/isEmpty";
 import { useEffect, useState } from "react";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
-import { AxiosApiClient } from "../../../utils";
+import { AxiosApiClient, filterSchemaProps } from "../../../utils";
 import { useFieldEvent, useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { IGenericCustomElementProps } from "../types";
@@ -173,7 +173,10 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// RENDER FUNCTIONS
 	// =========================================================================
 	const renderAccordion = (schema: IReviewSchemaAccordion) => {
-		const { button, bottomSection, expanded = true, label, topSection, ...otherSchema } = schema;
+		const {
+			commonSchema: { label },
+			customSchema: { button, bottomSection, expanded = true, topSection, ...accordionProps },
+		} = filterSchemaProps(schema);
 
 		return (
 			<BoxContainer
@@ -186,7 +189,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 					)
 				}
 				expanded={expanded}
-				{...otherSchema}
+				{...accordionProps}
 			>
 				<CustomUneditableSection
 					background={false}
@@ -203,10 +206,13 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	};
 
 	const renderBox = (schema: IReviewSchemaBox) => {
-		const { label, description, topSection, bottomSection, ...otherSchema } = schema;
+		const {
+			commonSchema: { label },
+			customSchema: { description, topSection, bottomSection, ...boxProps },
+		} = filterSchemaProps(schema);
 		return (
 			<UneditableSection
-				{...otherSchema}
+				{...boxProps}
 				id={id}
 				title={label}
 				description={description}

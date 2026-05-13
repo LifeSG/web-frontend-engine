@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
-import { TestHelper } from "../../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../../utils";
 import { useValidationConfig } from "../../../../utils/hooks";
 import { Sanitize } from "../../../shared";
 import { IGenericCustomFieldProps } from "../../types";
@@ -14,12 +14,11 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { schema, id, value, onChange } = props;
 	const {
-		schema: { label, options, expanded, validation, ...otherSchema },
-		id,
-		value,
-		onChange,
-	} = props;
+		commonSchema: { label, validation },
+		customSchema: { clearBehavior: _clearBehavior, options, expanded, ...checkboxProps },
+	} = filterSchemaProps(schema);
 
 	const { setValue } = useFormContext();
 	const [selectedOptions, setSelectedOptions] = useState<IOption[]>(); // Current selected value state
@@ -79,7 +78,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 	return (
 		<Filter.Checkbox
 			id={id}
-			{...otherSchema}
+			{...checkboxProps}
 			data-testid={TestHelper.generateId(id, "filter-checkbox")}
 			title={title}
 			addon={addon}

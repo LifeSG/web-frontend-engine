@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Warning } from "../../shared";
 import { ERROR_MESSAGES } from "../../shared/error-messages";
@@ -20,11 +20,15 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 		formattedLabel,
 		id,
 		onChange,
-		schema: { label: _label, options, validation, ...otherSchema },
+		schema,
 		value = { from: undefined, to: undefined },
 		warning,
 		...otherProps
 	} = props;
+	const {
+		commonSchema: { validation },
+		customSchema: { options, ...rangeSelectProps },
+	} = filterSchemaProps(schema);
 
 	const { setValue } = useFormContext();
 	const [toStateValue, setToStateValue] = useState<string>(value.from || "");
@@ -113,7 +117,7 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 	return (
 		<>
 			<Form.RangeSelect
-				{...otherSchema}
+				{...rangeSelectProps}
 				{...otherProps}
 				id={id}
 				onHideOptions={handleBlur}

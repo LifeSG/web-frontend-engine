@@ -3,6 +3,7 @@ import { FieldError, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 import * as Yup from "yup";
 import { useFieldEvent, useIframeMessage, useValidationConfig } from "../../../utils/hooks";
+import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IGenericCustomFieldProps } from "../types";
 import { EPostMessageEvent, IIframeSchema } from "./types";
 
@@ -20,12 +21,10 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	// CONST, STATE, REF
 	// =========================================================================
+	const { error, id, schema, value } = props;
 	const {
-		error,
-		id,
-		schema: { "data-testid": testId, src, validationTimeout = 2000, ...otherSchema },
-		value,
-	} = props;
+		customSchema: { "data-testid": testId, src, validationTimeout = 2000, ...iframeProps },
+	} = filterSchemaProps(schema);
 	const formContext = useFormContext();
 	const iframeRef = useRef<HTMLIFrameElement>(null);
 	const deferredRef = useRef<{
@@ -175,7 +174,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	return (
 		<FluidIframe
-			{...otherSchema}
+			{...iframeProps}
 			ref={iframeRef}
 			src={src}
 			id={id}

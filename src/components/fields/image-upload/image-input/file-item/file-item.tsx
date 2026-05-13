@@ -169,7 +169,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 			<>
 				<ErrorCustomMutedThumbnailContainer>
 					<Thumbnail
-						src={fileItem.dataURL ?? ""}
+						$src={fileItem.dataURL ?? ""}
 						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
@@ -195,7 +195,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 			<>
 				{status === EImageStatus.UPLOADED && !isError && (
 					<Thumbnail
-						src={fileItem.dataURL ?? ""}
+						$src={fileItem.dataURL ?? ""}
 						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
@@ -215,8 +215,8 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 
 	return (
 		<Wrapper
-			isError={isError}
-			isCustomMuted={status === EImageStatus.ERROR_CUSTOM_MUTED}
+			$isError={isError}
+			$isCustomMuted={status === EImageStatus.ERROR_CUSTOM_MUTED}
 			id={TestHelper.generateId(`${id}-${index + 1}`)}
 			data-testid={TestHelper.generateId(`${id}-${index + 1}`)}
 		>

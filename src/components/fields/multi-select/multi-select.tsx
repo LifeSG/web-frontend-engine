@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
 import { ISelectOption } from "../select/types";
@@ -14,16 +14,11 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { error, formattedLabel, id, onChange, schema, value, warning, ...otherProps } = props;
 	const {
-		error,
-		formattedLabel,
-		id,
-		onChange,
-		schema: { label: _label, options = [], validation, ...otherSchema },
-		value,
-		warning,
-		...otherProps
-	} = props;
+		commonSchema: { validation },
+		customSchema: { options = [], ...selectProps },
+	} = filterSchemaProps(schema);
 
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
@@ -81,7 +76,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	return (
 		<>
 			<Form.MultiSelect
-				{...otherSchema}
+				{...selectProps}
 				{...otherProps}
 				id={id}
 				data-testid={TestHelper.generateId(id)}

@@ -406,7 +406,7 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 
 	return (
 		<Wrapper ref={wrapperRef}>
-			<Canvas id={TestHelper.generateId("imageEditor")} ref={canvasRef} canDraw={!!(color || erase)} />
+			<Canvas id={TestHelper.generateId("imageEditor")} ref={canvasRef} $canDraw={!!(color || erase)} />
 		</Wrapper>
 	);
 });

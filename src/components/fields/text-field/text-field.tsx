@@ -6,7 +6,7 @@ import React, { HTMLInputTypeAttribute, useEffect, useRef, useState } from "reac
 import styled from "styled-components";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
 import { Warning } from "../../shared/warning";
@@ -16,10 +16,13 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
-	const { error, formattedLabel, id, onChange, value, schema, warning, ...otherProps } = props;
-	const { customOptions, inputMode, label: _label, uiType, validation, ...otherSchema } = schema;
+	const { error, formattedLabel, id, name, onBlur, onChange, value, schema, warning } = props;
+	const {
+		commonSchema: { customOptions, uiType, validation },
+		customSchema: { inputMode, ...inputProps },
+	} = filterSchemaProps(schema);
 
-	const [stateValue, setStateValue] = useState<string | number>(value || "");
+	const [stateValue, setStateValue] = useState<string | number>(value ?? "");
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -86,7 +89,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 
 	useEffect(() => {
 		if (value !== stateValue) {
-			setStateValue(value || "");
+			setStateValue(value ?? "");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
@@ -118,7 +121,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 			const isNumber = !isNaN(parseFloat(event.target.value));
 			const valueToUpdate = isNumber ? +event.target.value : undefined;
 			onChange({ target: { value: valueToUpdate } });
-			setStateValue(valueToUpdate);
+			setStateValue(valueToUpdate ?? "");
 			return;
 		}
 
@@ -224,14 +227,15 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	return (
 		<>
 			<InputElement
-				{...otherSchema}
-				{...otherProps}
+				{...inputProps}
 				{...derivedAttributes}
 				id={id}
+				name={name}
 				data-testid={TestHelper.generateId(id, uiType)}
 				ref={ref}
 				type={formatInputType()}
 				label={formattedLabel}
+				onBlur={onBlur}
 				onPaste={handlePaste}
 				onDrop={(e) => (customOptions?.preventDragAndDrop ? e.preventDefault() : null)}
 				inputMode={formatInputMode()}

@@ -75,12 +75,12 @@ export const ImageThumbnails = (props: IProps) => {
 						key={index}
 						id={TestHelper.generateId(id, `item-${index + 1}`)}
 						data-testid={TestHelper.generateId(id, `item-${index + 1}`)}
-						src={image.thumbnailDataURL || image.dataURL || ADD_PLACEHOLDER_ICON}
+						$src={image.thumbnailDataURL || image.dataURL || ADD_PLACEHOLDER_ICON}
 						type="button"
 						aria-label={`thumbnail of ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
 					>
-						<BorderOverlay isSelected={activeFileIndex === index} />
+						<BorderOverlay $isSelected={activeFileIndex === index} />
 					</ThumbnailItem>
 				);
 			} else if (image.addedFrom === "reviewModal" || image.status < EImageStatus.NONE) {
@@ -92,9 +92,9 @@ export const ImageThumbnails = (props: IProps) => {
 						type="button"
 						aria-label={`error with ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
-						error
+						$error
 					>
-						<BorderOverlay isSelected={activeFileIndex === index} />
+						<BorderOverlay $isSelected={activeFileIndex === index} />
 						<ThumbnailWarningIcon />
 					</ThumbnailItem>
 				);

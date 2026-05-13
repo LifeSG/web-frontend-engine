@@ -3,13 +3,13 @@ import { Typography } from "@lifesg/react-design-system/typography";
 import styled, { css } from "styled-components";
 import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 
-export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }>`
+export const Wrapper = styled.div<{ $isError?: boolean; $isCustomMuted?: boolean }>`
 	display: flex;
-	flex-wrap: ${(props) => (props.isCustomMuted ? "nowrap" : "wrap")};
+	flex-wrap: ${(props) => (props.$isCustomMuted ? "nowrap" : "wrap")};
 	align-items: center;
 	gap: ${Spacing["spacing-8"]};
 	border: ${(props) =>
-		props.isError
+		props.$isError
 			? css`
 					${Border["width-010"]} ${Border.solid} ${Colour["border-error"]}
 			  `
@@ -19,7 +19,7 @@ export const Wrapper = styled.div<{ isError?: boolean; isCustomMuted?: boolean }
 	border-radius: ${Radius.sm};
 	border-radius: ${Radius.sm};
 	background-color: ${(props) =>
-		props.isError ? `${Colour["bg-error"](props)}` : `${Colour["bg-primary-subtlest"](props)}`};
+		props.$isError ? `${Colour["bg-error"](props)}` : `${Colour["bg-primary-subtlest"](props)}`};
 	min-height: 3.5rem;
 	margin-bottom: ${Spacing["spacing-16"]};
 	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-32"]};
@@ -59,11 +59,11 @@ export const CellDeleteButton = styled.div`
 	width: 19.15%;
 `;
 
-export const Thumbnail = styled.div<{ src: string }>`
+export const Thumbnail = styled.div<{ $src: string }>`
 	margin-right: ${Spacing["spacing-32"]};
 	width: 6rem;
 	height: 6rem;
-	background: url(${(props) => props.src}) no-repeat center / cover;
+	background: url(${(props) => props.$src}) no-repeat center / cover;
 	overflow: hidden;
 	border-radius: ${Radius.sm};
 	${Font["body-sm-bold"]}

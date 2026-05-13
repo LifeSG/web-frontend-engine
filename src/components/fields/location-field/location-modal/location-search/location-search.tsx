@@ -662,7 +662,7 @@ export const LocationSearch = ({
 			<ResultItem
 				key={`${index}_${item.lat}_${item.lng}`}
 				onClick={() => handleClickResult(item, index)}
-				active={selectedIndex === index}
+				$active={selectedIndex === index}
 				id={TestHelper.generateId(`location-search-modal-search-result-${index + 0}`)}
 				data-testid={TestHelper.generateId(
 					`location-search-modal-search-result-${index + 0}`,
@@ -707,7 +707,7 @@ export const LocationSearch = ({
 				id={TestHelper.generateId(id, "location-search")}
 				data-testid={TestHelper.generateId(id, "location-search")}
 				className={`${className}-location-search`}
-				panelInputMode={panelInputMode}
+				$panelInputMode={panelInputMode}
 			>
 				<SearchBarIconButton
 					onClick={handleClickCancel}
@@ -716,7 +716,7 @@ export const LocationSearch = ({
 				>
 					<SearchBarModalCross />
 				</SearchBarIconButton>
-				<SearchBarContainer hasScrolled={hasScrolled}>
+				<SearchBarContainer $hasScrolled={hasScrolled}>
 					<SearchBarIconButton
 						onClick={handleInputFocus}
 						id={TestHelper.generateId(id, "location-search-modal-search")}
@@ -751,7 +751,7 @@ export const LocationSearch = ({
 				<ResultWrapper
 					id={TestHelper.generateId(id, "location-search-results")}
 					data-testid={TestHelper.generateId(id, "location-search-results", panelInputMode)}
-					panelInputMode={panelInputMode}
+					$panelInputMode={panelInputMode}
 					ref={resultRef}
 					onScroll={handleScrollResult}
 				>
@@ -774,15 +774,15 @@ export const LocationSearch = ({
 				<ButtonWrapper
 					id={TestHelper.generateId(id, "location-search-controls")}
 					data-testid={TestHelper.generateId(id, "location-search-controls")}
-					panelInputMode={panelInputMode}
+					$panelInputMode={panelInputMode}
 				>
-					<ButtonItem buttonType="cancel" styleType="light" onClick={handleClickCancel}>
+					<ButtonItem $buttonType="cancel" styleType="light" onClick={handleClickCancel}>
 						Cancel
 					</ButtonItem>
 					<ButtonItem
 						id={TestHelper.generateId(id, "location-search-controls-confirm")}
 						data-testid={TestHelper.generateId(id, "location-search-controls-confirm")}
-						buttonType="confirm"
+						$buttonType="confirm"
 						onClick={onConfirm}
 						disabled={selectedIndex < 0 || resultState !== "found"}
 					>

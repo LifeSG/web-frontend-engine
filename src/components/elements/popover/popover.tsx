@@ -1,6 +1,6 @@
 import { PopoverInline } from "@lifesg/react-design-system/popover-v2";
 import * as Icons from "@lifesg/react-icons";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
@@ -11,16 +11,16 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
+	const { id, schema } = props;
 	const {
-		id,
-		schema: {
+		customSchema: {
 			children,
 			className,
 			icon,
 			hint: { content: hintContent, ...hintProps },
-			...otherSchema
+			...popoverProps
 		},
-	} = props;
+	} = filterSchemaProps(schema);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
@@ -56,7 +56,7 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 			content={children && <Sanitize inline>{children}</Sanitize>}
 			popoverContent={renderPopoverContent()}
 			{...hintProps}
-			{...otherSchema}
+			{...popoverProps}
 		/>
 	);
 };
