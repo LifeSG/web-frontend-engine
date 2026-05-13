@@ -15,10 +15,8 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	// =========================================================================
 	// CONST, STATE, REF
 	// =========================================================================
-	const {
-		id,
-		schema: { currentActiveTabId, children, ...otherTabSchema },
-	} = props;
+	const { id, schema } = props;
+	const { children, currentActiveTabId, fullWidthIndicatorLine } = schema;
 	const [currentTabIndex, setCurrentTabIndex] = useState(getCurrentTabIndex());
 	const { removeFieldValidationConfig } = useValidationConfig();
 	const { unregister } = useFormContext();
@@ -100,21 +98,22 @@ export const Tab = (props: IGenericElementProps<ITabSchema>) => {
 	// =========================================================================
 	return (
 		<DSTab
-			{...otherTabSchema}
 			id={id}
 			data-testid={TestHelper.generateId(id, "tab")}
 			currentActive={currentTabIndex}
+			fullWidthIndicatorLine={fullWidthIndicatorLine}
 			onTabClick={handleTabClick}
 		>
 			{Object.entries(children).map(([childId, childSchema]) => {
-				const { title, children, ...otherTabItemSchema } = childSchema;
+				const { children, title, width } = childSchema;
+
 				return (
 					<DSTab.Item
-						{...otherTabItemSchema}
 						key={childId}
 						id={childId}
 						data-testid={TestHelper.generateId(childId, "tab-item")}
 						title={title}
+						width={width}
 					>
 						<Wrapper>{children}</Wrapper>
 					</DSTab.Item>

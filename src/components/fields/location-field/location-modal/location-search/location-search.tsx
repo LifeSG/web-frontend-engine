@@ -90,6 +90,7 @@ export const LocationSearch = ({
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const resultRef = useRef<HTMLDivElement>(null);
+	const isMounted = useRef(true);
 	const reverseGeocodeAborter = useRef<AbortController | null>(null);
 
 	const [hasScrolled, setHasScrolled] = useState(false);
@@ -128,6 +129,13 @@ export const LocationSearch = ({
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		return () => {
+			isMounted.current = false;
+			reverseGeocodeAborter.current?.abort();
+		};
+	}, []);
+
 	// check if any of the services is working
 	useEffect(() => {
 		if (!showLocationModal || !isRecaptchaReady) return;
@@ -323,6 +331,8 @@ export const LocationSearch = ({
 				}
 			},
 			(error) => {
+				if (!isMounted.current) return;
+
 				if (error instanceof SyntaxError || error instanceof TypeError) {
 					populateDisplayList({ results: [], queryString });
 				} else {
@@ -440,6 +450,8 @@ export const LocationSearch = ({
 	};
 
 	const resetResultsList = () => {
+		if (!isMounted.current) return;
+
 		setSelectedIndex(-1);
 		setCurrentPaginationPageNum(1);
 		setTotalNumPages(0);
@@ -494,6 +506,8 @@ export const LocationSearch = ({
 					setAPIPageNum(res.apiPageNum);
 				},
 				(error) => {
+					if (!isMounted.current) return;
+
 					resetResultsList();
 					handleApiErrors(new OneMapError(error));
 				},
@@ -547,6 +561,8 @@ export const LocationSearch = ({
 			return;
 		}
 
+		if (!isMounted.current) return;
+
 		if (resultListItem.length === 0) {
 			setQueryString("");
 			const shouldPanToCurrentLocation =
@@ -596,6 +612,8 @@ export const LocationSearch = ({
 				recaptchaToken,
 				mapApiHeaders
 			);
+			if (!isMounted.current) return;
+
 			locationFieldValue.x = X;
 			locationFieldValue.y = Y;
 		}
@@ -608,6 +626,8 @@ export const LocationSearch = ({
 	 * Stores proper state
 	 */
 	const populateDisplayList = (params: IDisplayResultListParams) => {
+		if (!isMounted.current) return;
+
 		const { results, boldResults, apiPageNum, totalNumPages, queryString } = params;
 
 		let displayResults = results;

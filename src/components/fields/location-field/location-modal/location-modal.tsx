@@ -82,6 +82,7 @@ const LocationModal = ({
 	const [mapPickedLatLng, setMapPickedLatLng] = useState<ILocationCoord>();
 	const [currentLocation, setCurrentLocation] = useState<ILocationCoord>();
 
+	const isMounted = useRef(true);
 	const shouldCallGetSelectablePins = useRef(true);
 
 	const theme = useContext(ThemeContext);
@@ -131,6 +132,8 @@ const LocationModal = ({
 	};
 
 	const restoreFormvalues = useCallback(() => {
+		if (!isMounted.current) return;
+
 		// Retain current form values
 		setSelectedAddressInfo(formValues || {});
 	}, [formValues]);
@@ -150,6 +153,8 @@ const LocationModal = ({
 	};
 
 	const handleApiErrors = (error?: any) => {
+		if (!isMounted.current) return;
+
 		const handleError = (errorType: TErrorType["errorType"], defaultHandle: () => void) => {
 			const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>("error", id, {
 				payload: {
@@ -225,6 +230,12 @@ const LocationModal = ({
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		return () => {
+			isMounted.current = false;
+		};
+	}, []);
+
 	useEffect(() => {
 		const handleError = (e: TLocationFieldEvents["error-end"]) => {
 			const errorType = e.detail?.payload?.errorType;
