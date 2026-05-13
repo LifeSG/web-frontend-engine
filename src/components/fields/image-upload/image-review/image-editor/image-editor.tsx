@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EraserBrush } from "@erase2d/fabric";
 import { useDrag, usePinch } from "@use-gesture/react";
-import { Canvas as FabricCanvas, FabricImage, FabricObject, Path, PencilBrush, Point, TEvent } from "fabric";
+import { Canvas as FabricCanvas, FabricImage, FabricObject, Path, PencilBrush, Point, Rect, TEvent } from "fabric";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { Canvas, Wrapper } from "./image-editor.styles";
@@ -222,6 +222,13 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 				);
 			}
 
+			fabricCanvas.current.clipPath = new Rect({
+				left: img.left,
+				top: img.top,
+				width: img.getScaledWidth(),
+				height: img.getScaledHeight(),
+			});
+
 			if (pencilBrush.current && eraserBrush.current) {
 				pencilBrush.current.width = PENCIL_BRUSH_SIZE * (img.scaleX || 1);
 				eraserBrush.current.width = PENCIL_BRUSH_SIZE * (img.scaleX || 1) * 2;
@@ -310,7 +317,6 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 		if (typeof TouchEvent !== "undefined" && e.e instanceof TouchEvent && e.e.touches.length === 2) {
 			if (typeof TouchEvent !== "undefined" && fabricCanvas.current && fabricCanvas.current.isDrawingMode) {
 				fabricCanvas.current.isDrawingMode = false;
-				const objectCountBeforeGesture = fabricCanvas.current.getObjects().length;
 
 				// prevent drawing when gesturing
 				// clear accidental drawings while gesturing
