@@ -47,13 +47,24 @@ const FileUploadManager = (props: IProps) => {
 	const previousValue = usePrevious(value);
 	const { setValue } = useFormContext();
 	const { dispatchFieldEvent } = useFieldEvent();
+	const isMounted = useRef(false);
 	const sessionId = useRef<string>();
+	const setFilesIfMounted: typeof setFiles = (value) => {
+		if (isMounted.current) {
+			setFiles(value);
+		}
+	};
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
+		isMounted.current = true;
 		sessionId.current = generateRandomId();
+
+		return () => {
+			isMounted.current = false;
+		};
 	}, []);
 
 	useEffect(
@@ -123,7 +134,7 @@ const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 
 	const handleGenericError = (index: number) => {
-		setFiles((prev) => {
+		setFilesIfMounted((prev) => {
 			const updatedFiles = [...prev];
 			const file = prev[index];
 			updatedFiles[index] = {
@@ -233,7 +244,7 @@ const FileUploadManager = (props: IProps) => {
 	// FILE STATUS HANDLERS
 	// =============================================================================
 	const injectFile = async (fileToInject: IFile, index: number) => {
-		setFiles((prev) => {
+		setFilesIfMounted((prev) => {
 			const updatedFiles = [...prev];
 			updatedFiles[index] = {
 				...prev[index],
@@ -273,7 +284,7 @@ const FileUploadManager = (props: IProps) => {
 
 		const thumbnailImageDataUrl = rawFile ? await generateThumbnail(fileToInject, fileType?.mime) : undefined;
 
-		setFiles((prev) => {
+		setFilesIfMounted((prev) => {
 			const updatedFiles = [...prev];
 			updatedFiles[index] = {
 				...fileToInject,
@@ -302,7 +313,7 @@ const FileUploadManager = (props: IProps) => {
 		const dataURL = await FileHelper.fileToDataUrl(compressedFile.rawFile);
 		const { errorMessage, fileType, status } = await readFile({ dataURL, ...compressedFile });
 
-		setFiles((prev) => {
+		setFilesIfMounted((prev) => {
 			const updatedFiles = [...prev];
 			updatedFiles[index] = {
 				...compressedFile,
@@ -326,7 +337,7 @@ const FileUploadManager = (props: IProps) => {
 	};
 
 	const uploadFile = async (fileToUpload: IFile, index: number) => {
-		setFiles((prev) => {
+		setFilesIfMounted((prev) => {
 			const updatedFiles = [...prev];
 			updatedFiles[index] = {
 				...prev[index],
@@ -353,7 +364,7 @@ const FileUploadManager = (props: IProps) => {
 				},
 				onUploadProgress: (progressEvent) => {
 					const { loaded, total } = progressEvent;
-					setFiles((prev) => {
+					setFilesIfMounted((prev) => {
 						if (!prev[index]) return prev;
 						const updatedFiles = [...prev];
 						updatedFiles[index] = {
@@ -370,7 +381,7 @@ const FileUploadManager = (props: IProps) => {
 			});
 
 			const thumbnailImageDataUrl = await generateThumbnail(fileToUpload);
-			setFiles((prev) => {
+			setFilesIfMounted((prev) => {
 				if (!prev[index]) return prev;
 				const updatedFiles = [...prev];
 				updatedFiles[index] = {
@@ -397,7 +408,7 @@ const FileUploadManager = (props: IProps) => {
 	};
 
 	const deleteFile = (index: number) => {
-		setFiles((prev) => prev.filter((_file, i) => i !== index));
+		setFilesIfMounted((prev) => prev.filter((_file, i) => i !== index));
 	};
 
 	const compressImageFile = async (fileToCompress: IFile) => {
