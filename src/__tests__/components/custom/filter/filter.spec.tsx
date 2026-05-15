@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { mocked } from "jest-mock";
 import "../../../../../jest/mocks/match-media";
 import { ITextFieldSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
@@ -52,7 +51,7 @@ describe(REFERENCE_KEY, () => {
 
 	describe("desktop", () => {
 		beforeEach(() => {
-			mocked(window.matchMedia).mockImplementation(() => {
+			jest.mocked(window.matchMedia).mockImplementation(() => {
 				return {
 					matches: false,
 					addListener: jest.fn(),
@@ -81,7 +80,7 @@ describe(REFERENCE_KEY, () => {
 
 	describe("mobile", () => {
 		beforeEach(() => {
-			mocked(window.matchMedia).mockImplementation(() => {
+			jest.mocked(window.matchMedia).mockImplementation(() => {
 				return {
 					matches: true,
 					addListener: jest.fn(),

@@ -87,7 +87,7 @@ describe("reset", () => {
 
 		await waitFor(() => fireEvent.click(getResetButton()));
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalledWith(
+		expect(SUBMIT_FN).toHaveBeenCalledWith(
 			expect.objectContaining({ [CHECKBOX_ID]: [], [TEXT_ID]: "", ["OBJECT_ID"]: {} })
 		);
 	});

@@ -46,7 +46,7 @@ describe("submit-button", () => {
 		fireEvent.change(getTextfield(), { target: { value: "hello" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
-		expect(SUBMIT_FN).toBeCalled();
+		expect(SUBMIT_FN).toHaveBeenCalled();
 	});
 
 	it("should be disabled if configured", async () => {

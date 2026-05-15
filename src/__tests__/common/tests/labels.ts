@@ -2,6 +2,28 @@ import { fireEvent, screen } from "@testing-library/react";
 
 export const labelTestSuite = (renderComponent: (overrideField: unknown) => void) =>
 	describe("labels", () => {
+		const getComputedStyle = window.getComputedStyle.bind(window);
+
+		beforeAll(() => {
+			// FIXME:  Opening the design-system popover makes Floating UI call getComputedStyle.
+			// In jsdom, that can hit a known nwsapi invalid-selector bug: https://github.com/dperini/nwsapi/issues/157
+			// As a workaround, overriding getComputedStyle to catch and ignore that specific error.
+			window.getComputedStyle = (...args) => {
+				try {
+					return getComputedStyle(...args);
+				} catch (error) {
+					if (error instanceof SyntaxError || /not a valid selector/.test(`${error}`)) {
+						return document.documentElement.style;
+					}
+					throw error;
+				}
+			};
+		});
+
+		afterAll(() => {
+			window.getComputedStyle = getComputedStyle;
+		});
+
 		it("should be able to render sub label and hint", () => {
 			renderComponent({
 				label: {

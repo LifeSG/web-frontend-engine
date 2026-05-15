@@ -242,7 +242,7 @@ describe("YupHelper", () => {
 			const schema = YupHelper.mapRules(YupHelper.mapSchemaType(type), [
 				{ ...config, errorMessage: ERROR_MESSAGE },
 			]);
-			expect(() => schema.validateSync(valid)).not.toThrowError();
+			expect(() => schema.validateSync(valid)).not.toThrow();
 			expect(TestHelper.getError(() => schema.validateSync(invalid, { abortEarly: false }))?.message).toBe(
 				ERROR_MESSAGE
 			);
@@ -267,7 +267,7 @@ describe("YupHelper", () => {
 		`("should support $condition condition for Yup $type type", ({ type, valid, invalid }) => {
 			const schema = generateMultipleFieldSchema(type);
 
-			expect(() => schema.validateSync({ field1: valid, field2: valid })).not.toThrowError();
+			expect(() => schema.validateSync({ field1: valid, field2: valid })).not.toThrow();
 			expect(
 				TestHelper.getError(() =>
 					schema.validateSync({ field1: valid, field2: invalid }, { abortEarly: false })
@@ -291,7 +291,7 @@ describe("YupHelper", () => {
 				},
 			});
 
-			expect(() => schema.validateSync({ field1: value, field2: valid })).not.toThrowError();
+			expect(() => schema.validateSync({ field1: value, field2: valid })).not.toThrow();
 			expect(
 				TestHelper.getError(() =>
 					schema.validateSync({ field1: value, field2: invalid }, { abortEarly: false })
@@ -318,7 +318,7 @@ describe("YupHelper", () => {
 		it("should support conditional validation for Yup string type", () => {
 			const schema = generateConditionalSchema("string", "hello", "string");
 
-			expect(() => schema.validateSync({ field1: "hi", field2: "hello" })).not.toThrowError();
+			expect(() => schema.validateSync({ field1: "hi", field2: "hello" })).not.toThrow();
 			expect(TestHelper.getError(() => schema.validateSync({ field1: undefined, field2: "hello" })).message).toBe(
 				ERROR_MESSAGE
 			);
@@ -330,7 +330,7 @@ describe("YupHelper", () => {
 		it("should support conditional validation for Yup number type", () => {
 			const schema = generateConditionalSchema("number", 1, "number");
 
-			expect(() => schema.validateSync({ field1: 5, field2: 1 })).not.toThrowError();
+			expect(() => schema.validateSync({ field1: 5, field2: 1 })).not.toThrow();
 			expect(TestHelper.getError(() => schema.validateSync({ field1: undefined, field2: 1 })).message).toBe(
 				ERROR_MESSAGE
 			);
@@ -355,7 +355,7 @@ describe("YupHelper", () => {
 			({ uiType, sourceFieldType, valid, then, otherwise }) => {
 				const schema = generateConditionalSchema(uiType, [{ filled: true }, { min: 3 }], sourceFieldType);
 
-				expect(() => schema.validateSync(valid)).not.toThrowError();
+				expect(() => schema.validateSync(valid)).not.toThrow();
 				expect(TestHelper.getError(() => schema.validateSync(then)).message).toBe(ERROR_MESSAGE);
 				expect(TestHelper.getError(() => schema.validateSync(otherwise)).message).toBe(ERROR_MESSAGE_2);
 			}
@@ -369,7 +369,7 @@ describe("YupHelper", () => {
 			${"empty object"}  | ${"object"} | ${{}}
 		`("should skip non-required validation rules for $scenario", ({ type, value }) => {
 			const schema = YupHelper.mapRules(YupHelper.mapSchemaType(type), [{ min: 5, errorMessage: ERROR_MESSAGE }]);
-			expect(() => schema.validateSync(value)).not.toThrowError();
+			expect(() => schema.validateSync(value)).not.toThrow();
 		});
 
 		it("should run non conditional validation rules regardless whether conditional validation is fulfilled or not", () => {
@@ -445,7 +445,7 @@ describe("YupHelper", () => {
 			YupHelper.addCondition("string", "testString", (value) => value === "hello");
 			const schema = (Yup.string() as any).testString(undefined, ERROR_MESSAGE);
 
-			expect(() => schema.validateSync("hello")).not.toThrowError();
+			expect(() => schema.validateSync("hello")).not.toThrow();
 			expect(TestHelper.getError(() => schema.validateSync("hi")).message).toBe(ERROR_MESSAGE);
 		});
 
@@ -453,7 +453,7 @@ describe("YupHelper", () => {
 			YupHelper.addCondition("number", "testNumber", (value) => value === 123);
 			const schema = (Yup.number() as any).testNumber(undefined, ERROR_MESSAGE);
 
-			expect(() => schema.validateSync(123)).not.toThrowError();
+			expect(() => schema.validateSync(123)).not.toThrow();
 			expect(TestHelper.getError(() => schema.validateSync(321)).message).toBe(ERROR_MESSAGE);
 		});
 
@@ -461,7 +461,7 @@ describe("YupHelper", () => {
 			YupHelper.addCondition("array", "testArray", (value) => isEqual(value, [1, 2, 3]));
 			const schema = (Yup.array() as any).testArray(undefined, ERROR_MESSAGE);
 
-			expect(() => schema.validateSync([1, 2, 3])).not.toThrowError();
+			expect(() => schema.validateSync([1, 2, 3])).not.toThrow();
 			expect(TestHelper.getError(() => schema.validateSync([3, 2, 1])).message).toBe(ERROR_MESSAGE);
 		});
 	});

@@ -209,7 +209,7 @@ describe(uiType, () => {
 			);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).not.toBeCalled();
+			expect(SUBMIT_FN).not.toHaveBeenCalled();
 			expect(getErrorMessage()).toBeInTheDocument();
 		});
 
@@ -227,7 +227,7 @@ describe(uiType, () => {
 			);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalled();
+			expect(SUBMIT_FN).toHaveBeenCalled();
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
 
@@ -289,7 +289,7 @@ describe(uiType, () => {
 			);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).not.toBeCalled();
+			expect(SUBMIT_FN).not.toHaveBeenCalled();
 			expect(getErrorMessage()).toBeInTheDocument();
 		});
 
@@ -307,7 +307,7 @@ describe(uiType, () => {
 			);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).toBeCalled();
+			expect(SUBMIT_FN).toHaveBeenCalled();
 			expect(getErrorMessage(true)).not.toBeInTheDocument();
 		});
 
@@ -441,7 +441,7 @@ describe(uiType, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).not.toBeCalled();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
 				expect(getErrorMessage()).toBeInTheDocument();
 			});
 
@@ -450,7 +450,7 @@ describe(uiType, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalled();
+				expect(SUBMIT_FN).toHaveBeenCalled();
 				expect(getErrorMessage(true)).not.toBeInTheDocument();
 			});
 
@@ -463,7 +463,7 @@ describe(uiType, () => {
 
 				fireEvent.change(getField("textbox", "Field 1"), { target: { value: "" } });
 				await waitFor(() => fireEvent.click(getSubmitButton()));
-				expect(SUBMIT_FN).toBeCalled();
+				expect(SUBMIT_FN).toHaveBeenCalled();
 				expect(getErrorMessage(true)).not.toBeInTheDocument();
 			});
 		});
@@ -496,7 +496,7 @@ describe(uiType, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).not.toBeCalled();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
 				expect(getErrorMessage()).toBeInTheDocument();
 			});
 
@@ -517,7 +517,7 @@ describe(uiType, () => {
 
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 
-				expect(SUBMIT_FN).toBeCalled();
+				expect(SUBMIT_FN).toHaveBeenCalled();
 				expect(getErrorMessage(true)).not.toBeInTheDocument();
 			});
 

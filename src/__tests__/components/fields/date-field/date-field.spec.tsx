@@ -221,7 +221,7 @@ describe(UI_TYPE, () => {
 			);
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).not.toBeCalled();
+			expect(SUBMIT_FN).not.toHaveBeenCalled();
 			expect(getErrorMessage()).toBeInTheDocument();
 		});
 

@@ -335,11 +335,11 @@ describe("conditional-renderer", () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
-		expect(SUBMIT_FN).not.toBeCalled();
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
 
 		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalled();
+		expect(SUBMIT_FN).toHaveBeenCalled();
 	});
 
 	it("should remove validation schema for fields with parents that are conditionally hidden", async () => {
@@ -376,13 +376,13 @@ describe("conditional-renderer", () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
-		expect(SUBMIT_FN).not.toBeCalled();
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
 
 		fireEvent.change(getFieldTwo(), { target: { value: "" } });
 		fireEvent.change(getFieldOne(), { target: { value: "hi" } });
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toBeCalled();
+		expect(SUBMIT_FN).toHaveBeenCalled();
 	});
 
 	it("should not submit fields that are conditionally hidden", async () => {

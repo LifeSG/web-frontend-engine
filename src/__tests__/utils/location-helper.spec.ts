@@ -32,7 +32,7 @@ describe("when reverseGeoCode returns an error", () => {
 				mockOnError
 			);
 		} catch (error) {
-			expect(mockOnError).toBeCalled();
+			expect(mockOnError).toHaveBeenCalled();
 		}
 		expect.hasAssertions();
 	});
@@ -51,7 +51,7 @@ describe("when reverseGeoCode returns an error", () => {
 				mockOnError
 			);
 		} catch (error) {
-			expect(mockOnError).not.toBeCalled();
+			expect(mockOnError).not.toHaveBeenCalled();
 		}
 		expect.hasAssertions();
 	});

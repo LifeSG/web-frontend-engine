@@ -288,7 +288,7 @@ describe("image-upload", () => {
 			});
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
-			expect(SUBMIT_FN).not.toBeCalled();
+			expect(SUBMIT_FN).not.toHaveBeenCalled();
 			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
 		});
 
@@ -326,7 +326,7 @@ describe("image-upload", () => {
 				});
 
 				await waitFor(() => expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument());
-				expect(uploadSpy).not.toBeCalled();
+				expect(uploadSpy).not.toHaveBeenCalled();
 			});
 
 			it("should not show error when filename matches the pattern", async () => {
@@ -337,7 +337,7 @@ describe("image-upload", () => {
 				});
 
 				expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
-				await waitFor(() => expect(uploadSpy).toBeCalledTimes(1));
+				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
 			});
 
 			it("should exclude invalid filename files from form submission", async () => {
@@ -363,7 +363,7 @@ describe("image-upload", () => {
 					uploadType: "input",
 				});
 
-				await waitFor(() => expect(uploadSpy).toBeCalledTimes(1));
+				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
 				await waitFor(() => fireEvent.click(getSubmitButton()));
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -391,7 +391,7 @@ describe("image-upload", () => {
 			it("should show and upload as many images", async () => {
 				expect(screen.getByText(FILE_1.name)).toBeInTheDocument();
 				expect(screen.getByText(FILE_2.name)).toBeInTheDocument();
-				expect(uploadSpy).toBeCalledTimes(2);
+				expect(uploadSpy).toHaveBeenCalledTimes(2);
 			});
 
 			it("should hide the add button", () => {
@@ -430,7 +430,7 @@ describe("image-upload", () => {
 			it("should show and upload up to max number of images", async () => {
 				expect(screen.getByText(FILE_1.name)).toBeInTheDocument();
 				expect(screen.queryByText(FILE_2.name)).not.toBeInTheDocument();
-				expect(uploadSpy).toBeCalledTimes(1);
+				expect(uploadSpy).toHaveBeenCalledTimes(1);
 			});
 
 			it("should display error message when adding beyond max no. of images", () => {
@@ -472,7 +472,7 @@ describe("image-upload", () => {
 
 			it("should not upload the invalid file and show an error message", () => {
 				expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
-				expect(uploadSpy).toBeCalledTimes(1);
+				expect(uploadSpy).toHaveBeenCalledTimes(1);
 			});
 
 			it("should submit only the valid files", async () => {
@@ -501,7 +501,7 @@ describe("image-upload", () => {
 
 			it("should not upload the erroneous file and show an error message", async () => {
 				expect(screen.getByText(ERROR_MESSAGES.UPLOAD().GENERIC)).toBeInTheDocument();
-				expect(uploadSpy).toBeCalledTimes(1);
+				expect(uploadSpy).toHaveBeenCalledTimes(1);
 			});
 
 			it("should submit only the valid files", async () => {
@@ -536,7 +536,7 @@ describe("image-upload", () => {
 
 			it("should show error and not upload the image that exceeds the file size limit", async () => {
 				expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
-				expect(uploadSpy).toBeCalledTimes(1);
+				expect(uploadSpy).toHaveBeenCalledTimes(1);
 			});
 
 			it("should submit only the valid files", async () => {
@@ -569,7 +569,7 @@ describe("image-upload", () => {
 				});
 				await flushPromise();
 
-				expect(compressSpy).not.toBeCalled();
+				expect(compressSpy).not.toHaveBeenCalled();
 			});
 
 			it("should compress image if compress=true and max size is defined", async () => {
@@ -583,7 +583,7 @@ describe("image-upload", () => {
 					await flushPromise();
 				});
 
-				expect(compressSpy).toBeCalled();
+				expect(compressSpy).toHaveBeenCalled();
 			});
 
 			it("Should extract image metadata", async () => {
@@ -676,7 +676,7 @@ describe("image-upload", () => {
 			});
 
 			it("should not upload photo", () => {
-				expect(uploadSpy).not.toBeCalled();
+				expect(uploadSpy).not.toHaveBeenCalled();
 			});
 
 			it("should show confirmation prompt", () => {
@@ -701,7 +701,7 @@ describe("image-upload", () => {
 			});
 
 			it("should not upload photo", () => {
-				expect(uploadSpy).not.toBeCalled();
+				expect(uploadSpy).not.toHaveBeenCalled();
 			});
 
 			it("should skip confirmation prompt and show review modal", async () => {
@@ -722,7 +722,7 @@ describe("image-upload", () => {
 			});
 
 			it("should not upload images", () => {
-				expect(uploadSpy).not.toBeCalled();
+				expect(uploadSpy).not.toHaveBeenCalled();
 			});
 
 			it("should show as many images", () => {
@@ -738,7 +738,7 @@ describe("image-upload", () => {
 				await waitFor(() => fireEvent.click(getSaveButton()));
 				await flushPromise();
 
-				expect(uploadSpy).toBeCalledTimes(2);
+				expect(uploadSpy).toHaveBeenCalledTimes(2);
 			});
 		});
 
@@ -807,7 +807,7 @@ describe("image-upload", () => {
 			});
 
 			it("should not compress the image", async () => {
-				expect(compressSpy).not.toBeCalled();
+				expect(compressSpy).not.toHaveBeenCalled();
 			});
 
 			it("should show error and disable submit button if image exceeds max size", async () => {
@@ -996,7 +996,7 @@ describe("image-upload", () => {
 		it("should fire mount event on mount", async () => {
 			const handleMount = jest.fn();
 			await renderComponent({ eventType: "mount", eventListener: handleMount });
-			expect(handleMount).toBeCalled();
+			expect(handleMount).toHaveBeenCalled();
 		});
 
 		it("should fire show-review-modal event on showing review modal", async () => {
@@ -1009,7 +1009,7 @@ describe("image-upload", () => {
 				reviewImage: true,
 			});
 
-			expect(handleShowReviewModal).toBeCalled();
+			expect(handleShowReviewModal).toHaveBeenCalled();
 		});
 
 		it("should fire hide-review-modal event on hiding review modal", async () => {
@@ -1023,7 +1023,7 @@ describe("image-upload", () => {
 			});
 			await waitFor(() => fireEvent.click(getSaveButton()));
 
-			expect(handleHideReviewModal).toBeCalled();
+			expect(handleHideReviewModal).toHaveBeenCalled();
 		});
 
 		it("should fire file-dialog event on showing file-dialog", async () => {
@@ -1036,7 +1036,7 @@ describe("image-upload", () => {
 				await waitFor(() => fireEvent.click(getField("button", "Image Upload")));
 			});
 
-			expect(handleFileDialog).toBeCalled();
+			expect(handleFileDialog).toHaveBeenCalled();
 		});
 
 		it("should fire save-review-images event on clicking save button in review modal", async () => {
@@ -1050,7 +1050,7 @@ describe("image-upload", () => {
 			});
 			await waitFor(() => fireEvent.click(getSaveButton()));
 
-			expect(handleSaveImages).toBeCalled();
+			expect(handleSaveImages).toHaveBeenCalled();
 		});
 
 		it("should not save images / close modal if save-review-images event is prevented", async () => {
@@ -1067,7 +1067,7 @@ describe("image-upload", () => {
 			await waitFor(() => fireEvent.click(getSaveButton()));
 
 			expect(getSaveButton()).toBeInTheDocument();
-			expect(uploadSpy).not.toBeCalled();
+			expect(uploadSpy).not.toHaveBeenCalled();
 		});
 
 		it("should allow retry through save-review-images event detail", async () => {
@@ -1089,9 +1089,9 @@ describe("image-upload", () => {
 			});
 			await waitFor(() => fireEvent.click(getSaveButton()));
 
-			expect(mockCounter.value).toBeCalledTimes(2);
+			expect(mockCounter.value).toHaveBeenCalledTimes(2);
 			expect(getSaveButton(true)).not.toBeInTheDocument();
-			expect(uploadSpy).toBeCalled();
+			expect(uploadSpy).toHaveBeenCalled();
 		});
 
 		it("should fire hide-review-modal event on hiding review modal", async () => {
@@ -1105,7 +1105,7 @@ describe("image-upload", () => {
 			});
 			await waitFor(() => fireEvent.click(getSaveButton()));
 
-			expect(handleHideReviewModal).toBeCalled();
+			expect(handleHideReviewModal).toHaveBeenCalled();
 		});
 
 		it("should allow dismissing of the review modal via dismiss-review-modal event", async () => {
@@ -1126,7 +1126,7 @@ describe("image-upload", () => {
 
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
-			expect(handleDismissReviewModal).toBeCalled();
+			expect(handleDismissReviewModal).toHaveBeenCalled();
 		});
 
 		it("should be able to save review images via trigger-save-review-images event", async () => {
@@ -1145,7 +1145,7 @@ describe("image-upload", () => {
 
 			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Custom Button" })));
 
-			expect(saveReviewImageFn).toBeCalled();
+			expect(saveReviewImageFn).toHaveBeenCalled();
 		});
 
 		it("should be able to show custom error message when update-image-status is fired", async () => {
