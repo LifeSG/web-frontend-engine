@@ -5,8 +5,8 @@ import { IChipButtonProps } from "./types";
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, IChipButtonProps {}
 
-export const Chip = ({ children, ...otherProps }: IProps) => (
-	<ChipButton type="button" aria-pressed={otherProps?.isActive} {...otherProps}>
+export const Chip = ({ children, isActive, ...otherProps }: IProps) => (
+	<ChipButton type="button" aria-pressed={isActive} $isActive={isActive} {...otherProps}>
 		<ChipText weight="semibold">{children}</ChipText>
 	</ChipButton>
 );

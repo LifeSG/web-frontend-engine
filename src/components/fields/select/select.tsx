@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Warning } from "../../shared";
 import { ISelectOption, ISelectSchema } from "./types";
@@ -13,16 +13,11 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { error, formattedLabel, id, onBlur, onChange, schema, value, warning } = props;
 	const {
-		error,
-		formattedLabel,
-		id,
-		onChange,
-		schema: { label: _label, options, validation, ...otherSchema },
-		value,
-		warning,
-		...otherProps
-	} = props;
+		commonSchema: { validation },
+		customSchema: { options, ...selectProps },
+	} = filterSchemaProps(schema);
 
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
@@ -64,13 +59,13 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	return (
 		<>
 			<Form.Select
-				{...otherSchema}
-				{...otherProps}
+				{...selectProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "select")}
 				label={formattedLabel}
 				errorMessage={error?.message}
 				options={options}
+				onBlur={onBlur}
 				onSelectOption={handleChange}
 				selectedOption={getSelectOption()}
 				displayValueExtractor={(item: ISelectOption) => item.label}

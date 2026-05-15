@@ -43,11 +43,11 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			tooltip,
 		},
 		id,
+		error,
 		isDirty,
 		isTouched,
 		value,
 		warning,
-		...otherProps
 	} = props;
 	const { images, setImages, currentFileIds } = useContext(ImageContext);
 	const previousImages = usePrevious(images);
@@ -288,7 +288,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 				maxFiles={maxFiles}
 				maxSizeInKb={maxFileSize}
 				dimensions={dimensions}
-				errorMessage={otherProps.error?.message}
+				errorMessage={error?.message}
 				validation={validation}
 				multiple={multiple}
 				warning={warning}

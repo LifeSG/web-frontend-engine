@@ -17,11 +17,11 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 		error,
 		formattedLabel,
 		id,
+		onBlur,
 		onChange,
 		schema: { label: _label, validation, disabled, readOnly, className, histogramSlider, customOptions },
 		value,
 		warning,
-		...otherProps
 	} = props;
 
 	const { bins, interval, ...sliderProps } = histogramSlider;
@@ -116,11 +116,11 @@ export const SelectHistogram = (props: IGenericFieldProps<ISelectHistogramSchema
 	return (
 		<>
 			<Form.SelectHistogram
-				{...otherProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "select-histogram")}
 				label={formattedLabel}
 				errorMessage={error?.message}
+				onBlur={onBlur}
 				onChangeEnd={handleChangeEnd}
 				disabled={disabled}
 				readOnly={readOnly}

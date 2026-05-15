@@ -11,7 +11,7 @@ export const ThumbnailsWrapper = styled.div`
 	max-height: 5rem;
 `;
 
-export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
+export const ThumbnailItem = styled.button<{ $src?: string; $error?: boolean }>`
 	position: relative;
 	cursor: pointer;
 	width: 3rem;
@@ -19,8 +19,8 @@ export const ThumbnailItem = styled.button<{ src?: string; error?: boolean }>`
 	padding: 0;
 	border: none;
 	border-radius: ${Radius.xs};
-	${({ src }) => `background-image: url(${src});`}
-	background-color: ${({ error }) => error && "#eee"};
+	${({ $src }) => `background-image: url(${$src});`}
+	background-color: ${({ $error }) => $error && "#eee"};
 	background-position: center;
 	background-size: cover;
 `;
@@ -83,9 +83,9 @@ export const LoadingBox = styled.div`
 	}
 `;
 
-export const BorderOverlay = styled.div<{ isSelected: boolean }>`
+export const BorderOverlay = styled.div<{ $isSelected: boolean }>`
 	border: ${(props) =>
-		props.isSelected
+		props.$isSelected
 			? css`
 					${Border.solid} ${Border["width-020"]}
 			  `

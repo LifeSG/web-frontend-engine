@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import sanitize from "sanitize-html";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Warning } from "../../shared";
 import { FlexWrapper } from "./switch.styles";
@@ -14,15 +14,11 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { error, formattedLabel, id, onChange, schema, value, warning } = props;
 	const {
-		error,
-		formattedLabel,
-		id,
-		onChange,
-		schema: { className, customOptions, disabled, label, validation, ...otherSchema },
-		value,
-		warning,
-	} = props;
+		commonSchema: { customOptions, label, validation },
+		customSchema: { className, disabled, ...toggleProps },
+	} = filterSchemaProps(schema);
 
 	const [stateValue, setStateValue] = useState<boolean>(value || undefined);
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -69,7 +65,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 					aria-label={typeof label === "string" ? label : sanitize(label.mainLabel, { allowedTags: [] })}
 				>
 					<Toggle
-						{...otherSchema}
+						{...toggleProps}
 						type="yes"
 						id={formatId("yes")}
 						data-testid={TestHelper.generateId(id, "switch-yes")}
@@ -84,7 +80,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 						Yes
 					</Toggle>
 					<Toggle
-						{...otherSchema}
+						{...toggleProps}
 						type="no"
 						id={formatId("no")}
 						data-testid={TestHelper.generateId(id, "switch-no")}

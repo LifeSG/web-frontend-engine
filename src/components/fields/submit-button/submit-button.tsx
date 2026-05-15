@@ -5,17 +5,18 @@ import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { useFrontendEngineForm, useValidationConfig, useValidationSchema } from "../../../utils/hooks";
+import { filterSchemaProps } from "../../../utils/prop-helper";
 import { ISubmitButtonSchema } from "./types";
 
 export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
+	const { id, schema } = props;
 	const {
-		id,
-		schema: { disabled, label, ...otherSchema },
-		...otherProps
-	} = props;
+		commonSchema: { label },
+		customSchema: { disabled, ...buttonProps },
+	} = filterSchemaProps(schema);
 	const { submitHandler, wrapInForm } = useFrontendEngineForm();
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { hardValidationSchema } = useValidationSchema();
@@ -63,8 +64,7 @@ export const SubmitButton = (props: IGenericFieldProps<ISubmitButtonSchema>) => 
 	// =============================================================================
 	return (
 		<Button.Default
-			{...otherSchema}
-			{...otherProps}
+			{...buttonProps}
 			disabled={isDisabled}
 			data-testid={id}
 			id={id}

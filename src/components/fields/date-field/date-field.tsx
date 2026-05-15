@@ -5,7 +5,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
-import { DateTimeHelper, TestHelper } from "../../../utils";
+import { DateTimeHelper, TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IGenericFieldProps } from "../types";
@@ -20,17 +20,11 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
+	const { error, formattedLabel, id, isDirty, onBlur, onChange, schema, value, warning } = props;
 	const {
-		error,
-		formattedLabel,
-		id,
-		isDirty,
-		onChange,
-		schema: { label: _label, useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, validation, ...otherSchema },
-		value,
-		warning,
-		...otherProps
-	} = props;
+		commonSchema: { validation },
+		customSchema: { useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, ...inputProps },
+	} = filterSchemaProps(schema);
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [derivedProps, setDerivedProps] = useState<Pick<DateInputProps, "minDate" | "maxDate" | "disabledDates">>();
@@ -243,13 +237,13 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	return (
 		<>
 			<Form.DateInput
-				{...otherSchema}
-				{...otherProps}
+				{...inputProps}
 				{...derivedProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "date")}
 				label={formattedLabel}
 				errorMessage={error?.message}
+				onBlur={onBlur}
 				onChange={handleChange}
 				value={stateValue}
 			/>

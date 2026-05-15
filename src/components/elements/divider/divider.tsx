@@ -1,5 +1,5 @@
 import { Divider as DSDivider } from "@lifesg/react-design-system/divider";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { IGenericElementProps } from "../types";
 import { IDividerSchema } from "./types";
 import styled from "styled-components";
@@ -8,10 +8,10 @@ export const Divider = (props: IGenericElementProps<IDividerSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
+	const { id, schema } = props;
 	const {
-		id,
-		schema: { verticalMargin, ...otherSchema },
-	} = props;
+		customSchema: { verticalMargin, ...dividerProps },
+	} = filterSchemaProps(schema);
 
 	// =============================================================================
 	// RENDER FUNCTIONS
@@ -21,7 +21,7 @@ export const Divider = (props: IGenericElementProps<IDividerSchema>) => {
 			id={id}
 			data-testid={TestHelper.generateId(id, "divider")}
 			$verticalMargin={verticalMargin}
-			{...otherSchema}
+			{...dividerProps}
 		/>
 	);
 };

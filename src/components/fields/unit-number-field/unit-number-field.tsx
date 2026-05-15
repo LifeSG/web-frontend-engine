@@ -2,7 +2,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IUnitNumberFieldSchema } from "./types";
@@ -11,16 +11,11 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { formattedLabel, error, id, onBlur, onChange, schema, value, warning } = props;
 	const {
-		formattedLabel,
-		error,
-		id,
-		onChange,
-		schema: { label: _label, validation, ...otherSchema },
-		value,
-		warning,
-		...otherProps
-	} = props;
+		commonSchema: { validation },
+		customSchema: inputProps,
+	} = filterSchemaProps(schema);
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -58,12 +53,12 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 	return (
 		<>
 			<Form.UnitNumberInput
-				{...otherSchema}
-				{...otherProps}
+				{...inputProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "unit-number")}
 				label={formattedLabel}
 				value={stateValue}
+				onBlur={onBlur}
 				onChange={handleChange}
 				errorMessage={error?.message}
 			/>

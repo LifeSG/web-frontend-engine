@@ -90,6 +90,7 @@ export const LocationSearch = ({
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const resultRef = useRef<HTMLDivElement>(null);
+	const isMounted = useRef(true);
 	const reverseGeocodeAborter = useRef<AbortController | null>(null);
 
 	const [hasScrolled, setHasScrolled] = useState(false);
@@ -128,6 +129,13 @@ export const LocationSearch = ({
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
+	useEffect(() => {
+		return () => {
+			isMounted.current = false;
+			reverseGeocodeAborter.current?.abort();
+		};
+	}, []);
+
 	// check if any of the services is working
 	useEffect(() => {
 		if (!showLocationModal || !isRecaptchaReady) return;
@@ -323,6 +331,8 @@ export const LocationSearch = ({
 				}
 			},
 			(error) => {
+				if (!isMounted.current) return;
+
 				if (error instanceof SyntaxError || error instanceof TypeError) {
 					populateDisplayList({ results: [], queryString });
 				} else {
@@ -440,6 +450,8 @@ export const LocationSearch = ({
 	};
 
 	const resetResultsList = () => {
+		if (!isMounted.current) return;
+
 		setSelectedIndex(-1);
 		setCurrentPaginationPageNum(1);
 		setTotalNumPages(0);
@@ -494,6 +506,8 @@ export const LocationSearch = ({
 					setAPIPageNum(res.apiPageNum);
 				},
 				(error) => {
+					if (!isMounted.current) return;
+
 					resetResultsList();
 					handleApiErrors(new OneMapError(error));
 				},
@@ -547,6 +561,8 @@ export const LocationSearch = ({
 			return;
 		}
 
+		if (!isMounted.current) return;
+
 		if (resultListItem.length === 0) {
 			setQueryString("");
 			const shouldPanToCurrentLocation =
@@ -596,6 +612,8 @@ export const LocationSearch = ({
 				recaptchaToken,
 				mapApiHeaders
 			);
+			if (!isMounted.current) return;
+
 			locationFieldValue.x = X;
 			locationFieldValue.y = Y;
 		}
@@ -608,6 +626,8 @@ export const LocationSearch = ({
 	 * Stores proper state
 	 */
 	const populateDisplayList = (params: IDisplayResultListParams) => {
+		if (!isMounted.current) return;
+
 		const { results, boldResults, apiPageNum, totalNumPages, queryString } = params;
 
 		let displayResults = results;
@@ -642,7 +662,7 @@ export const LocationSearch = ({
 			<ResultItem
 				key={`${index}_${item.lat}_${item.lng}`}
 				onClick={() => handleClickResult(item, index)}
-				active={selectedIndex === index}
+				$active={selectedIndex === index}
 				id={TestHelper.generateId(`location-search-modal-search-result-${index + 0}`)}
 				data-testid={TestHelper.generateId(
 					`location-search-modal-search-result-${index + 0}`,
@@ -687,7 +707,7 @@ export const LocationSearch = ({
 				id={TestHelper.generateId(id, "location-search")}
 				data-testid={TestHelper.generateId(id, "location-search")}
 				className={`${className}-location-search`}
-				panelInputMode={panelInputMode}
+				$panelInputMode={panelInputMode}
 			>
 				<SearchBarIconButton
 					onClick={handleClickCancel}
@@ -696,7 +716,7 @@ export const LocationSearch = ({
 				>
 					<SearchBarModalCross />
 				</SearchBarIconButton>
-				<SearchBarContainer hasScrolled={hasScrolled}>
+				<SearchBarContainer $hasScrolled={hasScrolled}>
 					<SearchBarIconButton
 						onClick={handleInputFocus}
 						id={TestHelper.generateId(id, "location-search-modal-search")}
@@ -731,7 +751,7 @@ export const LocationSearch = ({
 				<ResultWrapper
 					id={TestHelper.generateId(id, "location-search-results")}
 					data-testid={TestHelper.generateId(id, "location-search-results", panelInputMode)}
-					panelInputMode={panelInputMode}
+					$panelInputMode={panelInputMode}
 					ref={resultRef}
 					onScroll={handleScrollResult}
 				>
@@ -754,15 +774,15 @@ export const LocationSearch = ({
 				<ButtonWrapper
 					id={TestHelper.generateId(id, "location-search-controls")}
 					data-testid={TestHelper.generateId(id, "location-search-controls")}
-					panelInputMode={panelInputMode}
+					$panelInputMode={panelInputMode}
 				>
-					<ButtonItem buttonType="cancel" styleType="light" onClick={handleClickCancel}>
+					<ButtonItem $buttonType="cancel" styleType="light" onClick={handleClickCancel}>
 						Cancel
 					</ButtonItem>
 					<ButtonItem
 						id={TestHelper.generateId(id, "location-search-controls-confirm")}
 						data-testid={TestHelper.generateId(id, "location-search-controls-confirm")}
-						buttonType="confirm"
+						$buttonType="confirm"
 						onClick={onConfirm}
 						disabled={selectedIndex < 0 || resultState !== "found"}
 					>

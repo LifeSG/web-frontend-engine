@@ -8,7 +8,7 @@ import { Typography } from "@lifesg/react-design-system/typography";
 import { Button } from "@lifesg/react-design-system/button";
 
 interface ISinglePanelStyle {
-	panelInputMode: TPanelInputMode;
+	$panelInputMode: TPanelInputMode;
 }
 
 export const SearchWrapper = styled.div<ISinglePanelStyle>`
@@ -19,23 +19,23 @@ export const SearchWrapper = styled.div<ISinglePanelStyle>`
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
 		flex: unset;
-		height: ${({ panelInputMode }) => (panelInputMode === "search" ? `100%` : `auto`)};
+		height: ${({ $panelInputMode }) => ($panelInputMode === "search" ? `100%` : `auto`)};
 		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} 0;
 	}
 `;
 
-export const SearchBarContainer = styled.div<{ hasScrolled?: boolean }>`
+export const SearchBarContainer = styled.div<{ $hasScrolled?: boolean }>`
 	position: relative;
 	display: flex;
 	gap: ${Spacing["spacing-8"]};
 	padding-bottom: ${Spacing["spacing-8"]};
-	alight-items: center;
+	align-items: center;
 	justify-content: space-between;
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	clip-path: inset(0 0 -0.3rem 0);
 	transition: box-shadow ${Motion["duration-250"]} ${Motion["ease-default"]};
 
-	${({ hasScrolled }) => (hasScrolled ? `box-shadow: 0 0.06rem 0.4rem rgba(0,0,0,.12);` : "")}
+	${({ $hasScrolled }) => ($hasScrolled ? `box-shadow: 0 0.06rem 0.4rem rgba(0,0,0,.12);` : "")}
 
 	&:focus-within {
 		border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour["border-focus"]};
@@ -109,7 +109,7 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		display: ${({ panelInputMode }) => (panelInputMode !== "map" ? `block` : `none`)};
+		display: ${({ $panelInputMode }) => ($panelInputMode !== "map" ? `block` : `none`)};
 		border-bottom: 0;
 	}
 `;
@@ -127,7 +127,7 @@ export const NoResultTitle = styled(Typography.BodyMD)`
 	overflow-y: scroll;
 `;
 
-export const ResultItem = styled.div<{ active?: boolean }>`
+export const ResultItem = styled.div<{ $active?: boolean }>`
 	display: flex;
 	align-items: center;
 	gap: ${Spacing["spacing-16"]};
@@ -135,7 +135,7 @@ export const ResultItem = styled.div<{ active?: boolean }>`
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	text-transform: uppercase;
 	cursor: pointer;
-	background-color: ${({ active }) => (active ? Colour["bg-selected"] : `transparent`)};
+	background-color: ${({ $active }) => ($active ? Colour["bg-selected"] : `transparent`)};
 
 	.keyword {
 		font-weight: ${Font.Spec["weight-semibold"]};
@@ -155,7 +155,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	padding-top: ${Spacing["spacing-16"]};
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		display: ${({ panelInputMode }) => (panelInputMode === "map" ? `block` : `none`)};
+		display: ${({ $panelInputMode }) => ($panelInputMode === "map" ? `block` : `none`)};
 		position: absolute;
 		left: 0;
 		bottom: 0;
@@ -164,12 +164,12 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	}
 `;
 
-export const ButtonItem = styled(Button.Default)<{ buttonType: "cancel" | "confirm" }>`
+export const ButtonItem = styled(Button.Default)<{ $buttonType: "cancel" | "confirm" }>`
 	width: 9.5rem;
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
-		${({ buttonType }) => buttonType === "cancel" && `display: none`}
-		${({ buttonType }) => buttonType === "confirm" && `width: 100%`}
+		${({ $buttonType }) => $buttonType === "cancel" && `display: none`}
+		${({ $buttonType }) => $buttonType === "confirm" && `width: 100%`}
 	}
 `;
 

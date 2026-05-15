@@ -23,7 +23,6 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		onBlur,
 		error,
 		warning,
-		...otherProps
 	} = props;
 
 	const { setValue } = useFormContext();
@@ -142,7 +141,6 @@ export const NestedMultiSelect = (props: IGenericFieldProps<INestedMultiSelectSc
 		<>
 			<Form.NestedMultiSelect
 				{...otherSchema}
-				{...otherProps}
 				id={id}
 				data-testid={TestHelper.generateId(id)}
 				label={formattedLabel}

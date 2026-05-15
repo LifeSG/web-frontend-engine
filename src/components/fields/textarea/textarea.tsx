@@ -3,7 +3,7 @@ import { kebabCase } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Chip, Warning } from "../../shared";
 import { IGenericFieldProps } from "../types";
@@ -14,18 +14,11 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
+	const { error, formattedLabel, id, onChange, schema, value, warning, onBlur } = props;
 	const {
-		error,
-		formattedLabel,
-		id,
-		name,
-		onChange,
-		schema: { className, chipTexts, chipPosition, rows = 1, resizable, label: _label, validation, ...otherSchema },
-		value,
-		warning,
-		onBlur,
-		...otherProps
-	} = props;
+		commonSchema: { validation },
+		customSchema: { className, chipTexts, chipPosition, rows = 1, resizable, ...textareaProps },
+	} = filterSchemaProps(schema);
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string | number | readonly string[]>(value || "");
 	const [maxLength, setMaxLength] = useState<number>();
@@ -113,19 +106,17 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel}>
-				<Wrapper chipPosition={chipPosition}>
+				<Wrapper $chipPosition={chipPosition}>
 					{renderChips()}
 					<StyledTextarea
 						ref={textAreaRef}
-						{...otherSchema}
-						{...otherProps}
+						{...textareaProps}
 						id={id}
 						data-testid={TestHelper.generateId(id, "textarea")}
 						className={className}
-						name={name}
 						maxLength={maxLength}
 						rows={rows}
-						resizable={resizable}
+						$resizable={resizable}
 						onChange={handleChange}
 						value={stateValue}
 						errorMessage={error?.message}

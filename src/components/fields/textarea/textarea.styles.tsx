@@ -3,15 +3,15 @@ import { Form } from "@lifesg/react-design-system/form";
 import styled, { css } from "styled-components";
 
 interface ITextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	resizable?: boolean | undefined;
+	$resizable?: boolean | undefined;
 }
 
 // =============================================================================
 // STYLING
 // =============================================================================
-export const Wrapper = styled.div<{ chipPosition?: "top" | "bottom" | undefined }>`
+export const Wrapper = styled.div<{ $chipPosition?: "top" | "bottom" | undefined }>`
 	display: flex;
-	flex-direction: ${({ chipPosition }) => (chipPosition !== "bottom" ? "column" : "column-reverse")};
+	flex-direction: ${({ $chipPosition }) => ($chipPosition !== "bottom" ? "column" : "column-reverse")};
 `;
 
 export const ChipContainer = styled.div<{ $chipPosition?: "top" | "bottom" | undefined }>`
@@ -33,7 +33,7 @@ export const StyledTextarea = styled(Form.Textarea)<ITextareaProps>`
 	width: auto;
 
 	${(props) =>
-		!props.resizable
+		!props.$resizable
 			? css`
 					resize: none;
 			  `

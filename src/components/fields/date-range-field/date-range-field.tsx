@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { DateTimeHelper, TestHelper } from "../../../utils";
+import { DateTimeHelper, TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IDateRangeFieldValidationRule, TDateRangeFieldSchema, TDateRangeInputType } from "./types";
@@ -26,12 +26,16 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		formattedLabel,
 		id,
 		isDirty,
+		onBlur,
 		onChange,
-		schema: { dateFormat = DEFAULT_DATE_FORMAT, label: _label, validation, variant, ...otherSchema },
+		schema,
 		value = { from: undefined, to: undefined },
 		warning,
-		...otherProps
 	} = props;
+	const {
+		commonSchema: { validation },
+		customSchema: { dateFormat = DEFAULT_DATE_FORMAT, variant, ...inputProps },
+	} = filterSchemaProps(schema);
 	const [stateValue, setStateValue] = useState<string>(value.from || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [stateValueEnd, setStateValueEnd] = useState<string>(value.to || ""); // always uuuu-MM-dd because it is passed to Form.DateInput
 	const [derivedProps, setDerivedProps] = useState<DateRangeInputProps>();
@@ -367,13 +371,13 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 	return (
 		<>
 			<Form.DateRangeInput
-				{...otherSchema}
-				{...otherProps}
+				{...inputProps}
 				{...derivedProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "date")}
 				label={formattedLabel}
 				errorMessage={error?.message}
+				onBlur={onBlur}
 				onChange={handleChange}
 				value={stateValue}
 				valueEnd={stateValueEnd}

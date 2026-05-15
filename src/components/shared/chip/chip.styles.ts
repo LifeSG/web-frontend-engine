@@ -1,12 +1,11 @@
 import { Border, Colour } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled, { css } from "styled-components";
-import { IChipButtonProps } from "./types";
 
 // =============================================================================
 // STYLING
 // =============================================================================
-export const ChipButton = styled.button<IChipButtonProps>`
+export const ChipButton = styled.button<{ $isActive?: boolean }>`
 	background-color: ${Colour.bg};
 	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	border-radius: 1rem;
@@ -25,7 +24,7 @@ export const ChipButton = styled.button<IChipButtonProps>`
 	}
 
 	${(props) => {
-		if (props.isActive) {
+		if (props.$isActive) {
 			return css`
 				background-color: ${Colour["bg-inverse-subtlest"](props)};
 

@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper, generateRandomId } from "../../../utils";
+import { TestHelper, filterSchemaProps, generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize, Warning } from "../../shared";
@@ -16,15 +16,11 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { formattedLabel, error, id, onChange, schema, value, warning } = props;
 	const {
-		formattedLabel,
-		error,
-		id,
-		onChange,
-		schema: { className, customOptions, disabled, label: _label, options, validation, ...otherSchema },
-		value,
-		warning,
-	} = props;
+		commonSchema: { customOptions, validation },
+		customSchema: { className, disabled, options, ...checkboxProps },
+	} = filterSchemaProps(schema);
 
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
@@ -115,7 +111,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 						className={className ? `${className}-checkbox-container` : undefined}
 					>
 						<StyledCheckbox
-							{...otherSchema}
+							{...checkboxProps}
 							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={checkboxId}
 							className={className}

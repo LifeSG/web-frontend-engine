@@ -1,13 +1,13 @@
 import { Form } from "@lifesg/react-design-system/form";
 import isNil from "lodash/isNil";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
-import { IHistogramSliderSchema } from "./types";
+import { IHistogramSliderSchema, IHistogramSliderValue } from "./types";
 
 export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema>) => {
 	// =============================================================================
@@ -25,6 +25,13 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 	const { resetField } = useFormContext();
 	const [stateValue, setStateValue] = useState<[number, number]>(undefined);
 	const { setFieldValidationConfig } = useValidationConfig();
+	const rangeMin = useMemo(() => Math.min(...bins.map((bin) => bin.minValue)), [bins]);
+	const rangeMax = useMemo(() => Math.max(...bins.map((bin) => bin.minValue)) + interval, [bins, interval]);
+
+	const getDisplayValue = (value: IHistogramSliderValue | undefined): [number, number] => [
+		typeof value?.from === "number" ? value.from : rangeMin,
+		typeof value?.to === "number" ? value.to : rangeMax,
+	];
 
 	// =============================================================================
 	// EFFECTS
@@ -32,13 +39,10 @@ export const HistogramSlider = (props: IGenericFieldProps<IHistogramSliderSchema
 	useEffect(() => {
 		// prepopulate with full range selected if range is not selected
 		if (!value) {
-			const min = Math.min(...bins.map((bin) => bin.minValue));
-			const max = Math.max(...bins.map((bin) => bin.minValue)) + interval;
-
-			resetField(id, { defaultValue: { from: min, to: max }, keepDirty: true });
-			setStateValue([min, max]);
+			resetField(id, { defaultValue: { from: rangeMin, to: rangeMax }, keepDirty: true });
+			setStateValue([rangeMin, rangeMax]);
 		} else {
-			setStateValue([value.from, value.to]);
+			setStateValue(getDisplayValue(value));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);

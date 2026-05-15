@@ -1,29 +1,21 @@
 import { Button } from "@lifesg/react-design-system/button";
+import { Spacing } from "@lifesg/react-design-system/theme";
 import * as Icons from "@lifesg/react-icons";
 import styled from "styled-components";
 import { IGenericFieldProps } from "..";
-import { IButtonSchema } from "./types";
 import { useFieldEvent } from "../../../utils/hooks";
-import { Spacing } from "@lifesg/react-design-system/theme";
+import { filterSchemaProps } from "../../../utils/prop-helper";
+import { IButtonSchema } from "./types";
 
 export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
+	const { id, schema } = props;
 	const {
-		schema: {
-			label,
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			uiType,
-			startIcon,
-			endIcon,
-			href,
-			target,
-			...otherSchema
-		},
-		id,
-		...otherProps
-	} = props;
+		commonSchema: { label },
+		customSchema: { endIcon, href, startIcon, target, ...buttonProps },
+	} = filterSchemaProps(schema);
 	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =============================================================================
@@ -56,7 +48,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	};
 
 	return (
-		<CustomButton type="button" {...otherSchema} {...otherProps} onClick={handleClick}>
+		<CustomButton type="button" {...buttonProps} onClick={handleClick}>
 			{renderIcon(startIcon)}
 			{label}
 			{renderIcon(endIcon)}

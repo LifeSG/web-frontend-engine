@@ -6,17 +6,18 @@ import isString from "lodash/isString";
 import { useFormContext } from "react-hook-form";
 import { IGenericFieldProps } from "..";
 import { useFormSchema, useFormValues } from "../../../utils/hooks";
+import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IResetButtonSchema } from "./types";
 
 export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
+	const { id, schema } = props;
 	const {
-		id,
-		schema: { disabled, ignoreDefaultValues, label, ...otherSchema },
-		...otherProps
-	} = props;
+		commonSchema: { label },
+		customSchema: { disabled, ignoreDefaultValues, ...buttonProps },
+	} = filterSchemaProps(schema);
 
 	const { reset, getValues } = useFormContext();
 	const { resetFields } = useFormValues();
@@ -51,15 +52,7 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Button.Default
-			{...otherSchema}
-			{...otherProps}
-			disabled={disabled}
-			data-testid={id}
-			id={id}
-			type="reset"
-			onClick={onClick}
-		>
+		<Button.Default {...buttonProps} disabled={disabled} data-testid={id} id={id} type="reset" onClick={onClick}>
 			{label}
 		</Button.Default>
 	);

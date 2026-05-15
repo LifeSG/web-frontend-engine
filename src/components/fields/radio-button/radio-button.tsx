@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper, generateRandomId } from "../../../utils";
+import { TestHelper, filterSchemaProps, generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize, Warning } from "../../shared";
@@ -23,15 +23,11 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { error, formattedLabel, id, onChange, schema, value, warning } = props;
 	const {
-		error,
-		formattedLabel,
-		id,
-		onChange,
-		schema: { className, customOptions, disabled, label: _label, options, validation, ...otherSchema },
-		value,
-		warning,
-	} = props;
+		commonSchema: { customOptions, validation },
+		customSchema: { className, disabled, options, ...radioProps },
+	} = filterSchemaProps(schema);
 
 	const { setValue } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
@@ -93,7 +89,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				return (
 					<RadioContainer className={className ? `${className}-radio-container` : undefined} key={index}>
 						<StyledRadioButton
-							{...otherSchema}
+							{...radioProps}
 							className={className}
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
@@ -126,7 +122,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 
 						return (
 							<StyledToggle
-								{...otherSchema}
+								{...radioProps}
 								key={index}
 								type="radio"
 								id={radioButtonId}
@@ -170,7 +166,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							<StyledImageButton
 								// temp any fix until proper typing is created
 								// eslint-disable-next-line @typescript-eslint/no-explicit-any
-								{...(otherSchema as any)}
+								{...(radioProps as any)}
 								type="button"
 								key={index}
 								id={radioButtonId}

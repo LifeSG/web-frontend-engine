@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { FieldWrapper } from "../../elements/wrapper/field-wrapper";
 import { Chip, ERROR_MESSAGES, Warning } from "../../shared";
@@ -16,16 +16,11 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { error, formattedLabel, id, onChange, schema, value, warning } = props;
 	const {
-		error,
-		formattedLabel,
-		id,
-		onChange,
-		schema: { disabled, label: _label, options, textarea, validation, ...otherSchema },
-		value,
-		warning,
-		...otherProps
-	} = props;
+		commonSchema: { validation },
+		customSchema: { disabled, options, textarea, ...chipProps },
+	} = filterSchemaProps(schema);
 
 	const [stateValue, setStateValue] = useState<string[]>(value || []);
 	const [showTextarea, setShowTextarea] = useState(false);
@@ -143,7 +138,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	const renderChips = (): JSX.Element[] => {
 		return options.map((option, index) => (
 			<Chip
-				{...otherSchema}
+				{...chipProps}
 				key={index}
 				onClick={() => handleChange(option.value)}
 				isActive={isChipSelected(option.value)}
@@ -162,7 +157,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		const textareaLabel = getTextareaLabel();
 		return (
 			<Chip
-				{...otherSchema}
+				{...chipProps}
 				onClick={() => handleTextareaChipClick(textareaLabel)}
 				isActive={isChipSelected(textareaLabel)}
 			>
@@ -177,17 +172,17 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 		}
 
 		const textareaId = getTextareaId();
-		const schema: ITextareaSchema = {
+		const textareaSchema: ITextareaSchema = {
 			uiType: "textarea",
-			className: otherSchema.className ? `${otherSchema.className}-textarea` : undefined,
+			className: schema.className ? `${schema.className}-textarea` : undefined,
 			...textarea,
 		};
-		return showTextarea ? <FieldWrapper id={textareaId} schema={schema} Field={Textarea} /> : <></>;
+		return showTextarea ? <FieldWrapper id={textareaId} schema={textareaSchema} Field={Textarea} /> : <></>;
 	};
 
 	return (
 		<>
-			<Form.CustomField label={formattedLabel} errorMessage={error?.message} {...otherProps}>
+			<Form.CustomField label={formattedLabel} errorMessage={error?.message}>
 				<ChipContainer data-testid={TestHelper.generateId(id, "chips")} $showTextarea={showTextarea}>
 					{renderChips()}
 					{renderTextareaChip()}

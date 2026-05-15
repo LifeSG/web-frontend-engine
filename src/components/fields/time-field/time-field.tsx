@@ -3,7 +3,7 @@ import { Form } from "@lifesg/react-design-system/form";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { DateTimeHelper, TestHelper } from "../../../utils";
+import { DateTimeHelper, TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Warning } from "../../shared";
 import { ITimeFieldSchema } from "./types";
@@ -12,16 +12,11 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const { error, formattedLabel, id, onBlur, onChange, schema, value, warning } = props;
 	const {
-		error,
-		formattedLabel,
-		id,
-		onChange,
-		schema: { is24HourFormat, label: _label, placeholder, useCurrentTime, validation, ...otherSchema },
-		value,
-		warning,
-		...otherProps
-	} = props;
+		commonSchema: { validation },
+		customSchema: { is24HourFormat, placeholder, useCurrentTime, ...timepickerProps },
+	} = filterSchemaProps(schema);
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const { setFieldValidationConfig } = useValidationConfig();
@@ -68,8 +63,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	return (
 		<>
 			<Form.Timepicker
-				{...otherSchema}
-				{...otherProps}
+				{...timepickerProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "time")}
 				label={formattedLabel}
@@ -77,6 +71,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 				value={stateValue}
 				placeholder={placeholder}
 				format={is24HourFormat ? "24hr" : "12hr"}
+				onBlur={onBlur}
 				onChange={handleChange}
 			/>
 			<Warning id={id} message={warning} />
