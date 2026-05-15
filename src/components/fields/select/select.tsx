@@ -13,7 +13,7 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { error, formattedLabel, id, onChange, schema, value, warning, ...otherProps } = props;
+	const { error, formattedLabel, id, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { validation },
 		customSchema: { options, ...selectProps },
@@ -60,12 +60,12 @@ export const Select = (props: IGenericFieldProps<ISelectSchema>) => {
 		<>
 			<Form.Select
 				{...selectProps}
-				{...otherProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "select")}
 				label={formattedLabel}
 				errorMessage={error?.message}
 				options={options}
+				onBlur={onBlur}
 				onSelectOption={handleChange}
 				selectedOption={getSelectOption()}
 				displayValueExtractor={(item: ISelectOption) => item.label}

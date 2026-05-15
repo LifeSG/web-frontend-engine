@@ -14,7 +14,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { error, formattedLabel, id, name, onChange, schema, value, warning, onBlur, ...otherProps } = props;
+	const { error, formattedLabel, id, onChange, schema, value, warning, onBlur } = props;
 	const {
 		commonSchema: { validation },
 		customSchema: { className, chipTexts, chipPosition, rows = 1, resizable, ...textareaProps },
@@ -111,11 +111,9 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 					<StyledTextarea
 						ref={textAreaRef}
 						{...textareaProps}
-						{...otherProps}
 						id={id}
 						data-testid={TestHelper.generateId(id, "textarea")}
 						className={className}
-						name={name}
 						maxLength={maxLength}
 						rows={rows}
 						$resizable={resizable}

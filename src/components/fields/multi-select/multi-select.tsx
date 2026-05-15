@@ -14,7 +14,7 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { error, formattedLabel, id, onChange, schema, value, warning, ...otherProps } = props;
+	const { error, formattedLabel, id, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { validation },
 		customSchema: { options = [], ...selectProps },
@@ -77,11 +77,11 @@ export const MultiSelect = (props: IGenericFieldProps<IMultiSelectSchema>) => {
 		<>
 			<Form.MultiSelect
 				{...selectProps}
-				{...otherProps}
 				id={id}
 				data-testid={TestHelper.generateId(id)}
 				label={formattedLabel}
 				options={options}
+				onBlur={onBlur}
 				onSelectOptions={handleChange}
 				selectedOptions={getSelectOptions()}
 				valueExtractor={(item: IMultiSelectOption) => item.value}

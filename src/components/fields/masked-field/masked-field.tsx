@@ -17,11 +17,11 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		error,
 		formattedLabel,
 		id,
+		onBlur,
 		onChange,
 		value,
 		schema: { label: _label, uiType, validation, maskRegex, iconMask, iconUnmask, ...otherSchema },
 		warning,
-		...otherProps
 	} = props;
 
 	const [stateValue, setStateValue] = useState<string>(value || "");
@@ -87,11 +87,11 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		<>
 			<Form.MaskedInput
 				{...otherSchema}
-				{...otherProps}
 				{...derivedAttributes}
 				id={id}
 				data-testid={TestHelper.generateId(id, uiType)}
 				label={formattedLabel}
+				onBlur={onBlur}
 				onChange={handleChange}
 				value={stateValue}
 				errorMessage={error?.message}

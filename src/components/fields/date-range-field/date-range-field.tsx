@@ -26,11 +26,11 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		formattedLabel,
 		id,
 		isDirty,
+		onBlur,
 		onChange,
 		schema,
 		value = { from: undefined, to: undefined },
 		warning,
-		...otherProps
 	} = props;
 	const {
 		commonSchema: { validation },
@@ -372,12 +372,12 @@ export const DateRangeField = (props: IGenericFieldProps<TDateRangeFieldSchema>)
 		<>
 			<Form.DateRangeInput
 				{...inputProps}
-				{...otherProps}
 				{...derivedProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "date")}
 				label={formattedLabel}
 				errorMessage={error?.message}
+				onBlur={onBlur}
 				onChange={handleChange}
 				value={stateValue}
 				valueEnd={stateValueEnd}

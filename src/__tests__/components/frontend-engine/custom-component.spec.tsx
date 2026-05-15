@@ -40,10 +40,10 @@ const MyCustomComponent: TCustomComponent<MyCustomSchema> = (props: TCustomCompo
 	const {
 		error,
 		id,
+		onBlur,
 		onChange,
 		schema: { displayTitle, validation },
 		value,
-		...otherProps
 	} = props;
 
 	const {
@@ -81,10 +81,10 @@ const MyCustomComponent: TCustomComponent<MyCustomSchema> = (props: TCustomCompo
 			label={displayTitle}
 			id={id}
 			errorMessage={error?.message}
+			onBlur={onBlur}
 			onChange={handleDispatchEvent}
 			onClick={handleRemoveEvent}
 			value={value || ""}
-			{...otherProps}
 		/>
 	);
 };

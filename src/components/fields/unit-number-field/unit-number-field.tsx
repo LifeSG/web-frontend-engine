@@ -11,7 +11,7 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { formattedLabel, error, id, onChange, schema, value, warning, ...otherProps } = props;
+	const { formattedLabel, error, id, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { validation },
 		customSchema: inputProps,
@@ -54,11 +54,11 @@ export const UnitNumberField = (props: IGenericFieldProps<IUnitNumberFieldSchema
 		<>
 			<Form.UnitNumberInput
 				{...inputProps}
-				{...otherProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "unit-number")}
 				label={formattedLabel}
 				value={stateValue}
+				onBlur={onBlur}
 				onChange={handleChange}
 				errorMessage={error?.message}
 			/>

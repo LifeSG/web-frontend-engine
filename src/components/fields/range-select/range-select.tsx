@@ -19,11 +19,11 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 		error,
 		formattedLabel,
 		id,
+		onBlur,
 		onChange,
 		schema,
 		value = { from: undefined, to: undefined },
 		warning,
-		...otherProps
 	} = props;
 	const {
 		commonSchema: { validation },
@@ -118,9 +118,9 @@ export const RangeSelect = (props: IGenericFieldProps<IRangeSelectSchema>) => {
 		<>
 			<Form.RangeSelect
 				{...rangeSelectProps}
-				{...otherProps}
 				id={id}
 				onHideOptions={handleBlur}
+				onBlur={onBlur}
 				data-testid={TestHelper.generateId(id)}
 				label={formattedLabel}
 				options={options}

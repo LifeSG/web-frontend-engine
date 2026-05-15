@@ -16,7 +16,7 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { isDirty, formattedLabel, error, id, name, onChange, schema, value, warning, ...otherProps } = props;
+	const { isDirty, formattedLabel, error, id, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { validation },
 		customSchema: { defaultCountry, disabled, enableSearch, placeholder, ...inputProps },
@@ -184,7 +184,6 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 		<>
 			<Form.PhoneNumberInput
 				{...inputProps}
-				{...otherProps}
 				data-testid={TestHelper.generateId(id, "contact")}
 				disabled={disabled}
 				enableSearch={enableSearch}
@@ -192,9 +191,9 @@ export const ContactField = (props: IGenericFieldProps<IContactFieldSchema>) => 
 				fixedCountry={fixedCountry}
 				id={id}
 				label={formattedLabel}
-				name={name}
 				placeholder={getPlaceholderText()}
 				value={formatDisplayValue()}
+				onBlur={onBlur}
 				onChange={handleChange}
 			/>
 			<Warning id={id} message={warning} />

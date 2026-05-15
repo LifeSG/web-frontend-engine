@@ -20,7 +20,7 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
 	// =============================================================================
-	const { error, formattedLabel, id, isDirty, onChange, schema, value, warning, ...otherProps } = props;
+	const { error, formattedLabel, id, isDirty, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { validation },
 		customSchema: { useCurrentDate, dateFormat = DEFAULT_DATE_FORMAT, ...inputProps },
@@ -238,12 +238,12 @@ export const DateField = (props: IGenericFieldProps<IDateFieldSchema>) => {
 		<>
 			<Form.DateInput
 				{...inputProps}
-				{...otherProps}
 				{...derivedProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "date")}
 				label={formattedLabel}
 				errorMessage={error?.message}
+				onBlur={onBlur}
 				onChange={handleChange}
 				value={stateValue}
 			/>

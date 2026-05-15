@@ -27,17 +27,6 @@ interface IProps {
 	warning?: string | undefined;
 }
 
-type TForwardedFieldStateProp = keyof Pick<ControllerFieldState, "isDirty" | "isTouched" | "invalid" | "isValidating">;
-
-const FIELD_STATE_PROPS_BY_UI_TYPE: Partial<Record<TFrontendEngineFieldSchema["uiType"], TForwardedFieldStateProp[]>> =
-	{
-		"contact-field": ["isDirty"],
-		"date-field": ["isDirty"],
-		"date-range-field": ["isDirty"],
-		"file-upload": ["isDirty", "isTouched"],
-		"image-upload": ["isDirty", "isTouched"],
-	};
-
 export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 	// =========================================================================
 	// CONST, STATE, REFS
@@ -140,19 +129,10 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 			value: getField(id),
 			warning,
 		};
-		return <Field schema={schema} {...fieldProps} {...getFieldStateProps(schema, fieldState)} />;
+		return <Field schema={schema} {...fieldProps} {...fieldState} />;
 	};
 
 	return <Controller control={control} name={id} shouldUnregister={true} render={renderField} />;
-};
-
-const getFieldStateProps = (schema: TFrontendEngineFieldSchema, fieldState: ControllerFieldState) => {
-	const forwardedProps = FIELD_STATE_PROPS_BY_UI_TYPE[schema.uiType] ?? [];
-
-	return {
-		error: fieldState.error,
-		...Object.fromEntries(forwardedProps.map((prop) => [prop, fieldState[prop]])),
-	};
 };
 
 const StyledSublabel = styled(Sanitize)`

@@ -16,7 +16,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// ================================================
 	// CONST, STATE, REFS
 	// ================================================
-	const { error, formattedLabel, id, name, onBlur, onChange, value, schema, warning } = props;
+	const { error, formattedLabel, id, onBlur, onChange, value, schema, warning } = props;
 	const {
 		commonSchema: { customOptions, uiType, validation },
 		customSchema: { inputMode, ...inputProps },
@@ -230,7 +230,6 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 				{...inputProps}
 				{...derivedAttributes}
 				id={id}
-				name={name}
 				data-testid={TestHelper.generateId(id, uiType)}
 				ref={ref}
 				type={formatInputType()}

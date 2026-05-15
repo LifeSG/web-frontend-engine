@@ -16,7 +16,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { error, formattedLabel, id, onChange, schema, value, warning, ...otherProps } = props;
+	const { error, formattedLabel, id, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { validation },
 		customSchema: { disabled, options, textarea, ...chipProps },
@@ -182,7 +182,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 
 	return (
 		<>
-			<Form.CustomField label={formattedLabel} errorMessage={error?.message} {...otherProps}>
+			<Form.CustomField label={formattedLabel} errorMessage={error?.message}>
 				<ChipContainer data-testid={TestHelper.generateId(id, "chips")} $showTextarea={showTextarea}>
 					{renderChips()}
 					{renderTextareaChip()}

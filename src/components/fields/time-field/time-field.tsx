@@ -12,7 +12,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { error, formattedLabel, id, onChange, schema, value, warning, ...otherProps } = props;
+	const { error, formattedLabel, id, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { validation },
 		customSchema: { is24HourFormat, placeholder, useCurrentTime, ...timepickerProps },
@@ -64,7 +64,6 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 		<>
 			<Form.Timepicker
 				{...timepickerProps}
-				{...otherProps}
 				id={id}
 				data-testid={TestHelper.generateId(id, "time")}
 				label={formattedLabel}
@@ -72,6 +71,7 @@ export const TimeField = (props: IGenericFieldProps<ITimeFieldSchema>) => {
 				value={stateValue}
 				placeholder={placeholder}
 				format={is24HourFormat ? "24hr" : "12hr"}
+				onBlur={onBlur}
 				onChange={handleChange}
 			/>
 			<Warning id={id} message={warning} />
