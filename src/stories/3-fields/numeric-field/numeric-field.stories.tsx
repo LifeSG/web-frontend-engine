@@ -137,6 +137,34 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
+export const WithDecimalsValidation = DefaultStoryTemplate<INumericFieldSchema>(
+	"numeric-with-decimals-validation"
+).bind({});
+WithDecimalsValidation.args = {
+	label: "Number (max 2 decimal places)",
+	uiType: "numeric-field",
+	validation: [{ required: true }, { decimals: 2, errorMessage: "Enter a number with up to 2 decimal places." }],
+};
+WithDecimalsValidation.storyName = "Decimals validation";
+
+export const WithCurrencyValidation = DefaultStoryTemplate<INumericFieldSchema>(
+	"numeric-with-currency-validation"
+).bind({});
+WithCurrencyValidation.args = {
+	label: "Amount ($)",
+	uiType: "numeric-field",
+	placeholder: "0.00",
+	customOptions: {
+		addOn: { type: "label", value: "$", position: "left" },
+	},
+	validation: [
+		{ required: true, errorMessage: "Amount is required." },
+		{ min: 0, errorMessage: "Amount must be at least $0." },
+		{ decimals: 2, errorMessage: "Enter a valid dollar amount (up to 2 decimal places)." },
+	],
+};
+WithCurrencyValidation.storyName = "Currency amount (decimals validation)";
+
 export const Warning = WarningStoryTemplate<INumericFieldSchema>("numeric-with-warning").bind({});
 Warning.args = {
 	label: "Number",
