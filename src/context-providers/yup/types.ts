@@ -15,6 +15,7 @@ export const YUP_CONDITIONS = [
 	"integer",
 	"lessThan",
 	"moreThan",
+	"decimals",
 	"when",
 	"filled",
 	"empty",
@@ -44,6 +45,7 @@ interface IYupRule {
 	integer?: boolean | undefined;
 	lessThan?: number | undefined;
 	moreThan?: number | undefined;
+	decimals?: number | undefined;
 	empty?: boolean | undefined;
 	equals?: unknown | undefined;
 	notEquals?: unknown | undefined;
