@@ -8,3 +8,15 @@ export const CustomUneditableSection = styled(UneditableSection)`
 		padding: ${Spacing["spacing-20"]};
 	}
 `;
+
+interface IBoxUneditableSectionProps {
+	$itemGap?: string | undefined;
+}
+
+export const BoxUneditableSection = styled(UneditableSection)<IBoxUneditableSectionProps>`
+	${({ $itemGap }) =>
+		$itemGap &&
+		`ul {
+			row-gap: ${$itemGap};
+		}`}
+`;

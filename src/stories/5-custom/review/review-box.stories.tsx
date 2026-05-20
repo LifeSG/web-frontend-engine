@@ -103,6 +103,17 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		itemGap: {
+			description:
+				"Overrides the gap between review items. Accepts any valid CSS length value (e.g. `2rem`, `32px`).",
+			table: {
+				type: {
+					summary: "string",
+				},
+				defaultValue: { summary: "2rem (design system default)" },
+			},
+			control: { type: "text" },
+		},
 	},
 };
 export default meta;
@@ -257,3 +268,13 @@ NoBackground.args = {
 	items: SAMPLE_ITEMS,
 	background: false,
 };
+
+export const WithCustomItemGap = DefaultStoryTemplate<TReviewSchema>("review-custom-item-gap").bind({});
+WithCustomItemGap.args = {
+	referenceKey: "review",
+	label: "Your personal information",
+	description: "Retrieved on 27 Jun 2023",
+	items: SAMPLE_ITEMS,
+	itemGap: "4rem",
+};
+WithCustomItemGap.storyName = "Custom Item Gap";
