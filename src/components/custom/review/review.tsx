@@ -1,6 +1,6 @@
 import { BoxContainer } from "@lifesg/react-design-system/box-container";
 import { Button } from "@lifesg/react-design-system/button";
-import { UneditableSection, UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
+import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 import isEmpty from "lodash/isEmpty";
 import { useEffect, useState } from "react";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -16,7 +16,7 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
-import { CustomUneditableSection } from "./review.styles";
+import { BoxUneditableSection, CustomUneditableSection } from "./review.styles";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -208,11 +208,12 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const renderBox = (schema: IReviewSchemaBox) => {
 		const {
 			commonSchema: { label },
-			customSchema: { description, topSection, bottomSection, ...boxProps },
+			customSchema: { description, topSection, bottomSection, itemGap, ...boxProps },
 		} = filterSchemaProps(schema);
 		return (
-			<UneditableSection
+			<BoxUneditableSection
 				{...boxProps}
+				$itemGap={itemGap}
 				id={id}
 				title={label}
 				description={description}
