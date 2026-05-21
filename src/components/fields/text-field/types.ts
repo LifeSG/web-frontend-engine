@@ -1,7 +1,7 @@
 import { FormInputProps } from "@lifesg/react-design-system/form/types";
 import { InputGroupAddonPosition } from "@lifesg/react-design-system/input-group";
 import * as Icons from "@lifesg/react-icons";
-import { TComponentOmitProps } from "../../frontend-engine";
+import { IYupValidationRule, TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 type TCustomOptions = {
@@ -39,8 +39,12 @@ export interface IEmailFieldSchema<V = undefined>
 	customOptions?: TCustomOptions | undefined;
 }
 
+export interface INumericFieldValidationRule extends IYupValidationRule {
+	decimals?: number | undefined;
+}
+
 export interface INumericFieldSchema<V = undefined>
-	extends IBaseFieldSchema<"numeric-field", V>,
+	extends IBaseFieldSchema<"numeric-field", V, INumericFieldValidationRule>,
 		TComponentOmitProps<FormInputProps, "type" | "max" | "min"> {
 	customOptions?: TCustomOptions | undefined;
 }
