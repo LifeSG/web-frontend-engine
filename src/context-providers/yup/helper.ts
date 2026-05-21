@@ -198,21 +198,6 @@ export namespace YupHelper {
 						}
 					}
 					break;
-				case !isNaN(rule.decimals):
-					try {
-						yupSchema = (yupSchema as Yup.NumberSchema).test(
-							"decimals",
-							rule.errorMessage || ERROR_MESSAGES.NUMERIC.INVALID_DECIMALS(rule.decimals),
-							(value) => {
-								if (value === undefined || value === null) return true;
-								const decimalStr = String(value).split(".")[1];
-								return !decimalStr || decimalStr.length <= rule.decimals;
-							}
-						);
-					} catch (error) {
-						console.warn(`error applying "decimals" condition to ${yupSchema.type} schema`);
-					}
-					break;
 				case !!rule.when:
 					{
 						Object.keys(rule.when).forEach((fieldId) => {
