@@ -103,6 +103,17 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
+		rowGap: {
+			description:
+				"Overrides the row gap between review items. Accepts any valid CSS length value (e.g. `2rem`, `32px`).",
+			table: {
+				type: {
+					summary: "string",
+				},
+				defaultValue: { summary: "2rem (design system default)" },
+			},
+			control: { type: "text" },
+		},
 	},
 };
 export default meta;
@@ -256,4 +267,14 @@ NoBackground.args = {
 	description: "Retrieved on 27 Jun 2023",
 	items: SAMPLE_ITEMS,
 	background: false,
+};
+
+export const WithCustomRowGap = DefaultStoryTemplate<TReviewSchema>("review-custom-row-gap").bind({});
+WithCustomRowGap.storyName = "Custom Row Gap";
+WithCustomRowGap.args = {
+	referenceKey: "review",
+	label: "Your personal information",
+	description: "Retrieved on 27 Jun 2023",
+	items: SAMPLE_ITEMS,
+	rowGap: "4rem",
 };

@@ -16,6 +16,7 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
+import { BoxUneditableSection } from "./review.styles";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -202,10 +203,11 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	};
 
 	const renderBox = (schema: IReviewSchemaBox) => {
-		const { label, description, topSection, bottomSection, ...otherSchema } = schema;
+		const { label, description, topSection, bottomSection, rowGap, ...otherSchema } = schema;
 		return (
-			<UneditableSection
+			<BoxUneditableSection
 				{...otherSchema}
+				$rowGap={rowGap}
 				id={id}
 				title={label}
 				description={description}
