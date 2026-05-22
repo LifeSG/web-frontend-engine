@@ -10,13 +10,13 @@ export const CustomUneditableSection = styled(UneditableSection)`
 `;
 
 interface IBoxUneditableSectionProps {
-	$itemGap?: string | undefined;
+	$rowGap?: string | undefined;
 }
 
 export const BoxUneditableSection = styled(UneditableSection)<IBoxUneditableSectionProps>`
-	${({ $itemGap }) =>
-		$itemGap &&
+	${({ $rowGap }) =>
+		$rowGap &&
 		`ul {
-			row-gap: ${$itemGap};
+			row-gap: ${$rowGap};
 		}`}
 `;
