@@ -2,13 +2,13 @@ import { UneditableSection } from "@lifesg/react-design-system/uneditable-sectio
 import styled from "styled-components";
 
 interface IBoxUneditableSectionProps {
-	$itemGap?: string | undefined;
+	$rowGap?: string | undefined;
 }
 
 export const BoxUneditableSection = styled(UneditableSection)<IBoxUneditableSectionProps>`
-	${({ $itemGap }) =>
-		$itemGap &&
+	${({ $rowGap }) =>
+		$rowGap &&
 		`ul {
-			row-gap: ${$itemGap};
+			row-gap: ${$rowGap};
 		}`}
 `;

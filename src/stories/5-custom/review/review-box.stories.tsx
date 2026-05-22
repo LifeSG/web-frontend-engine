@@ -103,9 +103,9 @@ const meta: Meta = {
 				type: "boolean",
 			},
 		},
-		itemGap: {
+		rowGap: {
 			description:
-				"Overrides the gap between review items. Accepts any valid CSS length value (e.g. `2rem`, `32px`).",
+				"Overrides the row gap between review items. Accepts any valid CSS length value (e.g. `2rem`, `32px`).",
 			table: {
 				type: {
 					summary: "string",
@@ -269,12 +269,12 @@ NoBackground.args = {
 	background: false,
 };
 
-export const WithCustomItemGap = DefaultStoryTemplate<TReviewSchema>("review-custom-item-gap").bind({});
-WithCustomItemGap.storyName = "Custom Item Gap";
-WithCustomItemGap.args = {
+export const WithCustomRowGap = DefaultStoryTemplate<TReviewSchema>("review-custom-row-gap").bind({});
+WithCustomRowGap.storyName = "Custom Row Gap";
+WithCustomRowGap.args = {
 	referenceKey: "review",
 	label: "Your personal information",
 	description: "Retrieved on 27 Jun 2023",
 	items: SAMPLE_ITEMS,
-	itemGap: "4rem",
+	rowGap: "4rem",
 };

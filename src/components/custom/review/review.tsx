@@ -203,11 +203,11 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	};
 
 	const renderBox = (schema: IReviewSchemaBox) => {
-		const { label, description, topSection, bottomSection, itemGap, ...otherSchema } = schema;
+		const { label, description, topSection, bottomSection, rowGap, ...otherSchema } = schema;
 		return (
 			<BoxUneditableSection
 				{...otherSchema}
-				$itemGap={itemGap}
+				$rowGap={rowGap}
 				id={id}
 				title={label}
 				description={description}
