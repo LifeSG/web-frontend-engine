@@ -139,9 +139,12 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should validate decimal places", async () => {
-		renderComponent({ validation: [{ required: true }, { decimals: 2, errorMessage: ERROR_MESSAGE }] });
+		// Yup validation catches values set programmatically (bypasses handleChange)
+		renderComponent(
+			{ validation: [{ required: true }, { decimals: 2, errorMessage: ERROR_MESSAGE }] },
+			{ defaultValues: { [COMPONENT_ID]: 1.234 } }
+		);
 
-		fireEvent.change(getNumericField(), { target: { value: 1.234 } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(getErrorMessage()).toBeInTheDocument();
 
@@ -151,11 +154,48 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should use default error message for decimals validation if none is provided", async () => {
-		renderComponent({ validation: [{ required: true }, { decimals: 2 }] });
+		renderComponent(
+			{ validation: [{ required: true }, { decimals: 2 }] },
+			{ defaultValues: { [COMPONENT_ID]: 1.234 } }
+		);
 
-		fireEvent.change(getNumericField(), { target: { value: 1.234 } });
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(screen.getByText("Up to 2 decimal places only.")).toBeInTheDocument();
+	});
+
+	it("should truncate value that exceeds decimal places on input", async () => {
+		renderComponent({ validation: [{ required: true }, { decimals: 2 }] });
+
+		fireEvent.change(getNumericField(), { target: { value: "1.234" } });
+		expect(getNumericField()).toHaveValue(1.23);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1.23 }));
+	});
+
+	it("should truncate pasted value that exceeds decimal places", async () => {
+		renderComponent({ validation: [{ required: true }, { decimals: 2 }] });
+
+		const input = getNumericField();
+		await userEvent.click(input);
+		await userEvent.paste("1.234");
+		expect(input).toHaveValue(1.23);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 1.23 }));
+	});
+
+	it("should truncate value when editing a prefilled field beyond decimal places", async () => {
+		renderComponent(
+			{ validation: [{ required: true }, { decimals: 2 }] },
+			{ defaultValues: { [COMPONENT_ID]: 5.678 } }
+		);
+
+		fireEvent.change(getNumericField(), { target: { value: "9.876" } });
+		expect(getNumericField()).toHaveValue(9.87);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: 9.87 }));
 	});
 
 	it("should support default value", async () => {

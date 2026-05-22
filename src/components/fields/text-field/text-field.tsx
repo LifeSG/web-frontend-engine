@@ -128,12 +128,13 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
 		if (uiType === "numeric-field") {
-			// prevent entering beyond max decimal places
+			// truncate value to max decimal places instead of rejecting, so prefilled/pasted
+			// values beyond the limit can still be edited
 			const decimalsRule = (validation as INumericFieldValidationRule[])?.find((rule) => "decimals" in rule);
 			if (decimalsRule?.decimals !== undefined) {
-				const decimalPart = event.target.value.split(".")[1];
+				const [intPart, decimalPart] = event.target.value.split(".");
 				if (decimalPart && decimalPart.length > decimalsRule.decimals) {
-					return;
+					event.target.value = `${intPart}.${decimalPart.slice(0, decimalsRule.decimals)}`;
 				}
 			}
 			const isNumber = !isNaN(parseFloat(event.target.value));
