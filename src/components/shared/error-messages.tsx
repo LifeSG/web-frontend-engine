@@ -13,6 +13,9 @@ export const ERROR_MESSAGES = {
 		INVALID_SINGAPORE_NUMBER: "Invalid Singapore number.",
 		INVALID_INTERNATIONAL_NUMBER: "Invalid international number.",
 	},
+	NUMERIC: {
+		INVALID_DECIMALS: (decimals: number) => `Up to ${decimals} decimal place${decimals === 1 ? "" : "s"} only.`,
+	},
 	DATE: {
 		MUST_BE_FUTURE: "Date must be in the future.",
 		MUST_BE_PAST: "Date must be in the past.",
