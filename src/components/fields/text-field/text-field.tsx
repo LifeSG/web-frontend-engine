@@ -10,7 +10,7 @@ import { TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
 import { Warning } from "../../shared/warning";
-import { IEmailFieldSchema, INumericFieldSchema, ITextFieldSchema } from "./types";
+import { IEmailFieldSchema, INumericFieldSchema, INumericFieldValidationRule, ITextFieldSchema } from "./types";
 
 export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFieldSchema | INumericFieldSchema>) => {
 	// ================================================
@@ -32,7 +32,20 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	useEffect(() => {
 		switch (uiType) {
 			case "numeric-field": {
-				setFieldValidationConfig(id, Yup.number(), validation);
+				const decimalsRule = (validation as INumericFieldValidationRule[])?.find((rule) => "decimals" in rule);
+				let yupSchema: Yup.NumberSchema = Yup.number();
+				if (decimalsRule?.decimals !== undefined) {
+					yupSchema = yupSchema.test(
+						"decimals",
+						decimalsRule.errorMessage || ERROR_MESSAGES.NUMERIC.INVALID_DECIMALS(decimalsRule.decimals),
+						(value) => {
+							if (value === undefined || value === null) return true;
+							const decimalStr = String(value).split(".")[1];
+							return !decimalStr || decimalStr.length <= decimalsRule.decimals;
+						}
+					);
+				}
+				setFieldValidationConfig(id, yupSchema, validation);
 				const minRule = validation?.find((rule) => "min" in rule);
 				const maxRule = validation?.find((rule) => "max" in rule);
 				const attributes = { ...derivedAttributes };
@@ -115,6 +128,15 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// =============================================================================
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
 		if (uiType === "numeric-field") {
+			// truncate value to max decimal places instead of rejecting, so prefilled/pasted
+			// values beyond the limit can still be edited
+			const decimalsRule = (validation as INumericFieldValidationRule[])?.find((rule) => "decimals" in rule);
+			if (decimalsRule?.decimals !== undefined) {
+				const [intPart, decimalPart] = event.target.value.split(".");
+				if (decimalPart && decimalPart.length > decimalsRule.decimals) {
+					event.target.value = `${intPart}.${decimalPart.slice(0, decimalsRule.decimals)}`;
+				}
+			}
 			const isNumber = !isNaN(parseFloat(event.target.value));
 			const valueToUpdate = isNumber ? +event.target.value : undefined;
 			onChange({ target: { value: valueToUpdate } });
