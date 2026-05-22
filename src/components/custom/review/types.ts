@@ -56,6 +56,8 @@ export interface IReviewSchemaBox extends IReviewBaseSchema, ICustomElementJsonS
 	description?: string | undefined;
 	background?: boolean | undefined;
 	stretch?: boolean | undefined;
+	/** Overrides the row gap between review items. Accepts any valid CSS length value (e.g. "2rem", "32px"). */
+	rowGap?: string | undefined;
 }
 
 // =========================================================================
