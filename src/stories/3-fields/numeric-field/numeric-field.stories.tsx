@@ -137,15 +137,14 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const WithDecimalsValidation = DefaultStoryTemplate<INumericFieldSchema>(
+export const DecimalsValidation = DefaultStoryTemplate<INumericFieldSchema>(
 	"numeric-with-decimals-validation"
 ).bind({});
-WithDecimalsValidation.args = {
+DecimalsValidation.args = {
 	label: "Number (max 2 decimal places)",
 	uiType: "numeric-field",
 	validation: [{ required: true }, { decimals: 2, errorMessage: "Enter a number with up to 2 decimal places." }],
 };
-WithDecimalsValidation.storyName = "Decimals validation";
 
 export const WithCurrencyValidation = DefaultStoryTemplate<INumericFieldSchema>(
 	"numeric-with-currency-validation"
