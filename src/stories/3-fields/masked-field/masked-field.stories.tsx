@@ -1,6 +1,6 @@
 import * as Icons from "@lifesg/react-icons";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta } from "@storybook/react-webpack5";
 import { IMaskedFieldSchema } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,

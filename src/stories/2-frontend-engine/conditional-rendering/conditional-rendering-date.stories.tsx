@@ -1,13 +1,12 @@
 import { LocalDate } from "@js-joda/core";
-import { Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { FrontendEngine } from "../../../components";
 import { TFrontendEngineFieldSchema } from "../../../components/frontend-engine";
 import { SUBMIT_BUTTON_SCHEMA } from "../../common";
 
 const meta: Meta = {
 	title: "Form/Conditional Rendering/Rules/Dates",
-	component: null,
 	parameters: {
 		docs: {
 			page: () => (

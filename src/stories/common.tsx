@@ -1,6 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { Breakpoint, MediaQuery } from "@lifesg/react-design-system/theme";
-import { action } from "@storybook/addon-actions";
+import { action } from "storybook/actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef, useRef } from "react";
 import styled from "styled-components";

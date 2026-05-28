@@ -1,7 +1,7 @@
 import * as Icons from "@lifesg/react-icons";
-import { action } from "@storybook/addon-actions";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 import { IButtonSchema } from "../../../components/fields/button";

@@ -3,17 +3,7 @@ import path from "path";
 
 const config: StorybookConfig = {
 	stories: ["../src/stories/**/*.stories.@(ts|tsx)", "../src/stories/**/*.mdx"],
-	addons: [
-		"@storybook/addon-ally",
-		"@storybook/addon-actions",
-		"@storybook/addon-backgrounds",
-		"@storybook/addon-controls",
-		"@storybook/addon-docs",
-		"@storybook/addon-toolbars",
-		"@storybook/addon-viewport",
-		"@mihkeleidast/storybook-addon-source",
-		"@storybook/addon-webpack5-compiler-swc",
-	],
+	addons: ["@storybook/addon-a11y", "@storybook/addon-docs", "@storybook/addon-webpack5-compiler-swc"],
 	staticDirs: ["../public"],
 	webpackFinal: async (config) => {
 		config.resolve!.modules = [path.resolve(__dirname, ".."), "node_modules"];
@@ -32,8 +22,5 @@ const config: StorybookConfig = {
 			},
 		},
 	}),
-	typescript: {
-		reactDocgen: "react-docgen-typescript",
-	},
 };
 export default config;

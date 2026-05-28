@@ -1,7 +1,7 @@
 import { Typography } from "@lifesg/react-design-system/typography";
-import { action } from "@storybook/addon-actions";
-import { Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef, useState } from "react";
 import {
 	ILocationCoord,

@@ -1,6 +1,6 @@
-import { action } from "@storybook/addon-actions";
-import { Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef } from "react";
 import { IFileUploadSchema } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";

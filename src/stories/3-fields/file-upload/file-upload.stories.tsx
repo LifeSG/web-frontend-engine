@@ -1,6 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useRef } from "react";
 import { IFileUploadSchema, IFileUploadValue, TFileUploadErrorMessage } from "../../../components/fields/file-upload";
 import { IFrontendEngineRef } from "../../../components/frontend-engine/types";

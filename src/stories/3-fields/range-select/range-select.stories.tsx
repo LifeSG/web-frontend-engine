@@ -1,6 +1,6 @@
 import { InputRangeProp } from "@lifesg/react-design-system/input-range-select";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta } from "@storybook/react-webpack5";
 import { IRangeSelectSchema } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
