@@ -7,7 +7,6 @@ import {
 	TFrontendEngineFieldSchema,
 	TRestoreMode,
 } from "../../../../components/frontend-engine";
-import { SUBMIT_BUTTON_SCHEMA } from "../../../../stories/common";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -721,7 +720,11 @@ describe("conditional-renderer", () => {
 												{ label: "Cherry", value: "Cherry" },
 											],
 										},
-										...SUBMIT_BUTTON_SCHEMA,
+										"submit-button": {
+											uiType: "submit",
+											label: "Submit",
+											className: "margin-bottom-1",
+										},
 									},
 								},
 							},
@@ -786,7 +789,11 @@ describe("conditional-renderer", () => {
 												},
 											},
 										},
-										...SUBMIT_BUTTON_SCHEMA,
+										"submit-button": {
+											uiType: "submit",
+											label: "Submit",
+											className: "margin-bottom-1",
+										},
 									},
 								},
 							},
