@@ -1,7 +1,6 @@
 import ExifReader from "exifreader";
 import { FileHelper } from "./file-helper";
 import { IImageMetadata } from "../components/fields/image-upload";
-import { heicTo } from "heic-to";
 
 export namespace ImageHelper {
 	/**
@@ -10,6 +9,7 @@ export namespace ImageHelper {
 	export const convertBlob = async (blob: File | Blob, outputMimeType = "image/jpeg") => {
 		const inputMimeType = (await FileHelper.getType(blob)).mime;
 		if (inputMimeType === "image/heic" || inputMimeType === "image/heif") {
+			const { heicTo } = await import("heic-to/csp");
 			blob = (await heicTo({
 				blob: blob,
 				type: outputMimeType as `image/${string}`,
