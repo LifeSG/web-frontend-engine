@@ -89,7 +89,7 @@ export const FormBuilderTool = () => {
 		return (
 			<ContentWrapper $flexbox={true}>
 				<SchemaView
-					schema={formBuilderOutput.schema}
+					schema={formBuilderOutput.schema as IFrontendEngineData}
 					onChange={setFormBuilderOutput}
 					formBuilderRef={formBuilderRef}
 				/>
