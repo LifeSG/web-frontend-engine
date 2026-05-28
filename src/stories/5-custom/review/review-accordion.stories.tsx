@@ -149,6 +149,7 @@ const EventTemplate = (eventName: string) =>
 		const formRef = useRef<IFrontendEngineRef>();
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);

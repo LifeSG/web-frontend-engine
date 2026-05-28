@@ -397,6 +397,7 @@ export const WithTooltip: StoryFn<IImageUploadSchema> = (args: IImageUploadSchem
 	const formRef = useRef<IFrontendEngineRef>();
 	const handleTooltipClick = (e: unknown) => action("click-tooltip")(e);
 	useEffect(() => {
+		if (!formRef.current) return;
 		const currentFormRef = formRef.current;
 		currentFormRef.addFieldEventListener("image-upload", "click-tooltip", id, handleTooltipClick);
 		return () => currentFormRef.removeFieldEventListener("image-upload", "click-tooltip", id, handleTooltipClick);

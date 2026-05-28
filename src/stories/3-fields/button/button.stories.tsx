@@ -124,6 +124,7 @@ const Template = (id: string, eventName?: string | undefined) =>
 		const handleEvent = (e: unknown) => action(eventName)(e);
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("button", eventName as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);

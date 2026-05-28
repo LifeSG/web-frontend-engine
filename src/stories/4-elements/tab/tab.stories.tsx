@@ -91,6 +91,7 @@ const Template = (id: string) =>
 		const handleEvent = (e: unknown) => action("change")(e);
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("tab", "change" as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener("tab", "change" as any, id, handleEvent);

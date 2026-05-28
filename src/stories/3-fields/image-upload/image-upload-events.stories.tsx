@@ -34,6 +34,7 @@ const Template = (eventName: string) =>
 		const formRef = useRef<IFrontendEngineRef>();
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("image-upload", eventName as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener("image-upload", eventName as any, id, handleEvent);
@@ -122,6 +123,7 @@ const SaveReviewImagesTemplate = (eventName: string) =>
 		);
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("image-upload", eventName as any, id, handleSaveReviewImages);
 			return () =>
@@ -176,6 +178,7 @@ const ImageUploadReadyOrUploadedTemplate = (eventName: string, customMuted: bool
 				}, 3000);
 			};
 
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("image-upload", eventName as any, handleUploadReady);
 			return () => currentFormRef.removeFieldEventListener(eventName, id, handleUploadReady);

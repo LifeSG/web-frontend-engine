@@ -973,6 +973,7 @@ export const CustomComponent: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 
 	useEffect(() => {
+		if (!ref.current) return;
 		const currentFormRef = ref.current;
 		currentFormRef.addFieldEventListener("custom-change", "myCustomComponent", handleEvent);
 

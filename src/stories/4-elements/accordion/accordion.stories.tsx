@@ -110,6 +110,7 @@ const EventTemplate = <T, U = string>(id: string, eventName: string) =>
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("accordion", eventName as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener("accordion", eventName as any, id, handleEvent);

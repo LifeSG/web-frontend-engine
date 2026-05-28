@@ -414,6 +414,7 @@ const IndicateCurrentLocationTemplate = () =>
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 
