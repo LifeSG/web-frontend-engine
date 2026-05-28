@@ -79,14 +79,7 @@ const meta: Meta = {
 			},
 		},
 		addButton: {
-			description: `Customisation options for the add button<br/>
-				<ul>
-					<li>\`label\` prop overrides the text</li>
-					<li>\`icon\` prop overrides the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
-					<li>\`styleType\` prop sets the button style (\`default\`, \`secondary\`, \`light\`, \`link\`)</li>
-				</ul>
-			`,
-
+			description: `Customisation options for the add button<br/><ul><li>\`label\` prop overrides the text</li><li>\`icon\` prop overrides the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li><li>\`styleType\` prop sets the button style (\`default\`, \`secondary\`, \`light\`, \`link\`)</li></ul>`,
 			table: {
 				type: {
 					summary: "{ label?: string, icon?: string, styleType?: ButtonStyleType }",
@@ -94,15 +87,7 @@ const meta: Meta = {
 			},
 		},
 		removeButton: {
-			description: `Customisation options for the remove button<br/>
-				<ul>
-					<li>\`label\` prop overrides the text</li>
-					<li>\`icon\` prop sets the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
-					<li>\`styleType\` prop sets the button style (\`default\`, \`secondary\`, \`light\`, \`link\`)</li>
-					<li>\`position\` prop sets button position: \`top\` (default) or \`bottom\`</li>
-					<li>\`alignment\` prop sets button alignment: \`left\` or \`right\` (default)</li>
-				</ul>
-			`,
+			description: `Customisation options for the remove button<br/><ul><li>\`label\` prop overrides the text</li><li>\`icon\` prop sets the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li><li>\`styleType\` prop sets the button style (\`default\`, \`secondary\`, \`light\`, \`link\`)</li><li>\`position\` prop sets button position: \`top\` (default) or \`bottom\`</li><li>\`alignment\` prop sets button alignment: \`left\` or \`right\` (default)</li></ul>`,
 			table: {
 				type: {
 					summary:
@@ -111,13 +96,7 @@ const meta: Meta = {
 			},
 		},
 		removeConfirmationModal: {
-			description: `Customisation options for the confirmation modal when item is removed<br/>
-				<ul>
-					<li>\`title\` prop overrides the confirmation text title</li>
-					<li>\`skip\` prop skips the confirmation modal and removes the item immediately</li>
-				</ul>
-			`,
-
+			description: `Customisation options for the confirmation modal when item is removed<br/><ul><li>\`title\` prop overrides the confirmation text title</li><li>\`skip\` prop skips the confirmation modal and removes the item immediately</li></ul>`,
 			table: {
 				type: {
 					summary: "{ title?: string } | { skip: true }",
