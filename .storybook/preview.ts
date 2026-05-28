@@ -19,6 +19,9 @@ const preview: Preview = {
 		viewport: {
 			options: INITIAL_VIEWPORTS,
 		},
+		docs: {
+			codePanel: true,
+		},
 	},
 	tags: ["autodocs"],
 };

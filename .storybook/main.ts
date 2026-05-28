@@ -8,6 +8,7 @@ const __dirname = dirname(__filename);
 const config: StorybookConfig = {
 	stories: ["../src/stories/**/*.stories.@(ts|tsx)", "../src/stories/**/*.mdx"],
 	addons: ["@storybook/addon-a11y", "@storybook/addon-docs", "@storybook/addon-webpack5-compiler-swc"],
+	features: { interactions: false },
 	staticDirs: ["../public"],
 	webpackFinal: async (config) => {
 		config.resolve!.modules = [path.resolve(__dirname, ".."), "node_modules"];
