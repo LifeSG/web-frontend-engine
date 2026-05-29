@@ -14,6 +14,7 @@ import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	SUBMIT_BUTTON_SCHEMA,
 	flushPromise,
 	getErrorMessage,
 	getField,
@@ -806,11 +807,7 @@ describe("frontend-engine", () => {
 									uiType: "section",
 									children: {
 										...fieldSchema,
-										"submit-button": {
-											uiType: "submit",
-											label: "Submit",
-											className: "margin-bottom-1",
-										},
+										...SUBMIT_BUTTON_SCHEMA,
 									},
 								},
 							},
