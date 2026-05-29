@@ -74,7 +74,7 @@ const meta: Meta = {
 			table: {
 				type: {
 					summary:
-						"{ content: string | Record<string, ITextSchema | ITypographySchema | IInlineWrapperSchema | TBlockElementSchema | TInlineElementSchema | TWrapperSchema>; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
+						"{ content: string | Record<string, ITypographySchema | IInlineWrapperSchema | TBlockElementSchema | TInlineElementSchema | TWrapperSchema>; customOffset?: number; position?: PopoverV2Position; zIndex?: number }",
 				},
 			},
 		},
@@ -209,16 +209,16 @@ export const InlineUsage: StoryFn = () => {
 						uiType: "section",
 						children: {
 							text: {
-								uiType: "text-body",
+								uiType: "body-md",
 								children: {
-									1: { uiType: "text-body", children: "Click ", inline: true },
+									1: { uiType: "body-md", children: "Click ", inline: true },
 									2: {
 										uiType: "popover",
 										children: "here",
 										hint: { content: "Hint" },
 										icon: "QuestionmarkCircleFillIcon",
 									},
-									3: { uiType: "text-body", children: " to find out more", inline: true },
+									3: { uiType: "body-md", children: " to find out more", inline: true },
 								},
 							},
 						},

@@ -283,7 +283,7 @@ LabelCustomisationWithSchema.args = {
 				wrapper: {
 					children: {
 						heading: {
-							uiType: "text-h3",
+							uiType: "heading-sm",
 							weight: "semibold",
 							children: "Heading",
 							style: {
@@ -291,7 +291,7 @@ LabelCustomisationWithSchema.args = {
 							},
 						},
 						description: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children:
 								"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
 							style: {
@@ -316,7 +316,7 @@ LabelCustomisationWithSchema.args = {
 								},
 							],
 							uiType: "unordered-list",
-							size: "BodySmall",
+							size: "body-sm",
 						},
 					},
 					uiType: "div",

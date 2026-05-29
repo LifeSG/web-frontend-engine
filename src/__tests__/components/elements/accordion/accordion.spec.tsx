@@ -109,7 +109,7 @@ describe(UI_TYPE, () => {
 			{
 				title: {
 					text: {
-						uiType: "text-h4",
+						uiType: "heading-xs",
 						children: ACCORDION_TITLE,
 					},
 					span: {

@@ -7,7 +7,7 @@ import { IGridSchema } from "./grid";
 import { IOrderedListSchema, IUnorderedListSchema } from "./list";
 import { IPopoverSchema } from "./popover";
 import { ITabItemSchema, ITabSchema } from "./tab";
-import type { ITextSchema, ITypographySchema } from "./text";
+import type { ITypographySchema } from "./typography";
 import type { IInlineWrapperSchema, TWrapperSchema } from "./wrapper";
 
 /**
@@ -17,28 +17,16 @@ import type { IInlineWrapperSchema, TWrapperSchema } from "./wrapper";
  */
 export enum EElementType {
 	ALERT = "Alert",
-	"TEXT-D1" = "Text",
-	"TEXT-D2" = "Text",
-	"TEXT-DBODY" = "Text",
-	"TEXT-H1" = "Text",
-	"TEXT-H2" = "Text",
-	"TEXT-H3" = "Text",
-	"TEXT-H4" = "Text",
-	"TEXT-H5" = "Text",
-	"TEXT-H6" = "Text",
-	"TEXT-BODY" = "Text",
-	"TEXT-BODYSMALL" = "Text",
-	"TEXT-XSMALL" = "Text",
-	"HEADING-XXL" = "Text",
-	"HEADING-XL" = "Text",
-	"HEADING-MD" = "Text",
-	"HEADING-SM" = "Text",
-	"HEADING-LG" = "Text",
-	"HEADING-XS" = "Text",
-	"BODY-MD" = "Text",
-	"BODY-SM" = "Text",
-	"BODY-BL" = "Text",
-	"BODY-XS" = "Text",
+	"HEADING-XXL" = "Typography",
+	"HEADING-XL" = "Typography",
+	"HEADING-MD" = "Typography",
+	"HEADING-SM" = "Typography",
+	"HEADING-LG" = "Typography",
+	"HEADING-XS" = "Typography",
+	"BODY-MD" = "Typography",
+	"BODY-SM" = "Typography",
+	"BODY-BL" = "Typography",
+	"BODY-XS" = "Typography",
 	DIV = "Wrapper",
 	DIVIDER = "Divider",
 	SPAN = "Wrapper",
@@ -82,7 +70,6 @@ export type TBlockElementSchema<V = undefined, C = undefined> =
 	| IAlertSchema
 	| IDividerSchema
 	| IOrderedListSchema<V, C>
-	| ITextSchema
 	| ITypographySchema
 	| IUnorderedListSchema<V, C>;
 

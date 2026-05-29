@@ -119,7 +119,7 @@ NestedOrderedList.args = {
 				uiType: "list-item",
 				children: {
 					text: {
-						uiType: "text-body",
+						uiType: "body-md",
 						children: "Item with list",
 					},
 					list: {
@@ -165,7 +165,7 @@ NestedUnorderedList.args = {
 				uiType: "list-item",
 				children: {
 					text: {
-						uiType: "text-body",
+						uiType: "body-md",
 						children: "Item with list",
 					},
 					list: {

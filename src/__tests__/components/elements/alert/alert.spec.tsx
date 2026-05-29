@@ -64,7 +64,7 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should be able to render FEE schema children", () => {
-		renderComponent({ children: { text: { uiType: "text-body", children: "This is a schema" } } });
+		renderComponent({ children: { text: { uiType: "body-md", children: "This is a schema" } } });
 
 		expect(screen.getByText("This is a schema")).toBeInTheDocument();
 	});

@@ -139,7 +139,7 @@ const SCHEMA: Record<string, TFrontendEngineFieldSchema> = {
 		style: { marginTop: 16, marginBottom: 16 },
 		children: {
 			description: {
-				uiType: "text-body",
+				uiType: "body-md",
 				children: "Enter more details about this fruit",
 				columns: { mobile: 4, tablet: 8, desktop: 12 },
 			},
@@ -165,7 +165,7 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 		style: { marginTop: 16, marginBottom: 16 },
 		children: {
 			description: {
-				uiType: "text-body",
+				uiType: "body-md",
 				children: [
 					"This array field has custom error apply for the first and the third element.",
 					"Nested array in the first element has the custom error for the first and third entries.",

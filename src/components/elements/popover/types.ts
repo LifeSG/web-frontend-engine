@@ -1,6 +1,6 @@
 import { PopoverInlineProps } from "@lifesg/react-design-system/popover-v2";
 import * as Icons from "@lifesg/react-icons";
-import { ITextSchema, ITypographySchema } from "../text";
+import { ITypographySchema } from "../typography";
 import { IBaseElementSchema, TBlockElementSchema, TInlineElementSchema } from "../types";
 import { IInlineWrapperSchema, TWrapperSchema } from "../wrapper";
 
@@ -9,12 +9,7 @@ interface IPopoverHint extends Pick<PopoverInlineProps, "position" | "customOffs
 		| string
 		| Record<
 				string,
-				| ITextSchema
-				| ITypographySchema
-				| IInlineWrapperSchema
-				| TBlockElementSchema
-				| TInlineElementSchema
-				| TWrapperSchema
+				ITypographySchema | IInlineWrapperSchema | TBlockElementSchema | TInlineElementSchema | TWrapperSchema
 		  >;
 }
 
