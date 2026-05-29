@@ -1,6 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
 import { Meta, StoryFn } from "@storybook/react-webpack5";
-import { dedent } from "ts-dedent";
+import dedent from "dedent";
 import { IFilterCheckboxSchema } from "../../../components/custom/filter/filter-checkbox/types";
 import {
 	CommonCustomStoryProps,

@@ -1,6 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
 import { Meta, StoryFn } from "@storybook/react-webpack5";
-import { dedent } from "ts-dedent";
+import dedent from "dedent";
 import { IArrayFieldSchema } from "../../../components/custom";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../../../components/types";
 import {

@@ -1,6 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
 import { Meta, StoryFn } from "@storybook/react-webpack5";
-import dedent from "ts-dedent";
+import dedent from "dedent";
 import { ITextSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, LOREM_IPSUM } from "../../common";
 

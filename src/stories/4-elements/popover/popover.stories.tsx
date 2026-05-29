@@ -1,7 +1,7 @@
 import * as Icons from "@lifesg/react-icons";
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
 import { Meta, StoryFn } from "@storybook/react-webpack5";
-import dedent from "ts-dedent";
+import dedent from "dedent";
 import { IPopoverSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 

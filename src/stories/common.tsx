@@ -4,7 +4,7 @@ import { action } from "storybook/actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
 import { ReactElement, Ref, forwardRef, useRef } from "react";
 import styled from "styled-components";
-import { dedent } from "ts-dedent";
+import dedent from "dedent";
 import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
 import { IFrontendEngineRef, TFrontendEngineFieldSchema } from "../components/frontend-engine";

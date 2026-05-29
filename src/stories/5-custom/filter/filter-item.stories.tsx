@@ -1,6 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
 import { Meta, StoryFn } from "@storybook/react-webpack5";
-import { dedent } from "ts-dedent";
+import dedent from "dedent";
 import { IFilterItemSchema } from "../../../components/custom/filter/filter-item/types";
 import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
