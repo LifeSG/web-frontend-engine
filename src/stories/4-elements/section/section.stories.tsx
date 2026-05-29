@@ -43,17 +43,14 @@ const meta: Meta = {
 			},
 		},
 		customOptions: {
-			description: `Determines whether to render the component using <code>v2</code> or <code>v3</code> breakpoints, default is <code>v2</code><br><br>
-				For gridType <code>v2</code>:<br>Component will use the 12-8-4 column grid
-				For gridType <code>v3</code>:<br>Component will use the 12-8-8 column grid`,
+			description: "Escape hatch for other form / frontend engines to have unsupported attributes",
 			table: {
 				type: {
-					summary: "{ gridType?: 'v2' | 'v3' | undefined }",
+					summary: "Record<string, unknown>",
 				},
 			},
 			type: { name: "object", value: {} },
 			control: { type: "object" },
-			defaultValue: { gridType: "v2" },
 		},
 	},
 };
@@ -85,66 +82,33 @@ Default.args = {
 	},
 };
 
-export const GridV2 = Template("section-grid").bind({});
-GridV2.args = {
+export const Grid = Template("section-grid").bind({});
+Grid.args = {
 	uiType: "section",
 	layoutType: "grid",
 	children: {
 		text1: {
 			uiType: "text-field",
 			label: "Text",
-			columns: { desktop: 6 },
+			columns: { xl: 6 },
 		},
 		text2: {
 			uiType: "text-field",
 			label: "Text 2",
-			columns: { desktop: 6 },
+			columns: { xl: 6 },
 		},
 		text3: {
 			uiType: "text-field",
 			label: "Text 3",
-			columns: { desktop: 6 },
+			columns: { xl: 6 },
 		},
 		text4: {
 			uiType: "text-field",
 			label: "Text 4",
-			columns: { desktop: 6 },
+			columns: { xl: 6 },
 		},
 	},
 };
-GridV2.storyName = "Grid V2";
-
-export const GridV3 = Template("section-grid").bind({});
-GridV3.args = {
-	uiType: "section",
-	layoutType: "grid",
-	customOptions: {
-		gridType: "v3",
-	},
-	children: {
-		text1: {
-			uiType: "text-field",
-			label: "Text",
-			columns: { md: 3 },
-		},
-		text2: {
-			uiType: "text-field",
-			label: "Text 2",
-			columns: { md: 3 },
-		},
-		text3: {
-			uiType: "text-field",
-			label: "Text 3",
-			columns: { md: 3 },
-		},
-		text4: {
-			uiType: "text-field",
-			label: "Text 4",
-			columns: { md: 3 },
-		},
-	},
-};
-GridV3.storyName = "Grid V3";
 
 export const Contained = Template("section-contain").bind({});
 Contained.args = {

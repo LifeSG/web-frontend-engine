@@ -1,6 +1,6 @@
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Wrapper } from "../wrapper";
-import { Contained, GridWrapper, V2GridWrapper } from "./section.styles";
+import { Contained, GridWrapper } from "./section.styles";
 import { ISectionProps } from "./types";
 
 export const Section = (props: ISectionProps) => {
@@ -8,13 +8,7 @@ export const Section = (props: ISectionProps) => {
 	// CONST, STATE, REF
 	// =============================================================================
 	const {
-		sectionSchema: {
-			children,
-			layoutType,
-			customOptions = {
-				gridType: "v2",
-			},
-		},
+		sectionSchema: { children, layoutType },
 		...otherProps
 	} = props;
 
@@ -22,13 +16,11 @@ export const Section = (props: ISectionProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderInGrid = () => {
-		const LayoutContainer = customOptions.gridType === "v3" ? GridWrapper : V2GridWrapper;
-		const type = customOptions.gridType === "v3" ? "grid" : "flex";
 		return (
 			<Layout.Section>
-				<LayoutContainer type={type}>
+				<GridWrapper type="grid">
 					<Wrapper {...otherProps}>{children}</Wrapper>
-				</LayoutContainer>
+				</GridWrapper>
 			</Layout.Section>
 		);
 	};
