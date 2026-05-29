@@ -1,5 +1,6 @@
 import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
 import { Meta, StoryFn } from "@storybook/react-webpack5";
+import { dedent } from "ts-dedent";
 import { IFilterItemSchema } from "../../../components/custom/filter/filter-item/types";
 import { CommonCustomStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 import { IFilterSchema } from "../../../components/custom/filter/filter/types";
@@ -21,7 +22,16 @@ const meta: Meta = {
 	argTypes: {
 		...CommonCustomStoryProps("filter-item"),
 		label: {
-			description: `A name/description of the purpose of the section which may include an optional hint displayed in a popover.<br>If string is provided, the entire label will be rendered.<br>If object is provided:<ul><li>mainLabel: Primary text to display.</li><li>hint.content: Displays an info icon and brings up the content as a popover on click. Accepts a string or schema for more customisation. (See <strong>Label Customisation With Schema</strong> story)</li></ul>`,
+			description: dedent`
+				A name/description of the purpose of the section which may include an optional hint displayed in a popover.<br>
+				If string is provided, the entire label will be rendered.<br>
+				If object is provided:
+
+				<ul>
+					<li>mainLabel: Primary text to display.</li>
+					<li>hint.content: Displays an info icon and brings up the content as a popover on click. Accepts a string or schema for more customisation. (See <strong>Label Customisation With Schema</strong> story)</li>
+				</ul>
+			`,
 			table: {
 				type: {
 					summary:
