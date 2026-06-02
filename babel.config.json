@@ -1,6 +1,7 @@
 {
 	"presets": ["@babel/preset-env", ["@babel/preset-react", { "runtime": "automatic" }], "@babel/preset-typescript"],
 	"plugins": [
+		"./babel-plugins/babel-plugin-inject-linaria-css.js",
 		[
 			"styled-components",
 			{
