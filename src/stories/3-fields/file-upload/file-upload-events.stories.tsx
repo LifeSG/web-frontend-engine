@@ -1,6 +1,6 @@
-import { action } from "@storybook/addon-actions";
-import { Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef } from "react";
 import { IFileUploadSchema } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
@@ -34,6 +34,7 @@ const Template = (eventName: string) =>
 		const formRef = useRef<IFrontendEngineRef>();
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("file-upload", eventName as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener("file-upload", eventName as any, id, handleEvent);

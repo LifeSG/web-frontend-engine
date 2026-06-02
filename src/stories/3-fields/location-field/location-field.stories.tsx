@@ -1,5 +1,5 @@
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef } from "react";
 import { ILocationCoord, ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
@@ -414,6 +414,7 @@ const IndicateCurrentLocationTemplate = () =>
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 

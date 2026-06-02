@@ -1,6 +1,6 @@
-import { action } from "@storybook/addon-actions";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 import { TReviewSchema, TReviewSchemaItem } from "../../../components/custom/review";
@@ -149,6 +149,7 @@ const EventTemplate = (eventName: string) =>
 		const formRef = useRef<IFrontendEngineRef>();
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener(eventName, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener(eventName, id, handleEvent);

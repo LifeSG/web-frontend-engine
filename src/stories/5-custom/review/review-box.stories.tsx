@@ -1,5 +1,5 @@
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta } from "@storybook/react-webpack5";
 import { TReviewSchema, TReviewSchemaItem } from "../../../components/custom/review";
 import { CommonCustomStoryProps, DefaultStoryTemplate } from "../../common";
 

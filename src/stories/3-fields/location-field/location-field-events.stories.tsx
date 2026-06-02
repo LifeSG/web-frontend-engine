@@ -1,7 +1,7 @@
 import { Typography } from "@lifesg/react-design-system/typography";
-import { action } from "@storybook/addon-actions";
-import { Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef, useState } from "react";
 import {
 	ILocationCoord,
@@ -62,6 +62,7 @@ const Template = (eventName: string) =>
 		const handleEvent = (e: unknown) => action(eventName)(e);
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("location-field", eventName as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener("location-field", eventName as any, id, handleEvent);
@@ -96,6 +97,7 @@ const EditPromptTemplate = () =>
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("location-field", "click-edit-button", id, handleShowEditPrompt);
 
@@ -181,6 +183,7 @@ const GeolocationTemplate = (detail: TSetCurrentLocationDetail) =>
 		};
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 
 			currentFormRef.addFieldEventListener(
@@ -228,6 +231,7 @@ const ConfirmLocationPromptTemplate = () =>
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener(
 				"location-field",
@@ -536,6 +540,7 @@ const ErrorEventsTemplate = () =>
 		};
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 
 			currentFormRef.addFieldEventListener("location-field", "error", id, handleShowErrorModal);
@@ -590,6 +595,7 @@ const StrictLocationTemplate = () =>
 		};
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener(
 				"location-field",
@@ -644,6 +650,7 @@ const HidePermissionModalTemplate = () =>
 		};
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener(
 				"location-field",
@@ -692,6 +699,7 @@ const SetSelectablePinsTemplate = () =>
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 
@@ -775,6 +783,7 @@ const RefreshLocationAndTriggerGetCurrentLocationTemplate = () =>
 		};
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener(
 				"location-field",

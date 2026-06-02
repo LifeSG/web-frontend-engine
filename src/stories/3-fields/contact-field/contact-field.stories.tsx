@@ -1,5 +1,5 @@
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta } from "@storybook/react-webpack5";
 import { IContactFieldSchema } from "../../../components/fields";
 import { getCountries } from "../../../components/fields/contact-field/data";
 import {

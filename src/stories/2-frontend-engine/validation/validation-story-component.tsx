@@ -2,7 +2,7 @@ import { Font } from "@lifesg/react-design-system/theme";
 import { Form } from "@lifesg/react-design-system/form";
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Typography } from "@lifesg/react-design-system/typography";
-import { action } from "@storybook/addon-actions";
+import { action } from "storybook/actions";
 import highlightjs from "highlight.js";
 import json from "highlight.js/lib/languages/json";
 import "highlight.js/styles/monokai.css";

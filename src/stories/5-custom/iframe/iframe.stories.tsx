@@ -1,8 +1,8 @@
 import { LoadingDotsSpinner } from "@lifesg/react-design-system/animations";
 import { Modal } from "@lifesg/react-design-system/modal";
-import { action } from "@storybook/addon-actions";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn, StoryObj } from "@storybook/react";
+import { action } from "storybook/actions";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn, StoryObj } from "@storybook/react-webpack5";
 import { useEffect, useRef, useState } from "react";
 import { IFrontendEngineRef } from "../../../components";
 import { IIframeSchema } from "../../../components/custom/iframe/types";

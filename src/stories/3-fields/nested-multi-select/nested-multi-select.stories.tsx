@@ -1,5 +1,5 @@
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta } from "@storybook/react-webpack5";
 import { IL1Value, INestedMultiSelectSchema, TL1OptionProps } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,

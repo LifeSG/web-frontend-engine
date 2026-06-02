@@ -1,6 +1,6 @@
-import { action } from "@storybook/addon-actions";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 import { IAccordionSchema } from "../../../components/elements/accordion/types";
@@ -110,6 +110,7 @@ const EventTemplate = <T, U = string>(id: string, eventName: string) =>
 		const handleEvent = (e: unknown) => action(eventName)(e);
 		// eslint-disable-next-line react-hooks/rules-of-hooks
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("accordion", eventName as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener("accordion", eventName as any, id, handleEvent);

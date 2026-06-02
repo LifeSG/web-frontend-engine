@@ -1,9 +1,8 @@
-import { withJsx } from "@mihkeleidast/storybook-addon-source";
-import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
-import type { Preview } from "@storybook/react";
+import { INITIAL_VIEWPORTS } from "storybook/viewport";
+import type { Preview } from "@storybook/react-webpack5";
 
 const preview: Preview = {
-	decorators: [withJsx],
+	decorators: [],
 	parameters: {
 		controls: { expanded: true },
 		options: {
@@ -18,7 +17,10 @@ const preview: Preview = {
 		},
 		layout: "centered",
 		viewport: {
-			viewports: INITIAL_VIEWPORTS,
+			options: INITIAL_VIEWPORTS,
+		},
+		docs: {
+			codePanel: true,
 		},
 	},
 	tags: ["autodocs"],

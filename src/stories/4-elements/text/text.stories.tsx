@@ -1,5 +1,6 @@
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
+import dedent from "dedent";
 import { ITextSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, LOREM_IPSUM } from "../../common";
 
@@ -87,7 +88,9 @@ const meta: Meta = {
 			},
 		},
 		weight: {
-			description: `The weight of the text component.<br>
+			description: dedent`
+			The weight of the text component.<br>
+
 			For backward compatibility, numeric values will be mapped to the corresponding weight.<br>
 			300: <code>light</code><br>
 			400: <code>regular</code><br>

@@ -1,6 +1,6 @@
-import { action } from "@storybook/addon-actions";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef } from "react";
 import { IImageUploadSchema } from "../../../components/fields";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
@@ -397,6 +397,7 @@ export const WithTooltip: StoryFn<IImageUploadSchema> = (args: IImageUploadSchem
 	const formRef = useRef<IFrontendEngineRef>();
 	const handleTooltipClick = (e: unknown) => action("click-tooltip")(e);
 	useEffect(() => {
+		if (!formRef.current) return;
 		const currentFormRef = formRef.current;
 		currentFormRef.addFieldEventListener("image-upload", "click-tooltip", id, handleTooltipClick);
 		return () => currentFormRef.removeFieldEventListener("image-upload", "click-tooltip", id, handleTooltipClick);

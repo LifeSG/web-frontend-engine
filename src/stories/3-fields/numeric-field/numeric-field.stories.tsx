@@ -1,5 +1,5 @@
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta } from "@storybook/react-webpack5";
 import { INumericFieldSchema } from "../../../components/fields";
 import {
 	CommonFieldStoryProps,
@@ -137,9 +137,9 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
-export const DecimalsValidation = DefaultStoryTemplate<INumericFieldSchema>(
-	"numeric-with-decimals-validation"
-).bind({});
+export const DecimalsValidation = DefaultStoryTemplate<INumericFieldSchema>("numeric-with-decimals-validation").bind(
+	{}
+);
 DecimalsValidation.args = {
 	label: "Number (max 2 decimal places)",
 	uiType: "numeric-field",

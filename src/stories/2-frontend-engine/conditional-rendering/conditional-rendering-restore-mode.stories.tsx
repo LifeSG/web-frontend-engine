@@ -1,6 +1,6 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useRef } from "react";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/frontend-engine";
 import { FrontendEngine, SUBMIT_BUTTON_SCHEMA } from "../../common";
@@ -50,7 +50,6 @@ const DATA: IFrontendEngineData = {
 
 const meta: Meta = {
 	title: "Form/Conditional Rendering/Restoring Values",
-	component: null,
 	parameters: {
 		docs: {
 			page: () => (

@@ -4,7 +4,7 @@ import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { TabletIcon } from "@lifesg/react-icons/tablet";
 import { FormBuilder, IFormBuilderMethods } from "@lifesg/web-form-builder";
 import { ISchemaProps } from "@lifesg/web-form-builder/translator";
-import { Unstyled } from "@storybook/blocks";
+import { Unstyled } from "@storybook/addon-docs/blocks";
 import { useRef, useState } from "react";
 import { ContentWrapper, FrontendEnginePreview, ModeButton, Toolbar, Wrapper } from "./form-builder-tool.styles";
 import { SchemaView } from "./schema-view";
@@ -89,7 +89,7 @@ export const FormBuilderTool = () => {
 		return (
 			<ContentWrapper $flexbox={true}>
 				<SchemaView
-					schema={formBuilderOutput.schema}
+					schema={formBuilderOutput.schema as IFrontendEngineData}
 					onChange={setFormBuilderOutput}
 					formBuilderRef={formBuilderRef}
 				/>

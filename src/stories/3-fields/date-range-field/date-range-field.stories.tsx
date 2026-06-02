@@ -1,8 +1,8 @@
 import { DateTimeFormatter, LocalDate, ResolverStyle } from "@js-joda/core";
 import { Locale } from "@js-joda/locale_en-us";
 import { InputRangeProp } from "@lifesg/react-design-system/input-range-select/types";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta } from "@storybook/react-webpack5";
 import { TDateRangeFieldSchema } from "src/components/fields/date-range-field/types";
 import { CommonFieldStoryProps, DefaultStoryTemplate, ResetStoryTemplate, WarningStoryTemplate } from "../../common";
 

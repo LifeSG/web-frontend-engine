@@ -9,12 +9,12 @@ import { ITextFieldSchema } from "../../../components/fields";
 import { ERROR_MESSAGES } from "../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../components/types";
 import { IYupValidationRule } from "../../../context-providers";
-import { SUBMIT_BUTTON_SCHEMA } from "../../../stories/common";
 import { TestHelper } from "../../../utils";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	SUBMIT_BUTTON_SCHEMA,
 	flushPromise,
 	getErrorMessage,
 	getField,

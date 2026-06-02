@@ -1,6 +1,7 @@
 import * as Icons from "@lifesg/react-icons";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
+import dedent from "dedent";
 import { IPopoverSchema } from "../../../components/elements";
 import { CommonFieldStoryProps, FrontendEngine, OVERRIDES_ARG_TYPE, OverrideStoryTemplate } from "../../common";
 
@@ -60,7 +61,9 @@ const meta: Meta = {
 			options: Object.keys(Icons),
 		},
 		hint: {
-			description: `The popover configuration
+			description: dedent`
+				The popover configuration
+
 				<ul>
 					<li>content: Content to display in the popover (string or schema).</li>
 					<li>customOffset: The popover offset.</li>

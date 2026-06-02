@@ -1,6 +1,6 @@
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { action } from "@storybook/addon-actions";
-import { Meta, StoryFn } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { action } from "storybook/actions";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { ITabSchema } from "../../../components/elements";
 import {
 	CommonFieldStoryProps,
@@ -91,6 +91,7 @@ const Template = (id: string) =>
 		const handleEvent = (e: unknown) => action("change")(e);
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("tab", "change" as any, id, handleEvent);
 			return () => currentFormRef.removeFieldEventListener("tab", "change" as any, id, handleEvent);

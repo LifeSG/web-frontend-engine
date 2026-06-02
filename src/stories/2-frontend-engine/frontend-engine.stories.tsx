@@ -1,9 +1,9 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { Form } from "@lifesg/react-design-system/form";
 import { Typography } from "@lifesg/react-design-system/typography";
-import { action } from "@storybook/addon-actions";
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { action } from "storybook/actions";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { TCustomComponentProps, TCustomComponentSchema } from "../../components";
@@ -973,6 +973,7 @@ export const CustomComponent: StoryFn<IFrontendEngineProps> = () => {
 	const ref = useRef<IFrontendEngineRef>();
 
 	useEffect(() => {
+		if (!ref.current) return;
 		const currentFormRef = ref.current;
 		currentFormRef.addFieldEventListener("custom-change", "myCustomComponent", handleEvent);
 

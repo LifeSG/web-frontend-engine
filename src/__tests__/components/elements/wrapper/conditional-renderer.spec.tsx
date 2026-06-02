@@ -7,11 +7,11 @@ import {
 	TFrontendEngineFieldSchema,
 	TRestoreMode,
 } from "../../../../components/frontend-engine";
-import { SUBMIT_BUTTON_SCHEMA } from "../../../../stories/common";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	SUBMIT_BUTTON_SCHEMA,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
