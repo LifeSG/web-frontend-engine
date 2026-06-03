@@ -1,5 +1,5 @@
 import { TRenderRules } from "../../context-providers";
-import { IColumns, IV3Columns } from "../frontend-engine";
+import { IColumns } from "../frontend-engine";
 import { IAccordionSchema, TAccordionEvents } from "./accordion";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
@@ -94,7 +94,7 @@ export interface IBaseElementSchema<T> {
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
 	/** set responsive columns */
-	columns?: IColumns | IV3Columns | undefined;
+	columns?: IColumns | undefined;
 }
 // =============================================================================
 // ELEMENT PROPS

@@ -101,6 +101,7 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 				data-testid={getTestId(id)}
 				weight={getWeight()}
 				{...otherSchema}
+				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}
 			>
 				{renderText()}

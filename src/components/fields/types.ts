@@ -1,7 +1,7 @@
 import { FormLabelProps } from "@lifesg/react-design-system/form/types";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IYupValidationRule, TRenderRules } from "../../context-providers";
-import { IColumns, IV3Columns } from "../frontend-engine";
+import { IColumns } from "../frontend-engine";
 import { IButtonSchema, TButtonEvents } from "./button";
 import { TCheckboxGroupSchema } from "./checkbox-group";
 import { IChipsSchema } from "./chips";
@@ -133,7 +133,7 @@ export interface IBaseFieldSchema<T, V = undefined, U = undefined> {
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
 	/** set responsive columns */
-	columns?: IColumns | IV3Columns | undefined;
+	columns?: IColumns | undefined;
 }
 
 /**

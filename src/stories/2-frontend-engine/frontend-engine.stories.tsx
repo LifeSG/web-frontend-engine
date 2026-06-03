@@ -399,19 +399,19 @@ export const MultiColumn: StoryFn<IFrontendEngineProps> = () => {
 							name: {
 								label: "What is your name",
 								uiType: "text-field",
-								columns: { desktop: 6, mobile: 4 },
+								columns: { lg: 6, sm: 4 },
 								validation: [{ required: true }, { max: 5, errorMessage: "Maximum length of 5" }],
 							},
 							email: {
 								label: "Email address",
 								uiType: "email-field",
-								columns: { desktop: 6, mobile: 4 },
+								columns: { lg: 6, sm: 4 },
 								validation: [{ required: true }],
 							},
 							sex: {
 								uiType: "select",
 								label: "Sex",
-								columns: { mobile: 4 },
+								columns: { sm: 4 },
 								options: [
 									{ label: "Male", value: "male" },
 									{ label: "Female", value: "female" },
