@@ -3,13 +3,13 @@ import { Typography } from "@lifesg/react-design-system/typography";
 export const TYPOGRAPHY_MAPPING = {
 	"HEADING-XXL": Typography.HeadingXXL,
 	"HEADING-XL": Typography.HeadingXL,
+	"HEADING-LG": Typography.HeadingLG,
 	"HEADING-MD": Typography.HeadingMD,
 	"HEADING-SM": Typography.HeadingSM,
-	"HEADING-LG": Typography.HeadingLG,
 	"HEADING-XS": Typography.HeadingXS,
+	"BODY-BL": Typography.BodyBL,
 	"BODY-MD": Typography.BodyMD,
 	"BODY-SM": Typography.BodySM,
-	"BODY-BL": Typography.BodyBL,
 	"BODY-XS": Typography.BodyXS,
 };
 

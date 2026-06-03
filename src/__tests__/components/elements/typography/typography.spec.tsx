@@ -44,13 +44,13 @@ describe(UI_TYPE, () => {
 	it.each<TTypographyType>([
 		"heading-xxl",
 		"heading-xl",
+		"heading-lg",
 		"heading-md",
 		"heading-sm",
-		"heading-lg",
 		"heading-xs",
+		"body-bl",
 		"body-md",
 		"body-sm",
-		"body-bl",
 		"body-xs",
 	])("should be able to render Typography.%s component", (type) => {
 		const text = "hello world";

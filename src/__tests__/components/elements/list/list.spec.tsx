@@ -58,7 +58,7 @@ describe(UI_TYPE, () => {
 						uiType: "list-item",
 						children: {
 							text: {
-								uiType: "body-md",
+								uiType: "body-bl",
 								children: "Item with list",
 							},
 							list: {
