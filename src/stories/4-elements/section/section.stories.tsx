@@ -42,16 +42,6 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
-		customOptions: {
-			description: "Escape hatch for other form / frontend engines to have unsupported attributes",
-			table: {
-				type: {
-					summary: "Record<string, unknown>",
-				},
-			},
-			type: { name: "object", value: {} },
-			control: { type: "object" },
-		},
 	},
 };
 export default meta;
