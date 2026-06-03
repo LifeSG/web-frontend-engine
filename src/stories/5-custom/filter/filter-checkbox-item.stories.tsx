@@ -316,7 +316,6 @@ LabelCustomisationWithSchema.args = {
 								},
 							],
 							uiType: "unordered-list",
-							size: "body-sm",
 						},
 					},
 					uiType: "div",

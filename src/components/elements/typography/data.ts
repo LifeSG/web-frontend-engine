@@ -12,13 +12,3 @@ export const TYPOGRAPHY_MAPPING = {
 	"BODY-SM": Typography.BodySM,
 	"BODY-XS": Typography.BodyXS,
 };
-
-import { TypographyWeight } from "@lifesg/react-design-system/typography/types";
-
-export const WEIGHT_MAPPING: Record<number, TypographyWeight> = {
-	300: "light",
-	400: "regular",
-	500: "semibold",
-	700: "bold",
-	900: "bold",
-};

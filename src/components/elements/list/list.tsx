@@ -11,7 +11,7 @@ export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrdered
 	// =============================================================================
 	const {
 		id,
-		schema: { children, uiType, size, ...otherSchema },
+		schema: { children, uiType, ...otherSchema },
 	} = props;
 
 	const Element = uiType === "ordered-list" ? TextList.Ol : TextList.Ul;
@@ -36,7 +36,6 @@ export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrdered
 		<Element
 			{...{ id }} // pass id prop without Typescript error
 			data-testid={TestHelper.generateId(id, uiType)}
-			size={size}
 			{...otherSchema}
 		>
 			{renderChildren()}

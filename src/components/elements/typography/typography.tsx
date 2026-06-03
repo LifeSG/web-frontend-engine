@@ -1,7 +1,5 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { TypographyWeight } from "@lifesg/react-design-system/typography/types";
 import isArray from "lodash/isArray";
-import isNumber from "lodash/isNumber";
 import isObject from "lodash/isObject";
 import { useEffect, useRef, useState } from "react";
 import sanitizeHtml, { IOptions } from "sanitize-html";
@@ -10,7 +8,7 @@ import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
-import { TYPOGRAPHY_MAPPING, WEIGHT_MAPPING } from "./data";
+import { TYPOGRAPHY_MAPPING } from "./data";
 import { ITypographySchema } from "./types";
 
 export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
@@ -52,10 +50,8 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 		return TestHelper.generateId(id, "typography");
 	};
 
-	const getWeight = (): TypographyWeight | undefined => {
-		if (weight) {
-			return isNumber(weight) ? WEIGHT_MAPPING[weight] : (weight as TypographyWeight);
-		}
+	const getWeight = () => {
+		return weight || undefined;
 	};
 
 	const hasNestedFields = (): boolean => {
