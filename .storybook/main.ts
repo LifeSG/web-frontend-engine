@@ -13,7 +13,7 @@ const config: StorybookConfig = {
 	webpackFinal: async (config) => {
 		config.module?.rules?.unshift({
 			test: /\.(js|jsx|ts|tsx)$/,
-			include: [path.resolve(__dirname, "../src"), path.resolve(__dirname, "../stories")],
+			include: [path.resolve(__dirname, "../src")],
 			exclude: /node_modules/,
 			use: [
 				{
