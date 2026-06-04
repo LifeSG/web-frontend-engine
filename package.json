@@ -8,6 +8,9 @@
 	"scripts": {
 		"build": "npm run rollup",
 		"build-storybook": "storybook build",
+		"build-check": "npm run rollup",
+		"test-e2e": "playwright test --ui",
+		"post:build": "node ./scripts/post-build.js",
 		"publish-lib": "npm publish ./dist",
 		"rollup": "rm -rf dist && rollup -c",
 		"test": "jest --config jest/jest.config.js --coverage --runInBand",
