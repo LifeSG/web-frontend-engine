@@ -6,11 +6,15 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import terser from "@rollup/plugin-terser";
 import typescript from "rollup-plugin-typescript2";
+import wyw from "@wyw-in-js/rollup";
 
 const plugins = [
 	peerDepsExternal(), // Add the externals for me. [react, react-dom]
 	nodeResolve({ browser: true }),
 	commonjs(), // converts CommonJS to ES6 modules
+	wyw({
+		sourceMap: true,
+	}),
 	typescript({
 		include: ["**/*.ts", "**/*.tsx", "**/*.cts", "**/*.mts"],
 		useTsconfigDeclarationDir: true,
@@ -35,6 +39,15 @@ export default {
 			sourcemap: true,
 			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
+			preserveModules: true,
+			preserveModulesRoot: "src",
+			interop: "compat",
+			entryFileNames: (chunkInfo) => {
+				if (chunkInfo.name.includes("node_modules")) {
+					return chunkInfo.name.replaceAll("node_modules", "external") + ".js";
+				}
+				return "[name].js";
+			},
 		},
 		{
 			dir: "dist/cjs",
@@ -42,6 +55,15 @@ export default {
 			sourcemap: true,
 			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
+			preserveModules: true,
+			preserveModulesRoot: "src",
+			interop: "compat",
+			entryFileNames: (chunkInfo) => {
+				if (chunkInfo.name.includes("node_modules")) {
+					return chunkInfo.name.replaceAll("node_modules", "external") + ".js";
+				}
+				return "[name].js";
+			},
 		},
 	],
 	plugins,
