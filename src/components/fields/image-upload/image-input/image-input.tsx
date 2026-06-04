@@ -139,6 +139,10 @@ export const ImageInput = (props: IImageInputProps) => {
 	const renderFiles = () => {
 		if (!images || !images.length) return null;
 		return images.map((fileItem: IImage, i: number) => {
+			if (!ImageUploadHelper.shouldRenderFileItem(fileItem)) {
+				return null;
+			}
+
 			return (
 				<FileItem
 					id={`${id}-file-item`}
