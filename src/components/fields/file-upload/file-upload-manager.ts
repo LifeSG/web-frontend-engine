@@ -371,7 +371,7 @@ const FileUploadManager = (props: IProps) => {
 							...prev[index],
 							fileItem: {
 								...prev[index].fileItem,
-								progress: loaded / total,
+								progress: Math.min(loaded / total, 0.99),
 							},
 						};
 
@@ -388,7 +388,7 @@ const FileUploadManager = (props: IProps) => {
 					...prev[index],
 					fileItem: {
 						...prev[index].fileItem,
-						progress: 1,
+						progress: 0.99,
 						thumbnailImageDataUrl,
 					},
 					fileUrl: response?.["data"]?.["fileUrl"],

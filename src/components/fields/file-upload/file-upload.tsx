@@ -52,7 +52,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	const uploadRuleRef = useRef<IFileUploadValidationRule>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
-	const { clearErrors, setError } = useFormContext();
+	const { clearErrors, setError, trigger } = useFormContext();
 	const [fieldError, setFieldError] = useState<string | undefined>();
 	const filesRef = useRef<IFile[]>(files);
 
@@ -258,6 +258,46 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 			setFieldError(error.message);
 		}
 	}, [error?.message, setFiles]);
+
+	useEffect(() => {
+		const hasHeldProgress = files.some(
+			(file) =>
+				file.status === EFileStatus.UPLOADED &&
+				typeof file.fileItem?.progress === "number" &&
+				file.fileItem.progress < 1
+		);
+		if (!hasHeldProgress) return;
+
+		const processingStatuses = new Set([
+			EFileStatus.INJECTED,
+			EFileStatus.INJECTING,
+			EFileStatus.NONE,
+			EFileStatus.UPLOAD_READY,
+			EFileStatus.UPLOADING,
+		]);
+		const hasProcessingFiles = files.some((file) => processingStatuses.has(file.status));
+
+		const releaseProgress = () => {
+			setFiles((prev) =>
+				prev.map((file) =>
+					file.status === EFileStatus.UPLOADED &&
+					typeof file.fileItem?.progress === "number" &&
+					file.fileItem.progress < 1
+						? { ...file, fileItem: { ...file.fileItem, progress: 1 } }
+						: file
+				)
+			);
+		};
+
+		if (hasProcessingFiles) {
+			releaseProgress();
+		} else {
+			trigger(id).then((isValid) => {
+				if (!isValid) return;
+				releaseProgress();
+			});
+		}
+	}, [files, id, trigger, setFiles]);
 
 	// =============================================================================
 	// EVENT HANDLERS
