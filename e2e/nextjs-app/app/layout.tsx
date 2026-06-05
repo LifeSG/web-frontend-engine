@@ -13,12 +13,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 		<html lang="en">
 			<body>
 				<main className="main">
-					<div className="nav">
-						<Link href="/">Home</Link>
-						<Link href="/components">Components</Link>
-						<Link href="/fee">FEE</Link>
-					</div>
-					{children}
+					<div data-testid="story-layout">{children}</div>
 				</main>
 			</body>
 		</html>

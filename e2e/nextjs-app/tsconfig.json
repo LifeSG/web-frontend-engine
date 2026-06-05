@@ -23,6 +23,9 @@
       }
     ],
     "paths": {
+      "@/*": [
+        "./*"
+      ],
       "@lifesg/web-frontend-engine": [
         "../../src/index.ts"
       ]

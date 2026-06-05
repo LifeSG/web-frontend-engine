@@ -9,7 +9,7 @@ import {
 	OverrideStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 
 const meta: Meta = {

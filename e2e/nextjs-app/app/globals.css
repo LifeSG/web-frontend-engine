@@ -12,53 +12,7 @@
 	color-scheme: light;
 }
 
-* {
-	box-sizing: border-box;
-}
-
-body {
-	margin: 0;
-	font-family: Helvetica, Arial, sans-serif;
-	background: #f5f7fb;
-	color: #0f172a;
-}
-
-a {
-	color: inherit;
-}
-
 .main {
-	max-width: 960px;
 	margin: 0 auto;
 	padding: 24px;
-}
-
-.panel {
-	background: #ffffff;
-	border: 1px solid #d8dee9;
-	border-radius: 12px;
-	padding: 16px;
-	margin-bottom: 16px;
-}
-
-.nav {
-	display: flex;
-	gap: 12px;
-	margin-bottom: 16px;
-}
-
-.nav a {
-	padding: 8px 12px;
-	border: 1px solid #c4ccda;
-	border-radius: 8px;
-	text-decoration: none;
-	background: #ffffff;
-}
-
-.result {
-	padding: 12px;
-	border-radius: 8px;
-	background: #eef2ff;
-	white-space: pre-wrap;
-	word-break: break-word;
 }
