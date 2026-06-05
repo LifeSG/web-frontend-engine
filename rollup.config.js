@@ -13,9 +13,6 @@ const plugins = [
 	peerDepsExternal(), // Add the externals for me. [react, react-dom]
 	nodeResolve({ browser: true }),
 	commonjs(), // converts CommonJS to ES6 modules
-	wyw({
-		sourceMap: true,
-	}),
 	typescript({
 		include: ["**/*.ts", "**/*.tsx", "**/*.cts", "**/*.mts"],
 		useTsconfigDeclarationDir: true,
@@ -30,18 +27,25 @@ const plugins = [
 		minimize: true,
 		sourceMap: true,
 	}),
+	wyw({
+		sourceMap: true,
+	}),
 	image(),
 	json(),
 	terser(), // Helps remove comments, whitespace or logging codes
 	generatePackageJson({
 		outputFolder: "dist",
 		baseContents: (pkg) => ({
-			...pkg,
+			name: pkg.name,
+			version: pkg.version,
+			description: pkg.description,
 			typings: "./index.d.ts",
 			main: "./cjs/index.js",
 			module: "./index.js",
 			style: "./index.css",
 			sideEffects: ["*.css"],
+			dependencies: pkg.dependencies,
+			peerDependencies: pkg.peerDependencies,
 		}),
 	}),
 ];
@@ -55,6 +59,7 @@ export default {
 			sourcemap: true,
 			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
+			banner: 'import "./index.css";',
 		},
 		{
 			dir: "dist/cjs",
@@ -62,6 +67,7 @@ export default {
 			sourcemap: true,
 			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
+			banner: 'require("./index.css");',
 		},
 	],
 	plugins,
