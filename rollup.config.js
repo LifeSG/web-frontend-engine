@@ -8,6 +8,7 @@ import terser from "@rollup/plugin-terser";
 import typescript from "rollup-plugin-typescript2";
 import wyw from "@wyw-in-js/rollup";
 import generatePackageJson from "rollup-plugin-generate-package-json";
+import copy from "rollup-plugin-copy";
 
 const plugins = [
 	peerDepsExternal(), // Add the externals for me. [react, react-dom]
@@ -33,6 +34,17 @@ const plugins = [
 	image(),
 	json(),
 	terser(), // Helps remove comments, whitespace or logging codes
+	{
+		name: "inject-css-import",
+		renderChunk(code, chunk, options) {
+			// Only inject into entry chunks, not dynamic chunks
+			if (chunk.isEntry) {
+				const cssImport = options.format === "cjs" ? 'require("./index.css");' : 'import "./index.css";';
+				return cssImport + "\n" + code;
+			}
+			return null;
+		},
+	},
 	generatePackageJson({
 		outputFolder: "dist",
 		baseContents: (pkg) => ({
@@ -43,10 +55,22 @@ const plugins = [
 			main: "./cjs/index.js",
 			module: "./index.js",
 			style: "./index.css",
-			sideEffects: ["*.css"],
+			sideEffects: ["*.css", "./index.js", "./cjs/index.js"],
 			dependencies: pkg.dependencies,
 			peerDependencies: pkg.peerDependencies,
 		}),
+	}),
+	copy({
+		targets: [
+			{
+				src: "node_modules/leaflet/dist/images/*.png",
+				dest: "dist/images",
+			},
+			{
+				src: "node_modules/leaflet/dist/images/*.png",
+				dest: "dist/cjs/images",
+			},
+		],
 	}),
 ];
 
@@ -59,7 +83,6 @@ export default {
 			sourcemap: true,
 			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
-			banner: 'import "./index.css";',
 		},
 		{
 			dir: "dist/cjs",
@@ -67,7 +90,6 @@ export default {
 			sourcemap: true,
 			exports: "named",
 			chunkFileNames: "chunks/[name].[hash].js",
-			banner: 'require("./index.css");',
 		},
 	],
 	plugins,
