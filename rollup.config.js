@@ -8,7 +8,7 @@ import terser from "@rollup/plugin-terser";
 import typescript from "rollup-plugin-typescript2";
 import wyw from "@wyw-in-js/rollup";
 import generatePackageJson from "rollup-plugin-generate-package-json";
-import copy from "rollup-plugin-copy";
+import postcssUrl from "postcss-url";
 
 const plugins = [
 	peerDepsExternal(), // Add the externals for me. [react, react-dom]
@@ -27,6 +27,11 @@ const plugins = [
 		extract: true,
 		minimize: true,
 		sourceMap: true,
+		plugins: [
+			postcssUrl({
+				url: "inline",
+			}),
+		],
 	}),
 	wyw({
 		sourceMap: true,
@@ -59,18 +64,6 @@ const plugins = [
 			dependencies: pkg.dependencies,
 			peerDependencies: pkg.peerDependencies,
 		}),
-	}),
-	copy({
-		targets: [
-			{
-				src: "node_modules/leaflet/dist/images/*.png",
-				dest: "dist/images",
-			},
-			{
-				src: "node_modules/leaflet/dist/images/*.png",
-				dest: "dist/cjs/images",
-			},
-		],
 	}),
 ];
 
