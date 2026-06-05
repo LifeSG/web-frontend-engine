@@ -1,0 +1,64 @@
+@import url("/cdn/react-design-system/v3/css/main.css");
+@import url("/cdn/react-design-system/v3/css/atkinson-hyperlegible-next.css");
+@import url("/cdn/react-design-system/v3/css/plus-jakarta-sans.css");
+@import url("/cdn/react-design-system/v3/css/open-sans.css");
+@import url("/cdn/react-design-system/v3/css/inter.css");
+@import url("/cdn/react-design-system/v3/css/montserrat.css");
+@import url("/cdn/react-design-system/v3/css/lato.css");
+@import url("/cdn/react-design-system/v3/css/libre-franklin.css");
+@import url("/cdn/react-design-system/v3/css/public-sans.css");
+
+:root {
+	color-scheme: light;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	background: #f5f7fb;
+	color: #0f172a;
+}
+
+a {
+	color: inherit;
+}
+
+.main {
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 24px;
+}
+
+.panel {
+	background: #ffffff;
+	border: 1px solid #d8dee9;
+	border-radius: 12px;
+	padding: 16px;
+	margin-bottom: 16px;
+}
+
+.nav {
+	display: flex;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.nav a {
+	padding: 8px 12px;
+	border: 1px solid #c4ccda;
+	border-radius: 8px;
+	text-decoration: none;
+	background: #ffffff;
+}
+
+.result {
+	padding: 12px;
+	border-radius: 8px;
+	background: #eef2ff;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
