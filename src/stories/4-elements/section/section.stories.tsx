@@ -80,22 +80,22 @@ Grid.args = {
 		text1: {
 			uiType: "text-field",
 			label: "Text",
-			columns: { xl: 6 },
+			columns: { xxs: 3 },
 		},
 		text2: {
 			uiType: "text-field",
 			label: "Text 2",
-			columns: { xl: 6 },
+			columns: { xxs: 3 },
 		},
 		text3: {
 			uiType: "text-field",
 			label: "Text 3",
-			columns: { xl: 6 },
+			columns: { xxs: 3 },
 		},
 		text4: {
 			uiType: "text-field",
 			label: "Text 4",
-			columns: { xl: 6 },
+			columns: { xxs: 3 },
 		},
 	},
 };

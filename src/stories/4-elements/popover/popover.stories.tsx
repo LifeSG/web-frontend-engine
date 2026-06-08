@@ -209,16 +209,16 @@ export const InlineUsage: StoryFn = () => {
 						uiType: "section",
 						children: {
 							text: {
-								uiType: "body-md",
+								uiType: "body-bl",
 								children: {
-									1: { uiType: "body-md", children: "Click ", inline: true },
+									1: { uiType: "body-bl", children: "Click ", inline: true },
 									2: {
 										uiType: "popover",
 										children: "here",
 										hint: { content: "Hint" },
 										icon: "QuestionmarkCircleFillIcon",
 									},
-									3: { uiType: "body-md", children: " to find out more", inline: true },
+									3: { uiType: "body-bl", children: " to find out more", inline: true },
 								},
 							},
 						},

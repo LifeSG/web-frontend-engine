@@ -139,14 +139,14 @@ const SCHEMA: Record<string, TFrontendEngineFieldSchema> = {
 		style: { marginTop: 16, marginBottom: 16 },
 		children: {
 			description: {
-				uiType: "body-md",
+				uiType: "body-bl",
 				children: "Enter more details about this fruit",
 				columns: { xxs: 8, lg: 12 },
 			},
 			name: {
 				uiType: "text-field",
 				label: "Name",
-				columns: { sm: 4, md: 8, lg: 12 },
+				columns: { xxs: 8, lg: 12 },
 				validation: [{ required: true }],
 			},
 			colour: {
@@ -165,28 +165,28 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 		style: { marginTop: 16, marginBottom: 16 },
 		children: {
 			description: {
-				uiType: "body-md",
+				uiType: "body-bl",
 				children: [
 					"This array field has custom error apply for the first and the third element.",
 					"Nested array in the first element has the custom error for the first and third entries.",
 				],
-				columns: { sm: 4, md: 8, lg: 12 },
+				columns: { xxs: 8, lg: 12 },
 			},
 			name: {
 				uiType: "text-field",
 				label: "Name",
-				columns: { sm: 4, md: 8, lg: 12 },
+				columns: { xxs: 8, lg: 12 },
 				validation: [{ required: true }],
 			},
 			email: {
 				uiType: "email-field",
 				label: "Email",
-				columns: { sm: 4, md: 4, lg: 6 },
+				columns: { xxs: 8, md: 4, lg: 6 },
 			},
 			uinfin: {
 				uiType: "masked-field",
 				label: "Uinfin",
-				columns: { sm: 4, md: 4, lg: 6 },
+				columns: { xxs: 8, md: 4, lg: 6 },
 			},
 			wrapper: {
 				uiType: "div",
@@ -195,12 +195,12 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 					borderRadius: 4,
 					border: `1px solid #E0E4E5`,
 				},
-				columns: { sm: 4, md: 8, lg: 12 },
+				columns: { xxs: 8, lg: 12 },
 				children: {
 					testArray: {
 						referenceKey: "array-field",
 						sectionTitle: "Nested array",
-						columns: { sm: 4, md: 8, lg: 12 },
+						columns: { xxs: 8, lg: 12 },
 						fieldSchema: {
 							grid: {
 								uiType: "grid",
@@ -208,18 +208,18 @@ const SCHEMA_NESTED_ARRAY: Record<string, TFrontendEngineFieldSchema> = {
 									childName: {
 										uiType: "text-field",
 										label: "Child name",
-										columns: { sm: 4, md: 8, lg: 12 },
+										columns: { xxs: 8, lg: 12 },
 										validation: [{ required: true }],
 									},
 									childEmail: {
 										uiType: "email-field",
 										label: "Child email",
-										columns: { sm: 4, md: 4, lg: 6 },
+										columns: { xxs: 8, md: 4, lg: 6 },
 									},
 									childUinfin: {
 										uiType: "masked-field",
 										label: "Child uinfin",
-										columns: { sm: 4, md: 4, lg: 6 },
+										columns: { xxs: 8, md: 4, lg: 6 },
 									},
 								},
 							},
@@ -239,7 +239,7 @@ const SCHEMA_UNIQUE: Record<string, TFrontendEngineFieldSchema> = {
 			name: {
 				uiType: "text-field",
 				label: "Name",
-				columns: { sm: 4, md: 8, lg: 12 },
+				columns: { xxs: 8, lg: 12 },
 				validation: [
 					{ required: true },
 					{
@@ -256,7 +256,7 @@ const SCHEMA_UNIQUE: Record<string, TFrontendEngineFieldSchema> = {
 					{ label: "Blue", value: "Blue" },
 					{ label: "Green", value: "Green" },
 				],
-				columns: { sm: 4, md: 4, lg: 6 },
+				columns: { xxs: 8, md: 4, lg: 6 },
 			},
 		},
 	},
