@@ -11,7 +11,7 @@ export default async function Page({
 		throw new Error("Invalid story path.");
 	}
 
-	const story = storyPath.at(-1) as string;
+	const story = storyPath.at(-1);
 	const componentPath = storyPath.slice(0, -1).join("/");
 	const Story = dynamic(() => import(`@/app/components/${componentPath}/${story}.e2e`));
 
