@@ -151,12 +151,14 @@ export const CommonCustomStoryWithoutLabelProps = (referenceKey: string): ArgTyp
 
 export const COLUMNS_ARG_TYPE: ArgTypes = {
 	columns: {
-		description: `Specifies the number of columns to be span across for responsive breakpoints. If an array is specified, the format is as such <code>[startCol, endCol]</code>.<br><br>
-		Permitted values:<br>
-		xxs-md: <code>1-8</code> or <code>1-9</code> if specifying a range.<br>
-		lg-xxl: <code>1-12</code> or <code>1-13</code> if specifying a range.<br><br>
-		Settings are applied similar to how <code>@max-width</code> works: if <code>lg-xxl</code> is not specified, <code>xxs-md</code> will be used for all screen sizes.<br><br>
-		If all column settings are not specified, element will span across a single column.<br><br>`,
+		description: dedent`
+			Specifies the number of columns to be span across for responsive breakpoints. If an array is specified, the format is as such <code>[startCol, endCol]</code>.<br><br>
+			Permitted values:<br>
+			xxs-md: <code>1-8</code> or <code>1-9</code> if specifying a range.<br>
+			lg-xxl: <code>1-12</code> or <code>1-13</code> if specifying a range.<br><br>
+			Settings are applied similar to how <code>@max-width</code> works: if <code>lg-xxl</code> is not specified, <code>xxs-md</code> will be used for all screen sizes.<br><br>
+			If all column settings are not specified, element will span across a single column.<br><br>
+		`,
 		table: {
 			type: {
 				summary: `{xxs?: number, xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number}`,

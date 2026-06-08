@@ -72,17 +72,17 @@ ResponsiveLayout.args = {
 		block1: {
 			uiType: "text-field",
 			label: "Block 1",
-			columns: { xl: 4, lg: 6, sm: 8 },
+			columns: { xl: 4, lg: 6, xxs: 8 },
 		},
 		block2: {
 			uiType: "text-field",
 			label: "Block 2",
-			columns: { xl: 8, lg: 6, sm: 4 },
+			columns: { xl: 8, lg: 6, xxs: 4 },
 		},
 		block3: {
 			uiType: "text-field",
 			label: "Block 3",
-			columns: { xl: 12, lg: 12, sm: 4 },
+			columns: { xl: 12, lg: 12, xxs: 4 },
 		},
 	},
 };

@@ -141,7 +141,7 @@ const SCHEMA: Record<string, TFrontendEngineFieldSchema> = {
 			description: {
 				uiType: "body-md",
 				children: "Enter more details about this fruit",
-				columns: { sm: 4, md: 8, lg: 12 },
+				columns: { xxs: 8, lg: 12 },
 			},
 			name: {
 				uiType: "text-field",
@@ -153,7 +153,7 @@ const SCHEMA: Record<string, TFrontendEngineFieldSchema> = {
 				uiType: "select",
 				label: "Colour",
 				options: [{ label: "Red", value: "Red" }],
-				columns: { sm: 4, md: 4, lg: 6 },
+				columns: { xxs: 8, md: 4, lg: 6 },
 			},
 		},
 	},
