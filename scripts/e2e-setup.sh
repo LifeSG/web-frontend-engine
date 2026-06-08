@@ -9,7 +9,7 @@ pushd "$PROJECT_DIR" >/dev/null
 echo "[E2E Setup] Installing root dependencies"
 npm ci
 
-if [ "$CI" = "true" ]; then
+if [ "${CI:-}" = "true" ]; then
 	echo "[E2E Setup] Building FEE package (CI mode)"
 	npm run build
 else
@@ -18,6 +18,11 @@ fi
 
 echo "[E2E Setup] Installing Next app dependencies"
 npm --prefix e2e/nextjs-app ci
+
+if [ "${CI:-}" = "true" ]; then
+	echo "[E2E Setup] Installing built FEE package into Next app"
+	npm --prefix e2e/nextjs-app install --no-save "$PROJECT_DIR/dist"
+fi
 
 echo "[E2E Setup] Installing Playwright browser"
 npx playwright install --with-deps chromium

@@ -4,13 +4,11 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const isDev = process.env.NODE_ENV !== "production";
 const isCI = process.env.CI === "true";
 
 const appRoot = __dirname;
-const frontendEngineEntry = isCI ? "../../dist/index.js" : "../../src/index.ts";
-const frontendEngineEntryRelative = isCI ? "../../dist/index.js" : "../../src/index.ts";
-const frontendEngineEntryPath = path.resolve(__dirname, frontendEngineEntry);
+const frontendEngineSourceRelative = "../../src/index.ts";
+const frontendEngineSourcePath = path.resolve(__dirname, frontendEngineSourceRelative);
 const designSystemRelative = "./node_modules/@lifesg/react-design-system";
 const designSystemPath = path.resolve(__dirname, designSystemRelative);
 
@@ -19,14 +17,16 @@ const nextConfig = {
 	turbopack: {
 		root: appRoot,
 		resolveAlias: {
-			"@lifesg/web-frontend-engine": frontendEngineEntryRelative,
+			...(isCI ? {} : { "@lifesg/web-frontend-engine": frontendEngineSourceRelative }),
 			"@lifesg/react-design-system": designSystemRelative,
 		},
 	},
 	webpack: (config) => {
 		config.resolve = config.resolve ?? {};
 		config.resolve.alias = config.resolve.alias ?? {};
-		config.resolve.alias["@lifesg/web-frontend-engine"] = frontendEngineEntryPath;
+		if (!isCI) {
+			config.resolve.alias["@lifesg/web-frontend-engine"] = frontendEngineSourcePath;
+		}
 		config.resolve.alias["@lifesg/react-design-system"] = designSystemPath;
 		return config;
 	},
