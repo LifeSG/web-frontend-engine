@@ -5,13 +5,13 @@ import { TWrapperSchema } from "../wrapper";
 
 export interface IUnorderedListSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"unordered-list">,
-		TComponentOmitProps<UnorderedListProps, "children" | "size"> {
+		TComponentOmitProps<UnorderedListProps, "children"> {
 	children: (string | Record<string, IListItemSchema<V, C>>)[];
 }
 
 export interface IOrderedListSchema<V = undefined, C = undefined>
 	extends IBaseElementSchema<"ordered-list">,
-		TComponentOmitProps<OrderedListProps, "children" | "size"> {
+		TComponentOmitProps<OrderedListProps, "children"> {
 	children: (string | Record<string, IListItemSchema<V, C>>)[];
 }
 

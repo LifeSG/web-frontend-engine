@@ -17,7 +17,7 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 	// =============================================================================
 	const {
 		id,
-		schema: { children, uiType, maxLines, weight, ...otherSchema },
+		schema: { children, uiType, maxLines, ...otherSchema },
 	} = props;
 
 	const elementRef = useRef<HTMLParagraphElement>(null);
@@ -48,10 +48,6 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 	// =============================================================================
 	const getTestId = (id: string): string => {
 		return TestHelper.generateId(id, "typography");
-	};
-
-	const getWeight = () => {
-		return weight || undefined;
 	};
 
 	const hasNestedFields = (): boolean => {
@@ -99,7 +95,6 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 				ref={elementRef}
 				maxLines={!expanded ? maxLines : undefined}
 				data-testid={getTestId(id)}
-				weight={getWeight()}
 				{...otherSchema}
 				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
 				{...(hasNestedFields() && { as: "div" })}
