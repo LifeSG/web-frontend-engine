@@ -24,11 +24,8 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Install Playwright Browser
-        run: npx playwright install --with-deps chromium
+      - name: Setup E2E Environment
+        run: ./scripts/e2e-setup.sh
 
       - name: Run E2E Tests
         env:
