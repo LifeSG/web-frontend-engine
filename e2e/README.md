@@ -3,7 +3,10 @@
 This directory contains end-to-end assets split by responsibility:
 
 -   `nextjs-app/`: Next.js demo application used by Playwright
--   `tests/`: Playwright test suite - `components/`: component-level specs - `frontend-engine/`: frontend-engine behavior specs - `utils/`: shared test helpers (fixtures, StoryPage, screenshot utils)
+-   `tests/`: Playwright test suite
+    -   `components/`: component-level specs
+    -   `frontend-engine/`: frontend-engine behavior specs
+    -   `utils/`: shared test helpers (fixtures, StoryPage, screenshot utils)
 
 ## Route Convention
 
@@ -15,3 +18,7 @@ This directory contains end-to-end assets split by responsibility:
 
 -   Use `forComponent(...)` from `tests/utils/fixtures` to bind one component path and set stories per block.
 -   Use a file-local subclass of `StoryPage` when you need `story.locators` ergonomics.
+
+## Known Issues
+
+-   **Styled-components warning**: A browser warning about multiple `styled-components` instances is expected and non-breaking. This occurs because the root library and `nextjs-app` each have their own `styled-components` dependency. Tests pass despite this warning.
