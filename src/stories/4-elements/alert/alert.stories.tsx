@@ -148,7 +148,7 @@ SchemaChildren.args = {
 	type: "success",
 	children: {
 		description: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "The following fruits are provided:",
 		},
 		list: {

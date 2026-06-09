@@ -112,6 +112,7 @@ OrderedList.args = {
 export const NestedOrderedList = Template("list-nested-ordered").bind({});
 NestedOrderedList.args = {
 	uiType: "ordered-list",
+	size: "body-baseline",
 	children: [
 		"Item one",
 		{
@@ -119,7 +120,7 @@ NestedOrderedList.args = {
 				uiType: "list-item",
 				children: {
 					text: {
-						uiType: "text-body",
+						uiType: "body-bl",
 						children: "Item with list",
 					},
 					list: {
@@ -158,6 +159,7 @@ UnorderedListWithCustomBulletType.args = {
 export const NestedUnorderedList = Template("list-nested-unordered").bind({});
 NestedUnorderedList.args = {
 	uiType: "unordered-list",
+	size: "body-baseline",
 	children: [
 		"Item one",
 		{
@@ -165,7 +167,7 @@ NestedUnorderedList.args = {
 				uiType: "list-item",
 				children: {
 					text: {
-						uiType: "text-body",
+						uiType: "body-bl",
 						children: "Item with list",
 					},
 					list: {

@@ -130,7 +130,7 @@ Default.args = {
 	referenceKey: "filter-item",
 	children: {
 		text: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "This is a filter item",
 		},
 	},
@@ -171,7 +171,7 @@ LabelCustomisation.args = {
 	referenceKey: "filter-item",
 	children: {
 		text: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "This is a filter item",
 		},
 	},
@@ -186,7 +186,7 @@ LabelCustomisationWithSchema.args = {
 				wrapper: {
 					children: {
 						heading: {
-							uiType: "text-h3",
+							uiType: "heading-sm",
 							weight: "semibold",
 							children: "Heading",
 							style: {
@@ -194,7 +194,7 @@ LabelCustomisationWithSchema.args = {
 							},
 						},
 						description: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children:
 								"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
 							style: {
@@ -219,7 +219,6 @@ LabelCustomisationWithSchema.args = {
 								},
 							],
 							uiType: "unordered-list",
-							size: "BodySmall",
 						},
 					},
 					uiType: "div",
@@ -230,7 +229,7 @@ LabelCustomisationWithSchema.args = {
 	referenceKey: "filter-item",
 	children: {
 		text: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "This is a filter item",
 		},
 	},
@@ -243,7 +242,7 @@ Collapsible.args = {
 	collapsible: false,
 	children: {
 		text: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "This is expanded by default",
 		},
 	},
@@ -257,7 +256,7 @@ Expanded.args = {
 	expanded: true,
 	children: {
 		text: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "This is expanded by default in desktop on page load",
 		},
 	},
@@ -271,7 +270,7 @@ HideDivider.args = {
 	showMobileDivider: false,
 	children: {
 		text: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "This is a filter item",
 		},
 	},
@@ -331,7 +330,7 @@ Overrides.args = {
 			expanded: true,
 			children: {
 				text: {
-					uiType: "text-body",
+					uiType: "body-md",
 					children: "This is a collapsible item",
 				},
 			},

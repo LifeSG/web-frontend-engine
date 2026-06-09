@@ -20,12 +20,12 @@ const renderComponent = () => {
 							box1: {
 								uiType: "text-field",
 								label: TEXTFIELD_LABEL,
-								columns: { desktop: 6 },
+								columns: { xl: 6 },
 							},
 							box2: {
 								uiType: "text-field",
 								label: TEXTFIELD_LABEL_2,
-								columns: { desktop: 6 },
+								columns: { xl: 6 },
 							},
 						},
 					},

@@ -221,7 +221,7 @@ ActiveTab.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text1: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "<p>Apples are delicious</p>",
 						},
 					},
@@ -237,7 +237,7 @@ ActiveTab.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text2: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "Bananas are delicious",
 						},
 					},
@@ -253,7 +253,7 @@ ActiveTab.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text2: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "Cherries are delicious",
 						},
 					},
@@ -277,7 +277,7 @@ Overrides.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "This is tab item 1",
 						},
 					},
@@ -300,7 +300,7 @@ Overrides.args = {
 						style: { marginTop: "1rem", marginBottom: "1rem" },
 						children: {
 							text: {
-								uiType: "text-body",
+								uiType: "body-md",
 								children: "This is tab item 2",
 							},
 						},
@@ -326,7 +326,7 @@ TabChangeEvent.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "This is tab item A",
 						},
 					},
@@ -342,7 +342,7 @@ TabChangeEvent.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "This is tab item B",
 						},
 					},

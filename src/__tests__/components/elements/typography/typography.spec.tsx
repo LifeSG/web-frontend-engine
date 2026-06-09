@@ -1,15 +1,15 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ITextSchema, TTextType } from "../../../../components/elements";
+import { ITypographySchema, TTypographyType } from "../../../../components/elements";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import { TestHelper } from "../../../../utils";
 import { FRONTEND_ENGINE_ID, TOverrideSchema } from "../../../common";
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
-const UI_TYPE = "text-body";
-const COMPONENT_TEST_ID = TestHelper.generateId(COMPONENT_ID, "text");
+const UI_TYPE = "body-bl";
+const COMPONENT_TEST_ID = TestHelper.generateId(COMPONENT_ID, "typography");
 
 const renderComponent = (
-	overrideField?: Partial<Omit<ITextSchema, "label">> | undefined,
+	overrideField?: Partial<Omit<ITypographySchema, "label">> | undefined,
 	overrideSchema?: TOverrideSchema,
 	maxLines?: number
 ) => {
@@ -41,20 +41,18 @@ describe(UI_TYPE, () => {
 		expect(screen.getByTestId(COMPONENT_TEST_ID)).toBeInTheDocument();
 	});
 
-	it.each<TTextType>([
-		"text-d1",
-		"text-d2",
-		"text-dbody",
-		"text-h1",
-		"text-h2",
-		"text-h3",
-		"text-h4",
-		"text-h5",
-		"text-h6",
-		"text-body",
-		"text-bodysmall",
-		"text-xsmall",
-	])("should be able to render Text.%s component", (type) => {
+	it.each<TTypographyType>([
+		"heading-xxl",
+		"heading-xl",
+		"heading-lg",
+		"heading-md",
+		"heading-sm",
+		"heading-xs",
+		"body-bl",
+		"body-md",
+		"body-sm",
+		"body-xs",
+	])("should be able to render Typography.%s component", (type) => {
 		const text = "hello world";
 		renderComponent({ uiType: type, children: text });
 
@@ -74,7 +72,7 @@ describe(UI_TYPE, () => {
 	it("should be able to render an object of text", () => {
 		const fieldOneId = "field1";
 		const fieldTwoId = "field2";
-		const fields: Record<string, ITextSchema> = {
+		const fields: Record<string, ITypographySchema> = {
 			[fieldOneId]: {
 				uiType: UI_TYPE,
 				children: "field one",

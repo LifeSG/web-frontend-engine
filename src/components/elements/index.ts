@@ -5,5 +5,5 @@ export * from "./grid";
 export * from "./list";
 export * from "./popover";
 export * from "./tab";
-export * from "./text";
+export * from "./typography";
 export * from "./types";
