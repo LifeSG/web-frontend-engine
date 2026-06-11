@@ -1,4 +1,4 @@
-import { IconButton } from "@lifesg/react-design-system/icon-button";
+import { Button } from "@lifesg/react-design-system/button";
 import { Colour, Radius, Shadow, Spacing } from "@lifesg/react-design-system/theme";
 import styled from "styled-components";
 
@@ -46,7 +46,7 @@ export const LegendIcon = styled.img`
 	flex-shrink: 0;
 `;
 
-export const CloseButton = styled(IconButton)`
+export const CloseButton = styled(Button)`
 	padding: 0;
 	background-color: transparent;
 

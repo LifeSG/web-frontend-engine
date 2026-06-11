@@ -153,7 +153,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 				readOnly={readOnly}
 			/>
 			{hasExplicitEdit && formValue?.address && (
-				<Button.Default
+				<Button
 					id={TestHelper.generateId(id, "edit-button")}
 					data-testid={TestHelper.generateId(id, "edit-button")}
 					styleType="secondary"
@@ -161,7 +161,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 					type="button"
 				>
 					Edit
-				</Button.Default>
+				</Button>
 			)}
 			{!!formValue?.lat && !!formValue?.lng && (
 				<StaticMap

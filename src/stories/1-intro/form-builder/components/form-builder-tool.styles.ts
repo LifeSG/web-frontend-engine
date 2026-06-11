@@ -115,7 +115,7 @@ export const SchemaEditor = styled(Textarea)`
 	border-radius: ${Radius.sm};
 `;
 
-export const SaveButton = styled(Button.Default)`
+export const SaveButton = styled(Button)`
 	width: 10rem;
 	margin-left: auto;
 `;
@@ -130,7 +130,7 @@ export const AlertWrapper = styled(Alert)`
 	flex-grow: 1;
 `;
 
-export const RefreshButton = styled(Button.Small)`
+export const RefreshButton = styled(Button)`
 	display: inline;
 	padding: 0;
 `;

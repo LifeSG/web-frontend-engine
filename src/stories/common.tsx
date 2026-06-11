@@ -380,7 +380,7 @@ const FrontendEngineWithWarning = ({
 					},
 				}}
 			/>
-			<Button.Default
+			<Button
 				onClick={() =>
 					formRef.current?.setWarnings({
 						[id]: "This is a warning message, it is set via `setWarnings()` from Frontend Engine.",
@@ -389,7 +389,7 @@ const FrontendEngineWithWarning = ({
 				style={{ marginTop: "2rem" }}
 			>
 				Show warning
-			</Button.Default>
+			</Button>
 		</>
 	);
 };

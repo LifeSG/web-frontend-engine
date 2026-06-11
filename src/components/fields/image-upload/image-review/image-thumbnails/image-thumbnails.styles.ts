@@ -1,5 +1,5 @@
 import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
-import { IconButton } from "@lifesg/react-design-system/icon-button";
+import { Button } from "@lifesg/react-design-system/button";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import styled, { css, keyframes } from "styled-components";
 
@@ -99,17 +99,13 @@ export const HiddenFileSelect = styled.input`
 	display: none;
 `;
 
-export const AddImageButton = styled(IconButton)`
+export const AddImageButton = styled(Button)`
 	padding: 0;
 	width: 3rem;
 	height: 3rem;
 	background: #fff;
-	border: none;
-	${Border.Util["dashed-default"]({
-		colour: Colour["border-primary"],
-		thickness: Border["width-040"],
-		radius: Radius.sm,
-	})}
+	border: ${Border["width-040"]} dashed ${Colour["border-primary"]};
+	border-radius: ${Radius.sm};
 
 	> svg {
 		color: ${Colour["icon-primary"]};

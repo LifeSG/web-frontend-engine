@@ -1,6 +1,5 @@
 import { Border, Breakpoint, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
-import { IconButton } from "@lifesg/react-design-system/icon-button";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { BinIcon } from "@lifesg/react-icons/bin";
@@ -54,7 +53,7 @@ export const HeaderSection = styled.div<{ $drawActive?: boolean }>`
 	${({ $drawActive }) => ($drawActive ? "justify-content: space-between;" : "")}
 `;
 
-export const ReviewCloseButton = styled(IconButton)`
+export const ReviewCloseButton = styled(Button)`
 	position: absolute;
 	left: 0.5rem;
 	padding: ${Spacing["spacing-4"]};
@@ -126,7 +125,7 @@ export const DrawDeleteButtonWrapper = styled.div`
 	}
 `;
 
-export const DrawDeleteButton = styled(IconButton)`
+export const DrawDeleteButton = styled(Button)`
 	padding: 0;
 	width: 5.4375rem;
 	height: 2.5rem;
@@ -191,7 +190,7 @@ export const FooterSection = styled.div`
 	}
 `;
 
-export const FooterSaveButton = styled(Button.Default)`
+export const FooterSaveButton = styled(Button)`
 	height: 3rem;
 	margin-left: ${Spacing["spacing-16"]};
 	min-width: 6.5rem;
