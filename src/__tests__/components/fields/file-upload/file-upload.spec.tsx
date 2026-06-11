@@ -75,6 +75,7 @@ interface IRenderAndPerformActionsOptions {
 	eventType?: string | undefined;
 	eventListener?: ((this: Element, ev: Event) => unknown) | undefined;
 	onClick?: (ref: React.MutableRefObject<IFrontendEngineRef>) => void;
+	onChange?: IFrontendEngineProps["onChange"];
 }
 
 /**
@@ -94,6 +95,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		uploadType = "base64",
 		headers = {},
 		onClick,
+		onChange,
 	} = options;
 
 	jest.spyOn(FileHelper, "getType").mockImplementation(
@@ -128,6 +130,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 		<FrontendEngineWithEventListener
 			data={json}
 			onSubmit={SUBMIT_FN}
+			onChange={onChange}
 			eventType={eventType}
 			eventListener={eventListener}
 			onClick={onClick}
@@ -1382,6 +1385,33 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getCustomButton());
 
 			expect(formIsDirty).toBe(false);
+		});
+	});
+
+	describe("regression", () => {
+		// EP-0001: filesRef was updated in a useEffect (parent), which runs after FileUploadManager's
+		// setValue effect (child). This caused the no-interim-statuses Yup test to read a stale
+		// filesRef.current (UPLOADING) on the first validation after upload, emitting isValid: false.
+		// Fix: update filesRef.current synchronously during render so it is always current before
+		// any child effect executes.
+		it("should emit isValid: true on the first onChange call after upload completes (EP-0001)", async () => {
+			const onChange = jest.fn();
+			await renderComponent({
+				files: [FILE_1],
+				uploadType: "base64",
+				overrideField: { validation: [{ required: true, errorMessage: "Required" }] },
+				onChange,
+			});
+
+			await waitFor(() => expect(screen.getByLabelText(`delete ${FILE_1.name}`)).toBeInTheDocument());
+
+			// All onChange calls where the form value already contains the uploaded file must
+			// report isValid: true. The bug produced a spurious isValid: false call first.
+			const callsWithUploadedFile = onChange.mock.calls.filter(
+				([values]) => Array.isArray(values[COMPONENT_ID]) && values[COMPONENT_ID].length > 0
+			);
+			expect(callsWithUploadedFile.length).toBeGreaterThan(0);
+			expect(callsWithUploadedFile.every(([, isValid]) => isValid === true)).toBe(true);
 		});
 	});
 });

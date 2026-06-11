@@ -139,7 +139,7 @@ child effect that runs first.
 // This runs AFTER FileUploadManager's setValue effect, so any
 // validation triggered by setValue reads a stale filesRef.current.
 useEffect(() => {
-    filesRef.current = files;
+	filesRef.current = files;
 }, [files]);
 ```
 
@@ -206,11 +206,11 @@ states
 
 ### Risks and Mitigation
 
-| Risk | Impact | Mitigation |
-| --- | --- | --- |
-| Synchronous ref update causes unexpected side effects in other field event handlers that read `filesRef` | Low | `filesRef` is only used in the Yup `no-interim-statuses` test and the `hasHeldProgress` effect; both paths are covered by existing tests |
-| Fix does not cover `image-upload` field if it shares the same pattern | Low | `image-upload` uses a separate implementation; a separate audit should confirm whether it is affected |
-| Existing tests masked the bug | Medium | Add a regression test that asserts `onChange` emits `isValid: true` in the same tick as the final `setValue` after upload |
+| Risk                                                                                                     | Impact | Mitigation                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Synchronous ref update causes unexpected side effects in other field event handlers that read `filesRef` | Low    | `filesRef` is only used in the Yup `no-interim-statuses` test and the `hasHeldProgress` effect; both paths are covered by existing tests |
+| Fix does not cover `image-upload` field if it shares the same pattern                                    | Low    | `image-upload` uses a separate implementation; a separate audit should confirm whether it is affected                                    |
+| Existing tests masked the bug                                                                            | Medium | Add a regression test that asserts `onChange` emits `isValid: true` in the same tick as the final `setValue` after upload                |
 
 ## Design Details
 
@@ -228,7 +228,7 @@ any child effect runs.
 const filesRef = useRef<IFile[]>(files);
 
 useEffect(() => {
-    filesRef.current = files;
+	filesRef.current = files;
 }, [files]);
 ```
 
@@ -313,15 +313,15 @@ No additional infrastructure required.
 ## Review & Acceptance Checklist
 
 -   [ ] Root cause confirmed by reviewer via local reproduction
--   [ ] Unit test added to assert `onChange` emits `isValid: true` in
+-   [x] Unit test added to assert `onChange` emits `isValid: true` in
         the same tick as `setValue` after upload completion
 -   [ ] AC 1, AC 2, AC 3 manually verified
--   [ ] `image-upload` field audited for the same `useEffect` ref
+-   [x] `image-upload` field audited for the same `useEffect` ref
         pattern
 
 ## Execution Status
 
 -   [x] Root cause identified and documented
--   [ ] Code change implemented
--   [ ] Unit / integration tests added
+-   [x] Code change implemented
+-   [x] Unit / integration tests added
 -   [ ] PR raised against `web-frontend-engine`

@@ -45,7 +45,7 @@ const FileUploadManager = (props: IProps) => {
 	} = props;
 	const { files, setFiles, setCurrentFileIds } = useContext(FileUploadContext);
 	const previousValue = usePrevious(value);
-	const { setValue, trigger } = useFormContext();
+	const { setValue } = useFormContext();
 	const { dispatchFieldEvent } = useFieldEvent();
 	const isMounted = useRef(false);
 	const sessionId = useRef<string>();
@@ -54,6 +54,15 @@ const FileUploadManager = (props: IProps) => {
 			setFiles(value);
 		}
 	};
+	const isUploadedWithHeldProgress = (file: IFile) =>
+		file.status === EFileStatus.UPLOADED &&
+		typeof file.fileItem?.progress === "number" &&
+		file.fileItem.progress < 1;
+
+	const heldProgressFileIds = files
+		.filter(isUploadedWithHeldProgress)
+		.map((file) => file.fileItem?.id)
+		.join(",");
 
 	// =============================================================================
 	// EFFECTS
@@ -122,48 +131,23 @@ const FileUploadManager = (props: IProps) => {
 		[files.map(({ fileItem, status }) => `${fileItem?.id}-${status}`).join(",")]
 	);
 
-	// release held progress to 1 once all uploads settle and field is valid
+	// release held progress to 1 — progress is UI-only and does not affect form validity
 	useEffect(() => {
-		const hasHeldProgress = files.some(
-			(file) =>
-				file.status === EFileStatus.UPLOADED &&
-				typeof file.fileItem?.progress === "number" &&
-				file.fileItem.progress < 1
+		if (!heldProgressFileIds) return;
+
+		setFilesIfMounted((prev) =>
+			prev.map((file) =>
+				isUploadedWithHeldProgress(file)
+					? {
+							...file,
+							fileItem: { ...file.fileItem!, progress: 1 },
+					  }
+					: file
+			)
 		);
-		if (!hasHeldProgress) return;
-
-		const processingStatuses = new Set([
-			EFileStatus.INJECTED,
-			EFileStatus.INJECTING,
-			EFileStatus.NONE,
-			EFileStatus.UPLOAD_READY,
-			EFileStatus.UPLOADING,
-		]);
-		const hasProcessingFiles = files.some((file) => processingStatuses.has(file.status));
-
-		const releaseProgress = () => {
-			setFilesIfMounted((prev) =>
-				prev.map((file) =>
-					file.status === EFileStatus.UPLOADED &&
-					typeof file.fileItem?.progress === "number" &&
-					file.fileItem.progress < 1
-						? { ...file, fileItem: { ...file.fileItem, progress: 1 } }
-						: file
-				)
-			);
-		};
-
-		if (hasProcessingFiles) {
-			// other files are still uploading — releasing is purely cosmetic, no validation gate needed
-			releaseProgress();
-		} else {
-			// last file finished — only show 100% when the field is actually valid
-			trigger(id).then((isValid) => {
-				if (!isValid) return;
-				releaseProgress();
-			});
-		}
-	}, [files, id, trigger, setFilesIfMounted]);
+		// only re-runs when the set of UPLOADED files with progress < 1 actually changes
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [heldProgressFileIds]);
 
 	// for reset
 	useEffect(() => {
