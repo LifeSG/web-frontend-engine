@@ -1,5 +1,5 @@
-import { Breakpoint, Colour } from "@lifesg/react-design-system/theme";
-import { PopoverTrigger } from "@lifesg/react-design-system/popover-v2";
+import { Colour, useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
+import { PopoverTrigger } from "@lifesg/react-design-system/popover";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
@@ -7,9 +7,8 @@ import { ICircleFillIcon } from "@lifesg/react-icons";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import ReactDOMServer from "react-dom/server";
-import { ThemeContext } from "styled-components";
 import { TestHelper } from "../../../../../utils";
 import { useFieldEvent } from "../../../../../utils/hooks";
 import { LocationHelper } from "../../location-helper";
@@ -55,13 +54,12 @@ export const LocationPicker = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const theme = useContext(ThemeContext);
 	const mapRef = useRef<L.Map>();
 
 	const leafletWrapperRef = useRef<HTMLDivElement>(null);
 	const markersRef = useRef<L.Marker[]>();
 	const legendTriggerRef = useRef<HTMLButtonElement>(null);
-	const isMobile = window.matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`).matches;
+	const isMobile = useMaxWidthMediaQuery("lg");
 	const leafletConfig: L.MapOptions = {
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,
@@ -194,7 +192,7 @@ export const LocationPicker = ({
 					: undefined;
 			const mapPinIcon =
 				"data:image/svg+xml;base64," +
-				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour["icon-primary"]({ theme })} />));
+				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour["icon-primary"]} />));
 			const marker = markerFrom(
 				target,
 				interactiveMapPinIconUrl && !target.isCurrentLocation ? interactiveMapPinIconUrl : mapPinIcon,

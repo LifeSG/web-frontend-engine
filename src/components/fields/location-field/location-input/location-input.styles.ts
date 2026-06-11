@@ -99,10 +99,10 @@ export const LocationIconWrapper = styled.div<{ $disabled?: boolean; $readOnly?:
 	${(props) => {
 		if (props.$disabled) {
 			return css`
-				color: ${Colour.Primitive["neutral-70"](props)};
+				color: ${Colour.Primitive["neutral-70"]};
 				svg {
 					#path {
-						fill: ${Colour.Primitive["neutral-70"](props)};
+						fill: ${Colour.Primitive["neutral-70"]};
 					}
 				}
 			`;
