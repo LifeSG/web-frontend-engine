@@ -183,9 +183,9 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				title={label}
 				callToActionComponent={
 					button === false ? undefined : (
-						<Button.Default styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
+						<Button styleType="light" type="button" onClick={() => dispatchFieldEvent("edit", id)}>
 							{button?.label ?? "Edit"}
-						</Button.Default>
+						</Button>
 					)
 				}
 				expanded={expanded}

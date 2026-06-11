@@ -55,7 +55,7 @@ export const NameWrapper = styled.span`
 	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
-export const OkButton = styled(Button.Default)`
+export const OkButton = styled(Button)`
 	width: 100%;
 	max-width: 16rem;
 	margin-top: ${Spacing["spacing-32"]};

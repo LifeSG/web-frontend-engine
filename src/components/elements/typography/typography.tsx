@@ -103,7 +103,7 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 			</Element>
 
 			{showExpandButton && (
-				<PlainButton styleType="link" onClick={() => setExpanded(!expanded)}>
+				<PlainButton sizeType="small" styleType="link" onClick={() => setExpanded(!expanded)}>
 					{expanded ? "View less" : "View more"}
 				</PlainButton>
 			)}
@@ -111,6 +111,6 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 	);
 };
 
-const PlainButton = styled(Button.Small)`
+const PlainButton = styled(Button)`
 	padding: 0;
 `;

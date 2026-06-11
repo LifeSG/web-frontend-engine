@@ -10,11 +10,7 @@ export interface SubtitleProps {
 
 export const Wrapper = styled.div`
 	border-radius: ${Radius.sm};
-	${Border.Util["dashed-default"]({
-		colour: Colour.border,
-		thickness: Border["width-040"],
-		radius: Radius.sm,
-	})}
+	border: ${Border["width-040"]} dashed ${Colour.border};
 	&:not(:last-child) {
 		margin-bottom: ${Spacing["spacing-32"]};
 	}
@@ -69,7 +65,7 @@ export const UploadWrapper = styled.div`
 	margin-top: ${Spacing["spacing-32"]};
 `;
 
-export const AddButton = styled(Button.Small)`
+export const AddButton = styled(Button)`
 	width: 100%;
 	text-align: center;
 	${MediaQuery.MinWidth.md} {

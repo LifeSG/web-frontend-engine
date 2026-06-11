@@ -165,6 +165,7 @@ export const ImageInput = (props: IImageInputProps) => {
 			<UploadWrapper>
 				<AddButton
 					type="button"
+					sizeType="small"
 					onClick={handleClick}
 					styleType="secondary"
 					id={TestHelper.generateId(id, "file-input-add-button")}

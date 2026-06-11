@@ -1,4 +1,4 @@
-import { ButtonWithIcon } from "@lifesg/react-design-system/button-with-icon";
+import { Button } from "@lifesg/react-design-system/button";
 import { Divider } from "@lifesg/react-design-system/divider";
 import { ErrorDisplay } from "@lifesg/react-design-system/error-display";
 import styled from "styled-components";
@@ -43,7 +43,7 @@ export const SectionHeader = styled.div`
 	}
 `;
 
-export const RemoveButton = styled(ButtonWithIcon.Small)<RemoveButtonStyleProps>`
+export const RemoveButton = styled(Button)<RemoveButtonStyleProps>`
 	${({ $alignment }) => $alignment === "right" && "margin-left: auto;"}
 	${({ $alignment }) => $alignment === "left" && "margin-right: auto;"}
 	padding-left: ${Spacing["spacing-32"]};
@@ -54,7 +54,7 @@ export const RemoveButton = styled(ButtonWithIcon.Small)<RemoveButtonStyleProps>
 	}
 `;
 
-export const AddButton = styled(ButtonWithIcon.Default)`
+export const AddButton = styled(Button)`
 	padding-left: ${Spacing["spacing-32"]};
 	padding-right: ${Spacing["spacing-32"]};
 
