@@ -20,10 +20,23 @@ export default defineConfig({
 			use: { ...devices["Desktop Chrome"] },
 		},
 	],
-	webServer: {
-		command: "npm --prefix e2e/nextjs-app run dev",
-		url: `${baseURL}/`,
-		reuseExistingServer: !process.env.CI,
-		timeout: 120_000,
-	},
+	webServer: [
+		{
+			command: "npm run test-e2e:docker",
+			wait: {
+				stdout: /Listening on ws:\/\/0\.0\.0\.0:(?<PLAYWRIGHT_SERVER_PORT>\d+)/,
+			},
+			gracefulShutdown: { signal: "SIGTERM", timeout: 30000 },
+			reuseExistingServer: !process.env.CI,
+			stderr: "pipe",
+			stdout: "pipe",
+		},
+		{
+			command: "./scripts/e2e-next-app.sh",
+			url: "http://localhost:3000",
+			reuseExistingServer: !process.env.CI,
+			stderr: "pipe",
+			stdout: "pipe",
+		},
+	],
 });
