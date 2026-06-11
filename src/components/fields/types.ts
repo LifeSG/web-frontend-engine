@@ -1,4 +1,4 @@
-import { FormLabelProps } from "@lifesg/react-design-system/form/types";
+import { FormLabelProps } from "@lifesg/react-design-system/form";
 import { ControllerFieldState, ControllerRenderProps } from "react-hook-form";
 import { IYupValidationRule, TRenderRules } from "../../context-providers";
 import { IColumns } from "../frontend-engine";

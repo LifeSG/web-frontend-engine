@@ -1,10 +1,9 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IColor } from "../../../services/onemap/types";
 import { TestHelper } from "../../../utils";
 import { LocationHelper } from "../../fields/location-field/location-helper";
 import { StaticMapElement, StaticMapWrapper, staticMapDimensions } from "./static-map.styles";
-import { Breakpoint } from "@lifesg/react-design-system/theme";
-import { ThemeContext } from "styled-components";
+import { Breakpoint, parseCSSVariableValue } from "@lifesg/react-design-system/theme";
 
 const StaticMapPlaceholder = "https://assets.life.gov.sg/web-frontend-engine/img/map/static_map_placeholder.png";
 
@@ -35,8 +34,6 @@ export const StaticMap = ({
 	const isMobile = useRef(false);
 	const [mapSrc, setMapSrc] = useState<string>("");
 	const renderedCenter = useRef<[number, number]>([0, 0]);
-	const theme = useContext(ThemeContext);
-
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -57,7 +54,9 @@ export const StaticMap = ({
 
 	const reloadImage = () => {
 		if (!lat || !lng) return;
-		const newIsMobile = window.matchMedia(`(max-width: ${Breakpoint["sm-max"]({ theme })}px)`).matches;
+		const newIsMobile = window.matchMedia(
+			`(max-width: ${parseCSSVariableValue(Breakpoint["sm-max"], document.documentElement)})`
+		).matches;
 		if (
 			isMobile.current !== newIsMobile ||
 			renderedCenter.current[0] !== lat ||
