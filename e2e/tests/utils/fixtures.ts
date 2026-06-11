@@ -7,7 +7,9 @@ export const test = base.extend<{
 	story: StoryPage;
 	storyOptions: TStoryPageOptions;
 }>({
-	storyOptions: [{ component: "elements/divider", story: "default" }, { option: true }],
+	storyOptions: async () => {
+		throw new Error("storyOptions must be provided via test.use({ storyOptions: ... })");
+	},
 	story: async ({ page, storyOptions }, use) => {
 		const story = new StoryPage(page, storyOptions);
 		await use(story);
