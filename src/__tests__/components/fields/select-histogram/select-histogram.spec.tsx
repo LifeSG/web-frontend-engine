@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { FormSelectHistogramProps } from "@lifesg/react-design-system/form/types";
+import { FormSelectHistogramProps } from "@lifesg/react-design-system/form";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";

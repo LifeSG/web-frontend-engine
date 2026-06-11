@@ -1,4 +1,4 @@
-import { FormTextareaProps } from "@lifesg/react-design-system/form/types";
+import { FormTextareaProps } from "@lifesg/react-design-system/form";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 

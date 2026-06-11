@@ -1,4 +1,4 @@
-import { FormLabelAddonProps } from "@lifesg/react-design-system/form/types";
+import { FormLabelAddonProps } from "@lifesg/react-design-system/form";
 import styled from "styled-components";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize } from "../../shared";

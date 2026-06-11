@@ -1,4 +1,4 @@
-import { FormInputProps, FormMaskedInputProps } from "@lifesg/react-design-system/form/types";
+import { FormInputProps, FormMaskedInputProps } from "@lifesg/react-design-system/form";
 import * as Icons from "@lifesg/react-icons";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";

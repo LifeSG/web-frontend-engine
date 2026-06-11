@@ -9,6 +9,7 @@ import {
 	OverrideStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
+import { RecursivePartial } from "../../../utils";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 
@@ -308,7 +309,7 @@ Overrides.args = {
 				},
 			},
 		},
-	},
+	} as RecursivePartial<ITabSchema>,
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
