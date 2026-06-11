@@ -2,17 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 
-const CDN_STYLE_PATHS = [
-	"/cdn/react-design-system/v3/css/main.css",
-	"/cdn/react-design-system/v3/css/atkinson-hyperlegible-next.css",
-	"/cdn/react-design-system/v3/css/plus-jakarta-sans.css",
-	"/cdn/react-design-system/v3/css/open-sans.css",
-	"/cdn/react-design-system/v3/css/inter.css",
-	"/cdn/react-design-system/v3/css/montserrat.css",
-	"/cdn/react-design-system/v3/css/lato.css",
-	"/cdn/react-design-system/v3/css/libre-franklin.css",
-	"/cdn/react-design-system/v3/css/public-sans.css",
-];
+const CDN_STYLE_PATHS = ["/cdn/react-design-system/v3/css/main.css", "/cdn/react-design-system/v3/css/open-sans.css"];
 
 export const metadata: Metadata = {
 	title: "Frontend Engine E2E Demo",
