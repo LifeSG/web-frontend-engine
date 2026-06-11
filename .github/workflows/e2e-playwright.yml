@@ -28,13 +28,9 @@ jobs:
         run: npm ci
 
       - name: Setup E2E Environment
-        env:
-          CI: true
         run: ./scripts/e2e-setup.sh
 
       - name: Run E2E Tests
-        env:
-          CI: true
         run: playwright test
 
       - name: Upload Playwright Report
