@@ -164,7 +164,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	}
 `;
 
-export const ButtonItem = styled(Button.Default)<{ $buttonType: "cancel" | "confirm" }>`
+export const ButtonItem = styled(Button)<{ $buttonType: "cancel" | "confirm" }>`
 	width: 9.5rem;
 
 	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {

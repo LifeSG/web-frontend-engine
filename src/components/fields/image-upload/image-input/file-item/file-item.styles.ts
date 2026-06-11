@@ -1,4 +1,4 @@
-import { IconButton } from "@lifesg/react-design-system/icon-button";
+import { Button } from "@lifesg/react-design-system/button";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled, { css } from "styled-components";
 import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
@@ -18,8 +18,7 @@ export const Wrapper = styled.div<{ $isError?: boolean; $isCustomMuted?: boolean
 			  `};
 	border-radius: ${Radius.sm};
 	border-radius: ${Radius.sm};
-	background-color: ${(props) =>
-		props.$isError ? `${Colour["bg-error"](props)}` : `${Colour["bg-primary-subtlest"](props)}`};
+	background-color: ${(props) => (props.$isError ? Colour["bg-error"] : Colour["bg-primary-subtlest"])};
 	min-height: 3.5rem;
 	margin-bottom: ${Spacing["spacing-16"]};
 	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-32"]};
@@ -129,7 +128,7 @@ export const ErrorText = styled(Typography.BodySM)`
 	width: 100%;
 `;
 
-export const DeleteButton = styled(IconButton)`
+export const DeleteButton = styled(Button)`
 	padding: 0;
 	// additional 0.5 negative marginRight because the image itself has padding already
 	background-color: transparent;

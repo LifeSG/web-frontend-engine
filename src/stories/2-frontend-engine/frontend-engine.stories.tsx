@@ -376,9 +376,9 @@ export const ExternalSubmit: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={DATA} ref={ref} wrapInForm={false} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				My custom submit button
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -511,9 +511,9 @@ export const OverrideSchema: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={schema} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				Override fields
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -528,9 +528,9 @@ export const GetValues: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={DATA} ref={ref} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				Get form state
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -548,9 +548,9 @@ export const SetValue: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={DATA} ref={ref} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				Update name to Erik
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -568,9 +568,9 @@ export const CheckIsValid: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={DATA} ref={ref} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				Check form validity
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -588,17 +588,17 @@ export const TriggerValidation: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={DATA} ref={ref} />
 			<br />
-			<Button.Default styleType="secondary" onClick={() => handleClick("name")}>
+			<Button styleType="secondary" onClick={() => handleClick("name")}>
 				Validate name only
-			</Button.Default>
+			</Button>
 			<br />
-			<Button.Default styleType="secondary" onClick={() => handleClick(["name", "email"])}>
+			<Button styleType="secondary" onClick={() => handleClick(["name", "email"])}>
 				Validate name and email address only
-			</Button.Default>
+			</Button>
 			<br />
-			<Button.Default styleType="secondary" onClick={() => handleClick()}>
+			<Button styleType="secondary" onClick={() => handleClick()}>
 				Validate entire form
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -616,9 +616,9 @@ export const CheckUserIntervention: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={DATA} ref={ref} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				Check if user has edited the form
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -700,9 +700,9 @@ export const SetCustomErrors: StoryFn<IFrontendEngineProps> = () => {
 				ref={ref}
 			/>
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				Trigger API error upon click
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -753,21 +753,21 @@ export const ClearErrors: StoryFn<IFrontendEngineProps> = () => {
 				ref={ref}
 			/>
 			<br />
-			<Button.Default styleType="secondary" onClick={handleTriggerError}>
+			<Button styleType="secondary" onClick={handleTriggerError}>
 				Trigger API error upon click
-			</Button.Default>
+			</Button>
 			<br />
-			<Button.Default styleType="secondary" onClick={() => ref.current.clearErrors("field1")}>
+			<Button styleType="secondary" onClick={() => ref.current.clearErrors("field1")}>
 				Clear field 1 error
-			</Button.Default>
+			</Button>
 			<br />
-			<Button.Default styleType="secondary" onClick={() => ref.current.clearErrors(["field1", "field2"])}>
+			<Button styleType="secondary" onClick={() => ref.current.clearErrors(["field1", "field2"])}>
 				Clear field 1 and field 2 errors
-			</Button.Default>
+			</Button>
 			<br />
-			<Button.Default styleType="secondary" onClick={() => ref.current.clearErrors()}>
+			<Button styleType="secondary" onClick={() => ref.current.clearErrors()}>
 				Clear all errors
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -802,9 +802,9 @@ export const SetWarnings: StoryFn<IFrontendEngineProps> = () => {
 				ref={ref}
 			/>
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				Trigger warning upon click
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -822,9 +822,9 @@ export const Reset: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={{ ...DATA, defaultValues: { name: "Bob" } }} ref={ref} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleClick}>
+			<Button styleType="secondary" onClick={handleClick}>
 				Reset form
-			</Button.Default>
+			</Button>
 		</>
 	);
 };
@@ -906,13 +906,13 @@ export const StripUnknown: StoryFn<IFrontendEngineProps> = () => {
 		<>
 			<FrontendEngine data={json} ref={ref} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleAddUnknownValues}>
+			<Button styleType="secondary" onClick={handleAddUnknownValues}>
 				Add unknown field value to form
-			</Button.Default>
+			</Button>
 			<br />
-			<Button.Default styleType="secondary" onClick={handleGetFormState}>
+			<Button styleType="secondary" onClick={handleGetFormState}>
 				Get values
-			</Button.Default>
+			</Button>
 		</>
 	);
 };

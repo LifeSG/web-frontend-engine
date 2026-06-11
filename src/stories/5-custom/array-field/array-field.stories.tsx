@@ -512,9 +512,9 @@ const CustomErrorStory = <T,>(id: string, showSubmitButton = true) =>
 					}}
 					ref={formRef}
 				/>
-				<Button.Default onClick={handleTriggeredError} style={{ marginTop: "2rem" }}>
+				<Button onClick={handleTriggeredError} style={{ marginTop: "2rem" }}>
 					Triggered error message
-				</Button.Default>
+				</Button>
 			</>
 		);
 	}) as StoryFn<(args: T & { overrides?: RecursivePartial<T> | undefined }) => ReactElement>;

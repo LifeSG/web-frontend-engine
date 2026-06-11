@@ -349,9 +349,9 @@ const CustomErrorTemplate = () =>
 						},
 					}}
 				/>
-				<Button.Default onClick={handleSetCustomErrors} style={{ marginTop: "2rem" }}>
+				<Button onClick={handleSetCustomErrors} style={{ marginTop: "2rem" }}>
 					Set custom errors
-				</Button.Default>
+				</Button>
 			</>
 		);
 	}) as StoryFn<IFileUploadSchema>;

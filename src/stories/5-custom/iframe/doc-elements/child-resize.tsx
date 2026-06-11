@@ -30,7 +30,7 @@ export const ChildResize = () => {
 	// =========================================================================
 	return (
 		<>
-			<Button.Default onClick={handleClick}>Resize iframe</Button.Default>
+			<Button onClick={handleClick}>Resize iframe</Button>
 			<br />
 			<Typography.BodyBL>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
