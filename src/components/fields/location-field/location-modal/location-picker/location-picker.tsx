@@ -1,4 +1,4 @@
-import { Colour, useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
+import { Colour, useDesignToken, useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
 import { PopoverTrigger } from "@lifesg/react-design-system/popover";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
@@ -60,6 +60,7 @@ export const LocationPicker = ({
 	const markersRef = useRef<L.Marker[]>();
 	const legendTriggerRef = useRef<HTMLButtonElement>(null);
 	const isMobile = useMaxWidthMediaQuery("lg");
+	const iconPrimaryColor = useDesignToken(Colour["icon-primary"]);
 	const leafletConfig: L.MapOptions = {
 		minZoom: 11,
 		maxZoom: isMobile ? 20 : 19,
@@ -192,7 +193,7 @@ export const LocationPicker = ({
 					: undefined;
 			const mapPinIcon =
 				"data:image/svg+xml;base64," +
-				btoa(ReactDOMServer.renderToString(<PinFillIcon color={Colour["icon-primary"]} />));
+				btoa(ReactDOMServer.renderToString(<PinFillIcon color={iconPrimaryColor} />));
 			const marker = markerFrom(
 				target,
 				interactiveMapPinIconUrl && !target.isCurrentLocation ? interactiveMapPinIconUrl : mapPinIcon,
