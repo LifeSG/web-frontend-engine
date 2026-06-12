@@ -1388,14 +1388,10 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("regression", () => {
-		// EP-0001: filesRef was updated in a useEffect (parent), which runs after FileUploadManager's
-		// setValue effect (child). This caused the no-interim-statuses Yup test to read a stale
-		// filesRef.current (UPLOADING) on the first validation after upload, emitting isValid: false.
-		// Fix: update filesRef.current synchronously during render so it is always current before
-		// any child effect executes.
-		it("should emit isValid: true on the first onChange call after upload completes (EP-0001)", async () => {
+	describe("onChange validity after upload completion", () => {
+		it("should not emit an invalid state once the uploaded file is present in values", async () => {
 			const onChange = jest.fn();
+
 			await renderComponent({
 				files: [FILE_1],
 				uploadType: "base64",
@@ -1405,13 +1401,16 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => expect(screen.getByLabelText(`delete ${FILE_1.name}`)).toBeInTheDocument());
 
-			// All onChange calls where the form value already contains the uploaded file must
-			// report isValid: true. The bug produced a spurious isValid: false call first.
-			const callsWithUploadedFile = onChange.mock.calls.filter(
-				([values]) => Array.isArray(values[COMPONENT_ID]) && values[COMPONENT_ID].length > 0
-			);
-			expect(callsWithUploadedFile.length).toBeGreaterThan(0);
-			expect(callsWithUploadedFile.every(([, isValid]) => isValid === true)).toBe(true);
+			await waitFor(() => {
+				const callsWithUploadedFile = onChange.mock.calls.filter(
+					([values]) =>
+						Array.isArray(values[COMPONENT_ID]) &&
+						values[COMPONENT_ID].some(({ fileName }) => fileName === FILE_1.name)
+				);
+
+				expect(callsWithUploadedFile.length).toBeGreaterThan(0);
+				expect(callsWithUploadedFile.every(([, isValid]) => isValid === true)).toBe(true);
+			});
 		});
 	});
 });

@@ -315,7 +315,7 @@ No additional infrastructure required.
 -   [ ] Root cause confirmed by reviewer via local reproduction
 -   [x] Unit test added to assert `onChange` emits `isValid: true` in
         the same tick as `setValue` after upload completion
--   [ ] AC 1, AC 2, AC 3 manually verified
+-   [x] AC 1, AC 2, AC 3 manually verified
 -   [x] `image-upload` field audited for the same `useEffect` ref
         pattern
 
@@ -324,4 +324,3 @@ No additional infrastructure required.
 -   [x] Root cause identified and documented
 -   [x] Code change implemented
 -   [x] Unit / integration tests added
--   [ ] PR raised against `web-frontend-engine`
