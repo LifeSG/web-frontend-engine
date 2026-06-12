@@ -17,7 +17,9 @@ if [ "${CI:-}" = "true" ]; then
 	npm --prefix e2e/nextjs-app run start
 else
 	echo "[E2E Next App] Starting dev server"
-	npm --prefix e2e/nextjs-app run dev
+	# Docker + Next dev mode can hit HMR/runtime instability with Turbopack.
+	# Track: https://github.com/vercel/next.js/issues/36774
+	npm --prefix e2e/nextjs-app run dev:webpack
 fi
 
 popd >/dev/null
