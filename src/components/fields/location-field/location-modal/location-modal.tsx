@@ -1,5 +1,10 @@
 import { Modal } from "@lifesg/react-design-system/modal";
-import { useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
+import {
+	Breakpoint,
+	useMaxWidthMediaQuery,
+	useMediaQuery,
+	useResolvedBreakpointToken,
+} from "@lifesg/react-design-system/theme";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
@@ -58,6 +63,13 @@ const LocationModal = ({
 	// CONST, STATE, REFS
 	// =============================================================================
 	const isMobileOrTablet = useMaxWidthMediaQuery("lg");
+	const smMaxToken = useResolvedBreakpointToken(Breakpoint["sm-max"]);
+	const isMobileLandscape = useMediaQuery({
+		clauses: [
+			{ feature: "orientation", value: "landscape" },
+			{ feature: "max-height", value: smMaxToken },
+		],
+	});
 	const [panelInputMode, setPanelInputMode] = useState<TPanelInputMode>("double");
 
 	// Temporarily hold the selection
@@ -462,6 +474,7 @@ const LocationModal = ({
 					className={`${className}-modal-box`}
 					showCloseButton={false}
 					locationModalStyles={locationModalStyles}
+					data-mobile-landscape={isMobileLandscape ? "true" : undefined}
 				>
 					{hasInternetConnectivity ? (
 						<>

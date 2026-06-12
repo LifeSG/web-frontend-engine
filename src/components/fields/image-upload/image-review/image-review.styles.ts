@@ -1,4 +1,4 @@
-import { Border, Breakpoint, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
+import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -28,7 +28,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		margin: 0 ${Spacing["spacing-20"]};
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.sm}, &[data-mobile-landscape="true"] {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -64,7 +64,7 @@ export const ReviewCloseButton = styled(Button)`
 		color: ${Colour["bg-primary"]};
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.sm}, [data-mobile-landscape="true"] & {
 		height: 2.25rem;
 	}
 `;
@@ -102,7 +102,7 @@ export const ContentSection = styled.div`
 	background-color: ${Colour["bg-inverse"]};
 	overflow: hidden;
 	height: 31.25rem;
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.sm}, [data-mobile-landscape="true"] & {
 		height: 100%;
 	}
 `;
@@ -120,7 +120,7 @@ export const DrawDeleteButtonWrapper = styled.div`
 	flex-direction: column;
 	justify-content: flex-end;
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.sm}, [data-mobile-landscape="true"] & {
 		right: 1.25rem;
 	}
 `;
@@ -183,7 +183,7 @@ export const FooterSection = styled.div`
 	align-items: center;
 	margin: ${Spacing["spacing-16"]} ${Spacing["spacing-24"]};
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.sm}, [data-mobile-landscape="true"] & {
 		margin: 0 ${Spacing["spacing-20"]};
 		height: 6.5rem;
 		max-height: 6.5rem;
