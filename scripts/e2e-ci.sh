@@ -13,29 +13,29 @@ PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 # logs focused on setup actions rather than directory stack noise.
 pushd "$PROJECT_DIR" >/dev/null
 
-# In CI, we build the library first so downstream E2E runs against the
-# built artifact, which mirrors release behavior. Locally we skip the
-# build to keep iteration fast while developing tests.
-if [ "${CI:-}" = "true" ]; then
-	echo "[E2E Setup] Building FEE package (CI mode)"
-	./scripts/build.sh
-else
-	echo "[E2E Setup] Skipping build (dev mode - using source)"
-fi
+# Create production build of library
+LIB_VERSION=$(npm pkg get version --workspaces=false | tr -d \")
+echo ==============================================================================
+echo "[E2E Setup] Building v$LIB_VERSION"
+echo ==============================================================================
+./scripts/build.sh
 
 # Install dependencies for the Next.js E2E app.
+echo ==============================================================================
 echo "[E2E Setup] Installing Next app dependencies"
+echo ==============================================================================
 npm --prefix e2e/nextjs-app ci
 
-# In CI we explicitly install the freshly built dist output into the
-# Next.js app so tests validate the packaged artifact, not source files.
-if [ "${CI:-}" = "true" ]; then
-	echo "[E2E Setup] Installing built FEE package into Next app"
-	npm --prefix e2e/nextjs-app install --no-save "$PROJECT_DIR/dist"
-fi
+# Install the freshly built package
+echo ==============================================================================
+echo "[E2E Setup] Installing v$LIB_VERSION FEE package into Next app"
+echo ==============================================================================
+npm --prefix e2e/nextjs-app i "$PROJECT_DIR/dist/lifesg-web-frontend-engine-$LIB_VERSION.tgz"
 
 # Run functional tests
+echo ==============================================================================
 echo "[CI] Running Playwright"
+echo ==============================================================================
 export CI=true
 npx playwright test
 
