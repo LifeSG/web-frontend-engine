@@ -20,12 +20,6 @@ echo "[E2E Setup] Building v$LIB_VERSION"
 echo ==============================================================================
 ./scripts/build.sh
 
-# Install dependencies for the Next.js E2E app.
-echo ==============================================================================
-echo "[E2E Setup] Installing Next app dependencies"
-echo ==============================================================================
-npm --prefix e2e/nextjs-app ci
-
 # Install the freshly built package
 echo ==============================================================================
 echo "[E2E Setup] Installing v$LIB_VERSION FEE package into Next app"
