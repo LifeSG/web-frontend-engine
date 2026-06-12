@@ -1,3 +1,4 @@
+import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
 import { ChangeEvent, forwardRef, useImperativeHandle, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { FileHelper, TestHelper } from "../../../../../utils";
@@ -38,7 +39,13 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 	// =============================================================================
 	const renderHint = () => {
 		return (
-			<HintContainer id={TestHelper.generateId(id, "hint")} data-testid={TestHelper.generateId(id, "hint")}>
+			<HintContainer
+				id={TestHelper.generateId(id, "hint")}
+				data-testid={TestHelper.generateId(id, "hint")}
+				colour={Colour["border-focus-strong"]}
+				radius={Radius["sm"]}
+				thickness={Border["width-040"]}
+			>
 				<img src={UPLOAD_ICON} alt="" />
 				<HintText weight="semibold">{hint}</HintText>
 			</HintContainer>
