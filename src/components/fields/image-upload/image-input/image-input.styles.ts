@@ -1,6 +1,7 @@
-import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
+import { Colour, Font, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 import { Alert } from "@lifesg/react-design-system/alert";
 import { Button } from "@lifesg/react-design-system/button";
+import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
@@ -8,9 +9,7 @@ export interface SubtitleProps {
 	$hasDescription?: boolean;
 }
 
-export const Wrapper = styled.div`
-	border-radius: ${Radius.sm};
-	border: ${Border["width-040"]} dashed ${Colour.border};
+export const Wrapper = styled(DashedBorder)`
 	&:not(:last-child) {
 		margin-bottom: ${Spacing["spacing-32"]};
 	}
