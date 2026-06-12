@@ -1,12 +1,5 @@
+import type { NextConfig } from "next";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-// This config is authored as an ES module (`.mjs`), so Node does not provide
-// `__filename` and `__dirname` automatically. We derive them explicitly from
-// `import.meta.url` so all path calculations below remain stable regardless of
-// where the process is launched from.
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const isCI = process.env.CI === "true";
 
@@ -28,7 +21,7 @@ const frontendEngineSourceRelative = "./src/index.ts";
 // inconsistencies in E2E runs.
 const designSystemRelative = "./e2e/nextjs-app/node_modules/@lifesg/react-design-system";
 
-const nextConfig = {
+const nextConfig: NextConfig = {
 	reactStrictMode: true,
 	experimental: {
 		// Allow importing from outside the Next app directory (workspace source,
