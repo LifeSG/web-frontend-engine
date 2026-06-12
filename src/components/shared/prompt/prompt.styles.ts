@@ -40,7 +40,7 @@ export const PromptImage = styled.img`
 	margin: 0 auto ${Spacing["spacing-32"]};
 `;
 
-export const PromptButton = styled(Button.Default)<SizeProps>`
+export const PromptButton = styled(Button)<SizeProps>`
 	width: ${({ width }) => width || "100%"};
 	margin: 0 auto;
 

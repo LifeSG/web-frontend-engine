@@ -1,4 +1,4 @@
-import { FormLabelAddonProps } from "@lifesg/react-design-system/form/types";
+import { FormLabelAddonProps } from "@lifesg/react-design-system/form";
 import { TBlockElementSchema, TInlineElementSchema } from "../../elements/types";
 import { TWrapperSchema } from "../../elements/wrapper/types";
 

@@ -1,4 +1,4 @@
-import { PopoverInlineProps } from "@lifesg/react-design-system/popover-v2";
+import { PopoverInlineProps } from "@lifesg/react-design-system/popover";
 import * as Icons from "@lifesg/react-icons";
 import { ITypographySchema } from "../typography";
 import { IBaseElementSchema, TBlockElementSchema, TInlineElementSchema } from "../types";

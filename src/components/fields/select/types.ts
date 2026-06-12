@@ -1,4 +1,4 @@
-import { InputSelectProps } from "@lifesg/react-design-system/input-select/types";
+import { InputSelectProps } from "@lifesg/react-design-system/input-select";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 

@@ -183,7 +183,7 @@ describe("frontend-engine", () => {
 					return (
 						<>
 							<FrontendEngine data={schema} onChange={onChange} />
-							<Button.Default onClick={handleClick}>Update schema</Button.Default>
+							<Button onClick={handleClick}>Update schema</Button>
 						</>
 					);
 				};
@@ -320,7 +320,7 @@ describe("frontend-engine", () => {
 					return (
 						<>
 							<FrontendEngine data={schema} onValueChange={onValueChange} />
-							<Button.Default onClick={handleClick}>Update schema</Button.Default>
+							<Button onClick={handleClick}>Update schema</Button>
 						</>
 					);
 				};
@@ -349,7 +349,7 @@ describe("frontend-engine", () => {
 					return (
 						<>
 							<FrontendEngine data={schema} onValueChange={onValueChange} />
-							<Button.Default onClick={handleClick}>Update schema</Button.Default>
+							<Button onClick={handleClick}>Update schema</Button>
 						</>
 					);
 				};
@@ -993,7 +993,7 @@ describe("frontend-engine", () => {
 			return (
 				<>
 					<FrontendEngine data={schema} onSubmit={submitFn} />
-					<Button.Default onClick={handleClick}>Update schema</Button.Default>
+					<Button onClick={handleClick}>Update schema</Button>
 				</>
 			);
 		};
@@ -1247,13 +1247,9 @@ describe("frontend-engine", () => {
 			return (
 				<>
 					<FrontendEngine ref={ref} data={JSON_SCHEMA} />
-					<Button.Default onClick={handleAddFieldEventListener}>Add field event listener</Button.Default>
-					<Button.Default onClick={handleDispatchFieldEventListener}>
-						Dispatch field event listener
-					</Button.Default>
-					<Button.Default onClick={handleRemoveFieldEventListener}>
-						Remove field event listener
-					</Button.Default>
+					<Button onClick={handleAddFieldEventListener}>Add field event listener</Button>
+					<Button onClick={handleDispatchFieldEventListener}>Dispatch field event listener</Button>
+					<Button onClick={handleRemoveFieldEventListener}>Remove field event listener</Button>
 				</>
 			);
 		};
@@ -1373,7 +1369,7 @@ describe("frontend-engine", () => {
 				return (
 					<>
 						<FrontendEngine data={schema} />
-						<Button.Default onClick={handleClick}>Override schema</Button.Default>
+						<Button onClick={handleClick}>Override schema</Button>
 					</>
 				);
 			};

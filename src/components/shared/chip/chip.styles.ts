@@ -26,10 +26,10 @@ export const ChipButton = styled.button<{ $isActive?: boolean }>`
 	${(props) => {
 		if (props.$isActive) {
 			return css`
-				background-color: ${Colour["bg-inverse-subtlest"](props)};
+				background-color: ${Colour["bg-inverse-subtlest"]};
 
 				${ChipText} {
-					color: ${Colour["text-inverse"](props)};
+					color: ${Colour["text-inverse"]};
 				}
 			`;
 		}

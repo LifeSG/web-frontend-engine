@@ -1,5 +1,6 @@
 import { createRef, useContext, useEffect, useState } from "react";
 import * as Icons from "@lifesg/react-icons";
+import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
 import { TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ERROR_MESSAGES, Sanitize } from "../../../shared";
@@ -161,6 +162,7 @@ export const ImageInput = (props: IImageInputProps) => {
 			<UploadWrapper>
 				<AddButton
 					type="button"
+					sizeType="small"
 					onClick={handleClick}
 					styleType="secondary"
 					id={TestHelper.generateId(id, "file-input-add-button")}
@@ -215,6 +217,9 @@ export const ImageInput = (props: IImageInputProps) => {
 			className={className}
 			aria-invalid={!!errorMessage}
 			aria-describedby={!!errorMessage && TestHelper.generateId(id, "error")}
+			colour={Colour.border}
+			radius={Radius.sm}
+			thickness={Border["width-040"]}
 		>
 			<DragUpload
 				id={`${id}-drag-upload`}

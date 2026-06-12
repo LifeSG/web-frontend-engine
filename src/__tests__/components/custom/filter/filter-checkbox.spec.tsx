@@ -165,7 +165,7 @@ describe(REFERENCE_KEY, () => {
 						}}
 						onSubmit={SUBMIT_FN}
 					/>
-					<Button.Default
+					<Button
 						onClick={() =>
 							setOptions([
 								{ label: "A", value: "Apple" },
@@ -176,7 +176,7 @@ describe(REFERENCE_KEY, () => {
 						}
 					>
 						Update options
-					</Button.Default>
+					</Button>
 				</>
 			);
 		};

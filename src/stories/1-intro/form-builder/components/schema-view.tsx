@@ -80,7 +80,7 @@ export const SchemaView = ({ schema, onChange, formBuilderRef }: IProps) => {
 					{hasError ? (
 						<AlertWrapper type="error" showIcon>
 							Unable to save changes because there’s a syntax error. Amend the error or{" "}
-							<RefreshButton type="button" styleType="link" onClick={handleReset}>
+							<RefreshButton type="button" sizeType="small" styleType="link" onClick={handleReset}>
 								refresh to sync with the form builder.
 							</RefreshButton>
 						</AlertWrapper>

@@ -1,10 +1,11 @@
+import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
 import { PlusIcon } from "@lifesg/react-icons/plus";
 import { ChangeEvent, useRef } from "react";
-import { useTheme } from "styled-components";
 import { TestHelper } from "../../../../../utils";
 import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../../types";
 import {
 	AddImageButton,
+	AddImageButtonWrapper,
 	BorderOverlay,
 	HiddenFileSelect,
 	LoadingBox,
@@ -122,16 +123,22 @@ export const ImageThumbnails = (props: IProps) => {
 					multiple={multiple}
 					value="" // controlling the value to allow for the same file to be uploaded (by triggering on change)
 				/>
-				<AddImageButton
-					type="button"
-					id={TestHelper.generateId(id, "add-image-button")}
-					data-testid={TestHelper.generateId(id, "add-image-button")}
-					aria-label="add image"
-					styleType="secondary"
-					onClick={handleButtonClick}
+				<AddImageButtonWrapper
+					colour={Colour["border-primary"]}
+					radius={Radius.sm}
+					thickness={Border["width-040"]}
 				>
-					<PlusIcon />
-				</AddImageButton>
+					<AddImageButton
+						type="button"
+						id={TestHelper.generateId(id, "add-image-button")}
+						data-testid={TestHelper.generateId(id, "add-image-button")}
+						aria-label="add image"
+						styleType="secondary"
+						onClick={handleButtonClick}
+					>
+						<PlusIcon />
+					</AddImageButton>
+				</AddImageButtonWrapper>
 			</>
 		);
 

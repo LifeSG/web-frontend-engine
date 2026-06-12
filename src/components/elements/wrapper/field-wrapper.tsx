@@ -1,5 +1,5 @@
 import { Colour, Font } from "@lifesg/react-design-system/theme";
-import { FormLabelProps } from "@lifesg/react-design-system/form/types";
+import { FormLabelProps } from "@lifesg/react-design-system/form";
 import isArray from "lodash/isArray";
 import isBoolean from "lodash/isBoolean";
 import isNumber from "lodash/isNumber";

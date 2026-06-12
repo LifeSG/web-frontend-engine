@@ -1,8 +1,12 @@
 import { Modal } from "@lifesg/react-design-system/modal";
-import { Breakpoint } from "@lifesg/react-design-system/theme";
+import {
+	Breakpoint,
+	useMaxWidthMediaQuery,
+	useMediaQuery,
+	useResolvedBreakpointToken,
+} from "@lifesg/react-design-system/theme";
 import { isEmpty } from "lodash";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "styled-components";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
@@ -58,6 +62,14 @@ const LocationModal = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const isMobileOrTablet = useMaxWidthMediaQuery("lg");
+	const smMaxToken = useResolvedBreakpointToken(Breakpoint["sm-max"]);
+	const isMobileLandscape = useMediaQuery({
+		clauses: [
+			{ feature: "orientation", value: "landscape" },
+			{ feature: "max-height", value: smMaxToken },
+		],
+	});
 	const [panelInputMode, setPanelInputMode] = useState<TPanelInputMode>("double");
 
 	// Temporarily hold the selection
@@ -84,8 +96,6 @@ const LocationModal = ({
 
 	const isMounted = useRef(true);
 	const shouldCallGetSelectablePins = useRef(true);
-
-	const theme = useContext(ThemeContext);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -295,26 +305,20 @@ const LocationModal = ({
 	]);
 
 	useEffect(() => {
-		if (!window) return;
+		setPanelInputMode(isMobileOrTablet ? "map" : "double");
+	}, [isMobileOrTablet]);
 
-		const mql = matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`);
-		setPanelInputMode(mql.matches ? "map" : "double");
-
+	useEffect(() => {
 		const handleHasInternetConnectivity = () => setHasInternetConnectivity(true);
 		const handleNoInternetConnectivity = () => setHasInternetConnectivity(false);
 		// TODO handle when there is querystring
-		const handleResize = (e: MediaQueryListEvent) => {
-			setPanelInputMode(e.matches ? "map" : "double");
-		};
 
 		window.addEventListener("online", handleHasInternetConnectivity);
 		window.addEventListener("offline", handleNoInternetConnectivity);
-		mql.addEventListener("change", handleResize);
 
 		return () => {
 			window.removeEventListener("online", handleHasInternetConnectivity);
 			window.removeEventListener("offline", handleNoInternetConnectivity);
-			mql.removeEventListener("change", handleResize);
 		};
 	}, []);
 
@@ -470,6 +474,7 @@ const LocationModal = ({
 					className={`${className}-modal-box`}
 					showCloseButton={false}
 					locationModalStyles={locationModalStyles}
+					data-mobile-landscape={isMobileLandscape ? "true" : undefined}
 				>
 					{hasInternetConnectivity ? (
 						<>

@@ -1,6 +1,7 @@
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { isEmpty } from "lodash";
 import { ReactElement, useEffect, useRef, useState } from "react";
+import { Breakpoint, useMediaQuery, useResolvedBreakpointToken } from "@lifesg/react-design-system/theme";
 import { useRecaptcha } from "../../../../../context-providers/recaptcha";
 import { OneMapService } from "../../../../../services";
 import { OneMapBoolean, OneMapError } from "../../../../../services/onemap/types";
@@ -83,6 +84,13 @@ export const LocationSearch = ({
 	// =============================================================================
 	const { addFieldEventListener, removeFieldEventListener, dispatchFieldEvent } = useFieldEvent();
 	const { isRecaptchaReady, getToken } = useRecaptcha();
+	const smMaxToken = useResolvedBreakpointToken(Breakpoint["sm-max"]);
+	const isMobileLandscape = useMediaQuery({
+		clauses: [
+			{ feature: "orientation", value: "landscape" },
+			{ feature: "max-height", value: smMaxToken },
+		],
+	});
 	const reverseGeocodeUrl = mapApi?.reverseGeocode;
 	const convertLatLngToXYUrl = mapApi?.convertLatLngToXY;
 	const searchUrl = mapApi?.search;
@@ -708,6 +716,7 @@ export const LocationSearch = ({
 				data-testid={TestHelper.generateId(id, "location-search")}
 				className={`${className}-location-search`}
 				$panelInputMode={panelInputMode}
+				data-mobile-landscape={isMobileLandscape ? "true" : undefined}
 			>
 				<SearchBarIconButton
 					onClick={handleClickCancel}

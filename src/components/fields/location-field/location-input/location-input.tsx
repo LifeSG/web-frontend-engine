@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { FormInputGroupProps } from "@lifesg/react-design-system/form/types";
+import { FormInputGroupProps } from "@lifesg/react-design-system/form";
 import { TestHelper } from "../../../../utils";
 import { DummyLocationField } from "./dummy-location-field";
 
