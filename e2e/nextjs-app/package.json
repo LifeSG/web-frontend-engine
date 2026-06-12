@@ -1,0 +1,28 @@
+{
+	"name": "web-frontend-engine-e2e-app",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"dev:webpack": "next dev --webpack",
+		"dev:turbo": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start"
+	},
+	"dependencies": {
+		"@floating-ui/react": "^0.26.23",
+		"@lifesg/react-design-system": "3.4.0-canary.5",
+		"@lifesg/react-icons": "^1.9.0",
+		"@lifesg/web-frontend-engine": "file:../../dist/lifesg-web-frontend-engine-2.2.4.tgz",
+		"next": "16.2.7",
+		"react": "19.2.3",
+		"react-dom": "19.2.3",
+		"styled-components": "^6.4.1"
+	},
+	"devDependencies": {
+		"@types/node": "^20",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"typescript": "^5"
+	}
+}
