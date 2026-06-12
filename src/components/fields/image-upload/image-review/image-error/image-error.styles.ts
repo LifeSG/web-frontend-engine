@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Button } from "@lifesg/react-design-system/button";
-import { Breakpoint, Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
+import { Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 
 export const Wrapper = styled.div`
@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
 	padding: ${Spacing["spacing-40"]};
 	text-align: center;
 
-	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	[data-mobile-landscape="true"] & {
 		flex-direction: row;
 	}
 `;
@@ -28,7 +28,7 @@ export const ErrorIcon = styled.img`
 	height: auto;
 	margin-bottom: ${Spacing["spacing-32"]};
 
-	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	[data-mobile-landscape="true"] & {
 		margin: 0 ${Spacing["spacing-32"]} 0 0;
 	}
 `;
@@ -60,7 +60,7 @@ export const OkButton = styled(Button)`
 	max-width: 16rem;
 	margin-top: ${Spacing["spacing-32"]};
 
-	@media (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	[data-mobile-landscape="true"] & {
 		margin-top: ${Spacing["spacing-8"]};
 	}
 `;
