@@ -1,4 +1,5 @@
 import { Modal } from "@lifesg/react-design-system/modal";
+import { Breakpoint, useMediaQuery, useResolvedBreakpointToken } from "@lifesg/react-design-system/theme";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
@@ -81,6 +82,13 @@ export const ImageReview = (props: IProps) => {
 	const { images, setImages } = useContext(ImageContext);
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	const previousShow = usePrevious(show);
+	const smMaxToken = useResolvedBreakpointToken(Breakpoint["sm-max"]);
+	const isMobileLandscape = useMediaQuery({
+		clauses: [
+			{ feature: "orientation", value: "landscape" },
+			{ feature: "max-height", value: smMaxToken },
+		],
+	});
 
 	// review image
 	const [activeFileIndex, setActiveFileIndex] = useState(images.length - 1);
@@ -466,6 +474,7 @@ export const ImageReview = (props: IProps) => {
 				className={className ? `${className}-review-modal-box` : undefined}
 				imageReviewModalStyles={imageReviewModalStyles}
 				showCloseButton={false}
+				data-mobile-landscape={isMobileLandscape ? "true" : undefined}
 			>
 				{show ? (
 					<>
