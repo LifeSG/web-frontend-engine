@@ -54,6 +54,15 @@ const FileUploadManager = (props: IProps) => {
 			setFiles(value);
 		}
 	};
+	const isUploadedWithHeldProgress = (file: IFile) =>
+		file.status === EFileStatus.UPLOADED &&
+		typeof file.fileItem?.progress === "number" &&
+		file.fileItem.progress < 1;
+
+	const heldProgressFileIds = files
+		.filter(isUploadedWithHeldProgress)
+		.map((file) => file.fileItem?.id)
+		.join(",");
 
 	// =============================================================================
 	// EFFECTS
@@ -121,6 +130,24 @@ const FileUploadManager = (props: IProps) => {
 		}, // eslint-disable-next-line react-hooks/exhaustive-deps
 		[files.map(({ fileItem, status }) => `${fileItem?.id}-${status}`).join(",")]
 	);
+
+	// release held progress to 1 — progress is UI-only and does not affect form validity
+	useEffect(() => {
+		if (!heldProgressFileIds) return;
+
+		setFilesIfMounted((prev) =>
+			prev.map((file) =>
+				isUploadedWithHeldProgress(file)
+					? {
+							...file,
+							fileItem: { ...file.fileItem!, progress: 1 },
+					  }
+					: file
+			)
+		);
+		// only re-runs when the set of UPLOADED files with progress < 1 actually changes
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [heldProgressFileIds]);
 
 	// for reset
 	useEffect(() => {
@@ -371,7 +398,7 @@ const FileUploadManager = (props: IProps) => {
 							...prev[index],
 							fileItem: {
 								...prev[index].fileItem,
-								progress: loaded / total,
+								progress: Math.min(loaded / total, 0.99),
 							},
 						};
 
@@ -388,7 +415,7 @@ const FileUploadManager = (props: IProps) => {
 					...prev[index],
 					fileItem: {
 						...prev[index].fileItem,
-						progress: 1,
+						progress: 0.99,
 						thumbnailImageDataUrl,
 					},
 					fileUrl: response?.["data"]?.["fileUrl"],
