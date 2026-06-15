@@ -23,6 +23,9 @@ const designSystemRelative = "./e2e/nextjs-app/node_modules/@lifesg/react-design
 
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
+	// E2E browser runs in Docker and reaches the app via host.docker.internal.
+	// Allow this dev origin so HMR websocket upgrades are not rejected.
+	allowedDevOrigins: ["host.docker.internal"],
 	experimental: {
 		// Allow importing from outside the Next app directory (workspace source,
 		// dist artifact installs, and other monorepo-adjacent paths).
