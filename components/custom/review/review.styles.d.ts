@@ -1,0 +1,12 @@
+export declare const CustomUneditableSection: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("@lifesg/react-design-system").UneditableSectionProps, never> & Partial<Pick<import("@lifesg/react-design-system").UneditableSectionProps, never>>> & string & Omit<(({ items, title, description, topSection, bottomSection, children, background, stretch, fullWidth, onMask, onUnmask, onTryAgain, ...otherProps }: import("@lifesg/react-design-system").UneditableSectionProps) => import("react/jsx-runtime").JSX.Element) & {
+    ItemSection: (props: import("@lifesg/react-design-system").UneditableSectionItemSectionProps & import("react").RefAttributes<HTMLUListElement>) => React.ReactElement | null;
+    Item: ({ label, value, displayWidth, maskState, maskLoadingState, maskChar, maskRange, unmaskRange, maskRegex, disableMaskUnmask, alert, maskTransformer, onMask, onUnmask, onTryAgain, fullWidth, }: import("@lifesg/react-design-system/uneditable-section/section-item").UneditableSectionItemComponentProps) => import("react/jsx-runtime").JSX.Element;
+}, keyof import("react").Component<any, {}, any>>;
+interface IBoxUneditableSectionProps {
+    $rowGap?: string | undefined;
+}
+export declare const BoxUneditableSection: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("styled-components").FastOmit<import("@lifesg/react-design-system").UneditableSectionProps, "$rowGap"> & IBoxUneditableSectionProps, never> & Partial<Pick<import("styled-components").FastOmit<import("@lifesg/react-design-system").UneditableSectionProps, "$rowGap"> & IBoxUneditableSectionProps, never>>> & string & Omit<(({ items, title, description, topSection, bottomSection, children, background, stretch, fullWidth, onMask, onUnmask, onTryAgain, ...otherProps }: import("@lifesg/react-design-system").UneditableSectionProps) => import("react/jsx-runtime").JSX.Element) & {
+    ItemSection: (props: import("@lifesg/react-design-system").UneditableSectionItemSectionProps & import("react").RefAttributes<HTMLUListElement>) => React.ReactElement | null;
+    Item: ({ label, value, displayWidth, maskState, maskLoadingState, maskChar, maskRange, unmaskRange, maskRegex, disableMaskUnmask, alert, maskTransformer, onMask, onUnmask, onTryAgain, fullWidth, }: import("@lifesg/react-design-system/uneditable-section/section-item").UneditableSectionItemComponentProps) => import("react/jsx-runtime").JSX.Element;
+}, keyof import("react").Component<any, {}, any>>;
+export {};
