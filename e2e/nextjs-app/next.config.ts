@@ -23,6 +23,11 @@ const designSystemRelative = "./e2e/nextjs-app/node_modules/@lifesg/react-design
 
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
+	typescript: {
+		// CI must use dependency resolution from node_modules instead of local
+		// source aliases so E2E validates the published package behavior.
+		tsconfigPath: isCI ? "tsconfig.ci.json" : "tsconfig.json",
+	},
 	// E2E browser runs in Docker and reaches the app via host.docker.internal.
 	// Allow this dev origin so HMR websocket upgrades are not rejected.
 	allowedDevOrigins: ["host.docker.internal"],
