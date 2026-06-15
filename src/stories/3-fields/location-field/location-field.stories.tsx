@@ -16,16 +16,16 @@ import {
 
 const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
 
-const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
-const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
-const search = "https://api.dev.lifesg.io/onemap/search";
+const reverseGeocode = "https://api.dev.life.gov.sg/onemap/revgeocode";
+const convertLatLngToXY = "https://api.dev.life.gov.sg/onemap/4326to3414";
+const search = "https://api.dev.life.gov.sg/onemap/search";
 
 const defaultMapApi = {
 	reverseGeocode,
 	convertLatLngToXY,
 	search,
 	headers: {
-		"x-client-app": "LifeSG",
+		"x-client-app": "LIFESG",
 	},
 };
 
