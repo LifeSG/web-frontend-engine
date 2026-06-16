@@ -1,4 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -183,7 +184,10 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	return (
 		<>
 			<Form.CustomField label={formattedLabel} errorMessage={error?.message}>
-				<ChipContainer data-testid={TestHelper.generateId(id, "chips")} $showTextarea={showTextarea}>
+				<ChipContainer
+					data-testid={TestHelper.generateId(id, "chips")}
+					className={clsx(showTextarea && "chipContainerShowTextarea")}
+				>
 					{renderChips()}
 					{renderTextareaChip()}
 				</ChipContainer>
