@@ -103,7 +103,6 @@ export const HiddenFileSelect = styled.input`
 export const AddImageButtonWrapper = styled(DashedBorder)`
 	width: 3rem;
 	height: 3rem;
-	padding: 0;
 `;
 
 export const AddImageButton = styled(Button)`
@@ -115,7 +114,7 @@ export const AddImageButton = styled(Button)`
 	background: #fff;
 	border: none;
 
-	> svg {
+	> span > svg {
 		color: ${Colour["icon-primary"]};
 		stroke: ${Colour["icon-primary"]};
 		stroke-width: 1;

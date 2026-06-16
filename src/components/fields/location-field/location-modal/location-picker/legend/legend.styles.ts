@@ -48,12 +48,19 @@ export const LegendIcon = styled.img`
 
 export const CloseButton = styled(Button)`
 	padding: 0;
+	min-width: unset;
 	background-color: transparent;
 
 	height: ${Spacing["spacing-20"]};
 	width: ${Spacing["spacing-20"]};
 
-	> svg {
-		color: ${Colour["icon"]};
+	> span {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		> svg {
+			color: ${Colour["icon"]};
+		}
 	}
 `;

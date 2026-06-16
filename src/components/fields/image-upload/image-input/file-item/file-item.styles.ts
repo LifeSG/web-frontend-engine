@@ -130,10 +130,18 @@ export const ErrorText = styled(Typography.BodySM)`
 
 export const DeleteButton = styled(Button)`
 	padding: 0;
+	min-width: unset;
+	width: 3rem;
+	height: 3rem;
 	// additional 0.5 negative marginRight because the image itself has padding already
 	background-color: transparent;
 	outline-style: none;
 	color: ${Colour["text-subtler"]};
+
+	> span {
+		display: flex;
+		align-items: center;
+	}
 
 	svg {
 		height: 1.875rem;
