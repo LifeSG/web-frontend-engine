@@ -41,7 +41,7 @@ export const SearchBarContainer = styled.div<{ $hasScrolled?: boolean }>`
 		border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour["border-focus"]};
 	}
 
-	${MediaQuery.MaxWidth.lg}, [data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		margin: ${Spacing["spacing-12"]} 0 0;
 	}
 `;
@@ -92,7 +92,7 @@ export const SearchBarModalCross = styled(CrossIcon)`
 	font-size: 1.5rem;
 	color: ${Colour["icon-primary"]};
 
-	${MediaQuery.MaxWidth.lg}, [data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		display: block;
 		margin: -${Spacing["spacing-8"]} 0 0 -${Spacing["spacing-8"]};
 	}
@@ -108,7 +108,7 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	flex: 1;
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 
-	${MediaQuery.MaxWidth.lg}, [data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		display: ${({ $panelInputMode }) => ($panelInputMode !== "map" ? `block` : `none`)};
 		border-bottom: 0;
 	}
@@ -154,7 +154,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	gap: ${Spacing["spacing-16"]};
 	padding-top: ${Spacing["spacing-16"]};
 
-	${MediaQuery.MaxWidth.lg}, [data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		display: ${({ $panelInputMode }) => ($panelInputMode === "map" ? `block` : `none`)};
 		position: absolute;
 		left: 0;
@@ -167,7 +167,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 export const ButtonItem = styled(Button)<{ $buttonType: "cancel" | "confirm" }>`
 	width: 9.5rem;
 
-	${MediaQuery.MaxWidth.lg}, [data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		${({ $buttonType }) => $buttonType === "cancel" && `display: none`}
 		${({ $buttonType }) => $buttonType === "confirm" && `width: 100%`}
 	}

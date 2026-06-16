@@ -716,7 +716,7 @@ export const LocationSearch = ({
 				data-testid={TestHelper.generateId(id, "location-search")}
 				className={`${className}-location-search`}
 				$panelInputMode={panelInputMode}
-				data-mobile-landscape={isMobileLandscape ? "true" : undefined}
+				data-mobile-landscape={!!isMobileLandscape}
 			>
 				<SearchBarIconButton
 					onClick={handleClickCancel}
