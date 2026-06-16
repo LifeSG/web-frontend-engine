@@ -10,7 +10,7 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { FieldWrapper } from "../../elements/wrapper/field-wrapper";
 import { Chip, ERROR_MESSAGES, Warning } from "../../shared";
 import { ITextareaSchema, Textarea } from "../textarea";
-import { ChipContainer } from "./chips.styles";
+import * as styles from "./chips.styles";
 import { IChipsSchema } from "./types";
 
 export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
@@ -184,13 +184,13 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	return (
 		<>
 			<Form.CustomField label={formattedLabel} errorMessage={error?.message}>
-				<ChipContainer
+				<div
 					data-testid={TestHelper.generateId(id, "chips")}
-					className={clsx(showTextarea && "chipContainerShowTextarea")}
+					className={clsx(styles.chipContainer, showTextarea && styles.chipContainerShowTextarea)}
 				>
 					{renderChips()}
 					{renderTextareaChip()}
-				</ChipContainer>
+				</div>
 				{renderTextarea()}
 			</Form.CustomField>
 			<Warning id={id} message={warning} />
