@@ -474,7 +474,7 @@ const LocationModal = ({
 					className={`${className}-modal-box`}
 					showCloseButton={false}
 					locationModalStyles={locationModalStyles}
-					data-mobile-landscape={isMobileLandscape ? "true" : undefined}
+					data-mobile-landscape={!!isMobileLandscape}
 				>
 					{hasInternetConnectivity ? (
 						<>

@@ -44,7 +44,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 export const StyledLocationPicker = styled(LocationPicker)<ISinglePanelStyle>`
 	width: 48.89%;
 
-	${MediaQuery.MaxWidth.lg}, [data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.lg}, ${ModalBox}[data-mobile-landscape="true"] & {
 		/* Keep map mounted but control visibility to prevent coordinate corruption */
 		display: block;
 		visibility: ${({ panelInputMode }) => (panelInputMode !== "map" ? "hidden" : "visible")};
