@@ -12,8 +12,9 @@ const workspaceRoot = path.resolve(__dirname, "../..");
 // Local-only alias target for the FEE package:
 // when not running in CI, importing `@lifesg/web-frontend-engine` resolves to
 // repository source for faster feedback during E2E iteration.
-// In CI this alias is intentionally disabled so tests use the built package.
+// In CI this alias is redirected to the installed package entry.
 const frontendEngineSourceRelative = "./src/index.ts";
+const frontendEnginePackageEntryRelative = "./e2e/nextjs-app/node_modules/@lifesg/web-frontend-engine/index.js";
 
 // Force design-system resolution through the Next app's own node_modules path.
 // This helps avoid duplicate package instances when the workspace root also
@@ -42,8 +43,8 @@ const nextConfig: NextConfig = {
 		root: workspaceRoot,
 		resolveAlias: {
 			// Local: use source alias for rapid iteration.
-			// CI: remove this alias so imports resolve to installed package output.
-			...(isCI ? {} : { "@lifesg/web-frontend-engine": frontendEngineSourceRelative }),
+			// CI: force resolution to installed package output.
+			"@lifesg/web-frontend-engine": isCI ? frontendEnginePackageEntryRelative : frontendEngineSourceRelative,
 			// Always pin design-system resolution to the app dependency tree.
 			"@lifesg/react-design-system": designSystemRelative,
 		},
