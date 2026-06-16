@@ -42,6 +42,8 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "location-field";
 const LABEL = "Location field";
+const BREAKPOINT_LG_MAX = 1440;
+const BREAKPOINT_SM_MAX = 480;
 const LEGEND_ITEMS = [
 	{ id: "lift-fault", label: "Lift fault", icon: "/img/lift.png" },
 	{ id: "renovation", label: "Renovation", icon: "/img/reno.png" },
@@ -436,7 +438,7 @@ describe("location-input-group", () => {
 
 		viewport.set({
 			width,
-			height: 1440,
+			height: BREAKPOINT_LG_MAX,
 		});
 	};
 
@@ -453,10 +455,10 @@ describe("location-input-group", () => {
 		fetchLocationListSpy = jest.spyOn(LocationHelper, "fetchLocationList");
 
 		viewport = mockViewport({
-			width: 1440,
-			height: 1440,
+			width: BREAKPOINT_LG_MAX,
+			height: BREAKPOINT_LG_MAX,
 		});
-		setWindowAndViewPort(1440);
+		setWindowAndViewPort(BREAKPOINT_LG_MAX);
 	});
 
 	afterEach(() => {
@@ -764,7 +766,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should show confirm location prompt when confirm location", async () => {
-				fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+				fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 					onSuccess(mock1PageFetchAddressResponse);
 				});
 
@@ -1047,7 +1049,7 @@ describe("location-input-group", () => {
 
 				describe("when only lat lng", () => {
 					beforeEach(async () => {
-						fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+						fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 							onSuccess(mock1PageFetchAddressResponse);
 						});
 						fetchSingleLocationByLatLngSpy.mockImplementation(
@@ -1226,12 +1228,12 @@ describe("location-input-group", () => {
 					describe("modal controls", () => {
 						describe("for tablet and below", () => {
 							mockViewportForTestGroup({
-								width: 480,
-								height: 480,
+								width: BREAKPOINT_SM_MAX,
+								height: BREAKPOINT_SM_MAX,
 							});
 
 							it("should allow user to close the location modal when in map mode", async () => {
-								setWindowAndViewPort(480);
+								setWindowAndViewPort(BREAKPOINT_SM_MAX);
 								renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
@@ -1258,7 +1260,7 @@ describe("location-input-group", () => {
 							});
 
 							it("should allow user to close the modal when in search mode", async () => {
-								setWindowAndViewPort(480);
+								setWindowAndViewPort(BREAKPOINT_SM_MAX);
 								renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
@@ -1278,7 +1280,7 @@ describe("location-input-group", () => {
 									expect(getLocationSearchResults(true, "map")).toBeInTheDocument();
 								});
 
-								fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 									onSuccess(mock1PageFetchAddressResponse);
 								});
 
@@ -1302,7 +1304,7 @@ describe("location-input-group", () => {
 
 						describe("for desktop", () => {
 							it("should allow user to cancel", async () => {
-								setWindowAndViewPort(1441);
+								setWindowAndViewPort(BREAKPOINT_LG_MAX + 1);
 								renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
@@ -1370,7 +1372,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should automatically search as user types", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mockEmptyFetchAddressResponse);
 							});
 
@@ -1382,7 +1384,7 @@ describe("location-input-group", () => {
 								expect(getLocationSearchResults(true)).toHaveTextContent("No results found");
 							});
 
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1396,7 +1398,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to clear query string", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1417,7 +1419,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to select result", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1443,7 +1445,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to scroll to see more results", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1472,7 +1474,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should close location modal when confirm", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1508,7 +1510,7 @@ describe("location-input-group", () => {
 
 					describe("when using location search in mobile", () => {
 						beforeEach(async () => {
-							setWindowAndViewPort(480);
+							setWindowAndViewPort(BREAKPOINT_SM_MAX);
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});
@@ -1526,7 +1528,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should switch to map mode when result is selected", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1550,7 +1552,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should close location modal when confirm", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1779,7 +1781,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should not populate search bar input ", async () => {
-				fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+				fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 					onSuccess(mock1PageFetchAddressResponse);
 				});
 				reverseGeocodeSpy.mockImplementation(() => mockReverseGeoCodeResponse);
@@ -1824,7 +1826,7 @@ describe("location-input-group", () => {
 			${"lat lng missing"} | ${{ address: "Fusionopolis View" }}
 			${"lng missing"}     | ${{ lat: 1 }}
 			${"lat missing"}     | ${{ lng: 1 }}
-		`("$name", (name, value) => {
+		`("$name", (_name, value) => {
 			it("should validate if required", async () => {
 				renderComponent({
 					validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
@@ -1933,7 +1935,7 @@ describe("location-input-group", () => {
 
 		beforeEach(() => {
 			getCurrentLocationSpy.mockRejectedValue({ code: 1 });
-			fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+			fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 				onSuccess(mock1PageFetchAddressResponse);
 			});
 			formIsDirty = undefined;
@@ -2047,7 +2049,7 @@ describe("location-input-group", () => {
 
 	describe("search results list title", () => {
 		beforeEach(async () => {
-			fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+			fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 				onSuccess(mock1PageFetchAddressResponse);
 			});
 			fetchSingleLocationByLatLngSpy.mockImplementation(
@@ -2115,7 +2117,7 @@ describe("location-input-group", () => {
 					},
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
-				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+				eventListener: (formRef: IFrontendEngineRef) => (_e) => {
 					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.DISMISS_LOCATION_MODAL, COMPONENT_ID);
 				},
 			});
@@ -2145,7 +2147,7 @@ describe("location-input-group", () => {
 					},
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
-				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+				eventListener: (formRef: IFrontendEngineRef) => (_e) => {
 					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
 				},
 			});
