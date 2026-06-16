@@ -17,6 +17,28 @@ This directory contains end-to-end assets split by responsibility:
 ## Test Patterns
 
 -   Use `forComponent(...)` from `tests/utils/fixtures` to bind one component path and set stories per block.
+
+    ```tsx
+    import { expect, forComponent, test } from "../../../utils/fixtures";
+
+    const withStory = forComponent("component-type/component");
+
+    test.describe("Component", () => {
+    	test.describe(() => {
+    		test.use({
+    			storyOptions: {
+    				...withStory("default"),
+    			},
+    		});
+
+    		test("Default", async ({ story }) => {
+    			await story.goto();
+    			await story.snapshot("default");
+    		});
+    	});
+    });
+    ```
+
 -   Use a file-local subclass of `StoryPage` when you need `story.locators` ergonomics.
 
 ## Known Issues
