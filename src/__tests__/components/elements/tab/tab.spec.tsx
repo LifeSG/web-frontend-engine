@@ -3,11 +3,11 @@ import { ITabItemSchema, ITabSchema } from "../../../../components/elements";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	FRONTEND_ENGINE_ID,
+	FrontendEngineWithEventListener,
 	TOverrideField,
 	getField,
 	getSubmitButton,
 	getSubmitButtonProps,
-	FrontendEngineWithEventListener,
 } from "../../../common";
 
 const SUBMIT_FN = jest.fn();

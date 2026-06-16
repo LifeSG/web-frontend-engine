@@ -13,3 +13,10 @@ yarn-error.log*
 /storybook-static
 
 junit.xml
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
