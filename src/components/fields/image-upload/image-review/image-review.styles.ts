@@ -57,10 +57,15 @@ export const ReviewCloseButton = styled(Button)`
 	position: absolute;
 	left: 0.5rem;
 	padding: ${Spacing["spacing-4"]};
+	min-width: unset;
+	width: 3rem;
 	background-color: transparent;
 	outline-style: none;
-	> svg {
-		font-size: 2rem;
+
+	> span {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		color: ${Colour["bg-primary"]};
 	}
 
@@ -132,6 +137,12 @@ export const DrawDeleteButton = styled(Button)`
 	background-color: ${Colour.bg};
 	box-shadow: 0 0.125rem 0.25rem ${Colour["border-stronger"]}80;
 	border-radius: 1.25rem;
+
+	> span {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 
 	&:first-child {
 		margin-bottom: ${Spacing["spacing-16"]};
