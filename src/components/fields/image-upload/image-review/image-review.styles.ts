@@ -1,4 +1,4 @@
-import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
+import { Border, Colour, Font, MediaQuery, Radius, Shadow, Spacing } from "@lifesg/react-design-system/theme";
 import { Button } from "@lifesg/react-design-system/button";
 import { Modal } from "@lifesg/react-design-system/modal";
 import { Typography } from "@lifesg/react-design-system/typography";
@@ -130,16 +130,16 @@ export const DrawDeleteButton = styled(Button)`
 	height: 2.5rem;
 	gap: ${Spacing["spacing-4"]};
 	background-color: ${Colour.bg};
-	box-shadow: 0 0.125rem 0.25rem ${Colour["border-stronger"]}80;
+	box-shadow: ${Shadow["sm-strong"]};
 	border-radius: 1.25rem;
 
 	&:first-child {
 		margin-bottom: ${Spacing["spacing-16"]};
 	}
 
-	> img {
-		width: 1.5rem;
-		height: 1.5rem;
+	> svg {
+		width: 1.125rem;
+		height: 1.125rem;
 	}
 
 	&:hover,
