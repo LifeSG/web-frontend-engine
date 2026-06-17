@@ -55,6 +55,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	const { clearErrors, setError } = useFormContext();
 	const [fieldError, setFieldError] = useState<string | undefined>();
 	const filesRef = useRef<IFile[]>(files);
+	filesRef.current = files;
 
 	const handleNewFiles = useCallback(
 		(newFiles: IFile[], oldFiles: IFile[]) => {
@@ -81,10 +82,6 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
-	useEffect(() => {
-		filesRef.current = files;
-	}, [files]);
-
 	useEffect(() => {
 		dispatchFieldEvent("mount", id);
 	}, [dispatchFieldEvent, id]);

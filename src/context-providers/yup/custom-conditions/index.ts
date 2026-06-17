@@ -45,7 +45,7 @@ YupHelper.addCondition("string", "whitespace", (value: string, whitespace: boole
 	if (typeof whitespace === "object" && !whitespace.noLeadingOrTrailingWhitespace) {
 		return /\S/.test(value);
 	}
-	return /^(?!\s+$)(?!\s).*(?<!\s)$/.test(value);
+	return /^\S([\s\S]*\S)?$/.test(value);
 });
 YupHelper.addCondition("array", "includes", (values: unknown[], matches: unknown | unknown[]) => {
 	if (!values?.length) return true;
