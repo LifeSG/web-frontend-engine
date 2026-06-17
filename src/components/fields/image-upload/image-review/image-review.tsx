@@ -473,7 +473,7 @@ export const ImageReview = (props: IProps) => {
 				className={className ? `${className}-review-modal-box` : undefined}
 				imageReviewModalStyles={imageReviewModalStyles}
 				showCloseButton={false}
-				data-mobile-landscape={isMobileLandscape ? "true" : undefined}
+				data-mobile-landscape={!!isMobileLandscape}
 			>
 				{show ? (
 					<>

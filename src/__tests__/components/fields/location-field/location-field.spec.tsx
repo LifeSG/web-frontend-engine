@@ -42,7 +42,8 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "location-field";
 const LABEL = "Location field";
-const BREAKPOINT_LG_MAX = 1440;
+const BREAKPOINT_XL_MAX = 1440;
+const BREAKPOINT_LG_MAX = 1200;
 const BREAKPOINT_SM_MAX = 480;
 const LEGEND_ITEMS = [
 	{ id: "lift-fault", label: "Lift fault", icon: "/img/lift.png" },
@@ -411,7 +412,7 @@ describe("location-input-group", () => {
 	let fetchSingleLocationByLatLngSpy;
 	let fetchLocationListSpy;
 
-	const setWindowAndViewPort = (width: number, height = 1200) => {
+	const setWindowAndViewPort = (width: number, height = BREAKPOINT_LG_MAX) => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 320, // Set the desired screen width for the desktop view
@@ -438,7 +439,7 @@ describe("location-input-group", () => {
 
 		viewport.set({
 			width,
-			height: BREAKPOINT_LG_MAX,
+			height: BREAKPOINT_XL_MAX,
 		});
 	};
 
@@ -455,10 +456,10 @@ describe("location-input-group", () => {
 		fetchLocationListSpy = jest.spyOn(LocationHelper, "fetchLocationList");
 
 		viewport = mockViewport({
-			width: BREAKPOINT_LG_MAX,
-			height: BREAKPOINT_LG_MAX,
+			width: BREAKPOINT_XL_MAX,
+			height: BREAKPOINT_XL_MAX,
 		});
-		setWindowAndViewPort(BREAKPOINT_LG_MAX);
+		setWindowAndViewPort(BREAKPOINT_XL_MAX);
 	});
 
 	afterEach(() => {
@@ -1304,7 +1305,7 @@ describe("location-input-group", () => {
 
 						describe("for desktop", () => {
 							it("should allow user to cancel", async () => {
-								setWindowAndViewPort(BREAKPOINT_LG_MAX + 1);
+								setWindowAndViewPort(BREAKPOINT_XL_MAX + 1);
 								renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));

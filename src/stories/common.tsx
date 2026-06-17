@@ -193,7 +193,7 @@ const SIDEBAR_WIDTH = 210;
 const SPACER = 550;
 
 const StyledForm = styled(OriginalFrontendEngine)`
-	width: calc(${Breakpoint["xl-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+	width: calc(${Breakpoint["xl-max"]} - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	max-width: 820px;
 
 	${MediaQuery.MaxWidth.xl} {
