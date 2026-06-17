@@ -19,9 +19,11 @@ export const Legend = ({ onClose, items = [], id = "legend" }: ILegendProps) => 
 		<LegendWrapper data-testid={TestHelper.generateId(id, "legend")} aria-label="Map Legend">
 			<LegendHeader>
 				<Typography.BodyMD weight="semibold">Legend</Typography.BodyMD>
-				<CloseButton data-testid={TestHelper.generateId(id, "legend-close")} onClick={onClose}>
-					<CrossIcon />
-				</CloseButton>
+				<CloseButton
+					data-testid={TestHelper.generateId(id, "legend-close")}
+					onClick={onClose}
+					icon={<CrossIcon />}
+				/>
 			</LegendHeader>
 			<LegendContent>
 				{items.map((item) => (

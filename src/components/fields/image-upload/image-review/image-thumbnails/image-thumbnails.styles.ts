@@ -114,7 +114,7 @@ export const AddImageButton = styled(Button)`
 	background: #fff;
 	border: none;
 
-	> span > svg {
+	> svg {
 		color: ${Colour["icon-primary"]};
 		stroke: ${Colour["icon-primary"]};
 		stroke-width: 1;

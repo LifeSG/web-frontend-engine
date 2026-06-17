@@ -61,13 +61,7 @@ export const ReviewCloseButton = styled(Button)`
 	width: 3rem;
 	background-color: transparent;
 	outline-style: none;
-
-	> span {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: ${Colour["bg-primary"]};
-	}
+	color: ${Colour["bg-primary"]};
 
 	${MediaQuery.MaxWidth.sm}, [data-mobile-landscape="true"] & {
 		height: 2.25rem;
@@ -134,15 +128,10 @@ export const DrawDeleteButton = styled(Button)`
 	padding: 0;
 	width: 5.4375rem;
 	height: 2.5rem;
+	gap: ${Spacing["spacing-4"]};
 	background-color: ${Colour.bg};
 	box-shadow: 0 0.125rem 0.25rem ${Colour["border-stronger"]}80;
 	border-radius: 1.25rem;
-
-	> span {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
 
 	&:first-child {
 		margin-bottom: ${Spacing["spacing-16"]};
@@ -170,7 +159,6 @@ export const DrawDeleteButtonText = styled(Typography.BodySM)<{ $disabled: boole
 
 export const DrawIcon = styled(PencilStrokeIcon)<{ $disabled: boolean }>`
 	color: ${(props) => (props.$disabled ? Colour.icon : Colour["icon-primary"])};
-	margin-right: ${Spacing["spacing-4"]};
 `;
 
 export const DeleteIcon = styled(BinIcon)<{ $disabled: boolean }>`

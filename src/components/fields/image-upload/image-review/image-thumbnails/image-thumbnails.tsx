@@ -135,9 +135,8 @@ export const ImageThumbnails = (props: IProps) => {
 						aria-label="add image"
 						styleType="secondary"
 						onClick={handleButtonClick}
-					>
-						<PlusIcon />
-					</AddImageButton>
+						icon={<PlusIcon />}
+					/>
 				</AddImageButtonWrapper>
 			</>
 		);

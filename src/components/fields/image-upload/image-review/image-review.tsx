@@ -328,9 +328,8 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "close-button")}
 						aria-label="exit review modal"
 						onClick={() => setActivePrompt("exit")}
-					>
-						<CrossIcon type="cross" />
-					</ReviewCloseButton>
+						icon={<CrossIcon />}
+					/>
 					<ReviewTitle weight="semibold">Review photos</ReviewTitle>
 				</>
 			) : (
@@ -378,8 +377,8 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "draw-button")}
 						onClick={handleStartDrawing}
 						disabled={drawDeleteDisabled}
+						icon={<DrawIcon $disabled={drawDeleteDisabled} />}
 					>
-						<DrawIcon $disabled={drawDeleteDisabled} />
 						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
 							Draw
 						</DrawDeleteButtonText>
@@ -389,8 +388,8 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "delete-button")}
 						onClick={() => setActivePrompt("delete")}
 						disabled={drawDeleteDisabled}
+						icon={<DeleteIcon $disabled={drawDeleteDisabled} />}
 					>
-						<DeleteIcon $disabled={drawDeleteDisabled} />
 						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
 							Delete
 						</DrawDeleteButtonText>
