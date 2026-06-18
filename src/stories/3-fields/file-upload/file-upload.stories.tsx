@@ -306,6 +306,27 @@ WithValidation.args = {
 	validation: [{ required: true }],
 };
 
+export const WithValidityCheck: StoryFn<IFileUploadSchema> = (args) => (
+	<FrontendEngine
+		data={{
+			sections: {
+				section: {
+					uiType: "section",
+					children: {
+						"upload-validity-check": args,
+						"submit-button": { uiType: "submit", label: "Submit", disabled: "invalid-form" },
+					},
+				},
+			},
+		}}
+	/>
+);
+WithValidityCheck.args = {
+	...COMMON_STORY_ARGS,
+	description: "Submit button is disabled until file upload validation passes",
+	validation: [{ required: true }, { max: 3, errorMessage: "Upload up to 3 files" }],
+};
+
 export const Warning = WarningStoryTemplate<IFileUploadSchema>("upload-with-warning").bind({});
 Warning.args = {
 	...COMMON_STORY_ARGS,

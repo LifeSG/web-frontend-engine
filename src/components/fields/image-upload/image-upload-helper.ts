@@ -1,6 +1,15 @@
-import { IImage } from "./types";
+import { EImageStatus, IImage } from "./types";
 
 export namespace ImageUploadHelper {
+	/** Render when base64 is ready, or when FileItem should show a validation/upload error row. */
+	export const shouldRenderFileItem = (image: IImage): boolean => {
+		const { status, drawingDataURL, dataURL } = image;
+		return (
+			!!(drawingDataURL || dataURL) ||
+			(status < EImageStatus.NONE && status !== EImageStatus.INJECTED && status !== EImageStatus.TO_DELETE)
+		);
+	};
+
 	/**
 	 * picks an available slot
 	 * slot refers to the index of the file selected
