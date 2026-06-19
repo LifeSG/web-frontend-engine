@@ -106,7 +106,7 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-		const afghanCode = getField("option", "Afghanistan+93");
+		const afghanCode = getField("option", "Afghanistan +93");
 		await waitFor(() => fireEvent.click(afghanCode));
 
 		expect(getDefaultDropdownToggle()).toHaveTextContent("+93");
@@ -247,7 +247,7 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-			const japanCode = getField("option", "Japan+81");
+			const japanCode = getField("option", "Japan +81");
 
 			await waitFor(() => fireEvent.click(japanCode));
 			fireEvent.change(getContactFieldWithPlaceholder(), {
@@ -264,7 +264,7 @@ describe(UI_TYPE, () => {
 
 			await waitFor(() => fireEvent.click(getDefaultDropdownToggle()));
 
-			const japanCode = getField("option", "Japan+81");
+			const japanCode = getField("option", "Japan +81");
 
 			await waitFor(() => fireEvent.click(japanCode));
 			fireEvent.change(getContactFieldWithPlaceholder(), {
