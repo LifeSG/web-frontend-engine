@@ -119,6 +119,7 @@
 		"jest-canvas-mock": "^2.4.0",
 		"jest-environment-jsdom": "^30.3.0",
 		"jest-junit": "^17.0.0",
+		"jest-transform-css": "^6.0.3",
 		"jsdom-testing-mocks": "^1.9.0",
 		"lint-staged": "^16.4.0",
 		"patch-package": "^8.0.1",
