@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+
+import "@lifesg/react-design-system/theme/styles/lifesg.css";
 import "./globals.css";
 
 const CDN_STYLE_PATHS = ["/cdn/react-design-system/v3/css/main.css", "/cdn/react-design-system/v3/css/open-sans.css"];

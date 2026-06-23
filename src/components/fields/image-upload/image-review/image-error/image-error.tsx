@@ -1,10 +1,10 @@
-import { Typography } from "@lifesg/react-design-system/typography";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
 import { ImageContext } from "../../image-context";
 import { EImageStatus, IImage, ISharedImageProps } from "../../types";
 import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, TitleText, Wrapper } from "./image-error.styles";
+import { Breakpoint, useMediaQuery, useResolvedBreakpointToken } from "@lifesg/react-design-system/theme";
 
 const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-white.svg";
 
@@ -33,6 +33,14 @@ export const ImageError = (props: IProps) => {
 	const [errorDescription, setErrorDescription] = useState<JSX.Element>();
 	const [transformedFileName, setTransformedFileName] = useState<string>();
 	const errorDescriptionRef = useRef<HTMLParagraphElement>(null);
+	const smMaxToken = useResolvedBreakpointToken(Breakpoint["sm-max"]);
+
+	const isMobileLandscape = useMediaQuery({
+		clauses: [
+			{ feature: "orientation", value: "landscape" },
+			{ feature: "max-height", value: smMaxToken },
+		],
+	});
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -121,7 +129,7 @@ export const ImageError = (props: IProps) => {
 	// RENDER FUNCTIONS
 	//  =============================================================================
 	return (
-		<Wrapper>
+		<Wrapper data-mobile-landscape={!!isMobileLandscape}>
 			<ErrorIcon src={WARNING_ICON} alt={errorTitle} />
 			<Content>
 				<TitleText

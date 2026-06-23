@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "../../../../../jest/mocks/match-media";
+import { mockViewportForTestGroup } from "jsdom-testing-mocks";
 import { ITextFieldSchema } from "../../../../components/fields";
 import { FrontendEngine, IFrontendEngineData } from "../../../../components/frontend-engine";
 import { FRONTEND_ENGINE_ID, TOverrideField, TOverrideSchema, getField, getSubmitButtonProps } from "../../../common";
@@ -50,14 +50,9 @@ describe(REFERENCE_KEY, () => {
 	});
 
 	describe("desktop", () => {
-		beforeEach(() => {
-			jest.mocked(window.matchMedia).mockImplementation(() => {
-				return {
-					matches: false,
-					addListener: jest.fn(),
-					removeListener: jest.fn(),
-				} as Partial<MediaQueryList> as MediaQueryList;
-			});
+		mockViewportForTestGroup({
+			width: 1440,
+			height: 1200,
 		});
 
 		it("should be able to render child filter items and child fields", async () => {
@@ -79,14 +74,9 @@ describe(REFERENCE_KEY, () => {
 	});
 
 	describe("mobile", () => {
-		beforeEach(() => {
-			jest.mocked(window.matchMedia).mockImplementation(() => {
-				return {
-					matches: true,
-					addListener: jest.fn(),
-					removeListener: jest.fn(),
-				} as Partial<MediaQueryList> as MediaQueryList;
-			});
+		mockViewportForTestGroup({
+			width: 375,
+			height: 667,
 		});
 
 		it("should render modal with Done button when clicked on filters button", async () => {

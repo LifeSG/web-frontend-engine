@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Border, Breakpoint, Colour, Font, MediaQuery, Motion, Spacing } from "@lifesg/react-design-system/theme";
+import { Border, Colour, Font, MediaQuery, Motion, Spacing } from "@lifesg/react-design-system/theme";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { TPanelInputMode } from "../../types";
@@ -17,7 +17,7 @@ export const SearchWrapper = styled.div<ISinglePanelStyle>`
 	flex: 1;
 	padding: ${Spacing["spacing-32"]} ${Spacing["spacing-24"]} ${Spacing["spacing-16"]};
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.lg}, &[data-mobile-landscape="true"] {
 		flex: unset;
 		height: ${({ $panelInputMode }) => ($panelInputMode === "search" ? `100%` : `auto`)};
 		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} 0;
@@ -41,7 +41,7 @@ export const SearchBarContainer = styled.div<{ $hasScrolled?: boolean }>`
 		border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour["border-focus"]};
 	}
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		margin: ${Spacing["spacing-12"]} 0 0;
 	}
 `;
@@ -92,7 +92,7 @@ export const SearchBarModalCross = styled(CrossIcon)`
 	font-size: 1.5rem;
 	color: ${Colour["icon-primary"]};
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		display: block;
 		margin: -${Spacing["spacing-8"]} 0 0 -${Spacing["spacing-8"]};
 	}
@@ -108,7 +108,7 @@ export const ResultWrapper = styled.div<ISinglePanelStyle>`
 	flex: 1;
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		display: ${({ $panelInputMode }) => ($panelInputMode !== "map" ? `block` : `none`)};
 		border-bottom: 0;
 	}
@@ -154,7 +154,7 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	gap: ${Spacing["spacing-16"]};
 	padding-top: ${Spacing["spacing-16"]};
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		display: ${({ $panelInputMode }) => ($panelInputMode === "map" ? `block` : `none`)};
 		position: absolute;
 		left: 0;
@@ -164,10 +164,10 @@ export const ButtonWrapper = styled.div<ISinglePanelStyle>`
 	}
 `;
 
-export const ButtonItem = styled(Button.Default)<{ $buttonType: "cancel" | "confirm" }>`
+export const ButtonItem = styled(Button)<{ $buttonType: "cancel" | "confirm" }>`
 	width: 9.5rem;
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
 		${({ $buttonType }) => $buttonType === "cancel" && `display: none`}
 		${({ $buttonType }) => $buttonType === "confirm" && `width: 100%`}
 	}

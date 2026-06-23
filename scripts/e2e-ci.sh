@@ -14,17 +14,19 @@ PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 pushd "$PROJECT_DIR" >/dev/null
 
 # Create production build of library
-LIB_VERSION=$(npm pkg get version --workspaces=false | tr -d \")
+LIB_VERSION=$(npm pkg get version | tr -d \")
 echo ==============================================================================
 echo "[E2E Setup] Building v$LIB_VERSION"
 echo ==============================================================================
 ./scripts/build.sh
 
+DS_LIB_VERSION=$(cd "${PROJECT_DIR}/node_modules/@lifesg/react-design-system"; npm pkg get version | tr -d \")
+
 # Install the freshly built package
 echo ==============================================================================
 echo "[E2E Setup] Installing v$LIB_VERSION FEE package into Next app"
 echo ==============================================================================
-npm --prefix e2e/nextjs-app i "$PROJECT_DIR/dist/lifesg-web-frontend-engine-$LIB_VERSION.tgz"
+npm --prefix e2e/nextjs-app i "$PROJECT_DIR/dist/lifesg-web-frontend-engine-$LIB_VERSION.tgz" "@lifesg/react-design-system@$DS_LIB_VERSION"
 
 # Run functional tests
 echo ==============================================================================

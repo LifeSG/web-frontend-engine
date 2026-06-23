@@ -66,7 +66,7 @@ const renderComponent = (
 };
 
 const getPhoneNoInput = () => screen.getByPlaceholderText(/Enter.*mobile number/i);
-const getEmailInput = () => getField("textbox", COMPONENT_LABEL);
+const getEmailInput = () => getField("textbox", /Enter.*email address/);
 const getOtpInput = () => screen.getByPlaceholderText("Enter OTP");
 const getSendOtpButton = () => getField("button", { name: "Send OTP" });
 const getVerifyOtpButton = () => getField("button", { name: "Verify" });

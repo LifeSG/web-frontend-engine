@@ -1,4 +1,5 @@
 import { Modal } from "@lifesg/react-design-system/modal";
+import { Breakpoint, useMediaQuery, useResolvedBreakpointToken } from "@lifesg/react-design-system/theme";
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
@@ -81,6 +82,13 @@ export const ImageReview = (props: IProps) => {
 	const { images, setImages } = useContext(ImageContext);
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	const previousShow = usePrevious(show);
+	const smMaxToken = useResolvedBreakpointToken(Breakpoint["sm-max"]);
+	const isMobileLandscape = useMediaQuery({
+		clauses: [
+			{ feature: "orientation", value: "landscape" },
+			{ feature: "max-height", value: smMaxToken },
+		],
+	});
 
 	// review image
 	const [activeFileIndex, setActiveFileIndex] = useState(images.length - 1);
@@ -320,9 +328,8 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "close-button")}
 						aria-label="exit review modal"
 						onClick={() => setActivePrompt("exit")}
-					>
-						<CrossIcon type="cross" />
-					</ReviewCloseButton>
+						icon={<CrossIcon />}
+					/>
 					<ReviewTitle weight="semibold">Review photos</ReviewTitle>
 				</>
 			) : (
@@ -370,8 +377,8 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "draw-button")}
 						onClick={handleStartDrawing}
 						disabled={drawDeleteDisabled}
+						icon={<DrawIcon $disabled={drawDeleteDisabled} />}
 					>
-						<DrawIcon $disabled={drawDeleteDisabled} />
 						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
 							Draw
 						</DrawDeleteButtonText>
@@ -381,8 +388,8 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "delete-button")}
 						onClick={() => setActivePrompt("delete")}
 						disabled={drawDeleteDisabled}
+						icon={<DeleteIcon $disabled={drawDeleteDisabled} />}
 					>
-						<DeleteIcon $disabled={drawDeleteDisabled} />
 						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
 							Delete
 						</DrawDeleteButtonText>
@@ -466,6 +473,7 @@ export const ImageReview = (props: IProps) => {
 				className={className ? `${className}-review-modal-box` : undefined}
 				imageReviewModalStyles={imageReviewModalStyles}
 				showCloseButton={false}
+				data-mobile-landscape={!!isMobileLandscape}
 			>
 				{show ? (
 					<>

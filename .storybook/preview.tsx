@@ -1,8 +1,17 @@
-import { INITIAL_VIEWPORTS } from "storybook/viewport";
+import { ThemeProvider } from "@lifesg/react-design-system/theme";
 import type { Preview } from "@storybook/react-webpack5";
+import { INITIAL_VIEWPORTS } from "storybook/viewport";
+
+import "@lifesg/react-design-system/theme/styles/lifesg.css";
 
 const preview: Preview = {
-	decorators: [],
+	decorators: [
+		(Story) => (
+			<ThemeProvider theme="lifesg" mode="light">
+				<Story />
+			</ThemeProvider>
+		),
+	],
 	parameters: {
 		controls: { expanded: true },
 		options: {

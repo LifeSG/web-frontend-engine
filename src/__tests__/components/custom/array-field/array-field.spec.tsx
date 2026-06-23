@@ -30,6 +30,7 @@ const NESTED_ARRAY_FIELD_ID = "nested-array-field";
 const NESTED_TEXT_FIELD_ID = "nestedInput";
 const NESTED_TEXT_FIELD_LABEL = "NestedTextField";
 const UNIQUE_ITEM_ERROR = "Use a different value from the other entries";
+const REMOVE_CONFIRMATION_MODAL_TITLE = "Remove entry?";
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
@@ -194,11 +195,13 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).toBeVisible();
+			});
 
 			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-remove"));
 
-			expect(screen.queryByText("Remove entry?")).not.toBeVisible();
+			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -210,11 +213,13 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).toBeVisible();
+			});
 
 			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-back"));
 
-			expect(screen.queryByText("Remove entry?")).not.toBeVisible();
+			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -292,7 +297,9 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).toBeVisible();
+			});
 		});
 
 		it("should not show confirmation modal when disabled prop is true", async () => {
@@ -302,7 +309,7 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).not.toBeInTheDocument();
+			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeInTheDocument();
 			expect(screen.queryByText("The information you’ve entered will be deleted.")).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -323,7 +330,9 @@ describe(UI_TYPE, () => {
 
 		fireEvent.click(screen.queryByText("Minus"));
 
-		expect(screen.queryByText("Bye bye")).toBeVisible();
+		await waitFor(() => {
+			expect(screen.queryByText("Bye bye")).toBeVisible();
+		});
 	});
 
 	describe("min rule", () => {

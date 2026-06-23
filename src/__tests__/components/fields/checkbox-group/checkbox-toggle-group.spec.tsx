@@ -70,7 +70,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 	return (
 		<>
 			<FrontendEngine data={schema} onSubmit={SUBMIT_FN} />
-			<Button.Default onClick={() => setSchema(onClick)}>Update options</Button.Default>
+			<Button onClick={() => setSchema(onClick)}>Update options</Button>
 		</>
 	);
 };

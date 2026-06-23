@@ -2,7 +2,7 @@ import { Modal } from "@lifesg/react-design-system/modal";
 import styled from "styled-components";
 import { TPanelInputMode } from "../types";
 import { LocationPicker } from "./location-picker";
-import { Breakpoint, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
+import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
@@ -31,7 +31,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 		max-height: 90%;
 	}
 
-	${MediaQuery.MaxWidth.sm}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.sm}, &[data-mobile-landscape="true"] {
 		height: 100%;
 		width: 100%;
 		flex-direction: column;
@@ -44,7 +44,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 export const StyledLocationPicker = styled(LocationPicker)<ISinglePanelStyle>`
 	width: 48.89%;
 
-	${MediaQuery.MaxWidth.lg}, (orientation: landscape) and (max-height: ${Breakpoint["sm-max"]}px) {
+	${MediaQuery.MaxWidth.lg}, ${ModalBox}[data-mobile-landscape="true"] & {
 		/* Keep map mounted but control visibility to prevent coordinate corruption */
 		display: block;
 		visibility: ${({ panelInputMode }) => (panelInputMode !== "map" ? "hidden" : "visible")};

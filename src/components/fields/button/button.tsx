@@ -56,7 +56,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	);
 };
 
-const CustomButton = styled(Button.Default)`
+const CustomButton = styled(Button)`
 	> span {
 		display: flex;
 		align-items: center;

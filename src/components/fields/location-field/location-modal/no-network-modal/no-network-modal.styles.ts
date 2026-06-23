@@ -39,7 +39,7 @@ export const ContentBody = styled(Typography.BodyBL)`
 	}
 `;
 
-export const ButtonWrapper = styled(Button.Default)`
+export const ButtonWrapper = styled(Button)`
 	margin-top: ${Spacing["spacing-40"]};
 	width: 100%;
 	max-width: 16.5rem;

@@ -193,31 +193,31 @@ const SIDEBAR_WIDTH = 210;
 const SPACER = 550;
 
 const StyledForm = styled(OriginalFrontendEngine)`
-	width: calc(${Breakpoint["xl-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+	width: calc(${Breakpoint["xl-max"]} - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	max-width: 820px;
 
 	${MediaQuery.MaxWidth.xl} {
 		min-width: 500px;
-		width: calc(${Breakpoint["xl-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+		width: calc(${Breakpoint["xl-max"]} - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
 	${MediaQuery.MaxWidth.lg} {
 		min-width: 400px;
-		width: calc(${Breakpoint["lg-max"]}px - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
+		width: calc(${Breakpoint["lg-max"]} - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	}
 
 	${MediaQuery.MaxWidth.sm} {
 		min-width: 350px;
-		width: calc(${Breakpoint["sm-max"]}px - ${MINIMUM_SIDE_PADDING + SPACER}px);
+		width: calc(${Breakpoint["sm-max"]} - ${MINIMUM_SIDE_PADDING + SPACER}px);
 	}
 
 	${MediaQuery.MaxWidth.xs} {
 		min-width: 0;
-		width: calc(${Breakpoint["xs-max"]}px - ${MINIMUM_SIDE_PADDING}px);
+		width: calc(${Breakpoint["xs-max"]} - ${MINIMUM_SIDE_PADDING}px);
 	}
 
 	${MediaQuery.MaxWidth.xxs} {
-		width: calc(${Breakpoint["xs-max"]}px - ${MINIMUM_SIDE_PADDING}px);
+		width: calc(${Breakpoint["xs-max"]} - ${MINIMUM_SIDE_PADDING}px);
 	}
 `;
 
@@ -380,7 +380,7 @@ const FrontendEngineWithWarning = ({
 					},
 				}}
 			/>
-			<Button.Default
+			<Button
 				onClick={() =>
 					formRef.current?.setWarnings({
 						[id]: "This is a warning message, it is set via `setWarnings()` from Frontend Engine.",
@@ -389,7 +389,7 @@ const FrontendEngineWithWarning = ({
 				style={{ marginTop: "2rem" }}
 			>
 				Show warning
-			</Button.Default>
+			</Button>
 		</>
 	);
 };

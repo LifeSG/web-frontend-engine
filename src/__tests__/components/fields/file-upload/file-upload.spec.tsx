@@ -823,16 +823,9 @@ describe(UI_TYPE, () => {
 				expect(uploadSpy).toHaveBeenCalledTimes(1);
 			});
 
-			// NOTE: no longer able to drop files beyond max files, to be addressed when porting image-upload over
-			if (inputType === "input") {
-				it("should display error message when adding beyond max no. of files", () => {
-					expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
-				});
-			}
-
 			// NOTE: add button is now disabled instead of hidden, to be addressed when porting image-upload over
-			it.skip("should hide the add button", () => {
-				expect(getField("button", "Upload files", true)).not.toBeInTheDocument();
+			it("should disabled the add button", () => {
+				expect(getField("button", "Upload files", true)).toBeDisabled();
 			});
 
 			it("should disable the add button", () => {

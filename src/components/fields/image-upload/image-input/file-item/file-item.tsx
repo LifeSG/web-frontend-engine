@@ -157,9 +157,8 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 					id={TestHelper.generateId(`${id}-${index + 1}`, "btn-delete")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "btn-delete")}
 					aria-label={`remove ${fileName}`}
-				>
-					<CrossIcon />
-				</DeleteButton>
+					icon={<CrossIcon />}
+				/>
 			</CellDeleteButton>
 		);
 	};
