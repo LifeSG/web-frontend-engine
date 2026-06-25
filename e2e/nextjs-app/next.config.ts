@@ -51,6 +51,7 @@ const nextConfig: NextConfig = {
 			"@lifesg/react-design-system": designSystemRelative,
 		},
 	},
+	devIndicators: false,
 };
 
 export default withLinaria(nextConfig);
