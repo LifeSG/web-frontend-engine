@@ -1112,6 +1112,23 @@ describe("frontend-engine", () => {
 			expect(screen.getByTestId(`${FIELD_ONE_ID}__warning`)).toHaveTextContent(ERROR_MESSAGE);
 		});
 
+		it("should keep warning visible while typing", () => {
+			const handleSetWarnings = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+				ref.current.setWarnings({
+					[FIELD_ONE_ID]: ERROR_MESSAGE,
+				});
+			};
+
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleSetWarnings} />);
+			fireEvent.click(getCustomButton());
+
+			expect(screen.getByTestId(`${FIELD_ONE_ID}__warning`)).toHaveTextContent(ERROR_MESSAGE);
+
+			fireEvent.change(getFieldOne(), { target: { value: "hello" } });
+			expect(getFieldOne()).toHaveValue("hello");
+			expect(screen.getByTestId(`${FIELD_ONE_ID}__warning`)).toHaveTextContent(ERROR_MESSAGE);
+		});
+
 		it("should support setting of warnings for nested fields", async () => {
 			const handleSetWarnings = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 				try {
