@@ -40,15 +40,8 @@ export default function TextFieldWarningPage() {
 	}, []);
 
 	return (
-		<div className="panel" data-testid="text-field-warning-page">
-			<h2>Text Field Warning</h2>
-			<FrontendEngine
-				ref={formRef}
-				data={TEXT_FIELD_WARNING_SCHEMA}
-				onValueChange={() => {
-					// no-op
-				}}
-			/>
+		<div>
+			<FrontendEngine ref={formRef} data={TEXT_FIELD_WARNING_SCHEMA} />
 		</div>
 	);
 }
