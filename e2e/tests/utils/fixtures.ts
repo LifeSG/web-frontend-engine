@@ -1,6 +1,21 @@
 import { type Page, test as base } from "@playwright/test";
 import { StoryPage, type TStoryPageOptions } from "./story-page";
 
+// =============================================================================
+// TYPES
+// =============================================================================
+export type TStoryLocatorsFactory<TLocators> = (page: Page) => TLocators;
+
+export type TCreateStoryTestOptions<TLocators> = {
+	component: string;
+	story: string;
+	scope?: TStoryPageOptions["scope"];
+	createLocators: TStoryLocatorsFactory<TLocators>;
+};
+
+// =============================================================================
+// FIXTURES
+// =============================================================================
 export const forComponent = StoryPage.forComponent;
 
 export const test = base.extend<{
@@ -15,19 +30,6 @@ export const test = base.extend<{
 		await use(story);
 	},
 });
-
-export type TStoryLocatorsFactory<TLocators> = (page: Page) => TLocators;
-
-export type TCreateStoryTestOptions<TLocators> = {
-	component: string;
-	story: string;
-	scope?: TStoryPageOptions["scope"];
-	createLocators: TStoryLocatorsFactory<TLocators>;
-};
-
-export type TStoryPageWithLocators<TLocators> = StoryPage & {
-	locators: TLocators;
-};
 
 export const createStoryTest = <TLocators>(options: TCreateStoryTestOptions<TLocators>) => {
 	class StoryPageWithLocators extends StoryPage {
