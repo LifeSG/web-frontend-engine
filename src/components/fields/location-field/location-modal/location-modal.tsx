@@ -11,7 +11,6 @@ import { OneMapError } from "../../../../services/onemap/types";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
-import { Description } from "../../../shared/prompt/prompt.styles";
 import {
 	GeolocationPositionErrorWrapper,
 	ILocationCoord,
@@ -23,7 +22,7 @@ import {
 	TSetCurrentLocationDetail,
 } from "../types";
 import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
-import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
+import { Description, ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
 import { IMapPin } from "./location-picker/types";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
