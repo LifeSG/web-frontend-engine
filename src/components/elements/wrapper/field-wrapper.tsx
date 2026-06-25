@@ -16,7 +16,7 @@ import { useFormSchema, useFormValues, useIsomorphicDeepLayoutEffect, useValidat
 import { IComplexLabel } from "../../fields";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { Sanitize } from "../../shared";
-import { StyledHint, StyledSublabel } from "./wrapper.styles";
+import * as styles from "./wrapper.styles";
 
 interface IProps {
 	id: string;
@@ -89,16 +89,16 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 			return {
 				children: <Sanitize inline>{label.mainLabel}</Sanitize>,
 				subtitle: (
-					<StyledSublabel className="sub-label" id={`${id}-label-subtitle`}>
+					<Sanitize className={styles.sublabel} id={`${id}-label-subtitle`}>
 						{label.subLabel}
-					</StyledSublabel>
+					</Sanitize>
 				),
 				// acccept tooltip type when it's ready
 				addon: label.hint?.content
 					? /* eslint-disable indent */
 					  {
 							type: "popover",
-							content: <StyledHint className="label-hint">{label.hint?.content}</StyledHint>,
+							content: <Sanitize className={styles.hint}>{label.hint?.content}</Sanitize>,
 							"data-testid": (schema["data-testid"] || id) + "-popover",
 							zIndex: label.hint?.zIndex,
 					  }
