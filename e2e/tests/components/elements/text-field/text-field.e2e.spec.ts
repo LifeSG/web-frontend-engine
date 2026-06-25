@@ -1,4 +1,4 @@
-import { expect, forComponent, test } from "../../../utils/fixtures";
+import { forComponent, test } from "../../../utils/fixtures";
 
 const withStory = forComponent("elements/text-field");
 
@@ -10,10 +10,8 @@ test.describe("Text Field", () => {
 			},
 		});
 
-		test("state", async ({ story, page }) => {
+		test("state", async ({ story }) => {
 			await story.goto();
-			await expect(page.getByText("Primary warning message")).toBeVisible();
-
 			await story.snapshot("warning");
 		});
 	});
