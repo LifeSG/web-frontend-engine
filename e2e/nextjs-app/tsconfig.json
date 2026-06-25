@@ -24,6 +24,9 @@
       }
     ],
     "paths": {
+	  // Point to source package
+	  "@lifesg/react-design-system": ["../../node_modules/@lifesg/react-design-system"],
+ 	  "@lifesg/react-design-system/*": ["../../node_modules/@lifesg/react-design-system/*"],
 	  "@lifesg/web-frontend-engine": ["../../src"],
 	  "@lifesg/web-frontend-engine/*": ["../../src/*"],
       "@/*": [
