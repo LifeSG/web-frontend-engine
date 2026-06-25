@@ -179,6 +179,22 @@ describe(UI_TYPE, () => {
 		expect(getTextfield()).toHaveValue("HELLO");
 	});
 
+	it("should keep warning visible while typing", () => {
+		const warningMessage = "Warning message";
+		const handleSetWarnings = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			ref.current?.setWarnings({ [COMPONENT_ID]: warningMessage });
+		};
+
+		render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleSetWarnings} />);
+		fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+		expect(screen.getByText(warningMessage)).toBeInTheDocument();
+
+		fireEvent.change(getTextfield(), { target: { value: "hello" } });
+		expect(getTextfield()).toHaveValue("hello");
+		expect(screen.getByText(warningMessage)).toBeInTheDocument();
+	});
+
 	describe("addOn", () => {
 		it("should be able to render the icon add on", async () => {
 			renderComponent({
