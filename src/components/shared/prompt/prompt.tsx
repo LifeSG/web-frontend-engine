@@ -10,7 +10,7 @@ import { IPromptProps } from "./types";
 
 export const Prompt = (props: IPromptProps) => {
 	const { id = "prompt", show, size, title, description, image, buttons } = props;
-	const buttonContainerRef = useRef<HTMLButtonElement>(null);
+	const buttonContainerRef = useRef<HTMLDivElement>(null);
 
 	useApplyStyle(buttonContainerRef, {
 		[styles.tokens.promptButton.width]: buttons?.length === 1 ? "16rem" : "100%",
@@ -49,10 +49,12 @@ export const Prompt = (props: IPromptProps) => {
 							description
 						)}
 					</div>
-					<div className={clsx(styles.buttonContainer, size === "large" && styles.buttonContainerLarge)}>
+					<div
+						ref={buttonContainerRef}
+						className={clsx(styles.buttonContainer, size === "large" && styles.buttonContainerLarge)}
+					>
 						{buttons?.map((button, i) => (
 							<Button
-								ref={buttonContainerRef}
 								id={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-${i + 1}`)}
 								data-testid={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-${i + 1}`)}
 								className={clsx(styles.promptButton, size === "large" && styles.promptButtonLarge)}
