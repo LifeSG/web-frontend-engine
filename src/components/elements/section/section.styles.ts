@@ -1,11 +1,10 @@
-import { Layout } from "@lifesg/react-design-system/layout";
+import { css } from "@linaria/core";
 import { Spacing } from "@lifesg/react-design-system/theme";
-import styled from "styled-components";
 
-export const GridWrapper = styled(Layout.Container)`
+export const gridWrapper = css`
 	gap: ${Spacing["spacing-32"]};
 `;
 
-export const Contained = styled.div`
+export const contained = css`
 	flex: 1;
 `;
