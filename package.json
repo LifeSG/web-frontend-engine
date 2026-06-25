@@ -43,6 +43,7 @@
 		"@rollup/plugin-terser": "^1.0.0",
 		"@use-gesture/react": "^10.3.1",
 		"axios": "^1.12.2",
+		"clsx": "^2.1.1",
 		"country-code-lookup": "^0.0.20",
 		"exifreader": "^4.23.7",
 		"fabric": "7.2.0",
