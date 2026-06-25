@@ -1,7 +1,7 @@
 "use client";
 
 import { FrontendEngine, IFrontendEngineData } from "@lifesg/web-frontend-engine";
-import { ISectionSchema } from "@lifesg/web-frontend-engine/components/elements";
+import { ISectionSchema } from "@lifesg/web-frontend-engine/components/elements/section/types";
 
 const SECTION_SCHEMA: IFrontendEngineData<undefined, ISectionSchema> = {
 	sections: {

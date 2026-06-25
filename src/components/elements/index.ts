@@ -4,7 +4,6 @@ export * from "./divider";
 export * from "./grid";
 export * from "./list";
 export * from "./popover";
-export * from "./section";
 export * from "./tab";
 export * from "./typography";
 export * from "./types";
