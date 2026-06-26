@@ -10,13 +10,11 @@ import { IPromptProps } from "./types";
 
 export const Prompt = (props: IPromptProps) => {
 	const { id = "prompt", show, size, title, description, image, buttons } = props;
-	const buttonContainerRef = useRef<HTMLDivElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
 
-	useApplyStyle(buttonContainerRef, {
+	useApplyStyle(containerRef, {
 		[styles.tokens.promptButton.width]: buttons?.length === 1 ? "16rem" : "100%",
 	});
-
-	console.log({ tokens: styles.tokens, buttonContainerRef });
 
 	return (
 		<Modal
@@ -50,7 +48,7 @@ export const Prompt = (props: IPromptProps) => {
 						)}
 					</div>
 					<div
-						ref={buttonContainerRef}
+						ref={containerRef}
 						className={clsx(styles.buttonContainer, size === "large" && styles.buttonContainerLarge)}
 					>
 						{buttons?.map((button, i) => (
