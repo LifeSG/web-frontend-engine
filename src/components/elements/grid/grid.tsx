@@ -4,6 +4,7 @@ import { Wrapper } from "../wrapper";
 import { IGridSchema } from "./types";
 import { Layout } from "@lifesg/react-design-system/layout";
 import * as styles from "./grid.styles";
+import clsx from "clsx";
 
 export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 	// =============================================================================
@@ -12,7 +13,7 @@ export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 
 	const {
 		id,
-		schema: { children, uiType: _uiType, ...rest },
+		schema: { children, uiType: _uiType, className, ...rest },
 	} = props;
 
 	// =========================================================================
@@ -21,7 +22,7 @@ export const Grid = (props: IGenericCustomElementProps<IGridSchema>) => {
 	return (
 		<Layout.Container
 			type="grid"
-			className={styles.gridContainer}
+			className={clsx(styles.gridContainer, className)}
 			data-testid={TestHelper.generateId(id, "grid")}
 			{...rest}
 		>
