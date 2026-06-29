@@ -14,6 +14,7 @@ const GRID_SCHEMA: IFrontendEngineData<undefined, IGridSchema> = {
 						block1: {
 							uiType: "text-field",
 							label: "Block 1",
+							columns: { xl: [1, 5] },
 						},
 					},
 				},
@@ -22,6 +23,6 @@ const GRID_SCHEMA: IFrontendEngineData<undefined, IGridSchema> = {
 	},
 };
 
-export default function GridDefaultPage() {
+export default function GridColumnRangePage() {
 	return <FrontendEngine data={GRID_SCHEMA} />;
 }

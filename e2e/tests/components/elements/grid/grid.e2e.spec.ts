@@ -28,4 +28,30 @@ test.describe("Grid", () => {
 			await story.snapshot("mount");
 		});
 	});
+
+	test.describe(() => {
+		test.use({
+			storyOptions: {
+				...withStory("column-span"),
+			},
+		});
+
+		test("Column Span", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
+	});
+
+	test.describe(() => {
+		test.use({
+			storyOptions: {
+				...withStory("column-range"),
+			},
+		});
+
+		test("Column Range", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
+	});
 });
