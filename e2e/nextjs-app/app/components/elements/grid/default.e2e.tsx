@@ -15,6 +15,18 @@ const GRID_SCHEMA: IFrontendEngineData<undefined, IGridSchema> = {
 							uiType: "text-field",
 							label: "Block 1",
 						},
+						block2: {
+							uiType: "text-field",
+							label: "Block 2",
+						},
+						block3: {
+							uiType: "text-field",
+							label: "Block 3",
+						},
+						block4: {
+							uiType: "text-field",
+							label: "Block 4",
+						},
 					},
 				},
 			},

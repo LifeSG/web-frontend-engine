@@ -19,19 +19,6 @@ test.describe("Grid", () => {
 	test.describe(() => {
 		test.use({
 			storyOptions: {
-				...withStory("custom"),
-			},
-		});
-
-		test("Custom", async ({ story }) => {
-			await story.goto();
-			await story.snapshot("mount");
-		});
-	});
-
-	test.describe(() => {
-		test.use({
-			storyOptions: {
 				...withStory("column-span"),
 			},
 		});
