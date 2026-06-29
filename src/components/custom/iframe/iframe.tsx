@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FieldError, useFormContext } from "react-hook-form";
 import * as Yup from "yup";
+import clsx from "clsx";
 import { useApplyStyle, useFieldEvent, useIframeMessage, useValidationConfig } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IGenericCustomFieldProps } from "../types";
-import { FluidIframe, tokens } from "./iframe.styles";
+import * as styles from "./iframe.styles";
+import { tokens } from "./iframe.styles";
 import { EPostMessageEvent, IIframeSchema } from "./types";
 
 type TIframePostMessageOptions =
@@ -23,7 +25,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	const { error, id, schema, value } = props;
 	const {
-		customSchema: { "data-testid": testId, src, validationTimeout = 2000, ...iframeProps },
+		customSchema: { "data-testid": testId, src, validationTimeout = 2000, className, title, ...iframeProps },
 	} = filterSchemaProps(schema);
 	const formContext = useFormContext();
 	const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -180,5 +182,15 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	// RENDER FUNCTIONS
 	// =========================================================================
-	return <FluidIframe {...iframeProps} ref={iframeRef} src={src} id={id} data-testid={testId || id} />;
+	return (
+		<iframe
+			{...iframeProps}
+			className={clsx(styles.fluidIframe, className)}
+			ref={iframeRef}
+			src={src}
+			id={id}
+			data-testid={testId || id}
+			title={title}
+		/>
+	);
 };
