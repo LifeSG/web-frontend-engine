@@ -1,6 +1,6 @@
 import { Layout } from "@lifesg/react-design-system/layout";
 import { Wrapper } from "../wrapper";
-import { Contained, GridWrapper } from "./section.styles";
+import * as styles from "./section.styles";
 import { ISectionProps } from "./types";
 
 export const Section = (props: ISectionProps) => {
@@ -18,9 +18,9 @@ export const Section = (props: ISectionProps) => {
 	const renderInGrid = () => {
 		return (
 			<Layout.Section>
-				<GridWrapper type="grid">
+				<Layout.Container type="grid" className={styles.gridWrapper}>
 					<Wrapper {...otherProps}>{children}</Wrapper>
-				</GridWrapper>
+				</Layout.Container>
 			</Layout.Section>
 		);
 	};
@@ -28,9 +28,9 @@ export const Section = (props: ISectionProps) => {
 	const renderContained = () => {
 		return (
 			<Layout.Content>
-				<Contained>
+				<div className={styles.contained}>
 					<Wrapper {...otherProps}>{children}</Wrapper>
-				</Contained>
+				</div>
 			</Layout.Content>
 		);
 	};

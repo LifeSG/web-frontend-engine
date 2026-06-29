@@ -1,10 +1,10 @@
 import { css } from "@linaria/core";
 import { Spacing } from "@lifesg/react-design-system/theme";
 
-export const gridWrapper = css`
+export const gridContainer = css`
+	padding: 0;
 	gap: ${Spacing["spacing-32"]};
-`;
-
-export const contained = css`
-	flex: 1;
+	&:not(:last-child) {
+		margin-bottom: ${Spacing["spacing-32"]};
+	}
 `;
