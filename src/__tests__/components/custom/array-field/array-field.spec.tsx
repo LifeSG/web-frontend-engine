@@ -310,7 +310,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getRemoveButton(0));
 
 			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeInTheDocument();
-			expect(screen.queryByText("The information you’ve entered will be deleted.")).not.toBeVisible();
+			expect(screen.queryByText("The information you’ve entered will be deleted.")).toBeNull();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
