@@ -16,7 +16,7 @@ import { useFormSchema, useFormValues, useIsomorphicDeepLayoutEffect, useValidat
 import { IComplexLabel } from "../../fields";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { Sanitize } from "../../shared";
-import * as styles from "./wrapper.styles";
+import * as styles from "./field-wrapper.styles";
 
 interface IProps {
 	id: string;
