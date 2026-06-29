@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { css } from "@linaria/core";
 
 export const tokens = {
 	fluidIframe: {
@@ -7,7 +7,7 @@ export const tokens = {
 	},
 };
 
-export const FluidIframe = styled.iframe`
+export const fluidIframe = css`
 	${tokens.fluidIframe.width}: initial;
 	${tokens.fluidIframe.height}: initial;
 
