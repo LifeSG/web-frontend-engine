@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FieldError, useFormContext } from "react-hook-form";
-import styled from "styled-components";
 import * as Yup from "yup";
-import { useFieldEvent, useIframeMessage, useValidationConfig } from "../../../utils/hooks";
+import { useApplyStyle, useFieldEvent, useIframeMessage, useValidationConfig } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IGenericCustomFieldProps } from "../types";
+import { FluidIframe, tokens } from "./iframe.styles";
 import { EPostMessageEvent, IIframeSchema } from "./types";
 
 type TIframePostMessageOptions =
@@ -35,6 +35,14 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	const [dimensions, setDimensions] = useState<{ width?: number; height?: number }>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
+
+	// Apply dynamic dimensions via CSS variables
+	useApplyStyle(iframeRef, {
+		[tokens.fluidIframe.width]:
+			dimensions.width !== undefined && dimensions.width >= 0 ? `${dimensions.width}px` : undefined,
+		[tokens.fluidIframe.height]:
+			dimensions.height !== undefined && dimensions.height >= 0 ? `${dimensions.height}px` : undefined,
+	});
 
 	// =========================================================================
 	// HELPER FUNCTIONS
@@ -172,21 +180,5 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	// RENDER FUNCTIONS
 	// =========================================================================
-	return (
-		<FluidIframe
-			{...iframeProps}
-			ref={iframeRef}
-			src={src}
-			id={id}
-			data-testid={testId || id}
-			$width={dimensions.width}
-			$height={dimensions?.height}
-		/>
-	);
+	return <FluidIframe {...iframeProps} ref={iframeRef} src={src} id={id} data-testid={testId || id} />;
 };
-
-const FluidIframe = styled.iframe<{ $width?: number | undefined; $height?: number | undefined }>`
-	width: ${({ $width }) => ($width >= 0 ? `${$width}px` : "100%")};
-	height: ${({ $height }) => ($height >= 0 ? `${$height}px` : "100%")};
-	border: none;
-`;
