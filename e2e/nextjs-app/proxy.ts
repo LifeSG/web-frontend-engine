@@ -25,7 +25,7 @@ export function proxy(request: NextRequest) {
         object-src 'none';
         base-uri 'self';
         form-action 'self';
-		frame-ancestors ${isDev ? "'self'" : "'none'"};
+		frame-ancestors 'self';
     `;
 
 	// Replace newline characters and spaces
