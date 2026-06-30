@@ -722,7 +722,7 @@ describe("image-upload", () => {
 				await waitFor(() => {
 					expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeVisible();
 				});
-				expect(screen.queryByText(REVIEW_PROMPT_TEXT)).toBeNull();
+				expect(screen.queryByText(REVIEW_PROMPT_TEXT)).not.toBeInTheDocument();
 			});
 		});
 	});
@@ -744,8 +744,8 @@ describe("image-upload", () => {
 			it("should show as many images", async () => {
 				await waitFor(() => {
 					expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
-					expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
 				});
+				expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
 			});
 
 			it("should hide the add button", () => {
@@ -859,9 +859,8 @@ describe("image-upload", () => {
 					overrideField: { editImage: true },
 					reviewImage: true,
 				});
-				await waitFor(() => {
-					fireEvent.click(getField("button", "Draw"));
-				});
+				const drawButton = await screen.findByRole("button", { name: "Draw" });
+				fireEvent.click(drawButton);
 			});
 
 			it("should hide the thumbnails and show the drawing toolbar", () => {
@@ -909,8 +908,8 @@ describe("image-upload", () => {
 
 				await waitFor(() => {
 					expect(getField("button", "Draw")).toBeInTheDocument();
-					expect(getField("button", "Save")).toBeInTheDocument();
 				});
+				expect(getField("button", "Save")).toBeInTheDocument();
 
 				await act(async () => {
 					fireEvent.click(getField("button", "Draw"));
@@ -1186,9 +1185,8 @@ describe("image-upload", () => {
 				onClick: handleClick,
 			});
 
-			await waitFor(() => {
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-			});
+			const customButton = await screen.findByRole("button", { name: "Custom Button" });
+			fireEvent.click(customButton);
 
 			expect(handleDismissReviewModal).toHaveBeenCalled();
 		});
@@ -1207,7 +1205,8 @@ describe("image-upload", () => {
 				onClick: handleClick,
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Custom Button" })));
+			const customButton = await screen.findByRole("button", { name: "Custom Button" });
+			fireEvent.click(customButton);
 
 			expect(saveReviewImageFn).toHaveBeenCalled();
 		});
@@ -1229,9 +1228,8 @@ describe("image-upload", () => {
 				onClick: handleClick,
 			});
 
-			await waitFor(() => {
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-			});
+			const customButton = await screen.findByRole("button", { name: "Custom Button" });
+			fireEvent.click(customButton);
 			const errMsg = screen.getAllByTestId("field-file-item-1__error-text")[0].innerHTML;
 			expect(errMsg).toBe(ERROR_MESSAGE);
 			expect(screen.getAllByTestId("field-file-item-1__error-text")[0]).toBeInTheDocument();
@@ -1549,14 +1547,11 @@ describe("image-upload", () => {
 				await waitFor(() =>
 					fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1, FILE_2] } })
 				);
-				// await act(async () => {
-				// 	await new Promise((resolve) => setTimeout(resolve, 300)); //add time-out due the the behavior change in the drag-upload
-				// });
 				await waitFor(() => {
 					expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
-					expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
-					expect(getField("button", `thumbnail of test (1).jpg`)).toBeInTheDocument();
 				});
+				expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
+				expect(getField("button", `thumbnail of test (1).jpg`)).toBeInTheDocument();
 			});
 
 			it("should show exceed error when add over the max number", async () => {
@@ -1570,10 +1565,10 @@ describe("image-upload", () => {
 				);
 				await waitFor(() => {
 					expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
-					expect(
-						screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(1))
-					).toBeInTheDocument();
 				});
+				expect(
+					screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(1))
+				).toBeInTheDocument();
 			});
 		});
 	});

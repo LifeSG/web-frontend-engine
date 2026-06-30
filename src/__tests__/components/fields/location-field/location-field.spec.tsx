@@ -1970,9 +1970,9 @@ describe("location-input-group", () => {
 			const selectedResult = resultContainer.getElementsByTagName("div")[0];
 			fireEvent.click(selectedResult);
 			fireEvent.click(getLocationModalControlButtons("Confirm"));
-			await waitFor(() => {
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-			});
+
+			const customButton = await screen.findByRole("button", { name: "Custom Button" });
+			fireEvent.click(customButton);
 
 			expect(formIsDirty).toBe(true);
 		});
