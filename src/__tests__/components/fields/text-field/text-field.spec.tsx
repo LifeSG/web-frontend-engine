@@ -1,59 +1,27 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import cloneDeep from "lodash/cloneDeep";
-import merge from "lodash/merge";
-import { FrontendEngine } from "../../../../components";
 import { ITextFieldSchema } from "../../../../components/fields";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
-	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
-	TOverrideSchema,
+	createRenderComponent,
 	getErrorMessage,
 	getField,
 	getResetButton,
-	getResetButtonProps,
 	getSubmitButton,
-	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Textfield";
 const UI_TYPE = "text-field";
 const EXPECTED_TEXT = "test this has been pasted";
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: COMPONENT_LABEL,
-					uiType: UI_TYPE,
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
-		},
-	},
-};
 
-const renderComponent = (overrideField?: Partial<ITextFieldSchema> | undefined, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+const renderComponent = createRenderComponent<ITextFieldSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: { label: COMPONENT_LABEL, uiType: UI_TYPE },
+	submitFn: SUBMIT_FN,
+});
 
 const getTextfield = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
@@ -73,9 +41,9 @@ describe(UI_TYPE, () => {
 	it("should support validation schema", async () => {
 		renderComponent({ validation: [{ required: true, errorMessage: ERROR_MESSAGE }] });
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
+		fireEvent.click(getSubmitButton());
 
-		expect(getErrorMessage()).toBeInTheDocument();
+		await waitFor(() => expect(getErrorMessage()).toBeInTheDocument());
 	});
 
 	it("should apply inputMode according to its type", () => {
@@ -102,8 +70,10 @@ describe(UI_TYPE, () => {
 
 		expect(screen.getByDisplayValue(defaultValue)).toBeInTheDocument();
 
-		await waitFor(() => fireEvent.click(getSubmitButton()));
-		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+		fireEvent.click(getSubmitButton());
+		await waitFor(() =>
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }))
+		);
 	});
 
 	it("should pass other props into the field", () => {
@@ -126,7 +96,7 @@ describe(UI_TYPE, () => {
 		});
 		const textField = getTextfield();
 		textField.focus();
-		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
+		await userEvent.paste(EXPECTED_TEXT);
 		expect(textField).toHaveValue(EXPECTED_TEXT);
 	});
 
@@ -138,7 +108,7 @@ describe(UI_TYPE, () => {
 		});
 		const textField = getTextfield();
 		textField.focus();
-		await waitFor(() => userEvent.paste(EXPECTED_TEXT));
+		await userEvent.paste(EXPECTED_TEXT);
 		expect(textField).toHaveValue("");
 	});
 
@@ -193,8 +163,10 @@ describe(UI_TYPE, () => {
 			expect(startIcon).toBeInTheDocument();
 			expect(getTextfield()).toHaveValue("hello");
 
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }));
+			fireEvent.click(getSubmitButton());
+			await waitFor(() =>
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }))
+			);
 		});
 
 		it("should be able to render the label add on", async () => {
@@ -210,8 +182,10 @@ describe(UI_TYPE, () => {
 			expect(screen.getByText("$")).toBeInTheDocument();
 			expect(textfield).toHaveValue("hello");
 
-			await waitFor(() => fireEvent.click(getSubmitButton()));
-			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }));
+			fireEvent.click(getSubmitButton());
+			await waitFor(() =>
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello" }))
+			);
 		});
 	});
 
@@ -221,9 +195,9 @@ describe(UI_TYPE, () => {
 
 			fireEvent.change(getTextfield(), { target: { value: "hello" } });
 			fireEvent.click(getResetButton());
-			await waitFor(() => fireEvent.click(getSubmitButton()));
+			fireEvent.click(getSubmitButton());
 
-			expect(getTextfield()).toHaveValue("");
+			await waitFor(() => expect(getTextfield()).toHaveValue(""));
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: undefined }));
 		});
 
@@ -233,72 +207,18 @@ describe(UI_TYPE, () => {
 
 			fireEvent.change(getTextfield(), { target: { value: "world" } });
 			fireEvent.click(getResetButton());
-			await waitFor(() => fireEvent.click(getSubmitButton()));
+			fireEvent.click(getSubmitButton());
 
-			expect(getTextfield()).toHaveValue(defaultValue);
+			await waitFor(() => expect(getTextfield()).toHaveValue(defaultValue));
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getTextfield(), { target: { value: "world" } });
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getTextfield(), { target: { value: "world" } });
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.change(getTextfield(), { target: { value: "world" } });
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: "hello",
+		modifyField: () => fireEvent.change(getTextfield(), { target: { value: "world" } }),
 	});
 
 	labelTestSuite(renderComponent);

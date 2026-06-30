@@ -18,6 +18,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { warningTestSuite } from "../../../common/tests/warnings";
+import { dirtyStateTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const VALUE_CHANGE_FN = jest.fn();
@@ -586,77 +587,6 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-
-			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...JSON_SCHEMA,
-						defaultValues: { [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }] },
-					}}
-					onClick={handleClick}
-				/>
-			);
-
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-
-			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
-			fireEvent.click(getResetButton());
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Custom Button" })));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...JSON_SCHEMA,
-						defaultValues: { [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }] },
-					}}
-					onClick={handleClick}
-				/>
-			);
-
-			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-	});
-
 	describe("form config", () => {
 		it("should include form values of unregistered fields if stripUnknown is not true", async () => {
 			const mockOnSubmit = jest.fn();
@@ -965,6 +895,15 @@ describe(UI_TYPE, () => {
 				expect(screen.queryByText(ERROR_MESSAGES.ARRAY_FIELD.UNIQUE)).toBeInTheDocument();
 			});
 		});
+	});
+
+	dirtyStateTestSuite({
+		schema: JSON_SCHEMA,
+		componentId: COMPONENT_ID,
+		defaultValue: [{ [TEXT_FIELD_ID]: "Hello" }],
+		modifyField: async () => {
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
+		},
 	});
 
 	warningTestSuite<IArrayFieldSchema>({
