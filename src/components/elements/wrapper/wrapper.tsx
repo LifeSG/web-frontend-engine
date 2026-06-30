@@ -21,9 +21,6 @@ import { ConditionalRenderer } from "./conditional-renderer";
 import { FieldWrapper } from "./field-wrapper";
 import { IWrapperProps, TWrapperChildSchema } from "./types";
 
-const fieldTypeKeys = Object.keys(EFieldType);
-const elementTypeKeys = Object.keys(EElementType);
-
 export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	// =============================================================================
 	// CONST, STATE, REF
@@ -50,6 +47,9 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	 * - otherwise show field not supported error
 	 */
 	useIsomorphicDeepLayoutEffect(() => {
+		const fieldTypeKeys = Object.keys(EFieldType);
+		const elementTypeKeys = Object.keys(EElementType);
+
 		const wrapperChildren = overrideSchema(schemaChildren || children, overrides);
 		if (typeof wrapperChildren === "object") {
 			const renderComponents: JSX.Element[] = [];
