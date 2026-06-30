@@ -25,41 +25,35 @@ export const Prompt = ({ id = "prompt", show, size, title, description, image, b
 			id={TestHelper.generateId(id, undefined, show ? "show" : "hide")}
 			data-testid={TestHelper.generateId(id, undefined, show ? "show" : "hide")}
 		>
-			<ModalV2.Content>
-				<ModalV2.Card className={clsx(styles.container, size === "large" && styles.containerLarge)}>
-					<ModalV2.Content
-						className={clsx(styles.labelContainer, size === "large" && styles.labelContainerLarge)}
+			<ModalV2.Card className={clsx(styles.container, size === "large" && styles.containerLarge)}>
+				<ModalV2.Content
+					className={clsx(styles.labelContainer, size === "large" && styles.labelContainerLarge)}
+				>
+					{typeof image === "string" ? <img src={image} alt={title} className={styles.promptImage} /> : image}
+					<Typography.HeadingXS
+						id={TestHelper.generateId(id, "title")}
+						data-testid={TestHelper.generateId(id, "title")}
+						weight="semibold"
+						className={styles.title}
 					>
-						{typeof image === "string" ? (
-							<img src={image} alt={title} className={styles.promptImage} />
-						) : (
-							image
-						)}
-						<Typography.HeadingXS
-							id={TestHelper.generateId(id, "title")}
-							data-testid={TestHelper.generateId(id, "title")}
-							weight="semibold"
-							className={styles.title}
-						>
-							{title}
+						{title}
+					</Typography.HeadingXS>
+					{typeof description === "string" ? (
+						<Typography.HeadingXS as="p" weight="regular" className={styles.description}>
+							{description}
 						</Typography.HeadingXS>
-						{typeof description === "string" ? (
-							<Typography.HeadingXS as="p" weight="regular" className={styles.description}>
-								{description}
-							</Typography.HeadingXS>
-						) : (
-							description
-						)}
-					</ModalV2.Content>
-					{!!buttons && buttons.length > 0 && (
-						<ModalV2.Footer
-							className={clsx(styles.buttonContainer, size === "large" && styles.buttonContainerLarge)}
-							primaryButton={renderButton(buttons[0], 1)}
-							secondaryButton={buttons.length > 1 && renderButton(buttons[1], 2)}
-						/>
+					) : (
+						description
 					)}
-				</ModalV2.Card>
-			</ModalV2.Content>
+				</ModalV2.Content>
+				{!!buttons && buttons.length > 0 && (
+					<ModalV2.Footer
+						className={clsx(styles.buttonContainer, size === "large" && styles.buttonContainerLarge)}
+						primaryButton={renderButton(buttons[0], 1)}
+						secondaryButton={buttons.length > 1 && renderButton(buttons[1], 2)}
+					/>
+				)}
+			</ModalV2.Card>
 		</ModalV2>
 	);
 };

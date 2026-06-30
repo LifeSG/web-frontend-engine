@@ -2,12 +2,16 @@ import { css } from "@linaria/core";
 import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
 export const container = css`
-	max-width: 426px;
-	width: 100%;
+	${MediaQuery.MinWidth.lg} {
+		max-width: 426px;
+		width: 100%;
+	}
 `;
 
 export const containerLarge = css`
-	max-width: 672px;
+	${MediaQuery.MinWidth.lg} {
+		max-width: 672px;
+	}
 `;
 
 export const promptImage = css`
