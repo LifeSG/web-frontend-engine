@@ -1,13 +1,7 @@
 import { css } from "@linaria/core";
-import { MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
+import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
 export const container = css`
-	background: white;
-	border-radius: ${Radius.md};
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	margin: auto;
 	max-width: 426px;
 	width: 100%;
 `;
