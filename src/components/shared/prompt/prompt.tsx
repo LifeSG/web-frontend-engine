@@ -7,10 +7,10 @@ import * as styles from "./prompt.styles";
 import { IPromptProps, TPromptButton } from "./types";
 
 export const Prompt = ({ id = "prompt", show, size, title, description, image, buttons }: IPromptProps) => {
-	const renderButton = (button: TPromptButton) => (
+	const renderButton = (button: TPromptButton, index: number) => (
 		<Button
-			id={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-1`)}
-			data-testid={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-1`)}
+			id={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-${index}`)}
+			data-testid={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-${index}`)}
 			key={button.title}
 			onClick={button.onClick}
 			styleType={button.buttonStyle}
@@ -54,8 +54,8 @@ export const Prompt = ({ id = "prompt", show, size, title, description, image, b
 					{!!buttons && buttons.length > 0 && (
 						<ModalV2.Footer
 							className={clsx(styles.buttonContainer, size === "large" && styles.buttonContainerLarge)}
-							primaryButton={renderButton(buttons[0])}
-							secondaryButton={buttons.length > 1 && renderButton(buttons[1])}
+							primaryButton={renderButton(buttons[0], 1)}
+							secondaryButton={buttons.length > 1 && renderButton(buttons[1], 2)}
 						/>
 					)}
 				</ModalV2.Card>
