@@ -1970,7 +1970,9 @@ describe("location-input-group", () => {
 			const selectedResult = resultContainer.getElementsByTagName("div")[0];
 			fireEvent.click(selectedResult);
 			fireEvent.click(getLocationModalControlButtons("Confirm"));
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			const customButton = await screen.findByRole("button", { name: "Custom Button" });
+			fireEvent.click(customButton);
 
 			expect(formIsDirty).toBe(true);
 		});
@@ -2011,7 +2013,9 @@ describe("location-input-group", () => {
 			fireEvent.click(selectedResult);
 			fireEvent.click(getLocationModalControlButtons("Confirm"));
 
-			fireEvent.click(getResetButton());
+			await waitFor(() => {
+				fireEvent.click(getResetButton());
+			});
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(false);
@@ -2046,7 +2050,9 @@ describe("location-input-group", () => {
 			fireEvent.click(selectedResult);
 			fireEvent.click(getLocationModalControlButtons("Confirm"));
 
-			fireEvent.click(getResetButton());
+			await waitFor(() => {
+				fireEvent.click(getResetButton());
+			});
 			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
 
 			expect(formIsDirty).toBe(false);

@@ -195,13 +195,12 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			await waitFor(() => {
-				expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).toBeVisible();
-			});
+			const modalText = await screen.findByText(REMOVE_CONFIRMATION_MODAL_TITLE);
+			expect(modalText).toBeVisible();
 
-			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-remove"));
+			fireEvent.click(await screen.findByTestId("field-remove-prompt__btn-remove"));
 
-			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeVisible();
+			expect(modalText).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -213,13 +212,12 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			await waitFor(() => {
-				expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).toBeVisible();
-			});
+			const modalText = await screen.findByText(REMOVE_CONFIRMATION_MODAL_TITLE);
+			expect(modalText).toBeVisible();
 
-			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-back"));
+			fireEvent.click(await screen.findByTestId("field-remove-prompt__btn-back"));
 
-			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeVisible();
+			expect(modalText).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -310,7 +308,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getRemoveButton(0));
 
 			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeInTheDocument();
-			expect(screen.queryByText("The information you’ve entered will be deleted.")).not.toBeVisible();
+			expect(screen.queryByText("The information you’ve entered will be deleted.")).not.toBeInTheDocument();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 

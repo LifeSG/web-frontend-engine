@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { TPanelInputMode } from "../types";
 import { LocationPicker } from "./location-picker";
 import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
+import { Typography } from "@lifesg/react-design-system/typography";
 
 interface ISinglePanelStyle {
 	panelInputMode: TPanelInputMode;
@@ -68,4 +69,8 @@ export const ErrorImage = styled.img`
 
 export const PrefetchImage = styled.img`
 	display: none;
+`;
+
+export const Description = styled(Typography.HeadingXS)`
+	margin-top: ${Spacing["spacing-8"]};
 `;

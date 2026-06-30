@@ -1,102 +1,67 @@
-import { MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
-import { Button } from "@lifesg/react-design-system/button";
-import { Modal } from "@lifesg/react-design-system/modal";
-import { Typography } from "@lifesg/react-design-system/typography";
-import styled, { css } from "styled-components";
+import { css } from "@linaria/core";
+import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
-interface SizeProps {
-	size?: "large";
-	width?: string;
-}
-
-export const ScrollableModal = styled(Modal)`
-	height: 100%;
-	overflow-y: auto;
-`;
-
-export const GrowContainer = styled.div`
-	margin: auto;
-	padding: 5rem ${Spacing["layout-md"]};
-	width: 100%;
-
-	${MediaQuery.MaxWidth.sm} {
-		padding: ${Spacing["layout-sm"]} ${Spacing["layout-md"]};
+export const container = css`
+	${MediaQuery.MinWidth.lg} {
+		max-width: 426px;
+		width: 100%;
 	}
 `;
 
-export const Container = styled.div<SizeProps>`
-	background: white;
-	border-radius: ${Radius.md};
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	margin: auto;
-	max-width: ${(props) => (props.size === "large" ? "672px" : "426px")};
-	width: 100%;
+export const containerLarge = css`
+	${MediaQuery.MinWidth.lg} {
+		max-width: 672px;
+	}
 `;
 
-export const PromptImage = styled.img`
+export const promptImage = css`
 	width: 11rem;
 	margin: 0 auto ${Spacing["spacing-32"]};
 `;
 
-export const PromptButton = styled(Button)<SizeProps>`
-	width: ${({ width }) => width || "100%"};
-	margin: 0 auto;
-
-	&:not(:first-child):last-child {
-		margin-top: ${Spacing["spacing-16"]};
-
-		${MediaQuery.MinWidth.md} {
-			margin-top: 0;
-			margin-right: ${(props) => (props.size === "large" ? Spacing["spacing-32"] : Spacing["spacing-16"])};
-		}
-	}
-`;
-
-export const ButtonContainer = styled.div<SizeProps>`
+export const buttonContainer = css`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	margin: 0;
 	padding: 0 ${Spacing["spacing-24"]} ${Spacing["spacing-64"]};
+	gap: ${Spacing["spacing-16"]};
 
 	${MediaQuery.MinWidth.md} {
-		align-items: center;
 		flex-direction: row-reverse;
-
-		padding: ${(props) =>
-			props.size === "large"
-				? css`
-						${Spacing["spacing-32"]} ${Spacing["spacing-64"]} ${Spacing["spacing-64"]}
-				  `
-				: css`
-						${Spacing["spacing-40"]} ${Spacing["spacing-24"]} ${Spacing["spacing-32"]}
-				  `};
+		padding: ${Spacing["spacing-40"]} ${Spacing["spacing-24"]} ${Spacing["spacing-32"]};
 	}
 `;
 
-export const LabelContainer = styled.div<SizeProps>`
-	display: flex;
-	flex-direction: column;
+export const buttonContainerLarge = css`
+	gap: ${Spacing["spacing-16"]};
+
+	${MediaQuery.MinWidth.md} {
+		gap: ${Spacing["spacing-32"]};
+		padding: ${Spacing["spacing-32"]} ${Spacing["spacing-64"]} ${Spacing["spacing-64"]};
+	}
+`;
+
+export const labelContainer = css`
 	text-align: center;
+	margin: 0;
 	padding: ${Spacing["spacing-64"]} ${Spacing["spacing-24"]} ${Spacing["spacing-24"]};
 
 	${MediaQuery.MinWidth.md} {
-		padding: ${(props) =>
-			props.size === "large"
-				? css`
-						${Spacing["spacing-64"]} ${Spacing["spacing-64"]} 0rem ${Spacing["spacing-64"]}
-				  `
-				: css`
-						${Spacing["spacing-32"]} ${Spacing["spacing-24"]} 0
-				  `};
+		padding: ${Spacing["spacing-32"]} ${Spacing["spacing-24"]} 0;
 	}
 `;
 
-export const Description = styled(Typography.HeadingXS)`
+export const labelContainerLarge = css`
+	${MediaQuery.MinWidth.md} {
+		padding: ${Spacing["spacing-64"]} ${Spacing["spacing-64"]} 0rem ${Spacing["spacing-64"]};
+	}
+`;
+
+export const description = css`
 	margin-top: ${Spacing["spacing-8"]};
 `;
 
-export const Title = styled(Typography.HeadingXS)<SizeProps>`
+export const title = css`
 	margin-top: 0rem;
 `;

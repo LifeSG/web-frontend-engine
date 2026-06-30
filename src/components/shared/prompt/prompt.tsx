@@ -1,61 +1,59 @@
+import clsx from "clsx";
+import { ModalV2 } from "@lifesg/react-design-system/modal-v2";
+import { Typography } from "@lifesg/react-design-system/typography";
+import { Button } from "@lifesg/react-design-system/button";
 import { TestHelper } from "../../../utils";
-import {
-	ButtonContainer,
-	Container,
-	Description,
-	GrowContainer,
-	LabelContainer,
-	PromptButton,
-	PromptImage,
-	ScrollableModal,
-	Title,
-} from "./prompt.styles";
-import { IPromptProps } from "./types";
+import * as styles from "./prompt.styles";
+import { IPromptProps, TPromptButton } from "./types";
 
-export const Prompt = (props: IPromptProps) => {
-	const { id = "prompt", show, size, title, description, image, buttons } = props;
+export const Prompt = ({ id = "prompt", show, size, title, description, image, buttons }: IPromptProps) => {
+	const renderButton = (button: TPromptButton, index: number) => (
+		<Button
+			id={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-${index}`)}
+			data-testid={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-${index}`)}
+			key={button.title}
+			onClick={button.onClick}
+			styleType={button.buttonStyle}
+		>
+			{button.title}
+		</Button>
+	);
 
 	return (
-		<ScrollableModal
+		<ModalV2
 			show={show}
 			id={TestHelper.generateId(id, undefined, show ? "show" : "hide")}
 			data-testid={TestHelper.generateId(id, undefined, show ? "show" : "hide")}
 		>
-			<GrowContainer>
-				<Container size={size}>
-					<LabelContainer size={size}>
-						{typeof image === "string" ? <PromptImage src={image} alt={title} /> : image}
-						<Title
-							id={TestHelper.generateId(id, "title")}
-							data-testid={TestHelper.generateId(id, "title")}
-							size={size}
-							weight="semibold"
-						>
-							{title}
-						</Title>
-						{typeof description === "string" ? (
-							<Description weight="regular">{description}</Description>
-						) : (
-							description
-						)}
-					</LabelContainer>
-					<ButtonContainer size={size}>
-						{buttons?.map((button, i) => (
-							<PromptButton
-								id={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-${i + 1}`)}
-								data-testid={TestHelper.generateId(id, button.id ? `btn-${button.id}` : `btn-${i + 1}`)}
-								size={size}
-								key={button.title}
-								onClick={button.onClick}
-								styleType={button.buttonStyle}
-								width={buttons.length === 1 ? "16rem" : undefined}
-							>
-								{button.title}
-							</PromptButton>
-						))}
-					</ButtonContainer>
-				</Container>
-			</GrowContainer>
-		</ScrollableModal>
+			<ModalV2.Card className={clsx(styles.container, size === "large" && styles.containerLarge)}>
+				<ModalV2.Content
+					className={clsx(styles.labelContainer, size === "large" && styles.labelContainerLarge)}
+				>
+					{typeof image === "string" ? <img src={image} alt={title} className={styles.promptImage} /> : image}
+					<Typography.HeadingXS
+						id={TestHelper.generateId(id, "title")}
+						data-testid={TestHelper.generateId(id, "title")}
+						weight="semibold"
+						className={styles.title}
+					>
+						{title}
+					</Typography.HeadingXS>
+					{typeof description === "string" ? (
+						<Typography.HeadingXS as="p" weight="regular" className={styles.description}>
+							{description}
+						</Typography.HeadingXS>
+					) : (
+						description
+					)}
+				</ModalV2.Content>
+				{!!buttons && buttons.length > 0 && (
+					<ModalV2.Footer
+						className={clsx(styles.buttonContainer, size === "large" && styles.buttonContainerLarge)}
+						primaryButton={renderButton(buttons[0], 1)}
+						secondaryButton={buttons.length > 1 && renderButton(buttons[1], 2)}
+					/>
+				)}
+			</ModalV2.Card>
+		</ModalV2>
 	);
 };
