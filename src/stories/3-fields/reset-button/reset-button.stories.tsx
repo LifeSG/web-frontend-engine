@@ -10,7 +10,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>ResetButton</Title>
-					<p>The primary call to action component.</p>
+					<p>A button that resets form fields to their default values.</p>
 					<p>
 						This component also inherits the{" "}
 						<a
@@ -47,6 +47,18 @@ const meta: Meta = {
 				},
 			},
 			options: ["default", "secondary", "light", "link"],
+			control: {
+				type: "select",
+			},
+		},
+		sizeType: {
+			description: "The size of the button",
+			table: {
+				type: {
+					summary: "default | small | large",
+				},
+			},
+			options: ["default", "small", "large"],
 			control: {
 				type: "select",
 			},
@@ -122,6 +134,13 @@ Styled.args = {
 	uiType: "reset",
 	label: "Reset",
 	styleType: "secondary",
+};
+
+export const Size = Template("reset-size").bind({});
+Size.args = {
+	uiType: "reset",
+	label: "Reset",
+	sizeType: "large",
 };
 
 export const DefaultValue = Template("reset-default-value", "default").bind({});
