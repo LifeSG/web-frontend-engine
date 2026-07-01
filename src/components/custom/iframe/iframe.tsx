@@ -6,7 +6,6 @@ import { useApplyStyle, useFieldEvent, useIframeMessage, useValidationConfig } f
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IGenericCustomFieldProps } from "../types";
 import * as styles from "./iframe.styles";
-import { tokens } from "./iframe.styles";
 import { EPostMessageEvent, IIframeSchema } from "./types";
 
 type TIframePostMessageOptions =
@@ -40,9 +39,9 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 
 	// Apply dynamic dimensions via CSS variables
 	useApplyStyle(iframeRef, {
-		[tokens.fluidIframe.width]:
+		[styles.tokens.fluidIframe.width]:
 			dimensions.width !== undefined && dimensions.width >= 0 ? `${dimensions.width}px` : undefined,
-		[tokens.fluidIframe.height]:
+		[styles.tokens.fluidIframe.height]:
 			dimensions.height !== undefined && dimensions.height >= 0 ? `${dimensions.height}px` : undefined,
 	});
 

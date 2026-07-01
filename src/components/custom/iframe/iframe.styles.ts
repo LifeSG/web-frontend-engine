@@ -2,8 +2,8 @@ import { css } from "@linaria/core";
 
 export const tokens = {
 	fluidIframe: {
-		width: "--fds-internal-iframe-fluidIframe-width",
-		height: "--fds-internal-iframe-fluidIframe-height",
+		width: "--fee-internal-iframe-fluidIframe-width",
+		height: "--fee-internal-iframe-fluidIframe-height",
 	},
 };
 
