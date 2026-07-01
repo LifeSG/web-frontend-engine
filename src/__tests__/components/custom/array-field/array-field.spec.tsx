@@ -18,6 +18,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import { warningTestSuite } from "../../../common/tests/warnings";
+import { dirtyStateTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const VALUE_CHANGE_FN = jest.fn();
@@ -30,6 +31,7 @@ const NESTED_ARRAY_FIELD_ID = "nested-array-field";
 const NESTED_TEXT_FIELD_ID = "nestedInput";
 const NESTED_TEXT_FIELD_LABEL = "NestedTextField";
 const UNIQUE_ITEM_ERROR = "Use a different value from the other entries";
+const REMOVE_CONFIRMATION_MODAL_TITLE = "Remove entry?";
 
 const JSON_SCHEMA: IFrontendEngineData = {
 	id: FRONTEND_ENGINE_ID,
@@ -194,11 +196,13 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).toBeVisible();
+			});
 
 			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-remove"));
 
-			expect(screen.queryByText("Remove entry?")).not.toBeVisible();
+			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -210,11 +214,13 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).toBeVisible();
+			});
 
 			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-back"));
 
-			expect(screen.queryByText("Remove entry?")).not.toBeVisible();
+			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
 
@@ -292,7 +298,9 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).toBeVisible();
+			});
 		});
 
 		it("should not show confirmation modal when disabled prop is true", async () => {
@@ -302,7 +310,7 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).not.toBeInTheDocument();
+			expect(screen.queryByText(REMOVE_CONFIRMATION_MODAL_TITLE)).not.toBeInTheDocument();
 			expect(screen.queryByText("The information you’ve entered will be deleted.")).not.toBeVisible();
 
 			await waitFor(() => fireEvent.click(getSubmitButton()));
@@ -323,7 +331,9 @@ describe(UI_TYPE, () => {
 
 		fireEvent.click(screen.queryByText("Minus"));
 
-		expect(screen.queryByText("Bye bye")).toBeVisible();
+		await waitFor(() => {
+			expect(screen.queryByText("Bye bye")).toBeVisible();
+		});
 	});
 
 	describe("min rule", () => {
@@ -574,77 +584,6 @@ describe(UI_TYPE, () => {
 				expect.objectContaining({ [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }] })
 			);
 			expect(screen.queryAllByText("Section title")).toHaveLength(1);
-		});
-	});
-
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-
-			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...JSON_SCHEMA,
-						defaultValues: { [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }] },
-					}}
-					onClick={handleClick}
-				/>
-			);
-
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-
-			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
-			fireEvent.click(getResetButton());
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Custom Button" })));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...JSON_SCHEMA,
-						defaultValues: { [COMPONENT_ID]: [{ [TEXT_FIELD_ID]: "Hello" }] },
-					}}
-					onClick={handleClick}
-				/>
-			);
-
-			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
 		});
 	});
 
@@ -956,6 +895,15 @@ describe(UI_TYPE, () => {
 				expect(screen.queryByText(ERROR_MESSAGES.ARRAY_FIELD.UNIQUE)).toBeInTheDocument();
 			});
 		});
+	});
+
+	dirtyStateTestSuite({
+		schema: JSON_SCHEMA,
+		componentId: COMPONENT_ID,
+		defaultValue: [{ [TEXT_FIELD_ID]: "Hello" }],
+		modifyField: async () => {
+			await waitFor(() => fireEvent.change(getTextField(0), { target: { value: "Hello" } }));
+		},
 	});
 
 	warningTestSuite<IArrayFieldSchema>({
