@@ -1,11 +1,11 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { Spacing } from "@lifesg/react-design-system/theme";
 import * as Icons from "@lifesg/react-icons";
-import styled from "styled-components";
+import clsx from "clsx";
 import { IGenericFieldProps } from "..";
 import { useFieldEvent } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IButtonSchema } from "./types";
+import * as styles from "./button.styles";
 
 export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// =============================================================================
@@ -14,7 +14,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	const { id, schema } = props;
 	const {
 		commonSchema: { label },
-		customSchema: { endIcon, href, startIcon, target, ...buttonProps },
+		customSchema: { className, endIcon, href, startIcon, target, ...buttonProps },
 	} = filterSchemaProps(schema);
 	const { dispatchFieldEvent } = useFieldEvent();
 
@@ -48,18 +48,10 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	};
 
 	return (
-		<CustomButton type="button" {...buttonProps} onClick={handleClick}>
+		<Button type="button" {...buttonProps} onClick={handleClick} className={clsx(styles.customButton, className)}>
 			{renderIcon(startIcon)}
 			{label}
 			{renderIcon(endIcon)}
-		</CustomButton>
+		</Button>
 	);
 };
-
-const CustomButton = styled(Button)`
-	> span {
-		display: flex;
-		align-items: center;
-		gap: ${Spacing["spacing-8"]};
-	}
-`;
