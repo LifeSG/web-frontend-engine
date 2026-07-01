@@ -18,7 +18,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
@@ -286,65 +286,11 @@ describe(UI_TYPE, () => {
 			});
 		});
 
-		describe("dirty state", () => {
-			let formIsDirty: boolean;
-			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				formIsDirty = ref.current.isDirty;
-			};
-
-			beforeEach(() => {
-				formIsDirty = undefined;
-			});
-
-			it("should mount without setting field state as dirty", () => {
-				rtlRender(<FrontendEngineWithCustomButton data={PHONE_SCHEMA} onClick={handleClick} />);
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(false);
-			});
-
-			it("should set form state as dirty if user modifies the phone OTP field", () => {
-				rtlRender(<FrontendEngineWithCustomButton data={PHONE_SCHEMA} onClick={handleClick} />);
-				fireEvent.change(getPhoneNoInput(), { target: { value: MOCK_VALID_PHONE_NO } });
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(true);
-			});
-
-			it("should support default verified value without setting form state as dirty", () => {
-				rtlRender(
-					<FrontendEngineWithCustomButton
-						data={{ ...PHONE_SCHEMA, defaultValues: { [COMPONENT_ID]: VERIFIED_PHONE_DEFAULT_VALUE } }}
-						onClick={handleClick}
-					/>
-				);
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(false);
-			});
-
-			it("should reset and revert phone OTP form dirty state to false", () => {
-				rtlRender(<FrontendEngineWithCustomButton data={PHONE_SCHEMA} onClick={handleClick} />);
-				fireEvent.change(getPhoneNoInput(), { target: { value: MOCK_VALID_PHONE_NO } });
-				fireEvent.click(getResetButton());
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(false);
-			});
-
-			it("should reset to default verified value without setting form state as dirty", () => {
-				rtlRender(
-					<FrontendEngineWithCustomButton
-						data={{ ...PHONE_SCHEMA, defaultValues: { [COMPONENT_ID]: VERIFIED_PHONE_DEFAULT_VALUE } }}
-						onClick={handleClick}
-					/>
-				);
-				fireEvent.change(getPhoneNoInput(), { target: { value: "98765432" } });
-				fireEvent.click(getResetButton());
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(false);
-			});
+		dirtyStateTestSuite({
+			schema: PHONE_SCHEMA,
+			componentId: COMPONENT_ID,
+			defaultValue: VERIFIED_PHONE_DEFAULT_VALUE,
+			modifyField: () => fireEvent.change(getPhoneNoInput(), { target: { value: MOCK_VALID_PHONE_NO } }),
 		});
 	});
 

@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { FormHistogramSliderProps } from "@lifesg/react-design-system/form/types";
+import { FormHistogramSliderProps } from "@lifesg/react-design-system/form";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
@@ -13,55 +13,34 @@ import {
 	FrontendEngineWithCustomButton,
 	TOverrideField,
 	TOverrideSchema,
+	createRenderComponent,
 	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "histogram-slider";
 
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: "Histogram slider",
-					uiType: UI_TYPE,
-					bins: [
-						{ minValue: 10, count: 1 },
-						{ minValue: 20, count: 0 },
-						{ minValue: 30, count: 3 },
-						{ minValue: 90, count: 3 },
-					],
-					interval: 10,
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
-		},
+const renderComponent = createRenderComponent<IHistogramSliderSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: "Histogram slider",
+		uiType: UI_TYPE,
+		bins: [
+			{ minValue: 10, count: 1 },
+			{ minValue: 20, count: 0 },
+			{ minValue: 30, count: 3 },
+			{ minValue: 90, count: 3 },
+		],
+		interval: 10,
 	},
-};
-
-const renderComponent = (overrideField?: TOverrideField<IHistogramSliderSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+	submitFn: SUBMIT_FN,
+});
 
 const changeSliderValue = (
 	sliderSpy: jest.SpyInstance<JSX.Element, [FormHistogramSliderProps]>,
@@ -174,65 +153,11 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			changeSliderValue(sliderSpy, [20, 60]);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: { from: 10, to: 50 } } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			changeSliderValue(sliderSpy, [20, 60]);
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: { from: 10, to: 50 } } }}
-					onClick={handleClick}
-				/>
-			);
-			changeSliderValue(sliderSpy, [20, 60]);
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: { from: 10, to: 50 },
+		modifyField: () => changeSliderValue(sliderSpy, [20, 60]),
 	});
 
 	labelTestSuite(renderComponent);
