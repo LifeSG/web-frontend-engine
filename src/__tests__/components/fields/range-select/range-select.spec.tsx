@@ -6,72 +6,43 @@ import merge from "lodash/merge";
 import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IRangeSelectSchema } from "../../../../components/fields";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
+import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
-	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
-	TOverrideField,
-	TOverrideSchema,
+	createRenderComponent,
 	getErrorMessage,
-	getField,
 	getResetButton,
-	getResetButtonProps,
 	getSubmitButton,
-	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "range-select";
 
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: "RangeSelect",
-					uiType: UI_TYPE,
-					options: {
-						from: [
-							{ label: "A", value: "Apple" },
-							{ label: "B", value: "Berry" },
-						],
-						to: [
-							{ label: "C", value: "Cherry" },
-							{ label: "D", value: "Date" },
-						],
-					},
-					// listStyleWidth: "40rem",
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
+const renderComponent = createRenderComponent<IRangeSelectSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: "RangeSelect",
+		uiType: UI_TYPE,
+		options: {
+			from: [
+				{ label: "A", value: "Apple" },
+				{ label: "B", value: "Berry" },
+			],
+			to: [
+				{ label: "C", value: "Cherry" },
+				{ label: "D", value: "Date" },
+			],
 		},
 	},
-};
-
-const renderComponent = (overrideField?: TOverrideField<IRangeSelectSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+	submitFn: SUBMIT_FN,
+});
 
 const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineData) => IFrontendEngineData }) => {
 	const { onClick } = props;
-	const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
+	const [schema, setSchema] = useState<IFrontendEngineData>(renderComponent.schema);
 	return (
 		<>
 			<FrontendEngine data={schema} onSubmit={SUBMIT_FN} />
@@ -375,71 +346,15 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: ["Apple"],
+		modifyField: async () => {
 			await waitFor(() => fireEvent.click(getComponent()));
 			await waitFor(() => fireEvent.click(getOptionA()));
 			await waitFor(() => fireEvent.click(getOptionC()));
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: ["Apple"] } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			await waitFor(() => fireEvent.click(getComponent()));
-			await waitFor(() => fireEvent.click(getOptionA()));
-			await waitFor(() => fireEvent.click(getOptionC()));
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: ["Apple"] } }}
-					onClick={handleClick}
-				/>
-			);
-			await waitFor(() => fireEvent.click(getComponent()));
-			await waitFor(() => fireEvent.click(getOptionA()));
-			await waitFor(() => fireEvent.click(getOptionC()));
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+		},
 	});
 
 	labelTestSuite(renderComponent);

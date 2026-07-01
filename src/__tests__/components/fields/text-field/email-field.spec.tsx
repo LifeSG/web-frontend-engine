@@ -1,25 +1,16 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import cloneDeep from "lodash/cloneDeep";
-import merge from "lodash/merge";
-import { FrontendEngine } from "../../../../components";
 import { IEmailFieldSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
-	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
-	TOverrideField,
-	TOverrideSchema,
+	createRenderComponent,
 	getErrorMessage,
 	getField,
 	getResetButton,
-	getResetButtonProps,
 	getSubmitButton,
-	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
@@ -27,36 +18,15 @@ const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Email";
 const UI_TYPE = "email-field";
 const EXPECTED_VALUE = "aa@aa.com";
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: COMPONENT_LABEL,
-					uiType: UI_TYPE,
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
-		},
-	},
-};
 
-const renderComponent = (overrideField?: TOverrideField<IEmailFieldSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+const renderComponent = createRenderComponent<IEmailFieldSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: COMPONENT_LABEL,
+		uiType: UI_TYPE,
+	},
+	submitFn: SUBMIT_FN,
+});
 
 const getEmailField = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
@@ -240,65 +210,11 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getEmailField(), { target: { value: "world" } });
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "john@doe.tld" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getEmailField(), { target: { value: "world" } });
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "john@doe.tld" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.change(getEmailField(), { target: { value: "world" } });
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: "john@doe.tld",
+		modifyField: () => fireEvent.change(getEmailField(), { target: { value: "world" } }),
 	});
 
 	labelTestSuite(renderComponent);

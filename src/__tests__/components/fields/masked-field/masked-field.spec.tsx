@@ -1,59 +1,30 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import cloneDeep from "lodash/cloneDeep";
-import merge from "lodash/merge";
-import { FrontendEngine } from "../../../../components";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { IMaskedFieldSchema } from "../../../../components/fields";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import {
 	ERROR_MESSAGE,
-	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
-	TOverrideSchema,
+	createRenderComponent,
 	getErrorMessage,
 	getField,
 	getResetButton,
-	getResetButtonProps,
 	getSubmitButton,
-	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Masked field";
 const UI_TYPE = "masked-field";
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: COMPONENT_LABEL,
-					uiType: UI_TYPE,
-					maskRange: [0, 100],
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
-		},
-	},
-};
 
-const renderComponent = (overrideField?: Partial<IMaskedFieldSchema> | undefined, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+const renderComponent = createRenderComponent<IMaskedFieldSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: COMPONENT_LABEL,
+		uiType: UI_TYPE,
+		maskRange: [0, 100],
+	},
+	submitFn: SUBMIT_FN,
+});
 
 const getMaskedField = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
@@ -165,65 +136,11 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getMaskedField(), { target: { value: "world" } });
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getMaskedField(), { target: { value: "world" } });
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.change(getMaskedField(), { target: { value: "world" } });
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: "hello",
+		modifyField: () => fireEvent.change(getMaskedField(), { target: { value: "world" } }),
 	});
 
 	labelTestSuite(renderComponent);

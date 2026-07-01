@@ -2,18 +2,19 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { EPostMessageEvent, IIframeSchema } from "../../../../components/custom";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
+import { IFrontendEngineData } from "../../../../components/types";
 import {
 	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
 	FrontendEngineWithEventListener,
 	TOverrideField,
 	TOverrideSchema,
+	createRenderComponent,
 	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
+import { dirtyStateTestSuite } from "../../../common/tests";
 
 const CHANGE_FN = jest.fn();
 const SUBMIT_FN = jest.fn();
@@ -46,7 +47,16 @@ interface IRenderOptions {
 	eventListener?: ((this: Element, ev: Event) => any) | undefined;
 }
 
-const renderComponent = (
+const renderComponent = createRenderComponent<IIframeSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		referenceKey: UI_TYPE,
+		src: IFRAME_SRC,
+	},
+	submitFn: SUBMIT_FN,
+});
+
+const renderWithEventListener = (
 	overrideField?: TOverrideField<IIframeSchema> | undefined,
 	overrideSchema?: TOverrideSchema | undefined,
 	options?: IRenderOptions | undefined
@@ -124,7 +134,7 @@ describe("iframe", () => {
 		it("should fire a loading event when iframe starts loading", () => {
 			const testFn = jest.fn();
 
-			renderComponent(undefined, undefined, { eventType: "loading", eventListener: testFn });
+			renderWithEventListener(undefined, undefined, { eventType: "loading", eventListener: testFn });
 
 			expect(testFn).toHaveBeenCalled();
 		});
@@ -132,7 +142,7 @@ describe("iframe", () => {
 		it("should fire a loaded event on receiving a loaded postMessage", () => {
 			const testFn = jest.fn();
 
-			renderComponent(undefined, undefined, { eventType: "loaded", eventListener: testFn });
+			renderWithEventListener(undefined, undefined, { eventType: "loaded", eventListener: testFn });
 			sendPostMessage(EPostMessageEvent.LOADED);
 
 			expect(testFn).toHaveBeenCalled();
@@ -185,7 +195,7 @@ describe("iframe", () => {
 		it("should fail validation if validation exceeds validationTimeout", async () => {
 			jest.useFakeTimers();
 
-			renderComponent({ validationTimeout: 1000 });
+			renderWithEventListener({ validationTimeout: 1000 });
 			await waitFor(() => sendPostMessage(EPostMessageEvent.SET_VALUE, "hello world"));
 
 			jest.advanceTimersByTime(100);
@@ -254,64 +264,10 @@ describe("iframe", () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			sendPostMessage(EPostMessageEvent.SET_VALUE, "hello world");
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			sendPostMessage(EPostMessageEvent.SET_VALUE, "hello world");
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
-					onClick={handleClick}
-				/>
-			);
-			sendPostMessage(EPostMessageEvent.SET_VALUE, "hello world");
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: "hello",
+		modifyField: () => sendPostMessage(EPostMessageEvent.SET_VALUE, "hello world"),
 	});
 });

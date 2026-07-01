@@ -6,21 +6,17 @@ import merge from "lodash/merge";
 import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { IL1Value, INestedMultiSelectSchema } from "../../../../components/fields";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
+import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
-	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
 	TOverrideField,
-	TOverrideSchema,
+	createRenderComponent,
 	getErrorMessage,
 	getField,
 	getResetButton,
-	getResetButtonProps,
 	getSubmitButton,
-	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
@@ -53,53 +49,27 @@ const NESTED_JSON_FIELDS: TOverrideField<INestedMultiSelectSchema> = {
 	],
 };
 
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: "Nestedmultiselect",
-					uiType: UI_TYPE,
-					options: [
-						{ label: "A", value: "Apple", key: "appleKey" },
-						{ label: "B", value: "Berry", key: "berryKey" },
-						{ label: "C", value: "Cherry", key: "cherryKey" },
-						{ label: "D", value: "Durian", key: "durianKey" },
-					],
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
-		},
+const renderComponent = createRenderComponent<INestedMultiSelectSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: "Nestedmultiselect",
+		uiType: UI_TYPE,
+		options: [
+			{ label: "A", value: "Apple", key: "appleKey" },
+			{ label: "B", value: "Berry", key: "berryKey" },
+			{ label: "C", value: "Cherry", key: "cherryKey" },
+			{ label: "D", value: "Durian", key: "durianKey" },
+		],
 	},
-};
-
-const renderComponent = (
-	overrideField?: TOverrideField<INestedMultiSelectSchema>,
-	overrideSchema?: TOverrideSchema
-) => {
-	const json: IFrontendEngineData<INestedMultiSelectSchema> = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+	submitFn: SUBMIT_FN,
+});
 
 const ComponentWithSetSchemaButton = (props: {
 	onClick: (data: IFrontendEngineData) => IFrontendEngineData;
 	initialSchema?: IFrontendEngineData;
 }) => {
 	const { onClick, initialSchema } = props;
-	const [schema, setSchema] = useState<IFrontendEngineData>(initialSchema ?? JSON_SCHEMA);
+	const [schema, setSchema] = useState<IFrontendEngineData>(initialSchema ?? renderComponent.schema);
 	return (
 		<>
 			<FrontendEngine data={schema} onSubmit={SUBMIT_FN} />
@@ -362,7 +332,7 @@ describe(UI_TYPE, () => {
 		`("$scenario", async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }) => {
 			render(
 				<ComponentWithSetSchemaButton
-					initialSchema={merge(cloneDeep(JSON_SCHEMA), {
+					initialSchema={merge(cloneDeep(renderComponent.schema), {
 						sections: {
 							section: {
 								children: {
@@ -459,7 +429,7 @@ describe(UI_TYPE, () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(
 					<ComponentWithSetSchemaButton
-						initialSchema={JSON_SCHEMA}
+						initialSchema={renderComponent.schema}
 						onClick={(data) => ({
 							...data,
 							overrides: {
@@ -503,7 +473,7 @@ describe(UI_TYPE, () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(
 					<ComponentWithSetSchemaButton
-						initialSchema={merge(cloneDeep(JSON_SCHEMA), {
+						initialSchema={merge(cloneDeep(renderComponent.schema), {
 							sections: {
 								section: {
 									children: {
@@ -603,83 +573,14 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: { appleKey: "apple" },
+		modifyField: () => {
 			fireEvent.click(getComponent());
 			fireEvent.click(getCheckboxA());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...JSON_SCHEMA,
-						defaultValues: {
-							[COMPONENT_ID]: {
-								appleKey: "apple",
-							},
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(getComponent());
-			fireEvent.click(getCheckboxA());
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...JSON_SCHEMA,
-						defaultValues: {
-							[COMPONENT_ID]: {
-								appleKey: "apple",
-								berryKey: "Berry",
-							},
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(getComponent());
-			fireEvent.click(getCheckboxA());
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+		},
 	});
 
 	labelTestSuite(renderComponent);

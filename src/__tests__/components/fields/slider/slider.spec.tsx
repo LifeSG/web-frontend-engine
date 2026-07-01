@@ -1,61 +1,29 @@
-import { Form } from "@lifesg/react-design-system/form";
-import { FormSliderProps } from "@lifesg/react-design-system/form";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import cloneDeep from "lodash/cloneDeep";
-import merge from "lodash/merge";
-import { FrontendEngine } from "../../../../components";
+import { Form, FormSliderProps } from "@lifesg/react-design-system/form";
+import { act, fireEvent, waitFor } from "@testing-library/react";
 import { ISliderSchema } from "../../../../components/fields";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
-	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
-	TOverrideField,
-	TOverrideSchema,
+	createRenderComponent,
 	getErrorMessage,
 	getField,
 	getResetButton,
-	getResetButtonProps,
 	getSubmitButton,
-	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "slider";
 
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: "Slider",
-					uiType: UI_TYPE,
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
-		},
+const renderComponent = createRenderComponent<ISliderSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: "Slider",
+		uiType: UI_TYPE,
 	},
-};
-
-const renderComponent = (overrideField?: TOverrideField<ISliderSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+	submitFn: SUBMIT_FN,
+});
 
 const getSlider = (): HTMLElement => {
 	return getField("slider");
@@ -150,65 +118,11 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			changeSliderValue(sliderSpy, 15);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: 50 } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			changeSliderValue(sliderSpy, 15);
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: 50 } }}
-					onClick={handleClick}
-				/>
-			);
-			changeSliderValue(sliderSpy, 15);
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: 50,
+		modifyField: () => changeSliderValue(sliderSpy, 15),
 	});
 
 	labelTestSuite(renderComponent);
