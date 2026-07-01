@@ -3,13 +3,13 @@
 import { FrontendEngine, IFrontendEngineData } from "@lifesg/web-frontend-engine";
 import { IIframeSchema } from "@lifesg/web-frontend-engine/components/custom";
 import { useEffect, useState } from "react";
+import styles from "./iframe.module.css";
 
 export default function IframeDefaultPage() {
 	const [srcUrl, setSrcUrl] = useState("");
 
 	useEffect(() => {
-		const { protocol, host } = window.location;
-		setSrcUrl(`${protocol}//${host}/components/custom/iframe/default-child`);
+		setSrcUrl(`${window.location.origin}/components/custom/iframe/default-child`);
 	}, []);
 
 	if (!srcUrl) return null;
@@ -23,9 +23,7 @@ export default function IframeDefaultPage() {
 						referenceKey: "iframe",
 						validationTimeout: -1,
 						src: srcUrl,
-						style: {
-							minHeight: "300px",
-						},
+						className: styles.iframeStyle,
 					},
 				},
 			},
