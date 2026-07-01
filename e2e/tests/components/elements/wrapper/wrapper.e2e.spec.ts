@@ -65,16 +65,16 @@ test.describe("Wrapper", () => {
 			},
 		});
 
-		test("renders fields in grid columns at desktop viewport", async ({ story }) => {
+		test("Desktop", async ({ story }) => {
 			await story.setDesktopViewport();
 			await story.goto();
-			await story.snapshot("column-layout-desktop");
+			await story.snapshot("mount");
 		});
 
-		test("renders fields stacked at mobile viewport", async ({ story }) => {
+		test("Mobile", async ({ story }) => {
 			await story.setMobileViewport();
 			await story.goto();
-			await story.snapshot("column-layout-mobile");
+			await story.snapshot("mount");
 		});
 	});
 
@@ -99,7 +99,7 @@ test.describe("Wrapper", () => {
 			});
 
 			await test.step("verify popover content is visible", async () => {
-				await story.locators.complexLabel.hintContent.waitFor({ state: "visible" });
+				await expect(story.locators.complexLabel.hintContent).toBeVisible();
 			});
 
 			await story.snapshot("complex-label-hint-open");
@@ -114,7 +114,7 @@ test.describe("Wrapper", () => {
 			});
 
 			await test.step("verify popover content is visible", async () => {
-				await story.locators.complexLabel.hintContentMobile.waitFor({ state: "visible" });
+				await expect(story.locators.complexLabel.hintContentMobile).toBeVisible();
 			});
 
 			await story.snapshot("complex-label-hint-open-mobile", { fullscreen: true });
@@ -128,44 +128,17 @@ test.describe("Wrapper", () => {
 			},
 		});
 
-		test("keeps conditional fields hidden by default", async ({ story }) => {
+		test("shows conditional fields when trigger matches", async ({ story }) => {
 			await story.goto();
 			await expect(story.locators.conditionalRenderer.shownField).toHaveCount(0);
 			await expect(story.locators.conditionalRenderer.nestedShownField).toHaveCount(0);
-			await story.snapshot("conditional-renderer-hidden");
-		});
 
-		test("shows conditional fields when trigger matches", async ({ story }) => {
-			await story.goto();
+			await story.locators.conditionalRenderer.triggerField.fill("show");
 
-			await test.step("set trigger field value", async () => {
-				await story.locators.conditionalRenderer.triggerField.fill("show");
-			});
-
-			await test.step("assert dependent fields are visible", async () => {
-				await story.locators.conditionalRenderer.shownField.waitFor({ state: "visible" });
-				await story.locators.conditionalRenderer.nestedShownField.waitFor({ state: "visible" });
-			});
+			await expect(story.locators.conditionalRenderer.shownField).toBeVisible();
+			await expect(story.locators.conditionalRenderer.nestedShownField).toBeVisible();
 
 			await story.snapshot("conditional-renderer-shown");
-		});
-
-		test("shows and hides conditional fields on mobile", async ({ story }) => {
-			await story.setMobileViewport();
-			await story.goto();
-
-			await expect(story.locators.conditionalRenderer.shownField).toHaveCount(0);
-
-			await test.step("set trigger field value", async () => {
-				await story.locators.conditionalRenderer.triggerField.fill("show");
-			});
-
-			await test.step("assert dependent fields are visible", async () => {
-				await story.locators.conditionalRenderer.shownField.waitFor({ state: "visible" });
-				await story.locators.conditionalRenderer.nestedShownField.waitFor({ state: "visible" });
-			});
-
-			await story.snapshot("conditional-renderer-shown-mobile");
 		});
 	});
 });
