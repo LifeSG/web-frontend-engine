@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { FrontendEngine, IFrontendEngineData, IFrontendEngineRef } from "@lifesg/web-frontend-engine";
+import { createWarningPage } from "@/app/components/common";
+import { IFrontendEngineData } from "@lifesg/web-frontend-engine";
 
 const TEXT_FIELD_WARNING_SCHEMA: IFrontendEngineData = {
 	sections: {
@@ -23,25 +23,4 @@ const TEXT_FIELD_WARNING_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-export default function TextFieldWarningPage() {
-	const formRef = useRef<IFrontendEngineRef | null>(null);
-
-	useEffect(() => {
-		// Defer warning application to ensure fields are registered first.
-		const timerId = globalThis.setTimeout(() => {
-			formRef.current?.setWarnings({
-				primary: "Primary warning message",
-			});
-		}, 0);
-
-		return () => {
-			globalThis.clearTimeout(timerId);
-		};
-	}, []);
-
-	return (
-		<div>
-			<FrontendEngine ref={formRef} data={TEXT_FIELD_WARNING_SCHEMA} />
-		</div>
-	);
-}
+export default createWarningPage({ schema: TEXT_FIELD_WARNING_SCHEMA });
