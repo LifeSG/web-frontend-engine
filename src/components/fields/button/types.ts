@@ -10,10 +10,8 @@ export type TLinkTarget = "_blank" | "_self" | "_parent" | "_top";
 
 export interface IButtonSchema
 	extends Omit<IBaseFieldSchema<"button">, "validation">,
-		Omit<ButtonProps, "loading" | "type"> {
-	startIcon?: keyof typeof Icons | undefined;
-	endIcon?: keyof typeof Icons | undefined;
-	"data-testid"?: string | undefined;
+		Omit<ButtonProps, "loading" | "type" | "icon"> {
+	icon?: keyof typeof Icons | undefined;
 	label: string;
 	href?: string | undefined;
 	target?: TLinkTarget | undefined;

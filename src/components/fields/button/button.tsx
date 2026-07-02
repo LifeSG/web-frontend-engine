@@ -1,11 +1,11 @@
 import { Button } from "@lifesg/react-design-system/button";
-import { Spacing } from "@lifesg/react-design-system/theme";
 import * as Icons from "@lifesg/react-icons";
-import styled from "styled-components";
+import clsx from "clsx";
 import { IGenericFieldProps } from "..";
 import { useFieldEvent } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IButtonSchema } from "./types";
+import * as styles from "./button.styles";
 
 export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// =============================================================================
@@ -14,18 +14,17 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	const { id, schema } = props;
 	const {
 		commonSchema: { label },
-		customSchema: { endIcon, href, startIcon, target, ...buttonProps },
+		customSchema: { className, icon, iconPosition, href, target, ...buttonProps },
 	} = filterSchemaProps(schema);
 	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderIcon = (icon?: IButtonSchema["startIcon"] | IButtonSchema["endIcon"] | undefined) => {
-		if (!icon) return null;
-		const Element = Icons[icon];
-
-		return <Element />;
+	const renderIcon = () => {
+		if (!icon) return undefined;
+		const IconComponent = Icons[icon];
+		return <IconComponent />;
 	};
 
 	const isValidUrl = (url: string): boolean => {
@@ -48,18 +47,15 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	};
 
 	return (
-		<CustomButton type="button" {...buttonProps} onClick={handleClick}>
-			{renderIcon(startIcon)}
+		<Button
+			type="button"
+			{...buttonProps}
+			icon={renderIcon()}
+			iconPosition={iconPosition}
+			onClick={handleClick}
+			className={clsx(styles.customButton, className)}
+		>
 			{label}
-			{renderIcon(endIcon)}
-		</CustomButton>
+		</Button>
 	);
 };
-
-const CustomButton = styled(Button)`
-	> span {
-		display: flex;
-		align-items: center;
-		gap: ${Spacing["spacing-8"]};
-	}
-`;

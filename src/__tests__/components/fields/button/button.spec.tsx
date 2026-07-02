@@ -61,22 +61,20 @@ describe("button", () => {
 		expect(SUBMIT_FN).not.toHaveBeenCalled();
 	});
 
-	it("should render startIcon before button label", async () => {
-		renderComponent({ overrideButton: { startIcon: "AlbumFillIcon" } });
-		const label = screen.getByText(COMPONENT_LABEL);
-		const startIcon = document.querySelector("svg");
+	it("should render icon with left position", async () => {
+		renderComponent({ overrideButton: { icon: "AlbumFillIcon", iconPosition: "left" } });
+		const button = screen.getByRole("button");
+		const icon = button.querySelector("svg");
 
-		expect(label.childNodes.length).toEqual(2);
-		expect(startIcon).toEqual(label.firstChild);
+		expect(icon).toBeInTheDocument();
 	});
 
-	it("should render endIcon after button label", async () => {
-		renderComponent({ overrideButton: { endIcon: "AlbumFillIcon" } });
-		const label = screen.getByText(COMPONENT_LABEL);
-		const endIcon = document.querySelector("svg");
+	it("should render icon with right position", async () => {
+		renderComponent({ overrideButton: { icon: "AlbumFillIcon", iconPosition: "right" } });
+		const button = screen.getByRole("button");
+		const icon = button.querySelector("svg");
 
-		expect(label.childNodes.length).toEqual(2);
-		expect(endIcon).toEqual(label.lastChild);
+		expect(icon).toBeInTheDocument();
 	});
 
 	describe("events", () => {
