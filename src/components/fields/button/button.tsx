@@ -14,18 +14,17 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	const { id, schema } = props;
 	const {
 		commonSchema: { label },
-		customSchema: { className, endIcon, href, startIcon, target, ...buttonProps },
+		customSchema: { className, icon, iconPosition, href, target, ...buttonProps },
 	} = filterSchemaProps(schema);
 	const { dispatchFieldEvent } = useFieldEvent();
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
-	const renderIcon = (icon?: IButtonSchema["startIcon"] | IButtonSchema["endIcon"] | undefined) => {
-		if (!icon) return null;
-		const Element = Icons[icon];
-
-		return <Element />;
+	const renderIcon = () => {
+		if (!icon) return undefined;
+		const IconComponent = Icons[icon];
+		return <IconComponent />;
 	};
 
 	const isValidUrl = (url: string): boolean => {
@@ -48,10 +47,15 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	};
 
 	return (
-		<Button type="button" {...buttonProps} onClick={handleClick} className={clsx(styles.customButton, className)}>
-			{renderIcon(startIcon)}
+		<Button
+			type="button"
+			{...buttonProps}
+			icon={renderIcon()}
+			iconPosition={iconPosition}
+			onClick={handleClick}
+			className={clsx(styles.customButton, className)}
+		>
 			{label}
-			{renderIcon(endIcon)}
 		</Button>
 	);
 };

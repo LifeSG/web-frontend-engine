@@ -62,9 +62,9 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
-		startIcon: {
+		icon: {
 			description:
-				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a> before the button label",
+				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a>",
 			table: {
 				type: {
 					summary: "Refer to React Icons",
@@ -75,18 +75,18 @@ const meta: Meta = {
 			},
 			options: Object.keys(Icons),
 		},
-		endIcon: {
-			description:
-				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a> after the button label",
+		iconPosition: {
+			description: "Position of the icon relative to the button label",
 			table: {
 				type: {
-					summary: "Refer to React Icons",
+					summary: '"left" | "right"',
 				},
+				defaultValue: { summary: "left" },
 			},
 			control: {
 				type: "select",
 			},
-			options: Object.keys(Icons),
+			options: ["left", "right"],
 		},
 		href: {
 			description:
@@ -180,18 +180,20 @@ Overrides.args = {
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
-export const StartIcon = Template("button-start-icon").bind({});
-StartIcon.args = {
+export const IconLeft = Template("button-icon-left").bind({});
+IconLeft.args = {
 	uiType: "button",
 	label: "Button",
-	startIcon: "AlbumFillIcon",
+	icon: "AlbumFillIcon",
+	iconPosition: "left",
 };
 
-export const EndIcon = Template("button-end-icon").bind({});
-EndIcon.args = {
+export const IconRight = Template("button-icon-right").bind({});
+IconRight.args = {
 	uiType: "button",
 	label: "Button",
-	endIcon: "AlbumFillIcon",
+	icon: "AlbumFillIcon",
+	iconPosition: "right",
 };
 
 export const ClickEvent = Template("button-click-event", "click").bind({});
