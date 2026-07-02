@@ -1,9 +1,8 @@
 "use client";
 
 import { FrontendEngine, IFrontendEngineData } from "@lifesg/web-frontend-engine";
-import { IDividerSchema } from "@lifesg/web-frontend-engine/components/elements";
 
-const DIVIDER_SCHEMA: IFrontendEngineData<undefined, IDividerSchema> = {
+const DIVIDER_SCHEMA: IFrontendEngineData = {
 	sections: {
 		section: {
 			uiType: "section",

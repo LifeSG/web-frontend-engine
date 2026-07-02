@@ -1,9 +1,8 @@
 "use client";
 
 import { FrontendEngine, IFrontendEngineData } from "@lifesg/web-frontend-engine";
-import { IGridSchema } from "@lifesg/web-frontend-engine/components/elements";
 
-const GRID_SCHEMA: IFrontendEngineData<undefined, IGridSchema> = {
+const GRID_SCHEMA: IFrontendEngineData = {
 	sections: {
 		section: {
 			uiType: "section",
