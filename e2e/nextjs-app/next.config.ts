@@ -49,6 +49,7 @@ const nextConfig: NextConfig = {
 			"@lifesg/react-design-system": designSystemRelative,
 		},
 	},
+	devIndicators: false,
 };
 
 export default nextConfig;

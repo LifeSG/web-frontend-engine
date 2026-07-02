@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FieldError, useFormContext } from "react-hook-form";
-import styled from "styled-components";
 import * as Yup from "yup";
+import clsx from "clsx";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import { useFieldEvent, useIframeMessage, useValidationConfig } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IGenericCustomFieldProps } from "../types";
+import * as styles from "./iframe.styles";
 import { EPostMessageEvent, IIframeSchema } from "./types";
 
 type TIframePostMessageOptions =
@@ -23,7 +25,7 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	const { error, id, schema, value } = props;
 	const {
-		customSchema: { "data-testid": testId, src, validationTimeout = 2000, ...iframeProps },
+		customSchema: { "data-testid": testId, src, validationTimeout = 2000, className, title, ...iframeProps },
 	} = filterSchemaProps(schema);
 	const formContext = useFormContext();
 	const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -35,6 +37,14 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	const [dimensions, setDimensions] = useState<{ width?: number; height?: number }>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
+
+	// Apply dynamic dimensions via CSS variables
+	useApplyStyle(iframeRef, {
+		[styles.tokens.fluidIframe.width]:
+			dimensions.width !== undefined && dimensions.width >= 0 ? `${dimensions.width}px` : undefined,
+		[styles.tokens.fluidIframe.height]:
+			dimensions.height !== undefined && dimensions.height >= 0 ? `${dimensions.height}px` : undefined,
+	});
 
 	// =========================================================================
 	// HELPER FUNCTIONS
@@ -173,20 +183,14 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// RENDER FUNCTIONS
 	// =========================================================================
 	return (
-		<FluidIframe
+		<iframe
 			{...iframeProps}
+			className={clsx(styles.fluidIframe, className)}
 			ref={iframeRef}
 			src={src}
 			id={id}
 			data-testid={testId || id}
-			$width={dimensions.width}
-			$height={dimensions?.height}
+			title={title}
 		/>
 	);
 };
-
-const FluidIframe = styled.iframe<{ $width?: number | undefined; $height?: number | undefined }>`
-	width: ${({ $width }) => ($width >= 0 ? `${$width}px` : "100%")};
-	height: ${({ $height }) => ($height >= 0 ? `${$height}px` : "100%")};
-	border: none;
-`;
