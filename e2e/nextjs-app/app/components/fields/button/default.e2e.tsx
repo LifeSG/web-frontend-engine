@@ -1,9 +1,8 @@
 "use client";
 
 import { FrontendEngine, IFrontendEngineData } from "@lifesg/web-frontend-engine";
-import { IButtonSchema } from "@lifesg/web-frontend-engine/components/fields";
 
-const BUTTON_SCHEMA: IFrontendEngineData<undefined, IButtonSchema> = {
+const BUTTON_SCHEMA: IFrontendEngineData = {
 	sections: {
 		section: {
 			uiType: "section",
