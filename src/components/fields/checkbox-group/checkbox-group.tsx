@@ -1,4 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
+import clsx from "clsx";
 import without from "lodash/without";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -122,7 +123,11 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 							checked={isCheckboxChecked(option.value)}
 							onChange={() => handleChange(option.value)}
 						/>
-						<Label forwardedAs="label" htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
+						<Label
+							forwardedAs="label"
+							htmlFor={checkboxId}
+							className={clsx({ labelDisabled: disabled ?? option.disabled })}
+						>
 							{renderLabel(option.label)}
 						</Label>
 					</CheckboxContainer>
@@ -136,8 +141,10 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 			options.length > 0 &&
 			customOptions.styleType === "toggle" && (
 				<ToggleWrapper
-					$layoutType={customOptions?.layoutType ?? "horizontal"}
-					className={className ? `${className}-checkbox-container` : undefined}
+					className={clsx(
+						{ toggleWrapperVertical: customOptions?.layoutType === "vertical" },
+						className ? `${className}-checkbox-container` : undefined
+					)}
 				>
 					{options.map((option, index) => {
 						const checkboxId = formatId();

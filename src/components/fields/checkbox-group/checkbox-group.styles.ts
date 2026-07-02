@@ -2,19 +2,14 @@ import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
-import { TCheckboxToggleLayoutType } from "./types";
 import { Spacing } from "@lifesg/react-design-system/theme";
 
-interface ILabelProps {
-	disabled?: boolean | undefined;
-}
+export const Label = styled(Typography.BodyMD)`
+	cursor: pointer;
 
-interface IToggleWrapperProps {
-	$layoutType?: TCheckboxToggleLayoutType;
-}
-
-export const Label = styled(Typography.BodyMD)<ILabelProps>`
-	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+	&.labelDisabled {
+		cursor: not-allowed;
+	}
 `;
 
 export const StyledCheckbox = styled(Checkbox)`
@@ -30,11 +25,15 @@ export const CheckboxContainer = styled.div`
 	}
 `;
 
-export const ToggleWrapper = styled.div<IToggleWrapperProps>`
+export const ToggleWrapper = styled.div`
 	display: flex;
-	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
+	flex-direction: row;
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-16"]};
+
+	&.toggleWrapperVertical {
+		flex-direction: column;
+	}
 `;
 
 export const StyledToggle = styled(Toggle)`
