@@ -1,4 +1,7 @@
+import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import { Form } from "@lifesg/react-design-system/form";
+import { Toggle } from "@lifesg/react-design-system/toggle";
+import { Typography } from "@lifesg/react-design-system/typography";
 import clsx from "clsx";
 import without from "lodash/without";
 import { useEffect, useState } from "react";
@@ -10,7 +13,7 @@ import { TestHelper, filterSchemaProps, generateRandomId } from "../../../utils"
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize, Warning } from "../../shared";
-import { CheckboxContainer, Label, StyledCheckbox, StyledToggle, ToggleWrapper } from "./checkbox-group.styles";
+import * as styles from "./checkbox-group.styles";
 import { ICheckboxGroupOption, IToggleOption, TCheckboxGroupSchema } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) => {
@@ -107,15 +110,18 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 				const checkboxId = formatId();
 
 				return (
-					<CheckboxContainer
+					<div
 						key={index}
-						className={className ? `${className}-checkbox-container` : undefined}
+						className={clsx(
+							styles.checkboxContainer,
+							className ? `${className}-checkbox-container` : undefined
+						)}
 					>
-						<StyledCheckbox
+						<Checkbox
 							{...checkboxProps}
 							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={checkboxId}
-							className={className}
+							className={clsx(styles.checkbox, className)}
 							disabled={disabled ?? option.disabled}
 							name={checkboxId}
 							value={option.value}
@@ -123,14 +129,14 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 							checked={isCheckboxChecked(option.value)}
 							onChange={() => handleChange(option.value)}
 						/>
-						<Label
-							forwardedAs="label"
+						<Typography.BodyMD
+							as="label"
 							htmlFor={checkboxId}
-							className={clsx({ labelDisabled: disabled ?? option.disabled })}
+							className={clsx(styles.label, { [styles.labelDisabled]: disabled ?? option.disabled })}
 						>
 							{renderLabel(option.label)}
-						</Label>
-					</CheckboxContainer>
+						</Typography.BodyMD>
+					</div>
 				);
 			})
 		);
@@ -140,9 +146,10 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 		return (
 			options.length > 0 &&
 			customOptions.styleType === "toggle" && (
-				<ToggleWrapper
+				<div
 					className={clsx(
-						{ toggleWrapperVertical: customOptions?.layoutType === "vertical" },
+						styles.toggleWrapper,
+						customOptions?.layoutType === "vertical" && styles.toggleWrapperVertical,
 						className ? `${className}-checkbox-container` : undefined
 					)}
 				>
@@ -150,12 +157,12 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 						const checkboxId = formatId();
 
 						return (
-							<StyledToggle
+							<Toggle
 								key={index}
 								type="checkbox"
 								data-testid={TestHelper.generateId(id, "toggle")}
 								id={checkboxId}
-								className={className}
+								className={clsx(styles.toggle, className)}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
 								name={checkboxId}
@@ -175,10 +182,10 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								subLabel={!!option.subLabel && renderLabel(option.subLabel)}
 							>
 								{renderLabel(option.label)}
-							</StyledToggle>
+							</Toggle>
 						);
 					})}
-				</ToggleWrapper>
+				</div>
 			)
 		);
 	};
