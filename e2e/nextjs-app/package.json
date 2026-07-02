@@ -11,6 +11,7 @@
 		"@lifesg/react-design-system": "3.4.0-canary.5",
 		"@lifesg/web-frontend-engine": "^2.2.4",
 		"next": "16.2.7",
+		"next-with-linaria": "^1.4.0",
 		"react": "19.2.3",
 		"react-dom": "19.2.3"
 	},
