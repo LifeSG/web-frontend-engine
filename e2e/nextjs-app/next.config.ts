@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import withLinaria from "next-with-linaria";
 import path from "node:path";
 
 const isCI = process.env.CI === "true";
@@ -13,7 +14,7 @@ const workspaceRoot = path.resolve(__dirname, "../..");
 // when not running in CI, importing `@lifesg/web-frontend-engine` resolves to
 // repository source for faster feedback during E2E iteration.
 // In CI this alias is redirected to the installed package entry.
-const frontendEngineSourceRelative = "./src/index.ts";
+const frontendEngineSourceRelative = "../../src/index.ts";
 const frontendEnginePackageEntryRelative = "./e2e/nextjs-app/node_modules/@lifesg/web-frontend-engine/index.js";
 
 // Force design-system resolution through the Next app's own node_modules path.
@@ -51,4 +52,4 @@ const nextConfig: NextConfig = {
 	},
 };
 
-export default nextConfig;
+export default withLinaria(nextConfig);
