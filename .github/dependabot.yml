@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "main"
+    open-pull-requests-limit: 0
+    labels:
+      - "type: chore"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
