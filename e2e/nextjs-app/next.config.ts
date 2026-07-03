@@ -9,6 +9,7 @@ const isCI = process.env.CI === "true";
 // Using the workspace root avoids cross-filesystem resolution issues and keeps
 // module graph construction consistent in local and CI runs.
 const workspaceRoot = path.resolve(__dirname, "../..");
+const workspaceRootRelative = __dirname;
 
 // Local-only alias target for the FEE package:
 // when not running in CI, importing `@lifesg/web-frontend-engine` resolves to
@@ -41,7 +42,7 @@ const nextConfig: NextConfig = {
 	turbopack: {
 		// Anchor Turbopack to the workspace boundary so alias paths are evaluated
 		// against a predictable root rather than the app subdirectory.
-		root: workspaceRoot,
+		root: isCI ? workspaceRootRelative : workspaceRoot,
 		resolveAlias: {
 			// Local: use source alias for rapid iteration.
 			// CI: force resolution to installed package output.
