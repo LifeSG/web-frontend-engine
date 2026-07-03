@@ -9,19 +9,20 @@ const isCI = process.env.CI === "true";
 // Using the workspace root avoids cross-filesystem resolution issues and keeps
 // module graph construction consistent in local and CI runs.
 const workspaceRoot = path.resolve(__dirname, "../..");
+const workspaceRootRelative = __dirname;
 
 // Local-only alias target for the FEE package:
 // when not running in CI, importing `@lifesg/web-frontend-engine` resolves to
 // repository source for faster feedback during E2E iteration.
 // In CI this alias is redirected to the installed package entry.
-const frontendEngineSourceRelative = "../../src/index.ts";
-const frontendEnginePackageEntryRelative = "./e2e/nextjs-app/node_modules/@lifesg/web-frontend-engine/index.js";
+// const frontendEngineSourceRelative = "../../src/index.ts";
+// const frontendEnginePackageEntryRelative = "./e2e/nextjs-app/node_modules/@lifesg/web-frontend-engine/index.js";
 
 // Force design-system resolution through the Next app's own node_modules path.
 // This helps avoid duplicate package instances when the workspace root also
 // contains related dependencies, which can otherwise cause styling/runtime
 // inconsistencies in E2E runs.
-const designSystemRelative = "./e2e/nextjs-app/node_modules/@lifesg/react-design-system";
+// const designSystemRelative = "./e2e/nextjs-app/node_modules/@lifesg/react-design-system";
 
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
@@ -38,18 +39,21 @@ const nextConfig: NextConfig = {
 		// dist artifact installs, and other monorepo-adjacent paths).
 		externalDir: true,
 	},
-	turbopack: {
-		// Anchor Turbopack to the workspace boundary so alias paths are evaluated
-		// against a predictable root rather than the app subdirectory.
-		root: workspaceRoot,
-		resolveAlias: {
-			// Local: use source alias for rapid iteration.
-			// CI: force resolution to installed package output.
-			"@lifesg/web-frontend-engine": isCI ? frontendEnginePackageEntryRelative : frontendEngineSourceRelative,
-			// Always pin design-system resolution to the app dependency tree.
-			"@lifesg/react-design-system": designSystemRelative,
-		},
-	},
+	outputFileTracingRoot: isCI ? workspaceRootRelative : workspaceRoot,
+	// FIXME: BOOKINGSG-9316: Turbopack is currently disabled due to an issue with CSS load order. Re-enable once the issue is resolved.
+	// turbopack: {
+	// 	// Anchor Turbopack to the workspace boundary so alias paths are evaluated
+	// 	// against a predictable root rather than the app subdirectory.
+	// 	root: isCI ? workspaceRootRelative : workspaceRoot,
+	// 	resolveAlias: {
+	// 		// Local: use source alias for rapid iteration.
+	// 		// CI: force resolution to installed package output.
+	// 		"@lifesg/web-frontend-engine": isCI ? frontendEnginePackageEntryRelative : frontendEngineSourceRelative,
+	// 		// Always pin design-system resolution to the app dependency tree.
+	// 		"@lifesg/react-design-system": designSystemRelative,
+	// 	},
+	// },
+	devIndicators: false,
 };
 
 export default withLinaria(nextConfig);

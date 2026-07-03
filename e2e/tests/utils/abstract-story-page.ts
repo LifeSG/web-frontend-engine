@@ -25,7 +25,7 @@ export abstract class AbstractStoryPage {
 		await expect(this.layout).toBeVisible();
 	}
 
-	public async snapshot(name: string) {
-		await compareScreenshot(this.page, name);
+	public async snapshot(name: string, options?: { fullscreen?: boolean; locator?: Locator; mask?: Locator[] }) {
+		await compareScreenshot(this.page, name, options);
 	}
 }
