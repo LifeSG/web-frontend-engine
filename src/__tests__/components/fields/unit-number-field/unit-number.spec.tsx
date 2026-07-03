@@ -1,58 +1,23 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import cloneDeep from "lodash/cloneDeep";
-import merge from "lodash/merge";
-import { FrontendEngine } from "../../../../components";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { IUnitNumberFieldSchema } from "../../../../components/fields";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import { ERROR_MESSAGES } from "../../../../components/shared";
-import {
-	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
-	TOverrideField,
-	TOverrideSchema,
-	getField,
-	getResetButton,
-	getResetButtonProps,
-	getSubmitButton,
-	getSubmitButtonProps,
-} from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
+import { createRenderComponent, getResetButton, getSubmitButton } from "../../../common";
+import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Unit Number";
 const UI_TYPE = "unit-number-field";
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: COMPONENT_LABEL,
-					uiType: UI_TYPE,
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
-		},
-	},
-};
 
-const renderComponent = (overrideField?: TOverrideField<IUnitNumberFieldSchema>, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+const renderComponent = createRenderComponent<IUnitNumberFieldSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: COMPONENT_LABEL,
+		uiType: UI_TYPE,
+	},
+	submitFn: SUBMIT_FN,
+});
 
 const getFloorInputField = (): HTMLElement => {
 	return screen.getByTestId("floor-input");
@@ -175,65 +140,11 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			setFieldValue("12", "34");
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "01-02" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			setFieldValue("12", "34");
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "01-02" } }}
-					onClick={handleClick}
-				/>
-			);
-			setFieldValue("12", "34");
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema: renderComponent.schema,
+		componentId: COMPONENT_ID,
+		defaultValue: "01-02",
+		modifyField: () => setFieldValue("12", "34"),
 	});
 
 	labelTestSuite(renderComponent);

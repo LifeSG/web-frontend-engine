@@ -1,6 +1,7 @@
 import { fireEvent, screen } from "@testing-library/react";
 
-export const labelTestSuite = (renderComponent: (overrideField: unknown) => void) =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const labelTestSuite = (renderComponent: (overrideField?: any) => void) =>
 	describe("labels", () => {
 		const getComputedStyle = window.getComputedStyle.bind(window);
 
