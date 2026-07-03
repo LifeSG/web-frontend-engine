@@ -15,7 +15,11 @@ interface IToggleWrapperProps {
 }
 
 export const Label = styled(Typography.BodyMD)<ILabelProps>`
-	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+	cursor: pointer;
+
+	&.labelDisabled {
+		cursor: not-allowed;
+	}
 `;
 
 export const StyledRadioButton = styled(RadioButton)`
@@ -46,9 +50,13 @@ export const FlexImageWrapper = styled.div`
 
 export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
 	display: flex;
-	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
+	flex-direction: row;
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-16"]};
+
+	&.flexToggleWrapperVertical {
+		flex-direction: column;
+	}
 `;
 
 export const StyledToggle = styled(Toggle)`

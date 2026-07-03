@@ -1,4 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -100,7 +101,11 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							checked={isRadioButtonChecked(option.value)}
 							onChange={() => handleChangeOrClick(option.value)}
 						/>
-						<Label forwardedAs="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
+						<Label
+							as="label"
+							htmlFor={radioButtonId}
+							className={clsx((disabled ?? option.disabled) && "labelDisabled")}
+						>
 							{renderLabel(option.label)}
 						</Label>
 					</RadioContainer>
@@ -114,8 +119,10 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			options.length > 0 &&
 			customOptions.styleType === "toggle" && (
 				<FlexToggleWrapper
-					className={className ? `${className} ${className}-radio-container` : undefined}
-					$layoutType={customOptions?.layoutType ?? "horizontal"}
+					className={clsx(
+						customOptions?.layoutType === "vertical" && "flexToggleWrapperVertical",
+						className && `${className} ${className}-radio-container`
+					)}
 				>
 					{options.map((option, index) => {
 						const radioButtonId = formatId();
@@ -158,7 +165,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const renderImageButtons = () => {
 		return (
 			options.length > 0 && (
-				<FlexImageWrapper className={className ? `${className} ${className}-radio-container` : undefined}>
+				<FlexImageWrapper className={clsx(className && `${className} ${className}-radio-container`)}>
 					{options.map((option, index) => {
 						const radioButtonId = formatId();
 
