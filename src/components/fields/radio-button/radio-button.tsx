@@ -42,9 +42,9 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	}, [validation]);
 
 	useDeepCompareEffect(() => {
-		if (!options.find((option) => option.value === value)) {
-			setValue(id, "");
-		}
+		const isValidValue = value && options.find((option) => option.value === value);
+		const newValue = isValidValue ? value : "";
+		setValue(id, newValue);
 	}, [options]);
 
 	useEffect(() => {
