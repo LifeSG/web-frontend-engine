@@ -1,4 +1,4 @@
-import { Button } from "@lifesg/react-design-system/button";
+import { Button, ButtonIconPosition } from "@lifesg/react-design-system/button";
 import * as Icons from "@lifesg/react-icons";
 import clsx from "clsx";
 import { IGenericFieldProps } from "..";
@@ -22,10 +22,27 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderIcon = (icon?: IButtonSchema["startIcon"] | IButtonSchema["endIcon"] | undefined) => {
-		if (!icon) return null;
+		if (!icon) return undefined;
 		const Element = Icons[icon];
 
 		return <Element />;
+	};
+
+	const getIconProps = (): { icon: JSX.Element; iconPosition: ButtonIconPosition } | Record<string, never> => {
+		if (startIcon) {
+			return {
+				icon: renderIcon(startIcon),
+				iconPosition: "left",
+			};
+		}
+		if (endIcon) {
+			return {
+				icon: renderIcon(endIcon),
+				iconPosition: "right",
+			};
+		}
+
+		return {};
 	};
 
 	const isValidUrl = (url: string): boolean => {
@@ -48,10 +65,14 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	};
 
 	return (
-		<Button type="button" {...buttonProps} onClick={handleClick} className={clsx(styles.customButton, className)}>
-			{renderIcon(startIcon)}
+		<Button
+			type="button"
+			{...buttonProps}
+			{...getIconProps()}
+			onClick={handleClick}
+			className={clsx(styles.customButton, className)}
+		>
 			{label}
-			{renderIcon(endIcon)}
 		</Button>
 	);
 };
