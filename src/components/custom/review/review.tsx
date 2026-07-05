@@ -1,8 +1,9 @@
 import { BoxContainer } from "@lifesg/react-design-system/box-container";
 import { Button } from "@lifesg/react-design-system/button";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 import isEmpty from "lodash/isEmpty";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { AxiosApiClient, filterSchemaProps } from "../../../utils";
@@ -16,7 +17,7 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
-import { BoxUneditableSection, CustomUneditableSection } from "./review.styles";
+import { BoxUneditableSection, CustomUneditableSection, tokens } from "./review.styles";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -26,6 +27,12 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
 	const [itemDetailList, setItemDetailList] = useState<IReviewItemDetails[]>([]);
+	const boxRef = useRef<HTMLDivElement>(null);
+	const rowGap = schema.variant !== "accordion" ? (schema as IReviewSchemaBox).rowGap : undefined;
+
+	useApplyStyle(boxRef, {
+		[tokens.box.rowGap]: rowGap,
+	});
 
 	// =============================================================================
 	// EFFECTS
@@ -208,12 +215,14 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const renderBox = (schema: IReviewSchemaBox) => {
 		const {
 			commonSchema: { label },
-			customSchema: { description, topSection, bottomSection, rowGap, ...boxProps },
+			customSchema: { description, topSection, bottomSection, rowGap: _rowGap, ...boxProps },
 		} = filterSchemaProps(schema);
+
 		return (
 			<BoxUneditableSection
 				{...boxProps}
-				$rowGap={rowGap}
+				// @ts-expect-error - styled-components ref typing issue
+				ref={boxRef}
 				id={id}
 				title={label}
 				description={description}
