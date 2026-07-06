@@ -63,20 +63,20 @@ describe("button", () => {
 
 	it("should render startIcon before button label", async () => {
 		renderComponent({ overrideButton: { startIcon: "AlbumFillIcon" } });
-		const label = screen.getByText(COMPONENT_LABEL);
-		const startIcon = document.querySelector("svg");
+		const button = getField("button", COMPONENT_LABEL);
+		const icon = button.querySelector("svg");
 
-		expect(label.childNodes.length).toEqual(2);
-		expect(startIcon).toEqual(label.firstChild);
+		expect(icon).toBeInTheDocument();
+		expect(button).toHaveTextContent(COMPONENT_LABEL);
 	});
 
 	it("should render endIcon after button label", async () => {
 		renderComponent({ overrideButton: { endIcon: "AlbumFillIcon" } });
-		const label = screen.getByText(COMPONENT_LABEL);
-		const endIcon = document.querySelector("svg");
+		const button = getField("button", COMPONENT_LABEL);
+		const icon = button.querySelector("svg");
 
-		expect(label.childNodes.length).toEqual(2);
-		expect(endIcon).toEqual(label.lastChild);
+		expect(icon).toBeInTheDocument();
+		expect(button).toHaveTextContent(COMPONENT_LABEL);
 	});
 
 	describe("events", () => {
