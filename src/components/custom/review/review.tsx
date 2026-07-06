@@ -1,7 +1,8 @@
 import { BoxContainer } from "@lifesg/react-design-system/box-container";
 import { Button } from "@lifesg/react-design-system/button";
 import { useApplyStyle } from "@lifesg/react-design-system/theme";
-import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
+import { UneditableSection, UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
+import clsx from "clsx";
 import isEmpty from "lodash/isEmpty";
 import { useEffect, useRef, useState } from "react";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -17,7 +18,7 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
-import { BoxUneditableSection, CustomUneditableSection, tokens } from "./review.styles";
+import * as styles from "./review.styles";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -31,7 +32,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const rowGap = schema.variant !== "accordion" ? (schema as IReviewSchemaBox).rowGap : undefined;
 
 	useApplyStyle(boxRef, {
-		[tokens.box.rowGap]: rowGap,
+		[styles.tokens.box.rowGap]: rowGap,
 	});
 
 	// =============================================================================
@@ -182,7 +183,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const renderAccordion = (schema: IReviewSchemaAccordion) => {
 		const {
 			commonSchema: { label },
-			customSchema: { button, bottomSection, expanded = true, topSection, ...accordionProps },
+			customSchema: { button, bottomSection, className, expanded = true, topSection, ...accordionProps },
 		} = filterSchemaProps(schema);
 
 		return (
@@ -198,8 +199,9 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				expanded={expanded}
 				{...accordionProps}
 			>
-				<CustomUneditableSection
+				<UneditableSection
 					background={false}
+					className={clsx(styles.customUneditableSection, className)}
 					id={id}
 					items={formatItems()}
 					topSection={generateSection(topSection)}
@@ -219,19 +221,19 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 		} = filterSchemaProps(schema);
 
 		return (
-			<BoxUneditableSection
-				{...boxProps}
-				// @ts-expect-error - styled-components ref typing issue
-				ref={boxRef}
-				id={id}
-				title={label}
-				description={description}
-				items={formatItems()}
-				topSection={generateSection(topSection)}
-				bottomSection={generateSection(bottomSection)}
-				onUnmask={handleUnmask}
-				onTryAgain={handleUnmask}
-			/>
+			<div ref={boxRef} className={clsx(rowGap && styles.boxUneditableSection)}>
+				<UneditableSection
+					{...boxProps}
+					id={id}
+					title={label}
+					description={description}
+					items={formatItems()}
+					topSection={generateSection(topSection)}
+					bottomSection={generateSection(bottomSection)}
+					onUnmask={handleUnmask}
+					onTryAgain={handleUnmask}
+				/>
+			</div>
 		);
 	};
 
