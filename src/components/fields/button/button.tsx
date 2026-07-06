@@ -1,11 +1,10 @@
-import { Button, ButtonIconPosition } from "@lifesg/react-design-system/button";
+import { Button, ButtonProps } from "@lifesg/react-design-system/button";
 import * as Icons from "@lifesg/react-icons";
 import clsx from "clsx";
 import { IGenericFieldProps } from "..";
 import { useFieldEvent } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IButtonSchema } from "./types";
-import * as styles from "./button.styles";
 
 export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// =============================================================================
@@ -28,7 +27,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 		return <Element />;
 	};
 
-	const getIconProps = (): { icon: JSX.Element; iconPosition: ButtonIconPosition } | Record<string, never> => {
+	const getIconProps = (): Pick<ButtonProps, "icon" | "iconPosition"> | undefined => {
 		if (startIcon) {
 			return {
 				icon: renderIcon(startIcon),
@@ -42,7 +41,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 			};
 		}
 
-		return {};
+		return undefined;
 	};
 
 	const isValidUrl = (url: string): boolean => {
@@ -65,13 +64,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	};
 
 	return (
-		<Button
-			type="button"
-			{...buttonProps}
-			{...getIconProps()}
-			onClick={handleClick}
-			className={clsx(styles.customButton, className)}
-		>
+		<Button type="button" {...buttonProps} {...getIconProps()} onClick={handleClick} className={clsx(className)}>
 			{label}
 		</Button>
 	);
