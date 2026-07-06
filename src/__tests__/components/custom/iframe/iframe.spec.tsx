@@ -229,8 +229,8 @@ describe("iframe", () => {
 
 		const iframeElement = getIframe();
 		const computedStyle = window.getComputedStyle(iframeElement);
-		expect(computedStyle.width).toBe(`${width}px`);
-		expect(computedStyle.height).toBe(`${height}px`);
+		expect(computedStyle.getPropertyValue("--fee-internal-iframe-fluidIframe-width")).toBe(`${width}px`);
+		expect(computedStyle.getPropertyValue("--fee-internal-iframe-fluidIframe-height")).toBe(`${height}px`);
 	});
 
 	describe("reset", () => {

@@ -59,7 +59,7 @@ Before you begin, create the outline for a step-by-step plan you would have to t
     ```
 
 -   Ensure the consumer `className` prop is chained last to the top-level element using `clsx` to allow for external overrides
--   For props used as CSS values, convert them to CSS variables and apply them with `useApplyStyle` on a ref (do not use the JSX `style` prop / inline styles). The CSS variable name should be formatted as `--fds-internal-componentName-subComponent-propertyType`. For example:
+-   For props used as CSS values, convert them to CSS variables and apply them with `useApplyStyle` on a ref (do not use the JSX `style` prop / inline styles). The CSS variable name should be formatted as `--fee-internal-componentName-subComponent-propertyType`. For example:
 
     ```
     // before
@@ -69,7 +69,7 @@ Before you begin, create the outline for a step-by-step plan you would have to t
 
     // after
     const tokens = {
-      container: { backgroundColor: "--fds-internal-myComponent-container-backgroundColor" }
+      container: { backgroundColor: "--fee-internal-myComponent-container-backgroundColor" }
     }
 
     const Container = styled.div`
