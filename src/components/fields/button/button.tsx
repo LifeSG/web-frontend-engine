@@ -1,6 +1,5 @@
 import { Button, ButtonProps } from "@lifesg/react-design-system/button";
 import * as Icons from "@lifesg/react-icons";
-import clsx from "clsx";
 import { IGenericFieldProps } from "..";
 import { useFieldEvent } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
@@ -13,7 +12,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	const { id, schema } = props;
 	const {
 		commonSchema: { label },
-		customSchema: { className, endIcon, href, startIcon, target, ...buttonProps },
+		customSchema: { endIcon, href, startIcon, target, ...buttonProps },
 	} = filterSchemaProps(schema);
 	const { dispatchFieldEvent } = useFieldEvent();
 
@@ -64,7 +63,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	};
 
 	return (
-		<Button type="button" {...buttonProps} {...getIconProps()} onClick={handleClick} className={clsx(className)}>
+		<Button type="button" {...buttonProps} {...getIconProps()} onClick={handleClick}>
 			{label}
 		</Button>
 	);
