@@ -1,4 +1,4 @@
-import { ButtonProps } from "@lifesg/react-design-system/button/types";
+import { ButtonProps } from "@lifesg/react-design-system/button";
 import * as Icons from "@lifesg/react-icons";
 import { IBaseFieldSchema } from "../types";
 import { TFieldEventListener } from "../../../utils";

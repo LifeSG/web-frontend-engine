@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { FormInputProps } from "@lifesg/react-design-system/form/types";
+import { FormInputProps } from "@lifesg/react-design-system/form";
 import * as Icons from "@lifesg/react-icons";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";

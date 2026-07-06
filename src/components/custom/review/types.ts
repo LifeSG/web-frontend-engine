@@ -1,5 +1,5 @@
 import { BoxContainerProps } from "@lifesg/react-design-system/box-container";
-import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section/types";
+import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
 import { TFieldEventListener } from "../../../utils";
 import type { TBlockElementSchema, TInlineElementSchema } from "../../elements";
 import type { TWrapperSchema } from "../../elements/wrapper";

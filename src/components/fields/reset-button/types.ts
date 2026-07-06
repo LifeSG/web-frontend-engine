@@ -1,4 +1,4 @@
-import { ButtonProps } from "@lifesg/react-design-system/button/types";
+import { ButtonProps } from "@lifesg/react-design-system/button";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 

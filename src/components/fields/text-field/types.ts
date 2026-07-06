@@ -1,4 +1,4 @@
-import { FormInputProps } from "@lifesg/react-design-system/form/types";
+import { FormInputProps } from "@lifesg/react-design-system/form";
 import { InputGroupAddonPosition } from "@lifesg/react-design-system/input-group";
 import * as Icons from "@lifesg/react-icons";
 import { IYupValidationRule, TComponentOmitProps } from "../../frontend-engine";
