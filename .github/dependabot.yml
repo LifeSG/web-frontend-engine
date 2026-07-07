@@ -4,12 +4,12 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    target-branch: "main"
     open-pull-requests-limit: 0
     labels:
       - "type: chore"
     groups:
       minor-and-patch:
+        applies-to: security-updates
         update-types:
           - "minor"
           - "patch"
