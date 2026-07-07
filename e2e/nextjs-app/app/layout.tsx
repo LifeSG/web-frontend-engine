@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import type { ReactNode } from "react";
+import StyledComponentsRegistry from "./styled-components-registry";
 
 import "./globals.css";
 import "@lifesg/react-design-system/theme/styles/lifesg.css";
@@ -11,7 +13,9 @@ export const metadata: Metadata = {
 	description: "Next.js runtime target for Playwright E2E",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+	const nonce = (await headers()).get("x-nonce");
+
 	return (
 		<html lang="en">
 			<head>
@@ -20,9 +24,11 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
 				))}
 			</head>
 			<body>
-				<main className="main">
-					<div data-testid="story-layout">{children}</div>
-				</main>
+				<StyledComponentsRegistry nonce={nonce}>
+					<main className="main">
+						<div data-testid="story-layout">{children}</div>
+					</main>
+				</StyledComponentsRegistry>
 			</body>
 		</html>
 	);
