@@ -1,6 +1,5 @@
 import { TextList } from "@lifesg/react-design-system/text-list";
-import { TypographySizeType } from "@lifesg/react-design-system/theme/font/types";
-import { V2_TextSizeType } from "@lifesg/react-design-system/v2_text/types";
+import { V2_TextSizeType } from "@lifesg/react-design-system/v2_text";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
@@ -23,8 +22,7 @@ export const List = (props: IGenericElementProps<IUnorderedListSchema | IOrdered
 	// HELPER FUNCTIONS
 	// =============================================================================
 
-	const isV2TextSizeType = (size: TypographySizeType | V2_TextSizeType): size is V2_TextSizeType =>
-		size in SIZE_MAPPING;
+	const isV2TextSizeType = (textSize: typeof size): textSize is V2_TextSizeType => textSize in SIZE_MAPPING;
 
 	// =============================================================================
 	// RENDER FUNCTIONS

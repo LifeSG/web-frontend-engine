@@ -1,4 +1,4 @@
-import { ButtonStyleType } from "@lifesg/react-design-system/button/types";
+import { ButtonStyleType } from "@lifesg/react-design-system/button";
 import * as Icons from "@lifesg/react-icons";
 import { IYupValidationRule, TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { IBaseCustomFieldSchema } from "../types";

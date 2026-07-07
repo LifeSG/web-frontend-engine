@@ -1,7 +1,7 @@
-import { TypographySizeType } from "@lifesg/react-design-system/theme/font/types";
-import { V2_TextSizeType } from "@lifesg/react-design-system/v2_text/types";
+import { UnorderedListProps } from "@lifesg/react-design-system/text-list";
+import { V2_TextSizeType } from "@lifesg/react-design-system/v2_text";
 
-export const SIZE_MAPPING: Record<V2_TextSizeType, TypographySizeType> = {
+export const SIZE_MAPPING: Record<V2_TextSizeType, UnorderedListProps["size"]> = {
 	D1: "heading-xxl",
 	D2: "heading-xl",
 	D3: "heading-md",

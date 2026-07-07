@@ -1,5 +1,5 @@
-import { TypographyProps } from "@lifesg/react-design-system/typography/types";
-import { V2_TextProps } from "@lifesg/react-design-system/v2_text/types";
+import { TypographyProps } from "@lifesg/react-design-system/typography";
+import { V2_TextProps } from "@lifesg/react-design-system/v2_text";
 import { TComponentOmitProps } from "../../frontend-engine";
 import { IBaseElementSchema, TInlineElementSchema } from "../types";
 

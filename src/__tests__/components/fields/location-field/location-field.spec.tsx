@@ -633,7 +633,9 @@ describe("location-input-group", () => {
 					).not.toBeInTheDocument();
 				});
 
-				expect(screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "modal", "show"))).toBeVisible();
+				await waitFor(() => {
+					expect(screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "modal", "show"))).toBeVisible();
+				});
 			});
 		});
 
@@ -732,7 +734,10 @@ describe("location-input-group", () => {
 
 				fireEvent.click(getEditLocationButton());
 				fireEvent.click(getEditLocationModalEditButton());
-				expect(screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "modal", "show"))).toBeVisible();
+
+				await waitFor(() => {
+					expect(screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "modal", "show"))).toBeVisible();
+				});
 			});
 		});
 

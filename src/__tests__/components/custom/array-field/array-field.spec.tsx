@@ -194,7 +194,9 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText("Remove entry?")).toBeVisible();
+			});
 
 			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-remove"));
 
@@ -210,7 +212,9 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText("Remove entry?")).toBeVisible();
+			});
 
 			fireEvent.click(screen.queryByTestId("field-remove-prompt__btn-back"));
 
@@ -292,7 +296,9 @@ describe(UI_TYPE, () => {
 
 			fireEvent.click(getRemoveButton(0));
 
-			expect(screen.queryByText("Remove entry?")).toBeVisible();
+			await waitFor(() => {
+				expect(screen.queryByText("Remove entry?")).toBeVisible();
+			});
 		});
 
 		it("should not show confirmation modal when disabled prop is true", async () => {
@@ -323,7 +329,9 @@ describe(UI_TYPE, () => {
 
 		fireEvent.click(screen.queryByText("Minus"));
 
-		expect(screen.queryByText("Bye bye")).toBeVisible();
+		await waitFor(() => {
+			expect(screen.queryByText("Bye bye")).toBeVisible();
+		});
 	});
 
 	describe("min rule", () => {

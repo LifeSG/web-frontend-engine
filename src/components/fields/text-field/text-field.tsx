@@ -1,5 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { FormInputProps } from "@lifesg/react-design-system/form/types";
+import { FormInputProps } from "@lifesg/react-design-system/form";
 import { AddonProps } from "@lifesg/react-design-system/input-group";
 import * as Icons from "@lifesg/react-icons";
 import React, { HTMLInputTypeAttribute, useEffect, useRef, useState } from "react";

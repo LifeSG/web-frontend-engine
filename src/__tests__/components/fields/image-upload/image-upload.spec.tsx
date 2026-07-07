@@ -679,14 +679,22 @@ describe("image-upload", () => {
 				expect(uploadSpy).not.toHaveBeenCalled();
 			});
 
-			it("should show confirmation prompt", () => {
-				expect(screen.getByText("Review photos?")).toBeVisible();
+			it("should show confirmation prompt", async () => {
+				await waitFor(() => {
+					expect(screen.getByText("Review photos?")).toBeVisible();
+				});
 			});
 
 			it("should show review modal after clicking ok in confirmation prompt", async () => {
-				await waitFor(() => fireEvent.click(getField("button", "Ok")));
+				await waitFor(() => {
+					expect(getField("button", "Ok")).toBeVisible();
+				});
 
-				expect(screen.getByText("Review photos")).toBeVisible();
+				fireEvent.click(getField("button", "Ok"));
+
+				await waitFor(() => {
+					expect(screen.getByText("Review photos")).toBeVisible();
+				});
 			});
 		});
 
@@ -706,7 +714,9 @@ describe("image-upload", () => {
 
 			it("should skip confirmation prompt and show review modal", async () => {
 				expect(screen.getByText("Review photos?")).not.toBeVisible();
-				expect(screen.getByText("Review photos")).toBeVisible();
+				await waitFor(() => {
+					expect(screen.getByText("Review photos")).toBeVisible();
+				});
 			});
 		});
 	});
@@ -903,8 +913,10 @@ describe("image-upload", () => {
 					await waitFor(() => fireEvent.click(getField("button", "Delete")));
 				});
 
-				it("should show delete confirmation prompt on clicking the delete button", () => {
-					expect(screen.getByText("Delete photo?")).toBeVisible();
+				it("should show delete confirmation prompt on clicking the delete button", async () => {
+					await waitFor(() => {
+						expect(screen.getByText("Delete photo?")).toBeVisible();
+					});
 					expect(getField("button", "Cancel")).toBeVisible();
 					expect(getField("button", "Yes, delete")).toBeVisible();
 				});
@@ -934,8 +946,10 @@ describe("image-upload", () => {
 					await waitFor(() => fireEvent.click(getField("button", "Delete")));
 				});
 
-				it("should show delete and exit confirmation prompt on attempting to delete the last photo", () => {
-					expect(screen.getByText("Delete photo and exit?")).toBeVisible();
+				it("should show delete and exit confirmation prompt on attempting to delete the last photo", async () => {
+					await waitFor(() => {
+						expect(screen.getByText("Delete photo and exit?")).toBeVisible();
+					});
 					expect(getField("button", "Cancel")).toBeVisible();
 					expect(getField("button", "Delete and exit")).toBeVisible();
 				});
@@ -968,8 +982,10 @@ describe("image-upload", () => {
 				await waitFor(() => fireEvent.click(getField("button", "exit review modal")));
 			});
 
-			it("should show confirmation prompt", () => {
-				expect(screen.getByText("Exit without saving?")).toBeVisible();
+			it("should show confirmation prompt", async () => {
+				await waitFor(() => {
+					expect(screen.getByText("Exit without saving?")).toBeVisible();
+				});
 				expect(screen.getByText("Yes, exit")).toBeVisible();
 				expect(getField("button", "Cancel")).toBeVisible();
 			});
