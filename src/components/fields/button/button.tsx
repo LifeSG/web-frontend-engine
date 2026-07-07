@@ -1,7 +1,5 @@
-import { Button } from "@lifesg/react-design-system/button";
-import { Spacing } from "@lifesg/react-design-system/theme";
+import { Button, ButtonProps } from "@lifesg/react-design-system/button";
 import * as Icons from "@lifesg/react-icons";
-import styled from "styled-components";
 import { IGenericFieldProps } from "..";
 import { useFieldEvent } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
@@ -22,10 +20,27 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderIcon = (icon?: IButtonSchema["startIcon"] | IButtonSchema["endIcon"] | undefined) => {
-		if (!icon) return null;
+		if (!icon) return undefined;
 		const Element = Icons[icon];
 
 		return <Element />;
+	};
+
+	const getIconProps = (): Pick<ButtonProps, "icon" | "iconPosition"> | undefined => {
+		if (startIcon) {
+			return {
+				icon: renderIcon(startIcon),
+				iconPosition: "left",
+			};
+		}
+		if (endIcon) {
+			return {
+				icon: renderIcon(endIcon),
+				iconPosition: "right",
+			};
+		}
+
+		return undefined;
 	};
 
 	const isValidUrl = (url: string): boolean => {
@@ -48,18 +63,8 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	};
 
 	return (
-		<CustomButton type="button" {...buttonProps} onClick={handleClick}>
-			{renderIcon(startIcon)}
+		<Button type="button" {...buttonProps} {...getIconProps()} onClick={handleClick}>
 			{label}
-			{renderIcon(endIcon)}
-		</CustomButton>
+		</Button>
 	);
 };
-
-const CustomButton = styled(Button)`
-	> span {
-		display: flex;
-		align-items: center;
-		gap: ${Spacing["spacing-8"]};
-	}
-`;
