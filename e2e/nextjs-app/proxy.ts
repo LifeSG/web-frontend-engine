@@ -11,7 +11,7 @@ export function proxy(request: NextRequest) {
 
 	// Dev allows unsafe-inline for faster iteration; prod uses nonce-based CSP
 	// TODO: add nonce to non-dev env once we migrated from styled-components.
-	const styleSrcDirective = isDev ? "style-src 'self' 'unsafe-inline';" : `style-src 'self' 'unsafe-inline';`;
+	const styleSrcDirective = isDev ? "style-src 'self' 'unsafe-inline';" : `style-src 'self';`;
 
 	const cspHeader = `
         default-src 'self';
