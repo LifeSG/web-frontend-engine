@@ -1,6 +1,12 @@
 import { Modal } from "@lifesg/react-design-system/modal";
-import { Breakpoint, useMediaQuery, useResolvedBreakpointToken } from "@lifesg/react-design-system/theme";
+import {
+	Breakpoint,
+	useApplyStyle,
+	useMediaQuery,
+	useResolvedBreakpointToken,
+} from "@lifesg/react-design-system/theme";
 import { CrossIcon } from "@lifesg/react-icons/cross";
+import clsx from "clsx";
 import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
@@ -31,6 +37,7 @@ import {
 	PaletteHolder,
 	ReviewCloseButton,
 	ReviewTitle,
+	tokens,
 } from "./image-review.styles";
 import { ImageThumbnails } from "./image-thumbnails";
 
@@ -45,6 +52,39 @@ const PALETTE_COLORS = [
 	{ color: "#22910c", label: "green" },
 	{ color: "#f8e821", label: "yellow" },
 ];
+
+// =============================================================================
+// PALETTE ITEM
+// =============================================================================
+interface IPaletteItemProps {
+	id: string;
+	color: string;
+	colorScheme?: string;
+	ariaLabel: string;
+	isActive: boolean;
+	onClick: () => void;
+}
+
+const PaletteItem = ({ id, color, colorScheme, ariaLabel, isActive, onClick }: IPaletteItemProps) => {
+	const paletteRef = useRef<HTMLButtonElement>(null);
+
+	useApplyStyle(paletteRef, {
+		[tokens.palette.color]: color,
+	});
+
+	return (
+		<Palette
+			ref={paletteRef}
+			id={id}
+			data-testid={id}
+			aria-label={ariaLabel}
+			className={clsx(colorScheme === "light" && "paletteColorSchemeLight")}
+			onClick={onClick}
+		>
+			{isActive && <ButtonIcon className={clsx(colorScheme === "light" && "buttonIconColorSchemeLight")} />}
+		</Palette>
+	);
+};
 
 interface IProps extends ISharedImageProps {
 	capture?: TFileCapture | undefined;
@@ -320,7 +360,7 @@ export const ImageReview = (props: IProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderHeader = () => (
-		<HeaderSection className={className ? `${className}-header` : undefined} $drawActive={drawActive}>
+		<HeaderSection className={clsx(className && `${className}-header`, drawActive && "headerSectionDrawActive")}>
 			{!drawActive ? (
 				<>
 					<ReviewCloseButton
@@ -377,9 +417,12 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "draw-button")}
 						onClick={handleStartDrawing}
 						disabled={drawDeleteDisabled}
-						icon={<DrawIcon $disabled={drawDeleteDisabled} />}
+						icon={<DrawIcon className={clsx(drawDeleteDisabled && "drawIconDisabled")} />}
 					>
-						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
+						<DrawDeleteButtonText
+							weight="semibold"
+							className={clsx(drawDeleteDisabled && "drawDeleteButtonTextDisabled")}
+						>
 							Draw
 						</DrawDeleteButtonText>
 					</DrawDeleteButton>
@@ -388,9 +431,12 @@ export const ImageReview = (props: IProps) => {
 						data-testid={TestHelper.generateId(id, "delete-button")}
 						onClick={() => setActivePrompt("delete")}
 						disabled={drawDeleteDisabled}
-						icon={<DeleteIcon $disabled={drawDeleteDisabled} />}
+						icon={<DeleteIcon className={clsx(drawDeleteDisabled && "deleteIconDisabled")} />}
 					>
-						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
+						<DrawDeleteButtonText
+							weight="semibold"
+							className={clsx(drawDeleteDisabled && "drawDeleteButtonTextDisabled")}
+						>
 							Delete
 						</DrawDeleteButtonText>
 					</DrawDeleteButton>
@@ -442,20 +488,19 @@ export const ImageReview = (props: IProps) => {
 						aria-label="eraser"
 						onClick={handleEraseMode}
 					>
-						<EraserButtonIcon $eraseMode={eraseMode} />
+						<EraserButtonIcon className={clsx(eraseMode && "eraserButtonIconEraseMode")} />
 					</EraserButton>
 					<PaletteHolder>
 						{PALETTE_COLORS.map(({ color, colorScheme, label }, i) => (
-							<Palette
-								id={TestHelper.generateId(id, `palette-color-${i}`)}
-								aria-label={`${label} brush`}
-								$color={color}
-								$colorScheme={colorScheme}
+							<PaletteItem
 								key={color}
+								id={TestHelper.generateId(id, `palette-color-${i}`)}
+								color={color}
+								colorScheme={colorScheme}
+								ariaLabel={`${label} brush`}
+								isActive={activeColor === color}
 								onClick={() => handleSelectPaletteColor(color)}
-							>
-								{activeColor === color && <ButtonIcon $colorScheme={colorScheme} />}
-							</Palette>
+							/>
 						))}
 					</PaletteHolder>
 				</>

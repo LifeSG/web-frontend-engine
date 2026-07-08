@@ -8,6 +8,12 @@ import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import styled, { css } from "styled-components";
 
+export const tokens = {
+	palette: {
+		color: "--fee-internal-imageReview-palette-color",
+	},
+};
+
 interface IModalBoxStyle {
 	imageReviewModalStyles?: string | undefined;
 }
@@ -44,13 +50,16 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 // =============================================================================
 // HEADER
 // =============================================================================
-export const HeaderSection = styled.div<{ $drawActive?: boolean }>`
+export const HeaderSection = styled.div`
 	display: flex;
 	height: 2.75rem;
 	text-align: center;
 	align-items: center;
 	flex-shrink: 0;
-	${({ $drawActive }) => ($drawActive ? "justify-content: space-between;" : "")}
+
+	&.headerSectionDrawActive {
+		justify-content: space-between;
+	}
 `;
 
 export const ReviewCloseButton = styled(Button)`
@@ -152,17 +161,29 @@ export const DrawDeleteButton = styled(Button)`
 	}
 `;
 
-export const DrawDeleteButtonText = styled(Typography.BodySM)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Colour["text-subtler"] : Colour["text-primary"])};
+export const DrawDeleteButtonText = styled(Typography.BodySM)`
+	color: ${Colour["text-primary"]};
 	line-height: 1.75rem;
+
+	&.drawDeleteButtonTextDisabled {
+		color: ${Colour["text-subtler"]};
+	}
 `;
 
-export const DrawIcon = styled(PencilStrokeIcon)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Colour.icon : Colour["icon-primary"])};
+export const DrawIcon = styled(PencilStrokeIcon)`
+	color: ${Colour["icon-primary"]};
+
+	&.drawIconDisabled {
+		color: ${Colour.icon};
+	}
 `;
 
-export const DeleteIcon = styled(BinIcon)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Colour.icon : Colour["icon-primary"])};
+export const DeleteIcon = styled(BinIcon)`
+	color: ${Colour["icon-primary"]};
+
+	&.deleteIconDisabled {
+		color: ${Colour.icon};
+	}
 `;
 
 export const ImageEditorWrapper = styled.div`
@@ -208,17 +229,25 @@ export const EraserButton = styled.button`
 	}
 `;
 
-export const EraserButtonIcon = styled(EraserIcon)<{ $eraseMode: boolean }>`
+export const EraserButtonIcon = styled(EraserIcon)`
 	display: block;
 	width: 100%;
 	height: 100%;
-	color: ${(props) => (props.$eraseMode ? Colour["icon-primary"] : Colour.icon)};
+	color: ${Colour.icon};
+
+	&.eraserButtonIconEraseMode {
+		color: ${Colour["icon-primary"]};
+	}
 `;
 
-export const ButtonIcon = styled(PencilIcon)<{ $colorScheme: string }>`
-	color: ${(props) => (props.$colorScheme === "light" ? Colour.icon : Colour["icon-inverse"])};
+export const ButtonIcon = styled(PencilIcon)`
+	color: ${Colour["icon-inverse"]};
 	width: 100%;
 	height: 100%;
+
+	&.buttonIconColorSchemeLight {
+		color: ${Colour.icon};
+	}
 `;
 
 export const PaletteHolder = styled.div`
@@ -227,15 +256,19 @@ export const PaletteHolder = styled.div`
 	flex-direction: flex-end;
 `;
 
-export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
+export const Palette = styled.button`
 	width: 3rem;
 	height: 3rem;
 	border-radius: ${Radius.sm};
 	padding: ${Spacing["spacing-12"]};
-	background-color: ${({ $color }) => $color};
-	border: ${Border.solid} ${Border["width-010"]}
-		${({ $color, $colorScheme }) => ($colorScheme === "light" ? "#979797" : $color)};
+	${tokens.palette.color}: initial;
+	background-color: var(${tokens.palette.color});
+	border: ${Border.solid} ${Border["width-010"]} var(${tokens.palette.color});
 	cursor: pointer;
+
+	&.paletteColorSchemeLight {
+		border-color: #979797;
+	}
 
 	${MediaQuery.MaxWidth.sm} {
 		width: 2.5rem;

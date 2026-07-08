@@ -5,18 +5,18 @@ import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
 import { Typography } from "@lifesg/react-design-system/typography";
 import styled from "styled-components";
 
-export interface SubtitleProps {
-	$hasDescription?: boolean;
-}
-
 export const Wrapper = styled(DashedBorder)`
 	&:not(:last-child) {
 		margin-bottom: ${Spacing["spacing-32"]};
 	}
 `;
 
-export const Subtitle = styled(Typography.BodyBL)<SubtitleProps>`
-	margin-bottom: ${(props) => (props.$hasDescription ? Spacing["spacing-8"] : Spacing["spacing-16"])};
+export const Subtitle = styled(Typography.BodyBL)`
+	margin-bottom: ${Spacing["spacing-16"]};
+
+	&.subtitleHasDescription {
+		margin-bottom: ${Spacing["spacing-8"]};
+	}
 `;
 
 export const TooltipWrapper = styled.button`

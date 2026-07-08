@@ -3,27 +3,34 @@ import { Typography } from "@lifesg/react-design-system/typography";
 import styled, { css } from "styled-components";
 import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
 
-export const Wrapper = styled.div<{ $isError?: boolean; $isCustomMuted?: boolean }>`
+export const tokens = {
+	thumbnail: {
+		backgroundImage: "--fee-internal-fileItem-thumbnail-backgroundImage",
+	},
+};
+
+export const Wrapper = styled.div`
 	display: flex;
-	flex-wrap: ${(props) => (props.$isCustomMuted ? "nowrap" : "wrap")};
+	flex-wrap: wrap;
 	align-items: center;
 	gap: ${Spacing["spacing-8"]};
-	border: ${(props) =>
-		props.$isError
-			? css`
-					${Border["width-010"]} ${Border.solid} ${Colour["border-error"]}
-			  `
-			: css`
-					${Border["width-010"]} ${Border.solid} ${Colour.border}
-			  `};
+	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	border-radius: ${Radius.sm};
-	border-radius: ${Radius.sm};
-	background-color: ${(props) => (props.$isError ? Colour["bg-error"] : Colour["bg-primary-subtlest"])};
+	background-color: ${Colour["bg-primary-subtlest"]};
 	min-height: 3.5rem;
 	margin-bottom: ${Spacing["spacing-16"]};
 	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-32"]};
 	${MediaQuery.MaxWidth.lg} {
 		padding: ${Spacing["spacing-16"]};
+	}
+
+	&.wrapperIsError {
+		border: ${Border["width-010"]} ${Border.solid} ${Colour["border-error"]};
+		background-color: ${Colour["bg-error"]};
+	}
+
+	&.wrapperIsCustomMuted {
+		flex-wrap: nowrap;
 	}
 `;
 
@@ -58,11 +65,15 @@ export const CellDeleteButton = styled.div`
 	width: 19.15%;
 `;
 
-export const Thumbnail = styled.div<{ $src: string }>`
+export const Thumbnail = styled.div`
 	margin-right: ${Spacing["spacing-32"]};
 	width: 6rem;
 	height: 6rem;
-	background: url(${(props) => props.$src}) no-repeat center / cover;
+	${tokens.thumbnail.backgroundImage}: initial;
+	background-image: var(${tokens.thumbnail.backgroundImage});
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 	overflow: hidden;
 	border-radius: ${Radius.sm};
 	${Font["body-sm-bold"]}

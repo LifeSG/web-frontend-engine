@@ -1,5 +1,7 @@
 import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import { PlusIcon } from "@lifesg/react-icons/plus";
+import clsx from "clsx";
 import { ChangeEvent, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
 import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../../types";
@@ -13,9 +15,45 @@ import {
 	ThumbnailItem,
 	ThumbnailWarningIcon,
 	ThumbnailsWrapper,
+	tokens,
 } from "./image-thumbnails.styles";
 
 const ADD_PLACEHOLDER_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/photo-placeholder-add.svg";
+
+// =============================================================================
+// THUMBNAIL WITH IMAGE
+// =============================================================================
+interface IThumbnailWithImageProps {
+	id: string;
+	src: string;
+	isSelected: boolean;
+	isError?: boolean;
+	ariaLabel: string;
+	onClick: () => void;
+}
+
+const ThumbnailWithImage = ({ id, src, isSelected, isError, ariaLabel, onClick }: IThumbnailWithImageProps) => {
+	const thumbnailRef = useRef<HTMLButtonElement>(null);
+
+	useApplyStyle(thumbnailRef, {
+		[tokens.thumbnailItem.backgroundImage]: src ? `url(${src})` : undefined,
+	});
+
+	return (
+		<ThumbnailItem
+			ref={thumbnailRef}
+			id={id}
+			data-testid={id}
+			type="button"
+			aria-label={ariaLabel}
+			className={clsx(isError && "thumbnailItemError")}
+			onClick={onClick}
+		>
+			<BorderOverlay className={clsx(isSelected && "borderOverlayIsSelected")} />
+			{isError && <ThumbnailWarningIcon />}
+		</ThumbnailItem>
+	);
+};
 
 interface IProps extends Omit<ISharedImageProps, "maxSizeInKb"> {
 	activeFileIndex: number;
@@ -72,32 +110,26 @@ export const ImageThumbnails = (props: IProps) => {
 				);
 			} else if (image.status > EImageStatus.NONE || image.status === EImageStatus.ERROR_CUSTOM_MUTED) {
 				return (
-					<ThumbnailItem
+					<ThumbnailWithImage
 						key={index}
 						id={TestHelper.generateId(id, `item-${index + 1}`)}
-						data-testid={TestHelper.generateId(id, `item-${index + 1}`)}
-						$src={image.thumbnailDataURL || image.dataURL || ADD_PLACEHOLDER_ICON}
-						type="button"
-						aria-label={`thumbnail of ${image.name}`}
+						src={image.thumbnailDataURL || image.dataURL || ADD_PLACEHOLDER_ICON}
+						isSelected={activeFileIndex === index}
+						ariaLabel={`thumbnail of ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
-					>
-						<BorderOverlay $isSelected={activeFileIndex === index} />
-					</ThumbnailItem>
+					/>
 				);
 			} else if (image.addedFrom === "reviewModal" || image.status < EImageStatus.NONE) {
 				return (
-					<ThumbnailItem
+					<ThumbnailWithImage
 						key={index}
 						id={TestHelper.generateId(id, `item-${index + 1}`)}
-						data-testid={TestHelper.generateId(id, `item-${index + 1}`)}
-						type="button"
-						aria-label={`error with ${image.name}`}
+						src=""
+						isSelected={activeFileIndex === index}
+						isError
+						ariaLabel={`error with ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
-						$error
-					>
-						<BorderOverlay $isSelected={activeFileIndex === index} />
-						<ThumbnailWarningIcon />
-					</ThumbnailItem>
+					/>
 				);
 			}
 		});

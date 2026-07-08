@@ -1,5 +1,7 @@
 import { Typography } from "@lifesg/react-design-system/typography";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import { CrossIcon } from "@lifesg/react-icons/cross";
+import clsx from "clsx";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
@@ -19,6 +21,7 @@ import {
 	TextBody,
 	Thumbnail,
 	Wrapper,
+	tokens,
 } from "./file-item.styles";
 
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
@@ -37,7 +40,12 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	const [isError, setError] = useState<boolean>(false);
 	const [errorMessage, setErrorMessage] = useState<string>();
 	const fileNameWrapperRef = useRef<HTMLDivElement>(null);
+	const thumbnailRef = useRef<HTMLDivElement>(null);
 	const [transformedFileName, setTransformedFileName] = useState<string>();
+
+	useApplyStyle(thumbnailRef, {
+		[tokens.thumbnail.backgroundImage]: dataURL ? `url(${dataURL})` : undefined,
+	});
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
@@ -168,7 +176,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 			<>
 				<ErrorCustomMutedThumbnailContainer>
 					<Thumbnail
-						$src={fileItem.dataURL ?? ""}
+						ref={thumbnailRef}
 						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
@@ -194,7 +202,7 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 			<>
 				{status === EImageStatus.UPLOADED && !isError && (
 					<Thumbnail
-						$src={fileItem.dataURL ?? ""}
+						ref={thumbnailRef}
 						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
@@ -214,8 +222,10 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 
 	return (
 		<Wrapper
-			$isError={isError}
-			$isCustomMuted={status === EImageStatus.ERROR_CUSTOM_MUTED}
+			className={clsx(
+				isError && "wrapperIsError",
+				status === EImageStatus.ERROR_CUSTOM_MUTED && "wrapperIsCustomMuted"
+			)}
 			id={TestHelper.generateId(`${id}-${index + 1}`)}
 			data-testid={TestHelper.generateId(`${id}-${index + 1}`)}
 		>

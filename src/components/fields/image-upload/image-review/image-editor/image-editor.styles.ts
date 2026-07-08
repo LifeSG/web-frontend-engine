@@ -7,6 +7,8 @@ export const Wrapper = styled.div`
 	touch-action: none;
 `;
 
-export const Canvas = styled.canvas<{ $canDraw: boolean }>`
-	${({ $canDraw }) => $canDraw && "cursor: crosshair;"};
+export const Canvas = styled.canvas`
+	&.canvasCanDraw {
+		cursor: crosshair;
+	}
 `;

@@ -4,6 +4,12 @@ import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
 import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import styled, { css, keyframes } from "styled-components";
 
+export const tokens = {
+	thumbnailItem: {
+		backgroundImage: "--fee-internal-imageThumbnails-thumbnailItem-backgroundImage",
+	},
+};
+
 export const ThumbnailsWrapper = styled.div`
 	display: flex;
 	gap: ${Spacing["spacing-8"]};
@@ -12,7 +18,7 @@ export const ThumbnailsWrapper = styled.div`
 	max-height: 5rem;
 `;
 
-export const ThumbnailItem = styled.button<{ $src?: string; $error?: boolean }>`
+export const ThumbnailItem = styled.button`
 	position: relative;
 	cursor: pointer;
 	width: 3rem;
@@ -20,10 +26,14 @@ export const ThumbnailItem = styled.button<{ $src?: string; $error?: boolean }>`
 	padding: 0;
 	border: none;
 	border-radius: ${Radius.xs};
-	${({ $src }) => `background-image: url(${$src});`}
-	background-color: ${({ $error }) => $error && "#eee"};
+	${tokens.thumbnailItem.backgroundImage}: initial;
+	background-image: var(${tokens.thumbnailItem.backgroundImage});
 	background-position: center;
 	background-size: cover;
+
+	&.thumbnailItemError {
+		background-color: #eee;
+	}
 `;
 
 export const ThumbnailWarningIcon = styled(ExclamationTriangleIcon)`
@@ -84,16 +94,16 @@ export const LoadingBox = styled.div`
 	}
 `;
 
-export const BorderOverlay = styled.div<{ $isSelected: boolean }>`
-	border: ${(props) =>
-		props.$isSelected
-			? css`
-					${Border.solid} ${Border["width-020"]}
-			  `
-			: "none"};
+export const BorderOverlay = styled.div`
+	border: none;
 	border-color: ${Colour["border-primary"]};
 	width: 100%;
 	height: 100%;
+
+	&.borderOverlayIsSelected {
+		border: ${Border.solid} ${Border["width-020"]};
+		border-color: ${Colour["border-primary"]};
+	}
 `;
 
 export const HiddenFileSelect = styled.input`

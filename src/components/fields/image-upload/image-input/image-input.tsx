@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { createRef, useContext, useEffect, useState } from "react";
 import * as Icons from "@lifesg/react-icons";
 import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
@@ -236,7 +237,7 @@ export const ImageInput = (props: IImageInputProps) => {
 				<Subtitle
 					forwardedAs="label"
 					htmlFor={TestHelper.generateId(id, "file-input-add-button")}
-					$hasDescription={!!description}
+					className={clsx(!!description && "subtitleHasDescription")}
 					weight="semibold"
 				>
 					{label}
