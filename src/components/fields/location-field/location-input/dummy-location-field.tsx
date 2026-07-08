@@ -1,4 +1,5 @@
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
+import clsx from "clsx";
 import { DummyLocationInput, LocationIconWrapper, LocationInputText } from "./location-input.styles";
 
 interface IDummyLocationFieldProps {
@@ -27,10 +28,13 @@ export const DummyLocationField = (props: IDummyLocationFieldProps) => {
 			id={id}
 			data-testid={dataTestId}
 			type="button"
-			className={className}
+			className={clsx(
+				readOnly && "dummyLocationInputReadOnly",
+				disabled && "dummyLocationInputDisabled",
+				error && "dummyLocationInputError",
+				className
+			)}
 			disabled={disabled}
-			$readOnly={readOnly}
-			$error={error}
 			onFocus={onFocus}
 			onClick={handleClick}
 			tabIndex={disabled ? -1 : 0}
@@ -39,13 +43,18 @@ export const DummyLocationField = (props: IDummyLocationFieldProps) => {
 			aria-readonly={readOnly}
 		>
 			{placeholder && !value ? (
-				<LocationInputText $placeholder $disabled={disabled}>
+				<LocationInputText
+					className={clsx("locationInputTextPlaceholder", disabled && "locationInputTextDisabled")}
+				>
 					{placeholder}
 				</LocationInputText>
 			) : (
-				<LocationInputText $disabled={disabled}>{value}</LocationInputText>
+				<LocationInputText className={clsx(disabled && "locationInputTextDisabled")}>{value}</LocationInputText>
 			)}
-			<LocationIconWrapper $disabled={disabled} $readOnly={readOnly} aria-hidden="true">
+			<LocationIconWrapper
+				className={clsx(disabled && "locationIconWrapperDisabled", readOnly && "locationIconWrapperReadOnly")}
+				aria-hidden="true"
+			>
 				<PinFillIcon />
 			</LocationIconWrapper>
 		</DummyLocationInput>

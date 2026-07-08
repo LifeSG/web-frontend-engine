@@ -1,19 +1,10 @@
 import { Modal } from "@lifesg/react-design-system/modal";
 import styled from "styled-components";
-import { TPanelInputMode } from "../types";
 import { LocationPicker } from "./location-picker";
 import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 
-interface ISinglePanelStyle {
-	panelInputMode: TPanelInputMode;
-}
-
-interface IModalBoxStyle {
-	locationModalStyles?: string | undefined;
-}
-
-export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
+export const ModalBox = styled(Modal.Box)`
 	flex-direction: row;
 	width: 70%;
 	max-width: 45rem;
@@ -21,10 +12,6 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 
 	// set z-index to get past safari border-radius issue
 	z-index: 1;
-
-	${({ locationModalStyles }) => {
-		if (locationModalStyles) return `${locationModalStyles}`;
-	}}
 
 	${MediaQuery.MaxWidth.lg} {
 		flex-direction: column;
@@ -42,17 +29,29 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 	}
 `;
 
-export const StyledLocationPicker = styled(LocationPicker)<ISinglePanelStyle>`
+export const StyledLocationPicker = styled(LocationPicker)`
 	width: 48.89%;
 
 	${MediaQuery.MaxWidth.lg}, ${ModalBox}[data-mobile-landscape="true"] & {
 		/* Keep map mounted but control visibility to prevent coordinate corruption */
 		display: block;
-		visibility: ${({ panelInputMode }) => (panelInputMode !== "map" ? "hidden" : "visible")};
-		pointer-events: ${({ panelInputMode }) => (panelInputMode !== "map" ? "none" : "auto")};
 		width: 100%;
 		margin-top: ${Spacing["spacing-16"]};
 		height: calc(100% - 13rem);
+	}
+
+	&.styledLocationPickerPanelMap {
+		${MediaQuery.MaxWidth.lg}, ${ModalBox}[data-mobile-landscape="true"] & {
+			visibility: visible;
+			pointer-events: auto;
+		}
+	}
+
+	&.styledLocationPickerPanelNotMap {
+		${MediaQuery.MaxWidth.lg}, ${ModalBox}[data-mobile-landscape="true"] & {
+			visibility: hidden;
+			pointer-events: none;
+		}
 	}
 `;
 

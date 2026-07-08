@@ -2,16 +2,11 @@ import styled from "styled-components";
 import { Border, Colour, Font, MediaQuery, Motion, Spacing } from "@lifesg/react-design-system/theme";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import { CrossIcon } from "@lifesg/react-icons/cross";
-import { TPanelInputMode } from "../../types";
 import { MagnifierIcon } from "@lifesg/react-icons/magnifier";
 import { Typography } from "@lifesg/react-design-system/typography";
 import { Button } from "@lifesg/react-design-system/button";
 
-interface ISinglePanelStyle {
-	$panelInputMode: TPanelInputMode;
-}
-
-export const SearchWrapper = styled.div<ISinglePanelStyle>`
+export const SearchWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	flex: 1;
@@ -19,12 +14,23 @@ export const SearchWrapper = styled.div<ISinglePanelStyle>`
 
 	${MediaQuery.MaxWidth.lg}, &[data-mobile-landscape="true"] {
 		flex: unset;
-		height: ${({ $panelInputMode }) => ($panelInputMode === "search" ? `100%` : `auto`)};
 		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} 0;
+	}
+
+	&.searchWrapperPanelSearch {
+		${MediaQuery.MaxWidth.lg}, &[data-mobile-landscape="true"] {
+			height: 100%;
+		}
+	}
+
+	&.searchWrapperPanelNotSearch {
+		${MediaQuery.MaxWidth.lg}, &[data-mobile-landscape="true"] {
+			height: auto;
+		}
 	}
 `;
 
-export const SearchBarContainer = styled.div<{ $hasScrolled?: boolean }>`
+export const SearchBarContainer = styled.div`
 	position: relative;
 	display: flex;
 	gap: ${Spacing["spacing-8"]};
@@ -35,7 +41,9 @@ export const SearchBarContainer = styled.div<{ $hasScrolled?: boolean }>`
 	clip-path: inset(0 0 -0.3rem 0);
 	transition: box-shadow ${Motion["duration-250"]} ${Motion["ease-default"]};
 
-	${({ $hasScrolled }) => ($hasScrolled ? `box-shadow: 0 0.06rem 0.4rem rgba(0,0,0,.12);` : "")}
+	&.searchBarContainerScrolled {
+		box-shadow: 0 0.06rem 0.4rem rgba(0, 0, 0, 0.12);
+	}
 
 	&:focus-within {
 		border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour["border-focus"]};
@@ -103,14 +111,25 @@ export const SearchBarCross = styled(CrossIcon)`
 	color: ${Colour["icon-subtle"]};
 `;
 
-export const ResultWrapper = styled.div<ISinglePanelStyle>`
+export const ResultWrapper = styled.div`
 	overflow-y: auto;
 	flex: 1;
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 
 	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
-		display: ${({ $panelInputMode }) => ($panelInputMode !== "map" ? `block` : `none`)};
 		border-bottom: 0;
+	}
+
+	&.resultWrapperPanelMap {
+		${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
+			display: none;
+		}
+	}
+
+	&.resultWrapperPanelNotMap {
+		${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
+			display: block;
+		}
 	}
 `;
 
@@ -127,7 +146,7 @@ export const NoResultTitle = styled(Typography.BodyMD)`
 	overflow-y: scroll;
 `;
 
-export const ResultItem = styled.div<{ $active?: boolean }>`
+export const ResultItem = styled.div`
 	display: flex;
 	align-items: center;
 	gap: ${Spacing["spacing-16"]};
@@ -135,7 +154,11 @@ export const ResultItem = styled.div<{ $active?: boolean }>`
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	text-transform: uppercase;
 	cursor: pointer;
-	background-color: ${({ $active }) => ($active ? Colour["bg-selected"] : `transparent`)};
+	background-color: transparent;
+
+	&.resultItemActive {
+		background-color: ${Colour["bg-selected"]};
+	}
 
 	.keyword {
 		font-weight: ${Font.Spec["weight-semibold"]};
@@ -148,28 +171,46 @@ export const ResultItemPin = styled(PinFillIcon)`
 	color: ${Colour["icon-strongest"]};
 `;
 
-export const ButtonWrapper = styled.div<ISinglePanelStyle>`
+export const ButtonWrapper = styled.div`
 	display: flex;
 	justify-content: center;
 	gap: ${Spacing["spacing-16"]};
 	padding-top: ${Spacing["spacing-16"]};
 
 	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
-		display: ${({ $panelInputMode }) => ($panelInputMode === "map" ? `block` : `none`)};
 		position: absolute;
 		left: 0;
 		bottom: 0;
 		width: 100%;
 		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} ${Spacing["spacing-32"]};
 	}
+
+	&.buttonWrapperPanelMap {
+		${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
+			display: block;
+		}
+	}
+
+	&.buttonWrapperPanelNotMap {
+		${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
+			display: none;
+		}
+	}
 `;
 
-export const ButtonItem = styled(Button)<{ $buttonType: "cancel" | "confirm" }>`
+export const ButtonItem = styled(Button)`
 	width: 9.5rem;
 
-	${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
-		${({ $buttonType }) => $buttonType === "cancel" && `display: none`}
-		${({ $buttonType }) => $buttonType === "confirm" && `width: 100%`}
+	&.buttonItemCancel {
+		${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
+			display: none;
+		}
+	}
+
+	&.buttonItemConfirm {
+		${MediaQuery.MaxWidth.lg}, ${SearchWrapper}[data-mobile-landscape="true"] & {
+			width: 100%;
+		}
 	}
 `;
 

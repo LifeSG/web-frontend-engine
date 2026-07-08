@@ -1,4 +1,5 @@
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
+import clsx from "clsx";
 import { isEmpty } from "lodash";
 import { ReactElement, useEffect, useRef, useState } from "react";
 import { Breakpoint, useMediaQuery, useResolvedBreakpointToken } from "@lifesg/react-design-system/theme";
@@ -670,7 +671,7 @@ export const LocationSearch = ({
 			<ResultItem
 				key={`${index}_${item.lat}_${item.lng}`}
 				onClick={() => handleClickResult(item, index)}
-				$active={selectedIndex === index}
+				className={clsx(selectedIndex === index && "resultItemActive")}
 				id={TestHelper.generateId(`location-search-modal-search-result-${index + 0}`)}
 				data-testid={TestHelper.generateId(
 					`location-search-modal-search-result-${index + 0}`,
@@ -714,8 +715,11 @@ export const LocationSearch = ({
 			<SearchWrapper
 				id={TestHelper.generateId(id, "location-search")}
 				data-testid={TestHelper.generateId(id, "location-search")}
-				className={`${className}-location-search`}
-				$panelInputMode={panelInputMode}
+				className={clsx(
+					`${className}-location-search`,
+					panelInputMode === "search" && "searchWrapperPanelSearch",
+					panelInputMode !== "search" && "searchWrapperPanelNotSearch"
+				)}
 				data-mobile-landscape={!!isMobileLandscape}
 			>
 				<SearchBarIconButton
@@ -725,7 +729,7 @@ export const LocationSearch = ({
 				>
 					<SearchBarModalCross />
 				</SearchBarIconButton>
-				<SearchBarContainer $hasScrolled={hasScrolled}>
+				<SearchBarContainer className={clsx(hasScrolled && "searchBarContainerScrolled")}>
 					<SearchBarIconButton
 						onClick={handleInputFocus}
 						id={TestHelper.generateId(id, "location-search-modal-search")}
@@ -760,7 +764,10 @@ export const LocationSearch = ({
 				<ResultWrapper
 					id={TestHelper.generateId(id, "location-search-results")}
 					data-testid={TestHelper.generateId(id, "location-search-results", panelInputMode)}
-					$panelInputMode={panelInputMode}
+					className={clsx(
+						panelInputMode === "map" && "resultWrapperPanelMap",
+						panelInputMode !== "map" && "resultWrapperPanelNotMap"
+					)}
 					ref={resultRef}
 					onScroll={handleScrollResult}
 				>
@@ -783,15 +790,18 @@ export const LocationSearch = ({
 				<ButtonWrapper
 					id={TestHelper.generateId(id, "location-search-controls")}
 					data-testid={TestHelper.generateId(id, "location-search-controls")}
-					$panelInputMode={panelInputMode}
+					className={clsx(
+						panelInputMode === "map" && "buttonWrapperPanelMap",
+						panelInputMode !== "map" && "buttonWrapperPanelNotMap"
+					)}
 				>
-					<ButtonItem $buttonType="cancel" styleType="light" onClick={handleClickCancel}>
+					<ButtonItem className="buttonItemCancel" styleType="light" onClick={handleClickCancel}>
 						Cancel
 					</ButtonItem>
 					<ButtonItem
 						id={TestHelper.generateId(id, "location-search-controls-confirm")}
 						data-testid={TestHelper.generateId(id, "location-search-controls-confirm")}
-						$buttonType="confirm"
+						className="buttonItemConfirm"
 						onClick={onConfirm}
 						disabled={selectedIndex < 0 || resultState !== "found"}
 					>

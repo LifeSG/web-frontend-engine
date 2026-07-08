@@ -5,6 +5,7 @@ import {
 	useMediaQuery,
 	useResolvedBreakpointToken,
 } from "@lifesg/react-design-system/theme";
+import clsx from "clsx";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
@@ -95,6 +96,7 @@ const LocationModal = ({
 
 	const isMounted = useRef(true);
 	const shouldCallGetSelectablePins = useRef(true);
+	const modalBoxRef = useRef<HTMLDivElement>(null);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -244,6 +246,12 @@ const LocationModal = ({
 			isMounted.current = false;
 		};
 	}, []);
+
+	useEffect(() => {
+		if (modalBoxRef.current && locationModalStyles) {
+			modalBoxRef.current.style.cssText += locationModalStyles;
+		}
+	}, [locationModalStyles]);
 
 	useEffect(() => {
 		const handleError = (e: TLocationFieldEvents["error-end"]) => {
@@ -469,10 +477,10 @@ const LocationModal = ({
 				show={showLocationModal}
 			>
 				<ModalBox
+					ref={modalBoxRef}
 					id={TestHelper.generateId(id, "modal-box")}
 					className={`${className}-modal-box`}
 					showCloseButton={false}
-					locationModalStyles={locationModalStyles}
 					data-mobile-landscape={!!isMobileLandscape}
 				>
 					{hasInternetConnectivity ? (
@@ -506,7 +514,11 @@ const LocationModal = ({
 							/>
 							<StyledLocationPicker
 								id={id}
-								className={className}
+								className={clsx(
+									panelInputMode === "map" && "styledLocationPickerPanelMap",
+									panelInputMode !== "map" && "styledLocationPickerPanelNotMap",
+									className
+								)}
 								panelInputMode={panelInputMode}
 								locationAvailable={locationAvailable}
 								gettingCurrentLocation={gettingCurrentLocation}
