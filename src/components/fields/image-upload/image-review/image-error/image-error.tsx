@@ -1,9 +1,11 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { Button } from "@lifesg/react-design-system/button";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
 import { ImageContext } from "../../image-context";
 import { EImageStatus, IImage, ISharedImageProps } from "../../types";
-import { BodyText, Content, ErrorIcon, NameWrapper, OkButton, TitleText, Wrapper } from "./image-error.styles";
+import * as styles from "./image-error.styles";
 import { Breakpoint, useMediaQuery, useResolvedBreakpointToken } from "@lifesg/react-design-system/theme";
 
 const WARNING_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/warning-white.svg";
@@ -54,7 +56,7 @@ export const ImageError = (props: IProps) => {
 	// EFFECTS
 	//  =============================================================================
 	useEffect(() => {
-		const filename = <NameWrapper>{transformedFileName}</NameWrapper>;
+		const filename = <span className={styles.nameWrapper}>{transformedFileName}</span>;
 
 		switch (status) {
 			case EImageStatus.ERROR_FORMAT:
@@ -129,25 +131,29 @@ export const ImageError = (props: IProps) => {
 	// RENDER FUNCTIONS
 	//  =============================================================================
 	return (
-		<Wrapper data-mobile-landscape={!!isMobileLandscape}>
-			<ErrorIcon src={WARNING_ICON} alt={errorTitle} />
-			<Content>
-				<TitleText
+		<div className={styles.wrapper} data-mobile-landscape={!!isMobileLandscape}>
+			<img className={styles.errorIcon} src={WARNING_ICON} alt={errorTitle} />
+			<div className={styles.content}>
+				<Typography.HeadingXS
+					className={styles.titleText}
 					id={TestHelper.generateId(id, "title")}
 					data-testid={TestHelper.generateId(id, "title")}
 					weight="bold"
 				>
 					{errorTitle}
-				</TitleText>
-				<BodyText ref={errorDescriptionRef}>{errorDescription}</BodyText>
-				<OkButton
+				</Typography.HeadingXS>
+				<Typography.BodyBL className={styles.bodyText} ref={errorDescriptionRef}>
+					{errorDescription}
+				</Typography.BodyBL>
+				<Button
+					className={styles.okButton}
 					onClick={onClickOk}
 					id={TestHelper.generateId(id, "ok-button")}
 					data-testid={TestHelper.generateId(id, "ok-button")}
 				>
 					OK
-				</OkButton>
-			</Content>
-		</Wrapper>
+				</Button>
+			</div>
+		</div>
 	);
 };

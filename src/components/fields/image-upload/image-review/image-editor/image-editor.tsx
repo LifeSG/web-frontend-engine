@@ -5,7 +5,7 @@ import { Canvas as FabricCanvas, FabricImage, FabricObject, Path, PencilBrush, P
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import clsx from "clsx";
 import { FileHelper, TestHelper } from "../../../../../utils";
-import { Canvas, Wrapper } from "./image-editor.styles";
+import * as styles from "./image-editor.styles";
 import { IImageEditorProps, IImageEditorRef } from "./types";
 import { useWindowHelper } from "../../../../../utils/hooks";
 
@@ -406,12 +406,12 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	);
 
 	return (
-		<Wrapper ref={wrapperRef}>
-			<Canvas
+		<div ref={wrapperRef} className={styles.wrapper}>
+			<canvas
 				id={TestHelper.generateId("imageEditor")}
 				ref={canvasRef}
-				className={clsx(!!(color || erase) && "canvasCanDraw")}
+				className={clsx(!!(color || erase) && styles.canvasCanDraw)}
 			/>
-		</Wrapper>
+		</div>
 	);
 });

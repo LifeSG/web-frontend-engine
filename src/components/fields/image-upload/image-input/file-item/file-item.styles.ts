@@ -1,7 +1,5 @@
-import { Button } from "@lifesg/react-design-system/button";
-import { Typography } from "@lifesg/react-design-system/typography";
-import styled, { css } from "styled-components";
 import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
+import { css } from "@linaria/core";
 
 export const tokens = {
 	thumbnail: {
@@ -9,7 +7,7 @@ export const tokens = {
 	},
 };
 
-export const Wrapper = styled.div`
+export const wrapper = css`
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -23,25 +21,25 @@ export const Wrapper = styled.div`
 	${MediaQuery.MaxWidth.lg} {
 		padding: ${Spacing["spacing-16"]};
 	}
-
-	&.wrapperIsError {
-		border: ${Border["width-010"]} ${Border.solid} ${Colour["border-error"]};
-		background-color: ${Colour["bg-error"]};
-	}
-
-	&.wrapperIsCustomMuted {
-		flex-wrap: nowrap;
-	}
 `;
 
-export const CellInfo = styled.div`
+export const wrapperIsError = css`
+	border: ${Border["width-010"]} ${Border.solid} ${Colour["border-error"]};
+	background-color: ${Colour["bg-error"]};
+`;
+
+export const wrapperIsCustomMuted = css`
+	flex-wrap: nowrap;
+`;
+
+export const cellInfo = css`
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	flex: 1;
 `;
 
-export const CellFileSize = styled.div`
+export const cellFileSize = css`
 	width: 4.24rem;
 
 	${MediaQuery.MaxWidth.lg} {
@@ -49,7 +47,7 @@ export const CellFileSize = styled.div`
 	}
 `;
 
-export const CellProgressBar = styled.div`
+export const cellProgressBar = css`
 	display: flex;
 	justify-content: flex-end;
 	width: 19.15%;
@@ -59,13 +57,13 @@ export const CellProgressBar = styled.div`
 	}
 `;
 
-export const CellDeleteButton = styled.div`
+export const cellDeleteButton = css`
 	display: flex;
 	justify-content: flex-end;
 	width: 19.15%;
 `;
 
-export const Thumbnail = styled.div`
+export const thumbnail = css`
 	margin-right: ${Spacing["spacing-32"]};
 	width: 6rem;
 	height: 6rem;
@@ -83,29 +81,29 @@ export const Thumbnail = styled.div`
 	}
 `;
 
-export const TextBody = styled(Typography.BodyBL)`
+export const textBody = css`
 	flex: 1;
 `;
 
-export const FileNameWrapper = styled.div`
+export const fileNameWrapper = css`
 	word-break: break-all;
 `;
 
-export const MobileTextBodyDetail = styled.div`
+export const mobileTextBodyDetail = css`
 	display: none;
 	${MediaQuery.MaxWidth.lg} {
 		display: block;
 	}
 `;
 
-export const DesktopTextBodyDetail = styled.div`
+export const desktopTextBodyDetail = css`
 	display: block;
 	${MediaQuery.MaxWidth.lg} {
 		display: none;
 	}
 `;
 
-export const ProgressBar = styled.progress`
+export const progressBar = css`
 	max-width: 96px;
 	flex: 1;
 	height: 0.63rem;
@@ -134,12 +132,12 @@ export const ProgressBar = styled.progress`
 	}
 `;
 
-export const ErrorText = styled(Typography.BodySM)`
+export const errorText = css`
 	color: ${Colour["text-error"]};
 	width: 100%;
 `;
 
-export const DeleteButton = styled(Button)`
+export const deleteButton = css`
 	padding: 0;
 	min-width: unset;
 	width: 3rem;
@@ -160,7 +158,7 @@ export const DeleteButton = styled(Button)`
 	}
 `;
 
-export const ErrorCustomMutedThumbnailContainer = styled.div`
+export const errorCustomMutedThumbnailContainer = css`
 	display: flex;
 	width: 100%;
 `;

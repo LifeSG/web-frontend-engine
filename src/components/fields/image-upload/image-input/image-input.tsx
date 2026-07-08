@@ -1,7 +1,11 @@
 import clsx from "clsx";
 import { createRef, useContext, useEffect, useState } from "react";
 import * as Icons from "@lifesg/react-icons";
+import { Alert } from "@lifesg/react-design-system/alert";
 import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
+import { Button } from "@lifesg/react-design-system/button";
+import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ERROR_MESSAGES, Sanitize } from "../../../shared";
@@ -10,18 +14,7 @@ import { ImageUploadHelper } from "../image-upload-helper";
 import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps, TFileCapture } from "../types";
 import { DragUpload, IDragUploadRef } from "./drag-upload";
 import { FileItem } from "./file-item";
-import {
-	AddButton,
-	AlertContainer,
-	Content,
-	DropThemHereText,
-	Subtitle,
-	TooltipIcon,
-	TooltipLabel,
-	TooltipWrapper,
-	UploadWrapper,
-	Wrapper,
-} from "./image-input.styles";
+import * as styles from "./image-input.styles";
 
 interface IImageInputProps extends ISharedImageProps {
 	buttonLabel?: string | undefined;
@@ -132,9 +125,9 @@ export const ImageInput = (props: IImageInputProps) => {
 	const renderTooltipIcon = (icon: keyof typeof Icons) => {
 		const Icon = Icons[icon];
 		return (
-			<TooltipIcon>
+			<span className={styles.tooltipIcon}>
 				<Icon />
-			</TooltipIcon>
+			</span>
 		);
 	};
 
@@ -164,8 +157,9 @@ export const ImageInput = (props: IImageInputProps) => {
 	const renderUploader = () => {
 		if (maxFiles && remainingPhotos <= 0) return null;
 		return (
-			<UploadWrapper>
-				<AddButton
+			<div className={styles.uploadWrapper}>
+				<Button
+					className={styles.addButton}
 					type="button"
 					sizeType="small"
 					onClick={handleClick}
@@ -174,9 +168,9 @@ export const ImageInput = (props: IImageInputProps) => {
 					data-testid={TestHelper.generateId(id, "file-input-add-button")}
 				>
 					{buttonLabel}
-				</AddButton>
-				<DropThemHereText>or drop them here</DropThemHereText>
-			</UploadWrapper>
+				</Button>
+				<div className={clsx(styles.content, styles.dropThemHereText)}>or drop them here</div>
+			</div>
 		);
 	};
 
@@ -193,35 +187,35 @@ export const ImageInput = (props: IImageInputProps) => {
 		}
 
 		return (
-			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "error")}>
+			<Alert className={styles.alertContainer} type="error" data-testid={TestHelper.generateId(id, "error")}>
 				{_errorMessage}
-			</AlertContainer>
+			</Alert>
 		);
 	};
 
 	const renderCustomError = (_errorMessage: string) => {
 		return (
-			<AlertContainer type="error" data-testid={TestHelper.generateId(id, "error")}>
+			<Alert className={styles.alertContainer} type="error" data-testid={TestHelper.generateId(id, "error")}>
 				{_errorMessage}
-			</AlertContainer>
+			</Alert>
 		);
 	};
 
 	const renderWarning = () => {
 		if (!warning) return null;
 		return (
-			<AlertContainer type="warning" data-testid={TestHelper.generateId(id, "warning")}>
+			<Alert className={styles.alertContainer} type="warning" data-testid={TestHelper.generateId(id, "warning")}>
 				{warning}
-			</AlertContainer>
+			</Alert>
 		);
 	};
 	return (
-		<Wrapper
+		<DashedBorder
 			id={TestHelper.generateId(id)}
 			data-testid={TestHelper.generateId(id)}
-			className={className}
+			className={clsx(styles.wrapper, className)}
 			aria-invalid={!!errorMessage}
-			aria-describedby={!!errorMessage && TestHelper.generateId(id, "error")}
+			aria-describedby={errorMessage ? TestHelper.generateId(id, "error") : undefined}
 			colour={Colour.border}
 			radius={Radius.sm}
 			thickness={Border["width-040"]}
@@ -234,28 +228,31 @@ export const ImageInput = (props: IImageInputProps) => {
 				ref={dragUploadRef}
 				multiple={multiple}
 			>
-				<Subtitle
-					forwardedAs="label"
+				<Typography.BodyBL
+					as="label"
 					htmlFor={TestHelper.generateId(id, "file-input-add-button")}
-					className={clsx(!!description && "subtitleHasDescription")}
+					className={clsx(styles.subtitle, !!description && styles.subtitleHasDescription)}
 					weight="semibold"
 				>
 					{label}
-				</Subtitle>
+				</Typography.BodyBL>
 				{tooltip && (
-					<TooltipWrapper
+					<button
+						className={styles.tooltipWrapper}
 						type="button"
 						data-testid={TestHelper.generateId(id, "tooltip")}
 						onClick={() => dispatchFieldEvent("click-tooltip", id)}
 					>
-						{tooltip.label && <TooltipLabel>{tooltip.label}</TooltipLabel>}
+						{tooltip.label && (
+							<Typography.BodyMD className={styles.tooltipLabel}>{tooltip.label}</Typography.BodyMD>
+						)}
 						{tooltip.icon && renderTooltipIcon(tooltip.icon)}
-					</TooltipWrapper>
+					</button>
 				)}
 				{description && (
-					<Content>
+					<div className={styles.content}>
 						<Sanitize>{description}</Sanitize>
-					</Content>
+					</div>
 				)}
 				{renderFiles()}
 				{exceededFiles ? renderFileExceededAlert() : null}
@@ -263,6 +260,6 @@ export const ImageInput = (props: IImageInputProps) => {
 				{renderWarning()}
 				{renderUploader()}
 			</DragUpload>
-		</Wrapper>
+		</DashedBorder>
 	);
 };
