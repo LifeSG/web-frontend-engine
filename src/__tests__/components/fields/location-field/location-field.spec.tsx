@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
+import { MockViewport, mockIntersectionObserver, mockViewport } from "jsdom-testing-mocks";
 import { useEffect, useRef, useState } from "react";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
@@ -43,7 +43,6 @@ const COMPONENT_ID = "field";
 const UI_TYPE = "location-field";
 const LABEL = "Location field";
 const BREAKPOINT_XL_MAX = 1440;
-const BREAKPOINT_LG_MAX = 1200;
 const BREAKPOINT_SM_MAX = 480;
 const LEGEND_ITEMS = [
 	{ id: "lift-fault", label: "Lift fault", icon: "/img/lift.png" },
@@ -412,37 +411,6 @@ describe("location-input-group", () => {
 	let fetchSingleLocationByLatLngSpy;
 	let fetchLocationListSpy;
 
-	const setWindowAndViewPort = (width: number, height = BREAKPOINT_LG_MAX) => {
-		Object.defineProperty(window, "innerWidth", {
-			writable: true,
-			value: 320, // Set the desired screen width for the desktop view
-		});
-
-		const createMockVisualViewport = (width, height) => ({
-			width,
-			height,
-			offsetLeft: 0,
-			offsetTop: 0,
-			pageLeft: 0,
-			pageTop: 0,
-			scale: 1,
-			zoom: 1,
-			addEventListener: jest.fn(),
-			removeEventListener: jest.fn(),
-		});
-
-		const mockVisualViewport = createMockVisualViewport(width, height);
-		Object.defineProperty(window, "visualViewport", {
-			writable: true,
-			value: mockVisualViewport,
-		});
-
-		viewport.set({
-			width,
-			height: BREAKPOINT_XL_MAX,
-		});
-	};
-
 	beforeEach(() => {
 		jest.clearAllMocks();
 		jest.restoreAllMocks();
@@ -459,13 +427,9 @@ describe("location-input-group", () => {
 			width: BREAKPOINT_XL_MAX,
 			height: BREAKPOINT_XL_MAX,
 		});
-		setWindowAndViewPort(BREAKPOINT_XL_MAX);
 	});
 
 	afterEach(() => {
-		delete window.visualViewport;
-		delete window.innerWidth;
-		delete window.innerHeight;
 		viewport.cleanup();
 		getCurrentLocationSpy.mockReset();
 		fetchAddressSpy.mockRestore();
@@ -1233,13 +1197,14 @@ describe("location-input-group", () => {
 					});
 					describe("modal controls", () => {
 						describe("for tablet and below", () => {
-							mockViewportForTestGroup({
-								width: BREAKPOINT_SM_MAX,
-								height: BREAKPOINT_SM_MAX,
+							beforeEach(() => {
+								viewport.set({
+									width: BREAKPOINT_SM_MAX,
+									height: BREAKPOINT_SM_MAX,
+								});
 							});
 
 							it("should allow user to close the location modal when in map mode", async () => {
-								setWindowAndViewPort(BREAKPOINT_SM_MAX);
 								renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
@@ -1266,7 +1231,6 @@ describe("location-input-group", () => {
 							});
 
 							it("should allow user to close the modal when in search mode", async () => {
-								setWindowAndViewPort(BREAKPOINT_SM_MAX);
 								renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
@@ -1310,7 +1274,6 @@ describe("location-input-group", () => {
 
 						describe("for desktop", () => {
 							it("should allow user to cancel", async () => {
-								setWindowAndViewPort(BREAKPOINT_XL_MAX + 1);
 								renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
@@ -1516,7 +1479,10 @@ describe("location-input-group", () => {
 
 					describe("when using location search in mobile", () => {
 						beforeEach(async () => {
-							setWindowAndViewPort(BREAKPOINT_SM_MAX);
+							viewport.set({
+								width: BREAKPOINT_SM_MAX,
+								height: BREAKPOINT_SM_MAX,
+							});
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});
