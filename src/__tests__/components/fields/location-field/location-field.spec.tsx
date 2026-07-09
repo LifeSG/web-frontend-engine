@@ -5,7 +5,7 @@ import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEng
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { ERROR_SVG } from "../../../../components/fields/location-field/location-modal/location-modal.data";
-import { ErrorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
+import { errorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
 import { IMapPin } from "../../../../components/fields/location-field/location-modal/location-picker/types";
 import { ERROR_MESSAGES, Prompt } from "../../../../components/shared";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
@@ -191,7 +191,7 @@ const FrontendEngineWithEventListener = ({
 				title="Edit Location?"
 				size="large"
 				show={showEditPrompt}
-				image={<ErrorImage src={ERROR_SVG} />}
+				image={<img className={errorImage} src={ERROR_SVG} alt="Error" />}
 				description="sample prompt message"
 				buttons={[
 					{

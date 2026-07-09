@@ -12,8 +12,8 @@ import {
 } from "../../../components/fields";
 import { ERROR_SVG, TIMEOUT_SVG } from "../../../components/fields/location-field/location-modal/location-modal.data";
 import {
-	Description,
-	ErrorImage,
+	description,
+	errorImage,
 } from "../../../components/fields/location-field/location-modal/location-modal.styles";
 import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
 import { IFrontendEngineRef } from "../../../components/frontend-engine";
@@ -150,7 +150,7 @@ const EditPromptTemplate = () =>
 					title="Edit Location?"
 					size="large"
 					show={showEditPrompt}
-					image={<ErrorImage src={ERROR_SVG} />}
+					image={<img className={errorImage} src={ERROR_SVG} alt="Error" />}
 					description="sample prompt message"
 					buttons={[
 						{
@@ -391,13 +391,13 @@ const ErrorEventsTemplate = () =>
 						title="Map not available"
 						size="large"
 						show={true}
-						image={<ErrorImage src={ERROR_SVG} />}
+						image={<img className={errorImage} src={ERROR_SVG} alt="Error" />}
 						description={
-							<Description weight="regular">
+							<Typography.HeadingXS className={description} weight="regular">
 								Sorry, there was a problem with the map. You&rsquo;ll not be able to enter the location
 								right now. Please try again later.
 								{hotlineContent ? renderHotlineDetails(hotlineContent) : renderUnableToSubmitReport()}
-							</Description>
+							</Typography.HeadingXS>
 						}
 						buttons={[
 							{
@@ -452,9 +452,9 @@ const ErrorEventsTemplate = () =>
 						title="Something went wrong"
 						size="large"
 						show={true}
-						image={<ErrorImage src={TIMEOUT_SVG} />}
+						image={<img className={errorImage} src={TIMEOUT_SVG} alt="Timeout" />}
 						description={
-							<Description weight="regular">
+							<Typography.HeadingXS className={description} weight="regular">
 								It&rsquo;s taking longer than expected to retrieve your location. Please exit the map
 								and try again.
 								<br />
@@ -468,7 +468,7 @@ const ErrorEventsTemplate = () =>
 									{hotlineContent.number}
 								</Typography.LinkBL>
 								.
-							</Description>
+							</Typography.HeadingXS>
 						}
 						buttons={[
 							{
