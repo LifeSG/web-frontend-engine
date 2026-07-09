@@ -1,23 +1,14 @@
-import styled, { keyframes } from "styled-components";
+import { css } from "@linaria/core";
 import { BAR_HEIGHT, BAR_WIDTH, HEIGHT, TOTAL_BARS, WIDTH } from "./config";
 
-export const Spinner = styled.div`
+export const spinner = css`
 	display: inline-block;
 	position: relative;
 	width: ${WIDTH / 16}rem;
 	height: ${HEIGHT / 16}rem;
 `;
 
-const spinnerAnimation = keyframes`
-  0% {
-	background-color: #8e8e93;
-  }
-  100% {
-	background-color: #EEE;
-  }
-`;
-
-export const SpinnerBar = styled.div`
+export const spinnerBar = css`
 	transform-origin: ${WIDTH / 16 / 2}rem ${HEIGHT / 16 / 2}rem;
 
 	&::after {
@@ -29,7 +20,16 @@ export const SpinnerBar = styled.div`
 		width: ${BAR_WIDTH / 16}rem;
 		height: ${BAR_HEIGHT / 16}rem;
 		border-radius: ${BAR_WIDTH / 2 / 16}rem;
-		animation: ${spinnerAnimation} ${TOTAL_BARS / 10}s linear infinite;
+		animation: spinnerAnimation ${TOTAL_BARS / 10}s linear infinite;
+	}
+
+	@keyframes spinnerAnimation {
+		0% {
+			background-color: #8e8e93;
+		}
+		100% {
+			background-color: #eee;
+		}
 	}
 
 	${Array(TOTAL_BARS)
@@ -44,5 +44,6 @@ export const SpinnerBar = styled.div`
 					animation-delay: -${(TOTAL_BARS - i) / 10}s;
 				}
 			`;
-		})}
+		})
+		.join("")}
 `;

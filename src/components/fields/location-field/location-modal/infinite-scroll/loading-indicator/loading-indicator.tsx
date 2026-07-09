@@ -1,17 +1,17 @@
 import React from "react";
 import { TOTAL_BARS } from "./config";
-import { Spinner, SpinnerBar } from "./loading-indicator.styles";
+import * as styles from "./loading-indicator.styles";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const LoadingIndicator = (props: Props) => {
 	return (
-		<Spinner {...props}>
+		<div className={styles.spinner} {...props}>
 			{Array(TOTAL_BARS)
 				.fill("")
 				.map((foo, i) => (
-					<SpinnerBar key={i} />
+					<div className={styles.spinnerBar} key={i} />
 				))}
-		</Spinner>
+		</div>
 	);
 };

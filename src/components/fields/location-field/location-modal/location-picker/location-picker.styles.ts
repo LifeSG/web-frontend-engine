@@ -1,12 +1,11 @@
-import { Card } from "@lifesg/react-design-system/card";
 import { Colour, Font, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
-import styled from "styled-components";
+import { css } from "@linaria/core";
 
-export const LocationPickerWrapper = styled.div`
+export const locationPickerWrapper = css`
 	position: relative;
 `;
 
-export const LeafletWrapper = styled.div`
+export const leafletWrapper = css`
 	width: 100%;
 	height: 100%;
 
@@ -38,7 +37,7 @@ export const LeafletWrapper = styled.div`
 				width: 100%;
 				height: 50%;
 				color: ${Colour.hyperlink};
-				font-weight: ${Font.Spec["bold"]};
+				font-weight: ${Font.Spec["weight-bold"]};
 
 				&.leaflet-control-zoom-in {
 					border-bottom-color: ${Colour.border};
@@ -60,7 +59,7 @@ export const LeafletWrapper = styled.div`
 	}
 `;
 
-export const ButtonLocation = styled.button`
+export const buttonLocation = css`
 	position: absolute;
 	right: 1.5rem;
 	bottom: 2.5rem;
@@ -78,11 +77,25 @@ export const ButtonLocation = styled.button`
 	box-shadow: 0 0 4px rgb(from ${Colour.Primitive["neutral-20"]} r g b / 40%);
 `;
 
-export const ButtonLegend = styled(ButtonLocation)`
+export const buttonLegend = css`
+	position: absolute;
+	bottom: 2.5rem;
+	z-index: 1000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border: 0;
+	border-radius: 50%;
+	padding: 0;
+	background: ${Colour.bg};
+	cursor: pointer;
+	box-shadow: 0 0 4px rgb(from ${Colour.Primitive["neutral-20"]} r g b / 40%);
 	left: ${Spacing["spacing-24"]};
 `;
 
-export const ButtonLocationImage = styled.span`
+export const buttonLocationImage = css`
 	width: 1.5rem;
 	height: 1.5rem;
 
@@ -93,7 +106,7 @@ export const ButtonLocationImage = styled.span`
 	}
 `;
 
-export const BannerWrapper = styled.div`
+export const bannerWrapper = css`
 	position: absolute;
 	z-index: 1000;
 	width: 100%;
@@ -104,6 +117,6 @@ export const BannerWrapper = styled.div`
 	}
 `;
 
-export const Banner = styled(Card)`
+export const banner = css`
 	padding: ${Spacing["spacing-8"]} ${Spacing["spacing-16"]};
 `;

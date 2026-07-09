@@ -1,6 +1,6 @@
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
 import clsx from "clsx";
-import { DummyLocationInput, LocationIconWrapper, LocationInputText } from "./location-input.styles";
+import * as styles from "./location-input.styles";
 
 interface IDummyLocationFieldProps {
 	id?: string | undefined;
@@ -24,14 +24,15 @@ export const DummyLocationField = (props: IDummyLocationFieldProps) => {
 	};
 
 	return (
-		<DummyLocationInput
+		<button
 			id={id}
 			data-testid={dataTestId}
 			type="button"
 			className={clsx(
-				readOnly && "dummyLocationInputReadOnly",
-				disabled && "dummyLocationInputDisabled",
-				error && "dummyLocationInputError",
+				styles.dummyLocationInput,
+				readOnly && styles.dummyLocationInputReadOnly,
+				disabled && styles.dummyLocationInputDisabled,
+				error && styles.dummyLocationInputError,
 				className
 			)}
 			disabled={disabled}
@@ -40,23 +41,32 @@ export const DummyLocationField = (props: IDummyLocationFieldProps) => {
 			tabIndex={disabled ? -1 : 0}
 			aria-disabled={disabled || undefined}
 			aria-haspopup="dialog"
-			aria-readonly={readOnly}
 		>
 			{placeholder && !value ? (
-				<LocationInputText
-					className={clsx("locationInputTextPlaceholder", disabled && "locationInputTextDisabled")}
+				<span
+					className={clsx(
+						styles.locationInputText,
+						styles.locationInputTextPlaceholder,
+						disabled && styles.locationInputTextDisabled
+					)}
 				>
 					{placeholder}
-				</LocationInputText>
+				</span>
 			) : (
-				<LocationInputText className={clsx(disabled && "locationInputTextDisabled")}>{value}</LocationInputText>
+				<span className={clsx(styles.locationInputText, disabled && styles.locationInputTextDisabled)}>
+					{value}
+				</span>
 			)}
-			<LocationIconWrapper
-				className={clsx(disabled && "locationIconWrapperDisabled", readOnly && "locationIconWrapperReadOnly")}
+			<div
+				className={clsx(
+					styles.locationIconWrapper,
+					disabled && styles.locationIconWrapperDisabled,
+					readOnly && styles.locationIconWrapperReadOnly
+				)}
 				aria-hidden="true"
 			>
 				<PinFillIcon />
-			</LocationIconWrapper>
-		</DummyLocationInput>
+			</div>
+		</button>
 	);
 };

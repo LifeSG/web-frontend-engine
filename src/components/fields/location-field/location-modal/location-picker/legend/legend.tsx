@@ -1,6 +1,7 @@
 import { CrossIcon } from "@lifesg/react-icons/cross";
 import { Typography } from "@lifesg/react-design-system/typography";
-import { CloseButton, LegendContent, LegendHeader, LegendIcon, LegendItem, LegendWrapper } from "./legend.styles";
+import { Button } from "@lifesg/react-design-system/button";
+import * as styles from "./legend.styles";
 import { ILegendItem } from "../../../types";
 import { TestHelper } from "../../../../../../utils";
 
@@ -16,23 +17,24 @@ export const Legend = ({ onClose, items = [], id = "legend" }: ILegendProps) => 
 	}
 
 	return (
-		<LegendWrapper data-testid={TestHelper.generateId(id, "legend")} aria-label="Map Legend">
-			<LegendHeader>
+		<div className={styles.legendWrapper} data-testid={TestHelper.generateId(id, "legend")} aria-label="Map Legend">
+			<div className={styles.legendHeader}>
 				<Typography.BodyMD weight="semibold">Legend</Typography.BodyMD>
-				<CloseButton
+				<Button
+					className={styles.closeButton}
 					data-testid={TestHelper.generateId(id, "legend-close")}
 					onClick={onClose}
 					icon={<CrossIcon />}
 				/>
-			</LegendHeader>
-			<LegendContent>
+			</div>
+			<div className={styles.legendContent}>
 				{items.map((item) => (
-					<LegendItem key={item.id}>
-						<LegendIcon src={item.icon} alt={item.label} />
+					<div className={styles.legendItem} key={item.id}>
+						<img className={styles.legendIcon} src={item.icon} alt={item.label} />
 						<Typography.BodySM>{item.label}</Typography.BodySM>
-					</LegendItem>
+					</div>
 				))}
-			</LegendContent>
-		</LegendWrapper>
+			</div>
+		</div>
 	);
 };

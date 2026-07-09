@@ -1,8 +1,7 @@
-import { Button } from "@lifesg/react-design-system/button";
 import { Colour, Radius, Shadow, Spacing } from "@lifesg/react-design-system/theme";
-import styled from "styled-components";
+import { css } from "@linaria/core";
 
-export const LegendWrapper = styled.div`
+export const legendWrapper = css`
 	max-width: 250px;
 	position: absolute;
 	display: flex;
@@ -16,13 +15,13 @@ export const LegendWrapper = styled.div`
 	border-radius: ${Radius["md"]};
 `;
 
-export const LegendHeader = styled.div`
+export const legendHeader = css`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 `;
 
-export const LegendContent = styled.div`
+export const legendContent = css`
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -33,20 +32,20 @@ export const LegendContent = styled.div`
 	gap: ${Spacing["spacing-16"]};
 `;
 
-export const LegendItem = styled.div`
+export const legendItem = css`
 	display: flex;
 	align-items: center;
 	gap: ${Spacing["spacing-8"]};
 `;
 
-export const LegendIcon = styled.img`
+export const legendIcon = css`
 	width: ${Spacing["spacing-24"]};
 	height: ${Spacing["spacing-24"]};
 	object-fit: contain;
 	flex-shrink: 0;
 `;
 
-export const CloseButton = styled(Button)`
+export const closeButton = css`
 	padding: 0;
 	background-color: transparent;
 

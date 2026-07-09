@@ -1,10 +1,7 @@
-import { Modal } from "@lifesg/react-design-system/modal";
-import styled from "styled-components";
-import { LocationPicker } from "./location-picker";
 import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
-import { Typography } from "@lifesg/react-design-system/typography";
+import { css } from "@linaria/core";
 
-export const ModalBox = styled(Modal.Box)`
+export const modalBox = css`
 	flex-direction: row;
 	width: 70%;
 	max-width: 45rem;
@@ -29,10 +26,10 @@ export const ModalBox = styled(Modal.Box)`
 	}
 `;
 
-export const StyledLocationPicker = styled(LocationPicker)`
+export const styledLocationPicker = css`
 	width: 48.89%;
 
-	${MediaQuery.MaxWidth.lg}, ${ModalBox}[data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.lg}, ${modalBox}[data-mobile-landscape="true"] & {
 		/* Keep map mounted but control visibility to prevent coordinate corruption */
 		display: block;
 		width: 100%;
@@ -40,22 +37,22 @@ export const StyledLocationPicker = styled(LocationPicker)`
 		height: calc(100% - 13rem);
 	}
 
-	&.styledLocationPickerPanelMap {
-		${MediaQuery.MaxWidth.lg}, ${ModalBox}[data-mobile-landscape="true"] & {
+	&[data-panel-mode="map"] {
+		${MediaQuery.MaxWidth.lg}, ${modalBox}[data-mobile-landscape="true"] & {
 			visibility: visible;
 			pointer-events: auto;
 		}
 	}
 
-	&.styledLocationPickerPanelNotMap {
-		${MediaQuery.MaxWidth.lg}, ${ModalBox}[data-mobile-landscape="true"] & {
+	&[data-panel-mode]:not([data-panel-mode="map"]) {
+		${MediaQuery.MaxWidth.lg}, ${modalBox}[data-mobile-landscape="true"] & {
 			visibility: hidden;
 			pointer-events: none;
 		}
 	}
 `;
 
-export const ErrorImage = styled.img`
+export const errorImage = css`
 	display: block;
 	margin: 0 auto ${Spacing["spacing-32"]};
 	width: 10.5rem;
@@ -66,10 +63,10 @@ export const ErrorImage = styled.img`
 	}
 `;
 
-export const PrefetchImage = styled.img`
+export const prefetchImage = css`
 	display: none;
 `;
 
-export const Description = styled(Typography.HeadingXS)`
+export const description = css`
 	margin-top: ${Spacing["spacing-8"]};
 `;
