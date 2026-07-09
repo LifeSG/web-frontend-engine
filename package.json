@@ -147,6 +147,7 @@
 		]
 	},
 	"overrides": {
-		"micromatch": "^4.0.8"
+		"micromatch": "^4.0.8",
+		"jsdom": "^29.1.1"
 	}
 }

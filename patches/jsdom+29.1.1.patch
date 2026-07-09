@@ -1,0 +1,36 @@
+diff --git a/node_modules/jsdom/lib/jsdom/browser/Window.js b/node_modules/jsdom/lib/jsdom/browser/Window.js
+index bc8a9b5..dc5dcc2 100644
+--- a/node_modules/jsdom/lib/jsdom/browser/Window.js
++++ b/node_modules/jsdom/lib/jsdom/browser/Window.js
+@@ -480,7 +480,7 @@ function installOwnProperties(window, options) {
+     // [LegacyUnforgeable]:
+     window: { configurable: false },
+     document: { configurable: false },
+-    location: { configurable: false },
++    location: { configurable: true },
+     top: { configurable: false }
+   });
+ 
+diff --git a/node_modules/jsdom/lib/jsdom/living/css/helpers/computed-style.js b/node_modules/jsdom/lib/jsdom/living/css/helpers/computed-style.js
+index a8da57f..5698f96 100644
+--- a/node_modules/jsdom/lib/jsdom/living/css/helpers/computed-style.js
++++ b/node_modules/jsdom/lib/jsdom/living/css/helpers/computed-style.js
+@@ -4,6 +4,7 @@ const fs = require("node:fs");
+ const path = require("node:path");
+ const Specificity = require("@bramus/specificity").default;
+ const CSSImportRule = require("../../../../generated/idl/CSSImportRule.js");
++const CSSLayerBlockRule = require("../../../../generated/idl/CSSLayerBlockRule.js");
+ const CSSMediaRule = require("../../../../generated/idl/CSSMediaRule.js");
+ const CSSStyleProperties = require("../../../../generated/idl/CSSStyleProperties.js");
+ const CSSStyleRule = require("../../../../generated/idl/CSSStyleRule.js");
+@@ -86,6 +87,10 @@ function handleSheet(sheetImpl, elementImpl, declaration, specificities) {
+           handleRule(innerRule, elementImpl, declaration, specificities);
+         }
+       }
++    } else if (CSSLayerBlockRule.isImpl(ruleImpl)) {
++      for (const innerRule of ruleImpl.cssRules._list) {
++        handleRule(innerRule, elementImpl, declaration, specificities);
++      }
+     } else if (CSSMediaRule.isImpl(ruleImpl)) {
+       if (evaluateMediaList(ruleImpl.media._list)) {
+         for (const innerRule of ruleImpl.cssRules._list) {
