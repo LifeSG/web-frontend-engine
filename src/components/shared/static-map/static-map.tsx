@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { IColor } from "../../../services/onemap/types";
 import { TestHelper } from "../../../utils";
 import { LocationHelper } from "../../fields/location-field/location-helper";
-import { StaticMapElement, StaticMapWrapper, staticMapDimensions } from "./static-map.styles";
+import * as styles from "./static-map.styles";
 import { useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
 
 const StaticMapPlaceholder = "https://assets.life.gov.sg/web-frontend-engine/img/map/static_map_placeholder.png";
@@ -49,10 +49,21 @@ export const StaticMap = ({
 
 	const reloadImage = () => {
 		if (!lat || !lng) return;
-		const mapDimensions = isMobile ? staticMapDimensions.mobile : staticMapDimensions.desktop;
+		const mapDimensions = isMobile ? styles.staticMapDimensions.mobile : styles.staticMapDimensions.desktop;
 		const oneMapCreditsOverlayHeight = 15;
 		const mapHeight = mapDimensions.height + oneMapCreditsOverlayHeight;
 		setMapSrc(LocationHelper.getStaticMapUrl(lat, lng, mapDimensions.width, mapHeight, staticMapPinColor));
+	};
+
+	// =============================================================================
+	// EVENT HANDLERS
+	// =============================================================================
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+		if ((e.key === "Enter" || e.key === " ") && onClick && !disabled) {
+			e.preventDefault();
+			onClick();
+		}
 	};
 
 	// =============================================================================
@@ -62,20 +73,25 @@ export const StaticMap = ({
 	if (!lat || !lng) return null;
 
 	return (
-		<StaticMapWrapper
+		<div
 			id={TestHelper.generateId(id, "static-map")}
 			data-testid={TestHelper.generateId(id, "static-map")}
-			className={clsx(disabled ? "staticMapWrapperDisabled" : "staticMapWrapperEnabled", className)}
+			data-disabled={!!disabled}
+			className={clsx(styles.staticMapWrapper, className)}
 			onClick={onClick}
+			onKeyDown={handleKeyDown}
+			role="button"
+			tabIndex={disabled ? -1 : 0}
 			aria-disabled={disabled}
 		>
-			<StaticMapElement
+			<img
+				className={styles.staticMapElement}
 				alt={address || "Location Map"}
 				src={mapSrc}
 				onError={(e) => {
 					e.currentTarget.src = StaticMapPlaceholder;
 				}}
 			/>
-		</StaticMapWrapper>
+		</div>
 	);
 };
