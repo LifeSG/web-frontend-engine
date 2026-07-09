@@ -24,12 +24,14 @@ export const StaticMapWrapper = styled.div`
 		aspect-ratio: 2.46;
 		width: 100%;
 	}
-	${(props) => {
-		if (props["aria-disabled"]) {
-			return `cursor: not-allowed`;
-		}
-		return `cursor: pointer`;
-	}}
+
+	&.staticMapWrapperDisabled {
+		cursor: not-allowed;
+	}
+
+	&.staticMapWrapperEnabled {
+		cursor: pointer;
+	}
 `;
 
 export const StaticMapElement = styled.img`

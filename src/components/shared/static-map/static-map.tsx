@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import clsx from "clsx";
 import { IColor } from "../../../services/onemap/types";
 import { TestHelper } from "../../../utils";
 import { LocationHelper } from "../../fields/location-field/location-helper";
@@ -64,7 +65,7 @@ export const StaticMap = ({
 		<StaticMapWrapper
 			id={TestHelper.generateId(id, "static-map")}
 			data-testid={TestHelper.generateId(id, "static-map")}
-			className={className}
+			className={clsx(disabled ? "staticMapWrapperDisabled" : "staticMapWrapperEnabled", className)}
 			onClick={onClick}
 			aria-disabled={disabled}
 		>
