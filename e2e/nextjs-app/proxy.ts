@@ -19,7 +19,8 @@ export function proxy(request: NextRequest) {
 	} https://cdn.jsdelivr.net/npm/@govtechsg/sgds-web-component@3/components/Masthead/index.umd.js;
         ${styleSrcDirective}
         img-src 'self' https://*.life.gov.sg https://fastly.picsum.photos
-            https://mylegacy.life.gov.sg https://*.booking.gov.sg https://cdn-icons-png.flaticon.com blob: data:;
+            https://mylegacy.life.gov.sg https://*.booking.gov.sg https://cdn-icons-png.flaticon.com
+            https://www.onemap.gov.sg blob: data:;
         font-src 'self' https://assets.life.gov.sg;
         object-src 'none';
         base-uri 'self';
