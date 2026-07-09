@@ -12,7 +12,7 @@ test.describe("Review", () => {
 
 		test("Box Default", async ({ story }) => {
 			await story.goto();
-			await story.snapshot("default");
+			await story.snapshot("mount");
 		});
 	});
 
@@ -25,7 +25,7 @@ test.describe("Review", () => {
 
 		test("Accordion Default", async ({ story }) => {
 			await story.goto();
-			await story.snapshot("default");
+			await story.snapshot("mount");
 		});
 	});
 });
