@@ -1,9 +1,8 @@
 "use client";
 
 import { FrontendEngine, IFrontendEngineData } from "@lifesg/web-frontend-engine";
-import { ITimelineSchema } from "@lifesg/web-frontend-engine/components/custom";
 
-const TIMELINE_SCHEMA: IFrontendEngineData<undefined, ITimelineSchema> = {
+const TIMELINE_SCHEMA: IFrontendEngineData = {
 	sections: {
 		section: {
 			uiType: "section",
