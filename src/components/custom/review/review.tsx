@@ -29,7 +29,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const { dispatchFieldEvent } = useFieldEvent();
 	const [itemDetailList, setItemDetailList] = useState<IReviewItemDetails[]>([]);
 	const boxRef = useRef<HTMLDivElement>(null);
-	const rowGap = schema.variant !== "accordion" ? (schema as IReviewSchemaBox).rowGap : undefined;
+	const rowGap = schema.variant === "box" ? schema.rowGap : undefined;
 
 	useApplyStyle(boxRef, {
 		[styles.tokens.box.rowGap]: rowGap,
@@ -221,19 +221,19 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 		} = filterSchemaProps(schema);
 
 		return (
-			<div ref={boxRef} className={clsx(rowGap && styles.boxUneditableSection)}>
-				<UneditableSection
-					{...boxProps}
-					id={id}
-					title={label}
-					description={description}
-					items={formatItems()}
-					topSection={generateSection(topSection)}
-					bottomSection={generateSection(bottomSection)}
-					onUnmask={handleUnmask}
-					onTryAgain={handleUnmask}
-				/>
-			</div>
+			<UneditableSection
+				{...boxProps}
+				id={id}
+				ref={boxRef}
+				className={clsx(rowGap && styles.boxUneditableSection)}
+				title={label}
+				description={description}
+				items={formatItems()}
+				topSection={generateSection(topSection)}
+				bottomSection={generateSection(bottomSection)}
+				onUnmask={handleUnmask}
+				onTryAgain={handleUnmask}
+			/>
 		);
 	};
 
