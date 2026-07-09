@@ -1,14 +1,14 @@
 import commonjs from "@rollup/plugin-commonjs";
 import image from "@rollup/plugin-image";
 import json from "@rollup/plugin-json";
-import postcss from "rollup-plugin-postcss";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import terser from "@rollup/plugin-terser";
-import typescript from "rollup-plugin-typescript2";
 import wyw from "@wyw-in-js/rollup";
-import generatePackageJson from "rollup-plugin-generate-package-json";
 import postcssUrl from "postcss-url";
+import generatePackageJson from "rollup-plugin-generate-package-json";
+import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import postcss from "rollup-plugin-postcss";
+import typescript from "rollup-plugin-typescript2";
 
 const plugins = [
 	peerDepsExternal(), // Add the externals for me. [react, react-dom]
@@ -23,6 +23,9 @@ const plugins = [
 			exclude: ["**/stories/**", "**/__tests__/**", "**/__mocks__/**", "**/util/**"],
 		},
 	}),
+	wyw({
+		sourceMap: true,
+	}),
 	postcss({
 		extract: true,
 		minimize: true,
@@ -31,10 +34,16 @@ const plugins = [
 			postcssUrl({
 				url: "inline",
 			}),
+			// Inject `@layer fee` into the generated CSS files
+			{
+				postcssPlugin: "postcss-layer",
+				Once(root, { postcss }) {
+					const layer = postcss.atRule({ name: "layer", params: "fee", nodes: root.nodes });
+					root.removeAll();
+					root.append(layer);
+				},
+			},
 		],
-	}),
-	wyw({
-		sourceMap: true,
 	}),
 	image(),
 	json(),

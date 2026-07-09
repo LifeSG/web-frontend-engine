@@ -23,7 +23,7 @@ export default function IframeDefaultPage() {
 						referenceKey: "iframe",
 						validationTimeout: -1,
 						src: srcUrl,
-						className: styles.iframeStyle,
+						className: styles["iframe-parent"],
 					},
 				},
 			},
