@@ -22,7 +22,6 @@ import {
 	TPanelInputMode,
 	TSetCurrentLocationDetail,
 } from "../types";
-import { Typography } from "@lifesg/react-design-system/typography";
 import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
 import * as styles from "./location-modal.styles";
 import { IMapPin } from "./location-picker/types";
@@ -396,13 +395,13 @@ const LocationModal = ({
 					show={true}
 					image={<img className={styles.errorImage} src={ERROR_SVG} alt="Map error" />}
 					description={
-						<Typography.HeadingXS className={styles.description} weight="regular">
+						<p className={styles.description}>
 							Sorry, there was a problem with the map. You&rsquo;ll not be able to enter the location
 							right now. Please try again later.
 							<br />
 							<br />
 							Do note that you&rsquo;ll not be able to submit your report without entering the location.
-						</Typography.HeadingXS>
+						</p>
 					}
 					buttons={[
 						{
@@ -450,10 +449,10 @@ const LocationModal = ({
 					show={true}
 					image={<img className={styles.errorImage} src={TIMEOUT_SVG} alt="Timeout error" />}
 					description={
-						<Typography.HeadingXS className={styles.description} weight="regular">
+						<p className={styles.description}>
 							It&rsquo;s taking longer than expected to retrieve your location. Please exit the map and
 							try again.
-						</Typography.HeadingXS>
+						</p>
 					}
 					buttons={[
 						{
