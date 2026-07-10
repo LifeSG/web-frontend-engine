@@ -183,7 +183,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const renderAccordion = (schema: IReviewSchemaAccordion) => {
 		const {
 			commonSchema: { label },
-			customSchema: { button, bottomSection, className, expanded = true, topSection, ...accordionProps },
+			customSchema: { button, bottomSection, expanded = true, topSection, ...accordionProps },
 		} = filterSchemaProps(schema);
 
 		return (
@@ -201,7 +201,7 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 			>
 				<UneditableSection
 					background={false}
-					className={clsx(styles.customUneditableSection, className)}
+					className={styles.customUneditableSection}
 					id={id}
 					items={formatItems()}
 					topSection={generateSection(topSection)}
