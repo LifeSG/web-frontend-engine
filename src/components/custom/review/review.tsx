@@ -1,8 +1,10 @@
 import { BoxContainer } from "@lifesg/react-design-system/box-container";
 import { Button } from "@lifesg/react-design-system/button";
-import { UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
+import { UneditableSection, UneditableSectionItemProps } from "@lifesg/react-design-system/uneditable-section";
+import clsx from "clsx";
 import isEmpty from "lodash/isEmpty";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { AxiosApiClient, filterSchemaProps } from "../../../utils";
@@ -16,7 +18,7 @@ import {
 	TReviewSchema,
 	TReviewSchemaItem,
 } from "./types";
-import { BoxUneditableSection, CustomUneditableSection } from "./review.styles";
+import * as styles from "./review.styles";
 
 export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	// =============================================================================
@@ -26,6 +28,12 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
 	const [itemDetailList, setItemDetailList] = useState<IReviewItemDetails[]>([]);
+	const boxRef = useRef<HTMLDivElement>(null);
+	const rowGap = schema.variant === "box" ? schema.rowGap : undefined;
+
+	useApplyStyle(boxRef, {
+		[styles.tokens.box.rowGap]: rowGap,
+	});
 
 	// =============================================================================
 	// EFFECTS
@@ -191,8 +199,9 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 				expanded={expanded}
 				{...accordionProps}
 			>
-				<CustomUneditableSection
+				<UneditableSection
 					background={false}
+					className={styles.customUneditableSection}
 					id={id}
 					items={formatItems()}
 					topSection={generateSection(topSection)}
@@ -208,13 +217,15 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 	const renderBox = (schema: IReviewSchemaBox) => {
 		const {
 			commonSchema: { label },
-			customSchema: { description, topSection, bottomSection, rowGap, ...boxProps },
+			customSchema: { description, topSection, bottomSection, rowGap: _rowGap, ...boxProps },
 		} = filterSchemaProps(schema);
+
 		return (
-			<BoxUneditableSection
+			<UneditableSection
 				{...boxProps}
-				$rowGap={rowGap}
 				id={id}
+				ref={boxRef}
+				className={clsx(rowGap && styles.boxUneditableSection)}
 				title={label}
 				description={description}
 				items={formatItems()}
