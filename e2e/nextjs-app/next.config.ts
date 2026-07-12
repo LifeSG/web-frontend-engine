@@ -25,7 +25,7 @@ const workspaceRootRelative = __dirname;
 // const designSystemRelative = "./e2e/nextjs-app/node_modules/@lifesg/react-design-system";
 
 const nextConfig: NextConfig = {
-	reactStrictMode: true,
+	reactStrictMode: false,
 	typescript: {
 		// CI must use dependency resolution from node_modules instead of local
 		// source aliases so E2E validates the published package behavior.
