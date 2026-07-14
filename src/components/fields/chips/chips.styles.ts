@@ -1,16 +1,13 @@
+import { css } from "@linaria/core";
 import { Spacing } from "@lifesg/react-design-system/theme";
-import styled from "styled-components";
 
-export const ChipContainer = styled.div`
+export const chipsContainer = css`
 	display: flex;
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-8"]};
+	margin: ${Spacing["spacing-8"]} 0;
+`;
 
-	&.chipsContainerShowTextarea {
-		margin: ${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]};
-	}
-
-	&.chipsContainerHideTextarea {
-		margin: ${Spacing["spacing-8"]} 0;
-	}
+export const chipsContainerShowTextarea = css`
+	margin: ${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]};
 `;
