@@ -1,4 +1,9 @@
 import { Form } from "@lifesg/react-design-system/form";
+import { ImageButton } from "@lifesg/react-design-system/image-button";
+import { RadioButton } from "@lifesg/react-design-system/radio-button";
+import { Toggle } from "@lifesg/react-design-system/toggle";
+import { Typography } from "@lifesg/react-design-system/typography";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -8,15 +13,7 @@ import { TestHelper, filterSchemaProps, generateRandomId } from "../../../utils"
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize, Warning } from "../../shared";
-import {
-	FlexImageWrapper,
-	FlexToggleWrapper,
-	Label,
-	RadioContainer,
-	StyledImageButton,
-	StyledRadioButton,
-	StyledToggle,
-} from "./radio-button.styles";
+import * as styles from "./radio-button.styles";
 import { IRadioButtonOption, TRadioButtonGroupSchema } from "./types";
 
 export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
@@ -87,10 +84,13 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				const radioButtonId = formatId();
 
 				return (
-					<RadioContainer className={className ? `${className}-radio-container` : undefined} key={index}>
-						<StyledRadioButton
+					<div
+						className={clsx(styles.radioContainer, className && `${className}-radio-container`)}
+						key={index}
+					>
+						<RadioButton
 							{...radioProps}
-							className={className}
+							className={clsx(styles.styledRadioButton, className)}
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
@@ -100,10 +100,14 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							checked={isRadioButtonChecked(option.value)}
 							onChange={() => handleChangeOrClick(option.value)}
 						/>
-						<Label forwardedAs="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
+						<Typography.BodyMD
+							as="label"
+							htmlFor={radioButtonId}
+							className={clsx(styles.label, (disabled ?? option.disabled) && styles.labelDisabled)}
+						>
 							{renderLabel(option.label)}
-						</Label>
-					</RadioContainer>
+						</Typography.BodyMD>
+					</div>
 				);
 			})
 		);
@@ -113,20 +117,23 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		return (
 			options.length > 0 &&
 			customOptions.styleType === "toggle" && (
-				<FlexToggleWrapper
-					className={className ? `${className} ${className}-radio-container` : undefined}
-					$layoutType={customOptions?.layoutType ?? "horizontal"}
+				<div
+					className={clsx(
+						styles.flexToggleWrapper,
+						customOptions?.layoutType === "vertical" && styles.flexToggleWrapperVertical,
+						className && `${className} ${className}-radio-container`
+					)}
 				>
 					{options.map((option, index) => {
 						const radioButtonId = formatId();
 
 						return (
-							<StyledToggle
+							<Toggle
 								{...radioProps}
 								key={index}
 								type="radio"
 								id={radioButtonId}
-								className={className ? `${className}-radio` : undefined}
+								className={clsx(styles.styledToggle, className && `${className}-radio`)}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
@@ -147,10 +154,10 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								subLabel={!!option.subLabel && renderLabel(option.subLabel)}
 							>
 								{renderLabel(option.label)}
-							</StyledToggle>
+							</Toggle>
 						);
 					})}
-				</FlexToggleWrapper>
+				</div>
 			)
 		);
 	};
@@ -158,19 +165,21 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const renderImageButtons = () => {
 		return (
 			options.length > 0 && (
-				<FlexImageWrapper className={className ? `${className} ${className}-radio-container` : undefined}>
+				<div
+					className={clsx(styles.flexImageWrapper, className && `${className} ${className}-radio-container`)}
+				>
 					{options.map((option, index) => {
 						const radioButtonId = formatId();
 
 						return (
-							<StyledImageButton
+							<ImageButton
 								// temp any fix until proper typing is created
 								// eslint-disable-next-line @typescript-eslint/no-explicit-any
 								{...(radioProps as any)}
 								type="button"
 								key={index}
 								id={radioButtonId}
-								className={className ? `${className}-radio` : undefined}
+								className={clsx(styles.styledImageButton, className && `${className}-radio`)}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
@@ -181,10 +190,10 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								error={!!error?.message}
 							>
 								{option.label}
-							</StyledImageButton>
+							</ImageButton>
 						);
 					})}
-				</FlexImageWrapper>
+				</div>
 			)
 		);
 	};
