@@ -692,15 +692,17 @@ describe("image-upload", () => {
 			});
 
 			it("should show confirmation prompt", async () => {
-				expect(screen.getByText(REVIEW_PROMPT_TEXT)).toBeVisible();
+				expect(await screen.findByText(REVIEW_PROMPT_TEXT)).toBeVisible();
 			});
 
 			it("should show review modal after clicking ok in confirmation prompt", async () => {
+				await waitFor(() => {
+					expect(getField("button", "Ok")).toBeVisible();
+				});
+
 				fireEvent.click(getField("button", "Ok"));
 
-				await waitFor(() => {
-					expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeVisible();
-				});
+				expect(await screen.findByText(REVIEW_MODAL_TEXT)).toBeVisible();
 			});
 		});
 
@@ -944,7 +946,7 @@ describe("image-upload", () => {
 				});
 
 				it("should show delete confirmation prompt on clicking the delete button", async () => {
-					expect(screen.getByText(DELETE_PROMPT_TEXT)).toBeVisible();
+					expect(await screen.findByText(DELETE_PROMPT_TEXT)).toBeVisible();
 					expect(getField("button", "Cancel")).toBeVisible();
 					expect(getField("button", "Yes, delete")).toBeVisible();
 				});
@@ -981,8 +983,8 @@ describe("image-upload", () => {
 					await waitFor(() => expect(screen.getByText(DELETE_EXIT_PROMPT_TEXT)).toBeVisible());
 				});
 
-				it("should show delete and exit confirmation prompt on attempting to delete the last photo", () => {
-					expect(screen.getByText(DELETE_EXIT_PROMPT_TEXT)).toBeVisible();
+				it("should show delete and exit confirmation prompt on attempting to delete the last photo", async () => {
+					expect(await screen.findByText(DELETE_EXIT_PROMPT_TEXT)).toBeVisible();
 					expect(getField("button", "Cancel")).toBeVisible();
 					expect(getField("button", "Delete and exit")).toBeVisible();
 				});
@@ -1027,8 +1029,8 @@ describe("image-upload", () => {
 				await waitFor(() => expect(screen.getByText(REVIEW_EXIT_PROMPT_TEXT)).toBeVisible());
 			});
 
-			it("should show confirmation prompt", () => {
-				expect(getField("button", "Yes, exit")).toBeVisible();
+			it("should show confirmation prompt", async () => {
+				expect(screen.getByText("Yes, exit")).toBeVisible();
 				expect(getField("button", "Cancel")).toBeVisible();
 			});
 

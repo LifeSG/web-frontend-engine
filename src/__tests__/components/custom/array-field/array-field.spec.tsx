@@ -196,7 +196,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getRemoveButton(0));
 
 			const modalText = await screen.findByText(REMOVE_CONFIRMATION_MODAL_TITLE);
-			expect(modalText).toBeVisible();
+			await waitFor(() => expect(modalText).toBeVisible());
 
 			fireEvent.click(await screen.findByTestId("field-remove-prompt__btn-remove"));
 
@@ -213,7 +213,7 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getRemoveButton(0));
 
 			const modalText = await screen.findByText(REMOVE_CONFIRMATION_MODAL_TITLE);
-			expect(modalText).toBeVisible();
+			await waitFor(() => expect(modalText).toBeVisible());
 
 			fireEvent.click(await screen.findByTestId("field-remove-prompt__btn-back"));
 
