@@ -1,5 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { Toggle } from "@lifesg/react-design-system/toggle";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import sanitize from "sanitize-html";
 import * as Yup from "yup";
@@ -7,7 +8,7 @@ import { IGenericFieldProps } from "..";
 import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Warning } from "../../shared";
-import { FlexWrapper } from "./switch.styles";
+import * as styles from "./switch.styles";
 import { ISwitchSchema } from "./types";
 
 export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
@@ -59,8 +60,8 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				<FlexWrapper
-					className={className}
+				<div
+					className={clsx(styles.flexWrapper, className)}
 					role="radiogroup"
 					aria-label={typeof label === "string" ? label : sanitize(label.mainLabel, { allowedTags: [] })}
 				>
@@ -94,7 +95,7 @@ export const Switch = (props: IGenericFieldProps<ISwitchSchema>) => {
 					>
 						No
 					</Toggle>
-				</FlexWrapper>
+				</div>
 			</Form.CustomField>
 			<Warning id={id} message={warning} />
 		</>
