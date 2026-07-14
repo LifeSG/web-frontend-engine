@@ -1,16 +1,16 @@
 import { Spacing } from "@lifesg/react-design-system/theme";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
-export const ChipContainer = styled.div<{ $showTextarea?: boolean | undefined }>`
+export const ChipContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-8"]};
-	${({ $showTextarea }) =>
-		$showTextarea
-			? css`
-					margin: ${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]};
-			  `
-			: css`
-					margin: ${Spacing["spacing-8"]} 0;
-			  `}
+
+	&.chipsContainerShowTextarea {
+		margin: ${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]};
+	}
+
+	&.chipsContainerHideTextarea {
+		margin: ${Spacing["spacing-8"]} 0;
+	}
 `;
