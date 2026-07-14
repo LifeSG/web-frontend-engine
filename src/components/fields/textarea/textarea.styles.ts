@@ -1,45 +1,57 @@
 import { Spacing } from "@lifesg/react-design-system/theme";
 import { Form } from "@lifesg/react-design-system/form";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 interface ITextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	$resizable?: boolean | undefined;
+	$resizable?: boolean;
 }
 
 // =============================================================================
 // STYLING
 // =============================================================================
-export const Wrapper = styled.div<{ $chipPosition?: "top" | "bottom" | undefined }>`
+export const tokens = {
+	styledTextarea: {
+		minHeight: "--fee-internal-textarea-styledTextarea-minHeight",
+	},
+};
+
+export const Wrapper = styled.div`
 	display: flex;
-	flex-direction: ${({ $chipPosition }) => ($chipPosition !== "bottom" ? "column" : "column-reverse")};
+
+	&.textareaWrapperChipPositionTop {
+		flex-direction: column;
+	}
+
+	&.textareaWrapperChipPositionBottom {
+		flex-direction: column-reverse;
+	}
 `;
 
-export const ChipContainer = styled.div<{ $chipPosition?: "top" | "bottom" | undefined }>`
-	${({ $chipPosition }) =>
-		$chipPosition === "bottom"
-			? css`
-					margin: ${Spacing["spacing-16"]} 0 ${Spacing["spacing-8"]};
-			  `
-			: css`
-					margin: ${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]};
-			  `}
-
+export const ChipContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-8"]};
+
+	&.textareaChipContainerChipPositionTop {
+		margin: ${Spacing["spacing-8"]} 0 ${Spacing["spacing-16"]};
+	}
+
+	&.textareaChipContainerChipPositionBottom {
+		margin: ${Spacing["spacing-16"]} 0 ${Spacing["spacing-8"]};
+	}
 `;
 
 export const StyledTextarea = styled(Form.Textarea)<ITextareaProps>`
 	width: auto;
+	${tokens.styledTextarea.minHeight}: initial;
 
-	${(props) =>
-		!props.$resizable
-			? css`
-					resize: none;
-			  `
-			: css`
-					resize: vertical;
-					max-height: 37.5rem;
-					min-height: ${props.rows ? `${props.rows + 2 * 22 + 24}px` : "5rem"};
-			  `}
+	&.styledTextareaNotResizable {
+		resize: none;
+	}
+
+	&.styledTextareaResizable {
+		resize: vertical;
+		max-height: 37.5rem;
+		min-height: var(${tokens.styledTextarea.minHeight}, 5rem);
+	}
 `;
