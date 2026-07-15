@@ -14,6 +14,7 @@ const createChipsTest = (story: string) =>
 
 const defaultTest = createChipsTest("default");
 const withTextareaTest = createChipsTest("with-textarea");
+const warningTest = createChipsTest("warning");
 
 defaultTest.describe("", () => {
 	defaultTest("Default", async ({ story }) => {
@@ -39,5 +40,13 @@ withTextareaTest.describe("", () => {
 		await story.locators.durian.click();
 		await expect(story.locators.duriansTextarea).toBeVisible();
 		await story.snapshot("open");
+	});
+});
+
+warningTest.describe("", () => {
+	warningTest("Warning", async ({ story }) => {
+		await story.goto();
+
+		await story.snapshot("mount");
 	});
 });
