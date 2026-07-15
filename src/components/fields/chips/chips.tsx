@@ -1,4 +1,5 @@
 import { Form } from "@lifesg/react-design-system/form";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -9,7 +10,7 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { FieldWrapper } from "../../elements/wrapper/field-wrapper";
 import { Chip, ERROR_MESSAGES, Warning } from "../../shared";
 import { ITextareaSchema, Textarea } from "../textarea";
-import { ChipContainer } from "./chips.styles";
+import * as styles from "./chips.styles";
 import { IChipsSchema } from "./types";
 
 export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
@@ -183,10 +184,13 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 	return (
 		<>
 			<Form.CustomField label={formattedLabel} errorMessage={error?.message}>
-				<ChipContainer data-testid={TestHelper.generateId(id, "chips")} $showTextarea={showTextarea}>
+				<div
+					data-testid={TestHelper.generateId(id, "chips")}
+					className={clsx(styles.chipsContainer, showTextarea && styles.chipsContainerShowTextarea)}
+				>
 					{renderChips()}
 					{renderTextareaChip()}
-				</ChipContainer>
+				</div>
 				{renderTextarea()}
 			</Form.CustomField>
 			<Warning id={id} message={warning} />

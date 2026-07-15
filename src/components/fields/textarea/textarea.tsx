@@ -1,4 +1,6 @@
 import { Form } from "@lifesg/react-design-system/form";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
+import clsx from "clsx";
 import { kebabCase } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -7,7 +9,7 @@ import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Chip, Warning } from "../../shared";
 import { IGenericFieldProps } from "../types";
-import { ChipContainer, StyledTextarea, Wrapper } from "./textarea.styles";
+import * as styles from "./textarea.styles";
 import { ITextareaSchema } from "./types";
 
 export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
@@ -24,6 +26,10 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	const [maxLength, setMaxLength] = useState<number>();
 	const { setFieldValidationConfig } = useValidationConfig();
 	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+
+	useApplyStyle(textAreaRef, {
+		[styles.tokens.styledTextarea.minHeight]: rows ? `${rows + 2 * 22 + 24}px` : undefined,
+	});
 
 	// =============================================================================
 	// EFFECTS
@@ -75,7 +81,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
-		if (event.relatedTarget?.closest(".chip-container")) {
+		if (event.relatedTarget?.closest(`.${styles.chipContainer}`)) {
 			return;
 		}
 		onBlur();
@@ -87,7 +93,14 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	const renderChips = () => {
 		return (
 			chipTexts?.length && (
-				<ChipContainer className="chip-container" $chipPosition={chipPosition}>
+				<div
+					className={clsx(
+						styles.chipContainer,
+						chipPosition === "bottom"
+							? styles.chipContainerChipPositionBottom
+							: styles.chipContainerChipPositionTop
+					)}
+				>
 					{chipTexts.map((text, index) => (
 						<Chip
 							key={text}
@@ -98,7 +111,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 							{text}
 						</Chip>
 					))}
-				</ChipContainer>
+				</div>
 			)
 		);
 	};
@@ -106,23 +119,31 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel}>
-				<Wrapper $chipPosition={chipPosition}>
+				<div
+					className={clsx(
+						styles.wrapper,
+						chipPosition === "bottom" ? styles.wrapperChipPositionBottom : styles.wrapperChipPositionTop
+					)}
+				>
 					{renderChips()}
-					<StyledTextarea
+					<Form.Textarea
 						ref={textAreaRef}
 						{...textareaProps}
 						id={id}
 						data-testid={TestHelper.generateId(id, "textarea")}
-						className={className}
+						className={clsx(
+							styles.styledTextarea,
+							resizable ? styles.styledTextareaResizable : styles.styledTextareaNotResizable,
+							className
+						)}
 						maxLength={maxLength}
 						rows={rows}
-						$resizable={resizable}
 						onChange={handleChange}
 						value={stateValue}
 						errorMessage={error?.message}
 						onBlur={handleBlur}
 					/>
-				</Wrapper>
+				</div>
 			</Form.CustomField>
 			<Warning id={id} message={warning} />
 		</>

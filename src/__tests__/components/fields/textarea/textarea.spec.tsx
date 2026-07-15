@@ -125,6 +125,28 @@ describe(UI_TYPE, () => {
 		expect(screen.getByText("Hello Pill 1")).toBeInTheDocument();
 	});
 
+	it("should not trigger blur validation when focus moves to a pill", async () => {
+		renderComponent(
+			{
+				chipTexts: ["Pill 1", "Pill 2"],
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+			},
+			{ validationMode: "onBlur" }
+		);
+
+		const textarea = getTextarea();
+		const pillButton = screen.getByRole("button", { name: "Pill 1" });
+
+		fireEvent.focus(textarea);
+		fireEvent.blur(textarea, { relatedTarget: pillButton });
+		expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument();
+
+		fireEvent.blur(textarea);
+		await waitFor(() => {
+			expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument();
+		});
+	});
+
 	it("should pass other props into the field", () => {
 		renderComponent({
 			rows: 5,
