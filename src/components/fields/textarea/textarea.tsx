@@ -81,7 +81,7 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 	};
 
 	const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
-		if (event.relatedTarget?.closest(".chip-container")) {
+		if (event.relatedTarget?.closest(`.${styles.chipContainer}`)) {
 			return;
 		}
 		onBlur();
@@ -95,7 +95,6 @@ export const Textarea = (props: IGenericFieldProps<ITextareaSchema>) => {
 			chipTexts?.length && (
 				<div
 					className={clsx(
-						"chip-container",
 						styles.chipContainer,
 						chipPosition === "bottom"
 							? styles.chipContainerChipPositionBottom
