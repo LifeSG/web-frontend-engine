@@ -186,11 +186,7 @@ export const Chips = (props: IGenericFieldProps<IChipsSchema>) => {
 			<Form.CustomField label={formattedLabel} errorMessage={error?.message}>
 				<div
 					data-testid={TestHelper.generateId(id, "chips")}
-					className={clsx(
-						styles.chipsContainer,
-						showTextarea && styles.chipsContainerShowTextarea,
-						schema.className
-					)}
+					className={clsx(styles.chipsContainer, showTextarea && styles.chipsContainerShowTextarea)}
 				>
 					{renderChips()}
 					{renderTextareaChip()}

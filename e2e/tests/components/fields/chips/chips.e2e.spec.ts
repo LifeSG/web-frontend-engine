@@ -16,10 +16,21 @@ const defaultTest = createChipsTest("default");
 const withTextareaTest = createChipsTest("with-textarea");
 const warningTest = createChipsTest("warning");
 
-defaultTest.describe("", () => {
+defaultTest.describe(() => {
 	defaultTest("Default", async ({ story }) => {
 		await story.goto();
 		await story.snapshot("mount");
+	});
+
+	defaultTest("Hover", async ({ story }) => {
+		await story.goto();
+
+		await story.locators.apple.hover();
+		await story.snapshot("non-selected");
+
+		await story.locators.apple.click();
+		await story.locators.apple.hover();
+		await story.snapshot("selected");
 	});
 
 	defaultTest("With selection", async ({ story }) => {
@@ -32,7 +43,7 @@ defaultTest.describe("", () => {
 	});
 });
 
-withTextareaTest.describe("", () => {
+withTextareaTest.describe(() => {
 	withTextareaTest("With Textarea", async ({ story }) => {
 		await story.goto();
 		await story.snapshot("closed");
@@ -43,7 +54,7 @@ withTextareaTest.describe("", () => {
 	});
 });
 
-warningTest.describe("", () => {
+warningTest.describe(() => {
 	warningTest("Warning", async ({ story }) => {
 		await story.goto();
 
