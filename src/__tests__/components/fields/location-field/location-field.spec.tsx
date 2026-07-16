@@ -479,7 +479,7 @@ describe("location-input-group", () => {
 
 				await waitFor(() => window.dispatchEvent(new Event("online")));
 
-				await waitFor(() => getLocationInput().focus());
+				getLocationInput().focus();
 
 				await waitFor(() => {
 					expect(getCurrentLocationErrorModal(true)).not.toBeInTheDocument();
@@ -502,7 +502,7 @@ describe("location-input-group", () => {
 				await renderComponent({ withEvents: true, locationDetails });
 				await waitFor(() => window.dispatchEvent(new Event("online")));
 
-				await waitFor(() => getLocationInput().focus());
+				getLocationInput().focus();
 
 				expect(setCurrentLocationSpy).toHaveBeenCalled();
 
@@ -629,7 +629,7 @@ describe("location-input-group", () => {
 					eventType: ELocationInputEvents.SHOW_MODAL,
 					eventListener: () => handleShowReviewModal,
 				});
-				await waitFor(() => getLocationInput().focus());
+				getLocationInput().focus();
 				expect(handleShowReviewModal).toHaveBeenCalled();
 			});
 
@@ -639,7 +639,7 @@ describe("location-input-group", () => {
 					eventType: "hide-location-modal",
 					eventListener: () => handleHideReviewModal,
 				});
-				await waitFor(() => getLocationInput().focus());
+				getLocationInput().focus();
 				await waitFor(() => fireEvent.click(getField("button", "Cancel", false)));
 				expect(handleHideReviewModal).toHaveBeenCalled();
 			});
@@ -715,7 +715,7 @@ describe("location-input-group", () => {
 
 				await waitFor(() => window.dispatchEvent(new Event("online")));
 
-				await waitFor(() => getLocationInput().focus());
+				getLocationInput().focus();
 
 				await waitFor(() => {
 					expect(getCurrentLocationErrorModal()).toBeInTheDocument();
@@ -792,7 +792,7 @@ describe("location-input-group", () => {
 							},
 						},
 					});
-					await waitFor(() => getLocationInput().focus());
+					getLocationInput().focus();
 					await waitFor(() => {
 						expect(getSelectablePins).toHaveBeenCalled();
 					});
@@ -805,7 +805,7 @@ describe("location-input-group", () => {
 					});
 
 					await renderComponent(event);
-					await waitFor(() => getLocationInput().focus());
+					getLocationInput().focus();
 					await waitFor(() => {
 						expect(getSelectablePins).toHaveBeenCalled();
 					});
@@ -813,7 +813,7 @@ describe("location-input-group", () => {
 
 				it("should not fire get-selectable-pins event if failed to get current location", async () => {
 					await renderComponent(event);
-					await waitFor(() => getLocationInput().focus());
+					getLocationInput().focus();
 					await waitFor(() => {
 						expect(getSelectablePins).not.toHaveBeenCalled();
 					});
@@ -838,7 +838,7 @@ describe("location-input-group", () => {
 							},
 						},
 					});
-					await waitFor(() => getLocationInput().focus());
+					getLocationInput().focus();
 
 					await waitFor(() => {
 						expect(getOneMapErrorModal(true)).toBeDefined();
@@ -875,7 +875,7 @@ describe("location-input-group", () => {
 							},
 						},
 					});
-					await waitFor(() => getLocationInput().focus());
+					getLocationInput().focus();
 
 					await waitFor(() => {
 						expect(screen.queryByText("address 1")).toBeDefined();
@@ -903,7 +903,7 @@ describe("location-input-group", () => {
 
 				await waitFor(() => window.dispatchEvent(new Event("online")));
 
-				await waitFor(() => getLocationInput().focus());
+				getLocationInput().focus();
 
 				const refreshCurrentLocationButton = getCurrentLocationButton();
 
@@ -934,7 +934,7 @@ describe("location-input-group", () => {
 
 				await waitFor(() => window.dispatchEvent(new Event("online")));
 
-				await waitFor(() => getLocationInput()?.focus());
+				getLocationInput()?.focus();
 
 				const refreshCurrentLocationButton = getCurrentLocationButton();
 
@@ -995,7 +995,7 @@ describe("location-input-group", () => {
 					});
 
 					it("should open location model when location input is clicked", async () => {
-						await waitFor(() => getLocationInput().focus());
+						getLocationInput().focus();
 
 						await waitFor(() => {
 							expect(getLocationModal(true)).toBeInTheDocument();
@@ -1051,7 +1051,7 @@ describe("location-input-group", () => {
 					});
 
 					it("show input value only and open the modal when clicked", async () => {
-						await waitFor(() => getLocationInput().focus());
+						getLocationInput().focus();
 
 						await waitFor(() => {
 							expect(getLocationModal(true)).toBeInTheDocument();
@@ -1097,7 +1097,7 @@ describe("location-input-group", () => {
 					});
 
 					it("show input value only and open the modal when clicked", async () => {
-						await waitFor(() => getLocationInput().focus());
+						getLocationInput().focus();
 
 						await waitFor(() => {
 							expect(getLocationModal(true)).toBeInTheDocument();
@@ -1137,7 +1137,7 @@ describe("location-input-group", () => {
 				it("should open location modal when input is clicked", async () => {
 					await renderComponent();
 
-					await waitFor(() => getLocationInput().focus());
+					getLocationInput().focus();
 
 					await waitFor(() => {
 						expect(getLocationModal(true)).toBeInTheDocument();
@@ -1154,7 +1154,7 @@ describe("location-input-group", () => {
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
-							await waitFor(() => getLocationInput().focus());
+							getLocationInput().focus();
 
 							await waitFor(() => {
 								expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
@@ -1197,7 +1197,7 @@ describe("location-input-group", () => {
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
-								await waitFor(() => getLocationInput().focus());
+								getLocationInput().focus();
 
 								await waitFor(() => {
 									expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
@@ -1223,7 +1223,7 @@ describe("location-input-group", () => {
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
-								await waitFor(() => getLocationInput().focus());
+								getLocationInput().focus();
 
 								await waitFor(() => {
 									expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
@@ -1266,7 +1266,7 @@ describe("location-input-group", () => {
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
-								await waitFor(() => getLocationInput().focus());
+								getLocationInput().focus();
 
 								await waitFor(() => {
 									expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
@@ -1319,7 +1319,7 @@ describe("location-input-group", () => {
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
-							await waitFor(() => getLocationInput().focus());
+							getLocationInput().focus();
 
 							await waitFor(() => {
 								expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
@@ -1478,7 +1478,7 @@ describe("location-input-group", () => {
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
-							await waitFor(() => getLocationInput().focus());
+							getLocationInput().focus();
 
 							await waitFor(() => {
 								expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
@@ -1604,7 +1604,7 @@ describe("location-input-group", () => {
 
 						await waitFor(() => window.dispatchEvent(new Event("online")));
 
-						await waitFor(() => getLocationInput().focus());
+						getLocationInput().focus();
 
 						await waitFor(() => {
 							expect(getLocationModal(true)).toBeInTheDocument();
@@ -1628,7 +1628,7 @@ describe("location-input-group", () => {
 
 						await waitFor(() => window.dispatchEvent(new Event("online")));
 
-						await waitFor(() => getLocationInput().focus());
+						getLocationInput().focus();
 
 						await waitFor(() => {
 							expect(getLocationModal(true)).toBeInTheDocument();
@@ -1732,7 +1732,7 @@ describe("location-input-group", () => {
 			it("should not render search clear button", async () => {
 				await renderComponent({ overrideField: { locationSelectionMode: "pins-only" } });
 
-				await waitFor(() => getLocationInput().focus());
+				getLocationInput().focus();
 
 				await waitFor(() => {
 					const a = getLocationSearchClearButton(true);
@@ -1755,7 +1755,7 @@ describe("location-input-group", () => {
 					},
 				});
 
-				await waitFor(() => getLocationInput().focus());
+				getLocationInput().focus();
 
 				await waitFor(() => {
 					const locationListTitle = screen.queryByText(mockReverseGeoCodeResponse[0].address);
@@ -1911,7 +1911,7 @@ describe("location-input-group", () => {
 		it("should set form state as dirty if user modifies the field", async () => {
 			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
 			await waitFor(() => window.dispatchEvent(new Event("online")));
-			await waitFor(() => getLocationInput().focus());
+			getLocationInput().focus();
 			await waitFor(() => {
 				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
 			});
@@ -1953,7 +1953,7 @@ describe("location-input-group", () => {
 		it("should reset and revert form dirty state to false", async () => {
 			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
 			await waitFor(() => window.dispatchEvent(new Event("online")));
-			await waitFor(() => getLocationInput().focus());
+			getLocationInput().focus();
 			await waitFor(() => {
 				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
 			});
@@ -1990,7 +1990,7 @@ describe("location-input-group", () => {
 				/>
 			);
 			await waitFor(() => window.dispatchEvent(new Event("online")));
-			await waitFor(() => getLocationInput().focus());
+			getLocationInput().focus();
 			await waitFor(() => {
 				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
 			});
@@ -2090,7 +2090,7 @@ describe("location-input-group", () => {
 
 			await waitFor(() => window.dispatchEvent(new Event("online")));
 
-			await waitFor(() => getLocationInput().focus());
+			getLocationInput().focus();
 
 			await waitFor(() => {
 				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
@@ -2120,7 +2120,7 @@ describe("location-input-group", () => {
 
 			await waitFor(() => window.dispatchEvent(new Event("online")));
 
-			await waitFor(() => getLocationInput().focus());
+			getLocationInput().focus();
 
 			await waitFor(() => {
 				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();

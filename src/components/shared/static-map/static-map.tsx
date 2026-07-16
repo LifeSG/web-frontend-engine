@@ -33,7 +33,7 @@ export const StaticMap = ({
 	// CONST, STATE, REFS
 	// =============================================================================
 	const isMobile = useMaxWidthMediaQuery("sm");
-	const [mapSrc, setMapSrc] = useState<string>("");
+	const [mapSrc, setMapSrc] = useState<string | null>(null);
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================

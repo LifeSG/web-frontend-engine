@@ -10,11 +10,7 @@ const LOCATION_FIELD_SCHEMA: IFrontendEngineData = {
 				field: {
 					uiType: "location-field",
 					label: "Location",
-					mapApi: {
-						reverseGeocode: "/api/onemap/revgeocode",
-						convertLatLngToXY: "/api/onemap/4326to3414",
-						search: "/api/onemap/search",
-					},
+					readOnly: true,
 				},
 			},
 		},
@@ -28,6 +24,6 @@ const LOCATION_FIELD_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-export default function LocationFieldDefaultPage() {
+export default function LocationFieldReadonlyPage() {
 	return <FrontendEngine data={LOCATION_FIELD_SCHEMA} />;
 }

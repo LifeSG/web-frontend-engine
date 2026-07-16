@@ -89,7 +89,7 @@ export const LocationPicker = ({
 				minZoom: leafletConfig.minZoom,
 				// Do not remove this attribution
 				attribution:
-					'<div class="onemap"><img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png" style="height:20px;width:20px;"/>&nbsp;<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener noreferrer">OneMap</a>&nbsp;&copy;&nbsp;contributors&nbsp;&#124;&nbsp;<a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a></div>',
+					'<div class="onemap"><img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png"/>&nbsp;<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener noreferrer">OneMap</a>&nbsp;&copy;&nbsp;contributors&nbsp;&#124;&nbsp;<a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a></div>',
 			});
 
 			const [ne, sw] = LocationHelper.getMapBounds();

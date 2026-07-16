@@ -33,7 +33,7 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 				},
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByTestId("field-popover")));
+			fireEvent.click(await screen.findByTestId("field-popover"));
 
 			expect(screen.getByText("Main label")).toBeInTheDocument();
 			expect(screen.getByText("Sub label")).toBeInTheDocument();
@@ -49,7 +49,7 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 				},
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByTestId("field-popover")));
+			fireEvent.click(await screen.findByTestId("field-popover"));
 
 			expect(screen.getByText("Main label").nodeName).toBe("STRONG");
 			expect(screen.getByText("Sub label").nodeName).toBe("STRONG");
@@ -65,7 +65,7 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 				},
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByTestId("field-popover")));
+			fireEvent.click(await screen.findByTestId("field-popover"));
 
 			expect(document.querySelector("form script")).toBeNull();
 		});

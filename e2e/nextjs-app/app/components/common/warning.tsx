@@ -16,7 +16,7 @@ export const createWarningPage = ({ schema }: CreateWarningPageOptions) =>
 				formRef.current?.setWarnings({
 					primary: "Primary warning message",
 				});
-			}, 100);
+			}, 0);
 
 			return () => {
 				globalThis.clearTimeout(timerId);

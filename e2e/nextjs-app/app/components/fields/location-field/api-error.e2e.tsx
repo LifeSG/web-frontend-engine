@@ -12,22 +12,15 @@ const LOCATION_FIELD_SCHEMA: IFrontendEngineData = {
 					label: "Location",
 					mapApi: {
 						reverseGeocode: "/api/onemap/revgeocode",
-						convertLatLngToXY: "/api/onemap/4326to3414",
+						convertLatLngToXY: "/api/onemap/convertlatlngtoxy",
 						search: "/api/onemap/search",
 					},
 				},
 			},
 		},
 	},
-	defaultValues: {
-		field: {
-			address: "1 FUSIONOPOLIS VIEW ECLIPSE SINGAPORE 138577",
-			lat: 1.299941797074924,
-			lng: 103.78940434971592,
-		},
-	},
 };
 
-export default function LocationFieldDefaultPage() {
+export default function LocationFieldApiErrorPage() {
 	return <FrontendEngine data={LOCATION_FIELD_SCHEMA} />;
 }

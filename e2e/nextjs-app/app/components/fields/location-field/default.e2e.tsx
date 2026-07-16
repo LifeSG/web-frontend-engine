@@ -10,6 +10,11 @@ const LOCATION_FIELD_SCHEMA: IFrontendEngineData = {
 				field: {
 					uiType: "location-field",
 					label: "Location",
+					mapApi: {
+						reverseGeocode: "/api/onemap/revgeocode",
+						convertLatLngToXY: "/api/onemap/convertlatlngtoxy",
+						search: "/api/onemap/search",
+					},
 				},
 			},
 		},

@@ -25,6 +25,37 @@ export abstract class AbstractStoryPage {
 		await expect(this.layout).toBeVisible();
 	}
 
+	public async setViewport(options?: {
+		size?: "mobile" | "tablet" | "desktop" | { width: number; height: number };
+		orientation?: "portrait" | "landscape";
+	}) {
+		const { size = "desktop", orientation = "portrait" } = options || {};
+		let viewport: { width: number; height: number };
+
+		if (typeof size === "object") {
+			viewport = size;
+		} else {
+			switch (size) {
+				case "mobile":
+					viewport = { width: 375, height: 667 };
+					break;
+				case "tablet":
+					viewport = { width: 768, height: 1024 };
+					break;
+				case "desktop":
+				default:
+					viewport = { width: 1280, height: 720 };
+					break;
+			}
+		}
+
+		if (orientation === "landscape") {
+			viewport = { width: viewport.height, height: viewport.width };
+		}
+
+		await this.page.setViewportSize(viewport);
+	}
+
 	public async snapshot(name: string, options?: { fullscreen?: boolean; locator?: Locator; mask?: Locator[] }) {
 		await compareScreenshot(this.page, name, options);
 	}
