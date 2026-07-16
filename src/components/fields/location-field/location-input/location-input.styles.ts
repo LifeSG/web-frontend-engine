@@ -14,7 +14,7 @@ export const dummyLocationInput = css`
 
 export const dummyLocationInputReadOnly = css`
 	border: ${Border["width-010"]} ${Border["solid"]} transparent;
-	background: transparent !important;
+	background: transparent;
 
 	:focus-within {
 		border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-focus"]};
@@ -39,16 +39,6 @@ export const dummyLocationInputError = css`
 		border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-error"]};
 		box-shadow: ${Shadow["xs-error-strong"]};
 	}
-`;
-
-export const dummyLocationInputFocused = css`
-	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-focus"]};
-	box-shadow: none;
-`;
-
-export const dummyLocationInputErrorFocused = css`
-	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-error"]};
-	box-shadow: ${Shadow["xs-error-strong"]};
 `;
 
 export const locationInputText = css`

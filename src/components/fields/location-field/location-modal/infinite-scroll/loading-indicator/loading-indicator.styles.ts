@@ -23,7 +23,7 @@ export const spinnerBar = css`
 		animation: spinnerAnimation ${TOTAL_BARS / 10}s linear infinite;
 	}
 
-	@keyframes spinnerAnimation {
+	@keyframes location-field-spinner-animation {
 		0% {
 			background-color: #8e8e93;
 		}

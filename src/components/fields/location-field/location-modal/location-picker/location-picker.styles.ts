@@ -64,9 +64,8 @@ export const leafletWrapper = css`
 	}
 `;
 
-export const buttonLocation = css`
+export const button = css`
 	position: absolute;
-	right: 1.5rem;
 	bottom: 2.5rem;
 	z-index: 1000;
 	display: flex;
@@ -82,21 +81,11 @@ export const buttonLocation = css`
 	box-shadow: 0 0 4px rgb(from ${Colour.Primitive["neutral-20"]} r g b / 40%);
 `;
 
+export const buttonLocation = css`
+	right: 1.5rem;
+`;
+
 export const buttonLegend = css`
-	position: absolute;
-	bottom: 2.5rem;
-	z-index: 1000;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 2.5rem;
-	height: 2.5rem;
-	border: 0;
-	border-radius: 50%;
-	padding: 0;
-	background: ${Colour.bg};
-	cursor: pointer;
-	box-shadow: 0 0 4px rgb(from ${Colour.Primitive["neutral-20"]} r g b / 40%);
 	left: ${Spacing["spacing-24"]};
 `;
 

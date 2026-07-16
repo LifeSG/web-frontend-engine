@@ -6,6 +6,7 @@ import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
 import { ICircleFillIcon } from "@lifesg/react-icons";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
+import clsx from "clsx";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
@@ -224,9 +225,10 @@ export const LocationPicker = ({
 
 	return (
 		<div
-			className={`${styles.locationPickerWrapper} ${className}-location-picker`}
+			className={clsx(styles.locationPickerWrapper, className)}
 			id={TestHelper.generateId(id, "location-picker")}
 			data-testid={TestHelper.generateId(id, "location-picker", panelInputMode === "search" ? "hide" : "show")}
+			data-panel-mode={panelInputMode}
 		>
 			{mapBannerText && (
 				<div className={styles.bannerWrapper} data-testid={TestHelper.generateId(id, "location-banner")}>
@@ -237,7 +239,7 @@ export const LocationPicker = ({
 			)}
 			<div className={styles.leafletWrapper} ref={leafletWrapperRef} />
 			<button
-				className={styles.buttonLocation}
+				className={clsx(styles.button, styles.buttonLocation)}
 				data-testid={TestHelper.generateId(id, "refresh-current-location-button")}
 				aria-label="Refresh current location"
 				onClick={() => {
@@ -270,7 +272,7 @@ export const LocationPicker = ({
 				>
 					<button
 						ref={legendTriggerRef}
-						className={styles.buttonLegend}
+						className={clsx(styles.button, styles.buttonLegend)}
 						data-testid={TestHelper.generateId(id, "legend-trigger")}
 						aria-label="Toggle legend"
 					>

@@ -32,6 +32,8 @@ export const styledLocationPicker = css`
 	${MediaQuery.MaxWidth.lg}, ${modalBox}[data-mobile-landscape="true"] & {
 		/* Keep map mounted but control visibility to prevent coordinate corruption */
 		display: block;
+		visibility: hidden;
+		pointer-events: none;
 		width: 100%;
 		margin-top: ${Spacing["spacing-16"]};
 		height: calc(100% - 13rem);
@@ -41,13 +43,6 @@ export const styledLocationPicker = css`
 		${MediaQuery.MaxWidth.lg}, ${modalBox}[data-mobile-landscape="true"] & {
 			visibility: visible;
 			pointer-events: auto;
-		}
-	}
-
-	&[data-panel-mode]:not([data-panel-mode="map"]) {
-		${MediaQuery.MaxWidth.lg}, ${modalBox}[data-mobile-landscape="true"] & {
-			visibility: hidden;
-			pointer-events: none;
 		}
 	}
 `;

@@ -1,12 +1,13 @@
+import clsx from "clsx";
 import React from "react";
 import { TOTAL_BARS } from "./config";
 import * as styles from "./loading-indicator.styles";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
-export const LoadingIndicator = (props: Props) => {
+export const LoadingIndicator = ({ className, ...props }: Props) => {
 	return (
-		<div className={styles.spinner} {...props}>
+		<div className={clsx(styles.spinner, className)} {...props}>
 			{Array(TOTAL_BARS)
 				.fill("")
 				.map((foo, i) => (

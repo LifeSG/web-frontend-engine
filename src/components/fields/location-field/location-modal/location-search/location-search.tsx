@@ -663,12 +663,10 @@ export const LocationSearch = ({
 	// =============================================================================
 	const renderList = () =>
 		searchBuildingResults.map((item, index) => (
+			// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
 			<div
 				key={`${index}_${item.lat}_${item.lng}`}
-				role="button"
-				tabIndex={0}
 				onClick={() => handleClickResult(item, index)}
-				onKeyDown={handleResultItemKeyDown(item, index)}
 				className={clsx(styles.resultItem, selectedIndex === index && styles.resultItemActive)}
 				id={TestHelper.generateId(`location-search-modal-search-result-${index + 0}`)}
 				data-testid={TestHelper.generateId(
@@ -715,6 +713,7 @@ export const LocationSearch = ({
 				data-testid={TestHelper.generateId(id, "location-search")}
 				className={clsx(styles.searchWrapper, `${className}-location-search`)}
 				data-mobile-landscape={!!isMobileLandscape}
+				data-panel-mode={panelInputMode}
 			>
 				<button
 					className={styles.searchBarIconButton}
@@ -765,6 +764,7 @@ export const LocationSearch = ({
 					className={styles.resultWrapper}
 					ref={resultRef}
 					onScroll={handleScrollResult}
+					data-panel-mode={panelInputMode}
 				>
 					{!gettingCurrentLocation && (
 						<>

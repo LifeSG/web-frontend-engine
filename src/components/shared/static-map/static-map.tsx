@@ -56,32 +56,19 @@ export const StaticMap = ({
 	};
 
 	// =============================================================================
-	// EVENT HANDLERS
-	// =============================================================================
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-		if ((e.key === "Enter" || e.key === " ") && onClick && !disabled) {
-			e.preventDefault();
-			onClick();
-		}
-	};
-
-	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 
 	if (!lat || !lng) return null;
 
 	return (
+		// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
 		<div
 			id={TestHelper.generateId(id, "static-map")}
 			data-testid={TestHelper.generateId(id, "static-map")}
 			data-disabled={!!disabled}
 			className={clsx(styles.staticMapWrapper, className)}
 			onClick={onClick}
-			onKeyDown={handleKeyDown}
-			role="button"
-			tabIndex={disabled ? -1 : 0}
 			aria-disabled={disabled}
 		>
 			<img

@@ -5,6 +5,7 @@ import {
 	useMediaQuery,
 	useResolvedBreakpointToken,
 } from "@lifesg/react-design-system/theme";
+import { Typography } from "@lifesg/react-design-system/typography";
 import clsx from "clsx";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -250,7 +251,7 @@ const LocationModal = ({
 
 	useEffect(() => {
 		if (modalBoxRef.current && locationModalStyles) {
-			modalBoxRef.current.style.cssText += locationModalStyles;
+			modalBoxRef.current.style.cssText = locationModalStyles;
 		}
 	}, [locationModalStyles]);
 
@@ -393,15 +394,15 @@ const LocationModal = ({
 					title="Map not available"
 					size="large"
 					show={true}
-					image={<img className={styles.errorImage} src={ERROR_SVG} alt="Map error" />}
+					image={<img className={styles.errorImage} src={ERROR_SVG} alt="" />}
 					description={
-						<p className={styles.description}>
+						<Typography.HeadingXS as="p" className={styles.description}>
 							Sorry, there was a problem with the map. You&rsquo;ll not be able to enter the location
 							right now. Please try again later.
 							<br />
 							<br />
 							Do note that you&rsquo;ll not be able to submit your report without entering the location.
-						</p>
+						</Typography.HeadingXS>
 					}
 					buttons={[
 						{
@@ -447,12 +448,12 @@ const LocationModal = ({
 					title="Something went wrong"
 					size="large"
 					show={true}
-					image={<img className={styles.errorImage} src={TIMEOUT_SVG} alt="Timeout error" />}
+					image={<img className={styles.errorImage} src={TIMEOUT_SVG} alt="" />}
 					description={
-						<p className={styles.description}>
+						<Typography.HeadingXS as="p" className={styles.description}>
 							It&rsquo;s taking longer than expected to retrieve your location. Please exit the map and
 							try again.
-						</p>
+						</Typography.HeadingXS>
 					}
 					buttons={[
 						{

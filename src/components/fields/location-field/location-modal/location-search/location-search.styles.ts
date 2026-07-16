@@ -9,18 +9,13 @@ export const searchWrapper = css`
 
 	${MediaQuery.MaxWidth.lg}, &[data-mobile-landscape="true"] {
 		flex: unset;
+		height: auto;
 		padding: ${Spacing["spacing-24"]} ${Spacing["spacing-20"]} 0;
 	}
 
 	&[data-panel-mode="search"] {
 		${MediaQuery.MaxWidth.lg}, &[data-mobile-landscape="true"] {
 			height: 100%;
-		}
-	}
-
-	&[data-panel-mode]:not([data-panel-mode="search"]) {
-		${MediaQuery.MaxWidth.lg}, &[data-mobile-landscape="true"] {
-			height: auto;
 		}
 	}
 `;
@@ -112,18 +107,13 @@ export const resultWrapper = css`
 	border-bottom: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 
 	${MediaQuery.MaxWidth.lg}, ${searchWrapper}[data-mobile-landscape="true"] & {
+		display: block;
 		border-bottom: 0;
 	}
 
 	&[data-panel-mode="map"] {
 		${MediaQuery.MaxWidth.lg}, ${searchWrapper}[data-mobile-landscape="true"] & {
 			display: none;
-		}
-	}
-
-	&[data-panel-mode]:not([data-panel-mode="map"]) {
-		${MediaQuery.MaxWidth.lg}, ${searchWrapper}[data-mobile-landscape="true"] & {
-			display: block;
 		}
 	}
 `;
@@ -173,6 +163,7 @@ export const buttonWrapper = css`
 	padding-top: ${Spacing["spacing-16"]};
 
 	${MediaQuery.MaxWidth.lg}, ${searchWrapper}[data-mobile-landscape="true"] & {
+		display: none;
 		position: absolute;
 		left: 0;
 		bottom: 0;
@@ -183,12 +174,6 @@ export const buttonWrapper = css`
 	&[data-panel-mode="map"] {
 		${MediaQuery.MaxWidth.lg}, ${searchWrapper}[data-mobile-landscape="true"] & {
 			display: block;
-		}
-	}
-
-	&[data-panel-mode]:not([data-panel-mode="map"]) {
-		${MediaQuery.MaxWidth.lg}, ${searchWrapper}[data-mobile-landscape="true"] & {
-			display: none;
 		}
 	}
 `;
