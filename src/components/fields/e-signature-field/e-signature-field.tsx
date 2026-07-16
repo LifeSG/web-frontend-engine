@@ -1,3 +1,4 @@
+import { Alert } from "@lifesg/react-design-system/alert";
 import { Form } from "@lifesg/react-design-system/form";
 import { ExclamationCircleFillIcon } from "@lifesg/react-icons/exclamation-circle-fill";
 import { CanceledError } from "axios";
@@ -10,7 +11,7 @@ import { AxiosApiClient, FileHelper, generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IGenericFieldProps } from "../types";
-import { ESignatureWrapper, ErrorWrapper, RefreshAlert, TryAgain } from "./e-signature-field.styles";
+import * as styles from "./e-signature-field.styles";
 import { IESignatureFieldSchema, IESignatureFieldValidationRule, IESignatureValue } from "./types";
 
 export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema>) => {
@@ -192,52 +193,60 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		// upload error takes highest precedence
 		if (uploadErrorCount > 0) {
 			return (
-				<ErrorWrapper>
+				<div className={styles.errorWrapper}>
 					<ExclamationCircleFillIcon />
 					<span>
 						{uploadRuleRef.current?.errorMessage || ERROR_MESSAGES.ESIGNATURE.UPLOAD}
-						<TryAgain type="button" onClick={() => handleChange(signatureDataURL)}>
+						<button
+							className={styles.tryAgain}
+							type="button"
+							onClick={() => handleChange(signatureDataURL)}
+						>
 							Please try again.
-						</TryAgain>
+						</button>
 					</span>
 					{uploadErrorCount >= 3 && (
-						<RefreshAlert type="warning" data-testid="upload-refresh-alert">
+						<Alert className={styles.refreshAlert} type="warning" data-testid="upload-refresh-alert">
 							Refresh this page if you cannot upload your signature.
-						</RefreshAlert>
+						</Alert>
 					)}
-				</ErrorWrapper>
+				</div>
 			);
 		}
 
 		if (loadErrorCount > 0 && hasValue(value)) {
 			return (
-				<ErrorWrapper>
+				<div className={styles.errorWrapper}>
 					<ExclamationCircleFillIcon />
 					<span>
 						Failed to load.
-						<TryAgain type="button" onClick={() => loadImage(value.fileId, value.fileUrl)}>
+						<button
+							className={styles.tryAgain}
+							type="button"
+							onClick={() => loadImage(value.fileId, value.fileUrl)}
+						>
 							Please try again.
-						</TryAgain>
+						</button>
 					</span>
 					{loadErrorCount >= 3 && (
-						<RefreshAlert type="warning" data-testid="load-refresh-alert">
+						<Alert className={styles.refreshAlert} type="warning" data-testid="load-refresh-alert">
 							Refresh this page if your signature failed to load.
-						</RefreshAlert>
+						</Alert>
 					)}
-				</ErrorWrapper>
+				</div>
 			);
 		}
 
 		return (
-			<ErrorWrapper>
+			<div className={styles.errorWrapper}>
 				<ExclamationCircleFillIcon />
 				<span>{error?.message}</span>
-			</ErrorWrapper>
+			</div>
 		);
 	};
 
 	return (
-		<ESignatureWrapper className={clsx(className)}>
+		<div className={clsx(styles.eSignatureWrapper, className)}>
 			<Form.ESignature
 				{...otherSchema}
 				id={id}
@@ -248,6 +257,6 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 			/>
 			{renderError()}
 			<Warning id={id} message={warning} />
-		</ESignatureWrapper>
+		</div>
 	);
 };
