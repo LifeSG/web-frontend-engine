@@ -1,6 +1,7 @@
 import { Form } from "@lifesg/react-design-system/form";
 import { ExclamationCircleFillIcon } from "@lifesg/react-icons/exclamation-circle-fill";
 import { CanceledError } from "axios";
+import clsx from "clsx";
 import isEmpty from "lodash/isEmpty";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -21,7 +22,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		formattedLabel,
 		id,
 		onChange,
-		schema: { label: _label, uiType: _uiType, upload, validation, ...otherSchema },
+		schema: { label: _label, uiType: _uiType, upload, validation, className, ...otherSchema },
 		value,
 		warning,
 	} = props;
@@ -236,7 +237,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 	};
 
 	return (
-		<ESignatureWrapper>
+		<ESignatureWrapper className={clsx(className)}>
 			<Form.ESignature
 				{...otherSchema}
 				id={id}
