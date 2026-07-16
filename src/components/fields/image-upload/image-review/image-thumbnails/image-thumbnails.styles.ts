@@ -50,9 +50,9 @@ export const loadingDot = css`
 	background: ${Colour["bg-inverse-subtle"]};
 	margin: 0.125rem;
 	transform-origin: bottom;
-	animation: dot-move-animation 1.35s infinite linear;
+	animation: image-upload-dot-move-animation 1.35s infinite linear;
 
-	@keyframes dot-move-animation {
+	@keyframes image-upload-dot-move-animation {
 		0% {
 			transform: scale(1);
 		}
@@ -92,15 +92,12 @@ export const loadingBox = css`
 `;
 
 export const borderOverlay = css`
-	border: none;
-	border-color: ${Colour["border-primary"]};
 	width: 100%;
 	height: 100%;
 `;
 
 export const borderOverlayIsSelected = css`
-	border: ${Border.solid} ${Border["width-020"]};
-	border-color: ${Colour["border-primary"]};
+	border: ${Border["width-020"]} ${Border.solid} ${Colour["border-primary"]};
 `;
 
 export const hiddenFileSelect = css`

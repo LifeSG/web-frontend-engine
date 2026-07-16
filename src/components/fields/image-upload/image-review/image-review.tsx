@@ -13,7 +13,7 @@ import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import clsx from "clsx";
-import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
@@ -118,7 +118,9 @@ export const ImageReview = (props: IProps) => {
 		],
 	});
 
-	// review image
+	// Stable unique id used to scope consumer-provided imageReviewModalStyles to
+	// this specific modal instance, avoiding style leakage to other elements.
+	const modalStyleId = useMemo(() => `image-review-${generateRandomId()}`, []);
 	const [activeFileIndex, setActiveFileIndex] = useState(images.length - 1);
 	const [drawActive, setDrawActive] = useState(false);
 	const [activePrompt, setActivePrompt] = useState<"delete" | "exit" | "clear-drawing" | null>();
@@ -351,8 +353,8 @@ export const ImageReview = (props: IProps) => {
 		<div
 			className={clsx(
 				styles.headerSection,
-				className && `${className}-header`,
-				drawActive && styles.headerSectionDrawActive
+				drawActive && styles.headerSectionDrawActive,
+				className && `${className}-header`
 			)}
 		>
 			{!drawActive ? (
@@ -535,14 +537,18 @@ export const ImageReview = (props: IProps) => {
 			className={className ? `${className}-review` : undefined}
 			show={show}
 		>
-			<styles.ModalBox
-				className={className ? `${className}-review-modal-box` : undefined}
-				imageReviewModalStyles={imageReviewModalStyles}
+			<Modal.Box
+				className={clsx(
+					styles.modalBox,
+					imageReviewModalStyles && modalStyleId,
+					className && `${className}-review-modal-box`
+				)}
 				showCloseButton={false}
 				data-mobile-landscape={!!isMobileLandscape}
 			>
 				{show ? (
 					<>
+						{imageReviewModalStyles && <style>{`.${modalStyleId} { ${imageReviewModalStyles} }`}</style>}
 						{renderHeader()}
 						{renderContent()}
 						{renderFooter()}
@@ -557,7 +563,7 @@ export const ImageReview = (props: IProps) => {
 				) : (
 					<></>
 				)}
-			</styles.ModalBox>
+			</Modal.Box>
 		</Modal>
 	);
 };

@@ -68,10 +68,7 @@ export const thumbnail = css`
 	width: 6rem;
 	height: 6rem;
 	${tokens.thumbnail.backgroundImage}: initial;
-	background-image: var(${tokens.thumbnail.backgroundImage});
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
+	background: var(${tokens.thumbnail.backgroundImage}) no-repeat center / cover;
 	overflow: hidden;
 	border-radius: ${Radius.sm};
 	${Font["body-sm-bold"]}
@@ -146,11 +143,6 @@ export const deleteButton = css`
 	background-color: transparent;
 	outline-style: none;
 	color: ${Colour["text-subtler"]};
-
-	> span {
-		display: flex;
-		align-items: center;
-	}
 
 	svg {
 		height: 1.875rem;
