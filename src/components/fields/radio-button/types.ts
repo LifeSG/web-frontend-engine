@@ -45,16 +45,16 @@ interface IRadioButtonDefaultSchema<V = undefined>
 		| undefined;
 }
 
-interface IRadioButtonToggleSchema<V = undefined, C = undefined>
+export interface IRadioButtonToggleSchema<V = undefined, C = undefined>
 	extends IBaseFieldSchema<"radio", V>,
 		TComponentOmitProps<RadioButtonProps> {
 	options: IRadioToggleOption<V, C>[];
+	allowDeselection?: boolean | undefined;
 	customOptions: {
 		styleType: "toggle";
 		indicator?: boolean | undefined;
 		border?: boolean | undefined;
 		layoutType?: TRadioToggleLayoutType | undefined;
-		allowDeselection?: boolean | undefined;
 		layoutColumns?: TLayoutColumns | undefined;
 		minItemWidth?: TMinItemWidth | undefined;
 		stretch?: boolean | undefined;

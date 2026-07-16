@@ -5,12 +5,12 @@ import merge from "lodash/merge";
 import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { TRadioButtonGroupSchema } from "../../../../components/fields";
+import { IRadioButtonToggleSchema } from "../../../../components/fields/radio-button/types";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
-	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
@@ -63,7 +63,10 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-const renderComponent = (overrideField?: TOverrideField<TRadioButtonGroupSchema>, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (
+	overrideField?: Partial<Omit<IRadioButtonToggleSchema, "uiType">>,
+	overrideSchema?: TOverrideSchema
+) => {
 	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
 	merge(json, {
 		sections: {
@@ -479,9 +482,9 @@ describe("radio toggle button", () => {
 	describe("allowDeselection feature", () => {
 		it("should deselect when clicking selected option if allowDeselection is true", async () => {
 			renderComponent({
+				allowDeselection: true,
 				customOptions: {
 					styleType: "toggle",
-					allowDeselection: true,
 				},
 			});
 
@@ -514,9 +517,9 @@ describe("radio toggle button", () => {
 			${"undefined"} | ${undefined}
 		`("should not deselect when allowDeselection is $description", async ({ allowDeselection }) => {
 			renderComponent({
+				...(allowDeselection !== undefined && { allowDeselection }),
 				customOptions: {
 					styleType: "toggle",
-					...(allowDeselection !== undefined && { allowDeselection }),
 				},
 			});
 
@@ -536,9 +539,9 @@ describe("radio toggle button", () => {
 		it("should not deselect disabled option even with allowDeselection true", async () => {
 			renderComponent(
 				{
+					allowDeselection: true,
 					customOptions: {
 						styleType: "toggle",
-						allowDeselection: true,
 					},
 					options: [
 						{ value: "Apple", label: "A" },
@@ -568,9 +571,9 @@ describe("radio toggle button", () => {
 							[COMPONENT_ID]: {
 								label: "Radio",
 								uiType: UI_TYPE,
+								allowDeselection: true,
 								customOptions: {
 									styleType: "toggle",
-									allowDeselection: true,
 								},
 								options: [
 									{
@@ -637,9 +640,9 @@ describe("radio toggle button", () => {
 
 		it("should trigger required validation when deselecting required field", async () => {
 			renderComponent({
+				allowDeselection: true,
 				customOptions: {
 					styleType: "toggle",
-					allowDeselection: true,
 				},
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 			});
@@ -749,7 +752,7 @@ describe("radio toggle button", () => {
 		});
 	});
 
-	labelTestSuite(renderComponent);
+	labelTestSuite(renderComponent as (overrideField: unknown) => void);
 	warningTestSuite<TRadioButtonGroupSchema>({
 		label: "Radio",
 		uiType: UI_TYPE,

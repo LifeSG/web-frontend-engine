@@ -1,3 +1,5 @@
+import isEmpty from "lodash/isEmpty";
+import isObject from "lodash/isObject";
 import { Form } from "@lifesg/react-design-system/form";
 import { Breakpoint } from "@lifesg/react-design-system/theme";
 import { useContext, useEffect, useState } from "react";
@@ -58,11 +60,16 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			? customOptions
 			: undefined;
 
+	const allowDeselection =
+		toggleOptions && "allowDeselection" in schema
+			? (schema as { allowDeselection?: boolean }).allowDeselection
+			: undefined;
+
 	const theme = useContext(ThemeContext);
-	const { setValue, trigger, clearErrors } = useFormContext();
+	const { setValue, trigger, clearErrors, unregister } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const [currentBreakpoint, setCurrentBreakpoint] = useState<TBreakpoint>("desktop");
-	const { setFieldValidationConfig } = useValidationConfig();
+	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
@@ -109,18 +116,29 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	// EVENT HANDLERS
 	// =============================================================================
 	const handleChangeOrClick = (clickedValue: string): void => {
-		if (toggleOptions?.allowDeselection && stateValue === clickedValue) {
-			onChange?.({ target: { value: null } });
-			trigger(id);
-			const selectedOption = options.find((opt) => opt.value === clickedValue);
-			if (selectedOption && "children" in selectedOption && selectedOption.children) {
-				Object.keys(selectedOption.children as Record<string, unknown>).forEach((childId) =>
-					setValue(childId, undefined)
-				);
-			}
+		if (allowDeselection && stateValue === clickedValue) {
+			handleDeselect(clickedValue);
 		} else {
 			onChange?.({ target: { value: clickedValue } });
 			clearErrors(id);
+		}
+	};
+
+	const handleDeselect = (clickedValue: string): void => {
+		onChange?.({ target: { value: null } });
+		trigger(id);
+
+		const selectedOption = options.find((opt) => opt.value === clickedValue);
+		if (
+			selectedOption &&
+			"children" in selectedOption &&
+			isObject(selectedOption.children) &&
+			!isEmpty(selectedOption.children)
+		) {
+			collectNestedChildIds(selectedOption.children as Record<string, unknown>).forEach((childId) => {
+				removeFieldValidationConfig(childId);
+				unregister(childId);
+			});
 		}
 	};
 
@@ -135,6 +153,16 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		const unique = generateRandomId();
 		return `${id}-${unique}`;
 	};
+
+	const collectNestedChildIds = (children: Record<string, unknown>): string[] =>
+		Object.entries(children).flatMap(([childId, child]) => {
+			const nestedChildren = isObject(child) ? (child as Record<string, unknown>)["children"] : undefined;
+			const nestedIds =
+				isObject(nestedChildren) && !isEmpty(nestedChildren)
+					? collectNestedChildIds(nestedChildren as Record<string, unknown>)
+					: [];
+			return [childId, ...nestedIds];
+		});
 
 	// =============================================================================
 	// RENDER FUNCTIONS
@@ -217,10 +245,15 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isRadioButtonChecked(option.value)}
 								onClick={() => handleChangeOrClick(option.value)}
+								onKeyDown={(e) => {
+									if (e.key === " " || e.key === "Enter") {
+										e.preventDefault();
+										handleChangeOrClick(option.value);
+									}
+								}}
 								error={!!error?.message}
 								compositeSection={
-									option.children &&
-									(!toggleOptions?.allowDeselection || isRadioButtonChecked(option.value))
+									option.children && (!allowDeselection || isRadioButtonChecked(option.value))
 										? { children: <Wrapper>{option.children}</Wrapper>, collapsible: false }
 										: undefined
 								}
