@@ -1,6 +1,8 @@
 import { Form } from "@lifesg/react-design-system/form";
-import { useEffect, useState } from "react";
+import { Breakpoint } from "@lifesg/react-design-system/theme";
+import { useContext, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { ThemeContext } from "styled-components";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
@@ -17,7 +19,29 @@ import {
 	StyledRadioButton,
 	StyledToggle,
 } from "./radio-button.styles";
-import { IRadioButtonOption, TRadioButtonGroupSchema } from "./types";
+import {
+	IImageButtonOption,
+	IRadioButtonOption,
+	IRadioToggleOption,
+	TBreakpoint,
+	TRadioButtonGroupSchema,
+	TResponsiveValue,
+} from "./types";
+
+const DEFAULT_MIN_ITEM_WIDTH = 164;
+
+const resolveResponsiveValue = <T,>(
+	value: TResponsiveValue<T> | undefined,
+	breakpoint: TBreakpoint,
+	defaultValue: T
+): T => {
+	if (value === undefined || value === null) return defaultValue;
+	if (typeof value !== "object") return value as T;
+	const { mobile, tablet, desktop } = value as { mobile?: T; tablet?: T; desktop?: T };
+	if (breakpoint === "mobile") return mobile ?? tablet ?? desktop ?? defaultValue;
+	if (breakpoint === "tablet") return tablet ?? desktop ?? mobile ?? defaultValue;
+	return desktop ?? tablet ?? mobile ?? defaultValue;
+};
 
 export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
 	// =============================================================================
@@ -29,15 +53,22 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		customSchema: { className, disabled, options, ...radioProps },
 	} = filterSchemaProps(schema);
 
-	const { setValue } = useFormContext();
+	const toggleOptions =
+		customOptions && "styleType" in customOptions && customOptions.styleType === "toggle"
+			? customOptions
+			: undefined;
+
+	const theme = useContext(ThemeContext);
+	const { setValue, trigger, clearErrors } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
+	const [currentBreakpoint, setCurrentBreakpoint] = useState<TBreakpoint>("desktop");
 	const { setFieldValidationConfig } = useValidationConfig();
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
+		setFieldValidationConfig(id, Yup.string().nullable(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
@@ -48,14 +79,49 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	}, [options]);
 
 	useEffect(() => {
-		setStateValue(value || "");
+		setStateValue(value ?? "");
 	}, [value]);
+
+	useEffect(() => {
+		const mobileMax = Breakpoint["sm-max"]({ theme });
+		const tabletMax = Breakpoint["lg-max"]({ theme }) - 1;
+		const mobileQuery = window.matchMedia(`(max-width: ${mobileMax}px)`);
+		const tabletQuery = window.matchMedia(`(min-width: ${mobileMax + 1}px) and (max-width: ${tabletMax}px)`);
+
+		const detectBreakpoint = (): TBreakpoint => {
+			if (mobileQuery.matches) return "mobile";
+			if (tabletQuery.matches) return "tablet";
+			return "desktop";
+		};
+
+		const onQueryChange = () => setCurrentBreakpoint(detectBreakpoint());
+		onQueryChange();
+		mobileQuery.addEventListener("change", onQueryChange);
+		tabletQuery.addEventListener("change", onQueryChange);
+		return () => {
+			mobileQuery.removeEventListener("change", onQueryChange);
+			tabletQuery.removeEventListener("change", onQueryChange);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChangeOrClick = (value: string): void => {
-		onChange({ target: { value } });
+	const handleChangeOrClick = (clickedValue: string): void => {
+		if (toggleOptions?.allowDeselection && stateValue === clickedValue) {
+			onChange?.({ target: { value: null } });
+			trigger(id);
+			const selectedOption = options.find((opt) => opt.value === clickedValue);
+			if (selectedOption && "children" in selectedOption && selectedOption.children) {
+				Object.keys(selectedOption.children as Record<string, unknown>).forEach((childId) =>
+					setValue(childId, undefined)
+				);
+			}
+		} else {
+			onChange?.({ target: { value: clickedValue } });
+			clearErrors(id);
+		}
 	};
 
 	// =============================================================================
@@ -110,14 +176,30 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	};
 
 	const renderToggles = () => {
+		const layoutType = toggleOptions?.layoutType ?? "horizontal";
+		const resolvedColumns =
+			toggleOptions?.layoutColumns !== undefined
+				? resolveResponsiveValue(toggleOptions.layoutColumns, currentBreakpoint, 0) || undefined
+				: undefined;
+		const resolvedMinItemWidth = resolveResponsiveValue(
+			toggleOptions?.minItemWidth,
+			currentBreakpoint,
+			DEFAULT_MIN_ITEM_WIDTH
+		);
+		const stretch = toggleOptions?.stretch ?? false;
+
 		return (
 			options.length > 0 &&
-			customOptions.styleType === "toggle" && (
+			customOptions?.styleType === "toggle" && (
 				<FlexToggleWrapper
 					className={className ? `${className} ${className}-radio-container` : undefined}
-					$layoutType={customOptions?.layoutType ?? "horizontal"}
+					$layoutType={layoutType}
+					$resolvedColumns={resolvedColumns}
+					$resolvedMinItemWidth={resolvedMinItemWidth}
+					$stretch={stretch}
+					$hasMinItemWidth={!!toggleOptions?.minItemWidth}
 				>
-					{options.map((option, index) => {
+					{(options as IRadioToggleOption[]).map((option, index) => {
 						const radioButtonId = formatId();
 
 						return (
@@ -134,17 +216,15 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								indicator={customOptions?.indicator}
 								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isRadioButtonChecked(option.value)}
-								onChange={() => handleChangeOrClick(option.value)}
+								onClick={() => handleChangeOrClick(option.value)}
 								error={!!error?.message}
 								compositeSection={
-									option.children
-										? {
-												children: <Wrapper>{option.children}</Wrapper>,
-												collapsible: false,
-										  }
-										: null
+									option.children &&
+									(!toggleOptions?.allowDeselection || isRadioButtonChecked(option.value))
+										? { children: <Wrapper>{option.children}</Wrapper>, collapsible: false }
+										: undefined
 								}
-								subLabel={!!option.subLabel && renderLabel(option.subLabel)}
+								subLabel={option.subLabel ? renderLabel(option.subLabel) : undefined}
 							>
 								{renderLabel(option.label)}
 							</StyledToggle>
@@ -159,7 +239,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		return (
 			options.length > 0 && (
 				<FlexImageWrapper className={className ? `${className} ${className}-radio-container` : undefined}>
-					{options.map((option, index) => {
+					{(options as IImageButtonOption[]).map((option, index) => {
 						const radioButtonId = formatId();
 
 						return (
