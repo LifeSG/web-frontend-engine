@@ -12,6 +12,10 @@ interface ILabelProps {
 
 interface IToggleWrapperProps {
 	$layoutType?: TRadioToggleLayoutType;
+	$resolvedColumns?: number | undefined;
+	$resolvedMinItemWidth?: number | undefined;
+	$stretch?: boolean | undefined;
+	$hasMinItemWidth?: boolean | undefined;
 }
 
 export const Label = styled(Typography.BodyMD)<ILabelProps>`
@@ -45,9 +49,21 @@ export const FlexImageWrapper = styled.div`
 `;
 
 export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
-	display: flex;
-	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
-	flex-wrap: wrap;
+	${(props) => {
+		const { $resolvedColumns, $stretch, $resolvedMinItemWidth, $layoutType, $hasMinItemWidth } = props;
+		if ($resolvedColumns) {
+			return $stretch
+				? `display: grid; grid-template-columns: repeat(${$resolvedColumns}, 1fr);`
+				: `display: grid; grid-template-columns: repeat(${$resolvedColumns}, auto); justify-content: start;`;
+		}
+		if ($stretch) {
+			return `display: grid; grid-template-columns: repeat(auto-fill, minmax(${$resolvedMinItemWidth}px, 1fr));`;
+		}
+		if ($hasMinItemWidth) {
+			return `display: flex; flex-wrap: wrap; > * { flex: 0 0 ${$resolvedMinItemWidth}px; width: ${$resolvedMinItemWidth}px; }`;
+		}
+		return `display: flex; flex-direction: ${$layoutType === "vertical" ? "column" : "row"}; flex-wrap: wrap;`;
+	}}
 	gap: ${Spacing["spacing-16"]};
 `;
 

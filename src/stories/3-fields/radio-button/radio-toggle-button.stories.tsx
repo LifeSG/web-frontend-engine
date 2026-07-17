@@ -41,13 +41,23 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description:
-				"<div>A custom options on which styling to use for rendering the toggle group.</div><ul><li>`styleType` prop accept either `default` or `toggle` and also can be `undefined`.If set to `toggle` will render toggle button, else render default radio buttons.</li><li>`indicator` show/hide radio icon, `false` by default.</li><li>`border` show/hide border,`true` by default.</li><li>`layoutType` render radio buttons horizontally or vertically, `horizontal` by default.</li></ul>",
+				'<div>A custom options on which styling to use for rendering the toggle group.</div><ul><li>`styleType` prop accept either `default` or `toggle`. If set to `toggle` will render toggle button, else render default radio buttons.</li><li>`indicator` show/hide radio icon, `false` by default.</li><li>`border` show/hide border, `true` by default.</li><li>`layoutType` render radio buttons horizontally or vertically (`"horizontal"` by default).</li><li>`layoutColumns` controls how many toggle buttons appear per row using CSS grid — accepts a number or responsive object `{ mobile?, tablet?, desktop? }`.</li><li>`minItemWidth` sets a fixed minimum item width in pixels — accepts a number or responsive object `{ mobile?, tablet?, desktop? }`.</li><li>`stretch` when true, items stretch to fill the row using CSS auto-fill grid.</li></ul>',
 			table: {
 				type: {
-					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean, layoutType?: "horizontal" | "vertical"}`,
+					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean, layoutType?: "horizontal" | "vertical", layoutColumns?: number | { mobile?: number, tablet?: number, desktop?: number }, minItemWidth?: number | { mobile?: number, tablet?: number, desktop?: number }, stretch?: boolean}`,
 				},
 			},
 			type: { name: "object", value: {} },
+		},
+		allowDeselection: {
+			description:
+				"When `true`, clicking an already-selected toggle deselects it (field value becomes `null`). Only applies to the `toggle` styleType. Defaults to `false`.",
+			table: {
+				type: { summary: "boolean" },
+				defaultValue: { summary: "false" },
+			},
+			options: [true, false],
+			control: { type: "boolean" },
 		},
 		options: {
 			description:
@@ -359,3 +369,154 @@ Overrides.args = {
 	},
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
+
+export const AllowDeselection = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-allow-deselection").bind({});
+AllowDeselection.args = {
+	uiType: "radio",
+	label: "Select a fruit (click again to deselect)",
+	allowDeselection: true,
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+};
+
+export const AllowDeselectionWithNestedFields = DefaultStoryTemplate<TRadioButtonGroupSchema>(
+	"radio-allow-deselection-nested"
+).bind({});
+AllowDeselectionWithNestedFields.args = {
+	uiType: "radio",
+	label: "Select a reason (deselect to clear nested field)",
+	allowDeselection: true,
+	customOptions: {
+		styleType: "toggle",
+		indicator: true,
+	},
+	options: [
+		{
+			label: "Others",
+			value: "Others",
+			children: {
+				wrapper: {
+					uiType: "div",
+					style: { padding: "1rem" },
+					showIf: [{ "radio-allow-deselection-nested": [{ equals: "Others" }] }],
+					children: {
+						otherInput: {
+							uiType: "textarea",
+							label: "Please specify",
+							validation: [{ required: true }, { max: 100 }],
+						},
+					},
+				},
+			},
+		},
+		{ label: "Not applicable", value: "NA" },
+	],
+};
+
+export const AllowDeselectionWithRequiredValidation = DefaultStoryTemplate<TRadioButtonGroupSchema>(
+	"radio-allow-deselection-required"
+).bind({});
+AllowDeselectionWithRequiredValidation.args = {
+	uiType: "radio",
+	label: "Select a fruit (required — deselecting triggers validation error)",
+	allowDeselection: true,
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	validation: [{ required: true, errorMessage: "Please select an option" }],
+	defaultValues: "Apple",
+};
+
+export const AllowDeselectionWithDefault = DefaultStoryTemplate<TRadioButtonGroupSchema>(
+	"radio-allow-deselection-default"
+).bind({});
+AllowDeselectionWithDefault.args = {
+	uiType: "radio",
+	label: "Select a fruit (has default, click to deselect)",
+	allowDeselection: true,
+	customOptions: {
+		styleType: "toggle",
+	},
+	options: [
+		{ label: "Apple", value: "Apple" },
+		{ label: "Berry", value: "Berry" },
+		{ label: "Cherry", value: "Cherry" },
+	],
+	defaultValues: "Apple",
+};
+
+export const MinItemWidth = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-min-item-width").bind({});
+MinItemWidth.args = {
+	uiType: "radio",
+	label: "Fixed item width (200px each)",
+	customOptions: { styleType: "toggle", minItemWidth: 200 },
+	options: [
+		{ label: "Option A", value: "a" },
+		{ label: "Option B", value: "b" },
+		{ label: "Option C", value: "c" },
+		{ label: "Option D", value: "d" },
+	],
+};
+
+export const LayoutColumns = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-layout-columns").bind({});
+LayoutColumns.args = {
+	uiType: "radio",
+	label: "Responsive columns (1 on mobile, 3 on desktop, not stretched)",
+	customOptions: {
+		styleType: "toggle",
+		layoutColumns: { mobile: 1, desktop: 3 },
+	},
+	options: [
+		{ label: "Option A", value: "a" },
+		{ label: "Option B", value: "b" },
+		{ label: "Option C", value: "c" },
+		{ label: "Option D", value: "d" },
+		{ label: "Option E", value: "e" },
+		{ label: "Option F", value: "f" },
+	],
+};
+
+export const Stretch = DefaultStoryTemplate<TRadioButtonGroupSchema>("radio-stretch").bind({});
+Stretch.args = {
+	uiType: "radio",
+	label: "Stretch to fill row (auto-fill grid)",
+	customOptions: { styleType: "toggle", stretch: true },
+	options: [
+		{ label: "Option A", value: "a" },
+		{ label: "Option B", value: "b" },
+		{ label: "Option C", value: "c" },
+		{ label: "Option D", value: "d" },
+	],
+};
+
+export const LayoutColumnsWithStretch = DefaultStoryTemplate<TRadioButtonGroupSchema>(
+	"radio-layout-columns-stretch"
+).bind({});
+LayoutColumnsWithStretch.args = {
+	uiType: "radio",
+	label: "Responsive columns with stretch (1 mobile, 2 tablet, 3 desktop)",
+	customOptions: {
+		styleType: "toggle",
+		layoutColumns: { mobile: 1, tablet: 2, desktop: 3 },
+		stretch: true,
+	},
+	options: [
+		{ label: "Option A", value: "a" },
+		{ label: "Option B", value: "b" },
+		{ label: "Option C", value: "c" },
+		{ label: "Option D", value: "d" },
+		{ label: "Option E", value: "e" },
+		{ label: "Option F", value: "f" },
+	],
+};
