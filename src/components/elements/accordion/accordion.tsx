@@ -4,7 +4,7 @@ import { useFieldEvent } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
-import { Container } from "./accordion.styles";
+import * as styles from "./accordion.styles";
 import { IAccordionSchema } from "./types";
 
 /**
@@ -37,9 +37,9 @@ export const Accordion = (props: IGenericElementProps<IAccordionSchema>) => {
 			{disableContentInset ? (
 				<Wrapper id={id}>{children}</Wrapper>
 			) : (
-				<Container>
+				<div className={styles.container}>
 					<Wrapper id={id}>{children}</Wrapper>
-				</Container>
+				</div>
 			)}
 		</BoxContainer>
 	);
