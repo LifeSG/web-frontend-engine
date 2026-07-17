@@ -27,7 +27,7 @@ export const leafletWrapper = css`
 			&.leaflet-bar {
 				border-radius: 1.25rem;
 				overflow: hidden;
-				box-shadow: 0 0.125rem 0.25rem ${Colour["bg-inverse"]}66;
+				box-shadow: 0 0.125rem 0.25rem rgb(from ${Colour["bg-inverse"]} r g b / 40%);
 			}
 
 			&.leaflet-bar a {

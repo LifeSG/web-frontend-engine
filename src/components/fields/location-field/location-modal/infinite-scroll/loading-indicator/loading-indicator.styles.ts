@@ -20,7 +20,7 @@ export const spinnerBar = css`
 		width: ${BAR_WIDTH / 16}rem;
 		height: ${BAR_HEIGHT / 16}rem;
 		border-radius: ${BAR_WIDTH / 2 / 16}rem;
-		animation: spinnerAnimation ${TOTAL_BARS / 10}s linear infinite;
+		animation: location-field-spinner-animation ${TOTAL_BARS / 10}s linear infinite;
 	}
 
 	@keyframes location-field-spinner-animation {

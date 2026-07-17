@@ -431,14 +431,6 @@ export const LocationSearch = ({
 			}
 		}
 	};
-
-	const handleResultItemKeyDown = (item: IResultListItem, index: number) => (e: React.KeyboardEvent) => {
-		if (e.key === "Enter" || e.key === " ") {
-			e.preventDefault();
-			handleClickResult(item, index);
-		}
-	};
-
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
