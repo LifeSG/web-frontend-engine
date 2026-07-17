@@ -2,7 +2,6 @@
 
 import { FrontendEngine, IFrontendEngineData } from "@lifesg/web-frontend-engine";
 
-// TODO: Remove this example when we add a proper test for the component.
 const DIVIDER_SCHEMA: IFrontendEngineData = {
 	sections: {
 		section: {
@@ -10,6 +9,16 @@ const DIVIDER_SCHEMA: IFrontendEngineData = {
 			children: {
 				divider: {
 					uiType: "divider",
+				},
+				dividerDashed: {
+					uiType: "divider",
+					lineStyle: "dashed",
+					verticalMargin: 2,
+				},
+				dividerThick: {
+					uiType: "divider",
+					thickness: 3,
+					verticalMargin: 2,
 				},
 			},
 		},
