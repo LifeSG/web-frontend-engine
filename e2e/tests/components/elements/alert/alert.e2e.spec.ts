@@ -6,37 +6,11 @@ test.describe("Alert", () => {
 	test.describe(() => {
 		test.use({
 			storyOptions: {
-				...withStory("success"),
+				...withStory("alert"),
 			},
 		});
 
-		test("Success", async ({ story }) => {
-			await story.goto();
-			await story.snapshot("mount");
-		});
-	});
-
-	test.describe(() => {
-		test.use({
-			storyOptions: {
-				...withStory("warning"),
-			},
-		});
-
-		test("Warning", async ({ story }) => {
-			await story.goto();
-			await story.snapshot("mount");
-		});
-	});
-
-	test.describe(() => {
-		test.use({
-			storyOptions: {
-				...withStory("error"),
-			},
-		});
-
-		test("Error", async ({ story }) => {
+		test("Variants", async ({ story }) => {
 			await story.goto();
 			await story.snapshot("mount");
 		});
