@@ -1,8 +1,9 @@
-import { Divider as DSDivider } from "@lifesg/react-design-system/divider";
+import { useRef } from "react";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import { TestHelper, filterSchemaProps } from "../../../utils";
 import { IGenericElementProps } from "../types";
 import { IDividerSchema } from "./types";
-import styled from "styled-components";
+import { Container, StyledDivider, tokens } from "./divider.styles";
 
 export const Divider = (props: IGenericElementProps<IDividerSchema>) => {
 	// =============================================================================
@@ -12,20 +13,18 @@ export const Divider = (props: IGenericElementProps<IDividerSchema>) => {
 	const {
 		customSchema: { verticalMargin, ...dividerProps },
 	} = filterSchemaProps(schema);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	useApplyStyle(containerRef, {
+		[tokens.container.verticalMargin]: verticalMargin ? `${verticalMargin}rem 0` : undefined,
+	});
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<StyledDivider
-			id={id}
-			data-testid={TestHelper.generateId(id, "divider")}
-			$verticalMargin={verticalMargin}
-			{...dividerProps}
-		/>
+		<Container ref={containerRef}>
+			<StyledDivider id={id} data-testid={TestHelper.generateId(id, "divider")} {...dividerProps} />
+		</Container>
 	);
 };
-
-const StyledDivider = styled(DSDivider)<{ $verticalMargin?: number | undefined }>`
-	margin: ${({ $verticalMargin }) => ($verticalMargin ? `${$verticalMargin}rem 0` : "unset")};
-`;
