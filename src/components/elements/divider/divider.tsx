@@ -1,9 +1,11 @@
 import { useRef } from "react";
+import { Divider as DSDivider } from "@lifesg/react-design-system/divider";
 import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import { TestHelper, filterSchemaProps } from "../../../utils";
 import { IGenericElementProps } from "../types";
 import { IDividerSchema } from "./types";
-import { Container, StyledDivider, tokens } from "./divider.styles";
+import * as styles from "./divider.styles";
+import clsx from "clsx";
 
 export const Divider = (props: IGenericElementProps<IDividerSchema>) => {
 	// =============================================================================
@@ -11,20 +13,20 @@ export const Divider = (props: IGenericElementProps<IDividerSchema>) => {
 	// =============================================================================
 	const { id, schema } = props;
 	const {
-		customSchema: { verticalMargin, ...dividerProps },
+		customSchema: { verticalMargin, className, ...dividerProps },
 	} = filterSchemaProps(schema);
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	useApplyStyle(containerRef, {
-		[tokens.container.verticalMargin]: verticalMargin ? `${verticalMargin}rem 0` : undefined,
+		[styles.tokens.container.verticalMargin]: verticalMargin ? `${verticalMargin}rem 0` : undefined,
 	});
 
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Container ref={containerRef}>
-			<StyledDivider id={id} data-testid={TestHelper.generateId(id, "divider")} {...dividerProps} />
-		</Container>
+		<div ref={containerRef} className={clsx(styles.container, className)}>
+			<DSDivider id={id} data-testid={TestHelper.generateId(id, "divider")} {...dividerProps} />
+		</div>
 	);
 };

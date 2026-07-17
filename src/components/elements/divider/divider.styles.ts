@@ -1,5 +1,4 @@
-import { Divider as DSDivider } from "@lifesg/react-design-system/divider";
-import styled from "styled-components";
+import { css } from "@linaria/core";
 
 export const tokens = {
 	container: {
@@ -7,11 +6,7 @@ export const tokens = {
 	},
 };
 
-export const Container = styled.div`
+export const container = css`
 	${tokens.container.verticalMargin}: initial;
 	margin: var(${tokens.container.verticalMargin}, 0);
-`;
-
-export const StyledDivider = styled(DSDivider)`
-	margin: 0;
 `;
