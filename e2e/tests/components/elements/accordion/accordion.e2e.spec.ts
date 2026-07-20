@@ -28,4 +28,30 @@ test.describe("Accordion", () => {
 			await story.snapshot("mount");
 		});
 	});
+
+	test.describe(() => {
+		test.use({
+			storyOptions: {
+				...withStory("disable-content-inset"),
+			},
+		});
+
+		test("Disable Content Inset", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
+	});
+
+	test.describe(() => {
+		test.use({
+			storyOptions: {
+				...withStory("button"),
+			},
+		});
+
+		test("Button", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
+	});
 });
