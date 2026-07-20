@@ -27,6 +27,7 @@ import { ILocationPickerProps, IMapPin } from "./types";
 export const LocationPicker = ({
 	id = "location-picker",
 	className,
+	customClassName,
 	mapPanZoom,
 	panelInputMode,
 	showLocationModal,
@@ -225,7 +226,11 @@ export const LocationPicker = ({
 
 	return (
 		<div
-			className={clsx(styles.locationPickerWrapper, className)}
+			className={clsx(
+				styles.locationPickerWrapper,
+				className,
+				customClassName && `${customClassName}-location-picker`
+			)}
 			id={TestHelper.generateId(id, "location-picker")}
 			data-testid={TestHelper.generateId(id, "location-picker", panelInputMode === "search" ? "hide" : "show")}
 			data-panel-mode={panelInputMode}

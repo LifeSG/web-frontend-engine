@@ -250,8 +250,8 @@ const LocationModal = ({
 	}, []);
 
 	useEffect(() => {
-		if (modalBoxRef.current && locationModalStyles !== undefined) {
-			modalBoxRef.current.style.cssText = locationModalStyles;
+		if (modalBoxRef.current) {
+			modalBoxRef.current.style.cssText = locationModalStyles || "";
 		}
 	}, [locationModalStyles]);
 
@@ -516,7 +516,8 @@ const LocationModal = ({
 							/>
 							<LocationPicker
 								id={id}
-								className={clsx(styles.styledLocationPicker, className)}
+								className={styles.styledLocationPicker}
+								customClassName={className}
 								panelInputMode={panelInputMode}
 								locationAvailable={locationAvailable}
 								gettingCurrentLocation={gettingCurrentLocation}
