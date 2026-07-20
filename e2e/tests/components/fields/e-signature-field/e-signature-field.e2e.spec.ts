@@ -46,8 +46,8 @@ test.describe("E-Signature Field", () => {
 		});
 
 		test("Upload error display", async ({ story }) => {
-			await story.page.route("**/api/upload", (route) => route.fulfill({ status: 500 }));
 			await story.goto();
+			await story.page.route("**/api/upload", (route) => route.fulfill({ status: 500 }));
 
 			await test.step("Open modal and draw signature", async () => {
 				await story.page.getByRole("button", { name: "Add signature" }).click();
