@@ -108,7 +108,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForLoadState("networkidle");
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -122,7 +122,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForLoadState("networkidle");
+			await story.page.waitForTimeout(2000);
 			await story.locators.legendTrigger.click();
 
 			await story.snapshot("open", { fullscreen: true });
@@ -137,6 +137,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("error", { fullscreen: true });
 		});
