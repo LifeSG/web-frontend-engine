@@ -1,119 +1,98 @@
-import { deflateSync } from "zlib";
-import { forComponent, test } from "../../../utils/fixtures";
+import { type Locator, type Page, expect } from "@playwright/test";
+import { test as base, forComponent } from "../../../utils/fixtures";
 import { viewport } from "../../../consts";
+import { LONG_FILE, SHORT_FILE, THIRD_FILE } from "../../../utils/image-fixtures";
+import { StoryPage } from "../../../utils/story-page";
 
 const withStory = forComponent("fields/image-upload");
 
 // =============================================================================
-// PNG GENERATION HELPERS
-// Used to produce a visible solid-colour PNG instead of a 1×1 pixel stand-in
-// so that the blue drawn circle is clearly distinguishable from the backdrop.
+// CUSTOM STORY PAGE
+// Centralises all locators and upload/canvas helper methods so test bodies stay
+// declarative and free of repeated getByTestId calls.
 // =============================================================================
-const CRC32_TABLE = (() => {
-	const t: number[] = [];
-	for (let i = 0; i < 256; i++) {
-		let c = i;
-		for (let j = 0; j < 8; j++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-		t[i] = c;
+class ImageUploadPage extends StoryPage {
+	public readonly locators: {
+		// Upload form
+		fileInput: Locator;
+		errorAlert: Locator;
+		// Drag and drop
+		dropzone: Locator;
+		dragHint: Locator;
+		// Review modal
+		reviewOkButton: Locator;
+		drawButton: Locator;
+		deleteButton: Locator;
+		closeButton: Locator;
+		saveButton: Locator;
+		// Draw mode
+		saveDrawingButton: Locator;
+		clearDrawingButton: Locator;
+		blueBrush: Locator;
+		// Canvas
+		imageEditor: Locator;
+		// Upload form (add)
+		addButton: Locator;
+	};
+
+	public constructor(page: Page, story?: string) {
+		super(page, { component: "fields/image-upload", story });
+		this.locators = {
+			fileInput: page.getByTestId("field-drag-upload__hidden-input"),
+			errorAlert: page.getByTestId("field__error"),
+			dropzone: page.getByTestId("field-drag-upload"),
+			dragHint: page.getByTestId("field-drag-upload__hint"),
+			reviewOkButton: page.getByRole("button", { name: "Ok" }),
+			drawButton: page.getByTestId("field__draw-button"),
+			deleteButton: page.getByTestId("field__delete-button"),
+			closeButton: page.getByTestId("field__close-button"),
+			saveButton: page.getByTestId("field__save-button"),
+			saveDrawingButton: page.getByTestId("field__save-drawing"),
+			clearDrawingButton: page.getByTestId("field__clear-drawing-button"),
+			blueBrush: page.getByRole("button", { name: "blue brush" }),
+			imageEditor: page.locator("#imageEditor"),
+			addButton: page.getByTestId("field__file-input-add-button"),
+		};
 	}
-	return t;
-})();
 
-function crc32(buf: Buffer): number {
-	let crc = 0xffffffff;
-	for (let i = 0; i < buf.length; i++) crc = CRC32_TABLE[(crc ^ buf[i]) & 0xff] ^ (crc >>> 8);
-	return (crc ^ 0xffffffff) >>> 0;
-}
-
-function pngChunk(type: string, data: Buffer): Buffer {
-	const typeBytes = Buffer.from(type, "ascii");
-	const len = Buffer.alloc(4);
-	len.writeUInt32BE(data.length);
-	const crc = Buffer.alloc(4);
-	crc.writeUInt32BE(crc32(Buffer.concat([typeBytes, data])));
-	return Buffer.concat([len, typeBytes, data, crc]);
-}
-
-/** Returns a valid PNG buffer filled with a single solid RGB colour. */
-function createSolidColorPng(width: number, height: number, r: number, g: number, b: number): Buffer {
-	// Build one row: [filter=None, R, G, B, R, G, B, ...]
-	const row = Buffer.alloc(1 + width * 3);
-	for (let x = 0; x < width; x++) {
-		row[1 + x * 3] = r;
-		row[2 + x * 3] = g;
-		row[3 + x * 3] = b;
+	/** Sets files on the hidden drag-upload input. Defaults to [SHORT_FILE, LONG_FILE]. */
+	public async uploadFiles(files: { name: string; mimeType: string; buffer: Buffer }[] = [SHORT_FILE, LONG_FILE]) {
+		await this.locators.fileInput.setInputFiles(files);
 	}
-	// Repeat for all rows, then zlib-compress for IDAT
-	const raw = Buffer.concat(Array.from({ length: height }, () => row));
 
-	const ihdr = Buffer.alloc(13);
-	ihdr.writeUInt32BE(width, 0);
-	ihdr.writeUInt32BE(height, 4);
-	ihdr.writeUInt8(8, 8); // bit depth
-	ihdr.writeUInt8(2, 9); // color type: RGB
+	/** Waits until the fabric.js canvas has non-zero dimensions (image rendered). */
+	public async waitForImageEditorCanvas() {
+		await this.page.waitForFunction(() => {
+			const canvas = document.getElementById("imageEditor");
+			return !!canvas && canvas.getBoundingClientRect().height > 0;
+		});
+	}
 
-	return Buffer.concat([
-		Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), // PNG signature
-		pngChunk("IHDR", ihdr),
-		pngChunk("IDAT", deflateSync(raw)),
-		pngChunk("IEND", Buffer.alloc(0)),
-	]);
+	/** Desktop flow: upload files and confirm the "Review photos?" prompt. */
+	public async uploadFilesAndConfirmReview() {
+		await this.uploadFiles();
+		await this.locators.reviewOkButton.click();
+	}
+
+	/**
+	 * Mobile flow: upload files without a prompt — isMobileView() opens the review
+	 * modal directly, then waits for the canvas to be fully initialised.
+	 */
+	public async uploadFilesForMobileReview() {
+		await this.uploadFiles();
+		await this.locators.drawButton.waitFor({ state: "visible" });
+		await this.waitForImageEditorCanvas();
+	}
 }
 
-// Light-gray 200×200 PNG — large enough that fabric.js renders it as a visible
-// backdrop, so the blue drawn circle is clearly separated from the background.
-const IMAGE_BUFFER = createSolidColorPng(200, 200, 220, 220, 220);
+const test = base.extend<{ story: ImageUploadPage }>({
+	story: async ({ page, storyOptions }, use) => {
+		const story = new ImageUploadPage(page, storyOptions.story);
+		await use(story);
+	},
+});
 
-const SHORT_FILE = { name: "a.png", mimeType: "image/png", buffer: IMAGE_BUFFER };
-const LONG_FILE = {
-	name: "this-is-a-very-long-filename-that-exceeds-the-width-of-the-file-upload-display-area.png",
-	mimeType: "image/png",
-	buffer: IMAGE_BUFFER,
-};
-// A third distinct file used when tests need to exceed a 2-file max limit
-const THIRD_FILE = { name: "c.png", mimeType: "image/png", buffer: IMAGE_BUFFER };
-
-/**
- * Uploads the two test files via the hidden drag-upload input and waits for
- * the "Review photos?" prompt to appear (desktop flow with editImage: true).
- */
-async function uploadFilesAndConfirmReview(page: import("@playwright/test").Page) {
-	const fileInput = page.getByTestId("field-drag-upload__hidden-input");
-	await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
-	await page.getByRole("button", { name: "Ok" }).click();
-}
-
-/**
- * Waits until the fabric.js image editor canvas has been initialised and
- * laid out with non-zero dimensions, meaning the background image has been
- * rendered onto the canvas.
- */
-async function waitForImageEditorCanvas(page: import("@playwright/test").Page) {
-	await page.waitForFunction(() => {
-		const canvas = document.getElementById("imageEditor");
-		return !!canvas && canvas.getBoundingClientRect().height > 0;
-	});
-}
-
-/**
- * Uploads the two test files on mobile — skips the "Review photos?" prompt
- * because isMobileView() opens the review modal directly without a prompt.
- */
-async function uploadFilesForMobileReview(page: import("@playwright/test").Page) {
-	const fileInput = page.getByTestId("field-drag-upload__hidden-input");
-	await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
-	// On mobile the modal opens directly (no "Ok" prompt)
-	await page.getByTestId("field__draw-button").waitFor({ state: "visible" });
-	await waitForImageEditorCanvas(page);
-}
-
-// The playwright.config.ts has fullyParallel: true, which would let tests run
-// concurrently and crash the Docker browser under resource pressure. Serial mode
-// limits concurrency for this file while keeping each test fully isolated
-// (each test still gets its own fresh page via Playwright's page fixture).
 test.describe("ImageUpload", () => {
-	test.describe.configure({ mode: "serial" });
-
 	test.describe(() => {
 		test.use({ storyOptions: withStory("default") });
 
@@ -123,27 +102,26 @@ test.describe("ImageUpload", () => {
 		});
 
 		test("Default render (mobile)", async ({ story }) => {
-			await story.goto();
 			await story.page.setViewportSize(viewport.mobile);
+			await story.goto();
 			await story.snapshot("mount");
 		});
 	});
 
-	test.describe("Drag and drop", () => {
+	test.describe(() => {
 		test.use({ storyOptions: withStory("default") });
 
-		test("Drag and drop hint", async ({ story }) => {
+		test("Drag and drop", async ({ story }) => {
 			await story.goto();
 
 			// Simulate a file drag entering the dropzone to trigger isDragActive = true
-			const dropzone = story.page.getByTestId("field-drag-upload");
 			const dataTransfer = await story.page.evaluateHandle(() => {
 				const dt = new DataTransfer();
 				dt.items.add(new File([""], "test.png", { type: "image/png" }));
 				return dt;
 			});
-			await dropzone.dispatchEvent("dragenter", { dataTransfer });
-			await story.page.getByTestId("field-drag-upload__hint").waitFor({ state: "visible" });
+			await story.locators.dropzone.dispatchEvent("dragenter", { dataTransfer });
+			await expect(story.locators.dragHint).toBeVisible();
 
 			await story.snapshot("drag-active");
 		});
@@ -164,73 +142,70 @@ test.describe("ImageUpload", () => {
 			await story.goto();
 
 			await test.step("Upload short and long filename files", async () => {
-				const fileInput = story.page.getByTestId("field-drag-upload__hidden-input");
-				await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
+				await story.uploadFiles();
 			});
 
 			await test.step("Confirm review prompt and open modal", async () => {
-				await story.page.getByRole("button", { name: "Ok" }).click();
+				await story.locators.reviewOkButton.click();
 				await story.snapshot("review-modal", {
 					fullscreen: true,
 				});
 			});
 
 			await test.step("Save and return to upload view", async () => {
-				await story.page.getByTestId("field__save-button").click();
+				await story.locators.saveButton.click();
 				await story.snapshot("uploaded-files");
 			});
 		});
 
 		test("Review modal (mobile)", async ({ story }) => {
-			await story.goto();
 			await story.page.setViewportSize(viewport.mobile);
+			await story.goto();
 
 			await test.step("Upload short and long filename files", async () => {
-				const fileInput = story.page.getByTestId("field-drag-upload__hidden-input");
-				await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
+				await story.uploadFiles();
 			});
 
 			await test.step("Wait for review modal to open and snapshot", async () => {
-				await story.page.getByTestId("field__draw-button").waitFor({ state: "visible" });
-				await waitForImageEditorCanvas(story.page);
+				await story.locators.drawButton.waitFor({ state: "visible" });
+				await story.waitForImageEditorCanvas();
 				await story.snapshot("review-modal", {
 					fullscreen: true,
 				});
 			});
 
 			await test.step("Save and return to upload view", async () => {
-				await story.page.getByTestId("field__save-button").click();
+				await story.locators.saveButton.click();
 				await story.snapshot("uploaded-files");
 			});
 		});
 
 		test("Review modal (mobile landscape)", async ({ story }) => {
-			await story.goto();
 			await story.page.setViewportSize(viewport.mobileLandscape);
+			await story.goto();
 
 			await test.step("Upload short and long filename files", async () => {
-				const fileInput = story.page.getByTestId("field-drag-upload__hidden-input");
-				await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
+				await story.uploadFiles();
 			});
 
 			await test.step("Wait for review modal to open and snapshot", async () => {
-				await story.page.getByTestId("field__draw-button").waitFor({ state: "visible" });
-				await waitForImageEditorCanvas(story.page);
+				await story.locators.drawButton.waitFor({ state: "visible" });
+				await story.waitForImageEditorCanvas();
 				await story.snapshot("review-modal", {
 					fullscreen: true,
 				});
 			});
 
 			await test.step("Save and return to upload view", async () => {
-				await story.page.getByTestId("field__save-button").click();
+				await story.locators.saveButton.click();
 				await story.snapshot("uploaded-files");
 			});
 		});
 
 		test("Drawing tools", async ({ story }) => {
 			await story.goto();
-			await uploadFilesAndConfirmReview(story.page);
-			await story.page.getByTestId("field__draw-button").click();
+			await story.uploadFilesAndConfirmReview();
+			await story.locators.drawButton.click();
 			await story.snapshot("draw-mode", {
 				fullscreen: true,
 			});
@@ -240,22 +215,20 @@ test.describe("ImageUpload", () => {
 			await story.goto();
 
 			await test.step("Upload files and open review modal", async () => {
-				const fileInput = story.page.getByTestId("field-drag-upload__hidden-input");
-				await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
-				await story.page.getByRole("button", { name: "Ok" }).click();
-				await waitForImageEditorCanvas(story.page);
+				await story.uploadFiles();
+				await story.locators.reviewOkButton.click();
+				await story.waitForImageEditorCanvas();
 			});
 
 			await test.step("Enter draw mode, select colour and draw a circle", async () => {
-				await story.page.getByTestId("field__draw-button").click();
+				await story.locators.drawButton.click();
 
 				// Select a visible colour from the palette (default black is invisible on dark canvas)
-				await story.page.getByRole("button", { name: "blue brush" }).click();
+				await story.locators.blueBrush.click();
 
 				// Fabric.js intercepts events via its upper-canvas overlay which
 				// shares the same bounding box as the main canvas element.
-				const canvas = story.page.locator("#imageEditor");
-				const box = await canvas.boundingBox();
+				const box = await story.locators.imageEditor.boundingBox();
 
 				// Draw a square by tracing its four sides.
 				// Only the outline is drawn — the image remains visible inside and outside.
@@ -277,27 +250,32 @@ test.describe("ImageUpload", () => {
 			});
 
 			await test.step("Save drawing and return to review modal", async () => {
-				await story.page.getByTestId("field__save-drawing").click();
-				await waitForImageEditorCanvas(story.page);
+				await story.locators.saveDrawingButton.click();
+				await story.waitForImageEditorCanvas();
 				await story.snapshot("drawing-saved", { fullscreen: true });
+			});
+
+			await test.step("Save from review modal and snapshot uploaded files with updated thumbnail", async () => {
+				await story.locators.saveButton.click();
+				await story.snapshot("uploaded-with-drawing");
 			});
 		});
 
 		test("Drawing tools (mobile)", async ({ story }) => {
-			await story.goto();
 			await story.page.setViewportSize(viewport.mobile);
-			await uploadFilesForMobileReview(story.page);
-			await story.page.getByTestId("field__draw-button").click();
+			await story.goto();
+			await story.uploadFilesForMobileReview();
+			await story.locators.drawButton.click();
 			await story.snapshot("draw-mode", {
 				fullscreen: true,
 			});
 		});
 
 		test("Drawing tools (mobile landscape)", async ({ story }) => {
-			await story.goto();
 			await story.page.setViewportSize(viewport.mobileLandscape);
-			await uploadFilesForMobileReview(story.page);
-			await story.page.getByTestId("field__draw-button").click();
+			await story.goto();
+			await story.uploadFilesForMobileReview();
+			await story.locators.drawButton.click();
 			await story.snapshot("draw-mode", {
 				fullscreen: true,
 			});
@@ -307,14 +285,13 @@ test.describe("ImageUpload", () => {
 			await story.goto();
 
 			await test.step("Upload files and open review modal", async () => {
-				const fileInput = story.page.getByTestId("field-drag-upload__hidden-input");
-				await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
-				await story.page.getByRole("button", { name: "Ok" }).click();
-				await waitForImageEditorCanvas(story.page);
+				await story.uploadFiles();
+				await story.locators.reviewOkButton.click();
+				await story.waitForImageEditorCanvas();
 			});
 
 			await test.step("Trigger and snapshot delete prompt", async () => {
-				await story.page.getByTestId("field__delete-button").click();
+				await story.locators.deleteButton.click();
 				await story.page.getByText("Delete photo?").waitFor({ state: "visible" });
 				await story.snapshot("delete-prompt", { fullscreen: true });
 			});
@@ -324,14 +301,13 @@ test.describe("ImageUpload", () => {
 			await story.goto();
 
 			await test.step("Upload files and open review modal", async () => {
-				const fileInput = story.page.getByTestId("field-drag-upload__hidden-input");
-				await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
-				await story.page.getByRole("button", { name: "Ok" }).click();
-				await waitForImageEditorCanvas(story.page);
+				await story.uploadFiles();
+				await story.locators.reviewOkButton.click();
+				await story.waitForImageEditorCanvas();
 			});
 
 			await test.step("Trigger and snapshot exit prompt", async () => {
-				await story.page.getByTestId("field__close-button").click();
+				await story.locators.closeButton.click();
 				await story.page.getByText("Exit without saving?").waitFor({ state: "visible" });
 				await story.snapshot("exit-prompt", { fullscreen: true });
 			});
@@ -341,15 +317,14 @@ test.describe("ImageUpload", () => {
 			await story.goto();
 
 			await test.step("Upload files and open review modal", async () => {
-				const fileInput = story.page.getByTestId("field-drag-upload__hidden-input");
-				await fileInput.setInputFiles([SHORT_FILE, LONG_FILE]);
-				await story.page.getByRole("button", { name: "Ok" }).click();
-				await waitForImageEditorCanvas(story.page);
+				await story.uploadFiles();
+				await story.locators.reviewOkButton.click();
+				await story.waitForImageEditorCanvas();
 			});
 
 			await test.step("Enter draw mode and trigger clear prompt", async () => {
-				await story.page.getByTestId("field__draw-button").click();
-				await story.page.getByTestId("field__clear-drawing-button").click();
+				await story.locators.drawButton.click();
+				await story.locators.clearDrawingButton.click();
 				await story.page.getByText("Clear drawings?").waitFor({ state: "visible" });
 				await story.snapshot("clear-drawing-prompt", { fullscreen: true });
 			});
@@ -359,13 +334,22 @@ test.describe("ImageUpload", () => {
 	test.describe("Max files", () => {
 		test.use({ storyOptions: withStory("max-files") });
 
+		test("Max files", async ({ story }) => {
+			await story.goto();
+
+			// Upload exactly 2 files (the max) — the add button should no longer be visible
+			await story.uploadFiles();
+			await expect(story.locators.addButton).not.toBeVisible();
+
+			await story.snapshot("max-files-reached");
+		});
+
 		test("Max files exceeded", async ({ story }) => {
 			await story.goto();
 
-			const fileInput = story.page.getByTestId("field-drag-upload__hidden-input");
 			// Upload 3 files when max is 2 — triggers the exceeded-files error alert
-			await fileInput.setInputFiles([SHORT_FILE, LONG_FILE, THIRD_FILE]);
-			await story.page.getByTestId("field__error").waitFor({ state: "visible" });
+			await story.uploadFiles([SHORT_FILE, LONG_FILE, THIRD_FILE]);
+			await expect(story.locators.errorAlert).toBeVisible();
 
 			await story.snapshot("max-files-exceeded");
 		});
