@@ -1,17 +1,18 @@
+import clsx from "clsx";
 import React from "react";
 import { TOTAL_BARS } from "./config";
-import { Spinner, SpinnerBar } from "./loading-indicator.styles";
+import * as styles from "./loading-indicator.styles";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
-export const LoadingIndicator = (props: Props) => {
+export const LoadingIndicator = ({ className, ...props }: Props) => {
 	return (
-		<Spinner {...props}>
+		<div className={clsx(styles.spinner, className)} {...props}>
 			{Array(TOTAL_BARS)
 				.fill("")
 				.map((foo, i) => (
-					<SpinnerBar key={i} />
+					<div className={styles.spinnerBar} key={i} />
 				))}
-		</Spinner>
+		</div>
 	);
 };

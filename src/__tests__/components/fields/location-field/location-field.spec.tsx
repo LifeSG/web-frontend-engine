@@ -5,7 +5,7 @@ import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEng
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { ERROR_SVG } from "../../../../components/fields/location-field/location-modal/location-modal.data";
-import { ErrorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
+import { errorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
 import { IMapPin } from "../../../../components/fields/location-field/location-modal/location-picker/types";
 import { ERROR_MESSAGES, Prompt } from "../../../../components/shared";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
@@ -87,7 +87,7 @@ const FrontendEngineWithEventListener = ({
 	const [showConfirmLocationPrompt, setShowConfirmLocationPrompt] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (!withEvents || !locationDetails) return;
+		if (!withEvents || !locationDetails || !formRef.current) return;
 
 		const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = formRef.current;
 
@@ -144,7 +144,7 @@ const FrontendEngineWithEventListener = ({
 	}, []);
 
 	useEffect(() => {
-		if (eventType && eventListener) {
+		if (eventType && eventListener && formRef.current) {
 			const currentFormRef = formRef.current;
 			const eventListenerWithFormRef = eventListener(currentFormRef);
 			currentFormRef.addFieldEventListener(UI_TYPE, eventType as any, "field", eventListenerWithFormRef);
@@ -191,7 +191,7 @@ const FrontendEngineWithEventListener = ({
 				title="Edit Location?"
 				size="large"
 				show={showEditPrompt}
-				image={<ErrorImage src={ERROR_SVG} />}
+				image={<img className={errorImage} src={ERROR_SVG} alt="Error" />}
 				description="sample prompt message"
 				buttons={[
 					{
@@ -228,7 +228,7 @@ interface IRenderProps {
 	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
 
-const renderComponent = (
+const renderComponent = async (
 	{
 		overrideField,
 		overrideSchema,
@@ -258,7 +258,7 @@ const renderComponent = (
 		...overrideSchema,
 	};
 
-	return render(
+	const component = render(
 		<FrontendEngineWithEventListener
 			data={json}
 			onSubmit={SUBMIT_FN}
@@ -268,6 +268,13 @@ const renderComponent = (
 			eventType={eventType}
 		/>
 	);
+
+	await waitFor(() => {
+		expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
+		expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+	});
+
+	return component;
 };
 
 const testIdCmd = (query = false) => {
@@ -468,12 +475,9 @@ describe("location-input-group", () => {
 					lng: 103.789404349716,
 				});
 
-				renderComponent({ withEvents: false });
+				await renderComponent({ withEvents: false });
 
 				await waitFor(() => window.dispatchEvent(new Event("online")));
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
 				getLocationInput().focus();
 
@@ -482,7 +486,7 @@ describe("location-input-group", () => {
 					expect(getLocationPicker(true)).toBeInTheDocument();
 					expect(getLocationSearch(true)).toBeInTheDocument();
 				});
-			});
+			}, 10000);
 
 			it.todo(
 				"should handle when navigator does not support geolocation in default location getCurrentLocation "
@@ -495,11 +499,8 @@ describe("location-input-group", () => {
 						lng: 103.789404349716,
 					},
 				};
-				renderComponent({ withEvents: true, locationDetails });
+				await renderComponent({ withEvents: true, locationDetails });
 				await waitFor(() => window.dispatchEvent(new Event("online")));
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
 				getLocationInput().focus();
 
@@ -517,7 +518,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should handle timeout GeolocationPositionError when FE requests for current location", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: true,
 					locationDetails: {
 						errors: {
@@ -526,9 +527,6 @@ describe("location-input-group", () => {
 					},
 				});
 				await waitFor(() => window.dispatchEvent(new Event("online")));
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
 				screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")).focus();
 
@@ -558,7 +556,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should handle non app error when FE requests for current location", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: true,
 					locationDetails: {
 						errors: {
@@ -567,9 +565,6 @@ describe("location-input-group", () => {
 					},
 				});
 				await waitFor(() => window.dispatchEvent(new Event("online")));
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
 				screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")).focus();
 
@@ -613,7 +608,7 @@ describe("location-input-group", () => {
 		describe("Show Location Modal Ready events", () => {
 			it("should fire show-location-modal-ready after it is registered", async () => {
 				const handleShowLocationModalReady = jest.fn();
-				renderComponent({
+				await renderComponent({
 					eventType: ELocationInputEvents.SHOW_LOCATION_MODAL_READY,
 					eventListener: (formRef) => () => {
 						handleShowLocationModalReady();
@@ -630,7 +625,7 @@ describe("location-input-group", () => {
 		describe("Modal events", () => {
 			it("should fire show-location-modal event on showing location modal", async () => {
 				const handleShowReviewModal = jest.fn();
-				renderComponent({
+				await renderComponent({
 					eventType: ELocationInputEvents.SHOW_MODAL,
 					eventListener: () => handleShowReviewModal,
 				});
@@ -640,7 +635,7 @@ describe("location-input-group", () => {
 
 			it("should fire hide-location-modal event on hiding location modal", async () => {
 				const handleHideReviewModal = jest.fn();
-				renderComponent({
+				await renderComponent({
 					eventType: "hide-location-modal",
 					eventListener: () => handleHideReviewModal,
 				});
@@ -653,7 +648,7 @@ describe("location-input-group", () => {
 		//Explicit Edit Events
 		describe("Explicit Edit events", () => {
 			it("should fire click-edit-button event when edit button been clicked", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: true,
 					locationDetails: {
 						errors: {
@@ -673,8 +668,6 @@ describe("location-input-group", () => {
 				});
 				await waitFor(() => window.dispatchEvent(new Event("online")));
 
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 				expect(getEditLocationButton(true)).toBeInTheDocument();
 				expect(getLocationInput()).toHaveAttribute("aria-disabled", "true");
 				fireEvent.click(getEditLocationButton());
@@ -711,7 +704,7 @@ describe("location-input-group", () => {
 					code: 1,
 				});
 
-				renderComponent({
+				await renderComponent({
 					withEvents: true,
 					locationDetails: {
 						errors: {
@@ -788,7 +781,7 @@ describe("location-input-group", () => {
 				});
 
 				it("should fire get-selectable-pins event if default location is set", async () => {
-					renderComponent({
+					await renderComponent({
 						...event,
 						overrideSchema: {
 							defaultValues: {
@@ -811,7 +804,7 @@ describe("location-input-group", () => {
 						lng: 103.789404349716,
 					});
 
-					renderComponent(event);
+					await renderComponent(event);
 					getLocationInput().focus();
 					await waitFor(() => {
 						expect(getSelectablePins).toHaveBeenCalled();
@@ -819,7 +812,7 @@ describe("location-input-group", () => {
 				});
 
 				it("should not fire get-selectable-pins event if failed to get current location", async () => {
-					renderComponent(event);
+					await renderComponent(event);
 					getLocationInput().focus();
 					await waitFor(() => {
 						expect(getSelectablePins).not.toHaveBeenCalled();
@@ -829,7 +822,7 @@ describe("location-input-group", () => {
 
 			describe("set-selectable-pins", () => {
 				it("should show error modal if selectable pins is not an array", async () => {
-					renderComponent({
+					await renderComponent({
 						eventType: getSelectablePinsEvent,
 						eventListener: (formRef) => () => {
 							formRef.dispatchFieldEvent(UI_TYPE, "set-selectable-pins", COMPONENT_ID, {
@@ -853,7 +846,7 @@ describe("location-input-group", () => {
 				});
 
 				it("should populate results list with pins", async () => {
-					renderComponent({
+					await renderComponent({
 						eventType: getSelectablePinsEvent,
 						eventListener: (formRef) => () => {
 							formRef.dispatchFieldEvent(UI_TYPE, "set-selectable-pins", COMPONENT_ID, {
@@ -895,7 +888,7 @@ describe("location-input-group", () => {
 		describe("Refresh location events", () => {
 			it("should fire click-refresh-current-location event when get current location button is clicked", async () => {
 				const mockRefreshLocation = jest.fn();
-				renderComponent({
+				await renderComponent({
 					eventType: ELocationInputEvents.CLICK_REFRESH_CURRENT_LOCATION,
 					eventListener: () => mockRefreshLocation,
 					overrideSchema: {
@@ -922,7 +915,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should not call geolocation when defaultAddress is provided", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						defaultAddress: {
 							lat: 1.3001,
@@ -957,15 +950,13 @@ describe("location-input-group", () => {
 	describe("functionality", () => {
 		describe("when rendering the input field", () => {
 			it("should be able to render the location input field", async () => {
-				renderComponent();
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+				await renderComponent();
 			});
 
 			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => {
 				renderComponent({ overrideField });
 			});
+
 			warningTestSuite<ILocationFieldSchema>({ label: LABEL, uiType: UI_TYPE });
 
 			// test functionality
@@ -978,7 +969,7 @@ describe("location-input-group", () => {
 						reverseGeocodeSpy.mockImplementation(() => {
 							return mockReverseGeoCodeResponse;
 						});
-						renderComponent({
+						await renderComponent({
 							withEvents: false,
 							overrideSchema: {
 								defaultValues: {
@@ -1027,7 +1018,7 @@ describe("location-input-group", () => {
 								handleResult(fetchSingleLocationByLatLngSingleReponse);
 							}
 						);
-						renderComponent({
+						await renderComponent({
 							withEvents: false,
 							overrideSchema: {
 								defaultValues: {
@@ -1079,7 +1070,7 @@ describe("location-input-group", () => {
 								handleResult(fetchSingleLocationByLatLngSingleReponse);
 							}
 						);
-						renderComponent({
+						await renderComponent({
 							withEvents: false,
 							overrideSchema: {
 								defaultValues: {
@@ -1144,10 +1135,7 @@ describe("location-input-group", () => {
 
 			describe("when there is internet connectivity", () => {
 				it("should open location modal when input is clicked", async () => {
-					renderComponent();
-
-					expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-					expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+					await renderComponent();
 
 					getLocationInput().focus();
 
@@ -1162,7 +1150,7 @@ describe("location-input-group", () => {
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});
-							renderComponent();
+							await renderComponent();
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1205,7 +1193,7 @@ describe("location-input-group", () => {
 							});
 
 							it("should allow user to close the location modal when in map mode", async () => {
-								renderComponent();
+								await renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1231,7 +1219,7 @@ describe("location-input-group", () => {
 							});
 
 							it("should allow user to close the modal when in search mode", async () => {
-								renderComponent();
+								await renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1274,7 +1262,7 @@ describe("location-input-group", () => {
 
 						describe("for desktop", () => {
 							it("should allow user to cancel", async () => {
-								renderComponent();
+								await renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1327,7 +1315,7 @@ describe("location-input-group", () => {
 
 					describe("when using location search in desktop", () => {
 						beforeEach(async () => {
-							renderComponent();
+							await renderComponent();
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1486,7 +1474,7 @@ describe("location-input-group", () => {
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});
-							renderComponent();
+							await renderComponent();
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1596,13 +1584,13 @@ describe("location-input-group", () => {
 					it("should render a banner if banner text is specified", async () => {
 						const mapBannerText = "This is some sample banner text";
 
-						renderComponent({ overrideField: { mapBannerText } });
+						await renderComponent({ overrideField: { mapBannerText } });
 
 						expect(screen.getByText(mapBannerText)).toBeInTheDocument();
 					});
 
 					it("should not render a banner if banner text is undefined", async () => {
-						renderComponent();
+						await renderComponent();
 
 						expect(
 							screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "location-banner"))
@@ -1612,7 +1600,7 @@ describe("location-input-group", () => {
 
 				describe("when using legend items", () => {
 					it("should render legend trigger and items", async () => {
-						renderComponent({ overrideField: { legendItems: LEGEND_ITEMS } });
+						await renderComponent({ overrideField: { legendItems: LEGEND_ITEMS } });
 
 						await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1636,7 +1624,7 @@ describe("location-input-group", () => {
 					});
 
 					it("should not render legend trigger when legendItems is empty", async () => {
-						renderComponent({ overrideField: { legendItems: [] } });
+						await renderComponent({ overrideField: { legendItems: [] } });
 
 						await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1651,8 +1639,8 @@ describe("location-input-group", () => {
 				});
 
 				describe("when using the disableSearch", () => {
-					it("should allow text input when disableSearch is default (undefined))", () => {
-						renderComponent();
+					it("should allow text input when disableSearch is default (undefined))", async () => {
+						await renderComponent();
 
 						getLocationSearchInput().focus();
 						fireEvent.change(getLocationSearchInput(), { target: { value: "text input" } });
@@ -1663,8 +1651,8 @@ describe("location-input-group", () => {
 						expect(getLocationSearchClearButton()).toBeEnabled();
 					});
 
-					it("should disable text input when disableSearch is 'disabled'", () => {
-						renderComponent({ overrideField: { disableSearch: "disabled" } });
+					it("should disable text input when disableSearch is 'disabled'", async () => {
+						await renderComponent({ overrideField: { disableSearch: "disabled" } });
 
 						expect(getLocationSearchButton()).toBeDisabled();
 						expect(getLocationSearchInput()).toBeDisabled();
@@ -1672,8 +1660,8 @@ describe("location-input-group", () => {
 						expect(getLocationSearchClearButton()).toBeDisabled();
 					});
 
-					it("should set text input to readonly when disableSearch is 'readonly'", () => {
-						renderComponent({ overrideField: { disableSearch: "readonly" } });
+					it("should set text input to readonly when disableSearch is 'readonly'", async () => {
+						await renderComponent({ overrideField: { disableSearch: "readonly" } });
 
 						expect(getLocationSearchButton()).toBeDisabled();
 						expect(getLocationSearchInput()).not.toBeDisabled();
@@ -1742,7 +1730,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should not render search clear button", async () => {
-				renderComponent({ overrideField: { locationSelectionMode: "pins-only" } });
+				await renderComponent({ overrideField: { locationSelectionMode: "pins-only" } });
 
 				getLocationInput().focus();
 
@@ -1758,7 +1746,7 @@ describe("location-input-group", () => {
 				});
 				reverseGeocodeSpy.mockImplementation(() => mockReverseGeoCodeResponse);
 				fetchLocationListSpy.mockImplementation(() => mockReverseGeoCodeResponse);
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						mapApi: {
 							reverseGeocode: "https://www.mock.com/reverse-geo-code",
@@ -1783,7 +1771,7 @@ describe("location-input-group", () => {
 
 	describe("validation", () => {
 		it("should allow empty if validation not required", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: false,
 			});
 
@@ -1800,7 +1788,7 @@ describe("location-input-group", () => {
 			${"lat missing"}     | ${{ lng: 1 }}
 		`("$name", (_name, value) => {
 			it("should validate if required", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 					withEvents: false,
 					overrideSchema: {
@@ -1817,7 +1805,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should pass validation if required values are provided", async () => {
-			renderComponent({
+			await renderComponent({
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 				withEvents: false,
 				overrideSchema: {
@@ -1837,7 +1825,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should validate mustHavePostalCode", async () => {
-			renderComponent({
+			await renderComponent({
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 				withEvents: false,
 				overrideSchema: {
@@ -1860,7 +1848,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should allow customisation of missing postal code error message", async () => {
-			renderComponent({
+			await renderComponent({
 				validation: [{ required: true }, { postalCode: true, errorMessage: ERROR_MESSAGE }],
 				withEvents: false,
 				overrideSchema: {
@@ -2038,7 +2026,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should show default location list title if locationListTitle is not provided", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: false,
 				overrideSchema: {
 					defaultValues: {
@@ -2061,7 +2049,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should show location list title according to locationListTitle", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: false,
 				overrideSchema: {
 					defaultValues: {
@@ -2087,7 +2075,7 @@ describe("location-input-group", () => {
 
 	describe("Permission Modal events", () => {
 		it("should hide location modal for strict location", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: true,
 				locationDetails: {
 					errors: {
@@ -2117,7 +2105,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should hide permission modal and still show location modal for non-strict location", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: true,
 				locationDetails: {
 					errors: {

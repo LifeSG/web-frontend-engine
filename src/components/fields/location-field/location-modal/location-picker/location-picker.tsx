@@ -1,10 +1,12 @@
 import { Colour, useDesignToken, useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
 import { PopoverTrigger } from "@lifesg/react-design-system/popover";
 import { Typography } from "@lifesg/react-design-system/typography";
+import { Card } from "@lifesg/react-design-system/card";
 import { NavigationIcon } from "@lifesg/react-icons/navigation";
 import { NavigationFillIcon } from "@lifesg/react-icons/navigation-fill";
 import { ICircleFillIcon } from "@lifesg/react-icons";
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
+import clsx from "clsx";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
@@ -15,15 +17,7 @@ import { LocationHelper } from "../../location-helper";
 import { ILocationCoord } from "../../types";
 import { markerFrom, removeMarkers } from "./helper";
 import { Legend } from "./legend";
-import {
-	Banner,
-	BannerWrapper,
-	ButtonLegend,
-	ButtonLocation,
-	ButtonLocationImage,
-	LeafletWrapper,
-	LocationPickerWrapper,
-} from "./location-picker.styles";
+import * as styles from "./location-picker.styles";
 import { ILocationPickerProps, IMapPin } from "./types";
 
 // Show picker when
@@ -33,6 +27,7 @@ import { ILocationPickerProps, IMapPin } from "./types";
 export const LocationPicker = ({
 	id = "location-picker",
 	className,
+	customClassName,
 	mapPanZoom,
 	panelInputMode,
 	showLocationModal,
@@ -96,7 +91,7 @@ export const LocationPicker = ({
 				minZoom: leafletConfig.minZoom,
 				// Do not remove this attribution
 				attribution:
-					'<div class="onemap"><img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png" style="height:20px;width:20px;"/>&nbsp;<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener noreferrer">OneMap</a>&nbsp;&copy;&nbsp;contributors&nbsp;&#124;&nbsp;<a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a></div>',
+					'<div class="onemap"><img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png"/>&nbsp;<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener noreferrer">OneMap</a>&nbsp;&copy;&nbsp;contributors&nbsp;&#124;&nbsp;<a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a></div>',
 			});
 
 			const [ne, sw] = LocationHelper.getMapBounds();
@@ -230,20 +225,26 @@ export const LocationPicker = ({
 	};
 
 	return (
-		<LocationPickerWrapper
-			className={`${className}-location-picker`}
+		<div
+			className={clsx(
+				styles.locationPickerWrapper,
+				className,
+				customClassName && `${customClassName}-location-picker`
+			)}
 			id={TestHelper.generateId(id, "location-picker")}
 			data-testid={TestHelper.generateId(id, "location-picker", panelInputMode === "search" ? "hide" : "show")}
+			data-panel-mode={panelInputMode}
 		>
 			{mapBannerText && (
-				<BannerWrapper data-testid={TestHelper.generateId(id, "location-banner")}>
-					<Banner>
+				<div className={styles.bannerWrapper} data-testid={TestHelper.generateId(id, "location-banner")}>
+					<Card className={styles.banner}>
 						<Typography.BodyXS>{mapBannerText}</Typography.BodyXS>
-					</Banner>
-				</BannerWrapper>
+					</Card>
+				</div>
 			)}
-			<LeafletWrapper ref={leafletWrapperRef} />
-			<ButtonLocation
+			<div className={styles.leafletWrapper} ref={leafletWrapperRef} />
+			<button
+				className={clsx(styles.button, styles.buttonLocation)}
 				data-testid={TestHelper.generateId(id, "refresh-current-location-button")}
 				aria-label="Refresh current location"
 				onClick={() => {
@@ -259,10 +260,10 @@ export const LocationPicker = ({
 					}
 				}}
 			>
-				<ButtonLocationImage>
+				<span className={styles.buttonLocationImage}>
 					{locationAvailable ? <NavigationFillIcon /> : <NavigationIcon />}
-				</ButtonLocationImage>
-			</ButtonLocation>
+				</span>
+			</button>
 			{legendItems && legendItems.length > 0 && (
 				<PopoverTrigger
 					popoverContent={() => {
@@ -274,17 +275,18 @@ export const LocationPicker = ({
 					}}
 					isModal={false}
 				>
-					<ButtonLegend
+					<button
 						ref={legendTriggerRef}
+						className={clsx(styles.button, styles.buttonLegend)}
 						data-testid={TestHelper.generateId(id, "legend-trigger")}
 						aria-label="Toggle legend"
 					>
-						<ButtonLocationImage>
+						<span className={styles.buttonLocationImage}>
 							<ICircleFillIcon />
-						</ButtonLocationImage>
-					</ButtonLegend>
+						</span>
+					</button>
 				</PopoverTrigger>
 			)}
-		</LocationPickerWrapper>
+		</div>
 	);
 };

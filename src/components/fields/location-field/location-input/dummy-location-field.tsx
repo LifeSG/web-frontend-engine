@@ -1,5 +1,6 @@
 import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
-import { DummyLocationInput, LocationIconWrapper, LocationInputText } from "./location-input.styles";
+import clsx from "clsx";
+import * as styles from "./location-input.styles";
 
 interface IDummyLocationFieldProps {
 	id?: string | undefined;
@@ -23,31 +24,49 @@ export const DummyLocationField = (props: IDummyLocationFieldProps) => {
 	};
 
 	return (
-		<DummyLocationInput
+		<button
 			id={id}
 			data-testid={dataTestId}
 			type="button"
-			className={className}
+			className={clsx(
+				styles.dummyLocationInput,
+				readOnly && styles.dummyLocationInputReadOnly,
+				disabled && styles.dummyLocationInputDisabled,
+				error && styles.dummyLocationInputError,
+				className
+			)}
 			disabled={disabled}
-			$readOnly={readOnly}
-			$error={error}
 			onFocus={onFocus}
 			onClick={handleClick}
 			tabIndex={disabled ? -1 : 0}
 			aria-disabled={disabled || undefined}
 			aria-haspopup="dialog"
-			aria-readonly={readOnly}
 		>
 			{placeholder && !value ? (
-				<LocationInputText $placeholder $disabled={disabled}>
+				<span
+					className={clsx(
+						styles.locationInputText,
+						styles.locationInputTextPlaceholder,
+						disabled && styles.locationInputTextDisabled
+					)}
+				>
 					{placeholder}
-				</LocationInputText>
+				</span>
 			) : (
-				<LocationInputText $disabled={disabled}>{value}</LocationInputText>
+				<span className={clsx(styles.locationInputText, disabled && styles.locationInputTextDisabled)}>
+					{value}
+				</span>
 			)}
-			<LocationIconWrapper $disabled={disabled} $readOnly={readOnly} aria-hidden="true">
+			<div
+				className={clsx(
+					styles.locationIconWrapper,
+					disabled && styles.locationIconWrapperDisabled,
+					readOnly && styles.locationIconWrapperReadOnly
+				)}
+				aria-hidden="true"
+			>
 				<PinFillIcon />
-			</LocationIconWrapper>
-		</DummyLocationInput>
+			</div>
+		</button>
 	);
 };

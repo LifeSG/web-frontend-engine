@@ -1,9 +1,7 @@
 import { Font, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
-import { Button } from "@lifesg/react-design-system/button";
-import { Typography } from "@lifesg/react-design-system/typography";
-import styled from "styled-components";
+import { css } from "@linaria/core";
 
-export const Container = styled.div`
+export const container = css`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -12,7 +10,7 @@ export const Container = styled.div`
 	flex: 1;
 `;
 
-export const Image = styled.img`
+export const image = css`
 	width: 12.5625rem;
 
 	${MediaQuery.MaxWidth.sm} {
@@ -20,7 +18,7 @@ export const Image = styled.img`
 	}
 `;
 
-export const ContentTitle = styled(Typography.BodyBL)`
+export const contentTitle = css`
 	text-align: center;
 	margin: ${Spacing["spacing-24"]} auto ${Spacing["spacing-8"]};
 
@@ -29,7 +27,7 @@ export const ContentTitle = styled(Typography.BodyBL)`
 	}
 `;
 
-export const ContentBody = styled(Typography.BodyBL)`
+export const contentBody = css`
 	text-align: center;
 	width: 100%;
 
@@ -39,7 +37,7 @@ export const ContentBody = styled(Typography.BodyBL)`
 	}
 `;
 
-export const ButtonWrapper = styled(Button)`
+export const buttonWrapper = css`
 	margin-top: ${Spacing["spacing-40"]};
 	width: 100%;
 	max-width: 16.5rem;

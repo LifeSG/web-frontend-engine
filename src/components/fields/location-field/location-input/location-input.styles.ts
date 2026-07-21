@@ -1,29 +1,7 @@
 import { Border, Colour, Font, Radius, Shadow, Spacing } from "@lifesg/react-design-system/theme";
-import styled, { css } from "styled-components";
+import { css } from "@linaria/core";
 
-interface InputWrapperStyleProps {
-	disabled?: boolean | undefined;
-	$error?: boolean | undefined;
-	$readOnly?: boolean | undefined;
-	$focused?: boolean | undefined;
-}
-
-const readOnlyFocusCss = css`
-	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-focus"]};
-	box-shadow: none;
-`;
-
-const disabledFocusCss = css`
-	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border"]};
-	box-shadow: none;
-`;
-
-const errorFocusCss = css`
-	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-error"]};
-	box-shadow: ${Shadow["xs-error-strong"]};
-`;
-
-export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
+export const dummyLocationInput = css`
 	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border"]};
 	border-radius: ${Radius["sm"]};
 	background: ${Colour["bg"]};
@@ -32,38 +10,38 @@ export const DummyLocationInput = styled.button<InputWrapperStyleProps>`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	${(props) => {
-		if (props.$readOnly) {
-			return css`
-				border: ${Border["width-010"]} ${Border["solid"]} transparent;
-				background: transparent !important;
-				:focus-within {
-					${readOnlyFocusCss}
-				}
-				${props.$focused && readOnlyFocusCss}
-			`;
-		} else if (props.disabled) {
-			return css`
-				background: ${Colour["bg-stronger"]};
-				cursor: not-allowed;
-				:focus-within {
-					${disabledFocusCss}
-				}
-				${props.$focused && disabledFocusCss}
-			`;
-		} else if (props.$error) {
-			return css`
-				border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-error"]};
-				:focus-within {
-					${errorFocusCss}
-				}
-				${props.$focused && errorFocusCss};
-			`;
-		}
-	}}
 `;
 
-export const LocationInputText = styled.span<{ $placeholder?: boolean; $disabled?: boolean }>`
+export const dummyLocationInputReadOnly = css`
+	border: ${Border["width-010"]} ${Border["solid"]} transparent;
+	background: transparent;
+
+	:focus-within {
+		border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-focus"]};
+		box-shadow: none;
+	}
+`;
+
+export const dummyLocationInputDisabled = css`
+	background: ${Colour["bg-stronger"]};
+	cursor: not-allowed;
+
+	:focus-within {
+		border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border"]};
+		box-shadow: none;
+	}
+`;
+
+export const dummyLocationInputError = css`
+	border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-error"]};
+
+	:focus-within {
+		border: ${Border["width-010"]} ${Border["solid"]} ${Colour["border-error"]};
+		box-shadow: ${Shadow["xs-error-strong"]};
+	}
+`;
+
+export const locationInputText = css`
 	flex: 1 1 auto;
 	display: -webkit-box;
 	-webkit-line-clamp: 1;
@@ -74,21 +52,21 @@ export const LocationInputText = styled.span<{ $placeholder?: boolean; $disabled
 	text-align: left;
 	${Font["body-baseline-regular"]};
 	color: ${Colour["text"]};
-	${(props) =>
-		props.$placeholder &&
-		css`
-			color: ${Colour["text-subtler"]};
-		`}
-	${(props) =>
-		props.$disabled &&
-		css`
-			cursor: not-allowed;
-		`}
 `;
 
-export const LocationIconWrapper = styled.div<{ $disabled?: boolean; $readOnly?: boolean }>`
+export const locationInputTextPlaceholder = css`
+	color: ${Colour["text-subtler"]};
+`;
+
+export const locationInputTextDisabled = css`
+	cursor: not-allowed;
+`;
+
+export const locationIconWrapper = css`
 	display: flex;
 	align-items: center;
+	margin-left: ${Spacing["spacing-12"]};
+
 	svg {
 		height: ${Spacing["spacing-24"]};
 		width: ${Spacing["spacing-24"]};
@@ -96,26 +74,18 @@ export const LocationIconWrapper = styled.div<{ $disabled?: boolean; $readOnly?:
 			fill: ${Colour["text"]};
 		}
 	}
-	${(props) => {
-		if (props.$disabled) {
-			return css`
-				color: ${Colour.Primitive["neutral-70"]};
-				svg {
-					#path {
-						fill: ${Colour.Primitive["neutral-70"]};
-					}
-				}
-			`;
+`;
+
+export const locationIconWrapperDisabled = css`
+	color: ${Colour.Primitive["neutral-70"]};
+
+	svg {
+		#path {
+			fill: ${Colour.Primitive["neutral-70"]};
 		}
-		if (props.$readOnly) {
-			return css`
-				margin-left: ${props.$readOnly ? Spacing["spacing-4"] : Spacing["spacing-12"]};
-			`;
-		}
-	}}
-	${(props) => {
-		return css`
-			margin-left: ${props.$readOnly ? Spacing["spacing-4"] : Spacing["spacing-12"]};
-		`;
-	}}
+	}
+`;
+
+export const locationIconWrapperReadOnly = css`
+	margin-left: ${Spacing["spacing-4"]};
 `;

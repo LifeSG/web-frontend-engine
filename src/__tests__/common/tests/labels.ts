@@ -1,4 +1,4 @@
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 
 export const labelTestSuite = (renderComponent: (overrideField: unknown) => void) =>
 	describe("labels", () => {
@@ -24,7 +24,7 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 			window.getComputedStyle = getComputedStyle;
 		});
 
-		it("should be able to render sub label and hint", () => {
+		it("should be able to render sub label and hint", async () => {
 			renderComponent({
 				label: {
 					mainLabel: "Main label",
@@ -32,14 +32,15 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 					hint: { content: "Hint" },
 				},
 			});
-			fireEvent.click(screen.getByTestId("field-popover"));
+
+			fireEvent.click(await screen.findByTestId("field-popover"));
 
 			expect(screen.getByText("Main label")).toBeInTheDocument();
 			expect(screen.getByText("Sub label")).toBeInTheDocument();
 			expect(screen.getByText("Hint")).toBeVisible();
 		});
 
-		it("should be able to render HTML string in label, sub label and hint", () => {
+		it("should be able to render HTML string in label, sub label and hint", async () => {
 			renderComponent({
 				label: {
 					mainLabel: "<strong>Main label</strong>",
@@ -47,14 +48,15 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 					hint: { content: "<strong>Hint</strong>" },
 				},
 			});
-			fireEvent.click(screen.getByTestId("field-popover"));
+
+			fireEvent.click(await screen.findByTestId("field-popover"));
 
 			expect(screen.getByText("Main label").nodeName).toBe("STRONG");
 			expect(screen.getByText("Sub label").nodeName).toBe("STRONG");
 			expect(screen.getByText("Hint").nodeName).toBe("STRONG");
 		});
 
-		it("should be able to sanitise HTML string in label, sub label and hint", () => {
+		it("should be able to sanitise HTML string in label, sub label and hint", async () => {
 			renderComponent({
 				label: {
 					mainLabel: "Main label<script>console.log('hello world')</script>",
@@ -62,7 +64,8 @@ export const labelTestSuite = (renderComponent: (overrideField: unknown) => void
 					hint: { content: "Hint<script>console.log('hello world')</script>" },
 				},
 			});
-			fireEvent.click(screen.getByTestId("field-popover"));
+
+			fireEvent.click(await screen.findByTestId("field-popover"));
 
 			expect(document.querySelector("form script")).toBeNull();
 		});

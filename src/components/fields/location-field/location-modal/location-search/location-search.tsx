@@ -1,4 +1,4 @@
-import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
+import clsx from "clsx";
 import { isEmpty } from "lodash";
 import { ReactElement, useEffect, useRef, useState } from "react";
 import { Breakpoint, useMediaQuery, useResolvedBreakpointToken } from "@lifesg/react-design-system/theme";
@@ -19,25 +19,14 @@ import {
 	TLocationFieldErrorDetail,
 	TSetCurrentLocationDetail,
 } from "../../types";
+import { Button } from "@lifesg/react-design-system/button";
+import { Typography } from "@lifesg/react-design-system/typography";
+import { CrossIcon } from "@lifesg/react-icons/cross";
+import { PinFillIcon } from "@lifesg/react-icons/pin-fill";
+import { MagnifierIcon } from "@lifesg/react-icons/magnifier";
 import { InfiniteScrollList } from "../infinite-scroll";
 import { boldResultsWithQuery, pagination } from "./helper";
-import {
-	ButtonItem,
-	ButtonWrapper,
-	NoResultTitle,
-	ResultItem,
-	ResultItemPin,
-	ResultTitle,
-	ResultWrapper,
-	SearchBarContainer,
-	SearchBarCross,
-	SearchBarIconButton,
-	SearchBarIconWrapper,
-	SearchBarInput,
-	SearchBarModalCross,
-	SearchIcon,
-	SearchWrapper,
-} from "./location-search.styles";
+import * as styles from "./location-search.styles";
 import { ILocationSearchProps } from "./types";
 
 export const LocationSearch = ({
@@ -130,7 +119,7 @@ export const LocationSearch = ({
 	} = LocationHelper;
 
 	const iconPath: Record<typeof searchBarIcon, ReactElement> = {
-		search: <SearchIcon />,
+		search: <MagnifierIcon className={styles.searchIcon} />,
 		"location-pin": <PinFillIcon />,
 	};
 
@@ -442,7 +431,6 @@ export const LocationSearch = ({
 			}
 		}
 	};
-
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
@@ -667,10 +655,11 @@ export const LocationSearch = ({
 	// =============================================================================
 	const renderList = () =>
 		searchBuildingResults.map((item, index) => (
-			<ResultItem
+			// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+			<div
 				key={`${index}_${item.lat}_${item.lng}`}
 				onClick={() => handleClickResult(item, index)}
-				$active={selectedIndex === index}
+				className={clsx(styles.resultItem, selectedIndex === index && styles.resultItemActive)}
 				id={TestHelper.generateId(`location-search-modal-search-result-${index + 0}`)}
 				data-testid={TestHelper.generateId(
 					`location-search-modal-search-result-${index + 0}`,
@@ -678,7 +667,7 @@ export const LocationSearch = ({
 					selectedIndex === index ? "active" : undefined
 				)}
 			>
-				<ResultItemPin />
+				<PinFillIcon className={styles.resultItemPin} />
 				<Sanitize
 					sanitizeOptions={{
 						allowedTags: ["span"],
@@ -689,7 +678,7 @@ export const LocationSearch = ({
 				>
 					{item.displayAddressText}
 				</Sanitize>
-			</ResultItem>
+			</div>
 		));
 
 	const renderPostalCodeError = () => (
@@ -711,30 +700,33 @@ export const LocationSearch = ({
 
 	return (
 		<>
-			<SearchWrapper
+			<div
 				id={TestHelper.generateId(id, "location-search")}
 				data-testid={TestHelper.generateId(id, "location-search")}
-				className={`${className}-location-search`}
-				$panelInputMode={panelInputMode}
+				className={clsx(styles.searchWrapper, `${className}-location-search`)}
 				data-mobile-landscape={!!isMobileLandscape}
+				data-panel-mode={panelInputMode}
 			>
-				<SearchBarIconButton
+				<button
+					className={styles.searchBarIconButton}
 					onClick={handleClickCancel}
 					id={TestHelper.generateId(id, "location-search-modal-close")}
 					data-testid={TestHelper.generateId(id, "location-search-modal-close")}
 				>
-					<SearchBarModalCross />
-				</SearchBarIconButton>
-				<SearchBarContainer $hasScrolled={hasScrolled}>
-					<SearchBarIconButton
+					<CrossIcon className={styles.searchBarModalCross} />
+				</button>
+				<div className={clsx(styles.searchBarContainer, hasScrolled && styles.searchBarContainerScrolled)}>
+					<button
+						className={styles.searchBarIconButton}
 						onClick={handleInputFocus}
 						id={TestHelper.generateId(id, "location-search-modal-search")}
 						data-testid={TestHelper.generateId(id, "location-search-modal-search")}
 						disabled={!!disableSearch}
 					>
-						<SearchBarIconWrapper>{iconPath[searchBarIcon]}</SearchBarIconWrapper>
-					</SearchBarIconButton>
-					<SearchBarInput
+						<span className={styles.searchBarIconWrapper}>{iconPath[searchBarIcon]}</span>
+					</button>
+					<input
+						className={styles.searchBarInput}
 						id={TestHelper.generateId(id, "location-search-modal-input")}
 						data-testid={TestHelper.generateId(id, "location-search-modal-input")}
 						type="text"
@@ -747,26 +739,32 @@ export const LocationSearch = ({
 						disabled={disableSearch === "disabled"}
 					/>
 					{!restrictLocationSelection && (
-						<SearchBarIconButton
+						<button
+							className={styles.searchBarIconButton}
 							onClick={handleClearInput}
 							id={TestHelper.generateId(id, "location-search-input-clear")}
 							data-testid={TestHelper.generateId(id, "location-search-input-clear")}
 							disabled={!!disableSearch}
 						>
-							<SearchBarCross type="cross" />
-						</SearchBarIconButton>
+							<CrossIcon className={styles.searchBarCross} type="cross" />
+						</button>
 					)}
-				</SearchBarContainer>
-				<ResultWrapper
+				</div>
+				<div
 					id={TestHelper.generateId(id, "location-search-results")}
 					data-testid={TestHelper.generateId(id, "location-search-results", panelInputMode)}
-					$panelInputMode={panelInputMode}
+					className={styles.resultWrapper}
 					ref={resultRef}
 					onScroll={handleScrollResult}
+					data-panel-mode={panelInputMode}
 				>
 					{!gettingCurrentLocation && (
 						<>
-							{searchBuildingResults.length ? <ResultTitle>{locationListTitle}</ResultTitle> : null}
+							{searchBuildingResults.length ? (
+								<Typography.BodyMD className={styles.resultTitle}>
+									{locationListTitle}
+								</Typography.BodyMD>
+							) : null}
 							<InfiniteScrollList
 								items={renderList()}
 								loading={loading}
@@ -774,31 +772,38 @@ export const LocationSearch = ({
 								loadMore={getMoreLocationResults}
 							/>
 							{!loading && resultState === "not-found" && (
-								<NoResultTitle>No results found for &ldquo;{queryString}&rdquo;</NoResultTitle>
+								<Typography.BodyMD className={styles.noResultTitle}>
+									No results found for &ldquo;{queryString}&rdquo;
+								</Typography.BodyMD>
 							)}
 						</>
 					)}
-				</ResultWrapper>
+				</div>
 
-				<ButtonWrapper
+				<div
 					id={TestHelper.generateId(id, "location-search-controls")}
 					data-testid={TestHelper.generateId(id, "location-search-controls")}
-					$panelInputMode={panelInputMode}
+					className={styles.buttonWrapper}
+					data-panel-mode={panelInputMode}
 				>
-					<ButtonItem $buttonType="cancel" styleType="light" onClick={handleClickCancel}>
+					<Button
+						className={clsx(styles.buttonItem, styles.buttonItemCancel)}
+						styleType="light"
+						onClick={handleClickCancel}
+					>
 						Cancel
-					</ButtonItem>
-					<ButtonItem
+					</Button>
+					<Button
 						id={TestHelper.generateId(id, "location-search-controls-confirm")}
 						data-testid={TestHelper.generateId(id, "location-search-controls-confirm")}
-						$buttonType="confirm"
+						className={clsx(styles.buttonItem, styles.buttonItemConfirm)}
 						onClick={onConfirm}
 						disabled={selectedIndex < 0 || resultState !== "found"}
 					>
 						{panelInputMode !== "double" ? "Confirm location" : "Confirm"}
-					</ButtonItem>
-				</ButtonWrapper>
-			</SearchWrapper>
+					</Button>
+				</div>
+			</div>
 			{showPostalCodeError && renderPostalCodeError()}
 		</>
 	);
