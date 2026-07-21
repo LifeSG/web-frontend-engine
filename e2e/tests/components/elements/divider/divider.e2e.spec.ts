@@ -3,30 +3,29 @@ import { forComponent, test } from "../../../utils/fixtures";
 const withStory = forComponent("elements/divider");
 
 test.describe("Divider", () => {
-	test.describe("Default", () => {
+	test.describe(() => {
 		test.use({
 			storyOptions: {
-				...withStory("default"),
+				...withStory("variants"),
 			},
 		});
 
-		test("Mount", async ({ story }) => {
+		test("Variants", async ({ story }) => {
 			await story.goto();
-			await story.snapshot(`state`);
+			await story.snapshot("mount");
 		});
 	});
 
-	// TODO: Remove this example when we add a proper test for the component.
-	test.describe("Story A", () => {
+	test.describe(() => {
 		test.use({
 			storyOptions: {
-				...withStory("story-a"),
+				...withStory("vertical-margin"),
 			},
 		});
 
-		test("Mount", async ({ story }) => {
+		test("Vertical Margin", async ({ story }) => {
 			await story.goto();
-			await story.snapshot(`state`);
+			await story.snapshot("mount");
 		});
 	});
 });
