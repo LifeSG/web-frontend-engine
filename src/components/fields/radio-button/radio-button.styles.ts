@@ -2,9 +2,9 @@ import { ImageButton } from "@lifesg/react-design-system/image-button";
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Typography } from "@lifesg/react-design-system/typography";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { TRadioToggleLayoutType } from "./types";
-import { Spacing } from "@lifesg/react-design-system/theme";
+import { Colour, Spacing } from "@lifesg/react-design-system/theme";
 
 interface ILabelProps {
 	disabled?: boolean | undefined;
@@ -67,9 +67,22 @@ export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
 	gap: ${Spacing["spacing-16"]};
 `;
 
-export const StyledToggle = styled(Toggle)`
+interface IToggleProps {
+	$hasError?: boolean;
+}
+
+export const StyledToggle = styled(Toggle)<IToggleProps>`
 	[data-id="toggle-composite-children"] {
 		margin: 0;
 		padding: 0;
 	}
+
+	${({ $hasError }) =>
+		$hasError &&
+		css`
+			&:has(input:checked) [data-testid="toggle-label"],
+			&:has(input:checked) [aria-hidden="true"] {
+				color: ${Colour["text-error"]} !important;
+			}
+		`}
 `;

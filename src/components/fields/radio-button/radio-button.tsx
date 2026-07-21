@@ -66,7 +66,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			: undefined;
 
 	const theme = useContext(ThemeContext);
-	const { setValue, trigger, clearErrors, unregister } = useFormContext();
+	const { setValue, trigger, unregister } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const [currentBreakpoint, setCurrentBreakpoint] = useState<TBreakpoint>("desktop");
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
@@ -120,7 +120,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			handleDeselect(clickedValue);
 		} else {
 			onChange?.({ target: { value: clickedValue } });
-			clearErrors(id);
+			trigger(id);
 		}
 	};
 
@@ -251,7 +251,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 										handleChangeOrClick(option.value);
 									}
 								}}
-								error={!!error?.message}
+								error={!!error?.message && (!stateValue || isRadioButtonChecked(option.value))}
+								$hasError={!!error?.message && isRadioButtonChecked(option.value)}
 								compositeSection={
 									option.children && (!allowDeselection || isRadioButtonChecked(option.value))
 										? { children: <Wrapper>{option.children}</Wrapper>, collapsible: false }

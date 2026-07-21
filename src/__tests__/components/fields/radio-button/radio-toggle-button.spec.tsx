@@ -121,6 +121,32 @@ describe("radio toggle button", () => {
 		expect(getErrorMessage()).toBeInTheDocument();
 	});
 
+	it("should show error immediately when selected value fails notEquals validation", async () => {
+		renderComponent({
+			validation: [{ required: true }, { notEquals: "Apple", errorMessage: ERROR_MESSAGE }],
+		});
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		fireEvent.click(getRadioButtonA());
+
+		await waitFor(() => expect(getErrorMessage()).toBeInTheDocument());
+	});
+
+	it("should clear error when selected value passes notEquals validation", async () => {
+		renderComponent({
+			validation: [{ required: true }, { notEquals: "Apple", errorMessage: ERROR_MESSAGE }],
+		});
+
+		// Trigger validation by submitting with invalid value
+		fireEvent.click(getRadioButtonA());
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+		await waitFor(() => expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument());
+
+		// Select valid value — error should clear
+		fireEvent.click(getRadioButtonB());
+		await waitFor(() => expect(screen.queryByText(ERROR_MESSAGE)).not.toBeInTheDocument());
+	});
+
 	it("should be disabled if configured for options", async () => {
 		renderComponent({
 			options: [
