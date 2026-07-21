@@ -18,7 +18,7 @@ export const Divider = (props: IGenericElementProps<IDividerSchema>) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	useApplyStyle(containerRef, {
-		[styles.tokens.container.verticalMargin]: verticalMargin ? `${verticalMargin}rem 0` : undefined,
+		[styles.tokens.container.verticalMargin]: verticalMargin ? `${verticalMargin}rem` : undefined,
 	});
 
 	// =============================================================================

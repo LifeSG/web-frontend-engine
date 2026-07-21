@@ -8,5 +8,5 @@ export const tokens = {
 
 export const container = css`
 	${tokens.container.verticalMargin}: initial;
-	margin: var(${tokens.container.verticalMargin}, 0);
+	margin: var(${tokens.container.verticalMargin}, 0) 0;
 `;
