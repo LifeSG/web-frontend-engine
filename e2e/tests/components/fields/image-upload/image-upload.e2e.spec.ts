@@ -1,7 +1,22 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 import { test as base, forComponent } from "../../../utils/fixtures";
 import { viewport } from "../../../consts";
-import { LONG_FILE, SHORT_FILE, THIRD_FILE } from "../../../utils/image-fixtures";
+import { createSolidColorPng } from "../../../utils/image-fixtures";
+
+// =============================================================================
+// IMAGE FILE FIXTURES
+// Light-gray 200×200 PNG — large enough that fabric.js renders it as a visible
+// backdrop, so drawn strokes are clearly separated from the background.
+// =============================================================================
+const IMAGE_BUFFER = createSolidColorPng(200, 200, 220, 220, 220);
+const SHORT_FILE = { name: "a.png", mimeType: "image/png", buffer: IMAGE_BUFFER };
+const LONG_FILE = {
+	name: "this-is-a-very-long-filename-that-exceeds-the-width-of-the-file-upload-display-area.png",
+	mimeType: "image/png",
+	buffer: IMAGE_BUFFER,
+};
+// A third distinct file used when tests need to exceed a per-field max-files limit
+const THIRD_FILE = { name: "c.png", mimeType: "image/png", buffer: IMAGE_BUFFER };
 import { StoryPage } from "../../../utils/story-page";
 
 const withStory = forComponent("fields/image-upload");
@@ -129,14 +144,6 @@ test.describe("ImageUpload", () => {
 
 	test.describe("Edit image", () => {
 		test.use({ storyOptions: withStory("edit-image") });
-
-		test.afterEach(async ({ page }) => {
-			// Navigate away from the canvas-heavy page after each test so the browser
-			// can release fabric.js/canvas/WebGL resources before the next test loads
-			// another instance of the same page. Without this, cumulative memory
-			// pressure in Docker causes "Page crashed" after several tests.
-			await page.goto("about:blank");
-		});
 
 		test("Review modal", async ({ story }) => {
 			await story.goto();

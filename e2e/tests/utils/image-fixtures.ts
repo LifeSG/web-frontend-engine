@@ -31,7 +31,7 @@ function pngChunk(type: string, data: Buffer): Buffer {
 }
 
 /** Returns a valid PNG buffer filled with a single solid RGB colour. */
-function createSolidColorPng(width: number, height: number, r: number, g: number, b: number): Buffer {
+export function createSolidColorPng(width: number, height: number, r: number, g: number, b: number): Buffer {
 	// Build one row: [filter=None, R, G, B, R, G, B, ...]
 	const row = Buffer.alloc(1 + width * 3);
 	for (let x = 0; x < width; x++) {
@@ -55,19 +55,3 @@ function createSolidColorPng(width: number, height: number, r: number, g: number
 		pngChunk("IEND", Buffer.alloc(0)),
 	]);
 }
-
-// =============================================================================
-// SHARED IMAGE FILE FIXTURES
-// Light-gray 200×200 PNG — large enough that fabric.js renders it as a visible
-// backdrop, so drawn strokes are clearly separated from the background.
-// =============================================================================
-const IMAGE_BUFFER = createSolidColorPng(200, 200, 220, 220, 220);
-
-export const SHORT_FILE = { name: "a.png", mimeType: "image/png", buffer: IMAGE_BUFFER };
-export const LONG_FILE = {
-	name: "this-is-a-very-long-filename-that-exceeds-the-width-of-the-file-upload-display-area.png",
-	mimeType: "image/png",
-	buffer: IMAGE_BUFFER,
-};
-// A third distinct file used when tests need to exceed a per-field max-files limit
-export const THIRD_FILE = { name: "c.png", mimeType: "image/png", buffer: IMAGE_BUFFER };
