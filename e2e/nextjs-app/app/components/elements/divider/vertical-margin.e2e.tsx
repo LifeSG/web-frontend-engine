@@ -16,11 +16,11 @@ const DIVIDER_SCHEMA: IFrontendEngineData = {
 						},
 						dividerDashed: {
 							uiType: "divider",
-							lineStyle: "dashed",
+							verticalMargin: 2,
 						},
 						dividerThick: {
 							uiType: "divider",
-							thickness: 3,
+							verticalMargin: 3,
 						},
 					},
 				},
@@ -29,6 +29,6 @@ const DIVIDER_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-export default function DividerDefaultPage() {
+export default function DividerVerticalMarginPage() {
 	return <FrontendEngine data={DIVIDER_SCHEMA} />;
 }

@@ -15,4 +15,17 @@ test.describe("Divider", () => {
 			await story.snapshot("mount");
 		});
 	});
+
+	test.describe(() => {
+		test.use({
+			storyOptions: {
+				...withStory("vertical-margin"),
+			},
+		});
+
+		test("Vertical Margin", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
+	});
 });
