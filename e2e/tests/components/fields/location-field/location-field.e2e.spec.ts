@@ -36,7 +36,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForLoadState("networkidle");
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -50,7 +50,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForLoadState("networkidle");
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -64,7 +64,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForLoadState("networkidle");
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -74,7 +74,7 @@ test.describe("Location Field", () => {
 		mapTest("Map", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
-			await story.page.waitForLoadState("networkidle");
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("mount");
 		});
@@ -84,7 +84,7 @@ test.describe("Location Field", () => {
 		disabledTest("Disabled", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
-			await story.page.waitForLoadState("networkidle");
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("mount");
 		});
@@ -94,7 +94,7 @@ test.describe("Location Field", () => {
 		readonlyTest("Readonly", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
-			await story.page.waitForLoadState("networkidle");
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("mount");
 		});
