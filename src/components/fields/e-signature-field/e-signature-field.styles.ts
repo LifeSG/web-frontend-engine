@@ -8,7 +8,7 @@ export const eSignatureWrapper = css`
 `;
 
 export const errorWrapper = css`
-	margin: -${Spacing["spacing-16"]} 0 ${Spacing["spacing-32"]};
+	margin: calc(${Spacing["spacing-16"]} * -1) 0 ${Spacing["spacing-32"]};
 	color: ${Colour["text-error"]};
 	outline: none;
 	${Font["body-sm-semibold"]}
