@@ -69,4 +69,15 @@ export abstract class AbstractStoryPage {
 	public async snapshot(name: string, options?: { fullscreen?: boolean; locator?: Locator; mask?: Locator[] }) {
 		await compareScreenshot(this.page, name, options);
 	}
+
+	public async waitForImageLoad() {
+		await this.page.waitForFunction(
+			() => {
+				return Array.from(document.querySelectorAll("img")).every(
+					(img) => img.complete && img.naturalWidth > 0
+				);
+			},
+			{ polling: 100, timeout: 10000 }
+		);
+	}
 }

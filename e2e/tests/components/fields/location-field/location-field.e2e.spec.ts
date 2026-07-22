@@ -23,6 +23,10 @@ const apiErrorTest = createLocationFieldTest("api-error");
 const withStory = forComponent("fields/location-field");
 
 test.describe("Location Field", () => {
+	test.afterEach(async ({ story }) => {
+		await story.waitForImageLoad(); // wait for hidden prefetched image that loads after mount
+	});
+
 	defaultTest.describe(() => {
 		defaultTest("Default", async ({ story }) => {
 			await story.goto();

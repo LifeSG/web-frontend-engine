@@ -57,6 +57,7 @@ removeConfirmationModalTest.describe(() => {
 		await story.locators.removeButton.click();
 
 		await expect(story.page.getByText("Remove entry?")).toBeVisible();
+		await story.waitForImageLoad();
 		await story.snapshot("modal-open", { fullscreen: true });
 	});
 });
