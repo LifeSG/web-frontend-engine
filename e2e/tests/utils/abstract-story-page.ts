@@ -21,6 +21,16 @@ export abstract class AbstractStoryPage {
 	}
 
 	public async goto() {
+		// proxy all asset requests to the local cdn
+		await this.page.context().route(/^https:\/\/assets\.life\.gov\.sg/, async (route) => {
+			const url = route.request().url();
+			const path = new URL(url).pathname;
+			const cdn = `http://host.docker.internal:3000/cdn${path}`;
+
+			const res = await this.page.request.get(cdn);
+			await route.fulfill({ response: res });
+		});
+
 		await this.page.goto(this.getPath());
 		await expect(this.layout).toBeVisible();
 	}
@@ -58,5 +68,16 @@ export abstract class AbstractStoryPage {
 
 	public async snapshot(name: string, options?: { fullscreen?: boolean; locator?: Locator; mask?: Locator[] }) {
 		await compareScreenshot(this.page, name, options);
+	}
+
+	public async waitForImageLoad() {
+		await this.page.waitForFunction(
+			() => {
+				return Array.from(document.querySelectorAll("img")).every(
+					(img) => img.complete && img.naturalWidth > 0
+				);
+			},
+			{ polling: 100, timeout: 10000 }
+		);
 	}
 }

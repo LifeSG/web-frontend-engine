@@ -136,8 +136,10 @@ test.describe("ImageUpload", () => {
 				return dt;
 			});
 			await story.locators.dropzone.dispatchEvent("dragenter", { dataTransfer });
+
 			await expect(story.locators.dragHint).toBeVisible();
 
+			await story.waitForImageLoad();
 			await story.snapshot("drag-active");
 		});
 	});
