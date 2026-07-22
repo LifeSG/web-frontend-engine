@@ -21,6 +21,16 @@ export abstract class AbstractStoryPage {
 	}
 
 	public async goto() {
+		// proxy all asset requests to the local cdn
+		await this.page.context().route(/^https:\/\/assets\.life\.gov\.sg/, async (route) => {
+			const url = route.request().url();
+			const path = new URL(url).pathname;
+			const cdn = `http://host.docker.internal:3000/cdn${path}`;
+
+			const res = await this.page.request.get(cdn);
+			await route.fulfill({ response: res });
+		});
+
 		await this.page.goto(this.getPath());
 		await expect(this.layout).toBeVisible();
 	}
