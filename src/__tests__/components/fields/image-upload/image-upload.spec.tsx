@@ -954,7 +954,7 @@ describe("image-upload", () => {
 				it("should delete the image and hide the prompt on confirming delete", async () => {
 					fireEvent.click(getField("button", "Yes, delete"));
 
-					expect(screen.getByText(DELETE_PROMPT_TEXT)).not.toBeVisible();
+					await waitFor(() => expect(screen.getByText(DELETE_PROMPT_TEXT)).not.toBeVisible());
 					await waitFor(() => {
 						expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(2);
 					});
@@ -963,7 +963,7 @@ describe("image-upload", () => {
 				it("should not delete the image but dismiss the prompt on cancelling the confirmation prompt", async () => {
 					fireEvent.click(getField("button", "Cancel"));
 
-					expect(screen.getByText(DELETE_PROMPT_TEXT)).not.toBeVisible();
+					await waitFor(() => expect(screen.getByText(DELETE_PROMPT_TEXT)).not.toBeVisible());
 					await waitFor(() => {
 						expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(3);
 					});
@@ -992,7 +992,7 @@ describe("image-upload", () => {
 				it("should delete the image and close the review modal on deleting the last image", async () => {
 					fireEvent.click(getField("button", "Delete and exit"));
 
-					expect(screen.queryByText(DELETE_EXIT_PROMPT_TEXT)).not.toBeInTheDocument();
+					await waitFor(() => expect(screen.queryByText(DELETE_EXIT_PROMPT_TEXT)).not.toBeInTheDocument());
 					expect(screen.queryByText(REVIEW_MODAL_TEXT)).not.toBeInTheDocument();
 					await waitFor(() => {
 						expect(getField("button", /^thumbnail/i, true)).not.toBeInTheDocument();
@@ -1002,7 +1002,7 @@ describe("image-upload", () => {
 				it("should not delete the image and return to the review modal on cancelling the confirmation prompt", async () => {
 					fireEvent.click(getField("button", "Cancel"));
 
-					expect(screen.getByText(DELETE_EXIT_PROMPT_TEXT)).not.toBeVisible();
+					await waitFor(() => expect(screen.getByText(DELETE_EXIT_PROMPT_TEXT)).not.toBeVisible());
 					expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeInTheDocument();
 					await waitFor(() => {
 						expect(getField("button", /^thumbnail/i)).toBeInTheDocument();
@@ -1037,7 +1037,7 @@ describe("image-upload", () => {
 			it("should close review modal on confirmation", async () => {
 				fireEvent.click(getField("button", "Yes, exit"));
 
-				expect(screen.queryByText(REVIEW_EXIT_PROMPT_TEXT)).not.toBeInTheDocument();
+				await waitFor(() => expect(screen.queryByText(REVIEW_EXIT_PROMPT_TEXT)).not.toBeInTheDocument());
 				expect(screen.queryByText(REVIEW_MODAL_TEXT)).not.toBeInTheDocument();
 				expect(getField("button", /^thumbnail/i, true)).not.toBeInTheDocument();
 			});
@@ -1045,7 +1045,7 @@ describe("image-upload", () => {
 			it("should not close review modal on cancelling the confirmation prompt", async () => {
 				fireEvent.click(getField("button", "Cancel"));
 
-				expect(screen.getByText(REVIEW_EXIT_PROMPT_TEXT)).not.toBeVisible();
+				await waitFor(() => expect(screen.getByText(REVIEW_EXIT_PROMPT_TEXT)).not.toBeVisible());
 				expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeInTheDocument();
 
 				await waitFor(() => {

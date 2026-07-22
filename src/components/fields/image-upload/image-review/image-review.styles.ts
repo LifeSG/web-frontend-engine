@@ -1,24 +1,15 @@
 import { Border, Colour, Font, MediaQuery, Radius, Shadow, Spacing } from "@lifesg/react-design-system/theme";
-import { Button } from "@lifesg/react-design-system/button";
-import { Modal } from "@lifesg/react-design-system/modal";
-import { Typography } from "@lifesg/react-design-system/typography";
-import { BinIcon } from "@lifesg/react-icons/bin";
-import { EraserIcon } from "@lifesg/react-icons/eraser";
-import { PencilIcon } from "@lifesg/react-icons/pencil";
-import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
-import styled, { css } from "styled-components";
+import { css } from "@linaria/core";
 
-interface IModalBoxStyle {
-	imageReviewModalStyles?: string | undefined;
-}
+export const tokens = {
+	palette: {
+		color: "--fee-internal-imageReview-palette-color",
+	},
+};
 
-export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
+export const modalBox = css`
 	display: block;
 	max-height: fit-content;
-
-	${({ imageReviewModalStyles }) => {
-		if (imageReviewModalStyles) return `${imageReviewModalStyles}`;
-	}}
 
 	${MediaQuery.MinWidth.xl} {
 		max-width: 42rem;
@@ -44,16 +35,19 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 // =============================================================================
 // HEADER
 // =============================================================================
-export const HeaderSection = styled.div<{ $drawActive?: boolean }>`
+export const headerSection = css`
 	display: flex;
 	height: 2.75rem;
 	text-align: center;
 	align-items: center;
 	flex-shrink: 0;
-	${({ $drawActive }) => ($drawActive ? "justify-content: space-between;" : "")}
 `;
 
-export const ReviewCloseButton = styled(Button)`
+export const headerSectionDrawActive = css`
+	justify-content: space-between;
+`;
+
+export const reviewCloseButton = css`
 	position: absolute;
 	left: 0.5rem;
 	padding: ${Spacing["spacing-4"]};
@@ -63,17 +57,17 @@ export const ReviewCloseButton = styled(Button)`
 	outline-style: none;
 	color: ${Colour["bg-primary"]};
 
-	${MediaQuery.MaxWidth.sm}, ${ModalBox}[data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.sm}, .${modalBox}[data-mobile-landscape="true"] & {
 		height: 2.25rem;
 	}
 `;
 
-export const ReviewTitle = styled(Typography.BodyMD)`
+export const reviewTitle = css`
 	color: ${Colour["text-primary"]};
 	margin: 0 auto;
 `;
 
-const ButtonBase = css`
+const buttonBaseStyles = `
 	background: none;
 	outline: 0;
 	border: 0;
@@ -81,8 +75,8 @@ const ButtonBase = css`
 	cursor: pointer;
 `;
 
-export const EditHeaderButton = styled.button`
-	${ButtonBase}
+export const editHeaderButton = css`
+	${buttonBaseStyles}
 	display: flex;
 	color: ${Colour["text-primary"]};
 	font-size: 1rem;
@@ -93,7 +87,7 @@ export const EditHeaderButton = styled.button`
 // =============================================================================
 // CONTENT
 // =============================================================================
-export const ContentSection = styled.div`
+export const contentSection = css`
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -101,17 +95,17 @@ export const ContentSection = styled.div`
 	background-color: ${Colour["bg-inverse"]};
 	overflow: hidden;
 	height: 31.25rem;
-	${MediaQuery.MaxWidth.sm}, ${ModalBox}[data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.sm}, .${modalBox}[data-mobile-landscape="true"] & {
 		height: 100%;
 	}
 `;
 
-export const LoadingPreviewText = styled(Typography.HeadingXS)`
+export const loadingPreviewText = css`
 	color: ${Colour["text-inverse"]};
 	font-weight: ${Font.Spec["weight-semibold"]};
 `;
 
-export const DrawDeleteButtonWrapper = styled.div`
+export const drawDeleteButtonWrapper = css`
 	position: absolute;
 	right: 1.5rem;
 	bottom: 1.5rem;
@@ -119,12 +113,12 @@ export const DrawDeleteButtonWrapper = styled.div`
 	flex-direction: column;
 	justify-content: flex-end;
 
-	${MediaQuery.MaxWidth.sm}, ${ModalBox}[data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.sm}, .${modalBox}[data-mobile-landscape="true"] & {
 		right: 1.25rem;
 	}
 `;
 
-export const DrawDeleteButton = styled(Button)`
+export const drawDeleteButton = css`
 	padding: 0;
 	width: 5.4375rem;
 	height: 2.5rem;
@@ -152,20 +146,32 @@ export const DrawDeleteButton = styled(Button)`
 	}
 `;
 
-export const DrawDeleteButtonText = styled(Typography.BodySM)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Colour["text-subtler"] : Colour["text-primary"])};
+export const drawDeleteButtonText = css`
+	color: ${Colour["text-primary"]};
 	line-height: 1.75rem;
 `;
 
-export const DrawIcon = styled(PencilStrokeIcon)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Colour.icon : Colour["icon-primary"])};
+export const drawDeleteButtonTextDisabled = css`
+	color: ${Colour["text-subtler"]};
 `;
 
-export const DeleteIcon = styled(BinIcon)<{ $disabled: boolean }>`
-	color: ${(props) => (props.$disabled ? Colour.icon : Colour["icon-primary"])};
+export const drawIcon = css`
+	color: ${Colour["icon-primary"]};
 `;
 
-export const ImageEditorWrapper = styled.div`
+export const drawIconDisabled = css`
+	color: ${Colour.icon};
+`;
+
+export const deleteIcon = css`
+	color: ${Colour["icon-primary"]};
+`;
+
+export const deleteIconDisabled = css`
+	color: ${Colour.icon};
+`;
+
+export const imageEditorWrapper = css`
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -176,28 +182,28 @@ export const ImageEditorWrapper = styled.div`
 // =============================================================================
 // FOOTER
 // =============================================================================
-export const FooterSection = styled.div`
+export const footerSection = css`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	margin: ${Spacing["spacing-16"]} ${Spacing["spacing-24"]};
 
-	${MediaQuery.MaxWidth.sm}, ${ModalBox}[data-mobile-landscape="true"] & {
+	${MediaQuery.MaxWidth.sm}, .${modalBox}[data-mobile-landscape="true"] & {
 		margin: 0 ${Spacing["spacing-20"]};
 		height: 6.5rem;
 		max-height: 6.5rem;
 	}
 `;
 
-export const FooterSaveButton = styled(Button)`
+export const footerSaveButton = css`
 	height: 3rem;
 	margin-left: ${Spacing["spacing-16"]};
 	min-width: 6.5rem;
 	max-width: 7.125rem;
 `;
 
-export const EraserButton = styled.button`
-	${ButtonBase}
+export const eraserButton = css`
+	${buttonBaseStyles}
 	padding: 0;
 	width: 3rem;
 	height: 3rem;
@@ -208,33 +214,41 @@ export const EraserButton = styled.button`
 	}
 `;
 
-export const EraserButtonIcon = styled(EraserIcon)<{ $eraseMode: boolean }>`
+export const eraserButtonIcon = css`
 	display: block;
 	width: 100%;
 	height: 100%;
-	color: ${(props) => (props.$eraseMode ? Colour["icon-primary"] : Colour.icon)};
+	color: ${Colour.icon};
 `;
 
-export const ButtonIcon = styled(PencilIcon)<{ $colorScheme: string }>`
-	color: ${(props) => (props.$colorScheme === "light" ? Colour.icon : Colour["icon-inverse"])};
+export const eraserButtonIconEraseMode = css`
+	color: ${Colour["icon-primary"]};
+`;
+
+export const buttonIcon = css`
+	color: ${Colour["icon-inverse"]};
 	width: 100%;
 	height: 100%;
 `;
 
-export const PaletteHolder = styled.div`
+export const buttonIconColorSchemeLight = css`
+	color: ${Colour.icon};
+`;
+
+export const paletteHolder = css`
 	display: flex;
 	gap: ${Spacing["spacing-8"]};
 	flex-direction: flex-end;
 `;
 
-export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
+export const palette = css`
 	width: 3rem;
 	height: 3rem;
 	border-radius: ${Radius.sm};
 	padding: ${Spacing["spacing-12"]};
-	background-color: ${({ $color }) => $color};
-	border: ${Border.solid} ${Border["width-010"]}
-		${({ $color, $colorScheme }) => ($colorScheme === "light" ? "#979797" : $color)};
+	${tokens.palette.color}: initial;
+	background-color: var(${tokens.palette.color});
+	border: ${Border.solid} ${Border["width-010"]} var(${tokens.palette.color});
 	cursor: pointer;
 
 	${MediaQuery.MaxWidth.sm} {
@@ -242,4 +256,8 @@ export const Palette = styled.button<{ $color: string; $colorScheme?: string }>`
 		height: 2.5rem;
 		margin-left: ${Spacing["spacing-4"]};
 	}
+`;
+
+export const paletteColorSchemeLight = css`
+	border-color: #979797;
 `;

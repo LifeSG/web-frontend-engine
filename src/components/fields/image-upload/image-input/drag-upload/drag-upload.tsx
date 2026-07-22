@@ -1,8 +1,10 @@
 import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
+import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
+import { Typography } from "@lifesg/react-design-system/typography";
 import { ChangeEvent, forwardRef, useImperativeHandle, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { FileHelper, TestHelper } from "../../../../../utils";
-import { HiddenInput, HintContainer, HintText, Wrapper } from "./drag-upload.styles";
+import * as styles from "./drag-upload.styles";
 import { IDragUploadProps, IDragUploadRef } from "./types";
 
 const UPLOAD_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/global-upload.svg";
@@ -39,7 +41,8 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 	// =============================================================================
 	const renderHint = () => {
 		return (
-			<HintContainer
+			<DashedBorder
+				className={styles.hintContainer}
 				id={TestHelper.generateId(id, "hint")}
 				data-testid={TestHelper.generateId(id, "hint")}
 				colour={Colour["border-focus-strong"]}
@@ -47,14 +50,22 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 				thickness={Border["width-040"]}
 			>
 				<img src={UPLOAD_ICON} alt="" />
-				<HintText weight="semibold">{hint}</HintText>
-			</HintContainer>
+				<Typography.BodyMD className={styles.hintText} weight="semibold">
+					{hint}
+				</Typography.BodyMD>
+			</DashedBorder>
 		);
 	};
 
 	return (
-		<Wrapper id={TestHelper.generateId(id)} data-testid={TestHelper.generateId(id)} {...getRootProps()}>
-			<HiddenInput
+		<div
+			className={styles.wrapper}
+			id={TestHelper.generateId(id)}
+			data-testid={TestHelper.generateId(id)}
+			{...getRootProps()}
+		>
+			<input
+				className={styles.hiddenInput}
 				id={TestHelper.generateId(id, "hidden-input")}
 				data-testid={TestHelper.generateId(id, "hidden-input")}
 				ref={hiddenInputRef}
@@ -74,6 +85,6 @@ export const DragUpload = forwardRef<IDragUploadRef, IDragUploadProps>((props, r
 			/>
 			{children}
 			{isDragActive ? renderHint() : null}
-		</Wrapper>
+		</div>
 	);
 });

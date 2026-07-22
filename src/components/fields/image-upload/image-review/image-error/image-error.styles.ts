@@ -1,9 +1,7 @@
-import styled from "styled-components";
-import { Button } from "@lifesg/react-design-system/button";
 import { Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
-import { Typography } from "@lifesg/react-design-system/typography";
+import { css } from "@linaria/core";
 
-export const Wrapper = styled.div`
+export const wrapper = css`
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -22,7 +20,7 @@ export const Wrapper = styled.div`
 	}
 `;
 
-export const ErrorIcon = styled.img`
+export const errorIcon = css`
 	width: 100%;
 	max-width: 9rem;
 	height: auto;
@@ -33,29 +31,29 @@ export const ErrorIcon = styled.img`
 	}
 `;
 
-export const Content = styled.div`
+export const content = css`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: ${Spacing["spacing-8"]};
 `;
 
-export const BodyText = styled(Typography.BodyBL)`
+export const bodyText = css`
 	color: ${Colour["text-inverse"]};
 	word-break: break-word;
 `;
 
-export const TitleText = styled(Typography.HeadingXS)`
+export const titleText = css`
 	color: ${Colour["text-inverse"]};
 	word-break: break-word;
 `;
 
-export const NameWrapper = styled.span`
+export const nameWrapper = css`
 	display: inline-block;
 	font-weight: ${Font.Spec["weight-bold"]};
 `;
 
-export const OkButton = styled(Button)`
+export const okButton = css`
 	width: 100%;
 	max-width: 16rem;
 	margin-top: ${Spacing["spacing-32"]};

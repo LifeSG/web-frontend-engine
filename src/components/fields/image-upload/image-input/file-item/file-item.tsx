@@ -1,25 +1,13 @@
 import { Typography } from "@lifesg/react-design-system/typography";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
+import { Button } from "@lifesg/react-design-system/button";
 import { CrossIcon } from "@lifesg/react-icons/cross";
+import clsx from "clsx";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FileHelper, TestHelper } from "../../../../../utils";
 import { ERROR_MESSAGES } from "../../../../shared";
 import { EImageStatus, IImage, IImageUploadValidationRule, ISharedImageProps } from "../../types";
-import {
-	CellDeleteButton,
-	CellFileSize,
-	CellInfo,
-	CellProgressBar,
-	DeleteButton,
-	DesktopTextBodyDetail,
-	ErrorCustomMutedThumbnailContainer,
-	ErrorText,
-	FileNameWrapper,
-	MobileTextBodyDetail,
-	ProgressBar,
-	TextBody,
-	Thumbnail,
-	Wrapper,
-} from "./file-item.styles";
+import * as styles from "./file-item.styles";
 
 interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	id?: string;
@@ -37,7 +25,12 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 	const [isError, setError] = useState<boolean>(false);
 	const [errorMessage, setErrorMessage] = useState<string>();
 	const fileNameWrapperRef = useRef<HTMLDivElement>(null);
+	const thumbnailRef = useRef<HTMLDivElement>(null);
 	const [transformedFileName, setTransformedFileName] = useState<string>();
+
+	useApplyStyle(thumbnailRef, {
+		[styles.tokens.thumbnail.backgroundImage]: dataURL ? `url(${dataURL})` : undefined,
+	});
 	// =============================================================================
 	// HELPER FUNCTIONS
 	// =============================================================================
@@ -128,13 +121,14 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 
 	const renderError = () =>
 		(isError || status === EImageStatus.ERROR_CUSTOM_MUTED) && (
-			<ErrorText
+			<Typography.BodySM
+				className={styles.errorText}
 				weight={"semibold"}
 				id={TestHelper.generateId(`${id}-${index + 1}`, "error-text")}
 				data-testid={TestHelper.generateId(`${id}-${index + 1}`, "error-text")}
 			>
 				{errorMessage}
-			</ErrorText>
+			</Typography.BodySM>
 		);
 
 	/**
@@ -147,90 +141,103 @@ export const FileItem = ({ id = "file-item", index, fileItem, maxSizeInKb, accep
 			!isError && [EImageStatus.COMPRESSED, EImageStatus.CONVERTED, EImageStatus.UPLOADING].includes(status);
 
 		return renderProgressBar ? (
-			<CellProgressBar>
-				<ProgressBar value={uploadProgress} max={100} />
-			</CellProgressBar>
+			<div className={styles.cellProgressBar}>
+				<progress className={styles.progressBar} value={uploadProgress} max={100} />
+			</div>
 		) : (
-			<CellDeleteButton>
-				<DeleteButton
+			<div className={styles.cellDeleteButton}>
+				<Button
+					className={styles.deleteButton}
 					onClick={onDelete(index)}
 					id={TestHelper.generateId(`${id}-${index + 1}`, "btn-delete")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "btn-delete")}
 					aria-label={`remove ${fileName}`}
 					icon={<CrossIcon />}
 				/>
-			</CellDeleteButton>
+			</div>
 		);
 	};
 
 	const renderCellInfoDetails = () => {
 		return status === EImageStatus.ERROR_CUSTOM_MUTED ? (
 			<>
-				<ErrorCustomMutedThumbnailContainer>
-					<Thumbnail
-						$src={fileItem.dataURL ?? ""}
+				<div className={styles.errorCustomMutedThumbnailContainer}>
+					<div
+						className={styles.thumbnail}
+						ref={thumbnailRef}
 						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
-					<TextBody
-						forwardedAs="div"
+					<Typography.BodyBL
+						className={styles.textBody}
+						as="div"
 						id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 					>
-						<FileNameWrapper ref={fileNameWrapperRef}>{transformedFileName}</FileNameWrapper>
-						<DesktopTextBodyDetail>{renderError()}</DesktopTextBodyDetail>
-						<MobileTextBodyDetail>{fileSize}</MobileTextBodyDetail>
-					</TextBody>
-				</ErrorCustomMutedThumbnailContainer>
-				<TextBody
-					forwardedAs="div"
+						<div className={styles.fileNameWrapper} ref={fileNameWrapperRef}>
+							{transformedFileName}
+						</div>
+						<div className={styles.desktopTextBodyDetail}>{renderError()}</div>
+						<div className={styles.mobileTextBodyDetail}>{fileSize}</div>
+					</Typography.BodyBL>
+				</div>
+				<Typography.BodyBL
+					className={styles.textBody}
+					as="div"
 					id={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-error")}
 				>
-					<MobileTextBodyDetail>{renderError()}</MobileTextBodyDetail>
-				</TextBody>
+					<div className={styles.mobileTextBodyDetail}>{renderError()}</div>
+				</Typography.BodyBL>
 			</>
 		) : (
 			<>
 				{status === EImageStatus.UPLOADED && !isError && (
-					<Thumbnail
-						$src={fileItem.dataURL ?? ""}
+					<div
+						className={styles.thumbnail}
+						ref={thumbnailRef}
 						id={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "image")}
 					/>
 				)}
-				<TextBody
-					forwardedAs="div"
+				<Typography.BodyBL
+					className={styles.textBody}
+					as="div"
 					id={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 					data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-image")}
 				>
-					<FileNameWrapper ref={fileNameWrapperRef}>{transformedFileName}</FileNameWrapper>
+					<div className={styles.fileNameWrapper} ref={fileNameWrapperRef}>
+						{transformedFileName}
+					</div>
 					{renderError()}
-					<MobileTextBodyDetail>{fileSize}</MobileTextBodyDetail>
-				</TextBody>
+					<div className={styles.mobileTextBodyDetail}>{fileSize}</div>
+				</Typography.BodyBL>
 			</>
 		);
 	};
 
 	return (
-		<Wrapper
-			$isError={isError}
-			$isCustomMuted={status === EImageStatus.ERROR_CUSTOM_MUTED}
+		<div
+			className={clsx(
+				styles.wrapper,
+				isError && styles.wrapperIsError,
+				status === EImageStatus.ERROR_CUSTOM_MUTED && styles.wrapperIsCustomMuted
+			)}
 			id={TestHelper.generateId(`${id}-${index + 1}`)}
 			data-testid={TestHelper.generateId(`${id}-${index + 1}`)}
 		>
 			<>
-				<CellInfo>{renderCellInfoDetails()}</CellInfo>
-				<CellFileSize>
+				<div className={styles.cellInfo}>{renderCellInfoDetails()}</div>
+				<div className={styles.cellFileSize}>
 					<Typography.BodyBL
 						id={TestHelper.generateId(`${id}-${index + 1}`, "file-size")}
 						data-testid={TestHelper.generateId(`${id}-${index + 1}`, "file-size")}
 					>
 						{fileSize}
 					</Typography.BodyBL>
-				</CellFileSize>
+				</div>
 				{renderDetails()}
 			</>
-		</Wrapper>
+		</div>
 	);
 };

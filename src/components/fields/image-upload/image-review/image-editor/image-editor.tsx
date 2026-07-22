@@ -3,8 +3,9 @@ import { EraserBrush } from "@erase2d/fabric";
 import { useDrag, usePinch } from "@use-gesture/react";
 import { Canvas as FabricCanvas, FabricImage, FabricObject, Path, PencilBrush, Point, Rect, TEvent } from "fabric";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import clsx from "clsx";
 import { FileHelper, TestHelper } from "../../../../../utils";
-import { Canvas, Wrapper } from "./image-editor.styles";
+import * as styles from "./image-editor.styles";
 import { IImageEditorProps, IImageEditorRef } from "./types";
 import { useWindowHelper } from "../../../../../utils/hooks";
 
@@ -405,8 +406,12 @@ export const ImageEditor = forwardRef((props: IImageEditorProps, ref: ForwardedR
 	);
 
 	return (
-		<Wrapper ref={wrapperRef}>
-			<Canvas id={TestHelper.generateId("imageEditor")} ref={canvasRef} $canDraw={!!(color || erase)} />
-		</Wrapper>
+		<div ref={wrapperRef} className={styles.wrapper}>
+			<canvas
+				id={TestHelper.generateId("imageEditor")}
+				ref={canvasRef}
+				className={clsx(!!(color || erase) && styles.canvasCanDraw)}
+			/>
+		</div>
 	);
 });

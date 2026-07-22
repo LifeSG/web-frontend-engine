@@ -1,9 +1,7 @@
-import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
 import { Colour, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
-import { Typography } from "@lifesg/react-design-system/typography";
-import styled from "styled-components";
+import { css } from "@linaria/core";
 
-export const Wrapper = styled.div`
+export const wrapper = css`
 	position: relative;
 	display: block;
 	border-radius: ${Radius.sm};
@@ -14,11 +12,11 @@ export const Wrapper = styled.div`
 	}
 `;
 
-export const HiddenInput = styled.input`
+export const hiddenInput = css`
 	display: none;
 `;
 
-export const HintContainer = styled(DashedBorder)`
+export const hintContainer = css`
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -32,6 +30,6 @@ export const HintContainer = styled(DashedBorder)`
 	text-align: center;
 `;
 
-export const HintText = styled(Typography.BodyMD)`
+export const hintText = css`
 	color: ${Colour["text-selected"]};
 `;

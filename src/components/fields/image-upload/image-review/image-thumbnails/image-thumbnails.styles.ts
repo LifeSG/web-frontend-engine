@@ -1,10 +1,13 @@
 import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
-import { Button } from "@lifesg/react-design-system/button";
-import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
-import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
-import styled, { css, keyframes } from "styled-components";
+import { css } from "@linaria/core";
 
-export const ThumbnailsWrapper = styled.div`
+export const tokens = {
+	thumbnailItem: {
+		backgroundImage: "--fee-internal-imageThumbnails-thumbnailItem-backgroundImage",
+	},
+};
+
+export const thumbnailsWrapper = css`
 	display: flex;
 	gap: ${Spacing["spacing-8"]};
 	align-items: center;
@@ -12,7 +15,7 @@ export const ThumbnailsWrapper = styled.div`
 	max-height: 5rem;
 `;
 
-export const ThumbnailItem = styled.button<{ $src?: string; $error?: boolean }>`
+export const thumbnailItem = css`
 	position: relative;
 	cursor: pointer;
 	width: 3rem;
@@ -20,13 +23,17 @@ export const ThumbnailItem = styled.button<{ $src?: string; $error?: boolean }>`
 	padding: 0;
 	border: none;
 	border-radius: ${Radius.xs};
-	${({ $src }) => `background-image: url(${$src});`}
-	background-color: ${({ $error }) => $error && "#eee"};
+	${tokens.thumbnailItem.backgroundImage}: initial;
+	background-image: var(${tokens.thumbnailItem.backgroundImage});
 	background-position: center;
 	background-size: cover;
 `;
 
-export const ThumbnailWarningIcon = styled(ExclamationTriangleIcon)`
+export const thumbnailItemError = css`
+	background-color: #eee;
+`;
+
+export const thumbnailWarningIcon = css`
 	color: ${Colour["icon-subtle"]};
 	position: absolute;
 	top: 5%;
@@ -35,32 +42,32 @@ export const ThumbnailWarningIcon = styled(ExclamationTriangleIcon)`
 	height: 90%;
 `;
 
-const dotMoveKeyframe = keyframes`
-	0% {
-		transform: scale(1);
-	}
-	11% {
-		transform: scale(1.5) translate(0, -50%);
-		opacity: 1;
-	}
-	27% {
-		transform: scale(1);
-		opacity: 0.25;
-	}
-`;
-
-export const LoadingDot = styled.div`
+export const loadingDot = css`
 	width: 0.3125rem;
 	height: 0.3125rem;
 	border-radius: 50%;
-	animation: ${dotMoveKeyframe} 1.35s infinite linear;
 	opacity: 0.25;
 	background: ${Colour["bg-inverse-subtle"]};
 	margin: 0.125rem;
 	transform-origin: bottom;
+	animation: image-upload-dot-move-animation 1.35s infinite linear;
+
+	@keyframes image-upload-dot-move-animation {
+		0% {
+			transform: scale(1);
+		}
+		11% {
+			transform: scale(1.5) translate(0, -50%);
+			opacity: 1;
+		}
+		27% {
+			transform: scale(1);
+			opacity: 0.25;
+		}
+	}
 `;
 
-export const LoadingBox = styled.div`
+export const loadingBox = css`
 	position: relative;
 	display: flex;
 	width: 3rem;
@@ -70,42 +77,39 @@ export const LoadingBox = styled.div`
 	border-radius: ${Radius.xs};
 	background-color: ${Colour["bg-strongest"]};
 
-	${LoadingDot}:nth-child(1) {
+	.${loadingDot}:nth-child(1) {
 		animation-delay: 0s;
 	}
-	${LoadingDot}:nth-child(2) {
+	.${loadingDot}:nth-child(2) {
 		animation-delay: 0.1s;
 	}
-	${LoadingDot}:nth-child(3) {
+	.${loadingDot}:nth-child(3) {
 		animation-delay: 0.17s;
 	}
-	${LoadingDot}:nth-child(4) {
+	.${loadingDot}:nth-child(4) {
 		animation-delay: 0.25s;
 	}
 `;
 
-export const BorderOverlay = styled.div<{ $isSelected: boolean }>`
-	border: ${(props) =>
-		props.$isSelected
-			? css`
-					${Border.solid} ${Border["width-020"]}
-			  `
-			: "none"};
-	border-color: ${Colour["border-primary"]};
+export const borderOverlay = css`
 	width: 100%;
 	height: 100%;
 `;
 
-export const HiddenFileSelect = styled.input`
+export const borderOverlayIsSelected = css`
+	border: ${Border["width-020"]} ${Border.solid} ${Colour["border-primary"]};
+`;
+
+export const hiddenFileSelect = css`
 	display: none;
 `;
 
-export const AddImageButtonWrapper = styled(DashedBorder)`
+export const addImageButtonWrapper = css`
 	width: 3rem;
 	height: 3rem;
 `;
 
-export const AddImageButton = styled(Button)`
+export const addImageButton = css`
 	padding: 0;
 	width: 100%;
 	height: 100%;

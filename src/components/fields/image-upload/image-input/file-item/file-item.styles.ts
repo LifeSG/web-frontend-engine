@@ -1,24 +1,20 @@
-import { Button } from "@lifesg/react-design-system/button";
-import { Typography } from "@lifesg/react-design-system/typography";
-import styled, { css } from "styled-components";
 import { Border, Colour, Font, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
+import { css } from "@linaria/core";
 
-export const Wrapper = styled.div<{ $isError?: boolean; $isCustomMuted?: boolean }>`
+export const tokens = {
+	thumbnail: {
+		backgroundImage: "--fee-internal-fileItem-thumbnail-backgroundImage",
+	},
+};
+
+export const wrapper = css`
 	display: flex;
-	flex-wrap: ${(props) => (props.$isCustomMuted ? "nowrap" : "wrap")};
+	flex-wrap: wrap;
 	align-items: center;
 	gap: ${Spacing["spacing-8"]};
-	border: ${(props) =>
-		props.$isError
-			? css`
-					${Border["width-010"]} ${Border.solid} ${Colour["border-error"]}
-			  `
-			: css`
-					${Border["width-010"]} ${Border.solid} ${Colour.border}
-			  `};
+	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	border-radius: ${Radius.sm};
-	border-radius: ${Radius.sm};
-	background-color: ${(props) => (props.$isError ? Colour["bg-error"] : Colour["bg-primary-subtlest"])};
+	background-color: ${Colour["bg-primary-subtlest"]};
 	min-height: 3.5rem;
 	margin-bottom: ${Spacing["spacing-16"]};
 	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-32"]};
@@ -27,14 +23,23 @@ export const Wrapper = styled.div<{ $isError?: boolean; $isCustomMuted?: boolean
 	}
 `;
 
-export const CellInfo = styled.div`
+export const wrapperIsError = css`
+	border: ${Border["width-010"]} ${Border.solid} ${Colour["border-error"]};
+	background-color: ${Colour["bg-error"]};
+`;
+
+export const wrapperIsCustomMuted = css`
+	flex-wrap: nowrap;
+`;
+
+export const cellInfo = css`
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	flex: 1;
 `;
 
-export const CellFileSize = styled.div`
+export const cellFileSize = css`
 	width: 4.24rem;
 
 	${MediaQuery.MaxWidth.lg} {
@@ -42,7 +47,7 @@ export const CellFileSize = styled.div`
 	}
 `;
 
-export const CellProgressBar = styled.div`
+export const cellProgressBar = css`
 	display: flex;
 	justify-content: flex-end;
 	width: 19.15%;
@@ -52,17 +57,18 @@ export const CellProgressBar = styled.div`
 	}
 `;
 
-export const CellDeleteButton = styled.div`
+export const cellDeleteButton = css`
 	display: flex;
 	justify-content: flex-end;
 	width: 19.15%;
 `;
 
-export const Thumbnail = styled.div<{ $src: string }>`
+export const thumbnail = css`
 	margin-right: ${Spacing["spacing-32"]};
 	width: 6rem;
 	height: 6rem;
-	background: url(${(props) => props.$src}) no-repeat center / cover;
+	${tokens.thumbnail.backgroundImage}: initial;
+	background: var(${tokens.thumbnail.backgroundImage}) no-repeat center / cover;
 	overflow: hidden;
 	border-radius: ${Radius.sm};
 	${Font["body-sm-bold"]}
@@ -72,29 +78,29 @@ export const Thumbnail = styled.div<{ $src: string }>`
 	}
 `;
 
-export const TextBody = styled(Typography.BodyBL)`
+export const textBody = css`
 	flex: 1;
 `;
 
-export const FileNameWrapper = styled.div`
+export const fileNameWrapper = css`
 	word-break: break-all;
 `;
 
-export const MobileTextBodyDetail = styled.div`
+export const mobileTextBodyDetail = css`
 	display: none;
 	${MediaQuery.MaxWidth.lg} {
 		display: block;
 	}
 `;
 
-export const DesktopTextBodyDetail = styled.div`
+export const desktopTextBodyDetail = css`
 	display: block;
 	${MediaQuery.MaxWidth.lg} {
 		display: none;
 	}
 `;
 
-export const ProgressBar = styled.progress`
+export const progressBar = css`
 	max-width: 96px;
 	flex: 1;
 	height: 0.63rem;
@@ -123,12 +129,12 @@ export const ProgressBar = styled.progress`
 	}
 `;
 
-export const ErrorText = styled(Typography.BodySM)`
+export const errorText = css`
 	color: ${Colour["text-error"]};
 	width: 100%;
 `;
 
-export const DeleteButton = styled(Button)`
+export const deleteButton = css`
 	padding: 0;
 	min-width: unset;
 	width: 3rem;
@@ -138,18 +144,13 @@ export const DeleteButton = styled(Button)`
 	outline-style: none;
 	color: ${Colour["text-subtler"]};
 
-	> span {
-		display: flex;
-		align-items: center;
-	}
-
 	svg {
 		height: 1.875rem;
 		width: 1.875rem;
 	}
 `;
 
-export const ErrorCustomMutedThumbnailContainer = styled.div`
+export const errorCustomMutedThumbnailContainer = css`
 	display: flex;
 	width: 100%;
 `;

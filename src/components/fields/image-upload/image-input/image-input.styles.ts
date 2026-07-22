@@ -1,25 +1,21 @@
 import { Colour, Font, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
-import { Alert } from "@lifesg/react-design-system/alert";
-import { Button } from "@lifesg/react-design-system/button";
-import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
-import { Typography } from "@lifesg/react-design-system/typography";
-import styled from "styled-components";
+import { css } from "@linaria/core";
 
-export interface SubtitleProps {
-	$hasDescription?: boolean;
-}
-
-export const Wrapper = styled(DashedBorder)`
+export const wrapper = css`
 	&:not(:last-child) {
 		margin-bottom: ${Spacing["spacing-32"]};
 	}
 `;
 
-export const Subtitle = styled(Typography.BodyBL)<SubtitleProps>`
-	margin-bottom: ${(props) => (props.$hasDescription ? Spacing["spacing-8"] : Spacing["spacing-16"])};
+export const subtitle = css`
+	margin-bottom: ${Spacing["spacing-16"]};
 `;
 
-export const TooltipWrapper = styled.button`
+export const subtitleHasDescription = css`
+	margin-bottom: ${Spacing["spacing-8"]};
+`;
+
+export const tooltipWrapper = css`
 	display: inline-flex;
 	align-items: center;
 	gap: ${Spacing["spacing-4"]};
@@ -36,7 +32,7 @@ export const TooltipWrapper = styled.button`
 	}
 `;
 
-export const TooltipIcon = styled.span`
+export const tooltipIcon = css`
 	width: 1rem;
 	height: 1rem;
 	color: inherit;
@@ -47,24 +43,24 @@ export const TooltipIcon = styled.span`
 	}
 `;
 
-export const TooltipLabel = styled(Typography.BodyMD)`
+export const tooltipLabel = css`
 	color: inherit;
 `;
 
-export const Content = styled.div`
+export const content = css`
 	${Font["body-md-regular"]};
 	margin-bottom: ${Spacing["spacing-24"]};
 	color: ${Colour["text-subtler"]};
 `;
 
-export const UploadWrapper = styled.div`
+export const uploadWrapper = css`
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
 	margin-top: ${Spacing["spacing-32"]};
 `;
 
-export const AddButton = styled(Button)`
+export const addButton = css`
 	width: 100%;
 	text-align: center;
 	${MediaQuery.MinWidth.md} {
@@ -73,7 +69,7 @@ export const AddButton = styled(Button)`
 	}
 `;
 
-export const DropThemHereText = styled(Content)`
+export const dropThemHereText = css`
 	margin-top: ${Spacing["spacing-8"]};
 	display: none;
 	${MediaQuery.MinWidth.xl} {
@@ -83,7 +79,7 @@ export const DropThemHereText = styled(Content)`
 	}
 `;
 
-export const AlertContainer = styled(Alert)`
+export const alertContainer = css`
 	margin-top: ${Spacing["spacing-16"]};
 	margin-bottom: ${Spacing["spacing-16"]};
 `;

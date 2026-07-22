@@ -1,21 +1,51 @@
 import { Border, Colour, Radius } from "@lifesg/react-design-system/theme";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
+import { Button } from "@lifesg/react-design-system/button";
+import { DashedBorder } from "@lifesg/react-design-system/dashed-border";
+import { ExclamationTriangleIcon } from "@lifesg/react-icons/exclamation-triangle";
 import { PlusIcon } from "@lifesg/react-icons/plus";
+import clsx from "clsx";
 import { ChangeEvent, useRef } from "react";
 import { TestHelper } from "../../../../../utils";
 import { EImageStatus, IImage, ISharedImageProps, TFileCapture } from "../../types";
-import {
-	AddImageButton,
-	AddImageButtonWrapper,
-	BorderOverlay,
-	HiddenFileSelect,
-	LoadingBox,
-	LoadingDot,
-	ThumbnailItem,
-	ThumbnailWarningIcon,
-	ThumbnailsWrapper,
-} from "./image-thumbnails.styles";
+import * as styles from "./image-thumbnails.styles";
 
 const ADD_PLACEHOLDER_ICON = "https://assets.life.gov.sg/web-frontend-engine/img/icons/photo-placeholder-add.svg";
+
+// =============================================================================
+// THUMBNAIL WITH IMAGE
+// =============================================================================
+interface IThumbnailWithImageProps {
+	id: string;
+	src: string;
+	isSelected: boolean;
+	isError?: boolean;
+	ariaLabel: string;
+	onClick: () => void;
+}
+
+const ThumbnailWithImage = ({ id, src, isSelected, isError, ariaLabel, onClick }: IThumbnailWithImageProps) => {
+	const thumbnailRef = useRef<HTMLButtonElement>(null);
+
+	useApplyStyle(thumbnailRef, {
+		[styles.tokens.thumbnailItem.backgroundImage]: src ? `url(${src})` : undefined,
+	});
+
+	return (
+		<button
+			ref={thumbnailRef}
+			id={id}
+			data-testid={id}
+			type="button"
+			aria-label={ariaLabel}
+			className={clsx(styles.thumbnailItem, isError && styles.thumbnailItemError)}
+			onClick={onClick}
+		>
+			<div className={clsx(styles.borderOverlay, isSelected && styles.borderOverlayIsSelected)} />
+			{isError && <ExclamationTriangleIcon className={styles.thumbnailWarningIcon} />}
+		</button>
+	);
+};
 
 interface IProps extends Omit<ISharedImageProps, "maxSizeInKb"> {
 	activeFileIndex: number;
@@ -64,40 +94,34 @@ export const ImageThumbnails = (props: IProps) => {
 		images.map((image, index) => {
 			if (image.status === EImageStatus.NONE) {
 				return (
-					<LoadingBox key={index}>
+					<div className={styles.loadingBox} key={index}>
 						{[...Array(4)].map((_x, index) => (
-							<LoadingDot key={`dot-${index}`} />
+							<div className={styles.loadingDot} key={`dot-${index}`} />
 						))}
-					</LoadingBox>
+					</div>
 				);
 			} else if (image.status > EImageStatus.NONE || image.status === EImageStatus.ERROR_CUSTOM_MUTED) {
 				return (
-					<ThumbnailItem
+					<ThumbnailWithImage
 						key={index}
 						id={TestHelper.generateId(id, `item-${index + 1}`)}
-						data-testid={TestHelper.generateId(id, `item-${index + 1}`)}
-						$src={image.thumbnailDataURL || image.dataURL || ADD_PLACEHOLDER_ICON}
-						type="button"
-						aria-label={`thumbnail of ${image.name}`}
+						src={image.thumbnailDataURL || image.dataURL || ADD_PLACEHOLDER_ICON}
+						isSelected={activeFileIndex === index}
+						ariaLabel={`thumbnail of ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
-					>
-						<BorderOverlay $isSelected={activeFileIndex === index} />
-					</ThumbnailItem>
+					/>
 				);
 			} else if (image.addedFrom === "reviewModal" || image.status < EImageStatus.NONE) {
 				return (
-					<ThumbnailItem
+					<ThumbnailWithImage
 						key={index}
 						id={TestHelper.generateId(id, `item-${index + 1}`)}
-						data-testid={TestHelper.generateId(id, `item-${index + 1}`)}
-						type="button"
-						aria-label={`error with ${image.name}`}
+						src=""
+						isSelected={activeFileIndex === index}
+						isError
+						ariaLabel={`error with ${image.name}`}
 						onClick={() => onClickThumbnail(index)}
-						$error
-					>
-						<BorderOverlay $isSelected={activeFileIndex === index} />
-						<ThumbnailWarningIcon />
-					</ThumbnailItem>
+					/>
 				);
 			}
 		});
@@ -110,7 +134,8 @@ export const ImageThumbnails = (props: IProps) => {
 		).length < maxFiles ||
 			!maxFiles) && (
 			<>
-				<HiddenFileSelect
+				<input
+					className={styles.hiddenFileSelect}
 					id={TestHelper.generateId(id, "file-input")}
 					data-testid={TestHelper.generateId(id, "file-input")}
 					type="file"
@@ -123,12 +148,14 @@ export const ImageThumbnails = (props: IProps) => {
 					multiple={multiple}
 					value="" // controlling the value to allow for the same file to be uploaded (by triggering on change)
 				/>
-				<AddImageButtonWrapper
+				<DashedBorder
+					className={styles.addImageButtonWrapper}
 					colour={Colour["border-primary"]}
 					radius={Radius.sm}
 					thickness={Border["width-040"]}
 				>
-					<AddImageButton
+					<Button
+						className={styles.addImageButton}
 						type="button"
 						id={TestHelper.generateId(id, "add-image-button")}
 						data-testid={TestHelper.generateId(id, "add-image-button")}
@@ -137,14 +164,14 @@ export const ImageThumbnails = (props: IProps) => {
 						onClick={handleButtonClick}
 						icon={<PlusIcon />}
 					/>
-				</AddImageButtonWrapper>
+				</DashedBorder>
 			</>
 		);
 
 	return (
-		<ThumbnailsWrapper id={TestHelper.generateId(id)}>
+		<div className={styles.thumbnailsWrapper} id={TestHelper.generateId(id)}>
 			{renderThumbnails()}
 			{renderAddButton()}
-		</ThumbnailsWrapper>
+		</div>
 	);
 };
