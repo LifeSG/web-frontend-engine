@@ -3,12 +3,12 @@ import isArray from "lodash/isArray";
 import isObject from "lodash/isObject";
 import { useEffect, useRef, useState } from "react";
 import sanitizeHtml, { IOptions } from "sanitize-html";
-import styled from "styled-components";
 import { TestHelper } from "../../../utils";
 import { Sanitize } from "../../shared";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
 import { TYPOGRAPHY_MAPPING } from "./data";
+import * as styles from "./typography.styles";
 import { ITypographySchema } from "./types";
 
 export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
@@ -103,14 +103,15 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 			</Element>
 
 			{showExpandButton && (
-				<PlainButton sizeType="small" styleType="link" onClick={() => setExpanded(!expanded)}>
+				<Button
+					className={styles.plainButton}
+					sizeType="small"
+					styleType="link"
+					onClick={() => setExpanded(!expanded)}
+				>
 					{expanded ? "View less" : "View more"}
-				</PlainButton>
+				</Button>
 			)}
 		</>
 	);
 };
-
-const PlainButton = styled(Button)`
-	padding: 0;
-`;
