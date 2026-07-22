@@ -10,6 +10,7 @@ const DEFAULT_SCHEMA: IFrontendEngineData = {
 				"popover-default": {
 					uiType: "popover",
 					children: "More info",
+					icon: "ICircleFillIcon",
 					hint: { content: "Sample hint" },
 				},
 			},
