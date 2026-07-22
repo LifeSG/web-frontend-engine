@@ -6,11 +6,24 @@ test.describe("List", () => {
 	test.describe(() => {
 		test.use({
 			storyOptions: {
-				...withStory("basic"),
+				...withStory("unordered-list"),
 			},
 		});
 
-		test("Default", async ({ story }) => {
+		test("Unordered List", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
+	});
+
+	test.describe(() => {
+		test.use({
+			storyOptions: {
+				...withStory("ordered-list"),
+			},
+		});
+
+		test("Ordered List", async ({ story }) => {
 			await story.goto();
 			await story.snapshot("mount");
 		});
