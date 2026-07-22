@@ -9,6 +9,7 @@ import { ILocationModalProps } from "./location-modal/types";
 
 export interface ILocationFieldValidation extends IYupValidationRule {
 	postalCode?: boolean | undefined;
+	nonSGLocation?: boolean | undefined;
 }
 
 export interface ILegendItem {
@@ -38,6 +39,7 @@ export interface ILocationFieldSchema<V = undefined>
 			| "addressFieldPlaceholder"
 			| "searchBarIcon"
 			| "bufferRadius"
+			| "restrictNonSGLocation"
 		>,
 		Pick<ILocationInputProps, "locationInputPlaceholder" | "disabled" | "readOnly">,
 		Pick<IStaticMapProps, "staticMapPinColor">,
@@ -91,7 +93,12 @@ export interface IDisplayResultListParams extends IResultsMetaData {
 }
 
 export type TErrorType = {
-	errorType: "OneMapError" | "GetLocationError" | "GetLocationTimeoutError" | "PostalCodeError";
+	errorType:
+		| "OneMapError"
+		| "GetLocationError"
+		| "GetLocationTimeoutError"
+		| "PostalCodeError"
+		| "NonSGLocationError";
 };
 
 export interface TLocationFieldDetail<T = unknown> {
@@ -203,6 +210,9 @@ function locationFieldEvent(
  * `event.preventDefault()` will stop the selected address from being passed into Frontend Engine and from dismissing the location modal
  *
  * Note: if event is prevented, dispatch `confirm-location` to confirm location and dismiss location modal
+ *
+ * Note: when `restrictNonSGLocation` is enabled and the selected location is determined to be outside Singapore,
+ * this event is not fired — the `error` event is fired with errorType `NonSGLocationError` instead
  */
 function locationFieldEvent(
 	uiType: "location-field",
@@ -230,6 +240,7 @@ function locationFieldEvent(
  * - failure in calling reverse geocode endpoint
  * - failure in performing location search via onemap
  * - `set-current-location` event contains error
+ * - confirming a location outside Singapore while `restrictNonSGLocation` is enabled (`errorType: "NonSGLocationError"`)
  *
  * `event.preventDefault()` will prevent the error from being handled and respective error modal from being shown
  *
