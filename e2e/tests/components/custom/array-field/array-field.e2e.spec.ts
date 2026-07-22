@@ -14,7 +14,6 @@ const createArrayFieldTest = (story: string) =>
 
 const defaultTest = createArrayFieldTest("default");
 const multipleEntriesTest = createArrayFieldTest("multiple-entries");
-const removeConfirmationModalTest = createArrayFieldTest("remove-confirmation-modal");
 const minConstraintTest = createArrayFieldTest("min-constraint");
 const maxConstraintTest = createArrayFieldTest("max-constraint");
 const uniqueValidationTest = createArrayFieldTest("unique-validation");
@@ -50,8 +49,8 @@ warningTest.describe(() => {
 	});
 });
 
-removeConfirmationModalTest.describe(() => {
-	removeConfirmationModalTest("Remove confirmation modal", async ({ story }) => {
+defaultTest.describe(() => {
+	defaultTest("Remove confirmation modal", async ({ story }) => {
 		await story.goto();
 
 		await story.locators.removeButton.click();
