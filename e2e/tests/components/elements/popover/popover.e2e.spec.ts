@@ -1,30 +1,26 @@
-import { createStoryTest, expect } from "../../../utils/fixtures";
+import { createStoryTest } from "../../../utils/fixtures";
 
 const createPopoverTest = (story: string) =>
 	createStoryTest({
 		component: "elements/popover",
 		story,
 		createLocators: (page) => ({
-			hoverPopover: page.getByTestId("popover-hover__popover"),
+			defaultPopover: page.getByTestId("popover-default__popover"),
 		}),
 	});
 
 const defaultTest = createPopoverTest("default");
-const hoverTest = createPopoverTest("hover");
 
 defaultTest.describe(() => {
 	defaultTest("Default", async ({ story }) => {
 		await story.goto();
 		await story.snapshot("mount");
 	});
-});
 
-hoverTest.describe(() => {
-	hoverTest("Hover", async ({ story }) => {
+	defaultTest("Popover hint", async ({ story }) => {
 		await story.goto();
 
-		await story.locators.hoverPopover.hover();
-		expect(story.locators.hoverPopover).toBeVisible();
+		await story.locators.defaultPopover.click();
 		await story.snapshot("open", { fullscreen: true });
 	});
 });
