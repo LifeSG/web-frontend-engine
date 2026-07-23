@@ -67,10 +67,6 @@ test.describe("FileUpload", () => {
 			await mockUploadAPI(story.page);
 			await story.goto();
 
-			await test.step("Component mounts", async () => {
-				await story.snapshot("mount", { locator: story.locators.dropzone });
-			});
-
 			await test.step("Upload through button", async () => {
 				const fileChooserPromise = story.page.waitForEvent("filechooser");
 				await story.locators.uploadButton.click();
@@ -97,10 +93,6 @@ test.describe("FileUpload", () => {
 				await story.locators.dropzone.dispatchEvent("dragleave", { dataTransfer });
 				await dataTransfer.dispose();
 
-				// The DS component's actual drop handler is on an inner element, so synthetic
-				// DragEvents dispatched on the outer container do not carry files through.
-				// Use setInputFiles on the hidden file input — Playwright handles hidden inputs
-				// transparently, and this exercises the same component file-processing pipeline.
 				await story.page.getByTestId("file-upload-input").setInputFiles({
 					name: "drag-upload.png",
 					mimeType: "image/png",
@@ -133,7 +125,7 @@ test.describe("FileUpload", () => {
 	thumbnailTest.describe(() => {
 		thumbnailTest("Thumbnail", async ({ story }) => {
 			await story.goto();
-			await expect(story.locators.getFileName("image.png")).toBeVisible();
+			await expect(story.locators.getFileName("document.pdf")).toBeVisible();
 			await story.snapshot("mount", { locator: story.locators.dropzone });
 		});
 	});

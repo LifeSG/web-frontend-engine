@@ -16,26 +16,6 @@ const SCHEMA: IFrontendEngineData = {
 						url: "/api/upload",
 					},
 				},
-				"disabled-field": {
-					uiType: "file-upload",
-					label: "Disabled",
-					disabled: true,
-					"data-testid": "file-upload-disabled",
-					uploadOnAddingFile: {
-						type: "base64",
-						url: "/api/upload",
-					},
-				},
-				"readonly-field": {
-					uiType: "file-upload",
-					label: "Read only",
-					readOnly: true,
-					"data-testid": "file-upload-readonly",
-					uploadOnAddingFile: {
-						type: "base64",
-						url: "/api/upload",
-					},
-				},
 			},
 		},
 	},

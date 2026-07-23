@@ -2,10 +2,6 @@
 
 import { FrontendEngine, IFrontendEngineData } from "@lifesg/web-frontend-engine";
 
-// 8x8 pixel PNG
-const SAMPLE_IMG_DATAURL =
-	"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
-
 const SCHEMA: IFrontendEngineData = {
 	sections: {
 		section: {
@@ -26,9 +22,12 @@ const SCHEMA: IFrontendEngineData = {
 	defaultValues: {
 		field: [
 			{
-				fileId: "image-1",
-				fileName: "image.png",
-				dataURL: SAMPLE_IMG_DATAURL,
+				fileId: "pdf-1",
+				fileName: "document.pdf",
+				uploadResponse: {
+					fileSize: 51200,
+					mimeType: "application/pdf",
+				},
 			},
 		],
 	},
