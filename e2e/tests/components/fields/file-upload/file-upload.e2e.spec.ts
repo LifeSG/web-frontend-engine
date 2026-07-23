@@ -45,6 +45,18 @@ const createFileUploadTest = (story: string) =>
 const uploadInteractionsTest = createFileUploadTest("upload-interactions");
 const formStatesTest = createFileUploadTest("form-states");
 const thumbnailTest = createFileUploadTest("thumbnail");
+const warningTest = createFileUploadTest("warning");
+
+const customErrorTest = createStoryTest({
+	component: "fields/file-upload",
+	story: "custom-error",
+	createLocators: (page) => ({
+		dropzone: page.getByTestId("file-upload"),
+		uploadButton: page.getByRole("button", { name: "Upload files" }),
+		getFileName: (name: string) => page.getByText(name, { exact: true }),
+		setCustomErrorsButton: page.getByTestId("set-custom-errors"),
+	}),
+});
 
 // =============================================================================
 // TESTS
@@ -123,6 +135,37 @@ test.describe("FileUpload", () => {
 			await story.goto();
 			await expect(story.locators.getFileName("image.png")).toBeVisible();
 			await story.snapshot("mount", { locator: story.locators.dropzone });
+		});
+	});
+
+	warningTest.describe(() => {
+		warningTest("Warning", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount", { locator: story.locators.dropzone });
+		});
+	});
+
+	test.describe("Custom errors", () => {
+		customErrorTest.describe(() => {
+			customErrorTest("Main field error", async ({ story }) => {
+				await story.goto();
+				await story.locators.setCustomErrorsButton.click();
+				await story.snapshot("main-field-error", { locator: story.locators.dropzone });
+			});
+
+			customErrorTest("Main field and per-file errors", async ({ story }) => {
+				await mockUploadAPI(story.page);
+				await story.goto();
+
+				const fileChooserPromise = story.page.waitForEvent("filechooser");
+				await story.locators.uploadButton.click();
+				const fileChooser = await fileChooserPromise;
+				await fileChooser.setFiles(SAMPLE_PNG_PAYLOAD);
+				await expect(story.locators.getFileName(SAMPLE_PNG_PAYLOAD.name)).toBeVisible();
+
+				await story.locators.setCustomErrorsButton.click();
+				await story.snapshot("main-and-per-file-errors", { locator: story.locators.dropzone });
+			});
 		});
 	});
 });
