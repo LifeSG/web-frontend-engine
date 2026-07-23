@@ -89,6 +89,7 @@ const LocationModal = ({
 	const [showGetLocationError, setShowGetLocationError] = useState(false);
 	const [showOneMapError, setShowOneMapError] = useState(false);
 	const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
+	const [modalBoxRef, setModalBoxRef] = useState<HTMLDivElement | null>(null);
 
 	// map picked lat lng vs selectedAddressInfo
 	// map picked value can be falsy/ no address found
@@ -98,7 +99,6 @@ const LocationModal = ({
 
 	const isMounted = useRef(true);
 	const shouldCallGetSelectablePins = useRef(true);
-	const modalBoxRef = useRef<HTMLDivElement>(null);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -250,10 +250,10 @@ const LocationModal = ({
 	}, []);
 
 	useEffect(() => {
-		if (modalBoxRef.current) {
-			modalBoxRef.current.style.cssText = locationModalStyles || "";
+		if (modalBoxRef) {
+			modalBoxRef.style.cssText = locationModalStyles || "";
 		}
-	}, [locationModalStyles]);
+	}, [locationModalStyles, modalBoxRef]);
 
 	useEffect(() => {
 		const handleError = (e: TLocationFieldEvents["error-end"]) => {
@@ -479,7 +479,7 @@ const LocationModal = ({
 				show={showLocationModal}
 			>
 				<Modal.Box
-					ref={modalBoxRef}
+					elementRef={setModalBoxRef}
 					id={TestHelper.generateId(id, "modal-box")}
 					className={clsx(styles.modalBox, `${className}-modal-box`)}
 					showCloseButton={false}
