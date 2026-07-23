@@ -1,7 +1,9 @@
 import { Alert } from "@lifesg/react-design-system/alert";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import * as Icons from "@lifesg/react-icons";
 import { PlusCircleFillIcon } from "@lifesg/react-icons/plus-circle-fill";
+import clsx from "clsx";
 import isEmpty from "lodash/isEmpty";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -21,6 +23,8 @@ import {
 	SectionDivider,
 	SectionHeader,
 	WarningAlert,
+	Wrapper,
+	tokens,
 } from "./array-field.styles";
 import { IArrayFieldSchema, IArrayFieldValidationRule } from "./types";
 
@@ -58,8 +62,13 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const { resetField, setValue } = useFormContext();
 	const formRefs = useRef<IFrontendEngineRef[]>([]);
 	const stateValueRef = useRef(stateValue);
+	const wrapperRef = useRef<HTMLDivElement>(null);
 	const [fieldErrors, setFieldErrors] = useState<TErrorPayload[] | undefined>(undefined);
 	const [mainErrorMessage, setMainErrorMessage] = useState<string | undefined>(undefined);
+
+	useApplyStyle(wrapperRef, {
+		[tokens.horizontalInset]: typeof sectionInset === "number" ? `${sectionInset}px` : sectionInset,
+	});
 
 	// =============================================================================
 	// EFFECTS
@@ -268,12 +277,15 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 
 	const renderRemoveButton = (index: number) => (
 		<RemoveButton
-			className="array-field-remove-button"
+			className={clsx(
+				"array-field-remove-button",
+				removeButtonAlignment === "right" && "removeButtonAlignRight",
+				removeButtonAlignment === "left" && "removeButtonAlignLeft"
+			)}
 			type="button"
 			sizeType="small"
 			styleType={removeButton?.styleType ?? "light"}
 			danger
-			$alignment={removeButtonAlignment}
 			onClick={() => handleRemoveSection(index)}
 			{...(removeButton?.icon && { icon: renderIcon(removeButton.icon) })}
 		>
@@ -282,12 +294,12 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	);
 
 	return (
-		<>
+		<Wrapper ref={wrapperRef}>
 			{stateValue.map((sectionValues, index) => {
 				const isLastItem = index === stateValue.length - 1;
 				return (
 					<Fragment key={stateKeys[index]}>
-						<Inset $inset={sectionInset}>
+						<Inset>
 							<div className="array-field-section-container">
 								<SectionHeader>
 									{sectionTitle && (
@@ -310,7 +322,7 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				);
 			})}
 			{showAddButton && (
-				<Inset $inset={sectionInset}>
+				<Inset>
 					<AddButton
 						className="array-field-add-button"
 						type="button"
@@ -323,12 +335,12 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 				</Inset>
 			)}
 			{mainErrorMessage && (
-				<Inset $inset={sectionInset}>
+				<Inset>
 					<Alert type="error">{mainErrorMessage}</Alert>
 				</Inset>
 			)}
 			{warning && (
-				<Inset $inset={sectionInset}>
+				<Inset>
 					<WarningAlert id={id} message={warning} />
 				</Inset>
 			)}
@@ -353,6 +365,6 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 					},
 				]}
 			/>
-		</>
+		</Wrapper>
 	);
 };

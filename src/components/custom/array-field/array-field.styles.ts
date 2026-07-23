@@ -5,27 +5,20 @@ import styled from "styled-components";
 import { Warning } from "../../shared";
 import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
-// =============================================================================
-// STYLE INTERFACE
-// =============================================================================
-interface InsetStyleProps {
-	$inset?: string | number;
-}
-
-interface RemoveButtonStyleProps {
-	$alignment?: "left" | "right";
-}
+export const tokens = {
+	horizontalInset: "--fee-internal-arrayField-horizontalInset",
+};
 
 // =============================================================================
 // STYLING
 // =============================================================================
-export const Inset = styled.div<InsetStyleProps>`
-	${({ $inset }) =>
-		$inset &&
-		`
-	padding-left: ${$inset};
-	padding-right: ${$inset};
-	`}
+export const Wrapper = styled.div`
+	${tokens.horizontalInset}: initial;
+`;
+
+export const Inset = styled.div`
+	padding-left: var(${tokens.horizontalInset});
+	padding-right: var(${tokens.horizontalInset});
 
 	&:not(:last-child) {
 		margin-bottom: ${Spacing["spacing-32"]};
@@ -43,11 +36,17 @@ export const SectionHeader = styled.div`
 	}
 `;
 
-export const RemoveButton = styled(Button)<RemoveButtonStyleProps>`
-	${({ $alignment }) => $alignment === "right" && "margin-left: auto;"}
-	${({ $alignment }) => $alignment === "left" && "margin-right: auto;"}
+export const RemoveButton = styled(Button)`
 	padding-left: ${Spacing["spacing-32"]};
 	padding-right: ${Spacing["spacing-32"]};
+
+	&.removeButtonAlignRight {
+		margin-left: auto;
+	}
+
+	&.removeButtonAlignLeft {
+		margin-right: auto;
+	}
 
 	${MediaQuery.MaxWidth.sm} {
 		width: 100%;
