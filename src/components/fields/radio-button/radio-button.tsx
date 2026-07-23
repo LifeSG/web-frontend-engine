@@ -226,6 +226,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 					$resolvedMinItemWidth={resolvedMinItemWidth}
 					$stretch={stretch}
 					$hasMinItemWidth={!!toggleOptions?.minItemWidth}
+					$hasError={!!error?.message}
 				>
 					{(options as IRadioToggleOption[]).map((option, index) => {
 						const radioButtonId = formatId();
@@ -245,6 +246,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isRadioButtonChecked(option.value)}
 								onClick={() => handleChangeOrClick(option.value)}
+								$hasError={!!error?.message}
 								onKeyDown={(e) => {
 									if (e.key === " " || e.key === "Enter") {
 										e.preventDefault();
