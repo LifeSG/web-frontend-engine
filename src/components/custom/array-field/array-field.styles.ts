@@ -7,6 +7,10 @@ export const tokens = {
 
 export const wrapper = css`
 	${tokens.horizontalInset}: initial;
+
+	&:not(:last-child) {
+		margin-bottom: ${Spacing["spacing-32"]};
+	}
 `;
 
 export const inset = css`
@@ -49,10 +53,6 @@ export const removeButtonAlignLeft = css`
 export const addButton = css`
 	padding-left: ${Spacing["spacing-32"]};
 	padding-right: ${Spacing["spacing-32"]};
-
-	&:not(:last-child) {
-		margin-bottom: ${Spacing["spacing-32"]};
-	}
 
 	${MediaQuery.MaxWidth.sm} {
 		width: 100%;
