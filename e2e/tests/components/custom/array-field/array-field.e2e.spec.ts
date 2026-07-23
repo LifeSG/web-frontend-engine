@@ -14,13 +14,14 @@ const createArrayFieldTest = (story: string) =>
 
 const defaultTest = createArrayFieldTest("default");
 const multipleEntriesTest = createArrayFieldTest("multiple-entries");
+const warningTest = createArrayFieldTest("warning");
 const minConstraintTest = createArrayFieldTest("min-constraint");
 const maxConstraintTest = createArrayFieldTest("max-constraint");
 const uniqueValidationTest = createArrayFieldTest("unique-validation");
 const removeButtonPositionTest = createArrayFieldTest("remove-button-position");
 const customButtonsTest = createArrayFieldTest("custom-buttons");
 const hideDividerTest = createArrayFieldTest("hide-divider");
-const warningTest = createArrayFieldTest("warning");
+const sectionInsetTest = createArrayFieldTest("section-inset");
 
 defaultTest.describe(() => {
 	defaultTest("Default", async ({ story }) => {
@@ -123,6 +124,13 @@ customButtonsTest.describe(() => {
 
 hideDividerTest.describe(() => {
 	hideDividerTest("showDivider=false", async ({ story }) => {
+		await story.goto();
+		await story.snapshot("mount");
+	});
+});
+
+sectionInsetTest.describe(() => {
+	sectionInsetTest("Section inset", async ({ story }) => {
 		await story.goto();
 		await story.snapshot("mount");
 	});
