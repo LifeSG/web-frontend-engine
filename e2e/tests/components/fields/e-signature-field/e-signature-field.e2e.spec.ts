@@ -121,6 +121,7 @@ test.describe("E-Signature Field", () => {
 
 			await test.step("Click try again to reach refresh alert threshold", async () => {
 				await story.locators.tryAgainButton.click();
+				await expect(story.locators.tryAgainButton).toBeVisible();
 				await story.locators.tryAgainButton.click();
 			});
 
