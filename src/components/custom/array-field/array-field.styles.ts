@@ -1,22 +1,15 @@
-import { Button } from "@lifesg/react-design-system/button";
-import { Divider } from "@lifesg/react-design-system/divider";
-import { ErrorDisplay } from "@lifesg/react-design-system/error-display";
-import styled from "styled-components";
-import { Warning } from "../../shared";
+import { css } from "@linaria/core";
 import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
 export const tokens = {
 	horizontalInset: "--fee-internal-arrayField-horizontalInset",
 };
 
-// =============================================================================
-// STYLING
-// =============================================================================
-export const Wrapper = styled.div`
+export const wrapper = css`
 	${tokens.horizontalInset}: initial;
 `;
 
-export const Inset = styled.div`
+export const inset = css`
 	padding-left: var(${tokens.horizontalInset});
 	padding-right: var(${tokens.horizontalInset});
 
@@ -25,7 +18,7 @@ export const Inset = styled.div`
 	}
 `;
 
-export const SectionHeader = styled.div`
+export const sectionHeader = css`
 	display: flex;
 	justify-content: space-between;
 	align-items: baseline;
@@ -36,24 +29,24 @@ export const SectionHeader = styled.div`
 	}
 `;
 
-export const RemoveButton = styled(Button)`
+export const removeButton = css`
 	padding-left: ${Spacing["spacing-32"]};
 	padding-right: ${Spacing["spacing-32"]};
-
-	&.removeButtonAlignRight {
-		margin-left: auto;
-	}
-
-	&.removeButtonAlignLeft {
-		margin-right: auto;
-	}
 
 	${MediaQuery.MaxWidth.sm} {
 		width: 100%;
 	}
 `;
 
-export const AddButton = styled(Button)`
+export const removeButtonAlignRight = css`
+	margin-left: auto;
+`;
+
+export const removeButtonAlignLeft = css`
+	margin-right: auto;
+`;
+
+export const addButton = css`
 	padding-left: ${Spacing["spacing-32"]};
 	padding-right: ${Spacing["spacing-32"]};
 
@@ -66,14 +59,14 @@ export const AddButton = styled(Button)`
 	}
 `;
 
-export const SectionDivider = styled(Divider)`
+export const sectionDivider = css`
 	margin: ${Spacing["spacing-32"]} 0;
 `;
 
-export const WarningAlert = styled(Warning)`
+export const warningAlert = css`
 	margin: 0;
 `;
 
-export const CustomErrorDisplay = styled(ErrorDisplay)`
+export const customErrorDisplay = css`
 	margin-bottom: ${Spacing["spacing-32"]};
 `;
