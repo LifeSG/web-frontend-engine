@@ -22,7 +22,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		formattedLabel,
 		id,
 		onChange,
-		schema: { label: _label, uiType: _uiType, upload, validation, className, ...otherSchema },
+		schema: { label: _label, uiType: _uiType, upload, validation, ...otherSchema },
 		value,
 		warning,
 	} = props;
@@ -248,7 +248,6 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 		<div className={styles.eSignatureWrapper}>
 			<Form.ESignature
 				{...otherSchema}
-				className={className}
 				id={id}
 				label={formattedLabel}
 				onChange={handleChange}

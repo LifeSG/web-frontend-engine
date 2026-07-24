@@ -28,4 +28,10 @@ export abstract class AbstractStoryPage {
 	public async snapshot(name: string, options?: { fullscreen?: boolean; locator?: Locator; mask?: Locator[] }) {
 		await compareScreenshot(this.page, name, options);
 	}
+
+	public async waitForAnimationEnd(locator: Locator) {
+		const handle = await locator.elementHandle();
+		await handle?.waitForElementState("stable");
+		await handle?.dispose();
+	}
 }
