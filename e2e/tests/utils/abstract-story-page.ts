@@ -80,4 +80,10 @@ export abstract class AbstractStoryPage {
 			{ polling: 100, timeout: 10000 }
 		);
 	}
+
+	public async waitForAnimationEnd(locator: Locator) {
+		const handle = await locator.elementHandle();
+		await handle?.waitForElementState("stable");
+		await handle?.dispose();
+	}
 }

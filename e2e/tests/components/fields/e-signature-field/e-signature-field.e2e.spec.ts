@@ -30,9 +30,7 @@ class ESignatureFieldPage extends StoryPage {
 
 	public async drawSignature() {
 		await this.locators.canvas.waitFor({ state: "visible" });
-		await this.locators.signatureModal.evaluate((el) =>
-			Promise.all(el.getAnimations().map((animation) => animation.finished))
-		);
+		await this.waitForAnimationEnd(this.locators.signatureModal);
 		const box = await this.locators.canvas.boundingBox();
 		if (!box) return;
 		await this.page.mouse.move(box.x + 50, box.y + 50);
@@ -127,7 +125,6 @@ test.describe("E-Signature Field", () => {
 
 			await test.step("Verify refresh alert appears after 3 failed load attempts", async () => {
 				await expect(story.locators.loadRefreshAlert).toBeVisible();
-				await story.page.evaluate(() => document.fonts.ready);
 				await story.snapshot("load-error-refresh-alert");
 			});
 		});
