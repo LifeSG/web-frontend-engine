@@ -8,6 +8,7 @@ import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
 import { Description } from "../../../shared/prompt/prompt.styles";
+import { LocationHelper } from "../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
 	ILocationCoord,
@@ -54,6 +55,7 @@ const LocationModal = ({
 	pinsOnlyIndicateCurrentLocation,
 	legendItems,
 	defaultAddress,
+	restrictNonSGLocation,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -75,6 +77,7 @@ const LocationModal = ({
 	const [showGetLocationError, setShowGetLocationError] = useState(false);
 	const [showOneMapError, setShowOneMapError] = useState(false);
 	const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
+	const [showNonSGLocationError, setShowNonSGLocationError] = useState(false);
 
 	// map picked lat lng vs selectedAddressInfo
 	// map picked value can be falsy/ no address found
@@ -201,6 +204,18 @@ const LocationModal = ({
 	}, [handleCloseLocationModal, restoreFormvalues]);
 
 	const handleClickConfirm = () => {
+		if (restrictNonSGLocation && LocationHelper.checkIsLocationOutsideSG(selectedAddressInfo)) {
+			const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>("error", id, {
+				payload: {
+					errorType: "NonSGLocationError",
+				},
+			});
+			if (!shouldPreventDefault) {
+				setShowNonSGLocationError(true);
+			}
+			return;
+		}
+
 		const shouldPreventDefault = !dispatchFieldEvent("click-confirm-location", id, selectedAddressInfo);
 		if (!shouldPreventDefault) {
 			handleConfirm();
@@ -373,6 +388,34 @@ const LocationModal = ({
 		 */
 		if (!hasInternetConnectivity || !showLocationModal) return;
 
+		if (showNonSGLocationError) {
+			return (
+				<Prompt
+					id={TestHelper.generateId(id, "non-sg-location-error")}
+					data-testid={TestHelper.generateId(id, "non-sg-location-error")}
+					title="This location is outside Singapore."
+					size="large"
+					show={true}
+					description={
+						<Description weight="regular">
+							Reports can only be submitted for locations within Singapore.
+							<br />
+							Move the pin to continue.
+						</Description>
+					}
+					buttons={[
+						{
+							id: "edit-location",
+							title: "Edit location",
+							onClick: () => {
+								setShowNonSGLocationError(false);
+							},
+						},
+					]}
+				/>
+			);
+		}
+
 		if (showOneMapError) {
 			return (
 				<Prompt
@@ -494,6 +537,7 @@ const LocationModal = ({
 								mustHavePostalCode={mustHavePostalCode}
 								locationListTitle={locationListTitle}
 								restrictLocationSelection={locationSelectionMode === "pins-only"}
+								restrictNonSGLocation={restrictNonSGLocation}
 								selectablePins={selectablePins}
 								disableSearch={disableSearch}
 								addressFieldPlaceholder={addressFieldPlaceholder}

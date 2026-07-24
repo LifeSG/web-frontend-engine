@@ -9,7 +9,8 @@ import {
 	OneMapSearchBuildingResult,
 } from "../../../services/onemap/types";
 import { MathHelper } from "../../../utils";
-import { ILocationCoord, IResultListItem, IResultsMetaData } from "./types";
+import { NON_SG_COASTAL_OUTLINES, SG_COASTAL_OUTLINES } from "./singapore-boundary.data";
+import { ILocationCoord, ILocationFieldValues, IResultListItem, IResultsMetaData } from "./types";
 
 type TReverseGeocodeParams = {
 	route: string;
@@ -23,6 +24,59 @@ type TReverseGeocodeParams = {
 	options?: {
 		excludeNonSG: boolean;
 	};
+};
+
+// =============================================================================
+// SINGAPORE BOUNDARY GEOMETRY (see singapore-boundary.data.ts)
+// =============================================================================
+/** how far offshore from a Singapore coastal outline still counts as Singapore waters */
+const SG_WATERS_TOLERANCE_METRES = 10000;
+const METRES_PER_DEG_LAT = 110574;
+const METRES_PER_DEG_LNG = 111320 * Math.cos((1.35 * Math.PI) / 180); // longitude shrink at Singapore's latitude
+
+const isPointInRing = (lat: number, lng: number, ring: [number, number][]): boolean => {
+	// ray casting
+	let inside = false;
+	for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+		const [latI, lngI] = ring[i];
+		const [latJ, lngJ] = ring[j];
+		if (latI > lat !== latJ > lat && lng < ((lngJ - lngI) * (lat - latI)) / (latJ - latI) + lngI) {
+			inside = !inside;
+		}
+	}
+	return inside;
+};
+
+const isPointInAnyOutline = (lat: number, lng: number, outlines: [number, number][][]): boolean =>
+	outlines.some((ring) => isPointInRing(lat, lng, ring));
+
+const distanceToSegmentMetres = (
+	lat: number,
+	lng: number,
+	segStart: [number, number],
+	segEnd: [number, number]
+): number => {
+	const x = lng * METRES_PER_DEG_LNG;
+	const y = lat * METRES_PER_DEG_LAT;
+	const x1 = segStart[1] * METRES_PER_DEG_LNG;
+	const y1 = segStart[0] * METRES_PER_DEG_LAT;
+	const x2 = segEnd[1] * METRES_PER_DEG_LNG;
+	const y2 = segEnd[0] * METRES_PER_DEG_LAT;
+	const dx = x2 - x1;
+	const dy = y2 - y1;
+	if (!dx && !dy) return Math.hypot(x - x1, y - y1);
+	const t = Math.max(0, Math.min(1, ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy)));
+	return Math.hypot(x - (x1 + t * dx), y - (y1 + t * dy));
+};
+
+const minDistanceToOutlinesMetres = (lat: number, lng: number, outlines: [number, number][][]): number => {
+	let min = Infinity;
+	outlines.forEach((ring) => {
+		for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+			min = Math.min(min, distanceToSegmentMetres(lat, lng, ring[j], ring[i]));
+		}
+	});
+	return min;
 };
 
 export namespace LocationHelper {
@@ -227,7 +281,7 @@ export namespace LocationHelper {
 		});
 
 		if (options?.excludeNonSG) {
-			parsedLocationList = parsedLocationList.filter(({ building }) => building !== "JOHOR (MALAYSIA)");
+			parsedLocationList = parsedLocationList.filter(({ building }) => !hasNonSGBuildingValue(building));
 		}
 
 		if (parsedLocationList.length === 0) {
@@ -297,12 +351,52 @@ export namespace LocationHelper {
 		})();
 	};
 
+	/**
+	 * Checks whether a coordinate is outside Singapore, based on the coastal outlines of SLA's
+	 * National Map Polygon dataset (see singapore-boundary.data.ts).
+	 *
+	 * A coordinate is outside Singapore when it falls within a neighbouring (JOHOR (MALAYSIA)) landmass,
+	 * or when it is in open water that is beyond the waters tolerance of any Singapore coastal outline or
+	 * closer to a neighbouring landmass than to Singapore. Waters near Singapore's coast (e.g. sea just off
+	 * Changi, reservoirs) are considered part of Singapore.
+	 */
+	export const checkIsCoordinateOutsideSG = (coordinate: Partial<ILocationCoord>): boolean => {
+		const { lat, lng } = coordinate || {};
+		if (!lat || !lng) return true;
+		if (isPointInAnyOutline(lat, lng, NON_SG_COASTAL_OUTLINES)) return true;
+		if (isPointInAnyOutline(lat, lng, SG_COASTAL_OUTLINES)) return false;
+
+		const distanceToSG = minDistanceToOutlinesMetres(lat, lng, SG_COASTAL_OUTLINES);
+		const distanceToNonSG = minDistanceToOutlinesMetres(lat, lng, NON_SG_COASTAL_OUTLINES);
+		return !(distanceToSG <= SG_WATERS_TOLERANCE_METRES && distanceToSG < distanceToNonSG);
+	};
+
+	/**
+	 * Checks whether a location value is outside Singapore:
+	 * - locations resolved to a neighbouring (JOHOR (MALAYSIA)) building are outside Singapore
+	 * - locations with coordinates (searched addresses, map selections, pin locations) are checked
+	 *   against the Singapore boundary via `checkIsCoordinateOutsideSG`
+	 * - locations without coordinates are considered outside Singapore only if they are
+	 *   unresolvable `Pin location: <lat>, <lng>` values
+	 */
+	export const checkIsLocationOutsideSG = (location: ILocationFieldValues | undefined): boolean => {
+		if (LocationHelper.hasNonSGBuildingValue(location?.building)) return true;
+		if (location?.lat && location?.lng) {
+			return LocationHelper.checkIsCoordinateOutsideSG({ lat: location.lat, lng: location.lng });
+		}
+		return LocationHelper.hasGotPinLocationValue(location?.address);
+	};
+
 	// =========================================================================
 	// HELPERS
 	// =========================================================================
 	export const hasGotAddressValue = (value?: string): boolean => {
 		const lowercased = value?.toLowerCase();
 		return !!value && lowercased !== "nil" && lowercased !== "null";
+	};
+
+	export const hasNonSGBuildingValue = (building?: string): boolean => {
+		return building === "JOHOR (MALAYSIA)";
 	};
 
 	export const hasGotPinLocationValue = (value?: string): boolean => {

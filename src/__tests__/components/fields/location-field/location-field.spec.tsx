@@ -1922,6 +1922,589 @@ describe("location-input-group", () => {
 		});
 	});
 
+	describe("restrictNonSGLocation", () => {
+		const PIN_LOCATION_LAT = 1.474150330391359;
+		const PIN_LOCATION_LNG = 103.761828002775;
+		const PIN_LOCATION_ADDRESS = `Pin location: ${PIN_LOCATION_LAT}, ${PIN_LOCATION_LNG}`;
+		const PIN_LOCATION_RESPONSE = [
+			{
+				address: PIN_LOCATION_ADDRESS,
+				displayAddressText: PIN_LOCATION_ADDRESS,
+				lat: PIN_LOCATION_LAT,
+				lng: PIN_LOCATION_LNG,
+			},
+		];
+		// within Singapore bounds but no addresses nearby (sea off Changi)
+		const SEA_PIN_LAT = 1.3420644218306563;
+		const SEA_PIN_LNG = 104.03160095214845;
+		const SEA_PIN_ADDRESS = `Pin location: ${SEA_PIN_LAT}, ${SEA_PIN_LNG}`;
+		const SEA_PIN_RESPONSE = [
+			{
+				address: SEA_PIN_ADDRESS,
+				displayAddressText: SEA_PIN_ADDRESS,
+				lat: SEA_PIN_LAT,
+				lng: SEA_PIN_LNG,
+			},
+		];
+		const JOHOR_LOCATION_RESULT = {
+			address: "CAUSEWAY (JOHOR)",
+			displayAddressText: "CAUSEWAY (JOHOR)",
+			building: "JOHOR (MALAYSIA)",
+			roadName: "CAUSEWAY",
+			lat: PIN_LOCATION_LAT,
+			lng: PIN_LOCATION_LNG,
+		};
+		// searched addresses outside Singapore carry their own building name, not "JOHOR (MALAYSIA)"
+		const CAUSEWAY_JOHOR_SEARCH_RESULT = {
+			address: "CAUSEWAY (JOHOR)",
+			displayAddressText: "CAUSEWAY (JOHOR)",
+			building: "CAUSEWAY (JOHOR)",
+			lat: 1.4645,
+			lng: 103.76945,
+		};
+		const OUT_OF_BOUNDS_LAT = 1.6;
+		const OUT_OF_BOUNDS_LNG = 104.2;
+		const OUT_OF_BOUNDS_PIN_ADDRESS = `Pin location: ${OUT_OF_BOUNDS_LAT}, ${OUT_OF_BOUNDS_LNG}`;
+		// JOHOR (MALAYSIA) building but with coordinates that classify INSIDE Singapore (sea off Changi):
+		// isolates the building-name branch of checkIsLocationOutsideSG from the coordinate geometry.
+		const JOHOR_BUILDING_IN_SG_COORDS = {
+			address: "SOME JOHOR PLACE",
+			building: "JOHOR (MALAYSIA)",
+			lat: SEA_PIN_LAT,
+			lng: SEA_PIN_LNG,
+		};
+
+		const getNonSGLocationErrorModal = (query = false) =>
+			testIdCmd(query)(TestHelper.generateId(COMPONENT_ID, "non-sg-location-error", "show"));
+
+		const selectPinLocationInModal = async () => {
+			getLocationInput().focus();
+
+			await waitFor(() => {
+				expect(getLocationModal(true)).toBeInTheDocument();
+			});
+			await waitFor(() => {
+				expect(
+					screen.getByTestId(
+						TestHelper.generateId("location-search-modal-search-result-0", undefined, "active")
+					)
+				).toBeInTheDocument();
+			});
+		};
+
+		beforeEach(() => {
+			getCurrentLocationSpy.mockResolvedValue({ lat: PIN_LOCATION_LAT, lng: PIN_LOCATION_LNG });
+			fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
+				onSuccess?.(mockEmptyFetchAddressResponse);
+			});
+			reverseGeocodeSpy.mockImplementation(() => ({ results: [] })); // for the modal's service health check
+			fetchLocationListSpy.mockImplementation(() => PIN_LOCATION_RESPONSE);
+		});
+
+		describe("when confirming a location selection", () => {
+			it("should show the outside-Singapore prompt and not confirm the location", async () => {
+				renderComponent({
+					overrideField: {
+						restrictNonSGLocation: true,
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+				await selectPinLocationInModal();
+
+				fireEvent.click(getLocationModalControlButtons("Confirm"));
+
+				await waitFor(() => {
+					expect(getNonSGLocationErrorModal(true)).toBeInTheDocument();
+				});
+				expect(
+					within(getNonSGLocationErrorModal()).getByText("This location is outside Singapore.")
+				).toBeInTheDocument();
+				expect(getLocationModal(true)).toBeInTheDocument();
+
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).not.toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: PIN_LOCATION_ADDRESS }),
+						})
+					);
+				});
+			});
+
+			it("should keep the location modal open after dismissing the prompt", async () => {
+				renderComponent({
+					overrideField: {
+						restrictNonSGLocation: true,
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+				await selectPinLocationInModal();
+
+				fireEvent.click(getLocationModalControlButtons("Confirm"));
+				await waitFor(() => {
+					expect(getNonSGLocationErrorModal(true)).toBeInTheDocument();
+				});
+
+				fireEvent.click(within(getNonSGLocationErrorModal()).getByRole("button", { name: "Edit location" }));
+
+				await waitFor(() => {
+					expect(getNonSGLocationErrorModal(true)).not.toBeInTheDocument();
+				});
+				expect(getLocationModal(true)).toBeInTheDocument();
+			});
+
+			it("should dispatch error event with NonSGLocationError and allow preventing the default prompt", async () => {
+				const errorEventSpy = jest.fn();
+				renderComponent({
+					overrideField: {
+						restrictNonSGLocation: true,
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+					eventType: "error",
+					eventListener: () =>
+						errorEventSpy.mockImplementation((e: CustomEvent) => {
+							if (e.detail?.payload?.errorType === "NonSGLocationError") {
+								e.preventDefault();
+							}
+						}),
+				});
+				await selectPinLocationInModal();
+
+				fireEvent.click(getLocationModalControlButtons("Confirm"));
+
+				await waitFor(() => {
+					expect(errorEventSpy).toHaveBeenCalledWith(
+						expect.objectContaining({
+							detail: expect.objectContaining({
+								payload: expect.objectContaining({ errorType: "NonSGLocationError" }),
+							}),
+						})
+					);
+				});
+				expect(getNonSGLocationErrorModal(true)).not.toBeInTheDocument();
+			});
+
+			it("should confirm a pin location within Singapore that has no addresses nearby", async () => {
+				getCurrentLocationSpy.mockResolvedValue({ lat: SEA_PIN_LAT, lng: SEA_PIN_LNG });
+				fetchLocationListSpy.mockImplementation(() => SEA_PIN_RESPONSE);
+				renderComponent({
+					overrideField: {
+						restrictNonSGLocation: true,
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+				await selectPinLocationInModal();
+
+				fireEvent.click(getLocationModalControlButtons("Confirm"));
+
+				await waitFor(() => {
+					expect(getLocationModal(true)).not.toBeInTheDocument();
+				});
+				expect(getNonSGLocationErrorModal(true)).not.toBeInTheDocument();
+
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: SEA_PIN_ADDRESS }),
+						})
+					);
+				});
+			});
+
+			it("should show the outside-Singapore prompt when confirming a searched address outside Singapore", async () => {
+				getCurrentLocationSpy.mockRejectedValue({ code: 1 });
+				fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
+					onSuccess?.({
+						results: [CAUSEWAY_JOHOR_SEARCH_RESULT],
+						apiPageNum: 1,
+						totalNumPages: 1,
+					});
+				});
+				renderComponent({
+					overrideField: {
+						restrictNonSGLocation: true,
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+
+				getLocationInput().focus();
+				await waitFor(() => {
+					expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+				});
+				within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+
+				fireEvent.change(getLocationSearchInput(), { target: { value: "CAUSEWAY" } });
+				await waitFor(() => {
+					expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
+				});
+				const resultContainer = getLocationSearchResults();
+				fireEvent.click(resultContainer.getElementsByTagName("div")[0]);
+
+				fireEvent.click(getLocationModalControlButtons("Confirm"));
+
+				await waitFor(() => {
+					expect(getNonSGLocationErrorModal(true)).toBeInTheDocument();
+				});
+				expect(getLocationModal(true)).toBeInTheDocument();
+			});
+
+			it("should confirm pin location as usual when restrictNonSGLocation is not set", async () => {
+				renderComponent({
+					overrideField: {
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+				await selectPinLocationInModal();
+
+				fireEvent.click(getLocationModalControlButtons("Confirm"));
+
+				await waitFor(() => {
+					expect(getNonSGLocationErrorModal(true)).not.toBeInTheDocument();
+					expect(getLocationModal(true)).not.toBeInTheDocument();
+				});
+
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: PIN_LOCATION_ADDRESS }),
+						})
+					);
+				});
+			});
+		});
+
+		describe("validation", () => {
+			it("should block submission of pin location values on a neighbouring landmass", async () => {
+				renderComponent({
+					validation: [{ required: true }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: PIN_LOCATION_ADDRESS,
+								lat: PIN_LOCATION_LAT,
+								lng: PIN_LOCATION_LNG,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(screen.getByText(ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED)).toBeInTheDocument();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
+			});
+
+			it("should block submission of pin location values far outside Singapore", async () => {
+				renderComponent({
+					validation: [{ required: true }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: OUT_OF_BOUNDS_PIN_ADDRESS,
+								lat: OUT_OF_BOUNDS_LAT,
+								lng: OUT_OF_BOUNDS_LNG,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(screen.getByText(ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED)).toBeInTheDocument();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
+			});
+
+			it("should block submission of values with a non-Singapore address", async () => {
+				renderComponent({
+					validation: [{ required: true }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: JOHOR_LOCATION_RESULT.address,
+								building: JOHOR_LOCATION_RESULT.building,
+								lat: JOHOR_LOCATION_RESULT.lat,
+								lng: JOHOR_LOCATION_RESULT.lng,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(screen.getByText(ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED)).toBeInTheDocument();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
+			});
+
+			// isolates the building-name branch: the coordinates alone classify INSIDE Singapore,
+			// so blocking here can only come from the JOHOR (MALAYSIA) building check.
+			it("should block submission of a JOHOR building even when its coordinates are within Singapore", async () => {
+				renderComponent({
+					validation: [{ required: true }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: JOHOR_BUILDING_IN_SG_COORDS,
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(screen.getByText(ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED)).toBeInTheDocument();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
+			});
+
+			it("should allow submission of pin location values within Singapore bounds", async () => {
+				renderComponent({
+					validation: [{ required: true }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: SEA_PIN_ADDRESS,
+								lat: SEA_PIN_LAT,
+								lng: SEA_PIN_LNG,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalled();
+			});
+
+			it("should allow customisation of the pin location error message", async () => {
+				renderComponent({
+					validation: [{ required: true }, { nonSGLocation: true, errorMessage: ERROR_MESSAGE }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: OUT_OF_BOUNDS_PIN_ADDRESS,
+								lat: OUT_OF_BOUNDS_LAT,
+								lng: OUT_OF_BOUNDS_LNG,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(getErrorMessage()).toBeInTheDocument();
+			});
+
+			it("should allow submission of pin location values when restrictNonSGLocation is not set", async () => {
+				renderComponent({
+					validation: [{ required: true }],
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: OUT_OF_BOUNDS_PIN_ADDRESS,
+								lat: OUT_OF_BOUNDS_LAT,
+								lng: OUT_OF_BOUNDS_LNG,
+							},
+						},
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalled();
+			});
+
+			// the no-non-sg-location rule intentionally does not gate on the required rule:
+			// an optional field still cannot submit an out-of-Singapore value.
+			it("should block submission of an out-of-Singapore value on an optional (non-required) field", async () => {
+				renderComponent({
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: OUT_OF_BOUNDS_PIN_ADDRESS,
+								lat: OUT_OF_BOUNDS_LAT,
+								lng: OUT_OF_BOUNDS_LNG,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(screen.getByText(ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED)).toBeInTheDocument();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
+			});
+
+			it("should allow submission of an empty optional field when restrictNonSGLocation is set", async () => {
+				renderComponent({
+					withEvents: false,
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(SUBMIT_FN).toHaveBeenCalled();
+			});
+		});
+
+		describe("prefill", () => {
+			it("should clear prefilled values that resolve to a non-Singapore address", async () => {
+				fetchSingleLocationByLatLngSpy.mockImplementation(
+					(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
+						handleResult(JOHOR_LOCATION_RESULT);
+					}
+				);
+				renderComponent({
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								lat: PIN_LOCATION_LAT,
+								lng: PIN_LOCATION_LNG,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+
+				await waitFor(() => {
+					expect(fetchSingleLocationByLatLngSpy).toHaveBeenCalledTimes(1);
+				});
+
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.not.objectContaining({ address: JOHOR_LOCATION_RESULT.address }),
+						})
+					);
+				});
+			});
+
+			it("should keep prefilled values that resolve to a pin location within Singapore", async () => {
+				fetchSingleLocationByLatLngSpy.mockImplementation(
+					(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
+						handleResult(SEA_PIN_RESPONSE[0]);
+					}
+				);
+				renderComponent({
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: SEA_PIN_ADDRESS,
+								lat: SEA_PIN_LAT,
+								lng: SEA_PIN_LNG,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+
+				await waitFor(() => {
+					expect(fetchSingleLocationByLatLngSpy).toHaveBeenCalledTimes(1);
+				});
+
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: SEA_PIN_ADDRESS }),
+						})
+					);
+				});
+			});
+
+			it("should keep values that resolve to a non-Singapore address when restrictNonSGLocation is not set", async () => {
+				fetchSingleLocationByLatLngSpy.mockImplementation(
+					(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
+						handleResult(JOHOR_LOCATION_RESULT);
+					}
+				);
+				renderComponent({
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								lat: PIN_LOCATION_LAT,
+								lng: PIN_LOCATION_LNG,
+							},
+						},
+					},
+					overrideField: {
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+
+				await waitFor(() => {
+					expect(fetchSingleLocationByLatLngSpy).toHaveBeenCalledTimes(1);
+				});
+
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: JOHOR_LOCATION_RESULT.address }),
+						})
+					);
+				});
+			});
+		});
+	});
+
 	describe("dirty state", () => {
 		let formIsDirty: boolean;
 		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {

@@ -186,6 +186,20 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
+		restrictNonSGLocation: {
+			description:
+				"Prevents confirming and submitting locations that are outside Singapore. On confirming any selected location — a searched address (e.g. `CAUSEWAY (JOHOR)`), a map selection or an unresolvable `Pin location: <lat>, <lng>` value — its coordinates are checked against the coastal outlines of SLA's National Map Polygon dataset: if it falls on a neighbouring (JOHOR (MALAYSIA)) landmass or in waters outside Singapore, the “This location is outside Singapore.” prompt is shown and the location modal stays open. Areas within Singapore that simply have no addresses nearby (e.g. sea just off the coast, reservoirs) remain confirmable. Prefilled values that resolve to locations outside Singapore are cleared and such values fail validation on submission.",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: "false" },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -296,6 +310,19 @@ MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",
 	mustHavePostalCode: true,
+	mapApi: defaultMapApi,
+};
+
+export const RestrictNonSGLocation = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-restrict-non-sg-location",
+	false,
+	recaptchaSiteKey
+).bind({});
+RestrictNonSGLocation.args = {
+	uiType: "location-field",
+	label: "RestrictNonSGLocation",
+	restrictNonSGLocation: true,
+	validation: [{ required: true }],
 	mapApi: defaultMapApi,
 };
 
