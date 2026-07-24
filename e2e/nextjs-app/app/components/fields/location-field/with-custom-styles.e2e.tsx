@@ -10,7 +10,7 @@ const LOCATION_FIELD_SCHEMA: IFrontendEngineData = {
 				field: {
 					uiType: "location-field",
 					label: "Location With Custom Styles",
-					locationModalStyles: "padding-top: 50px; margin-right: 10px;",
+					locationModalStyles: "background: red;padding-top: 50px; margin-right: 10px;",
 					mapApi: {
 						reverseGeocode: "/api/onemap/revgeocode",
 						convertLatLngToXY: "/api/onemap/4326to3414",
