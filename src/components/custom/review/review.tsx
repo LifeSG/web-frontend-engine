@@ -221,19 +221,19 @@ export const Review = (props: IGenericCustomElementProps<TReviewSchema>) => {
 		} = filterSchemaProps(schema);
 
 		return (
-			<UneditableSection
-				{...boxProps}
-				id={id}
-				ref={boxRef}
-				className={clsx(rowGap && styles.boxUneditableSection)}
-				title={label}
-				description={description}
-				items={formatItems()}
-				topSection={generateSection(topSection)}
-				bottomSection={generateSection(bottomSection)}
-				onUnmask={handleUnmask}
-				onTryAgain={handleUnmask}
-			/>
+			<div ref={boxRef} className={clsx(rowGap && styles.boxUneditableSection)}>
+				<UneditableSection
+					{...boxProps}
+					id={id}
+					title={label}
+					description={description}
+					items={formatItems()}
+					topSection={generateSection(topSection)}
+					bottomSection={generateSection(bottomSection)}
+					onUnmask={handleUnmask}
+					onTryAgain={handleUnmask}
+				/>
+			</div>
 		);
 	};
 
