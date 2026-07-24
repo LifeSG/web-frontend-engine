@@ -81,7 +81,7 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 		schema: TFrontendEngineFieldSchema
 	): React.ReactNode | FormLabelProps => {
 		const label: string | IComplexLabel = schema["label"];
-		if (typeof label === "string") {
+		if (label && typeof label === "string") {
 			return {
 				children: <Sanitize inline>{label}</Sanitize>,
 			};
