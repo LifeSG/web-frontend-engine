@@ -307,22 +307,24 @@ export const ImageManager = (props: IProps) => {
 
 	const compressImage = async (index: number, imageToCompress: IImage) => {
 		try {
-			const dataURL = await ImageHelper.convertBlob(
+			const decodableBlob = await ImageHelper.ensureDecodableBlob(
 				imageToCompress.file,
 				FileHelper.fileExtensionToMimeType(outputType)
 			);
-			const image = await ImageHelper.dataUrlToImage(dataURL);
+			const image = await ImageHelper.blobToImage(decodableBlob);
 			const origDim = { w: image.naturalWidth, h: image.naturalHeight };
 			let compressed: Blob;
+			const outputMimeType = FileHelper.fileExtensionToMimeType(outputType);
 			if (crop) {
 				compressed = await ImageHelper.resampleImage(image, {
 					width: dimensions.width,
 					height: dimensions.height,
 					crop: true,
+					type: outputMimeType,
 				});
 			} else {
 				const scale = getScale(origDim.w, origDim.h);
-				compressed = await ImageHelper.resampleImage(image, { scale });
+				compressed = await ImageHelper.resampleImage(image, { scale, type: outputMimeType });
 			}
 			if (maxSizeInKb) {
 				compressed = (await ImageHelper.compressImage(compressed, {

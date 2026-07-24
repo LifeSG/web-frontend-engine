@@ -3,6 +3,18 @@ import { FileHelper } from "./file-helper";
 import { IImageMetadata } from "../components/fields/image-upload";
 
 export namespace ImageHelper {
+	export const ensureDecodableBlob = async (blob: File | Blob, outputMimeType = "image/jpeg"): Promise<Blob> => {
+		const inputMimeType = (await FileHelper.getType(blob)).mime;
+		if (inputMimeType === "image/heic" || inputMimeType === "image/heif") {
+			const { heicTo } = await import("heic-to/csp");
+			return (await heicTo({
+				blob: blob,
+				type: outputMimeType as `image/${string}`,
+			})) as Blob;
+		}
+		return blob;
+	};
+
 	/**
 	 * convert image type
 	 */
