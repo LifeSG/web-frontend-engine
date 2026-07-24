@@ -12,7 +12,7 @@ const SCHEMA: IFrontendEngineData = {
 					label: "Provide images",
 					editImage: true,
 					multiple: true,
-					imageReviewModalStyles: "padding-top: 50px; margin-right: 10px;",
+					imageReviewModalStyles: "background: red;padding-top: 50px; margin-right: 10px;",
 				},
 			},
 		},
