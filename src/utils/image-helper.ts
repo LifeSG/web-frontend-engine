@@ -80,13 +80,30 @@ export namespace ImageHelper {
 		height: number;
 		crop?: boolean | undefined;
 	}
+
+	const canvasToBlob = (canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> => {
+		return new Promise((resolve, reject) => {
+			canvas.toBlob(
+				(blob) => {
+					if (blob) {
+						resolve(blob);
+					} else {
+						reject(new Error("canvasToBlob(): failed to encode canvas"));
+					}
+				},
+				type,
+				quality
+			);
+		});
+	};
+
 	/**
-	 * resamples image by rendering it on canvas
+	 * resamples image by rendering it on canvas and returns both the rendered canvas and encoded blob
 	 */
-	export const resampleImage = async (
+	export const resampleToCanvas = async (
 		image: HTMLImageElement,
 		options: IResampleOptionsWithScale | IResampleOptionsWithDimensions
-	): Promise<Blob> => {
+	): Promise<{ canvas: HTMLCanvasElement; blob: Blob }> => {
 		const { crop, scale, width, height, quality = 1, type = "image/jpeg" } = options;
 		const cvs = document.createElement("canvas");
 		const ctx = cvs.getContext("2d");
@@ -113,31 +130,78 @@ export namespace ImageHelper {
 			ctx.drawImage(image, sx, sy, sw, sh, 0, 0, width, height);
 		}
 
-		return new Promise((resolve) => cvs.toBlob((blob) => resolve(blob), type, quality));
+		return { canvas: cvs, blob: await canvasToBlob(cvs, type, quality) };
 	};
 
 	/**
-	 * rescursively attempt to compress image till the desired filesize or lowest quality is reached
+	 * resamples image by rendering it on canvas
+	 */
+	export const resampleImage = async (
+		image: HTMLImageElement,
+		options: IResampleOptionsWithScale | IResampleOptionsWithDimensions
+	): Promise<Blob> => {
+		const { blob } = await resampleToCanvas(image, options);
+		return blob;
+	};
+
+	/**
+	 * Compresses an image to the desired filesize using a binary search over encoder quality.
+	 * When passed a canvas, its existing pixel data is reused without decoding or drawing again.
 	 *
 	 * fileSize is in kb
 	 * optional `maxAttempts` to limit the attempts, if file size still exceeds at the end of it, return the best compressed image
 	 */
 	export const compressImage = async (
-		file: File | Blob,
-		options: { quality?: number; fileSize: number; attempts?: number; maxAttempts?: number }
-	) => {
-		const { quality = 1, fileSize, attempts = 0, maxAttempts } = options;
-		const image = await blobToImage(file);
-
-		if (file.size <= fileSize * 1024 || quality < 0) return file;
-		const compressed = await resampleImage(image, { scale: 1, quality });
-
-		if (compressed.size > fileSize * 1024) {
-			if (attempts < maxAttempts || !maxAttempts) {
-				return compressImage(file, { ...options, quality: quality - 0.1, attempts: attempts + 1 });
-			}
+		input: File | Blob | HTMLCanvasElement,
+		options: {
+			fileSize: number;
+			maxAttempts?: number;
+			type?: string;
+			onAttempt?: (attempt: number, quality: number, outputSize: number) => void;
 		}
-		return compressed;
+	): Promise<File | Blob> => {
+		const { fileSize, maxAttempts = 6, type = "image/jpeg", onAttempt } = options;
+		const targetBytes = fileSize * 1024;
+		const attempts = Math.max(1, maxAttempts);
+
+		let canvas: HTMLCanvasElement;
+		if (input instanceof HTMLCanvasElement) {
+			canvas = input;
+		} else {
+			if (input.size <= targetBytes) return input;
+
+			const image = await blobToImage(input);
+			canvas = document.createElement("canvas");
+			canvas.width = image.width;
+			canvas.height = image.height;
+			canvas.getContext("2d").drawImage(image, 0, 0);
+		}
+
+		let low = 0;
+		let high = 1;
+		let smallest: Blob | undefined;
+		let bestWithinTarget: Blob | undefined;
+
+		for (let attempt = 0; attempt < attempts; attempt++) {
+			const quality = (low + high) / 2;
+			const compressed = await canvasToBlob(canvas, type, quality);
+			onAttempt?.(attempt + 1, quality, compressed.size);
+
+			if (!smallest || compressed.size < smallest.size) smallest = compressed;
+
+			if (compressed.size <= targetBytes) {
+				// This quality fits; look for the highest quality that still does.
+				bestWithinTarget = compressed;
+				low = quality;
+			} else {
+				high = quality;
+			}
+
+			if (high - low < 0.05) break;
+		}
+
+		const result = bestWithinTarget || (smallest as Blob);
+		return result;
 	};
 
 	export const getMetadata = async (file: File): Promise<IImageMetadata> => {

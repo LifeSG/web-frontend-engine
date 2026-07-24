@@ -25,6 +25,7 @@ interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	};
 	filenameMatches?: string | undefined;
 	filenameMatchesErrorMessage?: string | undefined;
+	onDebugLog?: ((message: string) => void) | undefined;
 	value: any;
 }
 
@@ -48,6 +49,7 @@ export const ImageManager = (props: IProps) => {
 		upload,
 		filenameMatches,
 		filenameMatchesErrorMessage,
+		onDebugLog,
 		value,
 	} = props;
 	const { images, setImages, setErrorCount, setCurrentFileIds } = useContext(ImageContext);
@@ -86,6 +88,14 @@ export const ImageManager = (props: IProps) => {
 	}, []);
 
 	useEffect(() => {
+		onDebugLog?.(
+			`image-upload ready | compression=${compress ? "enabled" : "disabled"} | target=${dimensions.width}x${
+				dimensions.height
+			} | max=${maxSizeInKb || "none"} KB`
+		);
+	}, [compress, dimensions.height, dimensions.width, maxSizeInKb, onDebugLog]);
+
+	useEffect(() => {
 		images.forEach((image, index) => {
 			const previousFile = previousImages?.[index];
 			if (image.status !== previousFile?.status || image.dataURL !== previousFile.dataURL) {
@@ -108,6 +118,11 @@ export const ImageManager = (props: IProps) => {
 							});
 						break;
 					case EImageStatus.NONE:
+						onDebugLog?.(
+							`${image.name}: file received | input=${Math.round(
+								image.file.size / 1024
+							)} KB | compress=${compress}`
+						);
 						if (filenameMatches) {
 							const pattern = resolveMatchesPattern(filenameMatches);
 							if (pattern && !pattern.test(image.name)) {
@@ -267,11 +282,15 @@ export const ImageManager = (props: IProps) => {
 	};
 
 	const convertImage = async (index: number, image: IImage) => {
+		const startedAt = Date.now();
+		const log = (message: string) => onDebugLog?.(`${image.name}: ${message}`);
 		try {
+			log("compression disabled; running convert-only flow");
 			const dataURL = await ImageHelper.convertBlob(image.file, FileHelper.fileExtensionToMimeType(outputType));
 			const filesize = FileHelper.getFilesizeFromBase64(dataURL);
 
 			if (maxSizeInKb && filesize > maxSizeInKb * 1024) {
+				log(`convert rejected: ${Math.round(filesize / 1024)} KB exceeds ${maxSizeInKb} KB`);
 				setImages((prev) => {
 					const updatedImages = [...prev];
 					updatedImages[index] = {
@@ -292,8 +311,10 @@ export const ImageManager = (props: IProps) => {
 					};
 					return updatedImages;
 				});
+				log(`convert complete | output=${Math.round(filesize / 1024)} KB | total=${Date.now() - startedAt} ms`);
 			}
 		} catch (e) {
+			log(`convert failed after ${Date.now() - startedAt} ms | ${e instanceof Error ? e.message : String(e)}`);
 			setImages((prev) => {
 				const updatedImages = [...prev];
 				updatedImages[index] = {
@@ -306,33 +327,66 @@ export const ImageManager = (props: IProps) => {
 	};
 
 	const compressImage = async (index: number, imageToCompress: IImage) => {
+		const startedAt = Date.now();
+		const log = (message: string) => onDebugLog?.(`${imageToCompress.name}: ${message}`);
 		try {
+			log(
+				`compress start | input=${Math.round(imageToCompress.file.size / 1024)} KB | target=${
+					dimensions.width
+				}x${dimensions.height} | crop=${crop} | max=${maxSizeInKb || "none"} KB`
+			);
+			let phaseStartedAt = Date.now();
 			const decodableBlob = await ImageHelper.ensureDecodableBlob(
 				imageToCompress.file,
 				FileHelper.fileExtensionToMimeType(outputType)
 			);
+			log(`ensure decodable blob ${Date.now() - phaseStartedAt} ms`);
+			phaseStartedAt = Date.now();
 			const image = await ImageHelper.blobToImage(decodableBlob);
+			log(`decode ${Date.now() - phaseStartedAt} ms | ${image.naturalWidth}x${image.naturalHeight}`);
 			const origDim = { w: image.naturalWidth, h: image.naturalHeight };
 			let compressed: Blob;
+			let canvas: HTMLCanvasElement;
 			const outputMimeType = FileHelper.fileExtensionToMimeType(outputType);
+
+			phaseStartedAt = Date.now();
 			if (crop) {
-				compressed = await ImageHelper.resampleImage(image, {
+				({ canvas, blob: compressed } = await ImageHelper.resampleToCanvas(image, {
 					width: dimensions.width,
 					height: dimensions.height,
 					crop: true,
 					type: outputMimeType,
-				});
+				}));
 			} else {
 				const scale = getScale(origDim.w, origDim.h);
-				compressed = await ImageHelper.resampleImage(image, { scale, type: outputMimeType });
+				({ canvas, blob: compressed } = await ImageHelper.resampleToCanvas(image, {
+					scale,
+					type: outputMimeType,
+				}));
 			}
+			log(`resample ${Date.now() - phaseStartedAt} ms | output=${Math.round(compressed.size / 1024)} KB`);
+
 			if (maxSizeInKb) {
-				compressed = (await ImageHelper.compressImage(compressed, {
+				phaseStartedAt = Date.now();
+				compressed = await ImageHelper.compressImage(canvas, {
 					fileSize: maxSizeInKb,
-				})) as File;
+					type: outputMimeType,
+					onAttempt: (attempt, quality, outputSize) =>
+						log(
+							`quality attempt ${attempt} | quality=${quality.toFixed(3)} | output=${Math.round(
+								outputSize / 1024
+							)} KB`
+						),
+				});
+				log(
+					`quality compression ${Date.now() - phaseStartedAt} ms | output=${Math.round(
+						compressed.size / 1024
+					)} KB`
+				);
 			}
 
 			if (maxSizeInKb && compressed.size > maxSizeInKb * 1024) {
+				log(`rejected: ${Math.round(compressed.size / 1024)} KB exceeds ${maxSizeInKb} KB`);
 				setImages((prev) => {
 					const updatedImages = [...prev];
 					updatedImages[index] = {
@@ -342,8 +396,11 @@ export const ImageManager = (props: IProps) => {
 					return updatedImages;
 				});
 			} else {
+				phaseStartedAt = Date.now();
 				const metadata = await ImageHelper.getMetadata(imageToCompress.file);
 				const dataURL = await FileHelper.fileToDataUrl(compressed);
+				log(`metadata + final dataURL ${Date.now() - phaseStartedAt} ms | total=${Date.now() - startedAt} ms`);
+
 				setImages((prev) => {
 					const updatedImages = [...prev];
 					updatedImages[index] = {
@@ -356,6 +413,9 @@ export const ImageManager = (props: IProps) => {
 				});
 			}
 		} catch (e) {
+			log(
+				`compression failed after ${Date.now() - startedAt} ms | ${e instanceof Error ? e.message : String(e)}`
+			);
 			setImages((prev) => {
 				const updatedImages = [...prev];
 				updatedImages[index] = {
@@ -416,7 +476,10 @@ export const ImageManager = (props: IProps) => {
 	};
 
 	const uploadImage = async (index: number, iFile: IImage) => {
+		const startedAt = Date.now();
+		const log = (message: string) => onDebugLog?.(`${iFile.name}: ${message}`);
 		try {
+			log(`upload start | method=${upload?.method || "none"} | endpoint=${upload?.url || "none"}`);
 			setImages((prev) => {
 				const updatedImages = [...prev];
 				updatedImages[index] = {
@@ -438,7 +501,8 @@ export const ImageManager = (props: IProps) => {
 					{
 						onUploadProgress: (progressEvent) => {
 							const { loaded, total } = progressEvent;
-							const percent = Math.floor((loaded * 100) / total);
+							const percent = total ? Math.floor((loaded * 100) / total) : 0;
+							log(`upload progress ${percent}%`);
 							setImages((prev) => {
 								const updatedImages = [...prev];
 								updatedImages[index] = {
@@ -461,7 +525,11 @@ export const ImageManager = (props: IProps) => {
 				};
 				return updatedImages;
 			});
+			log(`upload complete | total=${Date.now() - startedAt} ms`);
 		} catch (err) {
+			log(
+				`upload failed after ${Date.now() - startedAt} ms | ${err instanceof Error ? err.message : String(err)}`
+			);
 			setImages((prev) => {
 				const updatedImages = [...prev];
 				updatedImages[index] = {

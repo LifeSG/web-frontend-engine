@@ -1,5 +1,5 @@
 import xor from "lodash/xor";
-import { Suspense, lazy, useContext, useEffect, useState } from "react";
+import { Suspense, lazy, useCallback, useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { FileHelper, generateRandomId } from "../../../utils";
@@ -8,6 +8,7 @@ import { ERROR_MESSAGES, Prompt } from "../../shared";
 import { ImageContext, ImageProvider } from "./image-context";
 import { ImageInput } from "./image-input";
 import { ImageReview } from "./image-review";
+import { ImageUploadDebug } from "./image-upload-debug";
 import {
 	ACCEPTED_FILE_TYPES,
 	EImageStatus,
@@ -58,9 +59,14 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 	const [maxFileSize, setMaxFileSize] = useState(0);
 	const [showReviewPrompt, setShowReviewPrompt] = useState(false);
 	const [showReviewModal, setShowReviewModal] = useState(false);
+	const [debugLogs, setDebugLogs] = useState<string[]>([]);
 	const { setFieldValidationConfig } = useValidationConfig();
 	const { dispatchFieldEvent } = useFieldEvent();
 	const isMobileView = useWindowHelper();
+	const addDebugLog = useCallback((message: string) => {
+		const timestamp = new Date().toISOString().slice(11, 23);
+		setDebugLogs((previous) => [...previous.slice(-199), `[${timestamp}] ${message}`]);
+	}, []);
 
 	// =============================================================================
 	// EFFECTS
@@ -274,6 +280,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 					upload={uploadOnAddingFile}
 					filenameMatches={validation?.find((rule) => "matches" in rule)?.matches}
 					filenameMatchesErrorMessage={validation?.find((rule) => "matches" in rule)?.errorMessage}
+					onDebugLog={addDebugLog}
 					value={value}
 				/>
 			</Suspense>
@@ -297,6 +304,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 
 			{renderReviewPrompt()}
 			{renderImageReviewModal()}
+			<ImageUploadDebug logs={debugLogs} onClear={() => setDebugLogs([])} />
 		</>
 	);
 };
