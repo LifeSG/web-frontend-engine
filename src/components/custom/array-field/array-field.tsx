@@ -1,7 +1,12 @@
 import { Alert } from "@lifesg/react-design-system/alert";
+import { Button } from "@lifesg/react-design-system/button";
+import { Divider } from "@lifesg/react-design-system/divider";
+import { ErrorDisplay } from "@lifesg/react-design-system/error-display";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import { Typography } from "@lifesg/react-design-system/typography";
 import * as Icons from "@lifesg/react-icons";
 import { PlusCircleFillIcon } from "@lifesg/react-icons/plus-circle-fill";
+import clsx from "clsx";
 import isEmpty from "lodash/isEmpty";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -9,19 +14,11 @@ import * as Yup from "yup";
 import { generateRandomId } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { TErrorPayload } from "../../frontend-engine";
-import { ERROR_MESSAGES, Prompt } from "../../shared";
+import { ERROR_MESSAGES, Prompt, Warning } from "../../shared";
 import { IFrontendEngineRef, TFrontendEngineValues } from "../../types";
 import { IGenericCustomFieldProps } from "../types";
 import { ArrayFieldElement } from "./array-field-element";
-import {
-	AddButton,
-	CustomErrorDisplay,
-	Inset,
-	RemoveButton,
-	SectionDivider,
-	SectionHeader,
-	WarningAlert,
-} from "./array-field.styles";
+import * as styles from "./array-field.styles";
 import { IArrayFieldSchema, IArrayFieldValidationRule } from "./types";
 
 export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) => {
@@ -58,8 +55,13 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	const { resetField, setValue } = useFormContext();
 	const formRefs = useRef<IFrontendEngineRef[]>([]);
 	const stateValueRef = useRef(stateValue);
+	const wrapperRef = useRef<HTMLDivElement>(null);
 	const [fieldErrors, setFieldErrors] = useState<TErrorPayload[] | undefined>(undefined);
 	const [mainErrorMessage, setMainErrorMessage] = useState<string | undefined>(undefined);
+
+	useApplyStyle(wrapperRef, {
+		[styles.tokens.horizontalInset]: typeof sectionInset === "number" ? `${sectionInset}px` : sectionInset,
+	});
 
 	// =============================================================================
 	// EFFECTS
@@ -267,34 +269,38 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 	};
 
 	const renderRemoveButton = (index: number) => (
-		<RemoveButton
-			className="array-field-remove-button"
+		<Button
+			className={clsx(
+				"array-field-remove-button",
+				styles.removeButton,
+				removeButtonAlignment === "right" && styles.removeButtonAlignRight,
+				removeButtonAlignment === "left" && styles.removeButtonAlignLeft
+			)}
 			type="button"
 			sizeType="small"
 			styleType={removeButton?.styleType ?? "light"}
 			danger
-			$alignment={removeButtonAlignment}
 			onClick={() => handleRemoveSection(index)}
 			{...(removeButton?.icon && { icon: renderIcon(removeButton.icon) })}
 		>
 			{removeButton?.label ?? "Remove"}
-		</RemoveButton>
+		</Button>
 	);
 
 	return (
-		<>
+		<div ref={wrapperRef} className={styles.wrapper}>
 			{stateValue.map((sectionValues, index) => {
 				const isLastItem = index === stateValue.length - 1;
 				return (
 					<Fragment key={stateKeys[index]}>
-						<Inset $inset={sectionInset}>
+						<div className={styles.inset}>
 							<div className="array-field-section-container">
-								<SectionHeader>
+								<div className={styles.sectionHeader}>
 									{sectionTitle && (
 										<Typography.BodyBL weight="bold">{sectionTitle}</Typography.BodyBL>
 									)}
 									{showRemoveButton && removeButtonPosition === "top" && renderRemoveButton(index)}
-								</SectionHeader>
+								</div>
 								<ArrayFieldElement
 									ref={(formRef) => (formRefs.current[index] = formRef)}
 									formValues={sectionValues}
@@ -304,38 +310,45 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 								/>
 								{showRemoveButton && removeButtonPosition === "bottom" && renderRemoveButton(index)}
 							</div>
-						</Inset>
-						{showDivider && !isLastItem ? <SectionDivider /> : null}
+						</div>
+						{showDivider && !isLastItem ? <Divider className={styles.sectionDivider} /> : null}
 					</Fragment>
 				);
 			})}
 			{showAddButton && (
-				<Inset $inset={sectionInset}>
-					<AddButton
-						className="array-field-add-button"
+				<div className={styles.inset}>
+					<Button
+						className={clsx("array-field-add-button", styles.addButton)}
 						type="button"
 						styleType={addButton?.styleType ?? "light"}
 						icon={addButton?.icon ? renderIcon(addButton.icon) : <PlusCircleFillIcon />}
 						onClick={handleAddSection}
 					>
 						{addButton?.label ?? "Add"}
-					</AddButton>
-				</Inset>
+					</Button>
+				</div>
 			)}
 			{mainErrorMessage && (
-				<Inset $inset={sectionInset}>
+				<div className={styles.inset}>
 					<Alert type="error">{mainErrorMessage}</Alert>
-				</Inset>
+				</div>
 			)}
 			{warning && (
-				<Inset $inset={sectionInset}>
-					<WarningAlert id={id} message={warning} />
-				</Inset>
+				<div className={styles.inset}>
+					<Warning id={id} message={warning} className={styles.warningAlert} />
+				</div>
 			)}
 			<Prompt
 				id={`${id}-remove-prompt`}
 				size="large"
-				image={<CustomErrorDisplay type="warning" title={<></>} description={<></>} />}
+				image={
+					<ErrorDisplay
+						className={styles.customErrorDisplay}
+						type="warning"
+						title={<></>}
+						description={<></>}
+					/>
+				}
 				title={skipRemoveConfirmationModal ? undefined : removeConfirmationModal?.title ?? "Remove entry?"}
 				description="The information you’ve entered will be deleted."
 				show={showRemovePrompt}
@@ -353,6 +366,6 @@ export const ArrayField = (props: IGenericCustomFieldProps<IArrayFieldSchema>) =
 					},
 				]}
 			/>
-		</>
+		</div>
 	);
 };

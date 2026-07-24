@@ -1,38 +1,28 @@
-import { Button } from "@lifesg/react-design-system/button";
-import { Divider } from "@lifesg/react-design-system/divider";
-import { ErrorDisplay } from "@lifesg/react-design-system/error-display";
-import styled from "styled-components";
-import { Warning } from "../../shared";
+import { css } from "@linaria/core";
 import { MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
 
-// =============================================================================
-// STYLE INTERFACE
-// =============================================================================
-interface InsetStyleProps {
-	$inset?: string | number;
-}
+export const tokens = {
+	horizontalInset: "--fee-internal-arrayField-horizontalInset",
+};
 
-interface RemoveButtonStyleProps {
-	$alignment?: "left" | "right";
-}
-
-// =============================================================================
-// STYLING
-// =============================================================================
-export const Inset = styled.div<InsetStyleProps>`
-	${({ $inset }) =>
-		$inset &&
-		`
-	padding-left: ${$inset};
-	padding-right: ${$inset};
-	`}
+export const wrapper = css`
+	${tokens.horizontalInset}: initial;
 
 	&:not(:last-child) {
 		margin-bottom: ${Spacing["spacing-32"]};
 	}
 `;
 
-export const SectionHeader = styled.div`
+export const inset = css`
+	padding-left: var(${tokens.horizontalInset});
+	padding-right: var(${tokens.horizontalInset});
+
+	&:not(:last-child) {
+		margin-bottom: ${Spacing["spacing-32"]};
+	}
+`;
+
+export const sectionHeader = css`
 	display: flex;
 	justify-content: space-between;
 	align-items: baseline;
@@ -43,9 +33,7 @@ export const SectionHeader = styled.div`
 	}
 `;
 
-export const RemoveButton = styled(Button)<RemoveButtonStyleProps>`
-	${({ $alignment }) => $alignment === "right" && "margin-left: auto;"}
-	${({ $alignment }) => $alignment === "left" && "margin-right: auto;"}
+export const removeButton = css`
 	padding-left: ${Spacing["spacing-32"]};
 	padding-right: ${Spacing["spacing-32"]};
 
@@ -54,27 +42,31 @@ export const RemoveButton = styled(Button)<RemoveButtonStyleProps>`
 	}
 `;
 
-export const AddButton = styled(Button)`
+export const removeButtonAlignRight = css`
+	margin-left: auto;
+`;
+
+export const removeButtonAlignLeft = css`
+	margin-right: auto;
+`;
+
+export const addButton = css`
 	padding-left: ${Spacing["spacing-32"]};
 	padding-right: ${Spacing["spacing-32"]};
-
-	&:not(:last-child) {
-		margin-bottom: ${Spacing["spacing-32"]};
-	}
 
 	${MediaQuery.MaxWidth.sm} {
 		width: 100%;
 	}
 `;
 
-export const SectionDivider = styled(Divider)`
+export const sectionDivider = css`
 	margin: ${Spacing["spacing-32"]} 0;
 `;
 
-export const WarningAlert = styled(Warning)`
+export const warningAlert = css`
 	margin: 0;
 `;
 
-export const CustomErrorDisplay = styled(ErrorDisplay)`
+export const customErrorDisplay = css`
 	margin-bottom: ${Spacing["spacing-32"]};
 `;
