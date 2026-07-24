@@ -20,6 +20,7 @@ const readonlyTest = createLocationFieldTest("readonly");
 const mapBannerTest = createLocationFieldTest("map-banner");
 const legendTest = createLocationFieldTest("legend");
 const apiErrorTest = createLocationFieldTest("api-error");
+const customStylesTest = createLocationFieldTest("with-custom-styles");
 const withStory = forComponent("fields/location-field");
 
 test.describe("Location Field", () => {
@@ -157,6 +158,19 @@ test.describe("Location Field", () => {
 		test("Warning", async ({ story }) => {
 			await story.goto();
 			await story.snapshot("mount");
+		});
+	});
+
+	customStylesTest.describe(() => {
+		customStylesTest("Custom modal styles", async ({ story }) => {
+			await mockOneMapAPI(story.page);
+			await story.goto();
+
+			await story.locators.locationInput.click();
+			await expect(story.locators.modalBox).toBeVisible();
+			await story.page.waitForTimeout(2000);
+
+			await story.snapshot("open", { fullscreen: true });
 		});
 	});
 });

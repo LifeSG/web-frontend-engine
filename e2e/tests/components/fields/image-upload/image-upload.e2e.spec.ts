@@ -363,4 +363,15 @@ test.describe("ImageUpload", () => {
 			await story.snapshot("max-files-exceeded");
 		});
 	});
+
+	test.describe(() => {
+		test.use({ storyOptions: withStory("with-custom-styles") });
+
+		test("Custom review modal styles", async ({ story }) => {
+			await story.goto();
+			await story.uploadFilesAndConfirmReview();
+			await story.waitForImageEditorCanvas();
+			await story.snapshot("review-modal", { fullscreen: true });
+		});
+	});
 });

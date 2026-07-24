@@ -13,7 +13,7 @@ import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import clsx from "clsx";
-import { Suspense, lazy, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
@@ -118,9 +118,7 @@ export const ImageReview = (props: IProps) => {
 		],
 	});
 
-	// Stable unique id used to scope consumer-provided imageReviewModalStyles to
-	// this specific modal instance, avoiding style leakage to other elements.
-	const modalStyleId = useMemo(() => `image-review-${generateRandomId()}`, []);
+	const [modalBoxRef, setModalBoxRef] = useState<HTMLDivElement | null>(null);
 	const [activeFileIndex, setActiveFileIndex] = useState(images.length - 1);
 	const [drawActive, setDrawActive] = useState(false);
 	const [activePrompt, setActivePrompt] = useState<"delete" | "exit" | "clear-drawing" | null>();
@@ -130,6 +128,12 @@ export const ImageReview = (props: IProps) => {
 	const [activeColor, setActiveColor] = useState(PALETTE_COLORS[0].color);
 	const [eraseMode, setEraseMode] = useState(false);
 	const imageEditorRef = useRef<IImageEditorRef>(null);
+
+	useEffect(() => {
+		if (modalBoxRef) {
+			modalBoxRef.style.cssText = imageReviewModalStyles || "";
+		}
+	}, [imageReviewModalStyles, modalBoxRef]);
 
 	const reviewSaveDisabled =
 		!!images?.find(({ addedFrom, status }) => addedFrom === "reviewModal" && status <= EImageStatus.NONE) ||
@@ -538,17 +542,13 @@ export const ImageReview = (props: IProps) => {
 			show={show}
 		>
 			<Modal.Box
-				className={clsx(
-					styles.modalBox,
-					imageReviewModalStyles && modalStyleId,
-					className && `${className}-review-modal-box`
-				)}
+				elementRef={setModalBoxRef}
+				className={clsx(styles.modalBox, className && `${className}-review-modal-box`)}
 				showCloseButton={false}
 				data-mobile-landscape={!!isMobileLandscape}
 			>
 				{show ? (
 					<>
-						{imageReviewModalStyles && <style>{`.${modalStyleId} { ${imageReviewModalStyles} }`}</style>}
 						{renderHeader()}
 						{renderContent()}
 						{renderFooter()}
