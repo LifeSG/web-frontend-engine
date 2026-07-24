@@ -85,7 +85,7 @@ interface IRenderAndPerformActionsOptions {
  * optionally go to review modal
  */
 const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) => {
-	jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
+	jest.spyOn(ImageHelper, "convertToDataUrl").mockResolvedValue(JPG_BASE64);
 	jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 
 	const {
@@ -165,6 +165,12 @@ describe("image-upload", () => {
 		jest.spyOn(FileHelper, "truncateFileName").mockImplementation((fileName) => fileName);
 		uploadSpy = jest.spyOn(AxiosApiClient.prototype, "post").mockResolvedValue({ id: 1 });
 		extractMetadataSpy = jest.spyOn(ImageHelper, "getMetadata").mockResolvedValue(METADATA);
+		jest.spyOn(ImageHelper, "convertHeicToBlob").mockImplementation(async (blob) => blob);
+		jest.spyOn(ImageHelper, "blobToImage").mockResolvedValue(new Image());
+		jest.spyOn(ImageHelper, "drawImageToCanvas").mockResolvedValue({
+			canvas: document.createElement("canvas"),
+			blob: FILE_1,
+		});
 	});
 
 	it("should be able to render the field", async () => {
@@ -492,7 +498,7 @@ describe("image-upload", () => {
 
 		describe("when there is a generic error", () => {
 			beforeEach(async () => {
-				jest.spyOn(ImageHelper, "convertBlob").mockRejectedValueOnce("error");
+				jest.spyOn(ImageHelper, "convertToDataUrl").mockRejectedValueOnce("error");
 				await renderComponent({
 					files: [FILE_1, FILE_2],
 					uploadType: inputType,
@@ -522,8 +528,8 @@ describe("image-upload", () => {
 
 		describe("when there is a file size limit and images are not compressed", () => {
 			beforeEach(async () => {
-				jest.spyOn(ImageHelper, "convertBlob").mockResolvedValueOnce(`${JPG_BASE64}${JPG_BASE64}`);
-				jest.spyOn(ImageHelper, "convertBlob").mockResolvedValueOnce(JPG_BASE64);
+				jest.spyOn(ImageHelper, "convertToDataUrl").mockResolvedValueOnce(`${JPG_BASE64}${JPG_BASE64}`);
+				jest.spyOn(ImageHelper, "convertToDataUrl").mockResolvedValueOnce(JPG_BASE64);
 
 				await renderComponent({
 					files: [FILE_1, FILE_2],
@@ -556,13 +562,9 @@ describe("image-upload", () => {
 		});
 
 		describe("image compression", () => {
-			beforeEach(() => {
-				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
-				jest.spyOn(ImageHelper, "resampleImage").mockResolvedValue(FILE_1);
-			});
 
 			it("should not compress image by default", async () => {
-				const compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				const compressSpy = jest.spyOn(ImageHelper, "compressToTargetSize");
 				await renderComponent({
 					files: [FILE_1],
 					uploadType: inputType,
@@ -573,7 +575,12 @@ describe("image-upload", () => {
 			});
 
 			it("should compress image if compress=true and max size is defined", async () => {
-				const compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				const largeBlob = new Blob(["x".repeat(2048)]);
+				jest.spyOn(ImageHelper, "drawImageToCanvas").mockResolvedValue({
+					canvas: document.createElement("canvas"),
+					blob: largeBlob,
+				});
+				const compressSpy = jest.spyOn(ImageHelper, "compressToTargetSize").mockResolvedValue(FILE_1);
 				await act(async () => {
 					await renderComponent({
 						files: [FILE_1],
@@ -587,7 +594,7 @@ describe("image-upload", () => {
 			});
 
 			it("Should extract image metadata", async () => {
-				jest.spyOn(ImageHelper, "compressImage").mockResolvedValue(FILE_1);
+				jest.spyOn(ImageHelper, "compressToTargetSize").mockResolvedValue(FILE_1);
 
 				await waitFor(async () => {
 					await renderComponent({
@@ -602,7 +609,7 @@ describe("image-upload", () => {
 			});
 
 			it("should resize image to fit dimensions when crop is false", async () => {
-				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+				const drawSpy = jest.spyOn(ImageHelper, "drawImageToCanvas");
 				await act(async () => {
 					await renderComponent({
 						files: [FILE_1],
@@ -616,12 +623,15 @@ describe("image-upload", () => {
 					await flushPromise();
 				});
 
-				await waitFor(() => expect(resampleSpy).toHaveBeenCalled());
-				expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), { scale: expect.any(Number) });
+				await waitFor(() => expect(drawSpy).toHaveBeenCalled());
+				expect(drawSpy).toHaveBeenCalledWith(expect.any(Image), {
+					scale: expect.any(Number),
+					type: "image/jpeg",
+				});
 			});
 
 			it("should crop image to exact dimensions when crop is true", async () => {
-				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+				const drawSpy = jest.spyOn(ImageHelper, "drawImageToCanvas");
 				await act(async () => {
 					await renderComponent({
 						files: [FILE_1],
@@ -635,17 +645,18 @@ describe("image-upload", () => {
 					await flushPromise();
 				});
 
-				await waitFor(() => expect(resampleSpy).toHaveBeenCalled());
-				expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), {
+				await waitFor(() => expect(drawSpy).toHaveBeenCalled());
+				expect(drawSpy).toHaveBeenCalledWith(expect.any(Image), {
 					width: 500,
 					height: 500,
 					crop: true,
+					type: "image/jpeg",
 				});
 			});
 
 			it("should not use crop when compress is false even if crop is true", async () => {
-				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
-				const convertSpy = jest.spyOn(ImageHelper, "convertBlob");
+				const drawSpy = jest.spyOn(ImageHelper, "drawImageToCanvas");
+				const convertSpy = jest.spyOn(ImageHelper, "convertToDataUrl");
 				await act(async () => {
 					await renderComponent({
 						files: [FILE_1],
@@ -661,7 +672,7 @@ describe("image-upload", () => {
 
 				// convertImage is called instead of compressImage when compress=false
 				await waitFor(() => expect(convertSpy).toHaveBeenCalled());
-				expect(resampleSpy).not.toHaveBeenCalled();
+				expect(drawSpy).not.toHaveBeenCalled();
 			});
 		});
 	});
@@ -788,7 +799,7 @@ describe("image-upload", () => {
 					reviewImage: true,
 				});
 
-				jest.spyOn(ImageHelper, "convertBlob").mockRejectedValue("error");
+				jest.spyOn(ImageHelper, "convertToDataUrl").mockRejectedValue("error");
 				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
 				await act(async () => {
 					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
@@ -802,14 +813,14 @@ describe("image-upload", () => {
 		describe("when there is no need to compress", () => {
 			let compressSpy: jest.SpyInstance;
 			beforeEach(async () => {
-				compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				compressSpy = jest.spyOn(ImageHelper, "compressToTargetSize");
 				await renderComponent({
 					files: [FILE_1],
 					overrideField: { editImage: true, validation: [{ maxSizeInKb: 0.15 }] },
 					reviewImage: true,
 				});
 
-				jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(`${JPG_BASE64}${JPG_BASE64}`);
+				jest.spyOn(ImageHelper, "convertToDataUrl").mockResolvedValue(`${JPG_BASE64}${JPG_BASE64}`);
 				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
 				await act(async () => {
 					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
@@ -869,9 +880,12 @@ describe("image-upload", () => {
 
 		describe("when editing image with crop enabled", () => {
 			it("should recompress with crop when crop is enabled and image is edited", async () => {
-				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage").mockResolvedValue(FILE_1);
+				const drawSpy = jest.spyOn(ImageHelper, "drawImageToCanvas").mockResolvedValue({
+					canvas: document.createElement("canvas"),
+					blob: FILE_1,
+				});
 				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
-				jest.spyOn(ImageHelper, "compressImage").mockResolvedValue(FILE_1);
+				jest.spyOn(ImageHelper, "compressToTargetSize").mockResolvedValue(FILE_1);
 
 				await renderComponent({
 					files: [FILE_1],
@@ -893,10 +907,11 @@ describe("image-upload", () => {
 				});
 
 				await waitFor(() =>
-					expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), {
+					expect(drawSpy).toHaveBeenCalledWith(expect.any(Image), {
 						width: 400,
 						height: 400,
 						crop: true,
+						type: "image/jpeg",
 					})
 				);
 			});
@@ -1317,7 +1332,7 @@ describe("image-upload", () => {
 
 		beforeEach(() => {
 			formIsDirty = undefined;
-			jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
+			jest.spyOn(ImageHelper, "convertToDataUrl").mockResolvedValue(JPG_BASE64);
 			jest.spyOn(ImageHelper, "getMetadata").mockResolvedValue(METADATA);
 			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
 			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
