@@ -34,6 +34,7 @@ const createLocationFieldTest = (story: string) =>
 			modalBox: page.getByTestId("field__modal-box"),
 			modalMapImage: page.getByTestId("field__static-map").locator("img"),
 			legendTrigger: page.getByTestId("field__legend-trigger"),
+			legend: page.getByTestId("field__legend"),
 		}),
 	});
 
@@ -151,6 +152,7 @@ test.describe("Location Field", () => {
 			await expect(story.locators.modalBox).toBeVisible();
 			await waitForMapComponent(story.page);
 			await story.locators.legendTrigger.click();
+			await expect(story.locators.legend).toBeVisible();
 
 			await story.snapshot("open", { fullscreen: true });
 		});
