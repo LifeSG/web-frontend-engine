@@ -11,7 +11,7 @@ export type TCreateStoryTestOptions<TLocators> = {
 	story: string;
 	scope?: TStoryPageOptions["scope"];
 	createLocators: TStoryLocatorsFactory<TLocators>;
-	useMockedTimestamp?: boolean;
+	useMockedTimestamp?: boolean | string;
 };
 
 // =============================================================================
@@ -50,7 +50,9 @@ export const createStoryTest = <TLocators>(options: TCreateStoryTestOptions<TLoc
 		story: async ({ page }, runStory) => {
 			if (options.useMockedTimestamp) {
 				await page.clock.install();
-				await page.clock.setFixedTime("2026-04-08T12:00:00.000Z");
+				const timestamp =
+					options.useMockedTimestamp === true ? "2026-04-08T12:00:00.000Z" : options.useMockedTimestamp;
+				await page.clock.setFixedTime(timestamp);
 			}
 			const story = new StoryPageWithLocators(page);
 			await runStory(story);

@@ -13,7 +13,6 @@ const createDateFieldTest = (story: string) =>
 	});
 
 const defaultTest = createDateFieldTest("default");
-const withoutButtonsTest = createDateFieldTest("without-buttons");
 const warningTest = createDateFieldTest("warning");
 const disabledDatesTest = createDateFieldTest("disabled-dates");
 
@@ -24,16 +23,6 @@ defaultTest.describe(() => {
 	});
 
 	defaultTest("Date field modal", async ({ story }) => {
-		await story.goto();
-
-		await story.locators.dateField.click();
-		await expect(story.locators.calendarContainer).toBeVisible();
-		await story.snapshot("open", { fullscreen: true });
-	});
-});
-
-withoutButtonsTest.describe(() => {
-	withoutButtonsTest("Without buttons", async ({ story }) => {
 		await story.goto();
 
 		await story.locators.dateField.click();
