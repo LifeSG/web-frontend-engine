@@ -24,10 +24,6 @@ const customStylesTest = createLocationFieldTest("with-custom-styles");
 const withStory = forComponent("fields/location-field");
 
 test.describe("Location Field", () => {
-	test.afterEach(async ({ story }) => {
-		await story.waitForImageLoad(); // wait for hidden prefetched image that loads after mount
-	});
-
 	defaultTest.describe(() => {
 		defaultTest("Default", async ({ story }) => {
 			await story.goto();
@@ -41,7 +37,6 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -55,7 +50,6 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -69,7 +63,6 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -79,7 +72,6 @@ test.describe("Location Field", () => {
 		mapTest("Map", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
-			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("mount");
 		});
@@ -89,7 +81,6 @@ test.describe("Location Field", () => {
 		disabledTest("Disabled", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
-			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("mount");
 		});
@@ -99,7 +90,6 @@ test.describe("Location Field", () => {
 		readonlyTest("Readonly", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
-			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("mount");
 		});
@@ -113,7 +103,6 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -127,7 +116,6 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
 			await story.locators.legendTrigger.click();
 
 			await story.snapshot("open", { fullscreen: true });
@@ -142,7 +130,6 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("error", { fullscreen: true });
 		});
