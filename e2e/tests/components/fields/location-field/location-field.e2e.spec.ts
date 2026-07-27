@@ -26,7 +26,10 @@ const withStory = forComponent("fields/location-field");
 test.describe("Location Field", () => {
 	defaultTest.describe(() => {
 		defaultTest("Default", async ({ story }) => {
+			await mockGeolocation(story.page);
+			await mockOneMapAPI(story.page);
 			await story.goto();
+
 			await story.snapshot("mount");
 		});
 
@@ -37,6 +40,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -50,6 +54,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -63,6 +68,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -103,6 +109,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -117,6 +124,7 @@ test.describe("Location Field", () => {
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
 			await story.locators.legendTrigger.click();
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -130,6 +138,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
+			await story.page.waitForTimeout(2000);
 
 			await story.snapshot("error", { fullscreen: true });
 		});
