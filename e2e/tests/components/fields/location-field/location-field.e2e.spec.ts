@@ -149,8 +149,8 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.locators.legendTrigger.click();
 			await waitForMapComponent(story.page);
+			await story.locators.legendTrigger.click();
 
 			await story.snapshot("open", { fullscreen: true });
 		});
