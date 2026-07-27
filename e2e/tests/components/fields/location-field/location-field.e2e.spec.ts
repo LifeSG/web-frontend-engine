@@ -1,5 +1,29 @@
 import { createStoryTest, expect, forComponent, test } from "../../../utils/fixtures";
 import { mockGeolocation, mockOneMapAPI, mockOneMapAPIError } from "./fixtures/mock-onemap";
+import { Page } from "@playwright/test";
+
+const waitForMapComponent = async (page: Page, timeout = 10000) => {
+	await page.waitForFunction(
+		() => {
+			// Check for Leaflet tiles
+			const leafletTiles = Array.from(document.querySelectorAll<HTMLImageElement>(".leaflet-tile"));
+			if (leafletTiles.length > 0) {
+				const loadingTiles = document.querySelectorAll(".leaflet-tile-loading");
+				const allTilesLoaded = leafletTiles.every((tile) => tile.complete && tile.naturalHeight > 0);
+				return loadingTiles.length === 0 && allTilesLoaded;
+			}
+
+			// Check for static map
+			const staticMapImg = document.querySelector<HTMLImageElement>('[data-testid="field__static-map"] img');
+			if (staticMapImg) {
+				return staticMapImg.complete && staticMapImg.naturalHeight > 0;
+			}
+
+			return false;
+		},
+		{ polling: 100, timeout }
+	);
+};
 
 const createLocationFieldTest = (story: string) =>
 	createStoryTest({
@@ -26,9 +50,8 @@ const withStory = forComponent("fields/location-field");
 test.describe("Location Field", () => {
 	defaultTest.describe(() => {
 		defaultTest("Default", async ({ story }) => {
-			await mockGeolocation(story.page);
-			await mockOneMapAPI(story.page);
 			await story.goto();
+			await story.page.waitForLoadState("networkidle");
 
 			await story.snapshot("mount");
 		});
@@ -40,7 +63,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
+			await waitForMapComponent(story.page);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -54,7 +77,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
+			await waitForMapComponent(story.page);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -68,7 +91,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
+			await waitForMapComponent(story.page);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -78,6 +101,7 @@ test.describe("Location Field", () => {
 		mapTest("Map", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
+			await waitForMapComponent(story.page);
 
 			await story.snapshot("mount");
 		});
@@ -87,6 +111,7 @@ test.describe("Location Field", () => {
 		disabledTest("Disabled", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
+			await waitForMapComponent(story.page);
 
 			await story.snapshot("mount");
 		});
@@ -96,6 +121,7 @@ test.describe("Location Field", () => {
 		readonlyTest("Readonly", async ({ story }) => {
 			await mockOneMapAPI(story.page);
 			await story.goto();
+			await waitForMapComponent(story.page);
 
 			await story.snapshot("mount");
 		});
@@ -109,7 +135,7 @@ test.describe("Location Field", () => {
 
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
+			await waitForMapComponent(story.page);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
@@ -124,7 +150,7 @@ test.describe("Location Field", () => {
 			await story.locators.locationInput.click();
 			await expect(story.locators.modalBox).toBeVisible();
 			await story.locators.legendTrigger.click();
-			await story.page.waitForTimeout(2000);
+			await waitForMapComponent(story.page);
 
 			await story.snapshot("open", { fullscreen: true });
 		});
