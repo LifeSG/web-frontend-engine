@@ -86,6 +86,15 @@ export const mockOneMapAPI = async (page: Page) => {
 			body: image,
 		});
 	});
+
+	await page.route("https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png", async (route) => {
+		const image = createSolidColorPng(20, 20, 255, 128, 0);
+		await route.fulfill({
+			status: 200,
+			contentType: "image/png",
+			body: image,
+		});
+	});
 };
 
 export const mockOneMapAPIError = async (page: Page) => {
