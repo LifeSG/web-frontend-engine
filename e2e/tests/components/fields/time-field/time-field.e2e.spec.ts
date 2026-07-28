@@ -1,40 +1,37 @@
-import { createStoryTest, forComponent, test } from "../../../utils/fixtures";
+import { forComponent, test } from "../../../utils/fixtures";
 
 const withStory = forComponent("fields/time-field");
 
-const createTimeFieldTest = (story: string) =>
-	createStoryTest({
-		component: "fields/time-field",
-		story,
-		createLocators: () => ({}),
+test.describe("TimeField", () => {
+	test.describe(() => {
+		test.use({ storyOptions: withStory("default") });
+
+		test("Default", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
 	});
 
-const defaultTest = createTimeFieldTest("default");
-const warningTest = createTimeFieldTest("warning");
-const useCurrentTimeTest = createStoryTest({
-	component: "fields/time-field",
-	story: "use-current-time",
-	useMockedTimestamp: true,
-	createLocators: () => ({}),
-});
+	test.describe(() => {
+		test.use({ storyOptions: withStory("warning") });
 
-defaultTest.describe("", () => {
-	defaultTest("Default", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
+		test("Warning", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
 	});
-});
 
-warningTest.describe("", () => {
-	warningTest("Warning", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
-});
+	test.describe(() => {
+		test.use({
+			storyOptions: {
+				...withStory("use-current-time"),
+				useMockedTimestamp: true,
+			},
+		});
 
-useCurrentTimeTest.describe(() => {
-	useCurrentTimeTest("Use current time", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
+		test("Use current time", async ({ story }) => {
+			await story.goto();
+			await story.snapshot("mount");
+		});
 	});
 });

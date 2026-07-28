@@ -5,6 +5,7 @@ export type TStoryPageOptions = {
 	scope?: TStoryScope;
 	component: string;
 	story?: string;
+	useMockedTimestamp?: boolean | string;
 };
 
 export type TStoryOptionsFactory = (story: string) => TStoryPageOptions;
@@ -19,7 +20,7 @@ export class StoryPage extends AbstractStoryPage {
 	}
 
 	public constructor(page: Page, options: TStoryPageOptions) {
-		super(page);
+		super(page, { useMockedTimestamp: options.useMockedTimestamp });
 		this.scope = options.scope ?? "components";
 		this.component = options.component;
 		this.story = options.story ?? "default";
