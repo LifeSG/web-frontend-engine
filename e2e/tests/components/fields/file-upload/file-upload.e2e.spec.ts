@@ -83,6 +83,7 @@ test.describe("FileUpload", () => {
 		thumbnailTest("Thumbnail", async ({ story }) => {
 			await story.goto();
 			await expect(story.locators.fileItem("document.pdf")).toBeVisible();
+			await story.waitForImageLoad();
 			await story.snapshot("mount");
 		});
 	});
