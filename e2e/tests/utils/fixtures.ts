@@ -41,6 +41,7 @@ export const createStoryTest = <TLocators>(options: TCreateStoryTestOptions<TLoc
 				scope: options.scope,
 				component: options.component,
 				story: options.story,
+				useMockedTimestamp: options.useMockedTimestamp,
 			});
 			this.locators = options.createLocators(page);
 		}

@@ -3,17 +3,37 @@ import { compareScreenshot } from "./compare-screenshot";
 
 export type TStoryScope = "components" | "fee";
 
+type TAbstractStoryPageOptions = {
+	useMockedTimestamp?: boolean | string;
+};
+
+const DEFAULT_MOCKED_TIMESTAMP = "2026-04-08T12:00:00.000Z";
+
 export abstract class AbstractStoryPage {
 	public readonly page: Page;
 	public readonly layout: Locator;
+	private readonly useMockedTimestamp?: boolean | string;
+	private isClockInitialized = false;
 
 	protected readonly scope: TStoryScope = "components";
 	protected abstract readonly component: string;
 	protected readonly story: string = "default";
 
-	public constructor(page: Page) {
+	public constructor(page: Page, options?: TAbstractStoryPageOptions) {
 		this.page = page;
 		this.layout = page.getByTestId("story-layout");
+		this.useMockedTimestamp = options?.useMockedTimestamp;
+	}
+
+	private async configureClock() {
+		if (!this.useMockedTimestamp || this.isClockInitialized) {
+			return;
+		}
+
+		await this.page.clock.install();
+		const timestamp = this.useMockedTimestamp === true ? DEFAULT_MOCKED_TIMESTAMP : this.useMockedTimestamp;
+		await this.page.clock.setFixedTime(timestamp);
+		this.isClockInitialized = true;
 	}
 
 	protected getPath() {
@@ -21,6 +41,8 @@ export abstract class AbstractStoryPage {
 	}
 
 	public async goto() {
+		await this.configureClock();
+
 		// proxy all asset requests to the local cdn
 		await this.page.context().route(/^https:\/\/assets\.life\.gov\.sg/, async (route) => {
 			const url = route.request().url();
