@@ -1,4 +1,5 @@
 import { Page } from "@playwright/test";
+import { createSolidColorPng } from "../../../../utils/image-fixtures";
 
 export const mockOneMapAPI = async (page: Page) => {
 	await page.route("/api/onemap/**", async (route) => {
@@ -58,6 +59,41 @@ export const mockOneMapAPI = async (page: Page) => {
 				}),
 			});
 		}
+	});
+
+	await page.route("https://www.onemap.gov.sg/api/staticmap/getStaticImage**", async (route) => {
+		const image = createSolidColorPng(426, 135, 220, 220, 220);
+		await route.fulfill({
+			status: 200,
+			contentType: "image/png",
+			body: image,
+		});
+	});
+
+	await page.route("https://www.onemap.gov.sg/maps/tiles/Default_HD/*/*/*.png", async (route) => {
+		const url = new URL(route.request().url());
+		const [z, x, yVal] = url.pathname.split("/").slice(-3);
+		const y = yVal.split(".")[0];
+
+		const r = Number(z) % 256;
+		const g = Number(x) % 256;
+		const b = Number(y) % 256;
+		const image = createSolidColorPng(256, 256, r, g, b);
+
+		await route.fulfill({
+			status: 200,
+			contentType: "image/png",
+			body: image,
+		});
+	});
+
+	await page.route("https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png", async (route) => {
+		const image = createSolidColorPng(20, 20, 255, 128, 0);
+		await route.fulfill({
+			status: 200,
+			contentType: "image/png",
+			body: image,
+		});
 	});
 };
 
