@@ -57,7 +57,7 @@ test.describe("FileUpload", () => {
 				await fileChooser.setFiles(SAMPLE_PNG_PAYLOAD);
 
 				await expect(story.locators.fileItem(SAMPLE_PNG_PAYLOAD.name)).toBeVisible();
-				await story.snapshot("uploaded-through-button", { locator: story.locators.dropzone });
+				await story.snapshot("uploaded-through-button");
 			});
 		});
 	});
@@ -83,14 +83,14 @@ test.describe("FileUpload", () => {
 		thumbnailTest("Thumbnail", async ({ story }) => {
 			await story.goto();
 			await expect(story.locators.fileItem("document.pdf")).toBeVisible();
-			await story.snapshot("mount", { locator: story.locators.dropzone });
+			await story.snapshot("mount");
 		});
 	});
 
 	warningTest.describe(() => {
 		warningTest("Warning", async ({ story }) => {
 			await story.goto();
-			await story.snapshot("mount", { locator: story.locators.dropzone });
+			await story.snapshot("mount");
 		});
 	});
 
@@ -99,7 +99,7 @@ test.describe("FileUpload", () => {
 			customErrorTest("Main field error", async ({ story }) => {
 				await story.goto();
 				await story.locators.setCustomErrorsButton.click();
-				await story.snapshot("main-field-error", { locator: story.locators.dropzone });
+				await story.snapshot("main-field-error");
 			});
 
 			customErrorTest("Main field and per-file errors", async ({ story }) => {
@@ -113,7 +113,7 @@ test.describe("FileUpload", () => {
 				await expect(story.locators.fileItem(SAMPLE_PNG_PAYLOAD.name)).toBeVisible();
 
 				await story.locators.setCustomErrorsButton.click();
-				await story.snapshot("main-and-per-file-errors", { locator: story.locators.dropzone });
+				await story.snapshot("main-and-per-file-errors");
 			});
 		});
 	});
