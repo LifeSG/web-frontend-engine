@@ -1,15 +1,15 @@
-import { Form } from "@lifesg/react-design-system/form";
-import { FormInputProps } from "@lifesg/react-design-system/form";
+import { Form, FormInputProps } from "@lifesg/react-design-system/form";
 import { AddonProps } from "@lifesg/react-design-system/input-group";
+import { useApplyStyle } from "@lifesg/react-design-system/theme";
 import * as Icons from "@lifesg/react-icons";
 import React, { HTMLInputTypeAttribute, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper, filterSchemaProps } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { ERROR_MESSAGES } from "../../shared";
 import { Warning } from "../../shared/warning";
+import * as styles from "./text-field.styles";
 import { IEmailFieldSchema, INumericFieldSchema, INumericFieldValidationRule, ITextFieldSchema } from "./types";
 
 export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFieldSchema | INumericFieldSchema>) => {
@@ -26,8 +26,13 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 
-	const ref = useRef<HTMLInputElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const iconWrapperRef = useRef<SVGSVGElement>(null);
 	const caret = useRef<number>(0);
+
+	useApplyStyle(iconWrapperRef as unknown as React.MutableRefObject<HTMLElement>, {
+		[styles.tokens.customIcon.color]: customOptions?.addOn?.type === "icon" ? customOptions.addOn.color : undefined,
+	});
 
 	// ================================================
 	// EFFECTS
@@ -110,11 +115,11 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	useEffect(() => {
 		if (
 			uiType === "text-field" &&
-			document?.activeElement === ref.current &&
-			ref.current.selectionEnd !== caret.current
+			document?.activeElement === inputRef.current &&
+			inputRef.current.selectionEnd !== caret.current
 		) {
 			// keep caret in place after uppercase, not available for 'email' & 'number' HTML input types
-			ref.current.setSelectionRange(caret.current, caret.current);
+			inputRef.current.setSelectionRange(caret.current, caret.current);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [stateValue]);
@@ -229,13 +234,13 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		}
 
 		if (customOptions.addOn.type === "icon") {
-			const { icon, position, color } = customOptions.addOn;
+			const { icon, position } = customOptions.addOn;
 			const Element = Icons[icon];
 			return {
 				type: "custom",
 				position: position,
 				attributes: {
-					children: <CustomIcon as={Element} $color={color} />,
+					children: <Element ref={iconWrapperRef} className={styles.customIcon} />,
 				},
 			};
 		}
@@ -253,7 +258,7 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 				{...derivedAttributes}
 				id={id}
 				data-testid={TestHelper.generateId(id, uiType)}
-				ref={ref}
+				ref={inputRef}
 				type={formatInputType()}
 				label={formattedLabel}
 				onBlur={onBlur}
@@ -270,11 +275,3 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 		</>
 	);
 };
-
-interface CustomIconStyleProps {
-	$color?: string;
-}
-
-const CustomIcon = styled.div<CustomIconStyleProps>`
-	${({ $color }) => $color && `color: ${$color};`}
-`;
