@@ -9,6 +9,7 @@ const SCHEMA: IFrontendEngineData = {
 			children: {
 				field: {
 					uiType: "date-range-field",
+					variant: "range",
 					label: "Date",
 				},
 			},

@@ -10,6 +10,7 @@ const DATE_RANGE_WARNING_SCHEMA: IFrontendEngineData = {
 			children: {
 				primary: {
 					uiType: "date-range-field",
+					variant: "range",
 					label: "Date",
 				},
 			},
