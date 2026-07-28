@@ -1,15 +1,14 @@
-import { Alert } from "@lifesg/react-design-system/alert";
+import { css } from "@linaria/core";
 import { Colour, Font, Spacing } from "@lifesg/react-design-system/theme";
-import styled from "styled-components";
 
-export const ESignatureWrapper = styled.div`
+export const eSignatureWrapper = css`
 	&:not(:last-child) {
 		margin: 0 0 ${Spacing["spacing-32"]};
 	}
 `;
 
-export const ErrorWrapper = styled.div`
-	margin: -${Spacing["spacing-16"]} 0 ${Spacing["spacing-32"]};
+export const errorWrapper = css`
+	margin: calc(${Spacing["spacing-16"]} * -1) 0 ${Spacing["spacing-32"]};
 	color: ${Colour["text-error"]};
 	outline: none;
 	${Font["body-sm-semibold"]}
@@ -18,7 +17,7 @@ export const ErrorWrapper = styled.div`
 	align-items: center;
 `;
 
-export const TryAgain = styled.button`
+export const tryAgain = css`
 	background: none;
 	padding: 0;
 	border: 0;
@@ -29,6 +28,6 @@ export const TryAgain = styled.button`
 	cursor: pointer;
 `;
 
-export const RefreshAlert = styled(Alert)`
+export const refreshAlert = css`
 	margin-top: ${Spacing["spacing-8"]};
 `;
