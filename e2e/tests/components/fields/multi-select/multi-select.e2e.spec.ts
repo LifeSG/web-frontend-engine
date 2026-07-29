@@ -13,24 +13,20 @@ const createMultiSelectTest = (story: string) =>
 const defaultTest = createMultiSelectTest("default");
 const warningTest = createMultiSelectTest("warning");
 
-defaultTest.describe(() => {
-	defaultTest("Default", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
-
-	defaultTest("Dropdown", async ({ story }) => {
-		await story.goto();
-
-		await story.locators.selector.click();
-		await expect(story.locators.dropdown).toBeVisible();
-		await story.snapshot("open", { fullscreen: true });
-	});
+defaultTest("Default", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-warningTest.describe(() => {
-	warningTest("Warning", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+defaultTest("Dropdown", async ({ story }) => {
+	await story.goto();
+
+	await story.locators.selector.click();
+	await expect(story.locators.dropdown).toBeVisible();
+	await story.snapshot("open", { fullscreen: true });
+});
+
+warningTest("Warning", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
