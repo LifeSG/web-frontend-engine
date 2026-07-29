@@ -12,22 +12,18 @@ const createNestedMultiSelectTest = (story: string) =>
 const defaultTest = createNestedMultiSelectTest("default");
 const warningTest = createNestedMultiSelectTest("warning");
 
-defaultTest.describe(() => {
-	defaultTest("Default rendering", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
-
-	defaultTest("Dropdown open", async ({ story }) => {
-		await story.goto();
-		await story.locators.trigger.click();
-		await story.snapshot("open", { fullscreen: true });
-	});
+defaultTest("Default rendering", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-warningTest.describe(() => {
-	warningTest("Warning state", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+defaultTest("Dropdown open", async ({ story }) => {
+	await story.goto();
+	await story.locators.trigger.click();
+	await story.snapshot("open", { fullscreen: true });
+});
+
+warningTest("Warning state", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
