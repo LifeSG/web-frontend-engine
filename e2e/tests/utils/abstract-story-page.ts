@@ -1,18 +1,22 @@
 import { type Locator, type Page, expect } from "@playwright/test";
+import { timestamp as mockedTimestamp, viewport as viewportSizes } from "../consts";
 import { compareScreenshot } from "./compare-screenshot";
 
 export type TStoryScope = "components" | "fee";
 
-type TAbstractStoryPageOptions = {
+export type TAbstractStoryPageOptions = {
 	useMockedTimestamp?: boolean | string;
+	viewport?: {
+		size?: keyof typeof viewportSizes | { width: number; height: number };
+		orientation?: "portrait" | "landscape";
+	};
 };
-
-const DEFAULT_MOCKED_TIMESTAMP = "2026-04-08T12:00:00.000Z";
 
 export abstract class AbstractStoryPage {
 	public readonly page: Page;
 	public readonly layout: Locator;
-	private readonly useMockedTimestamp?: boolean | string;
+	private readonly useMockedTimestamp?: TAbstractStoryPageOptions["useMockedTimestamp"];
+	private readonly viewport?: TAbstractStoryPageOptions["viewport"];
 	private isClockInitialized = false;
 
 	protected readonly scope: TStoryScope = "components";
@@ -23,6 +27,7 @@ export abstract class AbstractStoryPage {
 		this.page = page;
 		this.layout = page.getByTestId("story-layout");
 		this.useMockedTimestamp = options?.useMockedTimestamp;
+		this.viewport = options?.viewport;
 	}
 
 	private async configureClock() {
@@ -31,7 +36,7 @@ export abstract class AbstractStoryPage {
 		}
 
 		await this.page.clock.install();
-		const timestamp = this.useMockedTimestamp === true ? DEFAULT_MOCKED_TIMESTAMP : this.useMockedTimestamp;
+		const timestamp = this.useMockedTimestamp === true ? mockedTimestamp : this.useMockedTimestamp;
 		await this.page.clock.setFixedTime(timestamp);
 		this.isClockInitialized = true;
 	}
@@ -42,6 +47,10 @@ export abstract class AbstractStoryPage {
 
 	public async goto() {
 		await this.configureClock();
+
+		if (this.viewport) {
+			await this.setViewport(this.viewport);
+		}
 
 		// proxy all asset requests to the local cdn
 		await this.page.context().route(/^https:\/\/assets\.life\.gov\.sg/, async (route) => {
@@ -57,28 +66,14 @@ export abstract class AbstractStoryPage {
 		await expect(this.layout).toBeVisible();
 	}
 
-	public async setViewport(options?: {
-		size?: "mobile" | "tablet" | "desktop" | { width: number; height: number };
-		orientation?: "portrait" | "landscape";
-	}) {
+	public async setViewport(options: TAbstractStoryPageOptions["viewport"]) {
 		const { size = "desktop", orientation = "portrait" } = options || {};
 		let viewport: { width: number; height: number };
 
 		if (typeof size === "object") {
 			viewport = size;
 		} else {
-			switch (size) {
-				case "mobile":
-					viewport = { width: 375, height: 667 };
-					break;
-				case "tablet":
-					viewport = { width: 768, height: 1024 };
-					break;
-				case "desktop":
-				default:
-					viewport = { width: 1280, height: 720 };
-					break;
-			}
+			viewport = viewportSizes[size] || viewportSizes.desktop;
 		}
 
 		if (orientation === "landscape") {

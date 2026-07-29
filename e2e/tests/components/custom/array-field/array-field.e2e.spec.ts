@@ -30,7 +30,7 @@ defaultTest.describe(() => {
 	});
 
 	defaultTest("Default (mobile)", async ({ story }) => {
-		await story.page.setViewportSize({ width: 375, height: 667 });
+		await story.setViewport({ size: "mobile" });
 		await story.goto();
 		await story.snapshot("mount");
 	});
@@ -109,7 +109,7 @@ removeButtonPositionTest.describe(() => {
 	});
 
 	removeButtonPositionTest("Remove button position (mobile)", async ({ story }) => {
-		await story.page.setViewportSize({ width: 375, height: 667 });
+		await story.setViewport({ size: "mobile" });
 		await story.goto();
 		await story.snapshot("mount");
 	});

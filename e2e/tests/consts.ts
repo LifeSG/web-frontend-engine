@@ -1,6 +1,5 @@
 export const viewport = {
-	mobile: { width: 375, height: 812 },
-	mobileLandscape: { width: 667, height: 375 },
+	mobile: { width: 375, height: 667 },
 	tablet: { width: 768, height: 1024 },
 	desktop: { width: 1280, height: 720 },
 	xxs: { width: 320, height: 720 },
@@ -11,3 +10,5 @@ export const viewport = {
 	xl: { width: 1280, height: 720 },
 	xxl: { width: 1536, height: 720 },
 };
+
+export const timestamp = "2026-04-08T12:00:00.000Z";

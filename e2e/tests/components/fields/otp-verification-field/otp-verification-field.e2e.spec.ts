@@ -1,4 +1,5 @@
 import { type Page } from "@playwright/test";
+import { timestamp } from "../../../consts";
 import { createStoryTest, expect, test } from "../../../utils/fixtures";
 
 const createOtpTest = (story: string) =>
@@ -66,7 +67,7 @@ test.describe("OTP Verification Field", () => {
 
 	phoneNumberTest.describe(() => {
 		phoneNumberTest("Interaction", async ({ story }) => {
-			const now = new Date("2024-02-02T08:00:00").getTime();
+			const now = new Date(timestamp).getTime();
 			await story.page.clock.install({ time: now - 30 * 1000 });
 
 			await mockApis(story.page);
