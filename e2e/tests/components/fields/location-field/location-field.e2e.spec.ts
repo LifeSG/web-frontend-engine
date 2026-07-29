@@ -126,6 +126,7 @@ test.describe("Location Field", () => {
 
 	apiErrorTest("API error", async ({ story }) => {
 		await mockGeolocation(story.page);
+		await mockOneMapAPI(story.page);
 		await mockOneMapAPIError(story.page);
 		await story.goto();
 
