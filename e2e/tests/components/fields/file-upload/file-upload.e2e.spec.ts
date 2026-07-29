@@ -88,7 +88,9 @@ test.describe("FileUpload", () => {
 	test.describe("Custom errors", () => {
 		customErrorTest("Main field error", async ({ story }) => {
 			await story.goto();
+			await story.page.waitForTimeout(500); // Allow FEE to fully initialise
 			await story.locators.setCustomErrorsButton.click();
+
 			await story.snapshot("main-field-error");
 		});
 
@@ -100,9 +102,11 @@ test.describe("FileUpload", () => {
 			await story.locators.uploadButton.click();
 			const fileChooser = await fileChooserPromise;
 			await fileChooser.setFiles(SAMPLE_PNG_PAYLOAD);
+
 			await expect(story.locators.fileItem(SAMPLE_PNG_PAYLOAD.name)).toBeVisible();
 
 			await story.locators.setCustomErrorsButton.click();
+
 			await story.snapshot("main-and-per-file-errors");
 		});
 	});
