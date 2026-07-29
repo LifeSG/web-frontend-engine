@@ -12,31 +12,22 @@ const chipsBottomTest = createTextareaTest("chips-bottom");
 const resizableVariantsTest = createTextareaTest("resizable-variants");
 const warningTest = createTextareaTest("warning");
 
-chipsTopTest.describe(() => {
-	chipsTopTest("Chips top display", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+chipsTopTest("Chips top display", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-chipsBottomTest.describe(() => {
-	chipsBottomTest("Chips bottom display", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+chipsBottomTest("Chips bottom display", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-resizableVariantsTest.describe(() => {
-	resizableVariantsTest("Resizable variants", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+resizableVariantsTest("Resizable variants", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-warningTest.describe(() => {
-	warningTest("Warning", async ({ story }) => {
-		await story.goto();
-
-		await story.snapshot("mount");
-	});
+warningTest("Warning", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });

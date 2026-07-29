@@ -16,48 +16,42 @@ const defaultTest = createChipsTest("default");
 const withTextareaTest = createChipsTest("with-textarea");
 const warningTest = createChipsTest("warning");
 
-defaultTest.describe(() => {
-	defaultTest("Default", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
-
-	defaultTest("Hover", async ({ story }) => {
-		await story.goto();
-
-		await story.locators.apple.hover();
-		await story.snapshot("non-selected");
-
-		await story.locators.apple.click();
-		await story.locators.apple.hover();
-		await story.snapshot("selected");
-	});
-
-	defaultTest("With selection", async ({ story }) => {
-		await story.goto();
-
-		await story.locators.apple.click();
-		await story.locators.berry.click();
-
-		await story.snapshot("state");
-	});
+defaultTest("Default", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-withTextareaTest.describe(() => {
-	withTextareaTest("With Textarea", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("closed");
+defaultTest("Hover", async ({ story }) => {
+	await story.goto();
 
-		await story.locators.durian.click();
-		await expect(story.locators.duriansTextarea).toBeVisible();
-		await story.snapshot("open");
-	});
+	await story.locators.apple.hover();
+	await story.snapshot("non-selected");
+
+	await story.locators.apple.click();
+	await story.locators.apple.hover();
+	await story.snapshot("selected");
 });
 
-warningTest.describe(() => {
-	warningTest("Warning", async ({ story }) => {
-		await story.goto();
+defaultTest("With selection", async ({ story }) => {
+	await story.goto();
 
-		await story.snapshot("mount");
-	});
+	await story.locators.apple.click();
+	await story.locators.berry.click();
+
+	await story.snapshot("state");
+});
+
+withTextareaTest("With Textarea", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("closed");
+
+	await story.locators.durian.click();
+	await expect(story.locators.duriansTextarea).toBeVisible();
+	await story.snapshot("open");
+});
+
+warningTest("Warning", async ({ story }) => {
+	await story.goto();
+
+	await story.snapshot("mount");
 });

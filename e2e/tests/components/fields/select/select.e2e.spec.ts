@@ -12,22 +12,18 @@ const createSelectTest = (story: string) =>
 const defaultTest = createSelectTest("default");
 const warningTest = createSelectTest("warning");
 
-defaultTest.describe(() => {
-	defaultTest("Default", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
-
-	defaultTest("Dropdown open", async ({ story }) => {
-		await story.goto();
-		await story.locators.trigger.click();
-		await story.snapshot("open", { fullscreen: true });
-	});
+defaultTest("Default", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-warningTest.describe(() => {
-	warningTest("Warning", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+defaultTest("Dropdown open", async ({ story }) => {
+	await story.goto();
+	await story.locators.trigger.click();
+	await story.snapshot("open", { fullscreen: true });
+});
+
+warningTest("Warning", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });

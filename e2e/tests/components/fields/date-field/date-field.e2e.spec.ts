@@ -16,34 +16,28 @@ const defaultTest = createDateFieldTest("default");
 const warningTest = createDateFieldTest("warning");
 const disabledDatesTest = createDateFieldTest("disabled-dates");
 
-defaultTest.describe(() => {
-	defaultTest("Default", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
-
-	defaultTest("Date field modal", async ({ story }) => {
-		await story.goto();
-
-		await story.locators.dateField.click();
-		await expect(story.locators.calendarContainer).toBeVisible();
-		await story.snapshot("open", { fullscreen: true });
-	});
+defaultTest("Default", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-warningTest.describe(() => {
-	warningTest("Warning", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+defaultTest("Date field modal", async ({ story }) => {
+	await story.goto();
+
+	await story.locators.dateField.click();
+	await expect(story.locators.calendarContainer).toBeVisible();
+	await story.snapshot("open", { fullscreen: true });
 });
 
-disabledDatesTest.describe(() => {
-	disabledDatesTest("Disabled dates", async ({ story }) => {
-		await story.goto();
+warningTest("Warning", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
+});
 
-		await story.locators.dateField.click();
-		await expect(story.locators.calendarContainer).toBeVisible();
-		await story.snapshot("open", { fullscreen: true });
-	});
+disabledDatesTest("Disabled dates", async ({ story }) => {
+	await story.goto();
+
+	await story.locators.dateField.click();
+	await expect(story.locators.calendarContainer).toBeVisible();
+	await story.snapshot("open", { fullscreen: true });
 });

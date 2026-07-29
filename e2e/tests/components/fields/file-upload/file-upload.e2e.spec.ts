@@ -45,77 +45,65 @@ const customErrorTest = createFileUploadTest("custom-error");
 // TESTS
 // =============================================================================
 test.describe("FileUpload", () => {
-	uploadInteractionsTest.describe(() => {
-		uploadInteractionsTest("Upload interactions", async ({ story }) => {
-			await mockUploadAPI(story.page);
-			await story.goto();
+	uploadInteractionsTest("Upload interactions", async ({ story }) => {
+		await mockUploadAPI(story.page);
+		await story.goto();
 
-			await test.step("Upload through button", async () => {
-				const fileChooserPromise = story.page.waitForEvent("filechooser");
-				await story.locators.uploadButton.click();
-				const fileChooser = await fileChooserPromise;
-				await fileChooser.setFiles(SAMPLE_PNG_PAYLOAD);
+		await test.step("Upload through button", async () => {
+			const fileChooserPromise = story.page.waitForEvent("filechooser");
+			await story.locators.uploadButton.click();
+			const fileChooser = await fileChooserPromise;
+			await fileChooser.setFiles(SAMPLE_PNG_PAYLOAD);
 
-				await expect(story.locators.fileItem(SAMPLE_PNG_PAYLOAD.name)).toBeVisible();
-				await story.snapshot("uploaded-through-button");
-			});
+			await expect(story.locators.fileItem(SAMPLE_PNG_PAYLOAD.name)).toBeVisible();
+			await story.snapshot("uploaded-through-button");
 		});
 	});
 
 	test.describe("Form states", () => {
-		formStatesTest.describe(() => {
-			formStatesTest("Visual", async ({ story }) => {
-				await story.goto();
-				await story.snapshot("mount");
-			});
-		});
-
-		formStatesTest.describe(() => {
-			formStatesTest("Mobile", async ({ story }) => {
-				await story.setViewport({ size: "mobile" });
-				await story.goto();
-				await story.snapshot("mount");
-			});
-		});
-	});
-
-	thumbnailTest.describe(() => {
-		thumbnailTest("Thumbnail", async ({ story }) => {
+		formStatesTest("Visual", async ({ story }) => {
 			await story.goto();
-			await expect(story.locators.fileItem("document.pdf")).toBeVisible();
-			await story.waitForImageLoad();
+			await story.snapshot("mount");
+		});
+
+		formStatesTest("Mobile", async ({ story }) => {
+			await story.setViewport({ size: "mobile" });
+			await story.goto();
 			await story.snapshot("mount");
 		});
 	});
 
-	warningTest.describe(() => {
-		warningTest("Warning", async ({ story }) => {
-			await story.goto();
-			await story.snapshot("mount");
-		});
+	thumbnailTest("Thumbnail", async ({ story }) => {
+		await story.goto();
+		await expect(story.locators.fileItem("document.pdf")).toBeVisible();
+		await story.waitForImageLoad();
+		await story.snapshot("mount");
+	});
+
+	warningTest("Warning", async ({ story }) => {
+		await story.goto();
+		await story.snapshot("mount");
 	});
 
 	test.describe("Custom errors", () => {
-		customErrorTest.describe(() => {
-			customErrorTest("Main field error", async ({ story }) => {
-				await story.goto();
-				await story.locators.setCustomErrorsButton.click();
-				await story.snapshot("main-field-error");
-			});
+		customErrorTest("Main field error", async ({ story }) => {
+			await story.goto();
+			await story.locators.setCustomErrorsButton.click();
+			await story.snapshot("main-field-error");
+		});
 
-			customErrorTest("Main field and per-file errors", async ({ story }) => {
-				await mockUploadAPI(story.page);
-				await story.goto();
+		customErrorTest("Main field and per-file errors", async ({ story }) => {
+			await mockUploadAPI(story.page);
+			await story.goto();
 
-				const fileChooserPromise = story.page.waitForEvent("filechooser");
-				await story.locators.uploadButton.click();
-				const fileChooser = await fileChooserPromise;
-				await fileChooser.setFiles(SAMPLE_PNG_PAYLOAD);
-				await expect(story.locators.fileItem(SAMPLE_PNG_PAYLOAD.name)).toBeVisible();
+			const fileChooserPromise = story.page.waitForEvent("filechooser");
+			await story.locators.uploadButton.click();
+			const fileChooser = await fileChooserPromise;
+			await fileChooser.setFiles(SAMPLE_PNG_PAYLOAD);
+			await expect(story.locators.fileItem(SAMPLE_PNG_PAYLOAD.name)).toBeVisible();
 
-				await story.locators.setCustomErrorsButton.click();
-				await story.snapshot("main-and-per-file-errors");
-			});
+			await story.locators.setCustomErrorsButton.click();
+			await story.snapshot("main-and-per-file-errors");
 		});
 	});
 });
