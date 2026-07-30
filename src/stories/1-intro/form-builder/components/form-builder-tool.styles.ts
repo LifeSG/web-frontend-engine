@@ -1,26 +1,10 @@
-import styled, { css } from "styled-components";
-import { Alert } from "@lifesg/react-design-system/alert";
-import { Button } from "@lifesg/react-design-system/button";
-import { Textarea } from "@lifesg/react-design-system/input-textarea";
-import { FrontendEngine } from "../../../common";
+import { css } from "@linaria/core";
 import { Border, Colour, Radius, Spacing } from "@lifesg/react-design-system/theme";
-
-// =============================================================================
-// STYLE INTERFACE
-// =============================================================================
-interface IContentWrapperProps {
-	$hidden?: boolean | undefined;
-	$flexbox?: boolean | undefined;
-}
-
-export interface IModeButtonProps {
-	$active: boolean | undefined;
-}
 
 // =============================================================================
 // STYLING
 // =============================================================================
-export const Wrapper = styled.div`
+export const wrapper = css`
 	position: absolute;
 	z-index: 1;
 	top: 0;
@@ -31,29 +15,27 @@ export const Wrapper = styled.div`
 	flex-direction: column;
 `;
 
-export const ContentWrapper = styled.div<IContentWrapperProps>`
-	display: ${({ $hidden, $flexbox }) => {
-		if ($hidden) return "none";
-		if ($flexbox) return "flex";
-		return "block";
-	}};
-
-	${({ $flexbox }) =>
-		$flexbox &&
-		css`
-			flex-direction: column;
-			align-items: center;
-			justify-content: flex-start;
-			gap: ${Spacing["spacing-32"]};
-			padding: ${Spacing["spacing-32"]};
-		`};
-
+export const contentWrapper = css`
+	display: block;
 	width: 100%;
 	flex: 1;
 	overflow-y: auto;
 `;
 
-export const Toolbar = styled.div`
+export const contentWrapperHidden = css`
+	display: none;
+`;
+
+export const contentWrapperFlexbox = css`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	gap: ${Spacing["spacing-32"]};
+	padding: ${Spacing["spacing-32"]};
+`;
+
+export const toolbar = css`
 	position: relative;
 	display: flex;
 	width: 100%;
@@ -66,8 +48,8 @@ export const Toolbar = styled.div`
 	box-sizing: border-box;
 `;
 
-export const ModeButton = styled.button<IModeButtonProps>`
-	background: ${({ $active }) => ($active ? Colour["bg-primary-subtlest-selected"] : "transparent")};
+export const modeButton = css`
+	background: transparent;
 	color: ${Colour["icon-primary"]};
 	display: grid;
 	cursor: pointer;
@@ -90,12 +72,16 @@ export const ModeButton = styled.button<IModeButtonProps>`
 	}
 `;
 
-export const FrontendEnginePreview = styled(FrontendEngine)`
+export const modeButtonActive = css`
+	background: ${Colour["bg-primary-subtlest-selected"]};
+`;
+
+export const frontendEnginePreview = css`
 	width: 100%;
 	margin-bottom: ${Spacing["spacing-32"]};
 `;
 
-export const SchemaEditorWrapper = styled.div`
+export const schemaEditorWrapper = css`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
@@ -106,7 +92,7 @@ export const SchemaEditorWrapper = styled.div`
 	}
 `;
 
-export const SchemaEditor = styled(Textarea)`
+export const schemaEditor = css`
 	flex: 1;
 	width: 100%;
 	overflow: auto;
@@ -115,22 +101,22 @@ export const SchemaEditor = styled(Textarea)`
 	border-radius: ${Radius.sm};
 `;
 
-export const SaveButton = styled(Button)`
+export const saveButton = css`
 	width: 10rem;
 	margin-left: auto;
 `;
 
-export const ActionWrapper = styled.div`
+export const actionWrapper = css`
 	display: flex;
 	width: 100%;
 	gap: 2rem;
 `;
 
-export const AlertWrapper = styled(Alert)`
+export const alertWrapper = css`
 	flex-grow: 1;
 `;
 
-export const RefreshButton = styled(Button)`
+export const refreshButton = css`
 	display: inline;
 	padding: 0;
 `;

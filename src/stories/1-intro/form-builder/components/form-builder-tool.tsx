@@ -5,10 +5,13 @@ import { TabletIcon } from "@lifesg/react-icons/tablet";
 import { FormBuilder, IFormBuilderMethods } from "@lifesg/web-form-builder";
 import { ISchemaProps } from "@lifesg/web-form-builder/translator";
 import { Unstyled } from "@storybook/addon-docs/blocks";
+import clsx from "clsx";
 import { useRef, useState } from "react";
-import { ContentWrapper, FrontendEnginePreview, ModeButton, Toolbar, Wrapper } from "./form-builder-tool.styles";
+import * as styles from "./form-builder-tool.styles";
 import { SchemaView } from "./schema-view";
 import { IFrontendEngineData } from "../../../../components";
+import { FrontendEngine } from "../../../common";
+import { ThemeProvider } from "@lifesg/react-design-system/theme";
 
 export type TFormBuilderMode = "form-builder" | "preview" | "schema";
 
@@ -48,72 +51,82 @@ export const FormBuilderTool = () => {
 	// =========================================================================
 	// RENDER FUNCTIONS
 	// =========================================================================
+	const getContentWrapperClassName = (hidden?: boolean, flexbox?: boolean) =>
+		clsx(styles.contentWrapper, hidden && styles.contentWrapperHidden, flexbox && styles.contentWrapperFlexbox);
+
 	const renderToolbar = () => (
-		<Toolbar>
-			<ModeButton
-				$active={formBuilderMode === "form-builder"}
+		<div className={styles.toolbar}>
+			<button
+				className={clsx(styles.modeButton, formBuilderMode === "form-builder" && styles.modeButtonActive)}
 				onClick={() => handleClickToolbarButton("form-builder")}
 				type="button"
 			>
 				<PencilIcon />
-			</ModeButton>
-			<ModeButton
-				$active={formBuilderMode === "preview"}
+			</button>
+			<button
+				className={clsx(styles.modeButton, formBuilderMode === "preview" && styles.modeButtonActive)}
 				onClick={() => handleClickToolbarButton("preview")}
 				type="button"
 			>
 				<EyeIcon />
-			</ModeButton>
-			<ModeButton
-				$active={formBuilderMode === "schema"}
+			</button>
+			<button
+				className={clsx(styles.modeButton, formBuilderMode === "schema" && styles.modeButtonActive)}
 				onClick={() => handleClickToolbarButton("schema")}
 				type="button"
 			>
 				<TabletIcon />
-			</ModeButton>
-		</Toolbar>
+			</button>
+		</div>
 	);
 
 	const renderPreview = () => {
 		if (formBuilderMode !== "preview") return;
 		return (
-			<ContentWrapper $flexbox={true}>
+			<div className={getContentWrapperClassName(false, true)}>
 				<Typography.HeadingMD weight="bold">Generate Form</Typography.HeadingMD>
-				{formBuilderOutput && <FrontendEnginePreview data={formBuilderOutput.schema as IFrontendEngineData} />}
-			</ContentWrapper>
+				{formBuilderOutput && (
+					<FrontendEngine
+						className={styles.frontendEnginePreview}
+						data={formBuilderOutput.schema as IFrontendEngineData}
+					/>
+				)}
+			</div>
 		);
 	};
 
 	const renderSchemaPreview = () => {
 		if (formBuilderMode !== "schema") return;
 		return (
-			<ContentWrapper $flexbox={true}>
+			<div className={getContentWrapperClassName(false, true)}>
 				<SchemaView
 					schema={formBuilderOutput.schema as IFrontendEngineData}
 					onChange={setFormBuilderOutput}
 					formBuilderRef={formBuilderRef}
 				/>
-			</ContentWrapper>
+			</div>
 		);
 	};
 
 	return (
-		<Unstyled>
-			<Wrapper>
-				{renderToolbar()}
-				<ContentWrapper $hidden={formBuilderMode !== "form-builder"}>
-					<FormBuilder
-						ref={formBuilderRef}
-						offset={5.1}
-						config={{
-							attributes: { prefill: { shouldShow: false } },
-							panels: { pages: { shouldShow: false } },
-						}}
-					/>
-				</ContentWrapper>
-				{renderPreview()}
-				{renderSchemaPreview()}
-			</Wrapper>
-		</Unstyled>
+		<ThemeProvider theme="lifesg" mode="light">
+			<Unstyled>
+				<div className={styles.wrapper}>
+					{renderToolbar()}
+					<div className={getContentWrapperClassName(formBuilderMode !== "form-builder")}>
+						<FormBuilder
+							ref={formBuilderRef}
+							offset={5.1}
+							config={{
+								attributes: { prefill: { shouldShow: false } },
+								panels: { pages: { shouldShow: false } },
+							}}
+						/>
+					</div>
+					{renderPreview()}
+					{renderSchemaPreview()}
+				</div>
+			</Unstyled>
+		</ThemeProvider>
 	);
 };

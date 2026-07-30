@@ -2,8 +2,9 @@ import { Button } from "@lifesg/react-design-system/button";
 import { Breakpoint, MediaQuery } from "@lifesg/react-design-system/theme";
 import { action } from "storybook/actions";
 import { ArgTypes, StoryFn } from "@storybook/react";
+import clsx from "clsx";
+import { css } from "@linaria/core";
 import { ReactElement, Ref, forwardRef, useRef } from "react";
-import styled from "styled-components";
 import dedent from "dedent";
 import { IFrontendEngineProps, IYupValidationRule, FrontendEngine as OriginalFrontendEngine } from "../components";
 import { IResetButtonSchema, ISubmitButtonSchema } from "../components/fields";
@@ -192,7 +193,7 @@ const MINIMUM_SIDE_PADDING = 48;
 const SIDEBAR_WIDTH = 210;
 const SPACER = 550;
 
-const StyledForm = styled(OriginalFrontendEngine)`
+const styledForm = css`
 	width: calc(${Breakpoint["xl-max"]} - ${MINIMUM_SIDE_PADDING + SIDEBAR_WIDTH + SPACER}px);
 	max-width: 820px;
 
@@ -222,11 +223,12 @@ const StyledForm = styled(OriginalFrontendEngine)`
 `;
 
 // naming it as `FrontendEngine` because this is shown in code view
-export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>((props, ref) => (
-	<StyledForm
+export const FrontendEngine = forwardRef<IFrontendEngineRef, IFrontendEngineProps>(({ className, ...props }, ref) => (
+	<OriginalFrontendEngine
 		onValueChange={(values, isValid) => action("valueChange")(values, isValid)}
 		onSubmit={(e) => action("submit")(e)}
 		ref={ref}
+		className={clsx(styledForm, className)}
 		{...props}
 	/>
 )) as <V = undefined, C = undefined>(
