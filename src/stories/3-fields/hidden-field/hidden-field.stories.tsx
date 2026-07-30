@@ -37,6 +37,18 @@ const meta: Meta = {
 				type: "select",
 			},
 		},
+		value: {
+			description:
+				"The current value of the field. Works together with valueType and takes higher precedence than defaultValue. Can be used to override prefilled values / previously saved form values for conditional rendering / validation.",
+			table: {
+				type: {
+					summary: "string | number | boolean",
+				},
+			},
+			control: {
+				type: "text",
+			},
+		},
 	},
 };
 export default meta;
