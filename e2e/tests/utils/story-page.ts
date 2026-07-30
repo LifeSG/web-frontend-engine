@@ -1,11 +1,12 @@
 import { type Page } from "@playwright/test";
-import { AbstractStoryPage, type TStoryScope } from "./abstract-story-page";
+import { AbstractStoryPage, TAbstractStoryPageOptions, type TStoryScope } from "./abstract-story-page";
 
 export type TStoryPageOptions = {
 	scope?: TStoryScope;
 	component: string;
 	story?: string;
-	useMockedTimestamp?: boolean | string;
+	useMockedTimestamp?: TAbstractStoryPageOptions["useMockedTimestamp"];
+	viewport?: TAbstractStoryPageOptions["viewport"];
 };
 
 export type TStoryOptionsFactory = (story: string) => TStoryPageOptions;
@@ -20,9 +21,10 @@ export class StoryPage extends AbstractStoryPage {
 	}
 
 	public constructor(page: Page, options: TStoryPageOptions) {
-		super(page, { useMockedTimestamp: options.useMockedTimestamp });
-		this.scope = options.scope ?? "components";
-		this.component = options.component;
-		this.story = options.story ?? "default";
+		const { scope, component, story, ...storyPageOptions } = options;
+		super(page, storyPageOptions);
+		this.scope = scope ?? "components";
+		this.component = component;
+		this.story = story ?? "default";
 	}
 }

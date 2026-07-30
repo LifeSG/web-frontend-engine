@@ -17,17 +17,17 @@ const SCHEMA: IFrontendEngineData = {
 						{
 							label: "Option 1",
 							value: "option1",
-							imgSrc: "https://cdn-icons-png.flaticon.com/512/415/415733.png",
+							imgSrc: "/image/177/95/160.png",
 						},
 						{
 							label: "Option 2",
 							value: "option2",
-							imgSrc: "https://cdn-icons-png.flaticon.com/128/2105/2105891.png",
+							imgSrc: "/image/85/115/5.png",
 						},
 						{
 							label: "Option 3",
 							value: "option3",
-							imgSrc: "https://cdn-icons-png.flaticon.com/128/7254/7254245.png",
+							imgSrc: "/image/44/23/208.png",
 						},
 					],
 				},

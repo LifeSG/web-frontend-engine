@@ -1,4 +1,4 @@
-import { createStoryTest, expect, forComponent, test } from "../../../utils/fixtures";
+import { createStoryTest, expect, test } from "../../../utils/fixtures";
 import { mockGeolocation, mockOneMapAPI, mockOneMapAPIError } from "./fixtures/mock-onemap";
 
 const createLocationFieldTest = (story: string) =>
@@ -22,157 +22,134 @@ const mapBannerTest = createLocationFieldTest("map-banner");
 const legendTest = createLocationFieldTest("legend");
 const apiErrorTest = createLocationFieldTest("api-error");
 const customStylesTest = createLocationFieldTest("with-custom-styles");
-const withStory = forComponent("fields/location-field");
+const warningTest = createLocationFieldTest("warning");
 
 test.describe("Location Field", () => {
-	defaultTest.describe(() => {
-		defaultTest("Default", async ({ story }) => {
-			await story.goto();
-			await story.page.waitForLoadState("networkidle");
+	defaultTest("Default", async ({ story }) => {
+		await story.goto();
+		await story.page.waitForLoadState("networkidle");
 
-			await story.snapshot("mount");
-		});
-
-		defaultTest("Modal", async ({ story }) => {
-			await mockGeolocation(story.page);
-			await mockOneMapAPI(story.page);
-			await story.goto();
-
-			await story.locators.locationInput.click();
-			await expect(story.locators.modalBox).toBeVisible();
-			await story.waitForImageLoad();
-
-			await story.snapshot("open", { fullscreen: true });
-		});
-
-		defaultTest("Modal (mobile)", async ({ story }) => {
-			await story.setViewport({ size: "mobile" });
-
-			await mockGeolocation(story.page);
-			await mockOneMapAPI(story.page);
-			await story.goto();
-
-			await story.locators.locationInput.click();
-			await expect(story.locators.modalBox).toBeVisible();
-			await story.waitForImageLoad();
-
-			await story.snapshot("open", { fullscreen: true });
-		});
-
-		defaultTest("Modal (mobile landscape)", async ({ story }) => {
-			await story.setViewport({ size: "mobile", orientation: "landscape" });
-
-			await mockGeolocation(story.page);
-			await mockOneMapAPI(story.page);
-			await story.goto();
-
-			await story.locators.locationInput.click();
-			await expect(story.locators.modalBox).toBeVisible();
-			await story.waitForImageLoad();
-
-			await story.snapshot("open", { fullscreen: true });
-		});
+		await story.snapshot("mount");
 	});
 
-	mapTest.describe(() => {
-		mapTest("Map", async ({ story }) => {
-			await mockOneMapAPI(story.page);
-			await story.goto();
-			await story.waitForImageLoad();
+	defaultTest("Modal", async ({ story }) => {
+		await mockGeolocation(story.page);
+		await mockOneMapAPI(story.page);
+		await story.goto();
 
-			await story.snapshot("mount");
-		});
+		await story.locators.locationInput.click();
+		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForImageLoad();
+
+		await story.snapshot("open", { fullscreen: true });
 	});
 
-	disabledTest.describe(() => {
-		disabledTest("Disabled", async ({ story }) => {
-			await mockOneMapAPI(story.page);
-			await story.goto();
-			await story.waitForImageLoad();
+	defaultTest("Modal (mobile)", async ({ story }) => {
+		await story.setViewport({ size: "mobile" });
 
-			await story.snapshot("mount");
-		});
+		await mockGeolocation(story.page);
+		await mockOneMapAPI(story.page);
+		await story.goto();
+
+		await story.locators.locationInput.click();
+		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForImageLoad();
+
+		await story.snapshot("open", { fullscreen: true });
 	});
 
-	readonlyTest.describe(() => {
-		readonlyTest("Readonly", async ({ story }) => {
-			await mockOneMapAPI(story.page);
-			await story.goto();
-			await story.waitForImageLoad();
+	defaultTest("Modal (mobile landscape)", async ({ story }) => {
+		await story.setViewport({ size: "mobile", orientation: "landscape" });
 
-			await story.snapshot("mount");
-		});
+		await mockGeolocation(story.page);
+		await mockOneMapAPI(story.page);
+		await story.goto();
+
+		await story.locators.locationInput.click();
+		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForImageLoad();
+
+		await story.snapshot("open", { fullscreen: true });
 	});
 
-	mapBannerTest.describe(() => {
-		mapBannerTest("Map banner", async ({ story }) => {
-			await mockGeolocation(story.page);
-			await mockOneMapAPI(story.page);
-			await story.goto();
+	mapTest("Map", async ({ story }) => {
+		await mockOneMapAPI(story.page);
+		await story.goto();
+		await story.waitForImageLoad();
 
-			await story.locators.locationInput.click();
-			await expect(story.locators.modalBox).toBeVisible();
-			await story.waitForImageLoad();
-
-			await story.snapshot("open", { fullscreen: true });
-		});
+		await story.snapshot("mount");
 	});
 
-	legendTest.describe(() => {
-		legendTest("Legend", async ({ story }) => {
-			await mockGeolocation(story.page);
-			await mockOneMapAPI(story.page);
-			await story.goto();
+	disabledTest("Disabled", async ({ story }) => {
+		await mockOneMapAPI(story.page);
+		await story.goto();
+		await story.waitForImageLoad();
 
-			await story.locators.locationInput.click();
-			await expect(story.locators.modalBox).toBeVisible();
-			await story.waitForImageLoad();
-			await story.page.waitForTimeout(1000); // Added timeout to allow popover to stabilize before clicking
-
-			await story.locators.legendTrigger.click();
-			await expect(story.locators.legend).toBeVisible();
-
-			await story.snapshot("open", { fullscreen: true });
-		});
+		await story.snapshot("mount");
 	});
 
-	apiErrorTest.describe(() => {
-		apiErrorTest("API error", async ({ story }) => {
-			await mockGeolocation(story.page);
-			await mockOneMapAPIError(story.page);
-			await story.goto();
+	readonlyTest("Readonly", async ({ story }) => {
+		await mockOneMapAPI(story.page);
+		await story.goto();
+		await story.waitForImageLoad();
 
-			await story.locators.locationInput.click();
-			await expect(story.locators.modalBox).toBeVisible();
-			await story.page.waitForTimeout(2000);
-
-			await story.snapshot("error", { fullscreen: true });
-		});
+		await story.snapshot("mount");
 	});
 
-	test.describe(() => {
-		test.use({
-			storyOptions: {
-				...withStory("warning"),
-			},
-		});
+	mapBannerTest("Map banner", async ({ story }) => {
+		await mockGeolocation(story.page);
+		await mockOneMapAPI(story.page);
+		await story.goto();
 
-		test("Warning", async ({ story }) => {
-			await story.goto();
-			await story.snapshot("mount");
-		});
+		await story.locators.locationInput.click();
+		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForImageLoad();
+
+		await story.snapshot("open", { fullscreen: true });
 	});
 
-	customStylesTest.describe(() => {
-		customStylesTest("Custom modal styles", async ({ story }) => {
-			await mockOneMapAPI(story.page);
-			await story.goto();
+	legendTest("Legend", async ({ story }) => {
+		await mockGeolocation(story.page);
+		await mockOneMapAPI(story.page);
+		await story.goto();
 
-			await story.locators.locationInput.click();
-			await expect(story.locators.modalBox).toBeVisible();
-			await story.waitForImageLoad();
+		await story.locators.locationInput.click();
+		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForImageLoad();
+		await story.page.waitForTimeout(1000); // Added timeout to allow popover to stabilize before clicking
 
-			await story.snapshot("open", { fullscreen: true });
-		});
+		await story.locators.legendTrigger.click();
+		await expect(story.locators.legend).toBeVisible();
+
+		await story.snapshot("open", { fullscreen: true });
+	});
+
+	apiErrorTest("API error", async ({ story }) => {
+		await mockGeolocation(story.page);
+		await mockOneMapAPI(story.page);
+		await mockOneMapAPIError(story.page);
+		await story.goto();
+
+		await story.locators.locationInput.click();
+		await expect(story.locators.modalBox).toBeVisible();
+		await story.page.waitForTimeout(2000);
+
+		await story.snapshot("error", { fullscreen: true });
+	});
+
+	warningTest("Warning", async ({ story }) => {
+		await story.goto();
+		await story.snapshot("mount");
+	});
+
+	customStylesTest("Custom modal styles", async ({ story }) => {
+		await mockOneMapAPI(story.page);
+		await story.goto();
+
+		await story.locators.locationInput.click();
+		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForImageLoad();
+
+		await story.snapshot("open", { fullscreen: true });
 	});
 });

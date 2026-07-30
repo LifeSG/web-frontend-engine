@@ -11,16 +11,14 @@ const createPopoverTest = (story: string) =>
 
 const defaultTest = createPopoverTest("default");
 
-defaultTest.describe(() => {
-	defaultTest("Default", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+defaultTest("Default", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
+});
 
-	defaultTest("Popover hint", async ({ story }) => {
-		await story.goto();
+defaultTest("Popover hint", async ({ story }) => {
+	await story.goto();
 
-		await story.locators.defaultPopover.click();
-		await story.snapshot("open", { fullscreen: true });
-	});
+	await story.locators.defaultPopover.click();
+	await story.snapshot("open", { fullscreen: true });
 });

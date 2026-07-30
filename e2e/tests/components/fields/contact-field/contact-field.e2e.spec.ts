@@ -15,38 +15,30 @@ const internationalNumberTest = createContactFieldTest("international-number");
 const singaporeNumberTest = createContactFieldTest("singapore-number");
 const warningTest = createContactFieldTest("warning");
 
-defaultTest.describe(() => {
-	defaultTest("Default", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+defaultTest("Default", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });
 
-internationalNumberTest.describe(() => {
-	internationalNumberTest("International number", async ({ story }) => {
-		await story.goto();
+internationalNumberTest("International number", async ({ story }) => {
+	await story.goto();
 
-		await story.locators.contactField.fill("12-345-678");
-		await story.locators.submitButton.click();
+	await story.locators.contactField.fill("12-345-678");
+	await story.locators.submitButton.click();
 
-		await story.snapshot("error");
-	});
+	await story.snapshot("error");
 });
 
-singaporeNumberTest.describe(() => {
-	singaporeNumberTest("Singapore number", async ({ story }) => {
-		await story.goto();
+singaporeNumberTest("Singapore number", async ({ story }) => {
+	await story.goto();
 
-		await story.locators.contactField.fill("12345678");
-		await story.locators.submitButton.click();
+	await story.locators.contactField.fill("12345678");
+	await story.locators.submitButton.click();
 
-		await story.snapshot("error");
-	});
+	await story.snapshot("error");
 });
 
-warningTest.describe(() => {
-	warningTest("Warning", async ({ story }) => {
-		await story.goto();
-		await story.snapshot("mount");
-	});
+warningTest("Warning", async ({ story }) => {
+	await story.goto();
+	await story.snapshot("mount");
 });

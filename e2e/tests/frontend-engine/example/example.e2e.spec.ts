@@ -13,22 +13,18 @@ const createExampleTest = (story: string) =>
 const defaultTest = createExampleTest("default");
 const withNameTest = createExampleTest("with-name");
 
-defaultTest.describe("default", () => {
-	defaultTest("renders email field", async ({ story }) => {
-		await story.goto();
-		await expect(story.locators.examplePage).toBeVisible();
-		await expect(story.locators.form).toBeVisible();
-		await expect(story.locators.form.getByLabel("Email")).toBeVisible();
-		await expect(story.locators.form.getByPlaceholder("Enter your email")).toBeVisible();
-	});
+defaultTest("renders email field", async ({ story }) => {
+	await story.goto();
+	await expect(story.locators.examplePage).toBeVisible();
+	await expect(story.locators.form).toBeVisible();
+	await expect(story.locators.form.getByLabel("Email")).toBeVisible();
+	await expect(story.locators.form.getByPlaceholder("Enter your email")).toBeVisible();
 });
 
-withNameTest.describe("with-name", () => {
-	withNameTest("renders email and name fields", async ({ story }) => {
-		await story.goto();
-		await expect(story.locators.examplePage).toBeVisible();
-		await expect(story.locators.form).toBeVisible();
-		await expect(story.locators.form.getByLabel("Email")).toBeVisible();
-		await expect(story.locators.form.getByLabel("Name")).toBeVisible();
-	});
+withNameTest("renders email and name fields", async ({ story }) => {
+	await story.goto();
+	await expect(story.locators.examplePage).toBeVisible();
+	await expect(story.locators.form).toBeVisible();
+	await expect(story.locators.form.getByLabel("Email")).toBeVisible();
+	await expect(story.locators.form.getByLabel("Name")).toBeVisible();
 });

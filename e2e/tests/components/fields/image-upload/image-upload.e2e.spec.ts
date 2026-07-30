@@ -1,7 +1,7 @@
 import { type Locator, type Page, expect } from "@playwright/test";
 import { test as base, forComponent } from "../../../utils/fixtures";
-import { viewport } from "../../../consts";
 import { createSolidColorPng } from "../../../utils/image-fixtures";
+import { StoryPage } from "../../../utils/story-page";
 
 // =============================================================================
 // IMAGE FILE FIXTURES
@@ -17,7 +17,6 @@ const LONG_FILE = {
 };
 // A third distinct file used when tests need to exceed a per-field max-files limit
 const THIRD_FILE = { name: "c.png", mimeType: "image/png", buffer: IMAGE_BUFFER };
-import { StoryPage } from "../../../utils/story-page";
 
 const withStory = forComponent("fields/image-upload");
 
@@ -117,7 +116,7 @@ test.describe("ImageUpload", () => {
 		});
 
 		test("Default render (mobile)", async ({ story }) => {
-			await story.page.setViewportSize(viewport.mobile);
+			await story.setViewport({ size: "mobile" });
 			await story.goto();
 			await story.snapshot("mount");
 		});
@@ -168,7 +167,7 @@ test.describe("ImageUpload", () => {
 		});
 
 		test("Review modal (mobile)", async ({ story }) => {
-			await story.page.setViewportSize(viewport.mobile);
+			await story.setViewport({ size: "mobile" });
 			await story.goto();
 
 			await test.step("Upload short and long filename files", async () => {
@@ -190,7 +189,7 @@ test.describe("ImageUpload", () => {
 		});
 
 		test("Review modal (mobile landscape)", async ({ story }) => {
-			await story.page.setViewportSize(viewport.mobileLandscape);
+			await story.setViewport({ size: "mobile", orientation: "landscape" });
 			await story.goto();
 
 			await test.step("Upload short and long filename files", async () => {
@@ -239,6 +238,10 @@ test.describe("ImageUpload", () => {
 				// shares the same bounding box as the main canvas element.
 				const box = await story.locators.imageEditor.boundingBox();
 
+				if (!box) {
+					throw new Error("Canvas bounding box not found");
+				}
+
 				// Draw a square by tracing its four sides.
 				// Only the outline is drawn — the image remains visible inside and outside.
 				const margin = 0.25;
@@ -271,7 +274,7 @@ test.describe("ImageUpload", () => {
 		});
 
 		test("Drawing tools (mobile)", async ({ story }) => {
-			await story.page.setViewportSize(viewport.mobile);
+			await story.setViewport({ size: "mobile" });
 			await story.goto();
 			await story.uploadFilesForMobileReview();
 			await story.locators.drawButton.click();
@@ -281,7 +284,7 @@ test.describe("ImageUpload", () => {
 		});
 
 		test("Drawing tools (mobile landscape)", async ({ story }) => {
-			await story.page.setViewportSize(viewport.mobileLandscape);
+			await story.setViewport({ size: "mobile", orientation: "landscape" });
 			await story.goto();
 			await story.uploadFilesForMobileReview();
 			await story.locators.drawButton.click();

@@ -44,11 +44,11 @@ export default function FileUploadCustomErrorPage() {
 	};
 
 	return (
-		<>
+		<div className="story-column-container">
 			<FrontendEngine ref={formRef} data={SCHEMA} />
-			<button data-testid="set-custom-errors" onClick={handleSetCustomErrors} style={{ marginTop: "2rem" }}>
+			<button data-testid="set-custom-errors" onClick={handleSetCustomErrors}>
 				Set custom errors
 			</button>
-		</>
+		</div>
 	);
 }
