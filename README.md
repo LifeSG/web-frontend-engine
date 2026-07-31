@@ -4,7 +4,7 @@ Repository for the web frontend engine
 
 -   UI components based on <a href="https://github.com/LifeSG/react-design-system" target="_blank" rel="noopener noreferrer">React design system</a>
 -   Form generation via JSON schema
--   To see the schema and fields available, visit our <a href="https://designsystem.life.gov.sg/web-frontend-engine/index.html?path=/story/introduction-getting-started--page" target="_blank" rel="noopener noreferrer">Storybook documentation</a>.
+-   To see the schema and fields available, visit our <a href="https://designsystem.life.gov.sg/web-frontend-engine/index.html?path=/docs/introduction-getting-started--docs" target="_blank" rel="noopener noreferrer">Storybook documentation</a>.
 
 The intention of frontend engine is to take out the heavy lifting of form development and offer a collection of common fields so engineers can develop forms quickly. The form will be defined through a JSON schema so non-engineers can customise the form as well.
 
@@ -12,11 +12,10 @@ The intention of frontend engine is to take out the heavy lifting of form develo
 
 Developers are expected to have the following packages installed:
 
--   @lifesg/react-design-system v3.4.0 or above
--   @lifesg/react-icons 1.9.0
--   react 17.0.2 or 18 or 19
--   react-dom 17.0.2 or 18
--   styled-components 6.1.19
+-   @lifesg/react-design-system `^v4.0.0-alpha.6`
+-   @lifesg/react-icons `^1.9.0`
+-   react `^17.0.2 || ^18.0.0 || ^19.0.0`
+-   react-dom `17.0.2 || ^18.0.0 || ^19.0.0`
 
 ## Installation
 
