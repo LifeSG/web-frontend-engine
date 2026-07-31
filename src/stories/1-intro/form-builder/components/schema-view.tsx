@@ -1,16 +1,13 @@
 import { Typography } from "@lifesg/react-design-system/typography";
+import { Alert } from "@lifesg/react-design-system/alert";
+import { Button } from "@lifesg/react-design-system/button";
+import { Textarea } from "@lifesg/react-design-system/input-textarea";
+import clsx from "clsx";
 import { IFormBuilderMethods } from "@lifesg/web-form-builder";
 import { ISchemaProps } from "@lifesg/web-form-builder/translator";
 import { useEffect, useState } from "react";
 import { IFrontendEngineData } from "../../../../components";
-import {
-	ActionWrapper,
-	AlertWrapper,
-	RefreshButton,
-	SaveButton,
-	SchemaEditor,
-	SchemaEditorWrapper,
-} from "./form-builder-tool.styles";
+import * as styles from "./form-builder-tool.styles";
 
 interface IProps {
 	schema?: IFrontendEngineData | undefined;
@@ -74,34 +71,42 @@ export const SchemaView = ({ schema, onChange, formBuilderRef }: IProps) => {
 	// =========================================================================
 
 	const renderActionPanel = () => (
-		<ActionWrapper>
+		<div className={styles.actionWrapper}>
 			{isDirty && (
 				<>
 					{hasError ? (
-						<AlertWrapper type="error" showIcon>
+						<Alert className={styles.alertWrapper} type="error" showIcon>
 							Unable to save changes because there’s a syntax error. Amend the error or{" "}
-							<RefreshButton type="button" sizeType="small" styleType="link" onClick={handleReset}>
+							<Button
+								className={styles.refreshButton}
+								type="button"
+								sizeType="small"
+								styleType="link"
+								onClick={handleReset}
+							>
 								refresh to sync with the form builder.
-							</RefreshButton>
-						</AlertWrapper>
+							</Button>
+						</Alert>
 					) : (
-						<AlertWrapper type="warning" showIcon>
+						<Alert className={styles.alertWrapper} type="warning" showIcon>
 							To reflect changes on preview, save changes first.
-						</AlertWrapper>
+						</Alert>
 					)}
 				</>
 			)}
-			<SaveButton onClick={onSubmit}>{isDirty ? "Save Changes" : "Saved"}</SaveButton>
-		</ActionWrapper>
+			<Button className={clsx(styles.saveButton)} onClick={onSubmit}>
+				{isDirty ? "Save Changes" : "Saved"}
+			</Button>
+		</div>
 	);
 
 	return (
 		<>
 			<Typography.HeadingMD weight="bold">Generate Schema</Typography.HeadingMD>
 			{renderActionPanel()}
-			<SchemaEditorWrapper>
-				<SchemaEditor value={stringifiedSchema} onChange={handleSchemaChange} />
-			</SchemaEditorWrapper>
+			<div className={styles.schemaEditorWrapper}>
+				<Textarea className={styles.schemaEditor} value={stringifiedSchema} onChange={handleSchemaChange} />
+			</div>
 		</>
 	);
 };
