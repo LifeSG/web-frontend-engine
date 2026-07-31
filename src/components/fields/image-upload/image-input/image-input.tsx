@@ -146,7 +146,7 @@ export const ImageInput = (props: IImageInputProps) => {
 			return (
 				<FileItem
 					id={`${id}-file-item`}
-					key={`${fileItem.name}_${i}`}
+					key={fileItem.id}
 					index={i}
 					fileItem={fileItem}
 					maxSizeInKb={maxSizeInKb}
