@@ -50,6 +50,14 @@ export const flexImageWrapper = css`
 `;
 
 export const flexToggleWrapper = css`
+	${tokens.flexToggleWrapper.display}: initial;
+	${tokens.flexToggleWrapper.flexDirection}: initial;
+	${tokens.flexToggleWrapper.flexWrap}: initial;
+	${tokens.flexToggleWrapper.gridTemplateColumns}: initial;
+	${tokens.flexToggleWrapper.justifyContent}: initial;
+	${tokens.flexToggleWrapper.childFlex}: initial;
+	${tokens.flexToggleWrapper.childWidth}: initial;
+
 	display: var(${tokens.flexToggleWrapper.display}, flex);
 	flex-direction: var(${tokens.flexToggleWrapper.flexDirection}, row);
 	flex-wrap: var(${tokens.flexToggleWrapper.flexWrap}, wrap);
