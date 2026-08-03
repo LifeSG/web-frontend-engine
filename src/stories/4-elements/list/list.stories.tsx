@@ -19,7 +19,7 @@ const meta: Meta = {
 					<p>
 						Please refer to the{" "}
 						<a
-							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/general-textlist--docs"
+							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/core-textlist--docs"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
