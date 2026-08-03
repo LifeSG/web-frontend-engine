@@ -145,12 +145,13 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 	const renderToggles = () => {
 		return (
 			options.length > 0 &&
-			customOptions.styleType === "toggle" && (
+			customOptions?.styleType === "toggle" && (
 				<div
 					className={clsx(
 						styles.toggleWrapper,
-						customOptions?.layoutType === "vertical" && styles.toggleWrapperVertical,
-						className ? `${className}-checkbox-container` : undefined
+						customOptions.layoutType === "vertical" && styles.toggleWrapperVertical,
+						className ? `${className}-checkbox-container` : undefined,
+						error?.message && styles.toggleWrapperHasError
 					)}
 				>
 					{options.map((option, index) => {
@@ -162,12 +163,12 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								type="checkbox"
 								data-testid={TestHelper.generateId(id, "toggle")}
 								id={checkboxId}
-								className={clsx(styles.toggle, className)}
+								className={clsx(styles.toggle, className, error?.message && styles.toggleHasError)}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
 								name={checkboxId}
-								indicator={customOptions?.indicator}
-								styleType={customOptions?.border === false ? "no-border" : "default"}
+								indicator={customOptions.indicator}
+								styleType={customOptions.border === false ? "no-border" : "default"}
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
 								error={!!error?.message}

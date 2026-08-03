@@ -17,7 +17,7 @@ const meta: Meta = {
 					<p>
 						Please refer to the{" "}
 						<a
-							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/modules-alert--alert"
+							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/feedback-indicators-alert--docs"
 							target="_blank"
 							rel="noopener noreferrer"
 						>

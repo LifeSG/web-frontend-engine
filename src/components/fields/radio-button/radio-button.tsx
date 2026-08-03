@@ -1,10 +1,13 @@
+import isEmpty from "lodash/isEmpty";
+import isObject from "lodash/isObject";
 import { Form } from "@lifesg/react-design-system/form";
 import { ImageButton } from "@lifesg/react-design-system/image-button";
 import { RadioButton } from "@lifesg/react-design-system/radio-button";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Typography } from "@lifesg/react-design-system/typography";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useApplyStyle, useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
@@ -14,7 +17,29 @@ import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize, Warning } from "../../shared";
 import * as styles from "./radio-button.styles";
-import { IRadioButtonOption, TRadioButtonGroupSchema } from "./types";
+import {
+	IImageButtonOption,
+	IRadioButtonOption,
+	IRadioToggleOption,
+	TBreakpoint,
+	TRadioButtonGroupSchema,
+	TResponsiveValue,
+} from "./types";
+
+const DEFAULT_MIN_ITEM_WIDTH = 164;
+
+const resolveResponsiveValue = <T,>(
+	value: TResponsiveValue<T> | undefined,
+	breakpoint: TBreakpoint,
+	defaultValue: T
+): T => {
+	if (value === undefined || value === null) return defaultValue;
+	if (typeof value !== "object") return value as T;
+	const { mobile, tablet, desktop } = value as { mobile?: T; tablet?: T; desktop?: T };
+	if (breakpoint === "mobile") return mobile ?? tablet ?? desktop ?? defaultValue;
+	if (breakpoint === "tablet") return tablet ?? desktop ?? mobile ?? defaultValue;
+	return desktop ?? tablet ?? mobile ?? defaultValue;
+};
 
 export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
 	// =============================================================================
@@ -26,15 +51,72 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		customSchema: { className, disabled, options, ...radioProps },
 	} = filterSchemaProps(schema);
 
-	const { setValue } = useFormContext();
+	const toggleOptions =
+		customOptions && "styleType" in customOptions && customOptions.styleType === "toggle"
+			? customOptions
+			: undefined;
+
+	const allowDeselection =
+		toggleOptions && "allowDeselection" in schema
+			? (schema as { allowDeselection?: boolean }).allowDeselection
+			: undefined;
+
+	const { setValue, trigger, clearErrors, unregister } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
-	const { setFieldValidationConfig } = useValidationConfig();
+	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
+	const toggleWrapperRef = useRef<HTMLDivElement | null>(null);
+
+	const isMobile = useMaxWidthMediaQuery("sm");
+	const isTablet = useMaxWidthMediaQuery("lg");
+	const currentBreakpoint: TBreakpoint = isMobile ? "mobile" : isTablet ? "tablet" : "desktop";
+
+	const resolvedColumns =
+		toggleOptions?.layoutColumns !== undefined
+			? resolveResponsiveValue(toggleOptions.layoutColumns, currentBreakpoint, 0) || undefined
+			: undefined;
+	const resolvedMinItemWidth = resolveResponsiveValue(
+		toggleOptions?.minItemWidth,
+		currentBreakpoint,
+		DEFAULT_MIN_ITEM_WIDTH
+	);
+	const stretch = toggleOptions?.stretch ?? false;
+	const hasMinItemWidth = !!toggleOptions?.minItemWidth;
+
+	const getToggleWrapperTokens = () => {
+		const t = styles.tokens.flexToggleWrapper;
+		if (resolvedColumns) {
+			return stretch
+				? { [t.display]: "grid", [t.gridTemplateColumns]: `repeat(${resolvedColumns}, 1fr)` }
+				: {
+						[t.display]: "grid",
+						[t.gridTemplateColumns]: `repeat(${resolvedColumns}, auto)`,
+						[t.justifyContent]: "start",
+				  };
+		}
+		if (stretch) {
+			return {
+				[t.display]: "grid",
+				[t.gridTemplateColumns]: `repeat(auto-fill, minmax(${resolvedMinItemWidth}px, 1fr))`,
+			};
+		}
+		if (hasMinItemWidth) {
+			return {
+				[t.display]: "flex",
+				[t.flexWrap]: "wrap",
+				[t.childFlex]: `0 0 ${resolvedMinItemWidth}px`,
+				[t.childWidth]: `${resolvedMinItemWidth}px`,
+			};
+		}
+		return {};
+	};
+
+	useApplyStyle(toggleWrapperRef, getToggleWrapperTokens());
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
+		setFieldValidationConfig(id, Yup.string().nullable(), validation);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
 
@@ -45,14 +127,37 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	}, [options]);
 
 	useEffect(() => {
-		setStateValue(value || "");
+		setStateValue(value ?? "");
 	}, [value]);
 
 	// =============================================================================
 	// EVENT HANDLERS
 	// =============================================================================
-	const handleChangeOrClick = (value: string): void => {
-		onChange({ target: { value } });
+	const handleChangeOrClick = (clickedValue: string): void => {
+		if (allowDeselection && stateValue === clickedValue) {
+			handleDeselect(clickedValue);
+		} else {
+			onChange?.({ target: { value: clickedValue } });
+			clearErrors(id);
+		}
+	};
+
+	const handleDeselect = (clickedValue: string): void => {
+		onChange?.({ target: { value: null } });
+		trigger(id);
+
+		const selectedOption = options.find((opt) => opt.value === clickedValue);
+		if (
+			selectedOption &&
+			"children" in selectedOption &&
+			isObject(selectedOption.children) &&
+			!isEmpty(selectedOption.children)
+		) {
+			collectNestedChildIds(selectedOption.children as Record<string, unknown>).forEach((childId) => {
+				removeFieldValidationConfig(childId);
+				unregister(childId);
+			});
+		}
 	};
 
 	// =============================================================================
@@ -66,6 +171,16 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		const unique = generateRandomId();
 		return `${id}-${unique}`;
 	};
+
+	const collectNestedChildIds = (children: Record<string, unknown>): string[] =>
+		Object.entries(children).flatMap(([childId, child]) => {
+			const nestedChildren = isObject(child) ? (child as Record<string, unknown>)["children"] : undefined;
+			const nestedIds =
+				isObject(nestedChildren) && !isEmpty(nestedChildren)
+					? collectNestedChildIds(nestedChildren as Record<string, unknown>)
+					: [];
+			return [childId, ...nestedIds];
+		});
 
 	// =============================================================================
 	// RENDER FUNCTIONS
@@ -116,15 +231,17 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const renderToggles = () => {
 		return (
 			options.length > 0 &&
-			customOptions.styleType === "toggle" && (
+			customOptions?.styleType === "toggle" && (
 				<div
+					ref={toggleWrapperRef}
 					className={clsx(
 						styles.flexToggleWrapper,
 						customOptions?.layoutType === "vertical" && styles.flexToggleWrapperVertical,
+						error?.message && styles.flexToggleWrapperHasError,
 						className && `${className} ${className}-radio-container`
 					)}
 				>
-					{options.map((option, index) => {
+					{(options as IRadioToggleOption[]).map((option, index) => {
 						const radioButtonId = formatId();
 
 						return (
@@ -133,7 +250,11 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								key={index}
 								type="radio"
 								id={radioButtonId}
-								className={clsx(styles.styledToggle, className && `${className}-radio`)}
+								className={clsx(
+									styles.styledToggle,
+									error?.message && styles.styledToggleHasError,
+									className && `${className}-radio`
+								)}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
@@ -141,17 +262,20 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								indicator={customOptions?.indicator}
 								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isRadioButtonChecked(option.value)}
-								onChange={() => handleChangeOrClick(option.value)}
+								onClick={() => handleChangeOrClick(option.value)}
+								onKeyDown={(e) => {
+									if (e.key === " " || e.key === "Enter") {
+										e.preventDefault();
+										handleChangeOrClick(option.value);
+									}
+								}}
 								error={!!error?.message}
 								compositeSection={
-									option.children
-										? {
-												children: <Wrapper>{option.children}</Wrapper>,
-												collapsible: false,
-										  }
-										: null
+									option.children && (!allowDeselection || isRadioButtonChecked(option.value))
+										? { children: <Wrapper>{option.children}</Wrapper>, collapsible: false }
+										: undefined
 								}
-								subLabel={!!option.subLabel && renderLabel(option.subLabel)}
+								subLabel={option.subLabel ? renderLabel(option.subLabel) : undefined}
 							>
 								{renderLabel(option.label)}
 							</Toggle>
@@ -168,7 +292,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				<div
 					className={clsx(styles.flexImageWrapper, className && `${className} ${className}-radio-container`)}
 				>
-					{options.map((option, index) => {
+					{(options as IImageButtonOption[]).map((option, index) => {
 						const radioButtonId = formatId();
 
 						return (
