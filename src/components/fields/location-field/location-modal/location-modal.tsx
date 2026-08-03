@@ -146,6 +146,7 @@ const LocationModal = ({
 	// =============================================================================
 	const handleCloseLocationModal = useCallback(() => {
 		shouldCallGetSelectablePins.current = true;
+		setShowNonSGLocationError(false);
 		onClose();
 	}, [onClose]);
 
@@ -210,9 +211,8 @@ const LocationModal = ({
 					errorType: "NonSGLocationError",
 				},
 			});
-			if (!shouldPreventDefault) {
-				setShowNonSGLocationError(true);
-			}
+			if (shouldPreventDefault) return;
+			setShowNonSGLocationError(true);
 			return;
 		}
 
@@ -380,6 +380,41 @@ const LocationModal = ({
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const renderNonSGLocationErrorPrompt = () => {
+		/**
+		 * Do not render any other error if there is no internet connectivity
+		 * since the form is not interactive.
+		 * When network restored, the form value will used.
+		 */
+		if (!hasInternetConnectivity || !showLocationModal || !showNonSGLocationError) return;
+
+		return (
+			<Prompt
+				id={TestHelper.generateId(id, "non-sg-location-error")}
+				data-testid={TestHelper.generateId(id, "non-sg-location-error")}
+				title="This location is outside Singapore."
+				size="large"
+				show={true}
+				description={
+					<Description weight="regular">
+						Reports can only be submitted for locations within Singapore.
+						<br />
+						Move the pin to continue.
+					</Description>
+				}
+				buttons={[
+					{
+						id: "edit-location",
+						title: "Edit location",
+						onClick: () => {
+							setShowNonSGLocationError(false);
+						},
+					},
+				]}
+			/>
+		);
+	};
+
 	const renderNetworkErrorPrompt = () => {
 		/**
 		 * Do not render any other error if there is no internet connectivity
@@ -387,34 +422,8 @@ const LocationModal = ({
 		 * When network restored, the form value will used.
 		 */
 		if (!hasInternetConnectivity || !showLocationModal) return;
-
-		if (showNonSGLocationError) {
-			return (
-				<Prompt
-					id={TestHelper.generateId(id, "non-sg-location-error")}
-					data-testid={TestHelper.generateId(id, "non-sg-location-error")}
-					title="This location is outside Singapore."
-					size="large"
-					show={true}
-					description={
-						<Description weight="regular">
-							Reports can only be submitted for locations within Singapore.
-							<br />
-							Move the pin to continue.
-						</Description>
-					}
-					buttons={[
-						{
-							id: "edit-location",
-							title: "Edit location",
-							onClick: () => {
-								setShowNonSGLocationError(false);
-							},
-						},
-					]}
-				/>
-			);
-		}
+		// non-SG location prompt takes precedence to prevent stacking multiple prompts
+		if (showNonSGLocationError) return;
 
 		if (showOneMapError) {
 			return (
@@ -576,6 +585,7 @@ const LocationModal = ({
 					)}
 				</ModalBox>
 			</Modal>
+			{renderNonSGLocationErrorPrompt()}
 			{renderNetworkErrorPrompt()}
 		</>
 	);

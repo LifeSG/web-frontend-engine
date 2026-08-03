@@ -2088,6 +2088,46 @@ describe("location-input-group", () => {
 					);
 				});
 				expect(getNonSGLocationErrorModal(true)).not.toBeInTheDocument();
+				// the location must not be confirmed even when the default prompt is prevented
+				expect(getLocationModal(true)).toBeInTheDocument();
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).not.toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: PIN_LOCATION_ADDRESS }),
+						})
+					);
+				});
+			});
+
+			it("should not show a stale prompt when reopening the modal after dismissing it", async () => {
+				renderComponent({
+					overrideField: {
+						restrictNonSGLocation: true,
+						mapApi: {
+							reverseGeocode: "https://www.mock.com/reverse-geo-code",
+						},
+					},
+				});
+				await selectPinLocationInModal();
+
+				fireEvent.click(getLocationModalControlButtons("Confirm"));
+				await waitFor(() => {
+					expect(getNonSGLocationErrorModal(true)).toBeInTheDocument();
+				});
+
+				// dismiss the whole location modal while the prompt is still showing
+				fireEvent.click(getLocationModalControlButtons("Cancel"));
+				await waitFor(() => {
+					expect(getLocationModal(true)).not.toBeInTheDocument();
+				});
+
+				// reopen: the prompt must not reappear without a new confirm attempt
+				getLocationInput().focus();
+				await waitFor(() => {
+					expect(getLocationModal(true)).toBeInTheDocument();
+				});
+				expect(getNonSGLocationErrorModal(true)).not.toBeInTheDocument();
 			});
 
 			it("should confirm a pin location within Singapore that has no addresses nearby", async () => {
