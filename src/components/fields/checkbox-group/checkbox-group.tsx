@@ -150,8 +150,8 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 					className={clsx(
 						styles.toggleWrapper,
 						customOptions.layoutType === "vertical" && styles.toggleWrapperVertical,
-						className ? `${className}-checkbox-container` : undefined,
-						error?.message && styles.toggleWrapperHasError
+						error?.message && styles.toggleWrapperHasError,
+						className ? `${className}-checkbox-container` : undefined
 					)}
 				>
 					{options.map((option, index) => {
