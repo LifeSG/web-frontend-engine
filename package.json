@@ -64,8 +64,7 @@
 		"@lifesg/react-design-system": "^4.0.0-alpha.6",
 		"@lifesg/react-icons": "^1.9.0",
 		"react": "^17.0.2 || ^18.0.0 || ^19.0.0",
-		"react-dom": "^17.0.2 || ^18.0.0 || ^19.0.0",
-		"styled-components": "^6.1.19"
+		"react-dom": "^17.0.2 || ^18.0.0 || ^19.0.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.19.3",
@@ -105,7 +104,6 @@
 		"@wyw-in-js/rollup": "^1.1.0",
 		"@wyw-in-js/webpack-loader": "^1.1.0",
 		"babel-loader": "^8.2.5",
-		"babel-plugin-styled-components": "^2.1.4",
 		"dedent": "^1.7.2",
 		"eslint": "^8.24.0",
 		"eslint-config-prettier": "^8.5.0",
@@ -138,7 +136,6 @@
 		"rollup-plugin-typescript2": "^0.36.0",
 		"storybook": "^10.2.10",
 		"style-loader": "^3.3.1",
-		"styled-components": "^6.4.1",
 		"typescript": "^5.7.3"
 	},
 	"lint-staged": {
