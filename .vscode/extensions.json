@@ -8,8 +8,5 @@
 		"dinhani.divider",
 		"bierner.markdown-mermaid",
 		"davidanson.vscode-markdownlint",
-
-		// Styled-components"
-		"styled-components.vscode-styled-components"
 	]
 }
