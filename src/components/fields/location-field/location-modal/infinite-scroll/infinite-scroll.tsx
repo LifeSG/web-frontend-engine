@@ -1,6 +1,6 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import { LoadingIndicator } from "./loading-indicator";
-import * as styles from "./infinite-scroll.style";
+import * as styles from "./infinite-scroll.styles";
 
 export type InfiniteScrollProp = {
 	loading: boolean;
