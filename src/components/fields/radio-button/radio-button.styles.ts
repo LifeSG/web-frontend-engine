@@ -2,14 +2,10 @@ import { Colour, Spacing } from "@lifesg/react-design-system/theme";
 import { css } from "@linaria/core";
 
 export const tokens = {
-	flexToggleWrapper: {
-		display: "--fee-internal-radio-flexToggleWrapper-display",
-		gridTemplateColumns: "--fee-internal-radio-flexToggleWrapper-gridTemplateColumns",
-		justifyContent: "--fee-internal-radio-flexToggleWrapper-justifyContent",
-		flexDirection: "--fee-internal-radio-flexToggleWrapper-flexDirection",
-		flexWrap: "--fee-internal-radio-flexToggleWrapper-flexWrap",
-		childFlex: "--fee-internal-radio-flexToggleWrapper-childFlex",
-		childWidth: "--fee-internal-radio-flexToggleWrapper-childWidth",
+	toggleWrapper: {
+		columns: "--fee-internal-radio-toggleWrapper-columns",
+		flex: "--fee-internal-radio-toggleWrapper-flex",
+		minItemWidth: "--fee-internal-radio-toggleWrapper-minItemWidth",
 	},
 };
 
@@ -50,28 +46,40 @@ export const flexImageWrapper = css`
 `;
 
 export const flexToggleWrapper = css`
-	${tokens.flexToggleWrapper.display}: initial;
-	${tokens.flexToggleWrapper.flexDirection}: initial;
-	${tokens.flexToggleWrapper.flexWrap}: initial;
-	${tokens.flexToggleWrapper.gridTemplateColumns}: initial;
-	${tokens.flexToggleWrapper.justifyContent}: initial;
-	${tokens.flexToggleWrapper.childFlex}: initial;
-	${tokens.flexToggleWrapper.childWidth}: initial;
+	${tokens.toggleWrapper.flex}: initial;
+	${tokens.toggleWrapper.minItemWidth}: initial;
 
-	display: var(${tokens.flexToggleWrapper.display}, flex);
-	flex-direction: var(${tokens.flexToggleWrapper.flexDirection}, row);
-	flex-wrap: var(${tokens.flexToggleWrapper.flexWrap}, wrap);
-	grid-template-columns: var(${tokens.flexToggleWrapper.gridTemplateColumns}, none);
-	justify-content: var(${tokens.flexToggleWrapper.justifyContent}, normal);
+	display: flex;
+	flex-wrap: wrap;
 	gap: ${Spacing["spacing-16"]};
 
 	> * {
-		flex: var(${tokens.flexToggleWrapper.childFlex}, initial);
-		width: var(${tokens.flexToggleWrapper.childWidth}, auto);
+		flex: var(${tokens.toggleWrapper.flex}, initial);
+		width: var(${tokens.toggleWrapper.minItemWidth}, auto);
 	}
 `;
 
-export const flexToggleWrapperHasError = css`
+export const gridToggleWrapper = css`
+	${tokens.toggleWrapper.columns}: initial;
+	${tokens.toggleWrapper.minItemWidth}: initial;
+
+	display: grid;
+	gap: ${Spacing["spacing-16"]};
+
+	&:not([data-stretch]) {
+		grid-template-columns: repeat(var(${tokens.toggleWrapper.columns}), auto);
+		justify-content: start;
+	}
+
+	&[data-stretch] {
+		grid-template-columns: repeat(
+			var(${tokens.toggleWrapper.columns}, auto-fill),
+			minmax(var(${tokens.toggleWrapper.minItemWidth}, 0), 1fr)
+		);
+	}
+`;
+
+export const toggleWrapperHasError = css`
 	/* No item selected — all items get error border */
 	&:not(:has(input:checked)) > * {
 		border-color: ${Colour["border-error"]};
@@ -83,7 +91,7 @@ export const flexToggleWrapperHasError = css`
 	}
 `;
 
-export const flexToggleWrapperVertical = css`
+export const toggleWrapperVertical = css`
 	flex-direction: column;
 `;
 

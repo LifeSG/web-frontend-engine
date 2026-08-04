@@ -82,35 +82,17 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const stretch = toggleOptions?.stretch ?? false;
 	const hasMinItemWidth = !!toggleOptions?.minItemWidth;
 
-	const getToggleWrapperTokens = () => {
-		const t = styles.tokens.flexToggleWrapper;
-		if (resolvedColumns) {
-			return stretch
-				? { [t.display]: "grid", [t.gridTemplateColumns]: `repeat(${resolvedColumns}, 1fr)` }
-				: {
-						[t.display]: "grid",
-						[t.gridTemplateColumns]: `repeat(${resolvedColumns}, auto)`,
-						[t.justifyContent]: "start",
-				  };
-		}
-		if (stretch) {
-			return {
-				[t.display]: "grid",
-				[t.gridTemplateColumns]: `repeat(auto-fill, minmax(${resolvedMinItemWidth}px, 1fr))`,
-			};
-		}
-		if (hasMinItemWidth) {
-			return {
-				[t.display]: "flex",
-				[t.flexWrap]: "wrap",
-				[t.childFlex]: `0 0 ${resolvedMinItemWidth}px`,
-				[t.childWidth]: `${resolvedMinItemWidth}px`,
-			};
-		}
-		return {};
-	};
+	const useGrid = !!(resolvedColumns || stretch);
+	const wrapperTokens: Record<string, string | undefined> = {};
+	if (resolvedColumns) wrapperTokens[styles.tokens.toggleWrapper.columns] = `${resolvedColumns}`;
+	if (stretch) {
+		wrapperTokens[styles.tokens.toggleWrapper.minItemWidth] = `${resolvedMinItemWidth}px`;
+	} else if (hasMinItemWidth) {
+		wrapperTokens[styles.tokens.toggleWrapper.minItemWidth] = `${resolvedMinItemWidth}px`;
+		wrapperTokens[styles.tokens.toggleWrapper.flex] = `0 0 ${resolvedMinItemWidth}px`;
+	}
 
-	useApplyStyle(toggleWrapperRef, getToggleWrapperTokens());
+	useApplyStyle(toggleWrapperRef, wrapperTokens);
 
 	// =============================================================================
 	// EFFECTS
@@ -235,11 +217,12 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				<div
 					ref={toggleWrapperRef}
 					className={clsx(
-						styles.flexToggleWrapper,
-						customOptions?.layoutType === "vertical" && styles.flexToggleWrapperVertical,
-						error?.message && styles.flexToggleWrapperHasError,
+						useGrid ? styles.gridToggleWrapper : styles.flexToggleWrapper,
+						customOptions?.layoutType === "vertical" && styles.toggleWrapperVertical,
+						error?.message && styles.toggleWrapperHasError,
 						className && `${className} ${className}-radio-container`
 					)}
+					data-stretch={stretch || undefined}
 				>
 					{(options as IRadioToggleOption[]).map((option, index) => {
 						const radioButtonId = formatId();
