@@ -21,14 +21,14 @@ export interface IImageButtonOption extends IRadioButtonOption {
 
 export type TRadioToggleLayoutType = "horizontal" | "vertical";
 
-export type TBreakpoint = "mobile" | "tablet" | "desktop";
+export type TBreakpoint = "sm" | "lg" | "xl";
 
 export type TResponsiveValue<T> =
 	| T
 	| {
-			mobile?: T | undefined;
-			tablet?: T | undefined;
-			desktop?: T | undefined;
+			sm?: T | undefined;
+			lg?: T | undefined;
+			xl?: T | undefined;
 	  };
 
 export type TLayoutColumns = TResponsiveValue<number>;

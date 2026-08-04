@@ -35,10 +35,10 @@ const resolveResponsiveValue = <T,>(
 ): T => {
 	if (value === undefined || value === null) return defaultValue;
 	if (typeof value !== "object") return value as T;
-	const { mobile, tablet, desktop } = value as { mobile?: T; tablet?: T; desktop?: T };
-	if (breakpoint === "mobile") return mobile ?? tablet ?? desktop ?? defaultValue;
-	if (breakpoint === "tablet") return tablet ?? desktop ?? mobile ?? defaultValue;
-	return desktop ?? tablet ?? mobile ?? defaultValue;
+	const { sm, lg, xl } = value as { sm?: T; lg?: T; xl?: T };
+	if (breakpoint === "sm") return sm ?? lg ?? xl ?? defaultValue;
+	if (breakpoint === "lg") return lg ?? xl ?? sm ?? defaultValue;
+	return xl ?? lg ?? sm ?? defaultValue;
 };
 
 export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
@@ -68,7 +68,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 
 	const isMobile = useMaxWidthMediaQuery("sm");
 	const isTablet = useMaxWidthMediaQuery("lg");
-	const currentBreakpoint: TBreakpoint = isMobile ? "mobile" : isTablet ? "tablet" : "desktop";
+	const currentBreakpoint: TBreakpoint = isMobile ? "sm" : isTablet ? "lg" : "xl";
 
 	const resolvedColumns =
 		toggleOptions?.layoutColumns !== undefined
