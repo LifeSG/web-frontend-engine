@@ -4,7 +4,6 @@ import { css } from "@linaria/core";
 export const tokens = {
 	toggleWrapper: {
 		columns: "--fee-internal-radio-toggleWrapper-columns",
-		flex: "--fee-internal-radio-toggleWrapper-flex",
 		minItemWidth: "--fee-internal-radio-toggleWrapper-minItemWidth",
 	},
 };
@@ -46,7 +45,6 @@ export const flexImageWrapper = css`
 `;
 
 export const flexToggleWrapper = css`
-	${tokens.toggleWrapper.flex}: initial;
 	${tokens.toggleWrapper.minItemWidth}: initial;
 
 	display: flex;
@@ -54,7 +52,7 @@ export const flexToggleWrapper = css`
 	gap: ${Spacing["spacing-16"]};
 
 	> * {
-		flex: var(${tokens.toggleWrapper.flex}, initial);
+		flex: 0 0 var(${tokens.toggleWrapper.minItemWidth}, auto);
 		width: var(${tokens.toggleWrapper.minItemWidth}, auto);
 	}
 `;

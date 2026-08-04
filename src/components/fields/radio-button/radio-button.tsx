@@ -85,11 +85,8 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const useGrid = !!(resolvedColumns || stretch);
 	const wrapperTokens: Record<string, string | undefined> = {};
 	if (resolvedColumns) wrapperTokens[styles.tokens.toggleWrapper.columns] = `${resolvedColumns}`;
-	if (stretch) {
+	if (stretch || hasMinItemWidth) {
 		wrapperTokens[styles.tokens.toggleWrapper.minItemWidth] = `${resolvedMinItemWidth}px`;
-	} else if (hasMinItemWidth) {
-		wrapperTokens[styles.tokens.toggleWrapper.minItemWidth] = `${resolvedMinItemWidth}px`;
-		wrapperTokens[styles.tokens.toggleWrapper.flex] = `0 0 ${resolvedMinItemWidth}px`;
 	}
 
 	useApplyStyle(toggleWrapperRef, wrapperTokens);
