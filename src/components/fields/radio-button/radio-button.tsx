@@ -28,6 +28,8 @@ import {
 
 const DEFAULT_MIN_ITEM_WIDTH = 164;
 
+const BREAKPOINT_ORDER: TBreakpoint[] = ["xxs", "xs", "sm", "md", "lg", "xl", "xxl"];
+
 const resolveResponsiveValue = <T,>(
 	value: TResponsiveValue<T> | undefined,
 	breakpoint: TBreakpoint,
@@ -35,10 +37,11 @@ const resolveResponsiveValue = <T,>(
 ): T => {
 	if (value === undefined || value === null) return defaultValue;
 	if (typeof value !== "object") return value as T;
-	const { sm, lg, xl } = value as { sm?: T; lg?: T; xl?: T };
-	if (breakpoint === "sm") return sm ?? lg ?? xl ?? defaultValue;
-	if (breakpoint === "lg") return lg ?? xl ?? sm ?? defaultValue;
-	return xl ?? lg ?? sm ?? defaultValue;
+	const responsive = value as Partial<Record<TBreakpoint, T | undefined>>;
+	const idx = BREAKPOINT_ORDER.indexOf(breakpoint);
+	const searchOrder = [...BREAKPOINT_ORDER.slice(0, idx + 1).reverse(), ...BREAKPOINT_ORDER.slice(idx + 1)];
+	const resolved = searchOrder.find((bp) => responsive[bp] !== undefined);
+	return resolved ? (responsive[resolved] as T) : defaultValue;
 };
 
 export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
@@ -66,9 +69,15 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 	const toggleWrapperRef = useRef<HTMLDivElement | null>(null);
 
-	const isMobile = useMaxWidthMediaQuery("sm");
-	const isTablet = useMaxWidthMediaQuery("lg");
-	const currentBreakpoint: TBreakpoint = isMobile ? "sm" : isTablet ? "lg" : "xl";
+	const breakpointMatches: [TBreakpoint, boolean][] = [
+		["xxs", useMaxWidthMediaQuery("xxs")],
+		["xs", useMaxWidthMediaQuery("xs")],
+		["sm", useMaxWidthMediaQuery("sm")],
+		["md", useMaxWidthMediaQuery("md")],
+		["lg", useMaxWidthMediaQuery("lg")],
+		["xl", useMaxWidthMediaQuery("xl")],
+	];
+	const currentBreakpoint: TBreakpoint = breakpointMatches.find(([, matches]) => matches)?.[0] ?? "xxl";
 
 	const resolvedColumns =
 		toggleOptions?.layoutColumns !== undefined

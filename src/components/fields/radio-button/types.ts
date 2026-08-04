@@ -21,15 +21,9 @@ export interface IImageButtonOption extends IRadioButtonOption {
 
 export type TRadioToggleLayoutType = "horizontal" | "vertical";
 
-export type TBreakpoint = "sm" | "lg" | "xl";
-
-export type TResponsiveValue<T> =
-	| T
-	| {
-			sm?: T | undefined;
-			lg?: T | undefined;
-			xl?: T | undefined;
-	  };
+export type TBreakpoint = "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+export type TResponsiveBreakpointValue<T> = Partial<Record<TBreakpoint, T | undefined>>;
+export type TResponsiveValue<T> = T | TResponsiveBreakpointValue<T>;
 
 export type TLayoutColumns = TResponsiveValue<number>;
 export type TMinItemWidth = TResponsiveValue<number>;

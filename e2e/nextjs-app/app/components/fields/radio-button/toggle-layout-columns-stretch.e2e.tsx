@@ -9,10 +9,10 @@ const SCHEMA: IFrontendEngineData = {
 			children: {
 				field: {
 					uiType: "radio",
-					label: "Responsive columns with stretch (1 sm, 2 lg, 3 xl)",
+					label: "Responsive columns with stretch (1 sm, 2 md, 3 xl)",
 					customOptions: {
 						styleType: "toggle",
-						layoutColumns: { sm: 1, lg: 2, xl: 3 },
+						layoutColumns: { sm: 1, md: 2, xl: 3 },
 						stretch: true,
 					},
 					options: [
