@@ -112,7 +112,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
+	}, [validation, mustHavePostalCode, restrictNonSGLocation]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS

@@ -225,10 +225,12 @@ const LocationModal = ({
 	const handleConfirm = useCallback(
 		(e?: CustomEvent | undefined) => {
 			const addressInfo = !isEmpty(e?.detail) ? e?.detail : selectedAddressInfo;
+			// align with handleClickConfirm: the external confirm-location trigger must not confirm non-SG locations either
+			if (restrictNonSGLocation && LocationHelper.checkIsLocationOutsideSG(addressInfo)) return;
 			onConfirm(addressInfo);
 			handleCloseLocationModal();
 		},
-		[handleCloseLocationModal, onConfirm, selectedAddressInfo]
+		[handleCloseLocationModal, onConfirm, selectedAddressInfo, restrictNonSGLocation]
 	);
 
 	const handleCloseLocationPermissionModal = () => {

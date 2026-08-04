@@ -362,7 +362,8 @@ export namespace LocationHelper {
 	 */
 	export const checkIsCoordinateOutsideSG = (coordinate: Partial<ILocationCoord>): boolean => {
 		const { lat, lng } = coordinate || {};
-		if (!lat || !lng) return true;
+		// explicit nullish checks so that 0 is treated as a valid coordinate
+		if (lat === undefined || lat === null || lng === undefined || lng === null) return true;
 		if (isPointInAnyOutline(lat, lng, NON_SG_COASTAL_OUTLINES)) return true;
 		if (isPointInAnyOutline(lat, lng, SG_COASTAL_OUTLINES)) return false;
 
@@ -380,9 +381,11 @@ export namespace LocationHelper {
 	 *   unresolvable `Pin location: <lat>, <lng>` values
 	 */
 	export const checkIsLocationOutsideSG = (location: ILocationFieldValues | undefined): boolean => {
+		const { lat, lng } = location || {};
 		if (LocationHelper.hasNonSGBuildingValue(location?.building)) return true;
-		if (location?.lat && location?.lng) {
-			return LocationHelper.checkIsCoordinateOutsideSG({ lat: location.lat, lng: location.lng });
+		// explicit nullish checks so that 0 is treated as a valid coordinate
+		if (lat !== undefined && lat !== null && lng !== undefined && lng !== null) {
+			return LocationHelper.checkIsCoordinateOutsideSG({ lat, lng });
 		}
 		return LocationHelper.hasGotPinLocationValue(location?.address);
 	};

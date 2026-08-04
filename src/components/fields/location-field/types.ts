@@ -289,7 +289,11 @@ function locationFieldTrigger(
 	id: string,
 	details: { pins: IMapPin[] }
 ): void;
-/** passes location info to Frontend Engine and dismisses location modal. this is meant to be triggered if `click-confirm-location` event is prevented */
+/**
+ * passes location info to Frontend Engine and dismisses location modal. this is meant to be triggered if `click-confirm-location` event is prevented
+ *
+ * Note: when `restrictNonSGLocation` is enabled and the location is determined to be outside Singapore, this trigger is ignored
+ */
 function locationFieldTrigger(
 	uiType: "location-field",
 	type: "confirm-location",

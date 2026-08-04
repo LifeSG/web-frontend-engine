@@ -2227,6 +2227,84 @@ describe("location-input-group", () => {
 			});
 		});
 
+		describe("confirm-location trigger", () => {
+			const json: IFrontendEngineData = {
+				id: FRONTEND_ENGINE_ID,
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[COMPONENT_ID]: {
+								label: LABEL,
+								uiType: UI_TYPE,
+								restrictNonSGLocation: true,
+								mapApi: {
+									reverseGeocode: "https://www.mock.com/reverse-geo-code",
+								},
+							},
+							...getSubmitButtonProps(),
+						},
+					},
+				},
+			};
+
+			it("should ignore the trigger when the location is outside Singapore", async () => {
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.dispatchFieldEvent(UI_TYPE, "confirm-location", COMPONENT_ID, {
+						address: PIN_LOCATION_ADDRESS,
+						lat: PIN_LOCATION_LAT,
+						lng: PIN_LOCATION_LNG,
+					});
+				};
+				render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} onSubmit={SUBMIT_FN} />);
+				getLocationInput().focus();
+				await waitFor(() => {
+					expect(getLocationModal(true)).toBeInTheDocument();
+				});
+
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				expect(getLocationModal(true)).toBeInTheDocument();
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).not.toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: PIN_LOCATION_ADDRESS }),
+						})
+					);
+				});
+			});
+
+			it("should confirm via the trigger when the location is within Singapore", async () => {
+				const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+					ref.current.dispatchFieldEvent(UI_TYPE, "confirm-location", COMPONENT_ID, {
+						address: SEA_PIN_ADDRESS,
+						lat: SEA_PIN_LAT,
+						lng: SEA_PIN_LNG,
+					});
+				};
+				render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} onSubmit={SUBMIT_FN} />);
+				getLocationInput().focus();
+				await waitFor(() => {
+					expect(getLocationModal(true)).toBeInTheDocument();
+				});
+
+				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+				await waitFor(() => {
+					expect(getLocationModal(true)).not.toBeInTheDocument();
+				});
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: SEA_PIN_ADDRESS }),
+						})
+					);
+				});
+			});
+		});
+
 		describe("validation", () => {
 			it("should block submission of pin location values on a neighbouring landmass", async () => {
 				renderComponent({
@@ -2389,6 +2467,31 @@ describe("location-input-group", () => {
 				expect(SUBMIT_FN).toHaveBeenCalled();
 			});
 
+			// 0 is a valid coordinate and must go through the boundary check, not be skipped as falsy
+			// (no required rule here: the pre-existing is-required test treats 0 coordinates as unfilled and would mask this rule)
+			it("should block submission of values with zero coordinates outside Singapore", async () => {
+				renderComponent({
+					withEvents: false,
+					overrideSchema: {
+						defaultValues: {
+							[COMPONENT_ID]: {
+								address: "Null Island",
+								lat: 0,
+								lng: 0,
+							},
+						},
+					},
+					overrideField: {
+						restrictNonSGLocation: true,
+					},
+				});
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				expect(screen.getByText(ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED)).toBeInTheDocument();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
+			});
+
 			// the no-non-sg-location rule intentionally does not gate on the required rule:
 			// an optional field still cannot submit an out-of-Singapore value.
 			it("should block submission of an out-of-Singapore value on an optional (non-required) field", async () => {
@@ -2412,6 +2515,48 @@ describe("location-input-group", () => {
 
 				expect(screen.getByText(ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED)).toBeInTheDocument();
 				expect(SUBMIT_FN).not.toHaveBeenCalled();
+			});
+
+			it("should stop blocking submission after restrictNonSGLocation is turned off at runtime", async () => {
+				// keep the same validation array reference across rerenders, mirroring how hosts
+				// (e.g. Storybook controls) update the schema without recreating nested arrays
+				const validation = [{ required: true }];
+				const buildJson = (restrictNonSGLocation: boolean): IFrontendEngineData => ({
+					id: FRONTEND_ENGINE_ID,
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[COMPONENT_ID]: {
+									label: LABEL,
+									uiType: UI_TYPE,
+									validation,
+									restrictNonSGLocation,
+								},
+								...getSubmitButtonProps(),
+							},
+						},
+					},
+					defaultValues: {
+						[COMPONENT_ID]: {
+							address: PIN_LOCATION_ADDRESS,
+							lat: PIN_LOCATION_LAT,
+							lng: PIN_LOCATION_LNG,
+						},
+					},
+				});
+				const { rerender } = render(<FrontendEngine data={buildJson(true)} onSubmit={SUBMIT_FN} />);
+
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(screen.getByText(ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED)).toBeInTheDocument();
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
+
+				rerender(<FrontendEngine data={buildJson(false)} onSubmit={SUBMIT_FN} />);
+
+				await waitFor(() => {
+					fireEvent.click(getSubmitButton());
+					expect(SUBMIT_FN).toHaveBeenCalled();
+				});
 			});
 
 			it("should allow submission of an empty optional field when restrictNonSGLocation is set", async () => {
