@@ -5,12 +5,12 @@ import merge from "lodash/merge";
 import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { TRadioButtonGroupSchema } from "../../../../components/fields";
+import { IRadioButtonToggleSchema } from "../../../../components/fields/radio-button/types";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
-	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
@@ -63,7 +63,10 @@ const JSON_SCHEMA: IFrontendEngineData = {
 	},
 };
 
-const renderComponent = (overrideField?: TOverrideField<TRadioButtonGroupSchema>, overrideSchema?: TOverrideSchema) => {
+const renderComponent = (
+	overrideField?: Partial<Omit<IRadioButtonToggleSchema, "uiType">>,
+	overrideSchema?: TOverrideSchema
+) => {
 	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
 	merge(json, {
 		sections: {
@@ -476,7 +479,280 @@ describe("radio toggle button", () => {
 		});
 	});
 
-	labelTestSuite(renderComponent);
+	describe("allowDeselection feature", () => {
+		it("should deselect when clicking selected option if allowDeselection is true", async () => {
+			renderComponent({
+				allowDeselection: true,
+				customOptions: {
+					styleType: "toggle",
+				},
+			});
+
+			const radioButtonA = getRadioButtonA();
+
+			// Select option A
+			fireEvent.click(radioButtonA);
+			await waitFor(() => expect(radioButtonA).toBeChecked());
+
+			// Click again to deselect
+			fireEvent.click(radioButtonA);
+			await waitFor(() => {
+				expect(radioButtonA).not.toBeChecked();
+			});
+
+			// Submit and verify value is null
+			fireEvent.click(getSubmitButton());
+			await waitFor(() => {
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						[COMPONENT_ID]: null,
+					})
+				);
+			});
+		});
+
+		it.each`
+			description    | allowDeselection
+			${"false"}     | ${false}
+			${"undefined"} | ${undefined}
+		`("should not deselect when allowDeselection is $description", async ({ allowDeselection }) => {
+			renderComponent({
+				...(allowDeselection !== undefined && { allowDeselection }),
+				customOptions: {
+					styleType: "toggle",
+				},
+			});
+
+			const radioButtonA = getRadioButtonA();
+			fireEvent.click(radioButtonA);
+			await waitFor(() => expect(radioButtonA).toBeChecked());
+
+			fireEvent.click(radioButtonA);
+			await waitFor(() => expect(radioButtonA).toBeChecked());
+
+			fireEvent.click(getSubmitButton());
+			await waitFor(() =>
+				expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "Apple" }))
+			);
+		});
+
+		it("should not deselect disabled option even with allowDeselection true", async () => {
+			renderComponent(
+				{
+					allowDeselection: true,
+					customOptions: {
+						styleType: "toggle",
+					},
+					options: [
+						{ value: "Apple", label: "A" },
+						{ value: "Berry", label: "B", disabled: true },
+					],
+				},
+				{ defaultValues: { [COMPONENT_ID]: "Berry" } }
+			);
+
+			const radioButtonB = getRadioButtonB();
+			expect(radioButtonB).toBeChecked();
+
+			// B is selected and disabled — clicking it should NOT deselect
+			fireEvent.click(radioButtonB);
+			await waitFor(() => {
+				expect(radioButtonB).toBeChecked();
+			});
+		});
+
+		it("should clear nested children when deselecting option with children", async () => {
+			const JSON_WITH_CHILDREN: IFrontendEngineData = {
+				id: FRONTEND_ENGINE_ID,
+				sections: {
+					section: {
+						uiType: "section",
+						children: {
+							[COMPONENT_ID]: {
+								label: "Radio",
+								uiType: UI_TYPE,
+								allowDeselection: true,
+								customOptions: {
+									styleType: "toggle",
+								},
+								options: [
+									{
+										label: "A",
+										value: "Apple",
+										children: {
+											[NESTED_FIELD_ID]: {
+												label: "Nested",
+												uiType: "text-field",
+											},
+										},
+									},
+									{ label: "B", value: "Berry" },
+								],
+							},
+							...getSubmitButtonProps(),
+						},
+					},
+				},
+			};
+
+			render(<FrontendEngine data={JSON_WITH_CHILDREN} onSubmit={SUBMIT_FN} />);
+
+			const radioButtonA = getRadioButtonA();
+
+			// Select option A - nested field should appear
+			fireEvent.click(radioButtonA);
+			await waitFor(() => {
+				expect(radioButtonA).toBeChecked();
+				expect(getNestedField()).toBeInTheDocument();
+			});
+
+			// Type in nested field
+			fireEvent.change(getNestedField(), { target: { value: "test value" } });
+			await waitFor(() => {
+				expect(getNestedField()).toHaveValue("test value");
+			});
+
+			// Deselect option A
+			fireEvent.click(radioButtonA);
+			await waitFor(() => {
+				expect(radioButtonA).not.toBeChecked();
+			});
+			await waitFor(() => {
+				expect(getNestedField()).not.toBeInTheDocument();
+			});
+
+			// Submit and verify nested field value is cleared
+			fireEvent.click(getSubmitButton());
+			await waitFor(() => {
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						[COMPONENT_ID]: null,
+					})
+				);
+				// Nested field should not be in the submission (it's removed/unmounted)
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.not.objectContaining({
+						[NESTED_FIELD_ID]: expect.anything(),
+					})
+				);
+			});
+		});
+
+		it("should trigger required validation when deselecting required field", async () => {
+			renderComponent({
+				allowDeselection: true,
+				customOptions: {
+					styleType: "toggle",
+				},
+				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+			});
+
+			const radioButtonA = getRadioButtonA();
+
+			// Select option A
+			fireEvent.click(radioButtonA);
+			await waitFor(() => expect(radioButtonA).toBeChecked());
+
+			// Deselect option A
+			fireEvent.click(radioButtonA);
+			await waitFor(() => {
+				expect(radioButtonA).not.toBeChecked();
+			});
+
+			// Try to submit - should show validation error
+			fireEvent.click(getSubmitButton());
+			await waitFor(() => {
+				expect(SUBMIT_FN).not.toHaveBeenCalled();
+				expect(getErrorMessage()).toBeInTheDocument();
+			});
+		});
+	});
+
+	describe("layoutColumns feature", () => {
+		it.each`
+			description     | layoutColumns
+			${"number"}     | ${2}
+			${"responsive"} | ${{ mobile: 1, desktop: 2 }}
+		`("should render toggles in grid when layoutColumns is $description", ({ layoutColumns }) => {
+			renderComponent({
+				customOptions: {
+					styleType: "toggle",
+					layoutColumns,
+				},
+				options: [
+					{ label: "A", value: "a" },
+					{ label: "B", value: "b" },
+					{ label: "C", value: "c" },
+					{ label: "D", value: "d" },
+				],
+			});
+
+			expect(screen.getAllByRole("radio")).toHaveLength(4);
+		});
+
+		it("should work with layoutType and layoutColumns together", () => {
+			renderComponent({
+				customOptions: {
+					styleType: "toggle",
+					layoutColumns: 2,
+					layoutType: "horizontal",
+				},
+			});
+
+			expect(screen.getAllByRole("radio")).toHaveLength(2);
+		});
+	});
+
+	describe("minItemWidth feature", () => {
+		it("should apply fixed item width when minItemWidth is set", () => {
+			renderComponent({
+				customOptions: { styleType: "toggle", minItemWidth: 200 },
+				options: [
+					{ label: "A", value: "a" },
+					{ label: "B", value: "b" },
+				],
+			});
+			expect(screen.getAllByRole("radio")).toHaveLength(2);
+		});
+
+		it("should apply responsive minItemWidth per breakpoint", () => {
+			renderComponent({
+				customOptions: { styleType: "toggle", minItemWidth: { mobile: 100, desktop: 200 } },
+				options: [
+					{ label: "A", value: "a" },
+					{ label: "B", value: "b" },
+				],
+			});
+			expect(screen.getAllByRole("radio")).toHaveLength(2);
+		});
+	});
+
+	describe("stretch feature", () => {
+		it("should render grid with auto-fill when stretch is true", () => {
+			renderComponent({
+				customOptions: { styleType: "toggle", stretch: true },
+				options: [
+					{ label: "A", value: "a" },
+					{ label: "B", value: "b" },
+				],
+			});
+			expect(screen.getAllByRole("radio")).toHaveLength(2);
+		});
+
+		it("should use layoutColumns with stretch", () => {
+			renderComponent({
+				customOptions: { styleType: "toggle", layoutColumns: 2, stretch: true },
+				options: [
+					{ label: "A", value: "a" },
+					{ label: "B", value: "b" },
+					{ label: "C", value: "c" },
+				],
+			});
+			expect(screen.getAllByRole("radio")).toHaveLength(3);
+		});
+	});
+
+	labelTestSuite(renderComponent as (overrideField: unknown) => void);
 	warningTestSuite<TRadioButtonGroupSchema>({
 		label: "Radio",
 		uiType: UI_TYPE,

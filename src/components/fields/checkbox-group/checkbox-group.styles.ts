@@ -1,4 +1,4 @@
-import { Spacing } from "@lifesg/react-design-system/theme";
+import { Colour, Spacing } from "@lifesg/react-design-system/theme";
 import { css } from "@linaria/core";
 
 export const label = css`
@@ -29,6 +29,18 @@ export const toggleWrapper = css`
 	gap: ${Spacing["spacing-16"]};
 `;
 
+export const toggleWrapperHasError = css`
+	/* No item selected — all items get error border */
+	&:not(:has(input:checked)) > * {
+		border-color: ${Colour["border-error"]};
+	}
+
+	/* An item is selected — unselected items revert to normal border */
+	&:has(input:checked) > *:not(:has(input:checked)) {
+		border-color: ${Colour.border};
+	}
+`;
+
 export const toggleWrapperVertical = css`
 	flex-direction: column;
 `;
@@ -37,5 +49,21 @@ export const toggle = css`
 	[data-id="toggle-composite-children"] {
 		margin: 0;
 		padding: 0;
+	}
+`;
+
+export const toggleHasError = css`
+	&:has(input:checked) {
+		background: ${Colour["bg-error"]};
+		border-color: ${Colour["border-error"]};
+
+		label,
+		span {
+			color: ${Colour["text-error"]};
+		}
+
+		svg {
+			color: ${Colour["icon-error"]};
+		}
 	}
 `;

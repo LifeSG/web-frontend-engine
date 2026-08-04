@@ -83,6 +83,35 @@ test.describe("Radio Toggle Button", () => {
 			await story.snapshot("toggle-nested");
 		});
 	});
+
+	const responsiveStories = [
+		{ story: "toggle-min-item-width", name: "Min item width" },
+		{ story: "toggle-layout-columns", name: "Layout columns" },
+		{ story: "toggle-stretch", name: "Stretch" },
+		{ story: "toggle-layout-columns-stretch", name: "Layout columns with stretch" },
+	] as const;
+
+	const viewports = ["desktop", "tablet", "mobile"] as const;
+
+	for (const { story, name } of responsiveStories) {
+		test.describe(() => {
+			test.use({
+				storyOptions: {
+					...withStory(story),
+				},
+			});
+
+			for (const viewport of viewports) {
+				test(`${name} (${viewport})`, async ({ story: storyPage }) => {
+					if (viewport !== "desktop") {
+						await storyPage.setViewport({ size: viewport });
+					}
+					await storyPage.goto();
+					await storyPage.snapshot(`${story}-${viewport}`);
+				});
+			}
+		});
+	}
 });
 
 test.describe("Radio Image Button", () => {
