@@ -1,0 +1,10 @@
+export declare const dummyLocationInput: import("@linaria/core").LinariaClassName;
+export declare const dummyLocationInputReadOnly: import("@linaria/core").LinariaClassName;
+export declare const dummyLocationInputDisabled: import("@linaria/core").LinariaClassName;
+export declare const dummyLocationInputError: import("@linaria/core").LinariaClassName;
+export declare const locationInputText: import("@linaria/core").LinariaClassName;
+export declare const locationInputTextPlaceholder: import("@linaria/core").LinariaClassName;
+export declare const locationInputTextDisabled: import("@linaria/core").LinariaClassName;
+export declare const locationIconWrapper: import("@linaria/core").LinariaClassName;
+export declare const locationIconWrapperDisabled: import("@linaria/core").LinariaClassName;
+export declare const locationIconWrapperReadOnly: import("@linaria/core").LinariaClassName;

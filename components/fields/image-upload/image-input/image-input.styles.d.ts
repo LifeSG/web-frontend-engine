@@ -1,0 +1,11 @@
+export declare const wrapper: import("@linaria/core").LinariaClassName;
+export declare const subtitle: import("@linaria/core").LinariaClassName;
+export declare const subtitleHasDescription: import("@linaria/core").LinariaClassName;
+export declare const tooltipWrapper: import("@linaria/core").LinariaClassName;
+export declare const tooltipIcon: import("@linaria/core").LinariaClassName;
+export declare const tooltipLabel: import("@linaria/core").LinariaClassName;
+export declare const content: import("@linaria/core").LinariaClassName;
+export declare const uploadWrapper: import("@linaria/core").LinariaClassName;
+export declare const addButton: import("@linaria/core").LinariaClassName;
+export declare const dropThemHereText: import("@linaria/core").LinariaClassName;
+export declare const alertContainer: import("@linaria/core").LinariaClassName;

@@ -1,0 +1,9 @@
+export declare const label: import("@linaria/core").LinariaClassName;
+export declare const labelDisabled: import("@linaria/core").LinariaClassName;
+export declare const checkbox: import("@linaria/core").LinariaClassName;
+export declare const checkboxContainer: import("@linaria/core").LinariaClassName;
+export declare const toggleWrapper: import("@linaria/core").LinariaClassName;
+export declare const toggleWrapperHasError: import("@linaria/core").LinariaClassName;
+export declare const toggleWrapperVertical: import("@linaria/core").LinariaClassName;
+export declare const toggle: import("@linaria/core").LinariaClassName;
+export declare const toggleHasError: import("@linaria/core").LinariaClassName;
