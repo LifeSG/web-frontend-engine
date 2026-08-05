@@ -41,10 +41,10 @@ const meta: Meta = {
 		},
 		customOptions: {
 			description:
-				'<div>A custom options on which styling to use for rendering the toggle group.</div><ul><li>`styleType` prop accept either `default` or `toggle`. If set to `toggle` will render toggle button, else render default radio buttons.</li><li>`indicator` show/hide radio icon, `false` by default.</li><li>`border` show/hide border, `true` by default.</li><li>`layoutType` render radio buttons horizontally or vertically (`"horizontal"` by default).</li><li>`layoutColumns` controls how many toggle buttons appear per row using CSS grid — accepts a number or responsive object `{ mobile?, tablet?, desktop? }`.</li><li>`minItemWidth` sets a fixed minimum item width in pixels — accepts a number or responsive object `{ mobile?, tablet?, desktop? }`.</li><li>`stretch` when true, items stretch to fill the row using CSS auto-fill grid.</li></ul>',
+				'<div>A custom options on which styling to use for rendering the toggle group.</div><ul><li>`styleType` prop accept either `default` or `toggle`. If set to `toggle` will render toggle button, else render default radio buttons.</li><li>`indicator` show/hide radio icon, `false` by default.</li><li>`border` show/hide border, `true` by default.</li><li>`layoutType` render radio buttons horizontally or vertically (`"horizontal"` by default).</li><li>`layoutColumns` controls how many toggle buttons appear per row using CSS grid — accepts a number or responsive object `{ xxs?, xs?, sm?, md?, lg?, xl?, xxl? }`.</li><li>`minItemWidth` sets a fixed minimum item width in pixels — accepts a number or responsive object `{ xxs?, xs?, sm?, md?, lg?, xl?, xxl? }`.</li><li>`stretch` when true, items stretch to fill the row using CSS auto-fill grid.</li></ul>',
 			table: {
 				type: {
-					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean, layoutType?: "horizontal" | "vertical", layoutColumns?: number | { mobile?: number, tablet?: number, desktop?: number }, minItemWidth?: number | { mobile?: number, tablet?: number, desktop?: number }, stretch?: boolean}`,
+					summary: `{styleType: "toggle", indicator?: boolean, border?: boolean, layoutType?: "horizontal" | "vertical", layoutColumns?: number | { xxs?: number, xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number }, minItemWidth?: number | { xxs?: number, xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number }, stretch?: boolean}`,
 				},
 			},
 			type: { name: "object", value: {} },
@@ -475,7 +475,7 @@ LayoutColumns.args = {
 	label: "Responsive columns (1 on mobile, 3 on desktop, not stretched)",
 	customOptions: {
 		styleType: "toggle",
-		layoutColumns: { mobile: 1, desktop: 3 },
+		layoutColumns: { sm: 1, xl: 3 },
 	},
 	options: [
 		{ label: "Option A", value: "a" },
@@ -508,7 +508,7 @@ LayoutColumnsWithStretch.args = {
 	label: "Responsive columns with stretch (1 mobile, 2 tablet, 3 desktop)",
 	customOptions: {
 		styleType: "toggle",
-		layoutColumns: { mobile: 1, tablet: 2, desktop: 3 },
+		layoutColumns: { sm: 1, lg: 2, xl: 3 },
 		stretch: true,
 	},
 	options: [

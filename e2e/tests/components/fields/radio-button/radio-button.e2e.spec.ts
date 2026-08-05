@@ -89,6 +89,7 @@ test.describe("Radio Toggle Button", () => {
 		{ story: "toggle-layout-columns", name: "Layout columns" },
 		{ story: "toggle-stretch", name: "Stretch" },
 		{ story: "toggle-layout-columns-stretch", name: "Layout columns with stretch" },
+		{ story: "toggle-responsive-xl-only", name: "Responsive values xl only" },
 	] as const;
 
 	const viewports = ["desktop", "tablet", "mobile"] as const;

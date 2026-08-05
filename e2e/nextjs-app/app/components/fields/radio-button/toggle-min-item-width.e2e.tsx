@@ -9,10 +9,10 @@ const SCHEMA: IFrontendEngineData = {
 			children: {
 				field: {
 					uiType: "radio",
-					label: "Responsive min item width (120px mobile, 160px tablet, 200px desktop)",
+					label: "Responsive min item width (120px sm, 160px md, 200px xl)",
 					customOptions: {
 						styleType: "toggle",
-						minItemWidth: { mobile: 120, tablet: 160, desktop: 200 },
+						minItemWidth: { sm: 120, md: 160, xl: 200 },
 					},
 					options: [
 						{ label: "Option A", value: "a" },

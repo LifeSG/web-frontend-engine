@@ -23,10 +23,13 @@ import {
 	IRadioToggleOption,
 	TBreakpoint,
 	TRadioButtonGroupSchema,
+	TResponsiveBreakpointValue,
 	TResponsiveValue,
 } from "./types";
 
 const DEFAULT_MIN_ITEM_WIDTH = 164;
+
+const BREAKPOINT_ORDER: TBreakpoint[] = ["xxs", "xs", "sm", "md", "lg", "xl", "xxl"];
 
 const resolveResponsiveValue = <T,>(
 	value: TResponsiveValue<T> | undefined,
@@ -35,10 +38,11 @@ const resolveResponsiveValue = <T,>(
 ): T => {
 	if (value === undefined || value === null) return defaultValue;
 	if (typeof value !== "object") return value as T;
-	const { mobile, tablet, desktop } = value as { mobile?: T; tablet?: T; desktop?: T };
-	if (breakpoint === "mobile") return mobile ?? tablet ?? desktop ?? defaultValue;
-	if (breakpoint === "tablet") return tablet ?? desktop ?? mobile ?? defaultValue;
-	return desktop ?? tablet ?? mobile ?? defaultValue;
+	const responsive = value as TResponsiveBreakpointValue<T>;
+	const idx = BREAKPOINT_ORDER.indexOf(breakpoint);
+	const searchOrder = BREAKPOINT_ORDER.slice(0, idx + 1).reverse();
+	const resolved = searchOrder.find((bp) => responsive[bp] !== undefined);
+	return resolved ? (responsive[resolved] as T) : defaultValue;
 };
 
 export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
@@ -66,9 +70,15 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 	const toggleWrapperRef = useRef<HTMLDivElement | null>(null);
 
-	const isMobile = useMaxWidthMediaQuery("sm");
-	const isTablet = useMaxWidthMediaQuery("lg");
-	const currentBreakpoint: TBreakpoint = isMobile ? "mobile" : isTablet ? "tablet" : "desktop";
+	const breakpointMatches: [TBreakpoint, boolean][] = [
+		["xxs", useMaxWidthMediaQuery("xxs")],
+		["xs", useMaxWidthMediaQuery("xs")],
+		["sm", useMaxWidthMediaQuery("sm")],
+		["md", useMaxWidthMediaQuery("md")],
+		["lg", useMaxWidthMediaQuery("lg")],
+		["xl", useMaxWidthMediaQuery("xl")],
+	];
+	const currentBreakpoint: TBreakpoint = breakpointMatches.find(([, matches]) => matches)?.[0] ?? "xxl";
 
 	const resolvedColumns =
 		toggleOptions?.layoutColumns !== undefined
