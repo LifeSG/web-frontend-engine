@@ -489,65 +489,11 @@ describe(UI_TYPE, () => {
 			});
 		});
 
-		describe("dirty state", () => {
-			let formIsDirty: boolean;
-			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-				formIsDirty = ref.current.isDirty;
-			};
-
-			beforeEach(() => {
-				formIsDirty = undefined;
-			});
-
-			it("should mount without setting field state as dirty", () => {
-				rtlRender(<FrontendEngineWithCustomButton data={EMAIL_SCHEMA} onClick={handleClick} />);
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(false);
-			});
-
-			it("should set form state as dirty if user modifies the email OTP field", () => {
-				rtlRender(<FrontendEngineWithCustomButton data={EMAIL_SCHEMA} onClick={handleClick} />);
-				fireEvent.change(getEmailInput(), { target: { value: MOCK_VALID_EMAIL } });
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(true);
-			});
-
-			it("should support default verified value without setting form state as dirty", () => {
-				rtlRender(
-					<FrontendEngineWithCustomButton
-						data={{ ...EMAIL_SCHEMA, defaultValues: { [COMPONENT_ID]: VERIFIED_EMAIL_DEFAULT_VALUE } }}
-						onClick={handleClick}
-					/>
-				);
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(false);
-			});
-
-			it("should reset and revert email OTP form dirty state to false", () => {
-				rtlRender(<FrontendEngineWithCustomButton data={EMAIL_SCHEMA} onClick={handleClick} />);
-				fireEvent.change(getEmailInput(), { target: { value: MOCK_VALID_EMAIL } });
-				fireEvent.click(getResetButton());
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(false);
-			});
-
-			it("should reset to default verified value without setting form state as dirty", () => {
-				rtlRender(
-					<FrontendEngineWithCustomButton
-						data={{ ...EMAIL_SCHEMA, defaultValues: { [COMPONENT_ID]: VERIFIED_EMAIL_DEFAULT_VALUE } }}
-						onClick={handleClick}
-					/>
-				);
-				fireEvent.change(getEmailInput(), { target: { value: "updated@example.com" } });
-				fireEvent.click(getResetButton());
-				fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-				expect(formIsDirty).toBe(false);
-			});
+		dirtyStateTestSuite({
+			schema: EMAIL_SCHEMA,
+			componentId: COMPONENT_ID,
+			defaultValue: VERIFIED_EMAIL_DEFAULT_VALUE,
+			modifyField: () => fireEvent.change(getEmailInput(), { target: { value: MOCK_VALID_EMAIL } }),
 		});
 	});
 
