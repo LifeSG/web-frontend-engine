@@ -1001,9 +1001,7 @@ describe("location-input-group", () => {
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 			});
 
-			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => {
-				renderComponent({ overrideField });
-			});
+			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => renderComponent({ overrideField }));
 			warningTestSuite<ILocationFieldSchema>({ label: LABEL, uiType: UI_TYPE });
 
 			// test functionality

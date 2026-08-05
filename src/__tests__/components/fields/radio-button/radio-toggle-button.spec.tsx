@@ -16,6 +16,7 @@ import {
 	getField,
 	getResetButton,
 	getSubmitButton,
+	getSubmitButtonProps,
 } from "../../../common";
 import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
 import { warningTestSuite } from "../../../common/tests/warnings";
@@ -671,7 +672,7 @@ describe("radio toggle button", () => {
 		});
 	});
 
-	labelTestSuite(renderComponent as (overrideField: unknown) => void);
+	labelTestSuite(renderComponent);
 	warningTestSuite<TRadioButtonGroupSchema>({
 		label: "Radio",
 		uiType: UI_TYPE,

@@ -1,7 +1,7 @@
 import { fireEvent, screen } from "@testing-library/react";
+import { TRenderComponent } from "../types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const labelTestSuite = (renderComponent: (overrideField?: any) => void) =>
+export const labelTestSuite = (renderComponent: TRenderComponent) =>
 	describe("labels", () => {
 		const getComputedStyle = window.getComputedStyle.bind(window);
 

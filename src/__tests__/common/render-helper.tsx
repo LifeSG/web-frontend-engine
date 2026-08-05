@@ -1,9 +1,9 @@
-import { RenderResult, render } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { FrontendEngine } from "../../components";
 import { IFrontendEngineData, IFrontendEngineProps, TFrontendEngineFieldSchema } from "../../components/types";
 import { FRONTEND_ENGINE_ID } from "./data";
 import { getResetButtonProps, getSubmitButtonProps } from "./helper";
-import { TOverrideField, TOverrideSchema } from "./types";
+import { TRenderComponent } from "./types";
 
 interface ICreateRenderComponentOptions {
 	componentId: string;
@@ -30,7 +30,10 @@ export function createRenderComponent<TFieldSchema>(options: ICreateRenderCompon
 		},
 	};
 
-	const renderFn = (overrideField?: TOverrideField<TFieldSchema>, overrideSchema?: TOverrideSchema): RenderResult => {
+	const renderFn: TRenderComponent<TFieldSchema> & { schema: IFrontendEngineData } = (
+		overrideField?,
+		overrideSchema?
+	) => {
 		const json: IFrontendEngineData = JSON.parse(JSON.stringify(baseJsonSchema));
 		if (overrideSchema) {
 			Object.assign(json, { ...overrideSchema, sections: json.sections });
