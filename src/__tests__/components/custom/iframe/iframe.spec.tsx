@@ -47,7 +47,7 @@ interface IRenderOptions {
 	eventListener?: ((this: Element, ev: Event) => any) | undefined;
 }
 
-const renderComponent = createRenderComponent<IIframeSchema>({
+const { renderComponent, schema } = createRenderComponent<IIframeSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		referenceKey: UI_TYPE,
@@ -265,7 +265,7 @@ describe("iframe", () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "hello",
 		modifyField: () => sendPostMessage(EPostMessageEvent.SET_VALUE, "hello world"),

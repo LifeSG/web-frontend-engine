@@ -15,7 +15,7 @@ const COMPONENT_ID = "field";
 const UI_TYPE = "textarea";
 const COMPONENT_LABEL = "Textarea";
 
-const renderComponent = createRenderComponent<ITextareaSchema>({
+const { renderComponent, schema } = createRenderComponent<ITextareaSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: { label: COMPONENT_LABEL, uiType: UI_TYPE },
 	submitFn: SUBMIT_FN,
@@ -133,7 +133,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "hello",
 		modifyField: () => fireEvent.change(getTextarea(), { target: { value: "world" } }),

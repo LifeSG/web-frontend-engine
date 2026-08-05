@@ -16,7 +16,7 @@ interface ICreateRenderComponentOptions {
 export function createRenderComponent<TFieldSchema>(options: ICreateRenderComponentOptions) {
 	const { componentId, baseSchema, submitFn = jest.fn(), includeReset = true, engineProps } = options;
 
-	const baseJsonSchema: IFrontendEngineData = {
+	const schema: IFrontendEngineData = {
 		id: FRONTEND_ENGINE_ID,
 		sections: {
 			section: {
@@ -30,11 +30,8 @@ export function createRenderComponent<TFieldSchema>(options: ICreateRenderCompon
 		},
 	};
 
-	const renderFn: TRenderComponent<TFieldSchema> & { schema: IFrontendEngineData } = (
-		overrideField?,
-		overrideSchema?
-	) => {
-		const json: IFrontendEngineData = JSON.parse(JSON.stringify(baseJsonSchema));
+	const renderComponent: TRenderComponent<TFieldSchema> = (overrideField?, overrideSchema?) => {
+		const json: IFrontendEngineData = JSON.parse(JSON.stringify(schema));
 		if (overrideSchema) {
 			Object.assign(json, { ...overrideSchema, sections: json.sections });
 		}
@@ -44,7 +41,5 @@ export function createRenderComponent<TFieldSchema>(options: ICreateRenderCompon
 		return render(<FrontendEngine {...engineProps} data={json} onSubmit={submitFn} />);
 	};
 
-	renderFn.schema = baseJsonSchema;
-
-	return renderFn;
+	return { renderComponent, schema };
 }

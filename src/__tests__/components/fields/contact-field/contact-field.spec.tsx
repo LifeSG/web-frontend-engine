@@ -29,7 +29,7 @@ const COMPONENT_LABEL = "Contact Number";
 
 jest.setTimeout(20000);
 
-const renderComponent = createRenderComponent<IContactFieldSchema>({
+const { renderComponent, schema } = createRenderComponent<IContactFieldSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: { label: COMPONENT_LABEL, uiType: UI_TYPE },
 	submitFn: SUBMIT_FN,
@@ -369,7 +369,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "91234567",
 		modifyField: () => fireEvent.change(getContactFieldWithPlaceholder(), { target: { value: "+65 91234567" } }),

@@ -28,7 +28,7 @@ const getRadioButtonB = (): HTMLElement => {
 	return getField("radio", "B");
 };
 
-const renderComponent = createRenderComponent<TRadioButtonGroupSchema>({
+const { renderComponent, schema } = createRenderComponent<TRadioButtonGroupSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: "Radio",
@@ -43,11 +43,11 @@ const renderComponent = createRenderComponent<TRadioButtonGroupSchema>({
 
 const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineData) => IFrontendEngineData }) => {
 	const { onClick } = props;
-	const [schema, setSchema] = useState<IFrontendEngineData>(renderComponent.schema);
+	const [data, setData] = useState<IFrontendEngineData>(schema);
 	return (
 		<>
-			<FrontendEngine data={schema} onSubmit={SUBMIT_FN} />
-			<Button.Default onClick={() => setSchema(onClick)}>Update options</Button.Default>
+			<FrontendEngine data={data} onSubmit={SUBMIT_FN} />
+			<Button.Default onClick={() => setData(onClick)}>Update options</Button.Default>
 		</>
 	);
 };
@@ -281,7 +281,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: ["Apple"],
 		modifyField: () => fireEvent.click(getRadioButtonA()),

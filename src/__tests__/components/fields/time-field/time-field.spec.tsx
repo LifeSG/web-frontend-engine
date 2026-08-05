@@ -16,7 +16,7 @@ const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Time";
 const UI_TYPE = "time-field";
 
-const renderComponent = createRenderComponent<ITimeFieldSchema>({
+const { renderComponent, schema } = createRenderComponent<ITimeFieldSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: COMPONENT_LABEL,
@@ -149,7 +149,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "hello",
 		modifyField: () => pickValidTime(),

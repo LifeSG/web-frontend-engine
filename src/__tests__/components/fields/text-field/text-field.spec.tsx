@@ -17,7 +17,7 @@ const COMPONENT_LABEL = "Textfield";
 const UI_TYPE = "text-field";
 const EXPECTED_TEXT = "test this has been pasted";
 
-const renderComponent = createRenderComponent<ITextFieldSchema>({
+const { renderComponent, schema } = createRenderComponent<ITextFieldSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: { label: COMPONENT_LABEL, uiType: UI_TYPE },
 	submitFn: SUBMIT_FN,
@@ -209,7 +209,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "hello",
 		modifyField: () => fireEvent.change(getTextfield(), { target: { value: "world" } }),

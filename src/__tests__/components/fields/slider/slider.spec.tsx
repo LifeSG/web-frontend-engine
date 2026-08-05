@@ -15,7 +15,7 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "slider";
 
-const renderComponent = createRenderComponent<ISliderSchema>({
+const { renderComponent, schema } = createRenderComponent<ISliderSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: "Slider",
@@ -118,7 +118,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: 50,
 		modifyField: () => changeSliderValue(sliderSpy, 15),

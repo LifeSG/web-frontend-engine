@@ -16,7 +16,7 @@ const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Numeric field";
 const UI_TYPE = "numeric-field";
 
-const renderComponent = createRenderComponent<INumericFieldSchema>({
+const { renderComponent, schema } = createRenderComponent<INumericFieldSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: COMPONENT_LABEL,
@@ -298,7 +298,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: 2,
 		modifyField: () => fireEvent.change(getNumericField(), { target: { value: 1 } }),

@@ -18,7 +18,7 @@ const COMPONENT_LABEL = "Email";
 const UI_TYPE = "email-field";
 const EXPECTED_VALUE = "aa@aa.com";
 
-const renderComponent = createRenderComponent<IEmailFieldSchema>({
+const { renderComponent, schema } = createRenderComponent<IEmailFieldSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: COMPONENT_LABEL,
@@ -210,7 +210,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "john@doe.tld",
 		modifyField: () => fireEvent.change(getEmailField(), { target: { value: "world" } }),

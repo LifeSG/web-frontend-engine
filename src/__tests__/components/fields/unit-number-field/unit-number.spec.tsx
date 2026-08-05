@@ -9,7 +9,7 @@ const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Unit Number";
 const UI_TYPE = "unit-number-field";
 
-const renderComponent = createRenderComponent<IUnitNumberFieldSchema>({
+const { renderComponent, schema } = createRenderComponent<IUnitNumberFieldSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: COMPONENT_LABEL,
@@ -140,7 +140,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "01-02",
 		modifyField: () => setFieldValue("12", "34"),

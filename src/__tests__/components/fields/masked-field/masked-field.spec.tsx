@@ -15,7 +15,7 @@ const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Masked field";
 const UI_TYPE = "masked-field";
 
-const renderComponent = createRenderComponent<IMaskedFieldSchema>({
+const { renderComponent, schema } = createRenderComponent<IMaskedFieldSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: COMPONENT_LABEL,
@@ -136,7 +136,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "hello",
 		modifyField: () => fireEvent.change(getMaskedField(), { target: { value: "world" } }),

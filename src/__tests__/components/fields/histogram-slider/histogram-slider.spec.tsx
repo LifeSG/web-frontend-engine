@@ -25,7 +25,7 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "histogram-slider";
 
-const renderComponent = createRenderComponent<IHistogramSliderSchema>({
+const { renderComponent, schema } = createRenderComponent<IHistogramSliderSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: "Histogram slider",
@@ -153,7 +153,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: { from: 10, to: 50 },
 		modifyField: () => changeSliderValue(sliderSpy, [20, 60]),

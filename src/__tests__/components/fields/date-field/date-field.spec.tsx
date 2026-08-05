@@ -17,7 +17,7 @@ const COMPONENT_ID = "field";
 const UI_TYPE = "date-field";
 const COMPONENT_LABEL = "Date";
 
-const renderComponent = createRenderComponent<IDateFieldSchema>({
+const { renderComponent, schema } = createRenderComponent<IDateFieldSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: { label: COMPONENT_LABEL, uiType: UI_TYPE },
 	submitFn: SUBMIT_FN,
@@ -291,7 +291,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: "2022-02-25",
 		modifyField: () => changeDate("25", "01", "2022"),

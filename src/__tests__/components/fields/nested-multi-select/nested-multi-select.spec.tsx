@@ -48,7 +48,7 @@ const NESTED_JSON_FIELDS: TOverrideField<INestedMultiSelectSchema> = {
 	],
 };
 
-const renderComponent = createRenderComponent<INestedMultiSelectSchema>({
+const { renderComponent, schema } = createRenderComponent<INestedMultiSelectSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: "Nestedmultiselect",
@@ -68,11 +68,11 @@ const ComponentWithSetSchemaButton = (props: {
 	initialSchema?: IFrontendEngineData;
 }) => {
 	const { onClick, initialSchema } = props;
-	const [schema, setSchema] = useState<IFrontendEngineData>(initialSchema ?? renderComponent.schema);
+	const [data, setData] = useState<IFrontendEngineData>(initialSchema ?? schema);
 	return (
 		<>
-			<FrontendEngine data={schema} onSubmit={SUBMIT_FN} />
-			<Button.Default onClick={() => setSchema(onClick)}>Update options</Button.Default>
+			<FrontendEngine data={data} onSubmit={SUBMIT_FN} />
+			<Button.Default onClick={() => setData(onClick)}>Update options</Button.Default>
 		</>
 	);
 };
@@ -331,7 +331,7 @@ describe(UI_TYPE, () => {
 		`("$scenario", async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }) => {
 			render(
 				<ComponentWithSetSchemaButton
-					initialSchema={merge(cloneDeep(renderComponent.schema), {
+					initialSchema={merge(cloneDeep(schema), {
 						sections: {
 							section: {
 								children: {
@@ -428,7 +428,7 @@ describe(UI_TYPE, () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(
 					<ComponentWithSetSchemaButton
-						initialSchema={renderComponent.schema}
+						initialSchema={schema}
 						onClick={(data) => ({
 							...data,
 							overrides: {
@@ -472,7 +472,7 @@ describe(UI_TYPE, () => {
 			async ({ selected, expectedValueBeforeUpdate, expectedValueAfterUpdate }: Record<string, string[]>) => {
 				render(
 					<ComponentWithSetSchemaButton
-						initialSchema={merge(cloneDeep(renderComponent.schema), {
+						initialSchema={merge(cloneDeep(schema), {
 							sections: {
 								section: {
 									children: {
@@ -573,7 +573,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: { appleKey: "apple" },
 		modifyField: () => {

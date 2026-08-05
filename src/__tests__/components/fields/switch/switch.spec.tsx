@@ -14,7 +14,7 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "switch";
 
-const renderComponent = createRenderComponent<ISwitchSchema>({
+const { renderComponent, schema } = createRenderComponent<ISwitchSchema>({
 	componentId: COMPONENT_ID,
 	baseSchema: {
 		label: "Switch",
@@ -108,7 +108,7 @@ describe(UI_TYPE, () => {
 	});
 
 	dirtyStateTestSuite({
-		schema: renderComponent.schema,
+		schema,
 		componentId: COMPONENT_ID,
 		defaultValue: ["Apple"],
 		modifyField: () => fireEvent.click(getSwitchButton("Yes")),
