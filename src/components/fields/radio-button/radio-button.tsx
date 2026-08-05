@@ -23,6 +23,7 @@ import {
 	IRadioToggleOption,
 	TBreakpoint,
 	TRadioButtonGroupSchema,
+	TResponsiveBreakpointValue,
 	TResponsiveValue,
 } from "./types";
 
@@ -37,9 +38,9 @@ const resolveResponsiveValue = <T,>(
 ): T => {
 	if (value === undefined || value === null) return defaultValue;
 	if (typeof value !== "object") return value as T;
-	const responsive = value as Partial<Record<TBreakpoint, T | undefined>>;
+	const responsive = value as TResponsiveBreakpointValue<T>;
 	const idx = BREAKPOINT_ORDER.indexOf(breakpoint);
-	const searchOrder = [...BREAKPOINT_ORDER.slice(0, idx + 1).reverse(), ...BREAKPOINT_ORDER.slice(idx + 1)];
+	const searchOrder = BREAKPOINT_ORDER.slice(0, idx + 1).reverse();
 	const resolved = searchOrder.find((bp) => responsive[bp] !== undefined);
 	return resolved ? (responsive[resolved] as T) : defaultValue;
 };
