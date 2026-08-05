@@ -18,8 +18,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
-import { warningTestSuite } from "../../../common/tests/warnings";
+import { dirtyStateTestSuite, labelTestSuite, warningTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";

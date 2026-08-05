@@ -7,8 +7,7 @@ import { FrontendEngine } from "../../../../components";
 import { TRadioButtonGroupSchema } from "../../../../components/fields";
 import { IFrontendEngineData } from "../../../../components/frontend-engine";
 import { ERROR_MESSAGE, createRenderComponent, getErrorMessage, getField, getSubmitButton } from "../../../common";
-import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
-import { warningTestSuite } from "../../../common/tests/warnings";
+import { dirtyStateTestSuite, labelTestSuite, warningTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";

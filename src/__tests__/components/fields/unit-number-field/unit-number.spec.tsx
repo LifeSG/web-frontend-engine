@@ -2,8 +2,7 @@ import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { IUnitNumberFieldSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { createRenderComponent, getResetButton, getSubmitButton } from "../../../common";
-import { dirtyStateTestSuite, labelTestSuite } from "../../../common/tests";
-import { warningTestSuite } from "../../../common/tests/warnings";
+import { dirtyStateTestSuite, labelTestSuite, warningTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";

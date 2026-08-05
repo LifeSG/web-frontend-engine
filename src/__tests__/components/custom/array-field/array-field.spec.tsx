@@ -17,8 +17,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { warningTestSuite } from "../../../common/tests/warnings";
-import { dirtyStateTestSuite } from "../../../common/tests";
+import { dirtyStateTestSuite, warningTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const VALUE_CHANGE_FN = jest.fn();
