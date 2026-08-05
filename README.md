@@ -16,7 +16,6 @@ Developers are expected to have the following packages installed:
 -   @lifesg/react-icons `^1.9.0`
 -   react `^17.0.2 || ^18.0.0 || ^19.0.0`
 -   react-dom `17.0.2 || ^18.0.0 || ^19.0.0`
--   styled-components `^6.1.19`
 
 ## Installation
 

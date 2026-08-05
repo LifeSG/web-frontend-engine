@@ -40,7 +40,3 @@ This directory contains end-to-end assets split by responsibility:
     ```
 
 -   Use a file-local subclass of `StoryPage` when you need `story.locators` ergonomics.
-
-## Known Issues
-
--   **Styled-components warning**: A browser warning about multiple `styled-components` instances is expected and non-breaking. This occurs because the root library and `nextjs-app` each have their own `styled-components` dependency. Tests pass despite this warning.
