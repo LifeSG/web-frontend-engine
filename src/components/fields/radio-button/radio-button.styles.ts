@@ -62,7 +62,7 @@ export const FlexToggleWrapper = styled.div<IToggleWrapperProps>`
 				: `display: grid; grid-template-columns: repeat(${$resolvedColumns}, auto); justify-content: start;`;
 		}
 		if ($stretch) {
-			return `display: grid; grid-template-columns: repeat(auto-fill, minmax(${$resolvedMinItemWidth}px, 1fr));`;
+			return `display: grid; grid-template-columns: repeat(auto-fit, minmax(${$resolvedMinItemWidth}px, 1fr));`;
 		}
 		if ($hasMinItemWidth) {
 			return `display: flex; flex-wrap: wrap; > * { flex: 0 0 ${$resolvedMinItemWidth}px; width: ${$resolvedMinItemWidth}px; }`;
