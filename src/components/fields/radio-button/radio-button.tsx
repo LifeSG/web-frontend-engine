@@ -125,7 +125,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	};
 
 	const handleDeselect = (clickedValue: string): void => {
-		onChange?.({ target: { value: null } });
+		onChange?.({ target: {} });
 		trigger(id);
 
 		const selectedOption = options.find((opt) => opt.value === clickedValue);

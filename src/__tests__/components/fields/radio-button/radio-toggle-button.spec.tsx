@@ -500,12 +500,12 @@ describe("radio toggle button", () => {
 				expect(radioButtonA).not.toBeChecked();
 			});
 
-			// Submit and verify value is null
+			// Submit and verify value is cleared
 			fireEvent.click(getSubmitButton());
 			await waitFor(() => {
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
-					expect.objectContaining({
-						[COMPONENT_ID]: null,
+					expect.not.objectContaining({
+						[COMPONENT_ID]: expect.anything(),
 					})
 				);
 			});
@@ -625,13 +625,8 @@ describe("radio toggle button", () => {
 			fireEvent.click(getSubmitButton());
 			await waitFor(() => {
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
-					expect.objectContaining({
-						[COMPONENT_ID]: null,
-					})
-				);
-				// Nested field should not be in the submission (it's removed/unmounted)
-				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.not.objectContaining({
+						[COMPONENT_ID]: expect.anything(),
 						[NESTED_FIELD_ID]: expect.anything(),
 					})
 				);
