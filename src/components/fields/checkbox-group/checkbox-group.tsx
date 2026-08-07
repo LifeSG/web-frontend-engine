@@ -138,6 +138,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 				<ToggleWrapper
 					$layoutType={customOptions?.layoutType ?? "horizontal"}
 					className={className ? `${className}-checkbox-container` : undefined}
+					$hasError={!!error?.message}
 				>
 					{options.map((option, index) => {
 						const checkboxId = formatId();
@@ -157,6 +158,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
 								error={!!error?.message}
+								$hasError={!!error?.message}
 								compositeSection={
 									option.children
 										? {

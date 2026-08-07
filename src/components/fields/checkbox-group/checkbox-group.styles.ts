@@ -1,9 +1,9 @@
 import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import { Toggle } from "@lifesg/react-design-system/toggle";
 import { Typography } from "@lifesg/react-design-system/typography";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { TCheckboxToggleLayoutType } from "./types";
-import { Spacing } from "@lifesg/react-design-system/theme";
+import { Colour, Spacing } from "@lifesg/react-design-system/theme";
 
 interface ILabelProps {
 	disabled?: boolean | undefined;
@@ -11,6 +11,11 @@ interface ILabelProps {
 
 interface IToggleWrapperProps {
 	$layoutType?: TCheckboxToggleLayoutType;
+	$hasError?: boolean | undefined;
+}
+
+interface IStyledToggleProps {
+	$hasError?: boolean | undefined;
 }
 
 export const Label = styled(Typography.BodyMD)<ILabelProps>`
@@ -35,11 +40,43 @@ export const ToggleWrapper = styled.div<IToggleWrapperProps>`
 	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-16"]};
+
+	${(props) =>
+		props.$hasError &&
+		css`
+			/* No item selected — all items get error border */
+			&:not(:has(input:checked)) > * {
+				border-color: ${Colour["border-error"](props)};
+			}
+
+			/* An item is selected — unselected items revert to normal border */
+			&:has(input:checked) > *:not(:has(input:checked)) {
+				border-color: ${Colour.border(props)};
+			}
+		`}
 `;
 
-export const StyledToggle = styled(Toggle)`
+export const StyledToggle = styled(Toggle)<IStyledToggleProps>`
 	[data-id="toggle-composite-children"] {
 		margin: 0;
 		padding: 0;
 	}
+
+	${(props) =>
+		props.$hasError &&
+		css`
+			&:has(input:checked) {
+				background: ${Colour["bg-error"](props)};
+				border-color: ${Colour["border-error"](props)};
+
+				label,
+				span {
+					color: ${Colour["text-error"](props)};
+				}
+
+				svg {
+					color: ${Colour["icon-error"](props)};
+				}
+			}
+		`}
 `;
