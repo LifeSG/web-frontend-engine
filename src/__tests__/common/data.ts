@@ -1,5 +1,6 @@
 import { ISubmitButtonSchema } from "../../components/fields";
 
+export const CUSTOM_BUTTON_LABEL = "Custom Button";
 export const SUBMIT_BUTTON_ID = "submit";
 export const SUBMIT_BUTTON_LABEL = "Submit";
 export const RESET_BUTTON_ID = "reset";

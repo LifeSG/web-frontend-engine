@@ -23,8 +23,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
-import { warningTestSuite } from "../../../common/tests/warnings";
+import { dirtyStateTestSuite, labelTestSuite, warningTestSuite } from "../../../common/tests";
 import {
 	fetchSingleLocationByLatLngSingleReponse,
 	mock1PageFetchAddressResponse,
@@ -1001,9 +1000,7 @@ describe("location-input-group", () => {
 				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 			});
 
-			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => {
-				renderComponent({ overrideField });
-			});
+			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => renderComponent({ overrideField }));
 			warningTestSuite<ILocationFieldSchema>({ label: LABEL, uiType: UI_TYPE });
 
 			// test functionality
@@ -1922,12 +1919,8 @@ describe("location-input-group", () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-		const json: IFrontendEngineData = {
+	dirtyStateTestSuite({
+		schema: {
 			id: FRONTEND_ENGINE_ID,
 			sections: {
 				section: {
@@ -1942,120 +1935,33 @@ describe("location-input-group", () => {
 					},
 				},
 			},
-		};
-
-		beforeEach(() => {
+		},
+		componentId: COMPONENT_ID,
+		defaultValue: {
+			address: "Fusionopolis View",
+		},
+		modifyField: async () => {
+			await waitFor(() => window.dispatchEvent(new Event("online")));
+			getLocationInput().focus();
+			await waitFor(() => {
+				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
+			});
+			within(getCurrentLocationErrorModal(true)).getByRole("button").click();
+			fireEvent.change(getLocationSearchInput(), { target: { value: "found something" } });
+			await waitFor(() => {
+				expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
+			});
+			const resultContainer = getLocationSearchResults();
+			const selectedResult = resultContainer.getElementsByTagName("div")[0];
+			fireEvent.click(selectedResult);
+			fireEvent.click(getLocationModalControlButtons("Confirm"));
+		},
+		beforeEach: () => {
 			getCurrentLocationSpy.mockRejectedValue({ code: 1 });
 			fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
 				onSuccess(mock1PageFetchAddressResponse);
 			});
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", async () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
-			await waitFor(() => window.dispatchEvent(new Event("online")));
-			getLocationInput().focus();
-			await waitFor(() => {
-				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
-			});
-			within(getCurrentLocationErrorModal(true)).getByRole("button").click();
-			fireEvent.change(getLocationSearchInput(), { target: { value: "found something" } });
-			await waitFor(() => {
-				expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
-			});
-			const resultContainer = getLocationSearchResults();
-			const selectedResult = resultContainer.getElementsByTagName("div")[0];
-			fireEvent.click(selectedResult);
-			fireEvent.click(getLocationModalControlButtons("Confirm"));
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...json,
-						defaultValues: {
-							[COMPONENT_ID]: {
-								address: "Fusionopolis View",
-							},
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
-			await waitFor(() => window.dispatchEvent(new Event("online")));
-			getLocationInput().focus();
-			await waitFor(() => {
-				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
-			});
-			within(getCurrentLocationErrorModal(true)).getByRole("button").click();
-			fireEvent.change(getLocationSearchInput(), { target: { value: "found something" } });
-			await waitFor(() => {
-				expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
-			});
-			const resultContainer = getLocationSearchResults();
-			const selectedResult = resultContainer.getElementsByTagName("div")[0];
-			fireEvent.click(selectedResult);
-			fireEvent.click(getLocationModalControlButtons("Confirm"));
-
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...json,
-						defaultValues: {
-							[COMPONENT_ID]: {
-								address: "Fusionopolis View",
-							},
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			await waitFor(() => window.dispatchEvent(new Event("online")));
-			getLocationInput().focus();
-			await waitFor(() => {
-				expect(getCurrentLocationErrorModal(true)).toBeInTheDocument();
-			});
-			within(getCurrentLocationErrorModal(true)).getByRole("button").click();
-			fireEvent.change(getLocationSearchInput(), { target: { value: "found something" } });
-			await waitFor(() => {
-				expect(getLocationSearchResults(true)).not.toBeEmptyDOMElement();
-			});
-			const resultContainer = getLocationSearchResults();
-			const selectedResult = resultContainer.getElementsByTagName("div")[0];
-			fireEvent.click(selectedResult);
-			fireEvent.click(getLocationModalControlButtons("Confirm"));
-
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+		},
 	});
 
 	describe("search results list title", () => {

@@ -1,6 +1,7 @@
 import { fireEvent, screen } from "@testing-library/react";
+import { TRenderComponent } from "../types";
 
-export const labelTestSuite = (renderComponent: (overrideField: unknown) => void) =>
+export const labelTestSuite = (renderComponent: TRenderComponent) =>
 	describe("labels", () => {
 		const getComputedStyle = window.getComputedStyle.bind(window);
 
