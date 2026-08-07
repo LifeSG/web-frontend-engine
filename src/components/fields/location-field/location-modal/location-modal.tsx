@@ -8,6 +8,7 @@ import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
 import { Description } from "../../../shared/prompt/prompt.styles";
+import { LocationHelper } from "../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
 	ILocationCoord,
@@ -54,6 +55,7 @@ const LocationModal = ({
 	pinsOnlyIndicateCurrentLocation,
 	legendItems,
 	defaultAddress,
+	restrictNonSGLocation,
 }: ILocationModalProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
@@ -75,6 +77,7 @@ const LocationModal = ({
 	const [showGetLocationError, setShowGetLocationError] = useState(false);
 	const [showOneMapError, setShowOneMapError] = useState(false);
 	const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
+	const [showNonSGLocationError, setShowNonSGLocationError] = useState(false);
 
 	// map picked lat lng vs selectedAddressInfo
 	// map picked value can be falsy/ no address found
@@ -143,6 +146,7 @@ const LocationModal = ({
 	// =============================================================================
 	const handleCloseLocationModal = useCallback(() => {
 		shouldCallGetSelectablePins.current = true;
+		setShowNonSGLocationError(false);
 		onClose();
 	}, [onClose]);
 
@@ -201,6 +205,17 @@ const LocationModal = ({
 	}, [handleCloseLocationModal, restoreFormvalues]);
 
 	const handleClickConfirm = () => {
+		if (restrictNonSGLocation && LocationHelper.checkIsLocationOutsideSG(selectedAddressInfo)) {
+			const shouldPreventDefault = !dispatchFieldEvent<TLocationFieldErrorDetail>("error", id, {
+				payload: {
+					errorType: "NonSGLocationError",
+				},
+			});
+			if (shouldPreventDefault) return;
+			setShowNonSGLocationError(true);
+			return;
+		}
+
 		const shouldPreventDefault = !dispatchFieldEvent("click-confirm-location", id, selectedAddressInfo);
 		if (!shouldPreventDefault) {
 			handleConfirm();
@@ -210,10 +225,12 @@ const LocationModal = ({
 	const handleConfirm = useCallback(
 		(e?: CustomEvent | undefined) => {
 			const addressInfo = !isEmpty(e?.detail) ? e?.detail : selectedAddressInfo;
+			// align with handleClickConfirm: the external confirm-location trigger must not confirm non-SG locations either
+			if (restrictNonSGLocation && LocationHelper.checkIsLocationOutsideSG(addressInfo)) return;
 			onConfirm(addressInfo);
 			handleCloseLocationModal();
 		},
-		[handleCloseLocationModal, onConfirm, selectedAddressInfo]
+		[handleCloseLocationModal, onConfirm, selectedAddressInfo, restrictNonSGLocation]
 	);
 
 	const handleCloseLocationPermissionModal = () => {
@@ -365,6 +382,41 @@ const LocationModal = ({
 	// =============================================================================
 	// RENDER FUNCTIONS
 	// =============================================================================
+	const renderNonSGLocationErrorPrompt = () => {
+		/**
+		 * Do not render any other error if there is no internet connectivity
+		 * since the form is not interactive.
+		 * When network restored, the form value will used.
+		 */
+		if (!hasInternetConnectivity || !showLocationModal || !showNonSGLocationError) return;
+
+		return (
+			<Prompt
+				id={TestHelper.generateId(id, "non-sg-location-error")}
+				data-testid={TestHelper.generateId(id, "non-sg-location-error")}
+				title="This location is outside Singapore."
+				size="large"
+				show={true}
+				description={
+					<Description weight="regular">
+						Reports can only be submitted for locations within Singapore.
+						<br />
+						Move the pin to continue.
+					</Description>
+				}
+				buttons={[
+					{
+						id: "edit-location",
+						title: "Edit location",
+						onClick: () => {
+							setShowNonSGLocationError(false);
+						},
+					},
+				]}
+			/>
+		);
+	};
+
 	const renderNetworkErrorPrompt = () => {
 		/**
 		 * Do not render any other error if there is no internet connectivity
@@ -372,6 +424,8 @@ const LocationModal = ({
 		 * When network restored, the form value will used.
 		 */
 		if (!hasInternetConnectivity || !showLocationModal) return;
+		// non-SG location prompt takes precedence to prevent stacking multiple prompts
+		if (showNonSGLocationError) return;
 
 		if (showOneMapError) {
 			return (
@@ -494,6 +548,7 @@ const LocationModal = ({
 								mustHavePostalCode={mustHavePostalCode}
 								locationListTitle={locationListTitle}
 								restrictLocationSelection={locationSelectionMode === "pins-only"}
+								restrictNonSGLocation={restrictNonSGLocation}
 								selectablePins={selectablePins}
 								disableSearch={disableSearch}
 								addressFieldPlaceholder={addressFieldPlaceholder}
@@ -532,6 +587,7 @@ const LocationModal = ({
 					)}
 				</ModalBox>
 			</Modal>
+			{renderNonSGLocationErrorPrompt()}
 			{renderNetworkErrorPrompt()}
 		</>
 	);
