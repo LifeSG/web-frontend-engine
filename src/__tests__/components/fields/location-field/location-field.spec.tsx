@@ -2648,6 +2648,73 @@ describe("location-input-group", () => {
 				});
 			});
 
+			it("should re-evaluate the prefilled value when restrictNonSGLocation is turned on at runtime", async () => {
+				fetchSingleLocationByLatLngSpy.mockImplementation(
+					(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {
+						handleResult(JOHOR_LOCATION_RESULT);
+					}
+				);
+				// the re-run resolves by address (the first prefill stored one)
+				fetchSingleLocationByAddressSpy.mockImplementation((_address, onSuccess) => {
+					onSuccess(JOHOR_LOCATION_RESULT);
+				});
+				// keep the same nested references across rerenders, mirroring how hosts update the schema
+				const mapApi = { reverseGeocode: "https://www.mock.com/reverse-geo-code" };
+				const defaultValues = {
+					[COMPONENT_ID]: {
+						lat: PIN_LOCATION_LAT,
+						lng: PIN_LOCATION_LNG,
+					},
+				};
+				const buildJson = (restrictNonSGLocation: boolean): IFrontendEngineData => ({
+					id: FRONTEND_ENGINE_ID,
+					sections: {
+						section: {
+							uiType: "section",
+							children: {
+								[COMPONENT_ID]: {
+									label: LABEL,
+									uiType: UI_TYPE,
+									mapApi,
+									restrictNonSGLocation,
+								},
+								...getSubmitButtonProps(),
+							},
+						},
+					},
+					defaultValues,
+				});
+				const { rerender } = render(<FrontendEngine data={buildJson(false)} onSubmit={SUBMIT_FN} />);
+
+				await waitFor(() => {
+					expect(fetchSingleLocationByLatLngSpy).toHaveBeenCalledTimes(1);
+				});
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).toHaveBeenCalledWith(
+						expect.objectContaining({
+							[COMPONENT_ID]: expect.objectContaining({ address: JOHOR_LOCATION_RESULT.address }),
+						})
+					);
+				});
+				SUBMIT_FN.mockClear();
+
+				rerender(<FrontendEngine data={buildJson(true)} onSubmit={SUBMIT_FN} />);
+
+				await waitFor(() => {
+					expect(fetchSingleLocationByAddressSpy).toHaveBeenCalled();
+				});
+				fireEvent.click(getSubmitButton());
+				await waitFor(() => {
+					expect(SUBMIT_FN).toHaveBeenCalled();
+				});
+				expect(SUBMIT_FN).not.toHaveBeenCalledWith(
+					expect.objectContaining({
+						[COMPONENT_ID]: expect.objectContaining({ address: JOHOR_LOCATION_RESULT.address }),
+					})
+				);
+			});
+
 			it("should keep values that resolve to a non-Singapore address when restrictNonSGLocation is not set", async () => {
 				fetchSingleLocationByLatLngSpy.mockImplementation(
 					(_reverseGeoCodeEndpoint, _convertLatLngToXYEndpoint, _lat, _lng, handleResult) => {

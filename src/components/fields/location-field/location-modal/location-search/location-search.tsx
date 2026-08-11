@@ -280,7 +280,7 @@ export const LocationSearch = ({
 				mapApiHeaders
 			);
 		}
-	}, [isRecaptchaReady]);
+	}, [isRecaptchaReady, mustHavePostalCode, restrictNonSGLocation]);
 
 	/**
 	 * Gets the address of the location with lat lng when user clicks on the map
