@@ -125,6 +125,7 @@ export const ERROR_MESSAGES = {
 	},
 	LOCATION: {
 		MUST_HAVE_POSTAL_CODE: "Selected location must have postal code.",
+		NON_SG_LOCATION_NOT_ALLOWED: "Selected location must be within Singapore.",
 	},
 	ARRAY_FIELD: {
 		INVALID: "One or more of the sections is incomplete",
