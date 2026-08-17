@@ -64,6 +64,7 @@ export const LocationSearch = ({
 	setSinglePanelMode,
 	updateFormValues,
 	restrictLocationSelection,
+	restrictNonSGLocation,
 	selectablePins,
 	searchBarIcon = "search",
 	bufferRadius,
@@ -209,8 +210,10 @@ export const LocationSearch = ({
 		const handleResult = ({ displayAddressText, ...locationFieldValue }: IResultListItem) => {
 			const validPostalCode =
 				!mustHavePostalCode || LocationHelper.hasGotAddressValue(locationFieldValue.postalCode);
+			const validSGLocation =
+				!restrictNonSGLocation || !LocationHelper.checkIsLocationOutsideSG(locationFieldValue);
 
-			if (isEmpty(locationFieldValue) || !validPostalCode) {
+			if (isEmpty(locationFieldValue) || !validPostalCode || !validSGLocation) {
 				updateFormValues({}, false);
 				onChangeSelectedAddressInfo({});
 				return;
@@ -274,7 +277,7 @@ export const LocationSearch = ({
 				mapApiHeaders
 			);
 		}
-	}, [isRecaptchaReady]);
+	}, [isRecaptchaReady, mustHavePostalCode, restrictNonSGLocation]);
 
 	/**
 	 * Gets the address of the location with lat lng when user clicks on the map

@@ -21,6 +21,7 @@ import {
 	getSubmitButtonProps,
 } from "../../../common";
 import * as WindowHelper from "../../../../utils/hooks/use-window-helper";
+import { dirtyStateTestSuite } from "../../../common/tests";
 
 const METADATA = { dateTimeOriginal: "2009:10:10 04:09:20", lat: 22.316033333333333, lng: 114.17031666666666 };
 
@@ -1342,12 +1343,8 @@ describe("image-upload", () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-		const json: IFrontendEngineData = {
+	dirtyStateTestSuite({
+		schema: {
 			id: FRONTEND_ENGINE_ID,
 			sections: {
 				section: {
@@ -1363,135 +1360,34 @@ describe("image-upload", () => {
 					},
 				},
 			},
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
+		},
+		componentId: COMPONENT_ID,
+		defaultValue: [
+			{
+				fileName: FILE_1.name,
+				dataURL: JPG_BASE64,
+			},
+		],
+		modifyField: async () => {
+			await act(async () => {
+				fireEvent.change(getDragInputUploadField(), {
+					target: {
+						files: [FILE_1],
+					},
+				});
+				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+			});
+		},
+		modifyAndRemoveField: async () => {
+			await waitFor(() => fireEvent.click(screen.getByTestId(`${COMPONENT_ID}-file-item-1__btn-delete`)));
+			await flushPromise();
+		},
+		beforeEach: () => {
 			jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
 			jest.spyOn(ImageHelper, "getMetadata").mockResolvedValue(METADATA);
 			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
 			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user adds an image", async () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
-			await act(async () => {
-				fireEvent.change(getDragInputUploadField(), {
-					target: {
-						files: [FILE_1],
-					},
-				});
-				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
-			});
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...json,
-						defaultValues: {
-							[COMPONENT_ID]: [
-								{
-									fileName: FILE_1.name,
-									dataURL: JPG_BASE64,
-								},
-							],
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			await act(async () => {
-				await flushPromise();
-			});
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user removes an image", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...json,
-						defaultValues: {
-							[COMPONENT_ID]: [
-								{
-									fileName: FILE_1.name,
-									dataURL: JPG_BASE64,
-								},
-							],
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			await waitFor(() => fireEvent.click(screen.getByTestId(`${COMPONENT_ID}-file-item-1__btn-delete`)));
-			await flushPromise();
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
-			await act(async () => {
-				fireEvent.change(getDragInputUploadField(), {
-					target: {
-						files: [FILE_1],
-					},
-				});
-				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
-				await flushPromise(100);
-				await waitFor(() => fireEvent.click(getResetButton()));
-			});
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...json,
-						defaultValues: {
-							[COMPONENT_ID]: [
-								{
-									fileName: FILE_1.name,
-									dataURL: JPG_BASE64,
-								},
-							],
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			await act(async () => {
-				fireEvent.change(getDragInputUploadField(), {
-					target: {
-						files: [FILE_2],
-					},
-				});
-				await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
-				await flushPromise(100);
-				await waitFor(() => fireEvent.click(getResetButton()));
-			});
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+		},
 	});
 
 	describe("when capture value is specified", () => {
