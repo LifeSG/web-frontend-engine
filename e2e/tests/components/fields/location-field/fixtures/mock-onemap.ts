@@ -112,28 +112,32 @@ export const mockOneMapAPIError = async (page: Page) => {
 
 export const mockGeolocation = async (
 	page: Page,
-	coords: { latitude: number; longitude: number } = {
-		latitude: 1.299941797074924,
-		longitude: 103.78940434971592,
-	}
+	options: { coords?: { latitude?: number; longitude?: number }; delay?: number } = {}
 ) => {
+	const lat = options.coords?.latitude ?? 1.299941797074924;
+	const lng = options.coords?.longitude ?? 103.78940434971592;
+	const delay = options.delay ?? 1;
+
 	await page.addInitScript(
-		({ lat, lng }) => {
+		({ lat, lng, delay }) => {
 			navigator.geolocation.getCurrentPosition = (success) => {
-				success({
-					coords: {
-						latitude: lat,
-						longitude: lng,
-						accuracy: 100,
-						altitude: null,
-						altitudeAccuracy: null,
-						heading: null,
-						speed: null,
-					},
-					timestamp: Date.now(),
-				} as GeolocationPosition);
+				const trigger = () =>
+					success({
+						coords: {
+							latitude: lat,
+							longitude: lng,
+							accuracy: 100,
+							altitude: null,
+							altitudeAccuracy: null,
+							heading: null,
+							speed: null,
+						},
+						timestamp: Date.now(),
+					} as GeolocationPosition);
+
+				setTimeout(trigger, delay);
 			};
 		},
-		{ lat: coords.latitude, lng: coords.longitude }
+		{ lat, lng, delay }
 	);
 };
