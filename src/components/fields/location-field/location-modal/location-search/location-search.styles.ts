@@ -72,16 +72,13 @@ export const searchBarInput = css`
 	width: 100%;
 	margin: 0;
 	padding: 0;
-	font-size: 1rem;
 	outline: none;
+	background-color: unset;
+	${Font["body-md-regular"]}
 
 	&::placeholder,
 	&::-webkit-input-placeholder {
 		color: ${Colour["text-subtlest"]};
-	}
-
-	&:disabled {
-		background-color: unset;
 	}
 `;
 
