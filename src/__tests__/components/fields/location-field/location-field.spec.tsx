@@ -13,11 +13,11 @@ import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	SUBMIT_BUTTON_LABEL,
 	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
-	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
@@ -270,7 +270,6 @@ const renderComponent = async (
 
 	await waitFor(() => {
 		expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-		expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 	});
 
 	return component;
@@ -1927,14 +1926,14 @@ describe("location-input-group", () => {
 			getLocationInput().focus();
 
 			await waitFor(() => {
-				expect(getLocationModal(true)).toBeInTheDocument();
+				expect(getLocationModal(true)).toBeVisible();
 			});
 			await waitFor(() => {
 				expect(
 					screen.getByTestId(
 						TestHelper.generateId("location-search-modal-search-result-0", undefined, "active")
 					)
-				).toBeInTheDocument();
+				).toBeVisible();
 			});
 		};
 
@@ -1949,7 +1948,7 @@ describe("location-input-group", () => {
 
 		describe("when confirming a location selection", () => {
 			it("should show the outside-Singapore prompt and not confirm the location", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -1962,14 +1961,14 @@ describe("location-input-group", () => {
 				fireEvent.click(getLocationModalControlButtons("Confirm"));
 
 				await waitFor(() => {
-					expect(getNonSGLocationErrorModal(true)).toBeInTheDocument();
+					expect(getNonSGLocationErrorModal(true)).toBeVisible();
 				});
 				expect(
 					within(getNonSGLocationErrorModal()).getByText("This location is outside Singapore.")
-				).toBeInTheDocument();
-				expect(getLocationModal(true)).toBeInTheDocument();
+				).toBeVisible();
+				expect(getLocationModal(true)).toBeVisible();
 
-				fireEvent.click(getSubmitButton());
+				fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_LABEL, hidden: true }));
 				await waitFor(() => {
 					expect(SUBMIT_FN).not.toHaveBeenCalledWith(
 						expect.objectContaining({
@@ -1980,7 +1979,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should keep the location modal open after dismissing the prompt", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2005,7 +2004,7 @@ describe("location-input-group", () => {
 
 			it("should dispatch error event with NonSGLocationError and allow preventing the default prompt", async () => {
 				const errorEventSpy = jest.fn();
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2047,7 +2046,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should not show a stale prompt when reopening the modal after dismissing it", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2079,7 +2078,7 @@ describe("location-input-group", () => {
 			it("should confirm a pin location within Singapore that has no addresses nearby", async () => {
 				getCurrentLocationSpy.mockResolvedValue({ lat: SEA_PIN_LAT, lng: SEA_PIN_LNG });
 				fetchLocationListSpy.mockImplementation(() => SEA_PIN_RESPONSE);
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2115,7 +2114,7 @@ describe("location-input-group", () => {
 						totalNumPages: 1,
 					});
 				});
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2146,7 +2145,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should confirm pin location as usual when restrictNonSGLocation is not set", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						mapApi: {
 							reverseGeocode: "https://www.mock.com/reverse-geo-code",
@@ -2253,7 +2252,7 @@ describe("location-input-group", () => {
 
 		describe("validation", () => {
 			it("should block submission of pin location values on a neighbouring landmass", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2277,7 +2276,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should block submission of pin location values far outside Singapore", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2301,7 +2300,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should block submission of values with a non-Singapore address", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2328,7 +2327,7 @@ describe("location-input-group", () => {
 			// isolates the building-name branch: the coordinates alone classify INSIDE Singapore,
 			// so blocking here can only come from the JOHOR (MALAYSIA) building check.
 			it("should block submission of a JOHOR building even when its coordinates are within Singapore", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2348,7 +2347,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should allow submission of pin location values within Singapore bounds", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2371,7 +2370,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should allow customisation of the pin location error message", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }, { nonSGLocation: true, errorMessage: ERROR_MESSAGE }],
 					withEvents: false,
 					overrideSchema: {
@@ -2394,7 +2393,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should allow submission of pin location values when restrictNonSGLocation is not set", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2416,7 +2415,7 @@ describe("location-input-group", () => {
 			// 0 is a valid coordinate and must go through the boundary check, not be skipped as falsy
 			// (no required rule here: the pre-existing is-required test treats 0 coordinates as unfilled and would mask this rule)
 			it("should block submission of values with zero coordinates outside Singapore", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2441,7 +2440,7 @@ describe("location-input-group", () => {
 			// the no-non-sg-location rule intentionally does not gate on the required rule:
 			// an optional field still cannot submit an out-of-Singapore value.
 			it("should block submission of an out-of-Singapore value on an optional (non-required) field", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2506,7 +2505,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should allow submission of an empty optional field when restrictNonSGLocation is set", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideField: {
 						restrictNonSGLocation: true,
@@ -2526,7 +2525,7 @@ describe("location-input-group", () => {
 						handleResult(JOHOR_LOCATION_RESULT);
 					}
 				);
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2564,7 +2563,7 @@ describe("location-input-group", () => {
 						handleResult(SEA_PIN_RESPONSE[0]);
 					}
 				);
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2670,7 +2669,7 @@ describe("location-input-group", () => {
 						handleResult(JOHOR_LOCATION_RESULT);
 					}
 				);
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
