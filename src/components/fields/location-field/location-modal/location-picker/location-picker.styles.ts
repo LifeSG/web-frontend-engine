@@ -53,6 +53,8 @@ export const leafletWrapper = css`
 			}
 
 			.onemap {
+				display: flex;
+				align-items: center;
 				font-size: 0.6875rem;
 
 				img {

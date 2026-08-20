@@ -39,7 +39,10 @@ test.describe("Location Field", () => {
 
 		await story.locators.locationInput.click();
 		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForAnimationEnd(story.locators.modalBox);
+
 		await story.waitForImageLoad();
+		await story.page.waitForLoadState("networkidle");
 
 		await story.snapshot("open", { fullscreen: true });
 	});
@@ -53,7 +56,10 @@ test.describe("Location Field", () => {
 
 		await story.locators.locationInput.click();
 		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForAnimationEnd(story.locators.modalBox);
+
 		await story.waitForImageLoad();
+		await story.page.waitForLoadState("networkidle");
 
 		await story.snapshot("open", { fullscreen: true });
 	});
@@ -67,7 +73,10 @@ test.describe("Location Field", () => {
 
 		await story.locators.locationInput.click();
 		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForAnimationEnd(story.locators.modalBox);
+
 		await story.waitForImageLoad();
+		await story.page.waitForLoadState("networkidle");
 
 		await story.snapshot("open", { fullscreen: true });
 	});
@@ -103,6 +112,9 @@ test.describe("Location Field", () => {
 
 		await story.locators.locationInput.click();
 		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForAnimationEnd(story.locators.modalBox);
+
+		await story.page.waitForLoadState("networkidle");
 		await story.waitForImageLoad();
 
 		await story.snapshot("open", { fullscreen: true });
@@ -115,7 +127,10 @@ test.describe("Location Field", () => {
 
 		await story.locators.locationInput.click();
 		await expect(story.locators.modalBox).toBeVisible();
+
+		await story.page.waitForLoadState("networkidle");
 		await story.waitForImageLoad();
+		await story.waitForAnimationEnd(story.locators.modalBox);
 		await story.page.waitForTimeout(1000); // Added timeout to allow popover to stabilize before clicking
 
 		await story.locators.legendTrigger.click();
@@ -132,9 +147,25 @@ test.describe("Location Field", () => {
 
 		await story.locators.locationInput.click();
 		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForAnimationEnd(story.locators.modalBox);
 		await story.page.waitForTimeout(2000);
 
 		await story.snapshot("error", { fullscreen: true });
+	});
+
+	defaultTest("Get current location", async ({ story }) => {
+		await mockGeolocation(story.page, { delay: 3000 });
+		await mockOneMapAPI(story.page);
+		await story.goto();
+
+		await story.locators.locationInput.click();
+		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForAnimationEnd(story.locators.modalBox);
+
+		await story.waitForImageLoad();
+		await story.page.waitForLoadState("networkidle");
+
+		await story.snapshot("open", { fullscreen: true });
 	});
 
 	warningTest("Warning", async ({ story }) => {
@@ -143,12 +174,16 @@ test.describe("Location Field", () => {
 	});
 
 	customStylesTest("Custom modal styles", async ({ story }) => {
+		await mockGeolocation(story.page);
 		await mockOneMapAPI(story.page);
 		await story.goto();
 
 		await story.locators.locationInput.click();
 		await expect(story.locators.modalBox).toBeVisible();
+		await story.waitForAnimationEnd(story.locators.modalBox);
+
 		await story.waitForImageLoad();
+		await story.page.waitForLoadState("networkidle");
 
 		await story.snapshot("open", { fullscreen: true });
 	});

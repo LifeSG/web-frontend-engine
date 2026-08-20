@@ -37,6 +37,20 @@ export const TextField = (props: IGenericFieldProps<ITextFieldSchema | IEmailFie
 	// ================================================
 	// EFFECTS
 	// ================================================
+
+	useEffect(() => {
+		const el = inputRef.current;
+		if (!el || uiType !== "numeric-field") return;
+		// Prevent scrolling of the page when using the mouse wheel change field value on a numeric input field
+		const handleWheel = (e: WheelEvent) => {
+			e.preventDefault();
+			window.scrollBy({ top: e.deltaY, left: e.deltaX });
+		};
+
+		el.addEventListener("wheel", handleWheel, { passive: false });
+		return () => el.removeEventListener("wheel", handleWheel);
+	}, [uiType]);
+
 	useEffect(() => {
 		switch (uiType) {
 			case "numeric-field": {

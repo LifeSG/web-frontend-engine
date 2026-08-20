@@ -45,6 +45,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 			pinsOnlyIndicateCurrentLocation,
 			legendItems,
 			defaultAddress,
+			restrictNonSGLocation,
 		},
 		// form values can initially be undefined when passed in via props
 		value: formValue,
@@ -73,6 +74,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 	useEffect(() => {
 		const isRequiredRule = validation?.find((rule) => "required" in rule);
 		const postalCodeRule = validation?.find((rule) => "postalCode" in rule);
+		const nonSGLocationRule = validation?.find((rule) => "nonSGLocation" in rule);
 
 		setFieldValidationConfig(
 			id,
@@ -98,11 +100,19 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						if (!isRequiredRule || !mustHavePostalCode) return true;
 						return LocationHelper.hasGotAddressValue(value.postalCode);
 					}
+				)
+				.test(
+					"no-non-sg-location",
+					nonSGLocationRule?.errorMessage || ERROR_MESSAGES.LOCATION.NON_SG_LOCATION_NOT_ALLOWED,
+					(value) => {
+						if (!restrictNonSGLocation) return true;
+						return !LocationHelper.checkIsLocationOutsideSG(value);
+					}
 				),
 			validation
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
+	}, [validation, mustHavePostalCode, restrictNonSGLocation]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -200,6 +210,7 @@ export const LocationField = (props: IGenericFieldProps<ILocationFieldSchema>) =
 						pinsOnlyIndicateCurrentLocation={pinsOnlyIndicateCurrentLocation}
 						legendItems={legendItems}
 						defaultAddress={defaultAddress}
+						restrictNonSGLocation={restrictNonSGLocation}
 					/>
 				)}
 			</Suspense>

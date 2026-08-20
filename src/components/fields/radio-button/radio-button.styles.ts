@@ -71,7 +71,7 @@ export const gridToggleWrapper = css`
 
 	&[data-stretch] {
 		grid-template-columns: repeat(
-			var(${tokens.toggleWrapper.columns}, auto-fill),
+			var(${tokens.toggleWrapper.columns}, auto-fit),
 			minmax(var(${tokens.toggleWrapper.minItemWidth}, 0), 1fr)
 		);
 	}
