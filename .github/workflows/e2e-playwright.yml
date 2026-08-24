@@ -3,10 +3,14 @@ name: E2E Tests
 on:
   push:
     branches:
-      - "pre-release/**"
+      - main
+      - "release/**"
+      - "!release/**-published"
+      - "!release/v1.**"
+      - "!release/v2.**"
   pull_request:
     branches:
-      - "pre-release/**"
+      - main
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
