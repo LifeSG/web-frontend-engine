@@ -9,7 +9,7 @@ import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper, filterSchemaProps, generateRandomId } from "../../../utils";
-import { useValidationConfig } from "../../../utils/hooks";
+import { useFormSchema, useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize, Warning } from "../../shared";
 import {
@@ -29,7 +29,6 @@ import {
 	TRadioButtonGroupSchema,
 	TResponsiveValue,
 } from "./types";
-
 const DEFAULT_MIN_ITEM_WIDTH = 164;
 
 const resolveResponsiveValue = <T,>(
@@ -66,11 +65,11 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			: undefined;
 
 	const theme = useContext(ThemeContext);
-	const { setValue, trigger, clearErrors, unregister } = useFormContext();
+	const { setValue, trigger, clearErrors, unregister, formState } = useFormContext();
+	const { formSchema } = useFormSchema(); // ← ADD THIS LINE
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const [currentBreakpoint, setCurrentBreakpoint] = useState<TBreakpoint>("desktop");
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
-
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -125,8 +124,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	};
 
 	const handleDeselect = (clickedValue: string): void => {
-		onChange?.({ target: {} });
-		trigger(id);
+		onChange?.({ target: { value: undefined } });
 
 		const selectedOption = options.find((opt) => opt.value === clickedValue);
 		if (
@@ -139,6 +137,15 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				removeFieldValidationConfig(childId);
 				unregister(childId);
 			});
+		}
+	};
+
+	const handleRadiogroupBlur = (): void => {
+		const { isSubmitted } = formState;
+		const revalidationMode = formSchema?.revalidationMode ?? "onChange";
+
+		if (isSubmitted && revalidationMode === "onBlur") {
+			trigger(id);
 		}
 	};
 
@@ -318,7 +325,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				<div role="radiogroup" tabIndex={0}>
+				<div role="radiogroup" tabIndex={0} onBlur={handleRadiogroupBlur}>
 					{renderOptions()}
 				</div>
 			</Form.CustomField>
