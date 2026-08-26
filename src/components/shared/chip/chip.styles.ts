@@ -16,7 +16,7 @@ export const chipButton = css`
 
 	&:focus-visible {
 		outline: none;
-		box-shadow: 0 0 0 1px #024fa9;
+		box-shadow: 0 0 0 1px ${Colour["border-focus"]};
 	}
 `;
 
