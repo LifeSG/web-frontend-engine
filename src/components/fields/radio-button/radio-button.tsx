@@ -140,17 +140,11 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		}
 	};
 
-	const handleRadiogroupBlur = (event: FocusEvent<HTMLDivElement>): void => {
+	const handleBlur = (event: FocusEvent<HTMLDivElement>): void => {
 		const nextFocusedElement = event.relatedTarget as Node | null;
-
-		// Do not blur the field when focus moves between controls
-		// inside the same radio group.
 		if (nextFocusedElement && event.currentTarget.contains(nextFocusedElement)) {
 			return;
 		}
-
-		// React Hook Form marks the field as touched and applies
-		// the configured validation/revalidation behavior.
 		onBlur?.();
 	};
 
@@ -330,7 +324,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				<div role="radiogroup" tabIndex={0} onBlur={handleRadiogroupBlur}>
+				<div role="radiogroup" tabIndex={0} onBlur={handleBlur}>
 					{renderOptions()}
 				</div>
 			</Form.CustomField>
