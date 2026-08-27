@@ -359,6 +359,105 @@ describe("radio toggle button", () => {
 				})
 			);
 		});
+		describe("validation mode on deselection", () => {
+			it("should not show error on deselect when validationMode is onSubmit (before submit)", async () => {
+				renderComponent(
+					{
+						allowDeselection: true,
+						customOptions: { styleType: "toggle" },
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+					{ validationMode: "onSubmit" }
+				);
+
+				const radioButtonA = getRadioButtonA();
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).toBeChecked());
+
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).not.toBeChecked());
+
+				// No error should show before submit
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			});
+
+			it("should show error immediately on deselect when validationMode is onChange (before submit)", async () => {
+				renderComponent(
+					{
+						allowDeselection: true,
+						customOptions: { styleType: "toggle" },
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+					{ validationMode: "onChange" }
+				);
+
+				const radioButtonA = getRadioButtonA();
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).toBeChecked());
+
+				fireEvent.click(radioButtonA);
+				await waitFor(() => {
+					expect(radioButtonA).not.toBeChecked();
+					expect(getErrorMessage()).toBeInTheDocument();
+				});
+			});
+
+			it("should show error immediately on deselect when revalidationMode is onChange (after submit)", async () => {
+				renderComponent(
+					{
+						allowDeselection: true,
+						customOptions: { styleType: "toggle" },
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+					{ revalidationMode: "onChange" }
+				);
+
+				const radioButtonA = getRadioButtonA();
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).toBeChecked());
+
+				// Submit first to set isSubmitted = true
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				// Deselect after submit
+				fireEvent.click(radioButtonA);
+				await waitFor(() => {
+					expect(radioButtonA).not.toBeChecked();
+					expect(getErrorMessage()).toBeInTheDocument();
+				});
+			});
+
+			it("should show error only on blur when revalidationMode is onBlur (after submit)", async () => {
+				renderComponent(
+					{
+						allowDeselection: true,
+						customOptions: { styleType: "toggle" },
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+					{ revalidationMode: "onBlur" }
+				);
+
+				const radioButtonA = getRadioButtonA();
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).toBeChecked());
+
+				// Submit first
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				// Deselect after submit
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).not.toBeChecked());
+
+				// No error yet before blur
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+
+				// Blur the radiogroup
+				fireEvent.blur(screen.getByRole("radiogroup"));
+				await waitFor(() => {
+					expect(getErrorMessage()).toBeInTheDocument();
+				});
+			});
+		});
 	});
 
 	describe("reset", () => {

@@ -8,6 +8,7 @@ import { Typography } from "@lifesg/react-design-system/typography";
 import clsx from "clsx";
 import { useApplyStyle, useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
 import { useEffect, useRef, useState } from "react";
+import type { FocusEvent } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
@@ -49,7 +50,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { error, formattedLabel, id, onChange, schema, value, warning } = props;
+	const { error, formattedLabel, id, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { customOptions, validation },
 		customSchema: { className, disabled, options, ...radioProps },
@@ -65,7 +66,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			? (schema as { allowDeselection?: boolean }).allowDeselection
 			: undefined;
 
-	const { setValue, trigger, clearErrors, unregister } = useFormContext();
+	const { setValue, clearErrors, unregister } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
 	const toggleWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -132,8 +133,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	};
 
 	const handleDeselect = (clickedValue: string): void => {
-		onChange?.({ target: {} });
-		trigger(id);
+		onChange?.({ target: { value: undefined } });
 
 		const selectedOption = options.find((opt) => opt.value === clickedValue);
 		if (
@@ -147,6 +147,14 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				unregister(childId);
 			});
 		}
+	};
+
+	const handleBlur = (event: FocusEvent<HTMLDivElement>): void => {
+		const nextFocusedElement = event.relatedTarget as Node | null;
+		if (nextFocusedElement && event.currentTarget.contains(nextFocusedElement)) {
+			return;
+		}
+		onBlur?.();
 	};
 
 	// =============================================================================
@@ -326,7 +334,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				<div role="radiogroup" tabIndex={0}>
+				<div role="radiogroup" tabIndex={0} onBlur={handleBlur}>
 					{renderOptions()}
 				</div>
 			</Form.CustomField>
