@@ -3,6 +3,7 @@ import isObject from "lodash/isObject";
 import { Form } from "@lifesg/react-design-system/form";
 import { Breakpoint } from "@lifesg/react-design-system/theme";
 import { useContext, useEffect, useState } from "react";
+import type { FocusEvent } from "react";
 import { useFormContext } from "react-hook-form";
 import { ThemeContext } from "styled-components";
 import useDeepCompareEffect from "use-deep-compare-effect";
@@ -29,7 +30,6 @@ import {
 	TRadioButtonGroupSchema,
 	TResponsiveValue,
 } from "./types";
-
 const DEFAULT_MIN_ITEM_WIDTH = 164;
 
 const resolveResponsiveValue = <T,>(
@@ -49,7 +49,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { error, formattedLabel, id, onChange, schema, value, warning } = props;
+	const { error, formattedLabel, id, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { customOptions, validation },
 		customSchema: { className, disabled, options, ...radioProps },
@@ -66,11 +66,10 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			: undefined;
 
 	const theme = useContext(ThemeContext);
-	const { setValue, trigger, clearErrors, unregister } = useFormContext();
+	const { setValue, clearErrors, unregister } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const [currentBreakpoint, setCurrentBreakpoint] = useState<TBreakpoint>("desktop");
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
-
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -125,8 +124,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	};
 
 	const handleDeselect = (clickedValue: string): void => {
-		onChange?.({ target: {} });
-		trigger(id);
+		onChange?.({ target: { value: undefined } });
 
 		const selectedOption = options.find((opt) => opt.value === clickedValue);
 		if (
@@ -140,6 +138,14 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				unregister(childId);
 			});
 		}
+	};
+
+	const handleBlur = (event: FocusEvent<HTMLDivElement>): void => {
+		const nextFocusedElement = event.relatedTarget as Node | null;
+		if (nextFocusedElement && event.currentTarget.contains(nextFocusedElement)) {
+			return;
+		}
+		onBlur?.();
 	};
 
 	// =============================================================================
@@ -318,7 +324,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	return (
 		<>
 			<Form.CustomField id={id} label={formattedLabel} errorMessage={error?.message}>
-				<div role="radiogroup" tabIndex={0}>
+				<div role="radiogroup" tabIndex={0} onBlur={handleBlur}>
 					{renderOptions()}
 				</div>
 			</Form.CustomField>
