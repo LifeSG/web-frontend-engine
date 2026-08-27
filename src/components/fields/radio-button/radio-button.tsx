@@ -3,13 +3,14 @@ import isObject from "lodash/isObject";
 import { Form } from "@lifesg/react-design-system/form";
 import { Breakpoint } from "@lifesg/react-design-system/theme";
 import { useContext, useEffect, useState } from "react";
+import type { FocusEvent } from "react";
 import { useFormContext } from "react-hook-form";
 import { ThemeContext } from "styled-components";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { TestHelper, filterSchemaProps, generateRandomId } from "../../../utils";
-import { useFormSchema, useValidationConfig } from "../../../utils/hooks";
+import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize, Warning } from "../../shared";
 import {
@@ -48,7 +49,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const { error, formattedLabel, id, onChange, schema, value, warning } = props;
+	const { error, formattedLabel, id, onBlur, onChange, schema, value, warning } = props;
 	const {
 		commonSchema: { customOptions, validation },
 		customSchema: { className, disabled, options, ...radioProps },
@@ -65,8 +66,7 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			: undefined;
 
 	const theme = useContext(ThemeContext);
-	const { setValue, trigger, clearErrors, unregister, formState } = useFormContext();
-	const { formSchema } = useFormSchema(); // ← ADD THIS LINE
+	const { setValue, clearErrors, unregister } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
 	const [currentBreakpoint, setCurrentBreakpoint] = useState<TBreakpoint>("desktop");
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
@@ -140,13 +140,18 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 		}
 	};
 
-	const handleRadiogroupBlur = (): void => {
-		const { isSubmitted } = formState;
-		const revalidationMode = formSchema?.revalidationMode ?? "onChange";
+	const handleRadiogroupBlur = (event: FocusEvent<HTMLDivElement>): void => {
+		const nextFocusedElement = event.relatedTarget as Node | null;
 
-		if (isSubmitted && revalidationMode === "onBlur") {
-			trigger(id);
+		// Do not blur the field when focus moves between controls
+		// inside the same radio group.
+		if (nextFocusedElement && event.currentTarget.contains(nextFocusedElement)) {
+			return;
 		}
+
+		// React Hook Form marks the field as touched and applies
+		// the configured validation/revalidation behavior.
+		onBlur?.();
 	};
 
 	// =============================================================================
