@@ -12,7 +12,14 @@ import {
 	FieldValues,
 	useFormContext,
 } from "react-hook-form";
-import { useFormSchema, useFormValues, useIsomorphicDeepLayoutEffect, useValidationConfig } from "../../../utils/hooks";
+import { useWhenDependencyMap } from "../../../context-providers";
+import {
+	useFormSchema,
+	useFormValues,
+	useIsomorphicDeepLayoutEffect,
+	useValidationConfig,
+	useWhenRevalidation,
+} from "../../../utils/hooks";
 import { IComplexLabel } from "../../fields";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { Sanitize } from "../../shared";
@@ -27,21 +34,16 @@ interface IProps {
 }
 
 export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
-	// =========================================================================
-	// CONST, STATE, REFS
-	// =========================================================================
 	const { control, setValue } = useFormContext();
-
 	const {
 		formSchema: { defaultValues, restoreMode = "none" },
 	} = useFormSchema();
 	const { getField, setField, setRegisteredFields } = useFormValues();
 	const { removeFieldValidationConfig } = useValidationConfig();
+	const whenDependencyMap = useWhenDependencyMap();
+	useWhenRevalidation(id, whenDependencyMap);
 	const restoreModeRef = useRef(restoreMode);
 
-	// =========================================================================
-	// EFFECTS
-	// =========================================================================
 	useEffect(() => {
 		restoreModeRef.current = restoreMode;
 	}, [restoreMode]);
@@ -73,9 +75,6 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// =========================================================================
-	// HELPER FUNCTIONS
-	// =========================================================================
 	const constructFormattedLabel = (
 		id: string,
 		schema: TFrontendEngineFieldSchema
@@ -93,24 +92,18 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 						{label.subLabel}
 					</Sanitize>
 				),
-				// acccept tooltip type when it's ready
 				addon: label.hint?.content
-					? /* eslint-disable indent */
-					  {
+					? {
 							type: "popover",
 							content: <Sanitize className={styles.hint}>{label.hint?.content}</Sanitize>,
 							"data-testid": (schema["data-testid"] || id) + "-popover",
 							zIndex: label.hint?.zIndex,
 					  }
-					: /* eslint-enable indent */
-					  undefined,
+					: undefined,
 			};
 		}
 	};
 
-	// =========================================================================
-	// RENDER FUNCTIONS
-	// =========================================================================
 	const renderField = ({
 		field,
 		fieldState,
@@ -118,7 +111,6 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 		field: ControllerRenderProps<FieldValues, FieldPath<FieldValues>>;
 		fieldState: ControllerFieldState;
 	}) => {
-		// not passing ref because not all components have fields to be manipulated
 		const { ref: _ref, ...fieldPropsWithoutRef } = field;
 
 		const fieldProps = {
