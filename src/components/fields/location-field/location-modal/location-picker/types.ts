@@ -10,6 +10,7 @@ export interface IMapPin extends ILocationCoord {
 export interface ILocationPickerProps extends React.InputHTMLAttributes<HTMLDivElement> {
 	id?: string | undefined;
 	className?: string | undefined;
+	customClassName?: string | undefined;
 	mapPanZoom?:
 		| {
 				mobile?: number | undefined;

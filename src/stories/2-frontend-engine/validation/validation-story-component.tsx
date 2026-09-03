@@ -7,8 +7,8 @@ import highlightjs from "highlight.js";
 import json from "highlight.js/lib/languages/json";
 import "highlight.js/styles/monokai.css";
 import cloneDeep from "lodash/cloneDeep";
+import { css } from "@linaria/core";
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import {
 	FrontendEngine,
 	IFrontendEngineData,
@@ -131,22 +131,22 @@ export const ValidationStoryComponent = ({
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Wrapper>
+		<div className={wrapper}>
 			<Layout.Content type="grid">
 				<Layout.ColDiv lgCols={12} xxsCols={8}>
-					<Section>
-						<SectionTitle as={Typography.HeadingSM}>{ruleName}</SectionTitle>
+					<section className={section}>
+						<Typography.HeadingSM className={sectionTitle}>{ruleName}</Typography.HeadingSM>
 						<Sanitize>{ruleDescription}</Sanitize>
 						<pre>
 							<code ref={ruleSnippet} key={demoFieldType} className="json">
 								{JSON.stringify({ ...rule, ...overrideRule() }, null, 2)}
 							</code>
 						</pre>
-					</Section>
+					</section>
 				</Layout.ColDiv>
 				<Layout.ColDiv xxsCols={8} lgCols={6}>
-					<Section>
-						<SectionTitle as={Typography.BodyMD}>Sample schema</SectionTitle>
+					<section className={section}>
+						<Typography.BodyMD className={sectionTitle}>Sample schema</Typography.BodyMD>
 						<div>
 							<Form.Select
 								options={fieldOptions}
@@ -164,11 +164,11 @@ export const ValidationStoryComponent = ({
 								{JSON.stringify(generateSchema(), null, 2)}
 							</code>
 						</pre>
-					</Section>
+					</section>
 				</Layout.ColDiv>
 				<Layout.ColDiv xxsCols={8} lgCols={6}>
-					<Section>
-						<SectionTitle as={Typography.BodyMD}>Preview</SectionTitle>
+					<section className={section}>
+						<Typography.BodyMD className={sectionTitle}>Preview</Typography.BodyMD>
 						<p>Submit form to preview validation</p>
 						<FrontendEngine
 							key={demoFieldType}
@@ -176,14 +176,14 @@ export const ValidationStoryComponent = ({
 							onSubmit={(e) => action("submit")(e)}
 							data={generateSchema() as IFrontendEngineData}
 						/>
-					</Section>
+					</section>
 				</Layout.ColDiv>
 			</Layout.Content>
-		</Wrapper>
+		</div>
 	);
 };
 
-const Wrapper = styled.div`
+const wrapper = css`
 	max-width: 90vw;
 
 	code {
@@ -191,7 +191,7 @@ const Wrapper = styled.div`
 	}
 `;
 
-const Section = styled.section`
+const section = css`
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
@@ -204,6 +204,6 @@ const Section = styled.section`
 	box-shadow: rgba(0, 0, 0, 0.1) 0 1px 3px 0;
 `;
 
-const SectionTitle = styled.div`
+const sectionTitle = css`
 	font-weight: ${Font.Spec["weight-bold"]};
 `;

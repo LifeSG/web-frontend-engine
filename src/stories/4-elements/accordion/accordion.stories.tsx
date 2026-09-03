@@ -71,7 +71,7 @@ const meta: Meta = {
 				"A name of the purpose of the element. Also accepts <code>Text</code>, <code>Popover</code> or <code>span</code> schemas",
 			table: {
 				type: {
-					summary: "string | ITextSchema | ITypographySchema | IPopoverSchema | IInlineWrapperSchema",
+					summary: "string | ITypographySchema | IPopoverSchema | IInlineWrapperSchema",
 				},
 			},
 		},
@@ -176,7 +176,7 @@ CustomTitle.args = {
 	expanded: true,
 	title: {
 		text: {
-			uiType: "text-h4",
+			uiType: "heading-xs",
 			weight: "semibold",
 			children: "Custom&nbsp;",
 		},
@@ -300,7 +300,7 @@ DisableContentInset.args = {
 	uiType: "accordion",
 	children: {
 		text1: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "Section one",
 			style: { margin: "1rem 2rem" },
 		},
@@ -308,7 +308,7 @@ DisableContentInset.args = {
 			uiType: "divider",
 		},
 		text2: {
-			uiType: "text-body",
+			uiType: "body-md",
 			children: "Section two",
 			style: { margin: "1rem 2rem" },
 		},

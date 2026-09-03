@@ -9,6 +9,7 @@ import {
 	OverrideStoryTemplate,
 	SUBMIT_BUTTON_SCHEMA,
 } from "../../common";
+import { RecursivePartial } from "../../../utils";
 import { useEffect, useRef } from "react";
 import { IFrontendEngineRef } from "../../../components";
 
@@ -221,7 +222,7 @@ ActiveTab.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text1: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "<p>Apples are delicious</p>",
 						},
 					},
@@ -237,7 +238,7 @@ ActiveTab.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text2: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "Bananas are delicious",
 						},
 					},
@@ -253,7 +254,7 @@ ActiveTab.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text2: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "Cherries are delicious",
 						},
 					},
@@ -277,7 +278,7 @@ Overrides.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "This is tab item 1",
 						},
 					},
@@ -300,7 +301,7 @@ Overrides.args = {
 						style: { marginTop: "1rem", marginBottom: "1rem" },
 						children: {
 							text: {
-								uiType: "text-body",
+								uiType: "body-md",
 								children: "This is tab item 2",
 							},
 						},
@@ -308,7 +309,7 @@ Overrides.args = {
 				},
 			},
 		},
-	},
+	} as RecursivePartial<ITabSchema>,
 };
 Overrides.argTypes = OVERRIDES_ARG_TYPE;
 
@@ -326,7 +327,7 @@ TabChangeEvent.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "This is tab item A",
 						},
 					},
@@ -342,7 +343,7 @@ TabChangeEvent.args = {
 					style: { marginTop: "1rem", marginBottom: "1rem" },
 					children: {
 						text: {
-							uiType: "text-body",
+							uiType: "body-md",
 							children: "This is tab item B",
 						},
 					},

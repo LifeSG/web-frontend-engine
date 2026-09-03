@@ -82,7 +82,7 @@ describe(UI_TYPE, () => {
 		renderComponent({
 			hint: {
 				content: {
-					text: { uiType: "text-body", children: "Schema hint content" },
+					text: { uiType: "body-md", children: "Schema hint content" },
 				},
 			},
 		});

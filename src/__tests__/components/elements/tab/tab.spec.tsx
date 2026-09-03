@@ -34,7 +34,7 @@ const renderComponent = (
 			title: "Tab Title 1",
 			children: {
 				text1: {
-					uiType: "text-body",
+					uiType: "body-md",
 					children: "Tab Body 1",
 				},
 			},
@@ -44,7 +44,7 @@ const renderComponent = (
 			title: "Tab Title 2",
 			children: {
 				text2: {
-					uiType: "text-body",
+					uiType: "body-md",
 					children: "Tab Body 2",
 				},
 			},

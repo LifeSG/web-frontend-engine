@@ -1,4 +1,4 @@
-import { PopoverInline } from "@lifesg/react-design-system/popover-v2";
+import { PopoverInline } from "@lifesg/react-design-system/popover";
 import * as Icons from "@lifesg/react-icons";
 import { TestHelper, filterSchemaProps } from "../../../utils";
 import { Sanitize } from "../../shared";

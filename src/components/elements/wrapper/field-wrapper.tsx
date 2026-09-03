@@ -1,4 +1,3 @@
-import { Colour, Font } from "@lifesg/react-design-system/theme";
 import { FormLabelProps } from "@lifesg/react-design-system/form";
 import isArray from "lodash/isArray";
 import isBoolean from "lodash/isBoolean";
@@ -13,11 +12,11 @@ import {
 	FieldValues,
 	useFormContext,
 } from "react-hook-form";
-import styled from "styled-components";
 import { useFormSchema, useFormValues, useIsomorphicDeepLayoutEffect, useValidationConfig } from "../../../utils/hooks";
 import { IComplexLabel } from "../../fields";
 import { TFrontendEngineFieldSchema } from "../../frontend-engine/types";
 import { Sanitize } from "../../shared";
+import * as styles from "./field-wrapper.styles";
 
 interface IProps {
 	id: string;
@@ -90,16 +89,16 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 			return {
 				children: <Sanitize inline>{label.mainLabel}</Sanitize>,
 				subtitle: (
-					<StyledSublabel className="sub-label" id={`${id}-label-subtitle`}>
+					<Sanitize className={styles.sublabel} id={`${id}-label-subtitle`}>
 						{label.subLabel}
-					</StyledSublabel>
+					</Sanitize>
 				),
 				// acccept tooltip type when it's ready
 				addon: label.hint?.content
 					? /* eslint-disable indent */
 					  {
 							type: "popover",
-							content: <StyledHint className="label-hint">{label.hint?.content}</StyledHint>,
+							content: <Sanitize className={styles.hint}>{label.hint?.content}</Sanitize>,
 							"data-testid": (schema["data-testid"] || id) + "-popover",
 							zIndex: label.hint?.zIndex,
 					  }
@@ -134,17 +133,3 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 
 	return <Controller control={control} name={id} shouldUnregister={true} render={renderField} />;
 };
-
-const StyledSublabel = styled(Sanitize)`
-	&.sub-label {
-		display: block;
-		${Font["body-md-regular"]};
-	}
-`;
-
-const StyledHint = styled(Sanitize)`
-	&.label-hint {
-		color: ${Colour.text};
-		${Font["body-md-regular"]};
-	}
-`;

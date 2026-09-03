@@ -4,7 +4,7 @@ import { useFieldEvent } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IGenericElementProps } from "../types";
 import { Wrapper } from "../wrapper";
-import { Container } from "./accordion.styles";
+import * as styles from "./accordion.styles";
 import { IAccordionSchema } from "./types";
 
 /**
@@ -28,22 +28,18 @@ export const Accordion = (props: IGenericElementProps<IAccordionSchema>) => {
 			{...accordionProps}
 			callToActionComponent={
 				button ? (
-					<Button.Default
-						styleType="light"
-						type="button"
-						onClick={() => dispatchFieldEvent("accordion", "edit", id)}
-					>
+					<Button styleType="light" type="button" onClick={() => dispatchFieldEvent("accordion", "edit", id)}>
 						{typeof button === "object" ? button.label : "Edit"}
-					</Button.Default>
+					</Button>
 				) : undefined
 			}
 		>
 			{disableContentInset ? (
 				<Wrapper id={id}>{children}</Wrapper>
 			) : (
-				<Container>
+				<div className={styles.container}>
 					<Wrapper id={id}>{children}</Wrapper>
-				</Container>
+				</div>
 			)}
 		</BoxContainer>
 	);

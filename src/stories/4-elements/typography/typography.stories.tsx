@@ -53,13 +53,13 @@ const meta: Meta = {
 					summary: `
 						 "heading-xxl"
 						| "heading-xl"
+						| "heading-lg"
 						| "heading-md"
 						| "heading-sm"
-						| "heading-lg"
 						| "heading-xs"
+						| "body-bl"
 						| "body-md"
 						| "body-sm"
-						| "body-bl"
 						| "body-xs"
 					`,
 				},
@@ -67,13 +67,13 @@ const meta: Meta = {
 			options: [
 				"heading-xxl",
 				"heading-xl",
+				"heading-lg",
 				"heading-md",
 				"heading-sm",
-				"heading-lg",
 				"heading-xs",
+				"body-bl",
 				"body-md",
 				"body-sm",
-				"body-bl",
 				"body-xs",
 			],
 			control: {
@@ -168,6 +168,10 @@ Variants.args = {
 			uiType: "heading-xs",
 			children: LOREM_IPSUM("heading-xs"),
 		},
+		"body-bl": {
+			uiType: "body-bl",
+			children: LOREM_IPSUM("body-bl"),
+		},
 		"body-md": {
 			uiType: "body-md",
 			children: LOREM_IPSUM("body-md"),
@@ -175,10 +179,6 @@ Variants.args = {
 		"body-sm": {
 			uiType: "body-sm",
 			children: LOREM_IPSUM("body-sm"),
-		},
-		"body-bl": {
-			uiType: "body-bl",
-			children: LOREM_IPSUM("body-bl"),
 		},
 		"body-xs": {
 			uiType: "body-xs",

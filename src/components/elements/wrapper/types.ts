@@ -1,7 +1,7 @@
 import { TRenderRules } from "../../../context-providers";
 import { IFilterCheckboxSchema } from "../../custom/filter/filter-checkbox/types";
 import { IFilterItemSchema } from "../../custom/filter/filter-item/types";
-import { IColumns, IV3Columns, TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { IColumns, TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IListItemSchema } from "../list";
 import { TInlineElementSchema } from "../types";
 
@@ -16,7 +16,7 @@ export interface IBlockWrapperSchema<V = undefined, C = undefined>
 	uiType: TBlockWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TFrontendEngineFieldSchema<V, C>> | string;
-	columns?: IColumns | IV3Columns | undefined;
+	columns?: IColumns | undefined;
 }
 
 export interface IInlineWrapperSchema<V = undefined, C = undefined>
@@ -24,7 +24,7 @@ export interface IInlineWrapperSchema<V = undefined, C = undefined>
 	uiType: TInlineWrapperType;
 	showIf?: TRenderRules[] | undefined;
 	children: Record<string, TInlineElementSchema<V, C>> | string;
-	columns?: IColumns | IV3Columns | undefined;
+	columns?: IColumns | undefined;
 }
 
 export interface IWrapperProps {

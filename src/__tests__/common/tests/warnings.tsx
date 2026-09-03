@@ -7,7 +7,7 @@ export const warningTestSuite = <T,>(fieldSchema: T) =>
 		const fieldId = "field";
 		const message = "Warning message";
 
-		beforeEach(() => {
+		beforeEach(async () => {
 			const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
 				ref.current?.setWarnings({ [fieldId]: message });
 			};
@@ -28,6 +28,11 @@ export const warningTestSuite = <T,>(fieldSchema: T) =>
 					onClick={handleClick}
 				/>
 			);
+
+			await waitFor(() => {
+				expect(getField("button", "Custom Button")).toBeInTheDocument();
+				expect(getSubmitButton()).toBeInTheDocument();
+			});
 		});
 
 		it("should not render warning by default", () => {
@@ -35,14 +40,14 @@ export const warningTestSuite = <T,>(fieldSchema: T) =>
 			expect(screen.queryByText(message)).not.toBeInTheDocument();
 		});
 
-		it("should be able to render warning via setWarnings()", () => {
+		it("should be able to render warning via setWarnings()", async () => {
 			fireEvent.click(getField("button", "Custom Button"));
 
-			expect(screen.getByText(message)).toBeInTheDocument();
+			await waitFor(() => expect(screen.getByText(message)).toBeInTheDocument());
 		});
 
-		it("should clear warnings on submit", async () => {
-			await waitFor(() => fireEvent.click(getSubmitButton()));
+		it("should clear warnings on submit", () => {
+			fireEvent.click(getSubmitButton());
 
 			expect(screen.queryByText(message)).not.toBeInTheDocument();
 		});

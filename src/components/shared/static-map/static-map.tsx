@@ -1,10 +1,10 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import clsx from "clsx";
 import { IColor } from "../../../services/onemap/types";
 import { TestHelper } from "../../../utils";
 import { LocationHelper } from "../../fields/location-field/location-helper";
-import { StaticMapElement, StaticMapWrapper, staticMapDimensions } from "./static-map.styles";
-import { Breakpoint } from "@lifesg/react-design-system/theme";
-import { ThemeContext } from "styled-components";
+import * as styles from "./static-map.styles";
+import { useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
 
 const StaticMapPlaceholder = "https://assets.life.gov.sg/web-frontend-engine/img/map/static_map_placeholder.png";
 
@@ -32,24 +32,16 @@ export const StaticMap = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
-	const isMobile = useRef(false);
-	const [mapSrc, setMapSrc] = useState<string>("");
-	const renderedCenter = useRef<[number, number]>([0, 0]);
-	const theme = useContext(ThemeContext);
-
+	const isMobile = useMaxWidthMediaQuery("sm");
+	const [mapSrc, setMapSrc] = useState<string | null>(null);
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		window.addEventListener("resize", reloadImage);
 		if (lat && lng) {
 			reloadImage();
 		}
-
-		return () => {
-			window.removeEventListener("resize", reloadImage);
-		};
-	}, [lat, lng]);
+	}, [lat, lng, isMobile]);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -57,19 +49,10 @@ export const StaticMap = ({
 
 	const reloadImage = () => {
 		if (!lat || !lng) return;
-		const newIsMobile = window.matchMedia(`(max-width: ${Breakpoint["sm-max"]({ theme })}px)`).matches;
-		if (
-			isMobile.current !== newIsMobile ||
-			renderedCenter.current[0] !== lat ||
-			renderedCenter.current[1] !== lng
-		) {
-			isMobile.current = newIsMobile;
-			const mapDimensions = newIsMobile ? staticMapDimensions.mobile : staticMapDimensions.desktop;
-			const oneMapCreditsOverlayHeight = 15;
-			const mapHeight = mapDimensions.height + oneMapCreditsOverlayHeight;
-			setMapSrc(LocationHelper.getStaticMapUrl(lat, lng, mapDimensions.width, mapHeight, staticMapPinColor));
-			renderedCenter.current = [lat, lng];
-		}
+		const mapDimensions = isMobile ? styles.staticMapDimensions.mobile : styles.staticMapDimensions.desktop;
+		const oneMapCreditsOverlayHeight = 15;
+		const mapHeight = mapDimensions.height + oneMapCreditsOverlayHeight;
+		setMapSrc(LocationHelper.getStaticMapUrl(lat, lng, mapDimensions.width, mapHeight, staticMapPinColor));
 	};
 
 	// =============================================================================
@@ -79,20 +62,23 @@ export const StaticMap = ({
 	if (!lat || !lng) return null;
 
 	return (
-		<StaticMapWrapper
+		// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+		<div
 			id={TestHelper.generateId(id, "static-map")}
 			data-testid={TestHelper.generateId(id, "static-map")}
-			className={className}
+			data-disabled={!!disabled}
+			className={clsx(styles.staticMapWrapper, className)}
 			onClick={onClick}
 			aria-disabled={disabled}
 		>
-			<StaticMapElement
+			<img
+				className={styles.staticMapElement}
 				alt={address || "Location Map"}
 				src={mapSrc}
 				onError={(e) => {
 					e.currentTarget.src = StaticMapPlaceholder;
 				}}
 			/>
-		</StaticMapWrapper>
+		</div>
 	);
 };

@@ -1,33 +1,20 @@
-import { Checkbox } from "@lifesg/react-design-system/checkbox";
-import { Toggle } from "@lifesg/react-design-system/toggle";
-import { Typography } from "@lifesg/react-design-system/typography";
-import styled, { css } from "styled-components";
-import { TCheckboxToggleLayoutType } from "./types";
 import { Colour, Spacing } from "@lifesg/react-design-system/theme";
+import { css } from "@linaria/core";
 
-interface ILabelProps {
-	disabled?: boolean | undefined;
-}
-
-interface IToggleWrapperProps {
-	$layoutType?: TCheckboxToggleLayoutType;
-	$hasError?: boolean | undefined;
-}
-
-interface IStyledToggleProps {
-	$hasError?: boolean | undefined;
-}
-
-export const Label = styled(Typography.BodyMD)<ILabelProps>`
-	cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+export const label = css`
+	cursor: pointer;
 `;
 
-export const StyledCheckbox = styled(Checkbox)`
+export const labelDisabled = css`
+	cursor: not-allowed;
+`;
+
+export const checkbox = css`
 	margin-right: ${Spacing["spacing-4"]};
 	flex-shrink: 0;
 `;
 
-export const CheckboxContainer = styled.div`
+export const checkboxContainer = css`
 	display: flex;
 	align-items: center;
 	&:not(:last-of-type) {
@@ -35,48 +22,48 @@ export const CheckboxContainer = styled.div`
 	}
 `;
 
-export const ToggleWrapper = styled.div<IToggleWrapperProps>`
+export const toggleWrapper = css`
 	display: flex;
-	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
+	flex-direction: row;
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-16"]};
-
-	${(props) =>
-		props.$hasError &&
-		css`
-			/* No item selected — all items get error border */
-			&:not(:has(input:checked)) > * {
-				border-color: ${Colour["border-error"](props)};
-			}
-
-			/* An item is selected — unselected items revert to normal border */
-			&:has(input:checked) > *:not(:has(input:checked)) {
-				border-color: ${Colour.border(props)};
-			}
-		`}
 `;
 
-export const StyledToggle = styled(Toggle)<IStyledToggleProps>`
+export const toggleWrapperHasError = css`
+	/* No item selected — all items get error border */
+	&:not(:has(input:checked)) > * {
+		border-color: ${Colour["border-error"]};
+	}
+
+	/* An item is selected — unselected items revert to normal border */
+	&:has(input:checked) > *:not(:has(input:checked)) {
+		border-color: ${Colour.border};
+	}
+`;
+
+export const toggleWrapperVertical = css`
+	flex-direction: column;
+`;
+
+export const toggle = css`
 	[data-id="toggle-composite-children"] {
 		margin: 0;
 		padding: 0;
 	}
+`;
 
-	${(props) =>
-		props.$hasError &&
-		css`
-			&:has(input:checked) {
-				background: ${Colour["bg-error"](props)};
-				border-color: ${Colour["border-error"](props)};
+export const toggleHasError = css`
+	&:has(input:checked) {
+		background: ${Colour["bg-error"]};
+		border-color: ${Colour["border-error"]};
 
-				label,
-				span {
-					color: ${Colour["text-error"](props)};
-				}
+		label,
+		span {
+			color: ${Colour["text-error"]};
+		}
 
-				svg {
-					color: ${Colour["icon-error"](props)};
-				}
-			}
-		`}
+		svg {
+			color: ${Colour["icon-error"]};
+		}
+	}
 `;

@@ -109,7 +109,7 @@ describe(UI_TYPE, () => {
 			{
 				title: {
 					text: {
-						uiType: "text-h4",
+						uiType: "heading-xs",
 						children: ACCORDION_TITLE,
 					},
 					span: {
@@ -129,7 +129,7 @@ describe(UI_TYPE, () => {
 		const element = screen.getByText(ACCORDION_TITLE);
 		expect(element).toBeInTheDocument();
 		expect(element.tagName).toBe("SPAN");
-		expect(element.parentElement.tagName).toBe("H4");
+		expect(element.parentElement.tagName).toBe("H6");
 
 		const spanElement = screen.getByText(SPAN_TITLE);
 		expect(spanElement).toBeInTheDocument();

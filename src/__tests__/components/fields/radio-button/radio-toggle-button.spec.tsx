@@ -59,7 +59,7 @@ const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineDa
 	return (
 		<>
 			<FrontendEngine data={data} onSubmit={SUBMIT_FN} />
-			<Button.Default onClick={() => setData(onClick)}>Update options</Button.Default>
+			<Button onClick={() => setData(onClick)}>Update options</Button>
 		</>
 	);
 };
@@ -730,7 +730,7 @@ describe("radio toggle button", () => {
 
 		it("should apply responsive minItemWidth per breakpoint", () => {
 			renderComponent({
-				customOptions: { styleType: "toggle", minItemWidth: { mobile: 100, desktop: 200 } },
+				customOptions: { styleType: "toggle", minItemWidth: { sm: 100, xl: 200 } },
 				options: [
 					{ label: "A", value: "a" },
 					{ label: "B", value: "b" },

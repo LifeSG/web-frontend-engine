@@ -1,11 +1,15 @@
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 import { Form } from "@lifesg/react-design-system/form";
-import { Breakpoint } from "@lifesg/react-design-system/theme";
-import { useContext, useEffect, useState } from "react";
+import { ImageButton } from "@lifesg/react-design-system/image-button";
+import { RadioButton } from "@lifesg/react-design-system/radio-button";
+import { Toggle } from "@lifesg/react-design-system/toggle";
+import { Typography } from "@lifesg/react-design-system/typography";
+import clsx from "clsx";
+import { useApplyStyle, useMaxWidthMediaQuery } from "@lifesg/react-design-system/theme";
+import { useEffect, useRef, useState } from "react";
 import type { FocusEvent } from "react";
 import { useFormContext } from "react-hook-form";
-import { ThemeContext } from "styled-components";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
@@ -13,24 +17,20 @@ import { TestHelper, filterSchemaProps, generateRandomId } from "../../../utils"
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize, Warning } from "../../shared";
-import {
-	FlexImageWrapper,
-	FlexToggleWrapper,
-	Label,
-	RadioContainer,
-	StyledImageButton,
-	StyledRadioButton,
-	StyledToggle,
-} from "./radio-button.styles";
+import * as styles from "./radio-button.styles";
 import {
 	IImageButtonOption,
 	IRadioButtonOption,
 	IRadioToggleOption,
 	TBreakpoint,
 	TRadioButtonGroupSchema,
+	TResponsiveBreakpointValue,
 	TResponsiveValue,
 } from "./types";
+
 const DEFAULT_MIN_ITEM_WIDTH = 164;
+
+const BREAKPOINT_ORDER: TBreakpoint[] = ["xxs", "xs", "sm", "md", "lg", "xl", "xxl"];
 
 const resolveResponsiveValue = <T,>(
 	value: TResponsiveValue<T> | undefined,
@@ -39,10 +39,11 @@ const resolveResponsiveValue = <T,>(
 ): T => {
 	if (value === undefined || value === null) return defaultValue;
 	if (typeof value !== "object") return value as T;
-	const { mobile, tablet, desktop } = value as { mobile?: T; tablet?: T; desktop?: T };
-	if (breakpoint === "mobile") return mobile ?? tablet ?? desktop ?? defaultValue;
-	if (breakpoint === "tablet") return tablet ?? desktop ?? mobile ?? defaultValue;
-	return desktop ?? tablet ?? mobile ?? defaultValue;
+	const responsive = value as TResponsiveBreakpointValue<T>;
+	const idx = BREAKPOINT_ORDER.indexOf(breakpoint);
+	const searchOrder = BREAKPOINT_ORDER.slice(0, idx + 1).reverse();
+	const resolved = searchOrder.find((bp) => responsive[bp] !== undefined);
+	return resolved ? (responsive[resolved] as T) : defaultValue;
 };
 
 export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSchema>) => {
@@ -65,11 +66,42 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 			? (schema as { allowDeselection?: boolean }).allowDeselection
 			: undefined;
 
-	const theme = useContext(ThemeContext);
 	const { setValue, clearErrors, unregister } = useFormContext();
 	const [stateValue, setStateValue] = useState<string>(value || "");
-	const [currentBreakpoint, setCurrentBreakpoint] = useState<TBreakpoint>("desktop");
 	const { setFieldValidationConfig, removeFieldValidationConfig } = useValidationConfig();
+	const toggleWrapperRef = useRef<HTMLDivElement | null>(null);
+
+	const breakpointMatches: [TBreakpoint, boolean][] = [
+		["xxs", useMaxWidthMediaQuery("xxs")],
+		["xs", useMaxWidthMediaQuery("xs")],
+		["sm", useMaxWidthMediaQuery("sm")],
+		["md", useMaxWidthMediaQuery("md")],
+		["lg", useMaxWidthMediaQuery("lg")],
+		["xl", useMaxWidthMediaQuery("xl")],
+	];
+	const currentBreakpoint: TBreakpoint = breakpointMatches.find(([, matches]) => matches)?.[0] ?? "xxl";
+
+	const resolvedColumns =
+		toggleOptions?.layoutColumns !== undefined
+			? resolveResponsiveValue(toggleOptions.layoutColumns, currentBreakpoint, 0) || undefined
+			: undefined;
+	const resolvedMinItemWidth = resolveResponsiveValue(
+		toggleOptions?.minItemWidth,
+		currentBreakpoint,
+		DEFAULT_MIN_ITEM_WIDTH
+	);
+	const stretch = toggleOptions?.stretch ?? false;
+	const hasMinItemWidth = !!toggleOptions?.minItemWidth;
+
+	const useGrid = !!(resolvedColumns || stretch);
+	const wrapperTokens: Record<string, string | undefined> = {};
+	if (resolvedColumns) wrapperTokens[styles.tokens.toggleWrapper.columns] = `${resolvedColumns}`;
+	if (stretch || hasMinItemWidth) {
+		wrapperTokens[styles.tokens.toggleWrapper.minItemWidth] = `${resolvedMinItemWidth}px`;
+	}
+
+	useApplyStyle(toggleWrapperRef, wrapperTokens);
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
@@ -87,29 +119,6 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	useEffect(() => {
 		setStateValue(value ?? "");
 	}, [value]);
-
-	useEffect(() => {
-		const mobileMax = Breakpoint["sm-max"]({ theme });
-		const tabletMax = Breakpoint["lg-max"]({ theme }) - 1;
-		const mobileQuery = window.matchMedia(`(max-width: ${mobileMax}px)`);
-		const tabletQuery = window.matchMedia(`(min-width: ${mobileMax + 1}px) and (max-width: ${tabletMax}px)`);
-
-		const detectBreakpoint = (): TBreakpoint => {
-			if (mobileQuery.matches) return "mobile";
-			if (tabletQuery.matches) return "tablet";
-			return "desktop";
-		};
-
-		const onQueryChange = () => setCurrentBreakpoint(detectBreakpoint());
-		onQueryChange();
-		mobileQuery.addEventListener("change", onQueryChange);
-		tabletQuery.addEventListener("change", onQueryChange);
-		return () => {
-			mobileQuery.removeEventListener("change", onQueryChange);
-			tabletQuery.removeEventListener("change", onQueryChange);
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -187,10 +196,13 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 				const radioButtonId = formatId();
 
 				return (
-					<RadioContainer className={className ? `${className}-radio-container` : undefined} key={index}>
-						<StyledRadioButton
+					<div
+						className={clsx(styles.radioContainer, className && `${className}-radio-container`)}
+						key={index}
+					>
+						<RadioButton
 							{...radioProps}
-							className={className}
+							className={clsx(styles.styledRadioButton, className)}
 							id={radioButtonId}
 							data-testid={TestHelper.generateId(id, "radio")}
 							disabled={disabled ?? option.disabled}
@@ -200,50 +212,47 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 							checked={isRadioButtonChecked(option.value)}
 							onChange={() => handleChangeOrClick(option.value)}
 						/>
-						<Label forwardedAs="label" htmlFor={radioButtonId} disabled={disabled ?? option.disabled}>
+						<Typography.BodyMD
+							as="label"
+							htmlFor={radioButtonId}
+							className={clsx(styles.label, (disabled ?? option.disabled) && styles.labelDisabled)}
+						>
 							{renderLabel(option.label)}
-						</Label>
-					</RadioContainer>
+						</Typography.BodyMD>
+					</div>
 				);
 			})
 		);
 	};
 
 	const renderToggles = () => {
-		const layoutType = toggleOptions?.layoutType ?? "horizontal";
-		const resolvedColumns =
-			toggleOptions?.layoutColumns !== undefined
-				? resolveResponsiveValue(toggleOptions.layoutColumns, currentBreakpoint, 0) || undefined
-				: undefined;
-		const resolvedMinItemWidth = resolveResponsiveValue(
-			toggleOptions?.minItemWidth,
-			currentBreakpoint,
-			DEFAULT_MIN_ITEM_WIDTH
-		);
-		const stretch = toggleOptions?.stretch ?? false;
-
 		return (
 			options.length > 0 &&
 			customOptions?.styleType === "toggle" && (
-				<FlexToggleWrapper
-					className={className ? `${className} ${className}-radio-container` : undefined}
-					$layoutType={layoutType}
-					$resolvedColumns={resolvedColumns}
-					$resolvedMinItemWidth={resolvedMinItemWidth}
-					$stretch={stretch}
-					$hasMinItemWidth={!!toggleOptions?.minItemWidth}
-					$hasError={!!error?.message}
+				<div
+					ref={toggleWrapperRef}
+					className={clsx(
+						useGrid ? styles.gridToggleWrapper : styles.flexToggleWrapper,
+						customOptions?.layoutType === "vertical" && styles.toggleWrapperVertical,
+						error?.message && styles.toggleWrapperHasError,
+						className && `${className} ${className}-radio-container`
+					)}
+					data-stretch={stretch || undefined}
 				>
 					{(options as IRadioToggleOption[]).map((option, index) => {
 						const radioButtonId = formatId();
 
 						return (
-							<StyledToggle
+							<Toggle
 								{...radioProps}
 								key={index}
 								type="radio"
 								id={radioButtonId}
-								className={className ? `${className}-radio` : undefined}
+								className={clsx(
+									styles.styledToggle,
+									error?.message && styles.styledToggleHasError,
+									className && `${className}-radio`
+								)}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
@@ -252,7 +261,6 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								styleType={customOptions?.border === false ? "no-border" : "default"}
 								checked={isRadioButtonChecked(option.value)}
 								onClick={() => handleChangeOrClick(option.value)}
-								$hasError={!!error?.message}
 								onKeyDown={(e) => {
 									if (e.key === " " || e.key === "Enter") {
 										e.preventDefault();
@@ -268,10 +276,10 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								subLabel={option.subLabel ? renderLabel(option.subLabel) : undefined}
 							>
 								{renderLabel(option.label)}
-							</StyledToggle>
+							</Toggle>
 						);
 					})}
-				</FlexToggleWrapper>
+				</div>
 			)
 		);
 	};
@@ -279,19 +287,21 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 	const renderImageButtons = () => {
 		return (
 			options.length > 0 && (
-				<FlexImageWrapper className={className ? `${className} ${className}-radio-container` : undefined}>
+				<div
+					className={clsx(styles.flexImageWrapper, className && `${className} ${className}-radio-container`)}
+				>
 					{(options as IImageButtonOption[]).map((option, index) => {
 						const radioButtonId = formatId();
 
 						return (
-							<StyledImageButton
+							<ImageButton
 								// temp any fix until proper typing is created
 								// eslint-disable-next-line @typescript-eslint/no-explicit-any
 								{...(radioProps as any)}
 								type="button"
 								key={index}
 								id={radioButtonId}
-								className={className ? `${className}-radio` : undefined}
+								className={clsx(styles.styledImageButton, className && `${className}-radio`)}
 								data-testid={TestHelper.generateId(id, "radio")}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
@@ -302,10 +312,10 @@ export const RadioButtonGroup = (props: IGenericFieldProps<TRadioButtonGroupSche
 								error={!!error?.message}
 							>
 								{option.label}
-							</StyledImageButton>
+							</ImageButton>
 						);
 					})}
-				</FlexImageWrapper>
+				</div>
 			)
 		);
 	};

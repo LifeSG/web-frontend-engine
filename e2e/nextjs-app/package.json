@@ -1,0 +1,24 @@
+{
+	"name": "web-frontend-engine-e2e-app",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --webpack",
+		"build": "next build --webpack",
+		"start": "next start"
+	},
+	"dependencies": {
+		"@lifesg/react-design-system": "3.4.0-canary.5",
+		"@lifesg/web-frontend-engine": "^2.2.4",
+		"next": "16.2.7",
+		"next-with-linaria": "^1.4.0",
+		"react": "19.2.3",
+		"react-dom": "19.2.3"
+	},
+	"devDependencies": {
+		"@types/node": "^20",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"typescript": "^5"
+	}
+}

@@ -29,6 +29,7 @@ const VERIFY_OTP_URL = "https://api.example.com/verify-otp";
 const MOCK_VALID_PHONE_NO = "86754231";
 const MOCK_VALID_EMAIL = "test@example.com";
 const MOCK_TXN_ID = "txn-123";
+const MOCK_OTP_PREFIX = "XYZ";
 const MOCK_OTP = "123456";
 
 const BASE_FIELD = {
@@ -65,7 +66,7 @@ const renderComponent = (
 };
 
 const getPhoneNoInput = () => screen.getByPlaceholderText(/Enter.*mobile number/i);
-const getEmailInput = () => getField("textbox", COMPONENT_LABEL);
+const getEmailInput = () => getField("textbox", /Enter.*email address/);
 const getOtpInput = () => screen.getByPlaceholderText("Enter OTP");
 const getSendOtpButton = () => getField("button", { name: "Send OTP" });
 const getVerifyOtpButton = () => getField("button", { name: "Verify" });
@@ -209,11 +210,50 @@ describe(UI_TYPE, () => {
 			await waitFor(() => {
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
-						[COMPONENT_ID]: expect.objectContaining({
+						[COMPONENT_ID]: {
+							contact: MOCK_VALID_PHONE_NO,
 							type: "phone-number",
 							state: "verified",
 							additionalData: { token: "mock-token" },
-						}),
+						},
+					})
+				);
+			});
+		});
+
+		it("should submit verified value with the prefix", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "post")
+				.mockResolvedValueOnce({
+					transactionId: MOCK_TXN_ID,
+					prefix: MOCK_OTP_PREFIX,
+				})
+				.mockResolvedValueOnce({ additionalData: { token: "mock-token" } });
+
+			render();
+			fireEvent.change(getPhoneNoInput(), { target: { value: MOCK_VALID_PHONE_NO } });
+			fireEvent.click(getSendOtpButton());
+
+			await waitFor(() => {
+				expect(getVerifyOtpButton()).toBeInTheDocument();
+				expect(screen.getByText(MOCK_OTP_PREFIX)).toBeInTheDocument();
+			});
+
+			fireEvent.change(getOtpInput(), { target: { value: MOCK_OTP } });
+			fireEvent.click(getVerifyOtpButton());
+
+			await waitFor(() => expect(screen.queryByRole("button", { name: "Verify" })).not.toBeInTheDocument());
+			fireEvent.click(getSubmitButton());
+
+			await waitFor(() => {
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						[COMPONENT_ID]: {
+							contact: MOCK_VALID_PHONE_NO,
+							otpPrefix: MOCK_OTP_PREFIX,
+							type: "phone-number",
+							state: "verified",
+							additionalData: { token: "mock-token" },
+						},
 					})
 				);
 			});
@@ -413,11 +453,50 @@ describe(UI_TYPE, () => {
 			await waitFor(() => {
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.objectContaining({
-						[COMPONENT_ID]: expect.objectContaining({
+						[COMPONENT_ID]: {
+							contact: MOCK_VALID_EMAIL,
 							type: "email",
 							state: "verified",
 							additionalData: { token: "mock-token" },
-						}),
+						},
+					})
+				);
+			});
+		});
+
+		it("should submit verified value with the prefix", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "post")
+				.mockResolvedValueOnce({
+					transactionId: MOCK_TXN_ID,
+					prefix: MOCK_OTP_PREFIX,
+				})
+				.mockResolvedValueOnce({ additionalData: { token: "mock-token" } });
+
+			render();
+			fireEvent.change(getEmailInput(), { target: { value: MOCK_VALID_EMAIL } });
+			fireEvent.click(getSendOtpButton());
+
+			await waitFor(() => {
+				expect(getVerifyOtpButton()).toBeInTheDocument();
+				expect(screen.getByText(MOCK_OTP_PREFIX)).toBeInTheDocument();
+			});
+
+			fireEvent.change(getOtpInput(), { target: { value: MOCK_OTP } });
+			fireEvent.click(getVerifyOtpButton());
+
+			await waitFor(() => expect(screen.queryByRole("button", { name: "Verify" })).not.toBeInTheDocument());
+			fireEvent.click(getSubmitButton());
+
+			await waitFor(() => {
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						[COMPONENT_ID]: {
+							contact: MOCK_VALID_EMAIL,
+							otpPrefix: MOCK_OTP_PREFIX,
+							type: "email",
+							state: "verified",
+							additionalData: { token: "mock-token" },
+						},
 					})
 				);
 			});

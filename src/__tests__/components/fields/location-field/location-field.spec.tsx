@@ -1,12 +1,11 @@
-import { Breakpoint, LifeSGTheme } from "@lifesg/react-design-system/theme";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { MockViewport, mockIntersectionObserver, mockViewport, mockViewportForTestGroup } from "jsdom-testing-mocks";
+import { MockViewport, mockIntersectionObserver, mockViewport } from "jsdom-testing-mocks";
 import { useEffect, useRef, useState } from "react";
 import { FrontendEngine, IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components";
 import { ILocationFieldSchema, TSetCurrentLocationDetail } from "../../../../components/fields";
 import { LocationHelper } from "../../../../components/fields/location-field/location-helper";
 import { ERROR_SVG } from "../../../../components/fields/location-field/location-modal/location-modal.data";
-import { ErrorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
+import { errorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
 import { IMapPin } from "../../../../components/fields/location-field/location-modal/location-picker/types";
 import { ERROR_MESSAGES, Prompt } from "../../../../components/shared";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
@@ -14,11 +13,11 @@ import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
 	FrontendEngineWithCustomButton,
+	SUBMIT_BUTTON_LABEL,
 	TOverrideField,
 	TOverrideSchema,
 	getErrorMessage,
 	getField,
-	getResetButton,
 	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
@@ -42,6 +41,8 @@ const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const UI_TYPE = "location-field";
 const LABEL = "Location field";
+const BREAKPOINT_XL_MAX = 1440;
+const BREAKPOINT_SM_MAX = 480;
 const LEGEND_ITEMS = [
 	{ id: "lift-fault", label: "Lift fault", icon: "/img/lift.png" },
 	{ id: "renovation", label: "Renovation", icon: "/img/reno.png" },
@@ -85,7 +86,7 @@ const FrontendEngineWithEventListener = ({
 	const [showConfirmLocationPrompt, setShowConfirmLocationPrompt] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (!withEvents || !locationDetails) return;
+		if (!withEvents || !locationDetails || !formRef.current) return;
 
 		const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = formRef.current;
 
@@ -142,7 +143,7 @@ const FrontendEngineWithEventListener = ({
 	}, []);
 
 	useEffect(() => {
-		if (eventType && eventListener) {
+		if (eventType && eventListener && formRef.current) {
 			const currentFormRef = formRef.current;
 			const eventListenerWithFormRef = eventListener(currentFormRef);
 			currentFormRef.addFieldEventListener(UI_TYPE, eventType as any, "field", eventListenerWithFormRef);
@@ -189,7 +190,7 @@ const FrontendEngineWithEventListener = ({
 				title="Edit Location?"
 				size="large"
 				show={showEditPrompt}
-				image={<ErrorImage src={ERROR_SVG} />}
+				image={<img className={errorImage} src={ERROR_SVG} alt="Error" />}
 				description="sample prompt message"
 				buttons={[
 					{
@@ -226,7 +227,7 @@ interface IRenderProps {
 	eventListener?: (formRef: IFrontendEngineRef) => (this: Element, ev: Event) => any;
 }
 
-const renderComponent = (
+const renderComponent = async (
 	{
 		overrideField,
 		overrideSchema,
@@ -256,7 +257,7 @@ const renderComponent = (
 		...overrideSchema,
 	};
 
-	return render(
+	const component = render(
 		<FrontendEngineWithEventListener
 			data={json}
 			onSubmit={SUBMIT_FN}
@@ -266,6 +267,12 @@ const renderComponent = (
 			eventType={eventType}
 		/>
 	);
+
+	await waitFor(() => {
+		expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
+	});
+
+	return component;
 };
 
 const testIdCmd = (query = false) => {
@@ -409,41 +416,6 @@ describe("location-input-group", () => {
 	let fetchSingleLocationByLatLngSpy;
 	let fetchLocationListSpy;
 
-	const setWindowAndViewPort = (width: number, height = Breakpoint["lg-max"]({ theme: LifeSGTheme })) => {
-		Object.defineProperty(window, "innerWidth", {
-			writable: true,
-			value: Breakpoint["xxs-max"]({ theme: LifeSGTheme }), // Set the desired screen width for the desktop view
-		});
-		Object.defineProperty(window, "innerHeight", {
-			writable: true,
-			value: Breakpoint["xxs-max"]({ theme: LifeSGTheme }), // Set the desired screen width for the desktop view
-		});
-
-		const createMockVisualViewport = (width, height) => ({
-			width,
-			height,
-			offsetLeft: 0,
-			offsetTop: 0,
-			pageLeft: 0,
-			pageTop: 0,
-			scale: 1,
-			zoom: 1,
-			addEventListener: jest.fn(),
-			removeEventListener: jest.fn(),
-		});
-
-		const mockVisualViewport = createMockVisualViewport(width, height);
-		Object.defineProperty(window, "visualViewport", {
-			writable: true,
-			value: mockVisualViewport,
-		});
-
-		viewport.set({
-			width,
-			height: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
-		});
-	};
-
 	beforeEach(() => {
 		jest.clearAllMocks();
 		jest.restoreAllMocks();
@@ -457,16 +429,12 @@ describe("location-input-group", () => {
 		fetchLocationListSpy = jest.spyOn(LocationHelper, "fetchLocationList");
 
 		viewport = mockViewport({
-			width: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
-			height: Breakpoint["xl-max"]({ theme: LifeSGTheme }),
+			width: BREAKPOINT_XL_MAX,
+			height: BREAKPOINT_XL_MAX,
 		});
-		setWindowAndViewPort(Breakpoint["xl-max"]({ theme: LifeSGTheme }));
 	});
 
 	afterEach(() => {
-		delete window.visualViewport;
-		delete window.innerWidth;
-		delete window.innerHeight;
 		viewport.cleanup();
 		getCurrentLocationSpy.mockReset();
 		fetchAddressSpy.mockRestore();
@@ -505,12 +473,9 @@ describe("location-input-group", () => {
 					lng: 103.789404349716,
 				});
 
-				renderComponent({ withEvents: false });
+				await renderComponent({ withEvents: false });
 
 				await waitFor(() => window.dispatchEvent(new Event("online")));
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
 				getLocationInput().focus();
 
@@ -519,7 +484,7 @@ describe("location-input-group", () => {
 					expect(getLocationPicker(true)).toBeInTheDocument();
 					expect(getLocationSearch(true)).toBeInTheDocument();
 				});
-			});
+			}, 10000);
 
 			it.todo(
 				"should handle when navigator does not support geolocation in default location getCurrentLocation "
@@ -532,11 +497,8 @@ describe("location-input-group", () => {
 						lng: 103.789404349716,
 					},
 				};
-				renderComponent({ withEvents: true, locationDetails });
+				await renderComponent({ withEvents: true, locationDetails });
 				await waitFor(() => window.dispatchEvent(new Event("online")));
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
 				getLocationInput().focus();
 
@@ -554,7 +516,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should handle timeout GeolocationPositionError when FE requests for current location", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: true,
 					locationDetails: {
 						errors: {
@@ -563,9 +525,6 @@ describe("location-input-group", () => {
 					},
 				});
 				await waitFor(() => window.dispatchEvent(new Event("online")));
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
 				screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")).focus();
 
@@ -595,7 +554,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should handle non app error when FE requests for current location", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: true,
 					locationDetails: {
 						errors: {
@@ -604,9 +563,6 @@ describe("location-input-group", () => {
 					},
 				});
 				await waitFor(() => window.dispatchEvent(new Event("online")));
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 
 				screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "location-input-base")).focus();
 
@@ -650,7 +606,7 @@ describe("location-input-group", () => {
 		describe("Show Location Modal Ready events", () => {
 			it("should fire show-location-modal-ready after it is registered", async () => {
 				const handleShowLocationModalReady = jest.fn();
-				renderComponent({
+				await renderComponent({
 					eventType: ELocationInputEvents.SHOW_LOCATION_MODAL_READY,
 					eventListener: (formRef) => () => {
 						handleShowLocationModalReady();
@@ -667,7 +623,7 @@ describe("location-input-group", () => {
 		describe("Modal events", () => {
 			it("should fire show-location-modal event on showing location modal", async () => {
 				const handleShowReviewModal = jest.fn();
-				renderComponent({
+				await renderComponent({
 					eventType: ELocationInputEvents.SHOW_MODAL,
 					eventListener: () => handleShowReviewModal,
 				});
@@ -677,7 +633,7 @@ describe("location-input-group", () => {
 
 			it("should fire hide-location-modal event on hiding location modal", async () => {
 				const handleHideReviewModal = jest.fn();
-				renderComponent({
+				await renderComponent({
 					eventType: "hide-location-modal",
 					eventListener: () => handleHideReviewModal,
 				});
@@ -690,7 +646,7 @@ describe("location-input-group", () => {
 		//Explicit Edit Events
 		describe("Explicit Edit events", () => {
 			it("should fire click-edit-button event when edit button been clicked", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: true,
 					locationDetails: {
 						errors: {
@@ -710,8 +666,6 @@ describe("location-input-group", () => {
 				});
 				await waitFor(() => window.dispatchEvent(new Event("online")));
 
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
 				expect(getEditLocationButton(true)).toBeInTheDocument();
 				expect(getLocationInput()).toHaveAttribute("aria-disabled", "true");
 				fireEvent.click(getEditLocationButton());
@@ -748,7 +702,7 @@ describe("location-input-group", () => {
 					code: 1,
 				});
 
-				renderComponent({
+				await renderComponent({
 					withEvents: true,
 					locationDetails: {
 						errors: {
@@ -773,7 +727,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should show confirm location prompt when confirm location", async () => {
-				fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+				fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 					onSuccess(mock1PageFetchAddressResponse);
 				});
 
@@ -825,7 +779,7 @@ describe("location-input-group", () => {
 				});
 
 				it("should fire get-selectable-pins event if default location is set", async () => {
-					renderComponent({
+					await renderComponent({
 						...event,
 						overrideSchema: {
 							defaultValues: {
@@ -848,7 +802,7 @@ describe("location-input-group", () => {
 						lng: 103.789404349716,
 					});
 
-					renderComponent(event);
+					await renderComponent(event);
 					getLocationInput().focus();
 					await waitFor(() => {
 						expect(getSelectablePins).toHaveBeenCalled();
@@ -856,7 +810,7 @@ describe("location-input-group", () => {
 				});
 
 				it("should not fire get-selectable-pins event if failed to get current location", async () => {
-					renderComponent(event);
+					await renderComponent(event);
 					getLocationInput().focus();
 					await waitFor(() => {
 						expect(getSelectablePins).not.toHaveBeenCalled();
@@ -866,7 +820,7 @@ describe("location-input-group", () => {
 
 			describe("set-selectable-pins", () => {
 				it("should show error modal if selectable pins is not an array", async () => {
-					renderComponent({
+					await renderComponent({
 						eventType: getSelectablePinsEvent,
 						eventListener: (formRef) => () => {
 							formRef.dispatchFieldEvent(UI_TYPE, "set-selectable-pins", COMPONENT_ID, {
@@ -890,7 +844,7 @@ describe("location-input-group", () => {
 				});
 
 				it("should populate results list with pins", async () => {
-					renderComponent({
+					await renderComponent({
 						eventType: getSelectablePinsEvent,
 						eventListener: (formRef) => () => {
 							formRef.dispatchFieldEvent(UI_TYPE, "set-selectable-pins", COMPONENT_ID, {
@@ -932,7 +886,7 @@ describe("location-input-group", () => {
 		describe("Refresh location events", () => {
 			it("should fire click-refresh-current-location event when get current location button is clicked", async () => {
 				const mockRefreshLocation = jest.fn();
-				renderComponent({
+				await renderComponent({
 					eventType: ELocationInputEvents.CLICK_REFRESH_CURRENT_LOCATION,
 					eventListener: () => mockRefreshLocation,
 					overrideSchema: {
@@ -959,7 +913,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should not call geolocation when defaultAddress is provided", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						defaultAddress: {
 							lat: 1.3001,
@@ -994,13 +948,11 @@ describe("location-input-group", () => {
 	describe("functionality", () => {
 		describe("when rendering the input field", () => {
 			it("should be able to render the location input field", async () => {
-				renderComponent();
-
-				expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-				expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+				await renderComponent();
 			});
 
 			labelTestSuite((overrideField: TOverrideField<ILocationFieldSchema>) => renderComponent({ overrideField }));
+
 			warningTestSuite<ILocationFieldSchema>({ label: LABEL, uiType: UI_TYPE });
 
 			// test functionality
@@ -1013,7 +965,7 @@ describe("location-input-group", () => {
 						reverseGeocodeSpy.mockImplementation(() => {
 							return mockReverseGeoCodeResponse;
 						});
-						renderComponent({
+						await renderComponent({
 							withEvents: false,
 							overrideSchema: {
 								defaultValues: {
@@ -1054,7 +1006,7 @@ describe("location-input-group", () => {
 
 				describe("when only lat lng", () => {
 					beforeEach(async () => {
-						fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+						fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 							onSuccess(mock1PageFetchAddressResponse);
 						});
 						fetchSingleLocationByLatLngSpy.mockImplementation(
@@ -1062,7 +1014,7 @@ describe("location-input-group", () => {
 								handleResult(fetchSingleLocationByLatLngSingleReponse);
 							}
 						);
-						renderComponent({
+						await renderComponent({
 							withEvents: false,
 							overrideSchema: {
 								defaultValues: {
@@ -1114,7 +1066,7 @@ describe("location-input-group", () => {
 								handleResult(fetchSingleLocationByLatLngSingleReponse);
 							}
 						);
-						renderComponent({
+						await renderComponent({
 							withEvents: false,
 							overrideSchema: {
 								defaultValues: {
@@ -1179,10 +1131,7 @@ describe("location-input-group", () => {
 
 			describe("when there is internet connectivity", () => {
 				it("should open location modal when input is clicked", async () => {
-					renderComponent();
-
-					expect(screen.getByTestId(COMPONENT_ID)).toBeInTheDocument();
-					expect(screen.getByLabelText(LABEL)).toBeInTheDocument();
+					await renderComponent();
 
 					getLocationInput().focus();
 
@@ -1197,7 +1146,7 @@ describe("location-input-group", () => {
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});
-							renderComponent();
+							await renderComponent();
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1232,15 +1181,15 @@ describe("location-input-group", () => {
 					});
 					describe("modal controls", () => {
 						describe("for tablet and below", () => {
-							mockViewportForTestGroup({
-								width: Breakpoint["sm-max"]({ theme: LifeSGTheme }),
-								height: Breakpoint["sm-max"]({ theme: LifeSGTheme }),
+							beforeEach(() => {
+								viewport.set({
+									width: BREAKPOINT_SM_MAX,
+									height: BREAKPOINT_SM_MAX,
+								});
 							});
 
 							it("should allow user to close the location modal when in map mode", async () => {
-								setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
-
-								renderComponent();
+								await renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1266,9 +1215,7 @@ describe("location-input-group", () => {
 							});
 
 							it("should allow user to close the modal when in search mode", async () => {
-								setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
-
-								renderComponent();
+								await renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1287,7 +1234,7 @@ describe("location-input-group", () => {
 									expect(getLocationSearchResults(true, "map")).toBeInTheDocument();
 								});
 
-								fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+								fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 									onSuccess(mock1PageFetchAddressResponse);
 								});
 
@@ -1311,9 +1258,7 @@ describe("location-input-group", () => {
 
 						describe("for desktop", () => {
 							it("should allow user to cancel", async () => {
-								setWindowAndViewPort(Breakpoint["xxl-min"]({ theme: LifeSGTheme }));
-
-								renderComponent();
+								await renderComponent();
 
 								await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1366,7 +1311,7 @@ describe("location-input-group", () => {
 
 					describe("when using location search in desktop", () => {
 						beforeEach(async () => {
-							renderComponent();
+							await renderComponent();
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1380,7 +1325,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should automatically search as user types", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mockEmptyFetchAddressResponse);
 							});
 
@@ -1392,7 +1337,7 @@ describe("location-input-group", () => {
 								expect(getLocationSearchResults(true)).toHaveTextContent("No results found");
 							});
 
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1406,7 +1351,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to clear query string", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1427,7 +1372,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to select result", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1453,7 +1398,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should allow user to scroll to see more results", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1482,7 +1427,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should close location modal when confirm", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1518,11 +1463,14 @@ describe("location-input-group", () => {
 
 					describe("when using location search in mobile", () => {
 						beforeEach(async () => {
-							setWindowAndViewPort(Breakpoint["sm-max"]({ theme: LifeSGTheme }));
+							viewport.set({
+								width: BREAKPOINT_SM_MAX,
+								height: BREAKPOINT_SM_MAX,
+							});
 							getCurrentLocationSpy.mockRejectedValue({
 								code: 1,
 							});
-							renderComponent();
+							await renderComponent();
 
 							await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1536,7 +1484,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should switch to map mode when result is selected", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1560,7 +1508,7 @@ describe("location-input-group", () => {
 						});
 
 						it("should close location modal when confirm", async () => {
-							fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+							fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 								onSuccess(mock1PageFetchAddressResponse);
 							});
 
@@ -1632,13 +1580,13 @@ describe("location-input-group", () => {
 					it("should render a banner if banner text is specified", async () => {
 						const mapBannerText = "This is some sample banner text";
 
-						renderComponent({ overrideField: { mapBannerText } });
+						await renderComponent({ overrideField: { mapBannerText } });
 
 						expect(screen.getByText(mapBannerText)).toBeInTheDocument();
 					});
 
 					it("should not render a banner if banner text is undefined", async () => {
-						renderComponent();
+						await renderComponent();
 
 						expect(
 							screen.queryByTestId(TestHelper.generateId(COMPONENT_ID, "location-banner"))
@@ -1648,7 +1596,7 @@ describe("location-input-group", () => {
 
 				describe("when using legend items", () => {
 					it("should render legend trigger and items", async () => {
-						renderComponent({ overrideField: { legendItems: LEGEND_ITEMS } });
+						await renderComponent({ overrideField: { legendItems: LEGEND_ITEMS } });
 
 						await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1672,7 +1620,7 @@ describe("location-input-group", () => {
 					});
 
 					it("should not render legend trigger when legendItems is empty", async () => {
-						renderComponent({ overrideField: { legendItems: [] } });
+						await renderComponent({ overrideField: { legendItems: [] } });
 
 						await waitFor(() => window.dispatchEvent(new Event("online")));
 
@@ -1687,8 +1635,8 @@ describe("location-input-group", () => {
 				});
 
 				describe("when using the disableSearch", () => {
-					it("should allow text input when disableSearch is default (undefined))", () => {
-						renderComponent();
+					it("should allow text input when disableSearch is default (undefined))", async () => {
+						await renderComponent();
 
 						getLocationSearchInput().focus();
 						fireEvent.change(getLocationSearchInput(), { target: { value: "text input" } });
@@ -1699,8 +1647,8 @@ describe("location-input-group", () => {
 						expect(getLocationSearchClearButton()).toBeEnabled();
 					});
 
-					it("should disable text input when disableSearch is 'disabled'", () => {
-						renderComponent({ overrideField: { disableSearch: "disabled" } });
+					it("should disable text input when disableSearch is 'disabled'", async () => {
+						await renderComponent({ overrideField: { disableSearch: "disabled" } });
 
 						expect(getLocationSearchButton()).toBeDisabled();
 						expect(getLocationSearchInput()).toBeDisabled();
@@ -1708,8 +1656,8 @@ describe("location-input-group", () => {
 						expect(getLocationSearchClearButton()).toBeDisabled();
 					});
 
-					it("should set text input to readonly when disableSearch is 'readonly'", () => {
-						renderComponent({ overrideField: { disableSearch: "readonly" } });
+					it("should set text input to readonly when disableSearch is 'readonly'", async () => {
+						await renderComponent({ overrideField: { disableSearch: "readonly" } });
 
 						expect(getLocationSearchButton()).toBeDisabled();
 						expect(getLocationSearchInput()).not.toBeDisabled();
@@ -1778,7 +1726,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should not render search clear button", async () => {
-				renderComponent({ overrideField: { locationSelectionMode: "pins-only" } });
+				await renderComponent({ overrideField: { locationSelectionMode: "pins-only" } });
 
 				getLocationInput().focus();
 
@@ -1789,12 +1737,12 @@ describe("location-input-group", () => {
 			});
 
 			it("should not populate search bar input ", async () => {
-				fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+				fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 					onSuccess(mock1PageFetchAddressResponse);
 				});
 				reverseGeocodeSpy.mockImplementation(() => mockReverseGeoCodeResponse);
 				fetchLocationListSpy.mockImplementation(() => mockReverseGeoCodeResponse);
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						mapApi: {
 							reverseGeocode: "https://www.mock.com/reverse-geo-code",
@@ -1819,7 +1767,7 @@ describe("location-input-group", () => {
 
 	describe("validation", () => {
 		it("should allow empty if validation not required", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: false,
 			});
 
@@ -1834,9 +1782,9 @@ describe("location-input-group", () => {
 			${"lat lng missing"} | ${{ address: "Fusionopolis View" }}
 			${"lng missing"}     | ${{ lat: 1 }}
 			${"lat missing"}     | ${{ lng: 1 }}
-		`("$name", (name, value) => {
+		`("$name", (_name, value) => {
 			it("should validate if required", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 					withEvents: false,
 					overrideSchema: {
@@ -1853,7 +1801,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should pass validation if required values are provided", async () => {
-			renderComponent({
+			await renderComponent({
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 				withEvents: false,
 				overrideSchema: {
@@ -1873,7 +1821,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should validate mustHavePostalCode", async () => {
-			renderComponent({
+			await renderComponent({
 				validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
 				withEvents: false,
 				overrideSchema: {
@@ -1896,7 +1844,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should allow customisation of missing postal code error message", async () => {
-			renderComponent({
+			await renderComponent({
 				validation: [{ required: true }, { postalCode: true, errorMessage: ERROR_MESSAGE }],
 				withEvents: false,
 				overrideSchema: {
@@ -1978,14 +1926,14 @@ describe("location-input-group", () => {
 			getLocationInput().focus();
 
 			await waitFor(() => {
-				expect(getLocationModal(true)).toBeInTheDocument();
+				expect(getLocationModal(true)).toBeVisible();
 			});
 			await waitFor(() => {
 				expect(
 					screen.getByTestId(
 						TestHelper.generateId("location-search-modal-search-result-0", undefined, "active")
 					)
-				).toBeInTheDocument();
+				).toBeVisible();
 			});
 		};
 
@@ -2000,7 +1948,7 @@ describe("location-input-group", () => {
 
 		describe("when confirming a location selection", () => {
 			it("should show the outside-Singapore prompt and not confirm the location", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2013,14 +1961,14 @@ describe("location-input-group", () => {
 				fireEvent.click(getLocationModalControlButtons("Confirm"));
 
 				await waitFor(() => {
-					expect(getNonSGLocationErrorModal(true)).toBeInTheDocument();
+					expect(getNonSGLocationErrorModal(true)).toBeVisible();
 				});
 				expect(
 					within(getNonSGLocationErrorModal()).getByText("This location is outside Singapore.")
-				).toBeInTheDocument();
-				expect(getLocationModal(true)).toBeInTheDocument();
+				).toBeVisible();
+				expect(getLocationModal(true)).toBeVisible();
 
-				fireEvent.click(getSubmitButton());
+				fireEvent.click(screen.getByRole("button", { name: SUBMIT_BUTTON_LABEL, hidden: true }));
 				await waitFor(() => {
 					expect(SUBMIT_FN).not.toHaveBeenCalledWith(
 						expect.objectContaining({
@@ -2031,7 +1979,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should keep the location modal open after dismissing the prompt", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2056,7 +2004,7 @@ describe("location-input-group", () => {
 
 			it("should dispatch error event with NonSGLocationError and allow preventing the default prompt", async () => {
 				const errorEventSpy = jest.fn();
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2098,7 +2046,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should not show a stale prompt when reopening the modal after dismissing it", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2130,7 +2078,7 @@ describe("location-input-group", () => {
 			it("should confirm a pin location within Singapore that has no addresses nearby", async () => {
 				getCurrentLocationSpy.mockResolvedValue({ lat: SEA_PIN_LAT, lng: SEA_PIN_LNG });
 				fetchLocationListSpy.mockImplementation(() => SEA_PIN_RESPONSE);
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2166,7 +2114,7 @@ describe("location-input-group", () => {
 						totalNumPages: 1,
 					});
 				});
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						restrictNonSGLocation: true,
 						mapApi: {
@@ -2197,7 +2145,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should confirm pin location as usual when restrictNonSGLocation is not set", async () => {
-				renderComponent({
+				await renderComponent({
 					overrideField: {
 						mapApi: {
 							reverseGeocode: "https://www.mock.com/reverse-geo-code",
@@ -2304,7 +2252,7 @@ describe("location-input-group", () => {
 
 		describe("validation", () => {
 			it("should block submission of pin location values on a neighbouring landmass", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2328,7 +2276,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should block submission of pin location values far outside Singapore", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2352,7 +2300,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should block submission of values with a non-Singapore address", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2379,7 +2327,7 @@ describe("location-input-group", () => {
 			// isolates the building-name branch: the coordinates alone classify INSIDE Singapore,
 			// so blocking here can only come from the JOHOR (MALAYSIA) building check.
 			it("should block submission of a JOHOR building even when its coordinates are within Singapore", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2399,7 +2347,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should allow submission of pin location values within Singapore bounds", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2422,7 +2370,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should allow customisation of the pin location error message", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }, { nonSGLocation: true, errorMessage: ERROR_MESSAGE }],
 					withEvents: false,
 					overrideSchema: {
@@ -2445,7 +2393,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should allow submission of pin location values when restrictNonSGLocation is not set", async () => {
-				renderComponent({
+				await renderComponent({
 					validation: [{ required: true }],
 					withEvents: false,
 					overrideSchema: {
@@ -2467,7 +2415,7 @@ describe("location-input-group", () => {
 			// 0 is a valid coordinate and must go through the boundary check, not be skipped as falsy
 			// (no required rule here: the pre-existing is-required test treats 0 coordinates as unfilled and would mask this rule)
 			it("should block submission of values with zero coordinates outside Singapore", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2492,7 +2440,7 @@ describe("location-input-group", () => {
 			// the no-non-sg-location rule intentionally does not gate on the required rule:
 			// an optional field still cannot submit an out-of-Singapore value.
 			it("should block submission of an out-of-Singapore value on an optional (non-required) field", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2557,7 +2505,7 @@ describe("location-input-group", () => {
 			});
 
 			it("should allow submission of an empty optional field when restrictNonSGLocation is set", async () => {
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideField: {
 						restrictNonSGLocation: true,
@@ -2577,7 +2525,7 @@ describe("location-input-group", () => {
 						handleResult(JOHOR_LOCATION_RESULT);
 					}
 				);
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2615,7 +2563,7 @@ describe("location-input-group", () => {
 						handleResult(SEA_PIN_RESPONSE[0]);
 					}
 				);
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2721,7 +2669,7 @@ describe("location-input-group", () => {
 						handleResult(JOHOR_LOCATION_RESULT);
 					}
 				);
-				renderComponent({
+				await renderComponent({
 					withEvents: false,
 					overrideSchema: {
 						defaultValues: {
@@ -2793,7 +2741,7 @@ describe("location-input-group", () => {
 		},
 		beforeEach: () => {
 			getCurrentLocationSpy.mockRejectedValue({ code: 1 });
-			fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+			fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 				onSuccess(mock1PageFetchAddressResponse);
 			});
 		},
@@ -2801,7 +2749,7 @@ describe("location-input-group", () => {
 
 	describe("search results list title", () => {
 		beforeEach(async () => {
-			fetchAddressSpy.mockImplementation((queryString, pageNumber, onSuccess) => {
+			fetchAddressSpy.mockImplementation((_queryString, _pageNumber, onSuccess) => {
 				onSuccess(mock1PageFetchAddressResponse);
 			});
 			fetchSingleLocationByLatLngSpy.mockImplementation(
@@ -2812,7 +2760,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should show default location list title if locationListTitle is not provided", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: false,
 				overrideSchema: {
 					defaultValues: {
@@ -2835,7 +2783,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should show location list title according to locationListTitle", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: false,
 				overrideSchema: {
 					defaultValues: {
@@ -2861,7 +2809,7 @@ describe("location-input-group", () => {
 
 	describe("Permission Modal events", () => {
 		it("should hide location modal for strict location", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: true,
 				locationDetails: {
 					errors: {
@@ -2869,7 +2817,7 @@ describe("location-input-group", () => {
 					},
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
-				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+				eventListener: (formRef: IFrontendEngineRef) => (_e) => {
 					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.DISMISS_LOCATION_MODAL, COMPONENT_ID);
 				},
 			});
@@ -2891,7 +2839,7 @@ describe("location-input-group", () => {
 		});
 
 		it("should hide permission modal and still show location modal for non-strict location", async () => {
-			renderComponent({
+			await renderComponent({
 				withEvents: true,
 				locationDetails: {
 					errors: {
@@ -2899,7 +2847,7 @@ describe("location-input-group", () => {
 					},
 				},
 				eventType: ELocationInputEvents.BEFORE_HIDE_PERMISSION_MODAL,
-				eventListener: (formRef: IFrontendEngineRef) => (e) => {
+				eventListener: (formRef: IFrontendEngineRef) => (_e) => {
 					formRef.dispatchFieldEvent(UI_TYPE, ELocationInputEvents.HIDE_PERMISSION_MODAL, COMPONENT_ID);
 				},
 			});

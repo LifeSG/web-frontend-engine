@@ -1,5 +1,5 @@
 import { TRenderRules } from "../../context-providers";
-import { IColumns, IV3Columns } from "../frontend-engine";
+import { IColumns } from "../frontend-engine";
 import { IAccordionSchema, TAccordionEvents } from "./accordion";
 import type { IAlertSchema } from "./alert";
 import { IDividerSchema } from "./divider";
@@ -7,7 +7,7 @@ import { IGridSchema } from "./grid";
 import { IOrderedListSchema, IUnorderedListSchema } from "./list";
 import { IPopoverSchema } from "./popover";
 import { ITabItemSchema, ITabSchema } from "./tab";
-import type { ITextSchema, ITypographySchema } from "./text";
+import type { ITypographySchema } from "./typography";
 import type { IInlineWrapperSchema, TWrapperSchema } from "./wrapper";
 
 /**
@@ -17,28 +17,16 @@ import type { IInlineWrapperSchema, TWrapperSchema } from "./wrapper";
  */
 export enum EElementType {
 	ALERT = "Alert",
-	"TEXT-D1" = "Text",
-	"TEXT-D2" = "Text",
-	"TEXT-DBODY" = "Text",
-	"TEXT-H1" = "Text",
-	"TEXT-H2" = "Text",
-	"TEXT-H3" = "Text",
-	"TEXT-H4" = "Text",
-	"TEXT-H5" = "Text",
-	"TEXT-H6" = "Text",
-	"TEXT-BODY" = "Text",
-	"TEXT-BODYSMALL" = "Text",
-	"TEXT-XSMALL" = "Text",
-	"HEADING-XXL" = "Text",
-	"HEADING-XL" = "Text",
-	"HEADING-MD" = "Text",
-	"HEADING-SM" = "Text",
-	"HEADING-LG" = "Text",
-	"HEADING-XS" = "Text",
-	"BODY-MD" = "Text",
-	"BODY-SM" = "Text",
-	"BODY-BL" = "Text",
-	"BODY-XS" = "Text",
+	"HEADING-XXL" = "Typography",
+	"HEADING-XL" = "Typography",
+	"HEADING-LG" = "Typography",
+	"HEADING-MD" = "Typography",
+	"HEADING-SM" = "Typography",
+	"HEADING-XS" = "Typography",
+	"BODY-BL" = "Typography",
+	"BODY-MD" = "Typography",
+	"BODY-SM" = "Typography",
+	"BODY-XS" = "Typography",
 	DIV = "Wrapper",
 	DIVIDER = "Divider",
 	SPAN = "Wrapper",
@@ -82,7 +70,6 @@ export type TBlockElementSchema<V = undefined, C = undefined> =
 	| IAlertSchema
 	| IDividerSchema
 	| IOrderedListSchema<V, C>
-	| ITextSchema
 	| ITypographySchema
 	| IUnorderedListSchema<V, C>;
 
@@ -107,7 +94,7 @@ export interface IBaseElementSchema<T> {
 	/** escape hatch for other form / frontend engines to have unsupported attributes */
 	customOptions?: Record<string, unknown> | undefined;
 	/** set responsive columns */
-	columns?: IColumns | IV3Columns | undefined;
+	columns?: IColumns | undefined;
 }
 // =============================================================================
 // ELEMENT PROPS

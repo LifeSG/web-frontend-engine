@@ -164,58 +164,8 @@ export type TFrontendEngineFieldSchema<V = undefined, C = undefined> =
 	| TCustomSchema<V, C>
 	| TElementSchema<V, C>;
 
-type MobileCol = 1 | 2 | 3 | 4;
-type MobileColRange = MobileCol | 5;
-type TabletCol = MobileCol | 5 | 6 | 7 | 8;
-type TabletColRange = TabletCol | 9;
-type DesktopCol = TabletCol | 9 | 10 | 11 | 12;
-type DesktopColRange = DesktopCol | 13;
 export interface IColumns extends React.HTMLAttributes<HTMLDivElement> {
 	"data-testid"?: string | undefined;
-	/**
-	 * Specifies the number of columns to be span across in mobile viewports.
-	 * If an array is specified, the format is as such [startCol, endCol].
-	 * If `tabletCols` or `desktopCols` are not specified, this
-	 * setting will be applied to tablet and desktop viewports.
-	 *
-	 * If all column props are not specified, the div will span across a single
-	 * column.
-	 * @deprecated Use design system v3 columns: `xxs` / `xs` / `sm`
-	 */
-	mobile?: MobileCol | [MobileColRange, MobileColRange] | undefined;
-	/**
-	 * Specifies the number of columns to be span across in tablet viewports.
-	 * If an array is specified, the format is as such [startCol, endCol].
-	 * If `desktopCols` are not specified, this setting will be
-	 * applied to desktop viewports as well.
-	 *
-	 * If all column props are not specified, the div will span across a single
-	 * column.
-	 * @deprecated Use design system v3 columns: `lg`
-	 */
-	tablet?: TabletCol | [TabletColRange, TabletColRange] | undefined;
-	/**
-	 * Specifies the number of columns to be span across in desktop viewports.
-	 * If an array is specified, the format is as such [startCol, endCol].
-	 *
-	 * If all column props are not specified, the div will span across a single
-	 * column.
-	 * @deprecated Use design system v3 columns: `xl` / `xxl`
-	 */
-	desktop?: DesktopCol | [DesktopColRange, DesktopColRange] | undefined;
-	xxl?: never | undefined;
-	xl?: never | undefined;
-	lg?: never | undefined;
-	md?: never | undefined;
-	sm?: never | undefined;
-	xs?: never | undefined;
-	xxs?: never | undefined;
-}
-
-export interface IV3Columns extends React.HTMLAttributes<HTMLDivElement> {
-	mobile?: never | undefined;
-	tablet?: never | undefined;
-	desktop?: never | undefined;
 	/**
 	 * Specifies the number of columns to be spanned across for any breakpoint.
 	 * If an array is specified, the format is [startCol, endCol].

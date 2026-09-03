@@ -49,7 +49,6 @@ export const Wrapper = (props: IWrapperProps): JSX.Element | null => {
 	useIsomorphicDeepLayoutEffect(() => {
 		const fieldTypeKeys = Object.keys(EFieldType);
 		const elementTypeKeys = Object.keys(EElementType);
-
 		const wrapperChildren = overrideSchema(schemaChildren || children, overrides);
 		if (typeof wrapperChildren === "object") {
 			const renderComponents: JSX.Element[] = [];

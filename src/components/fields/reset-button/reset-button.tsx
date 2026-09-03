@@ -52,8 +52,8 @@ export const ResetButton = (props: IGenericFieldProps<IResetButtonSchema>) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	return (
-		<Button.Default {...buttonProps} disabled={disabled} data-testid={id} id={id} type="reset" onClick={onClick}>
+		<Button {...buttonProps} disabled={disabled} data-testid={id} id={id} type="reset" onClick={onClick}>
 			{label}
-		</Button.Default>
+		</Button>
 	);
 };

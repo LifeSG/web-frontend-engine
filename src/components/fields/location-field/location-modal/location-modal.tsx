@@ -1,13 +1,18 @@
 import { Modal } from "@lifesg/react-design-system/modal";
-import { Breakpoint } from "@lifesg/react-design-system/theme";
+import {
+	Breakpoint,
+	useMaxWidthMediaQuery,
+	useMediaQuery,
+	useResolvedBreakpointToken,
+} from "@lifesg/react-design-system/theme";
+import { Typography } from "@lifesg/react-design-system/typography";
+import clsx from "clsx";
 import { isEmpty } from "lodash";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "styled-components";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
 import { GeoLocationHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
-import { Description } from "../../../shared/prompt/prompt.styles";
 import { LocationHelper } from "../location-helper";
 import {
 	GeolocationPositionErrorWrapper,
@@ -20,8 +25,9 @@ import {
 	TSetCurrentLocationDetail,
 } from "../types";
 import { ERROR_SVG, OFFLINE_IMAGE, TIMEOUT_SVG } from "./location-modal.data";
-import { ErrorImage, ModalBox, PrefetchImage, StyledLocationPicker } from "./location-modal.styles";
+import * as styles from "./location-modal.styles";
 import { IMapPin } from "./location-picker/types";
+import { LocationPicker } from "./location-picker";
 import { LocationSearch } from "./location-search";
 import NoNetworkModal from "./no-network-modal/no-network-modal";
 import { ILocationModalProps } from "./types";
@@ -60,6 +66,14 @@ const LocationModal = ({
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
+	const isMobileOrTablet = useMaxWidthMediaQuery("lg");
+	const smMaxToken = useResolvedBreakpointToken(Breakpoint["sm-max"]);
+	const isMobileLandscape = useMediaQuery({
+		clauses: [
+			{ feature: "orientation", value: "landscape" },
+			{ feature: "max-height", value: smMaxToken },
+		],
+	});
 	const [panelInputMode, setPanelInputMode] = useState<TPanelInputMode>("double");
 
 	// Temporarily hold the selection
@@ -78,6 +92,7 @@ const LocationModal = ({
 	const [showOneMapError, setShowOneMapError] = useState(false);
 	const [showGetLocationTimeoutError, setShowGetLocationTimeoutError] = useState(false);
 	const [showNonSGLocationError, setShowNonSGLocationError] = useState(false);
+	const [modalBoxRef, setModalBoxRef] = useState<HTMLDivElement | null>(null);
 
 	// map picked lat lng vs selectedAddressInfo
 	// map picked value can be falsy/ no address found
@@ -87,8 +102,6 @@ const LocationModal = ({
 
 	const isMounted = useRef(true);
 	const shouldCallGetSelectablePins = useRef(true);
-
-	const theme = useContext(ThemeContext);
 
 	// =============================================================================
 	// HELPER FUNCTIONS
@@ -254,6 +267,12 @@ const LocationModal = ({
 	}, []);
 
 	useEffect(() => {
+		if (modalBoxRef) {
+			modalBoxRef.style.cssText = locationModalStyles || "";
+		}
+	}, [locationModalStyles, modalBoxRef]);
+
+	useEffect(() => {
 		const handleError = (e: TLocationFieldEvents["error-end"]) => {
 			const errorType = e.detail?.payload?.errorType;
 			if (!errorType) return;
@@ -312,26 +331,20 @@ const LocationModal = ({
 	]);
 
 	useEffect(() => {
-		if (!window) return;
+		setPanelInputMode(isMobileOrTablet ? "map" : "double");
+	}, [isMobileOrTablet]);
 
-		const mql = matchMedia(`(max-width: ${Breakpoint["lg-max"]({ theme })}px)`);
-		setPanelInputMode(mql.matches ? "map" : "double");
-
+	useEffect(() => {
 		const handleHasInternetConnectivity = () => setHasInternetConnectivity(true);
 		const handleNoInternetConnectivity = () => setHasInternetConnectivity(false);
 		// TODO handle when there is querystring
-		const handleResize = (e: MediaQueryListEvent) => {
-			setPanelInputMode(e.matches ? "map" : "double");
-		};
 
 		window.addEventListener("online", handleHasInternetConnectivity);
 		window.addEventListener("offline", handleNoInternetConnectivity);
-		mql.addEventListener("change", handleResize);
 
 		return () => {
 			window.removeEventListener("online", handleHasInternetConnectivity);
 			window.removeEventListener("offline", handleNoInternetConnectivity);
-			mql.removeEventListener("change", handleResize);
 		};
 	}, []);
 
@@ -398,11 +411,11 @@ const LocationModal = ({
 				size="large"
 				show={true}
 				description={
-					<Description weight="regular">
+					<Typography.HeadingXS as="p" className={styles.description}>
 						Reports can only be submitted for locations within Singapore.
 						<br />
 						Move the pin to continue.
-					</Description>
+					</Typography.HeadingXS>
 				}
 				buttons={[
 					{
@@ -435,15 +448,15 @@ const LocationModal = ({
 					title="Map not available"
 					size="large"
 					show={true}
-					image={<ErrorImage src={ERROR_SVG} />}
+					image={<img className={styles.errorImage} src={ERROR_SVG} alt="" />}
 					description={
-						<Description weight="regular">
+						<Typography.HeadingXS as="p" className={styles.description}>
 							Sorry, there was a problem with the map. You&rsquo;ll not be able to enter the location
 							right now. Please try again later.
 							<br />
 							<br />
 							Do note that you&rsquo;ll not be able to submit your report without entering the location.
-						</Description>
+						</Typography.HeadingXS>
 					}
 					buttons={[
 						{
@@ -489,12 +502,12 @@ const LocationModal = ({
 					title="Something went wrong"
 					size="large"
 					show={true}
-					image={<ErrorImage src={TIMEOUT_SVG} />}
+					image={<img className={styles.errorImage} src={TIMEOUT_SVG} alt="" />}
 					description={
-						<Description weight="regular">
+						<Typography.HeadingXS as="p" className={styles.description}>
 							It&rsquo;s taking longer than expected to retrieve your location. Please exit the map and
 							try again.
-						</Description>
+						</Typography.HeadingXS>
 					}
 					buttons={[
 						{
@@ -513,17 +526,18 @@ const LocationModal = ({
 
 	return (
 		<>
-			<PrefetchImage src={OFFLINE_IMAGE} alt="no internet connectivity" />
+			<img className={styles.prefetchImage} src={OFFLINE_IMAGE} alt="no internet connectivity" />
 			<Modal
 				id={TestHelper.generateId(id, "modal", showLocationModal ? "show" : "hide")}
 				className={`${className}-location-modal`}
 				show={showLocationModal}
 			>
-				<ModalBox
+				<Modal.Box
+					elementRef={setModalBoxRef}
 					id={TestHelper.generateId(id, "modal-box")}
-					className={`${className}-modal-box`}
+					className={clsx(styles.modalBox, `${className}-modal-box`)}
 					showCloseButton={false}
-					locationModalStyles={locationModalStyles}
+					data-mobile-landscape={!!isMobileLandscape}
 				>
 					{hasInternetConnectivity ? (
 						<>
@@ -555,9 +569,10 @@ const LocationModal = ({
 								searchBarIcon={searchBarIcon}
 								bufferRadius={bufferRadius}
 							/>
-							<StyledLocationPicker
+							<LocationPicker
 								id={id}
-								className={className}
+								className={styles.styledLocationPicker}
+								customClassName={className}
 								panelInputMode={panelInputMode}
 								locationAvailable={locationAvailable}
 								gettingCurrentLocation={gettingCurrentLocation}
@@ -585,7 +600,7 @@ const LocationModal = ({
 					) : (
 						<NoNetworkModal id={id} cachedImage={OFFLINE_IMAGE} refreshNetwork={refreshNetwork} />
 					)}
-				</ModalBox>
+				</Modal.Box>
 			</Modal>
 			{renderNonSGLocationErrorPrompt()}
 			{renderNetworkErrorPrompt()}

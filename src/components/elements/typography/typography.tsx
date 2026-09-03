@@ -1,0 +1,117 @@
+import { Button } from "@lifesg/react-design-system/button";
+import isArray from "lodash/isArray";
+import isObject from "lodash/isObject";
+import { useEffect, useRef, useState } from "react";
+import sanitizeHtml, { IOptions } from "sanitize-html";
+import { TestHelper } from "../../../utils";
+import { Sanitize } from "../../shared";
+import { IGenericElementProps } from "../types";
+import { Wrapper } from "../wrapper";
+import { TYPOGRAPHY_MAPPING } from "./data";
+import * as styles from "./typography.styles";
+import { ITypographySchema } from "./types";
+
+export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
+	// =============================================================================
+	// CONST, STATE, REF
+	// =============================================================================
+	const {
+		id,
+		schema: { children, uiType, maxLines, ...otherSchema },
+	} = props;
+
+	const elementRef = useRef<HTMLParagraphElement>(null);
+	const [expanded, setExpanded] = useState(false);
+	const [showExpandButton, setShowExpandButton] = useState(false);
+
+	const Element = TYPOGRAPHY_MAPPING[uiType.toUpperCase() as keyof typeof TYPOGRAPHY_MAPPING] || undefined;
+
+	// =============================================================================
+	// EFFECTS / CALLBACKS
+	// =============================================================================
+	/**
+	 * control whether to render "View more" button and whether to expand / condense on click
+	 */
+	useEffect(() => {
+		setExpanded(!maxLines);
+		setShowExpandButton(maxLines > 0);
+
+		if (!maxLines || !elementRef.current) return;
+
+		const clientHeight = elementRef.current.clientHeight;
+		const scrollHeight = elementRef.current.scrollHeight;
+		setShowExpandButton(scrollHeight - clientHeight > 1);
+	}, [children, maxLines]);
+
+	// =============================================================================
+	// HELPER FUNCTIONS
+	// =============================================================================
+	const getTestId = (id: string): string => {
+		return TestHelper.generateId(id, "typography");
+	};
+
+	const hasNestedFields = (): boolean => {
+		const isArrayWithChild = isArray(children) && children.length > 1;
+		const isObjectWithChild = isObject(children) && Object.keys(children).length > 1;
+		return isArrayWithChild || isObjectWithChild;
+	};
+
+	// =============================================================================
+	// RENDER FUNCTIONS
+	// =============================================================================
+	const sanitizeOptions: IOptions = {
+		allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+		allowedAttributes: false,
+	};
+
+	const renderText = (): JSX.Element[] | JSX.Element | string[] | string => {
+		if (isArray(children)) {
+			return children.map((text, index) => {
+				const childrenId = `${id}-${index}`;
+				const childrenContentId = `${childrenId}-content`;
+
+				return (
+					<Element key={index} id={childrenId} data-testid={getTestId(childrenId)}>
+						<Sanitize id={childrenContentId} inline sanitizeOptions={sanitizeOptions}>
+							{text}
+						</Sanitize>
+					</Element>
+				);
+			});
+		} else if (typeof children === "object") {
+			return <Wrapper>{children}</Wrapper>;
+		}
+		return (
+			<Sanitize inline sanitizeOptions={sanitizeOptions}>
+				{children}
+			</Sanitize>
+		);
+	};
+
+	return (
+		<>
+			<Element
+				id={id}
+				ref={elementRef}
+				maxLines={!expanded ? maxLines : undefined}
+				data-testid={getTestId(id)}
+				{...otherSchema}
+				// NOTE: Parent text body should be transformed into <div> to prevent validateDOMNesting error
+				{...(hasNestedFields() && { as: "div" })}
+			>
+				{renderText()}
+			</Element>
+
+			{showExpandButton && (
+				<Button
+					className={styles.plainButton}
+					sizeType="small"
+					styleType="link"
+					onClick={() => setExpanded(!expanded)}
+				>
+					{expanded ? "View less" : "View more"}
+				</Button>
+			)}
+		</>
+	);
+};

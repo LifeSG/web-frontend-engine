@@ -92,7 +92,7 @@ describe(UI_TYPE, () => {
 	});
 
 	it("render children if specified", async () => {
-		renderComponent({ children: { text: { uiType: "text-body", children: "Hello world" } } });
+		renderComponent({ children: { text: { uiType: "body-md", children: "Hello world" } } });
 
 		expect(screen.getByText("Hello world")).toBeInTheDocument();
 	});

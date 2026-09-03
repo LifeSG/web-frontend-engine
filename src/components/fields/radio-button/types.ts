@@ -1,11 +1,11 @@
 import { RadioButtonProps } from "@lifesg/react-design-system/radio-button";
-import type { IPopoverSchema, ITextSchema, ITypographySchema } from "../../elements";
+import type { IPopoverSchema, ITypographySchema } from "../../elements";
 import type { IInlineWrapperSchema } from "../../elements/wrapper";
 import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
 import { IBaseFieldSchema } from "../types";
 
 export interface IRadioButtonOption {
-	label: string | Record<string, ITextSchema | ITypographySchema | IPopoverSchema | IInlineWrapperSchema>;
+	label: string | Record<string, ITypographySchema | IPopoverSchema | IInlineWrapperSchema>;
 	value: string;
 	disabled?: boolean | undefined;
 }
@@ -21,15 +21,9 @@ export interface IImageButtonOption extends IRadioButtonOption {
 
 export type TRadioToggleLayoutType = "horizontal" | "vertical";
 
-export type TBreakpoint = "mobile" | "tablet" | "desktop";
-
-export type TResponsiveValue<T> =
-	| T
-	| {
-			mobile?: T | undefined;
-			tablet?: T | undefined;
-			desktop?: T | undefined;
-	  };
+export type TBreakpoint = "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+export type TResponsiveBreakpointValue<T> = Partial<Record<TBreakpoint, T | undefined>>;
+export type TResponsiveValue<T> = T | TResponsiveBreakpointValue<T>;
 
 export type TLayoutColumns = TResponsiveValue<number>;
 export type TMinItemWidth = TResponsiveValue<number>;

@@ -78,9 +78,9 @@ const Template: StoryFn<IFrontendEngineProps> = (args) => {
 			<style dangerouslySetInnerHTML={{ __html: ".hidden {display: none};" }} />
 			<FrontendEngine ref={ref} {...args} />
 			<br />
-			<Button.Default styleType="secondary" onClick={handleReset}>
+			<Button styleType="secondary" onClick={handleReset}>
 				Reset form
-			</Button.Default>
+			</Button>
 		</>
 	);
 };

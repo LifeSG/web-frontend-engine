@@ -1,9 +1,8 @@
 import { FormLabelAddonProps } from "@lifesg/react-design-system/form";
-import styled from "styled-components";
 import { Wrapper } from "../../elements/wrapper";
 import { Sanitize } from "../../shared";
 import { IFilterItemLabel } from "./types";
-import { Colour } from "@lifesg/react-design-system/theme";
+import * as styles from "./filter-helper.styles";
 
 export namespace FilterHelper {
 	export const constructFormattedLabel = (
@@ -16,10 +15,10 @@ export namespace FilterHelper {
 			};
 		} else if (!!label && typeof label === "object" && label.mainLabel) {
 			const content =
-				typeof label.hint.content === "string" ? (
-					<StyledHint className="label-hint">{label.hint.content}</StyledHint>
+				typeof label.hint?.content === "string" ? (
+					<Sanitize className={styles.labelHint}>{label.hint.content}</Sanitize>
 				) : (
-					<Wrapper>{label.hint.content}</Wrapper>
+					<Wrapper>{label.hint?.content}</Wrapper>
 				);
 			return {
 				title: label.mainLabel,
@@ -37,9 +36,3 @@ export namespace FilterHelper {
 		}
 	};
 }
-
-const StyledHint = styled(Sanitize)`
-	&.label-hint {
-		color: ${Colour.text};
-	}
-`;

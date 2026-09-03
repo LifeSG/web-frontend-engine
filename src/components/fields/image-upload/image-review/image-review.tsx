@@ -1,5 +1,18 @@
 import { Modal } from "@lifesg/react-design-system/modal";
+import {
+	Breakpoint,
+	useApplyStyle,
+	useMediaQuery,
+	useResolvedBreakpointToken,
+} from "@lifesg/react-design-system/theme";
+import { Button } from "@lifesg/react-design-system/button";
+import { Typography } from "@lifesg/react-design-system/typography";
+import { BinIcon } from "@lifesg/react-icons/bin";
 import { CrossIcon } from "@lifesg/react-icons/cross";
+import { EraserIcon } from "@lifesg/react-icons/eraser";
+import { PencilIcon } from "@lifesg/react-icons/pencil";
+import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
+import clsx from "clsx";
 import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
@@ -9,28 +22,7 @@ import { EImageStatus, IDismissReviewModalEvent, IImage, ISharedImageProps, TFil
 import { IImageEditorRef } from "./image-editor";
 import { ImageError } from "./image-error";
 import { ImagePrompts } from "./image-prompts";
-import {
-	ButtonIcon,
-	ContentSection,
-	DeleteIcon,
-	DrawDeleteButton,
-	DrawDeleteButtonText,
-	DrawDeleteButtonWrapper,
-	DrawIcon,
-	EditHeaderButton,
-	EraserButton,
-	EraserButtonIcon,
-	FooterSaveButton,
-	FooterSection,
-	HeaderSection,
-	ImageEditorWrapper,
-	LoadingPreviewText,
-	ModalBox,
-	Palette,
-	PaletteHolder,
-	ReviewCloseButton,
-	ReviewTitle,
-} from "./image-review.styles";
+import * as styles from "./image-review.styles";
 import { ImageThumbnails } from "./image-thumbnails";
 
 // lazy load to fix next.js SSR errors
@@ -44,6 +36,43 @@ const PALETTE_COLORS = [
 	{ color: "#22910c", label: "green" },
 	{ color: "#f8e821", label: "yellow" },
 ];
+
+// =============================================================================
+// PALETTE ITEM
+// =============================================================================
+interface IPaletteItemProps {
+	id: string;
+	color: string;
+	colorScheme?: string;
+	ariaLabel: string;
+	isActive: boolean;
+	onClick: () => void;
+}
+
+const PaletteItem = ({ id, color, colorScheme, ariaLabel, isActive, onClick }: IPaletteItemProps) => {
+	const paletteRef = useRef<HTMLButtonElement>(null);
+
+	useApplyStyle(paletteRef, {
+		[styles.tokens.palette.color]: color,
+	});
+
+	return (
+		<button
+			ref={paletteRef}
+			id={id}
+			data-testid={id}
+			className={clsx(styles.palette, colorScheme === "light" && styles.paletteColorSchemeLight)}
+			aria-label={ariaLabel}
+			onClick={onClick}
+		>
+			{isActive && (
+				<PencilIcon
+					className={clsx(styles.buttonIcon, colorScheme === "light" && styles.buttonIconColorSchemeLight)}
+				/>
+			)}
+		</button>
+	);
+};
 
 interface IProps extends ISharedImageProps {
 	capture?: TFileCapture | undefined;
@@ -81,8 +110,15 @@ export const ImageReview = (props: IProps) => {
 	const { images, setImages } = useContext(ImageContext);
 	const { dispatchFieldEvent, addFieldEventListener, removeFieldEventListener } = useFieldEvent();
 	const previousShow = usePrevious(show);
+	const smMaxToken = useResolvedBreakpointToken(Breakpoint["sm-max"]);
+	const isMobileLandscape = useMediaQuery({
+		clauses: [
+			{ feature: "orientation", value: "landscape" },
+			{ feature: "max-height", value: smMaxToken },
+		],
+	});
 
-	// review image
+	const [modalBoxRef, setModalBoxRef] = useState<HTMLDivElement | null>(null);
 	const [activeFileIndex, setActiveFileIndex] = useState(images.length - 1);
 	const [drawActive, setDrawActive] = useState(false);
 	const [activePrompt, setActivePrompt] = useState<"delete" | "exit" | "clear-drawing" | null>();
@@ -92,6 +128,12 @@ export const ImageReview = (props: IProps) => {
 	const [activeColor, setActiveColor] = useState(PALETTE_COLORS[0].color);
 	const [eraseMode, setEraseMode] = useState(false);
 	const imageEditorRef = useRef<IImageEditorRef>(null);
+
+	useEffect(() => {
+		if (modalBoxRef) {
+			modalBoxRef.style.cssText = imageReviewModalStyles || "";
+		}
+	}, [imageReviewModalStyles, modalBoxRef]);
 
 	const reviewSaveDisabled =
 		!!images?.find(({ addedFrom, status }) => addedFrom === "reviewModal" && status <= EImageStatus.NONE) ||
@@ -312,44 +354,54 @@ export const ImageReview = (props: IProps) => {
 	// RENDER FUNCTIONS
 	// =============================================================================
 	const renderHeader = () => (
-		<HeaderSection className={className ? `${className}-header` : undefined} $drawActive={drawActive}>
+		<div
+			className={clsx(
+				styles.headerSection,
+				drawActive && styles.headerSectionDrawActive,
+				className && `${className}-header`
+			)}
+		>
 			{!drawActive ? (
 				<>
-					<ReviewCloseButton
+					<Button
+						className={styles.reviewCloseButton}
 						id={TestHelper.generateId(id, "close-button")}
 						data-testid={TestHelper.generateId(id, "close-button")}
 						aria-label="exit review modal"
 						onClick={() => setActivePrompt("exit")}
-					>
-						<CrossIcon type="cross" />
-					</ReviewCloseButton>
-					<ReviewTitle weight="semibold">Review photos</ReviewTitle>
+						icon={<CrossIcon />}
+					/>
+					<Typography.BodyMD className={styles.reviewTitle} weight="semibold">
+						Review photos
+					</Typography.BodyMD>
 				</>
 			) : (
 				<>
-					<EditHeaderButton
+					<button
+						className={styles.editHeaderButton}
 						id={TestHelper.generateId(id, "clear-drawing-button")}
 						data-testid={TestHelper.generateId(id, "clear-drawing-button")}
 						onClick={() => setActivePrompt("clear-drawing")}
 					>
 						Clear
-					</EditHeaderButton>
-					<EditHeaderButton
+					</button>
+					<button
+						className={styles.editHeaderButton}
 						id={TestHelper.generateId(id, "save-drawing")}
 						data-testid={TestHelper.generateId(id, "save-drawing")}
 						onClick={handleSaveDrawing}
 					>
 						Save
-					</EditHeaderButton>
+					</button>
 				</>
 			)}
-		</HeaderSection>
+		</div>
 	);
 
 	const renderContent = () => (
-		<ContentSection>
+		<div className={styles.contentSection}>
 			{images.length > 0 && (
-				<ImageEditorWrapper className={className ? `${className}-editor` : undefined}>
+				<div className={clsx(styles.imageEditorWrapper, className && `${className}-editor`)}>
 					<Suspense fallback={null}>
 						<ImageEditor
 							baseImageDataURL={images[activeFileIndex]?.dataURL}
@@ -360,34 +412,58 @@ export const ImageReview = (props: IProps) => {
 							maxSizeInKb={maxSizeInKb}
 						/>
 					</Suspense>
-				</ImageEditorWrapper>
+				</div>
 			)}
-			{images.length > 0 && <LoadingPreviewText>Loading Preview...</LoadingPreviewText>}
+			{images.length > 0 && (
+				<Typography.HeadingXS className={styles.loadingPreviewText}>Loading Preview...</Typography.HeadingXS>
+			)}
 			{!drawActive && images[activeFileIndex]?.status >= EImageStatus.NONE && (
-				<DrawDeleteButtonWrapper>
-					<DrawDeleteButton
+				<div className={styles.drawDeleteButtonWrapper}>
+					<Button
+						className={styles.drawDeleteButton}
 						id={TestHelper.generateId(id, "draw-button")}
 						data-testid={TestHelper.generateId(id, "draw-button")}
 						onClick={handleStartDrawing}
 						disabled={drawDeleteDisabled}
+						icon={
+							<PencilStrokeIcon
+								className={clsx(styles.drawIcon, drawDeleteDisabled && styles.drawIconDisabled)}
+							/>
+						}
 					>
-						<DrawIcon $disabled={drawDeleteDisabled} />
-						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
+						<Typography.BodySM
+							className={clsx(
+								styles.drawDeleteButtonText,
+								drawDeleteDisabled && styles.drawDeleteButtonTextDisabled
+							)}
+							weight="semibold"
+						>
 							Draw
-						</DrawDeleteButtonText>
-					</DrawDeleteButton>
-					<DrawDeleteButton
+						</Typography.BodySM>
+					</Button>
+					<Button
+						className={styles.drawDeleteButton}
 						id={TestHelper.generateId(id, "delete-button")}
 						data-testid={TestHelper.generateId(id, "delete-button")}
 						onClick={() => setActivePrompt("delete")}
 						disabled={drawDeleteDisabled}
+						icon={
+							<BinIcon
+								className={clsx(styles.deleteIcon, drawDeleteDisabled && styles.deleteIconDisabled)}
+							/>
+						}
 					>
-						<DeleteIcon $disabled={drawDeleteDisabled} />
-						<DrawDeleteButtonText weight="semibold" $disabled={drawDeleteDisabled}>
+						<Typography.BodySM
+							className={clsx(
+								styles.drawDeleteButtonText,
+								drawDeleteDisabled && styles.drawDeleteButtonTextDisabled
+							)}
+							weight="semibold"
+						>
 							Delete
-						</DrawDeleteButtonText>
-					</DrawDeleteButton>
-				</DrawDeleteButtonWrapper>
+						</Typography.BodySM>
+					</Button>
+				</div>
 			)}
 			{images[activeFileIndex]?.status < EImageStatus.NONE && (
 				<ImageError
@@ -400,11 +476,11 @@ export const ImageReview = (props: IProps) => {
 					maxFiles={maxFiles}
 				/>
 			)}
-		</ContentSection>
+		</div>
 	);
 
 	const renderFooter = () => (
-		<FooterSection className={className ? `${className}-footer` : undefined}>
+		<div className={clsx(styles.footerSection, className && `${className}-footer`)}>
 			{!drawActive ? (
 				<>
 					<ImageThumbnails
@@ -418,42 +494,45 @@ export const ImageReview = (props: IProps) => {
 						onSelectFile={handleSelectFile}
 						multiple={multiple}
 					/>
-					<FooterSaveButton
+					<Button
+						className={styles.footerSaveButton}
 						id={TestHelper.generateId(id, "save-button")}
 						data-testid={TestHelper.generateId(id, "save-button")}
 						onClick={handleSave}
 						disabled={reviewSaveDisabled}
 					>
 						Save
-					</FooterSaveButton>
+					</Button>
 				</>
 			) : (
 				<>
-					<EraserButton
+					<button
+						className={styles.eraserButton}
 						id={TestHelper.generateId(id, "eraser-button")}
 						data-testid={TestHelper.generateId(id, "eraser-button")}
 						aria-label="eraser"
 						onClick={handleEraseMode}
 					>
-						<EraserButtonIcon $eraseMode={eraseMode} />
-					</EraserButton>
-					<PaletteHolder>
+						<EraserIcon
+							className={clsx(styles.eraserButtonIcon, eraseMode && styles.eraserButtonIconEraseMode)}
+						/>
+					</button>
+					<div className={styles.paletteHolder}>
 						{PALETTE_COLORS.map(({ color, colorScheme, label }, i) => (
-							<Palette
-								id={TestHelper.generateId(id, `palette-color-${i}`)}
-								aria-label={`${label} brush`}
-								$color={color}
-								$colorScheme={colorScheme}
+							<PaletteItem
 								key={color}
+								id={TestHelper.generateId(id, `palette-color-${i}`)}
+								color={color}
+								colorScheme={colorScheme}
+								ariaLabel={`${label} brush`}
+								isActive={activeColor === color}
 								onClick={() => handleSelectPaletteColor(color)}
-							>
-								{activeColor === color && <ButtonIcon $colorScheme={colorScheme} />}
-							</Palette>
+							/>
 						))}
-					</PaletteHolder>
+					</div>
 				</>
 			)}
-		</FooterSection>
+		</div>
 	);
 
 	return (
@@ -462,10 +541,11 @@ export const ImageReview = (props: IProps) => {
 			className={className ? `${className}-review` : undefined}
 			show={show}
 		>
-			<ModalBox
-				className={className ? `${className}-review-modal-box` : undefined}
-				imageReviewModalStyles={imageReviewModalStyles}
+			<Modal.Box
+				elementRef={setModalBoxRef}
+				className={clsx(styles.modalBox, className && `${className}-review-modal-box`)}
 				showCloseButton={false}
+				data-mobile-landscape={!!isMobileLandscape}
 			>
 				{show ? (
 					<>
@@ -483,7 +563,7 @@ export const ImageReview = (props: IProps) => {
 				) : (
 					<></>
 				)}
-			</ModalBox>
+			</Modal.Box>
 		</Modal>
 	);
 };

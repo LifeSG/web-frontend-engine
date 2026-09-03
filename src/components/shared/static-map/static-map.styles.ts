@@ -1,5 +1,5 @@
 import { Colour, MediaQuery, Radius, Spacing } from "@lifesg/react-design-system/theme";
-import styled from "styled-components";
+import { css } from "@linaria/core";
 
 export const staticMapDimensions = {
 	desktop: {
@@ -12,7 +12,7 @@ export const staticMapDimensions = {
 	},
 };
 
-export const StaticMapWrapper = styled.div`
+export const staticMapWrapper = css`
 	width: ${staticMapDimensions.desktop.width / 16}rem;
 	aspect-ratio: 3.55;
 	margin-top: ${Spacing["spacing-40"]};
@@ -24,15 +24,17 @@ export const StaticMapWrapper = styled.div`
 		aspect-ratio: 2.46;
 		width: 100%;
 	}
-	${(props) => {
-		if (props["aria-disabled"]) {
-			return `cursor: not-allowed`;
-		}
-		return `cursor: pointer`;
-	}}
+
+	&[data-disabled="true"] {
+		cursor: not-allowed;
+	}
+
+	&[data-disabled="false"] {
+		cursor: pointer;
+	}
 `;
 
-export const StaticMapElement = styled.img`
+export const staticMapElement = css`
 	display: block;
 	width: 100%;
 	height: auto;

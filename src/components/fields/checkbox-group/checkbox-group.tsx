@@ -1,4 +1,8 @@
+import { Checkbox } from "@lifesg/react-design-system/checkbox";
 import { Form } from "@lifesg/react-design-system/form";
+import { Toggle } from "@lifesg/react-design-system/toggle";
+import { Typography } from "@lifesg/react-design-system/typography";
+import clsx from "clsx";
 import without from "lodash/without";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -9,7 +13,7 @@ import { TestHelper, filterSchemaProps, generateRandomId } from "../../../utils"
 import { useValidationConfig } from "../../../utils/hooks";
 import { Wrapper } from "../../elements/wrapper";
 import { ERROR_MESSAGES, Sanitize, Warning } from "../../shared";
-import { CheckboxContainer, Label, StyledCheckbox, StyledToggle, ToggleWrapper } from "./checkbox-group.styles";
+import * as styles from "./checkbox-group.styles";
 import { ICheckboxGroupOption, IToggleOption, TCheckboxGroupSchema } from "./types";
 
 export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) => {
@@ -106,15 +110,18 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 				const checkboxId = formatId();
 
 				return (
-					<CheckboxContainer
+					<div
 						key={index}
-						className={className ? `${className}-checkbox-container` : undefined}
+						className={clsx(
+							styles.checkboxContainer,
+							className ? `${className}-checkbox-container` : undefined
+						)}
 					>
-						<StyledCheckbox
+						<Checkbox
 							{...checkboxProps}
 							data-testid={TestHelper.generateId(id, "checkbox")}
 							id={checkboxId}
-							className={className}
+							className={clsx(styles.checkbox, className)}
 							disabled={disabled ?? option.disabled}
 							name={checkboxId}
 							value={option.value}
@@ -122,10 +129,14 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 							checked={isCheckboxChecked(option.value)}
 							onChange={() => handleChange(option.value)}
 						/>
-						<Label forwardedAs="label" htmlFor={checkboxId} disabled={disabled ?? option.disabled}>
+						<Typography.BodyMD
+							as="label"
+							htmlFor={checkboxId}
+							className={clsx(styles.label, { [styles.labelDisabled]: disabled ?? option.disabled })}
+						>
 							{renderLabel(option.label)}
-						</Label>
-					</CheckboxContainer>
+						</Typography.BodyMD>
+					</div>
 				);
 			})
 		);
@@ -134,31 +145,33 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 	const renderToggles = () => {
 		return (
 			options.length > 0 &&
-			customOptions.styleType === "toggle" && (
-				<ToggleWrapper
-					$layoutType={customOptions?.layoutType ?? "horizontal"}
-					className={className ? `${className}-checkbox-container` : undefined}
-					$hasError={!!error?.message}
+			customOptions?.styleType === "toggle" && (
+				<div
+					className={clsx(
+						styles.toggleWrapper,
+						customOptions.layoutType === "vertical" && styles.toggleWrapperVertical,
+						error?.message && styles.toggleWrapperHasError,
+						className ? `${className}-checkbox-container` : undefined
+					)}
 				>
 					{options.map((option, index) => {
 						const checkboxId = formatId();
 
 						return (
-							<StyledToggle
+							<Toggle
 								key={index}
 								type="checkbox"
 								data-testid={TestHelper.generateId(id, "toggle")}
 								id={checkboxId}
-								className={className}
+								className={clsx(styles.toggle, className, error?.message && styles.toggleHasError)}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
 								name={checkboxId}
-								indicator={customOptions?.indicator}
-								styleType={customOptions?.border === false ? "no-border" : "default"}
+								indicator={customOptions.indicator}
+								styleType={customOptions.border === false ? "no-border" : "default"}
 								checked={isCheckboxChecked(option.value)}
 								onChange={() => handleChange(option.value, option.none)}
 								error={!!error?.message}
-								$hasError={!!error?.message}
 								compositeSection={
 									option.children
 										? {
@@ -170,10 +183,10 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								subLabel={!!option.subLabel && renderLabel(option.subLabel)}
 							>
 								{renderLabel(option.label)}
-							</StyledToggle>
+							</Toggle>
 						);
 					})}
-				</ToggleWrapper>
+				</div>
 			)
 		);
 	};

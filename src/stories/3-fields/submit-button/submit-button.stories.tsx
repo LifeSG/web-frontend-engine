@@ -10,7 +10,7 @@ const meta: Meta = {
 			page: () => (
 				<>
 					<Title>SubmitButton</Title>
-					<p>The primary call to action component.</p>
+					<p>A button that triggers form submission.</p>
 					<p>
 						This component also inherits the{" "}
 						<a
@@ -47,6 +47,18 @@ const meta: Meta = {
 				},
 			},
 			options: ["default", "secondary", "light", "link"],
+			control: {
+				type: "select",
+			},
+		},
+		sizeType: {
+			description: "The size of the button",
+			table: {
+				type: {
+					summary: "default | small | large",
+				},
+			},
+			options: ["default", "small", "large"],
 			control: {
 				type: "select",
 			},
@@ -106,6 +118,13 @@ Styled.args = {
 	uiType: "submit",
 	label: "Submit",
 	styleType: "secondary",
+};
+
+export const Size = Template("submit-size").bind({});
+Size.args = {
+	uiType: "submit",
+	label: "Submit",
+	sizeType: "large",
 };
 
 export const WithValidityCheck = (args: ISubmitButtonSchema) => (

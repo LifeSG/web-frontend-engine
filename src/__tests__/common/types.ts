@@ -6,4 +6,4 @@ export type TOverrideSchema = Partial<Omit<IFrontendEngineData, "sections">> | u
 export type TRenderComponent<T = unknown> = (
 	overrideField?: TOverrideField<T>,
 	overrideSchema?: TOverrideSchema
-) => RenderResult;
+) => Promise<RenderResult> | RenderResult;

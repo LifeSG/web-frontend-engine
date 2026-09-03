@@ -1,6 +1,6 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import { InfiniteListItem } from "./infinite-scroll.style";
 import { LoadingIndicator } from "./loading-indicator";
+import * as styles from "./infinite-scroll.styles";
 
 export type InfiniteScrollProp = {
 	loading: boolean;
@@ -33,9 +33,13 @@ export const InfiniteScrollList = (props: InfiniteScrollProp): JSX.Element => {
 		<>
 			{items}
 			{(loading || hasNextPage) && (
-				<InfiniteListItem data-testid={"InfiniteScrollList__InfiniteListItem-sentryRef"} ref={sentryRef}>
+				<div
+					className={styles.infiniteIndicator}
+					data-testid={"InfiniteScrollList__InfiniteListItem-sentryRef"}
+					ref={sentryRef}
+				>
 					<LoadingIndicator />
-				</InfiniteListItem>
+				</div>
 			)}
 		</>
 	);
