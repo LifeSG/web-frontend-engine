@@ -164,9 +164,9 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		const hasUnloadedImages = images.some((img) => img.status === EImageStatus.NONE);
 		if (hasUnloadedImages) return; // Waiting for all images to load
 
-		images.some((image, index) => {
-			const previousFile = previousImages?.[index];
-			if (image.status !== previousFile?.status || image.dataURL !== previousFile.dataURL) {
+		images.some((image) => {
+			const previousFile = previousImages?.find((prevImage) => prevImage.id === image.id);
+			if (image.status !== previousFile?.status || image.dataURL !== previousFile?.dataURL) {
 				switch (image.status) {
 					case EImageStatus.COMPRESSED:
 					case EImageStatus.CONVERTED:

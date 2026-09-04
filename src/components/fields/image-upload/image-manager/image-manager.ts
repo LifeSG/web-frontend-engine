@@ -28,6 +28,19 @@ interface IProps extends Omit<ISharedImageProps, "maxFiles"> {
 	value: any;
 }
 
+const patchImageById = (
+	prev: IImage[],
+	imageId: string,
+	patch: Partial<IImage> | ((image: IImage) => IImage)
+): IImage[] => {
+	const imageIndex = prev.findIndex((img) => img.id === imageId);
+	if (imageIndex === -1) return prev;
+	const updatedImages = [...prev];
+	const current = prev[imageIndex];
+	updatedImages[imageIndex] = typeof patch === "function" ? patch(current) : { ...current, ...patch };
+	return updatedImages;
+};
+
 /**
  * manages selected images by listening to images from context provider
  * rename / compress / upload
@@ -66,6 +79,7 @@ export const ImageManager = (props: IProps) => {
 		const handleUpdateImageStatus = (e: CustomEvent<IUpdateImageStatus>) => {
 			setImages((prev) => {
 				const imageIndex = prev.findIndex((image) => image.id === e.detail.id);
+				if (imageIndex === -1) return prev;
 				const updatedImage = { ...prev[imageIndex] };
 				updatedImage.status = e.detail.updatedStatus;
 				updatedImage.customErrorMessage = e.detail.errorMessage;
@@ -86,40 +100,37 @@ export const ImageManager = (props: IProps) => {
 	}, []);
 
 	useEffect(() => {
-		images.forEach((image, index) => {
-			const previousFile = previousImages?.[index];
-			if (image.status !== previousFile?.status || image.dataURL !== previousFile.dataURL) {
+		images.forEach((image) => {
+			const previousFile = previousImages?.find((prevImage) => prevImage.id === image.id);
+			if (image.status !== previousFile?.status || image.dataURL !== previousFile?.dataURL) {
 				switch (image.status) {
-					case EImageStatus.INJECTED:
+					case EImageStatus.INJECTED: {
+						const imageId = image.id;
 						FileHelper.dataUrlToBlob(image.dataURL)
 							.then((blob) => {
-								setImages((prev) => {
-									const updatedImages = [...prev];
-									updatedImages[index] = {
-										...image,
+								setImages((prev) =>
+									patchImageById(prev, imageId, {
 										file: new File([blob], image.name),
 										status: EImageStatus.NONE,
-									};
-									return updatedImages;
-								});
+									})
+								);
 							})
 							.catch(() => {
-								setImages((prev) => prev.filter((prev, i) => i !== index));
+								setImages((prev) => prev.filter((img) => img.id !== imageId));
 							});
 						break;
-					case EImageStatus.NONE:
+					}
+					case EImageStatus.NONE: {
+						const imageId = image.id;
 						if (filenameMatches) {
 							const pattern = resolveMatchesPattern(filenameMatches);
 							if (pattern && !pattern.test(image.name)) {
-								setImages((prev) => {
-									const updatedImages = [...prev];
-									updatedImages[index] = {
-										...image,
+								setImages((prev) =>
+									patchImageById(prev, imageId, {
 										status: EImageStatus.ERROR_FILENAME,
 										customErrorMessage: filenameMatchesErrorMessage,
-									};
-									return updatedImages;
-								});
+									})
+								);
 								break;
 							}
 						}
@@ -127,36 +138,33 @@ export const ImageManager = (props: IProps) => {
 							const mimeType = fileType.mime;
 							if (mimeType && accepts.map(FileHelper.fileExtensionToMimeType).includes(mimeType)) {
 								setImages((prev) => {
-									const updatedImages = [...prev];
-									updatedImages[index] = {
-										...image,
+									const imageIndex = prev.findIndex((img) => img.id === imageId);
+									if (imageIndex === -1) return prev;
+									return patchImageById(prev, imageId, {
 										name: FileHelper.deduplicateFileName(
-											images.map(({ name }) => name),
-											index,
+											prev.map(({ name }) => name),
+											imageIndex,
 											FileHelper.sanitizeFileName(image.name)
 										),
 										type: mimeType,
 										status: image.addedFrom !== "schema" ? image.status : EImageStatus.UPLOADED,
-									};
-									return updatedImages;
+									});
 								});
 								if (image.addedFrom !== "schema") {
-									compress ? compressImage(index, image) : convertImage(index, image);
+									compress ? compressImage(image) : convertImage(image);
 								}
 							} else {
-								setImages((prev) => {
-									const updatedImages = [...prev];
-									updatedImages[index] = {
-										...image,
+								setImages((prev) =>
+									patchImageById(prev, imageId, {
 										status: EImageStatus.ERROR_FORMAT,
-									};
-									return updatedImages;
-								});
+									})
+								);
 							}
 						});
 						break;
+					}
 					case EImageStatus.TO_RECOMPRESS:
-						recompressImage(index, image);
+						recompressImage(image);
 						break;
 					case EImageStatus.COMPRESSED:
 					case EImageStatus.CONVERTED:
@@ -164,18 +172,15 @@ export const ImageManager = (props: IProps) => {
 						if (!editImage) {
 							const shouldPreventDefault = !dispatchFieldEvent("upload-ready", id, { imageData: image });
 
-							setImages((prev) => {
-								const updatedImages = [...prev];
-								updatedImages[index] = {
-									...updatedImages[index],
+							setImages((prev) =>
+								patchImageById(prev, image.id, {
 									status: shouldPreventDefault ? EImageStatus.PENDING : EImageStatus.UPLOAD_READY,
-								};
-								return updatedImages;
-							});
+								})
+							);
 						}
 						break;
 					case EImageStatus.UPLOAD_READY:
-						uploadImage(index, image);
+						uploadImage(image);
 						break;
 					case EImageStatus.TO_DELETE:
 						setImages((prev) => prev.filter(({ status }) => status !== EImageStatus.TO_DELETE));
@@ -266,46 +271,31 @@ export const ImageManager = (props: IProps) => {
 		}
 	};
 
-	const convertImage = async (index: number, image: IImage) => {
+	const convertImage = async (image: IImage) => {
+		const imageId = image.id;
 		try {
 			const dataURL = await ImageHelper.convertBlob(image.file, FileHelper.fileExtensionToMimeType(outputType));
 			const filesize = FileHelper.getFilesizeFromBase64(dataURL);
 
 			if (maxSizeInKb && filesize > maxSizeInKb * 1024) {
-				setImages((prev) => {
-					const updatedImages = [...prev];
-					updatedImages[index] = {
-						...prev[index],
-						status: EImageStatus.ERROR_SIZE,
-					};
-					return updatedImages;
-				});
+				setImages((prev) => patchImageById(prev, imageId, { status: EImageStatus.ERROR_SIZE }));
 			} else {
 				const metadata = await ImageHelper.getMetadata(image.file);
-				setImages((prev) => {
-					const updatedImages = [...prev];
-					updatedImages[index] = {
-						...prev[index],
+				setImages((prev) =>
+					patchImageById(prev, imageId, {
 						dataURL,
 						metadata,
 						status: EImageStatus.CONVERTED,
-					};
-					return updatedImages;
-				});
+					})
+				);
 			}
 		} catch (e) {
-			setImages((prev) => {
-				const updatedImages = [...prev];
-				updatedImages[index] = {
-					...prev[index],
-					status: EImageStatus.ERROR_GENERIC,
-				};
-				return updatedImages;
-			});
+			setImages((prev) => patchImageById(prev, imageId, { status: EImageStatus.ERROR_GENERIC }));
 		}
 	};
 
-	const compressImage = async (index: number, imageToCompress: IImage) => {
+	const compressImage = async (imageToCompress: IImage) => {
+		const imageId = imageToCompress.id;
 		try {
 			const dataURL = await ImageHelper.convertBlob(
 				imageToCompress.file,
@@ -331,41 +321,25 @@ export const ImageManager = (props: IProps) => {
 			}
 
 			if (maxSizeInKb && compressed.size > maxSizeInKb * 1024) {
-				setImages((prev) => {
-					const updatedImages = [...prev];
-					updatedImages[index] = {
-						...prev[index],
-						status: EImageStatus.ERROR_SIZE,
-					};
-					return updatedImages;
-				});
+				setImages((prev) => patchImageById(prev, imageId, { status: EImageStatus.ERROR_SIZE }));
 			} else {
 				const metadata = await ImageHelper.getMetadata(imageToCompress.file);
-				const dataURL = await FileHelper.fileToDataUrl(compressed);
-				setImages((prev) => {
-					const updatedImages = [...prev];
-					updatedImages[index] = {
-						...prev[index],
-						dataURL,
+				const compressedDataURL = await FileHelper.fileToDataUrl(compressed);
+				setImages((prev) =>
+					patchImageById(prev, imageId, {
+						dataURL: compressedDataURL,
 						metadata,
 						status: EImageStatus.COMPRESSED,
-					};
-					return updatedImages;
-				});
+					})
+				);
 			}
 		} catch (e) {
-			setImages((prev) => {
-				const updatedImages = [...prev];
-				updatedImages[index] = {
-					...prev[index],
-					status: EImageStatus.ERROR_GENERIC,
-				};
-				return updatedImages;
-			});
+			setImages((prev) => patchImageById(prev, imageId, { status: EImageStatus.ERROR_GENERIC }));
 		}
 	};
 
-	const recompressImage = async (index: number, imageToCompress: IImage) => {
+	const recompressImage = async (imageToCompress: IImage) => {
+		const imageId = imageToCompress.id;
 		if (imageToCompress.drawingDataURL) {
 			try {
 				const image = await ImageHelper.dataUrlToImage(imageToCompress.drawingDataURL);
@@ -384,45 +358,26 @@ export const ImageManager = (props: IProps) => {
 				scaledFile = (await ImageHelper.compressImage(scaledFile, { fileSize: maxSizeInKb })) as File;
 
 				if (scaledFile.size > maxSizeInKb * 1024) {
-					const updatedImages = [...images];
-					updatedImages[index] = {
-						...images[index],
-						status: EImageStatus.ERROR_SIZE,
-					};
-					setImages(updatedImages);
+					setImages((prev) => patchImageById(prev, imageId, { status: EImageStatus.ERROR_SIZE }));
 				} else {
 					const dataURL = await FileHelper.fileToDataUrl(scaledFile);
-					const updatedImages = [...images];
-					updatedImages[index] = {
-						...images[index],
-						drawingDataURL: dataURL,
-						status: EImageStatus.RECOMPRESSED,
-					};
-					setImages(updatedImages);
+					setImages((prev) =>
+						patchImageById(prev, imageId, {
+							drawingDataURL: dataURL,
+							status: EImageStatus.RECOMPRESSED,
+						})
+					);
 				}
 			} catch (e) {
-				setImages((prev) => {
-					const updatedImages = [...prev];
-					updatedImages[index] = {
-						...prev[index],
-						status: EImageStatus.ERROR_GENERIC,
-					};
-					return updatedImages;
-				});
+				setImages((prev) => patchImageById(prev, imageId, { status: EImageStatus.ERROR_GENERIC }));
 			}
 		}
 	};
 
-	const uploadImage = async (index: number, iFile: IImage) => {
+	const uploadImage = async (iFile: IImage) => {
+		const uploadImageId = iFile.id;
 		try {
-			setImages((prev) => {
-				const updatedImages = [...prev];
-				updatedImages[index] = {
-					...prev[index],
-					status: EImageStatus.UPLOADING,
-				};
-				return updatedImages;
-			});
+			setImages((prev) => patchImageById(prev, uploadImageId, { status: EImageStatus.UPLOADING }));
 
 			let response: unknown;
 			if (upload?.method && upload?.url) {
@@ -437,37 +392,20 @@ export const ImageManager = (props: IProps) => {
 						onUploadProgress: (progressEvent) => {
 							const { loaded, total } = progressEvent;
 							const percent = Math.floor((loaded * 100) / total);
-							setImages((prev) => {
-								const updatedImages = [...prev];
-								updatedImages[index] = {
-									...prev[index],
-									uploadProgress: percent,
-								};
-								return updatedImages;
-							});
+							setImages((prev) => patchImageById(prev, uploadImageId, { uploadProgress: percent }));
 						},
 					}
 				);
 			}
 
-			setImages((prev) => {
-				const updatedImages = [...prev];
-				updatedImages[index] = {
-					...prev[index],
+			setImages((prev) =>
+				patchImageById(prev, uploadImageId, {
 					uploadResponse: response,
 					status: EImageStatus.UPLOADED,
-				};
-				return updatedImages;
-			});
+				})
+			);
 		} catch (err) {
-			setImages((prev) => {
-				const updatedImages = [...prev];
-				updatedImages[index] = {
-					...prev[index],
-					status: EImageStatus.ERROR_GENERIC,
-				};
-				return updatedImages;
-			});
+			setImages((prev) => patchImageById(prev, uploadImageId, { status: EImageStatus.ERROR_GENERIC }));
 		}
 	};
 
