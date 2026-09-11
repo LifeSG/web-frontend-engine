@@ -41,7 +41,9 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 	const { getField, setField, setRegisteredFields } = useFormValues();
 	const { removeFieldValidationConfig } = useValidationConfig();
 	const whenDependencyMap = useWhenDependencyMap();
+
 	useWhenRevalidation(id, whenDependencyMap);
+
 	const restoreModeRef = useRef(restoreMode);
 
 	useEffect(() => {

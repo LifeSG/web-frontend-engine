@@ -1,48 +1,45 @@
-import { getWhenDependencies } from "../../../utils/hooks/use-when-revalidation";
-import { IYupValidationRule } from "../../../context-providers";
+import { getSourceFieldsForDependent } from "../../../utils/hooks/use-when-revalidation";
 
-describe("getWhenDependencies", () => {
-	it("should return empty array when validation rules are undefined", () => {
-		expect(getWhenDependencies(undefined)).toEqual([]);
+describe("getSourceFieldsForDependent", () => {
+	it("should return empty array when dependency map is undefined", () => {
+		expect(getSourceFieldsForDependent("fieldA", undefined)).toEqual([]);
 	});
 
-	it("should return empty array when validation rules are empty", () => {
-		expect(getWhenDependencies([])).toEqual([]);
+	it("should return empty array when dependency map is empty", () => {
+		expect(getSourceFieldsForDependent("fieldA", {})).toEqual([]);
 	});
 
-	it("should return empty array when no when rules exist", () => {
-		expect(getWhenDependencies([{ required: true }])).toEqual([]);
+	it("should return empty array when field has no source dependencies", () => {
+		const whenDependencyMap = {
+			fieldB: ["fieldC"],
+		};
+
+		expect(getSourceFieldsForDependent("fieldA", whenDependencyMap)).toEqual([]);
 	});
 
-	it("should return single dependency from a when rule", () => {
-		const rules: IYupValidationRule[] = [
-			{
-				when: {
-					fieldA: { is: "yes", then: [{ required: true }] },
-				},
-			},
-		];
-		expect(getWhenDependencies(rules)).toEqual(["fieldA"]);
+	it("should return single source field for a dependent field", () => {
+		const whenDependencyMap = {
+			fieldB: ["fieldA"],
+		};
+
+		expect(getSourceFieldsForDependent("fieldA", whenDependencyMap)).toEqual(["fieldB"]);
 	});
 
-	it("should return multiple dependencies from a single when rule", () => {
-		const rules: IYupValidationRule[] = [
-			{
-				when: {
-					fieldA: { is: "yes", then: [{ required: true }] },
-					fieldC: { is: "active", then: [{ required: true }] },
-				},
-			},
-		];
-		expect(getWhenDependencies(rules)).toEqual(["fieldA", "fieldC"]);
+	it("should return multiple source fields for a dependent field", () => {
+		const whenDependencyMap = {
+			fieldA: ["fieldB"],
+			fieldC: ["fieldB"],
+		};
+
+		expect(getSourceFieldsForDependent("fieldB", whenDependencyMap)).toEqual(["fieldA", "fieldC"]);
 	});
 
-	it("should not duplicate dependencies across multiple when rules", () => {
-		const rules: IYupValidationRule[] = [
-			{ when: { fieldA: { is: "yes", then: [{ required: true }] } } },
-			{ when: { fieldA: { is: "no", then: [{ required: false }] } } },
-			{ when: { fieldC: { is: "active", then: [{ required: true }] } } },
-		];
-		expect(getWhenDependencies(rules)).toEqual(["fieldA", "fieldC"]);
+	it("should ignore unrelated dependent fields", () => {
+		const whenDependencyMap = {
+			fieldA: ["fieldB", "fieldC"],
+			fieldD: ["fieldE"],
+		};
+
+		expect(getSourceFieldsForDependent("fieldC", whenDependencyMap)).toEqual(["fieldA"]);
 	});
 });
