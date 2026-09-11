@@ -1,39 +1,26 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { IYupValidationRule } from "../../context-providers";
 
-export const getWhenDependencies = (validationRules: IYupValidationRule[] | undefined): string[] => {
-	if (!validationRules?.length) return [];
+export const getSourceFieldsForDependent = (
+	fieldId: string,
+	whenDependencyMap: Record<string, string[]> | undefined
+): string[] => {
+	if (!whenDependencyMap) {
+		return [];
+	}
 
-	const deps: string[] = [];
-
-	const extractDeps = (rules: IYupValidationRule[]) => {
-		rules.forEach((rule) => {
-			if (rule.when && typeof rule.when === "object") {
-				Object.entries(rule.when).forEach(([key, condition]) => {
-					if (!deps.includes(key)) {
-						deps.push(key);
-					}
-
-					if (condition.then?.length) {
-						extractDeps(condition.then as IYupValidationRule[]);
-					}
-
-					if (condition.otherwise?.length) {
-						extractDeps(condition.otherwise as IYupValidationRule[]);
-					}
-				});
-			}
-		});
-	};
-
-	extractDeps(validationRules);
-	return deps;
+	return Object.entries(whenDependencyMap)
+		.filter(([, dependentFieldIds]) => dependentFieldIds.includes(fieldId))
+		.map(([sourceFieldId]) => sourceFieldId);
 };
 
-export const useWhenRevalidation = (fieldId: string, validationRules: IYupValidationRule[] | undefined): void => {
+export const useWhenRevalidation = (fieldId: string, whenDependencyMap: Record<string, string[]> | undefined): void => {
 	const { trigger } = useFormContext();
-	const dependencies = getWhenDependencies(validationRules);
+
+	const dependencies = useMemo(
+		() => getSourceFieldsForDependent(fieldId, whenDependencyMap),
+		[fieldId, whenDependencyMap]
+	);
 
 	const watchedValues = useWatch({
 		name: dependencies,
@@ -43,11 +30,15 @@ export const useWhenRevalidation = (fieldId: string, validationRules: IYupValida
 	const isMountedRef = useRef(false);
 
 	useEffect(() => {
+		if (dependencies.length === 0) {
+			return;
+		}
+
 		if (!isMountedRef.current) {
 			isMountedRef.current = true;
 			return;
 		}
 
 		void trigger(fieldId);
-	}, [watchedValues, fieldId, trigger]);
+	}, [dependencies.length, fieldId, trigger, watchedValues]);
 };

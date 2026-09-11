@@ -54,6 +54,12 @@ export const useValidationSchema = () => {
 		buildValidationSchema();
 	}, [buildValidationSchema]);
 
+	const hardValidationMeta = hardValidationSchema.describe().meta as
+		| { whenDependencyMap?: Record<string, string[]> }
+		| undefined;
+
+	const whenDependencyMap = hardValidationMeta?.whenDependencyMap ?? {};
+
 	/**
 	 * Executes validation based on allowSoftValidation flag provided in the schema to generate warning messages
 	 * @param schema soft validation schema
@@ -89,6 +95,7 @@ export const useValidationSchema = () => {
 		warnings,
 		softValidationSchema,
 		hardValidationSchema,
+		whenDependencyMap,
 		rebuildValidationSchema: buildValidationSchema,
 		performSoftValidation,
 		addWarnings,

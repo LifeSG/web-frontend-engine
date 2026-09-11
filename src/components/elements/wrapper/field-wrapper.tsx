@@ -14,6 +14,7 @@ import {
 	useFormContext,
 } from "react-hook-form";
 import styled from "styled-components";
+import { useWhenDependencyMap } from "../../../context-providers";
 import {
 	useFormSchema,
 	useFormValues,
@@ -42,8 +43,11 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 		formSchema: { defaultValues, restoreMode = "none" },
 	} = useFormSchema();
 	const { getField, setField, setRegisteredFields } = useFormValues();
-	const { formValidationConfig, removeFieldValidationConfig } = useValidationConfig();
-	useWhenRevalidation(id, formValidationConfig?.[id]?.validationRules ?? []);
+	const { removeFieldValidationConfig } = useValidationConfig();
+	const whenDependencyMap = useWhenDependencyMap();
+
+	useWhenRevalidation(id, whenDependencyMap);
+
 	const restoreModeRef = useRef(restoreMode);
 
 	// =========================================================================
@@ -100,17 +104,14 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 						{label.subLabel}
 					</StyledSublabel>
 				),
-				// acccept tooltip type when it's ready
 				addon: label.hint?.content
-					? /* eslint-disable indent */
-					  {
+					? {
 							type: "popover",
 							content: <StyledHint className="label-hint">{label.hint?.content}</StyledHint>,
 							"data-testid": (schema["data-testid"] || id) + "-popover",
 							zIndex: label.hint?.zIndex,
 					  }
-					: /* eslint-enable indent */
-					  undefined,
+					: undefined,
 			};
 		}
 	};
@@ -125,7 +126,6 @@ export const FieldWrapper = ({ Field, id, schema, warning }: IProps) => {
 		field: ControllerRenderProps<FieldValues, FieldPath<FieldValues>>;
 		fieldState: ControllerFieldState;
 	}) => {
-		// not passing ref because not all components have fields to be manipulated
 		const { ref: _ref, ...fieldPropsWithoutRef } = field;
 
 		const fieldProps = {
