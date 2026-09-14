@@ -161,7 +161,7 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 
 		const fetchImage = async () => {
 			try {
-				const request = await new AxiosApiClient("", undefined, undefined, false, {
+				const request = await new AxiosApiClient("", undefined, undefined, true, {
 					responseType: "blob",
 				}).get<Blob>(fileUrl, { signal: controller.signal });
 				const fileType = await FileHelper.getType(new File([request], fileId));
