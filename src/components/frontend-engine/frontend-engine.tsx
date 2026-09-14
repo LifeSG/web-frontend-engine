@@ -8,6 +8,7 @@ import {
 	IYupValidationRule,
 	TCustomValidationFunction,
 	TYupSchemaType,
+	WhenDependencyMapContext,
 	YupHelper,
 } from "../../context-providers";
 import { TNoInfer, TestHelper } from "../../utils";
@@ -51,6 +52,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		performSoftValidation,
 		softValidationSchema,
 		hardValidationSchema,
+		whenDependencyMap,
 		rebuildValidationSchema,
 		yupId,
 	} = useValidationSchema();
@@ -76,7 +78,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		clearErrors,
 	} = formMethods;
 	const { resetFields, setFields, getFormValues, registeredFields } = useFormValues(formMethods);
-	const registeredFieldsRef = useRef(registeredFields); // using ref ensures the latest values can be retrieved in setErrors and setWarnings
+	const registeredFieldsRef = useRef(registeredFields);
 	const { checkIsFormValid } = useFormChange(props, formMethods);
 
 	// =============================================================================
@@ -124,8 +126,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const handleSubmitError = useCallback(
 		(errors: TFrontendEngineValues): void => {
-			// NOTE: this delays the callback into the process tick, ensuring the dom has updated by then
-			// this allows for potential error handling targeting attribute tags like `aria-invalid`
 			setTimeout(() => onSubmitError?.(errors));
 		},
 		[onSubmitError]
@@ -211,18 +211,20 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}
 
 	return (
-		<FormProvider {...formMethods}>
-			<InnerElement
-				id={formId}
-				data-testid={id ? TestHelper.generateId(id, "frontend-engine") : formId}
-				className={formClassNames}
-				noValidate
-				onSubmit={reactFormHookSubmit(handleSubmit, handleSubmitError)}
-				ref={ref}
-			>
-				<Sections />
-			</InnerElement>
-		</FormProvider>
+		<WhenDependencyMapContext.Provider value={whenDependencyMap}>
+			<FormProvider {...formMethods}>
+				<InnerElement
+					id={formId}
+					data-testid={id ? TestHelper.generateId(id, "frontend-engine") : formId}
+					className={formClassNames}
+					noValidate
+					onSubmit={reactFormHookSubmit(handleSubmit, handleSubmitError)}
+					ref={ref}
+				>
+					<Sections />
+				</InnerElement>
+			</FormProvider>
+		</WhenDependencyMapContext.Provider>
 	);
 });
 
