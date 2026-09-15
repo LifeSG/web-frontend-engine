@@ -36,7 +36,30 @@ export namespace YupHelper {
 			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
 		});
 
-		return Yup.object().meta({ yupId }).shape(yupSchema, whenPairIds);
+		// build reverse map: sourceField -> [dependentFields]
+		// reuses the already-computed whenPairIds (same data Yup uses for cycle detection)
+		const whenDependencyMap = buildWhenDependencyMap(whenPairIds);
+
+		return Yup.object().meta({ yupId, whenDependencyMap }).shape(yupSchema, whenPairIds);
+	};
+
+	/**
+	 * Converts [dependentField, sourceField] pairs into a sourceField -> dependentFields[] map.
+	 * Used to determine which fields should revalidate when a source field changes.
+	 * @param whenPairIds array of [dependentFieldId, sourceFieldId] pairs
+	 * @returns map of sourceFieldId -> dependentFieldIds[]
+	 */
+	const buildWhenDependencyMap = (whenPairIds: [string, string][]): Record<string, string[]> => {
+		const map: Record<string, string[]> = {};
+		whenPairIds.forEach(([dependentField, sourceField]) => {
+			if (!map[sourceField]) {
+				map[sourceField] = [];
+			}
+			if (!map[sourceField].includes(dependentField)) {
+				map[sourceField].push(dependentField);
+			}
+		});
+		return map;
 	};
 
 	/**
