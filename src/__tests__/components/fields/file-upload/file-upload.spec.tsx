@@ -268,6 +268,9 @@ describe(UI_TYPE, () => {
 			});
 
 			expect(getSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getAllByText(ERROR_MESSAGES.UPLOAD().GENERIC).length).toBe(2);
+			});
 		});
 
 		it("should support default value without dataURL and fileUrl", async () => {
@@ -307,6 +310,7 @@ describe(UI_TYPE, () => {
 				uploadedAt: "2025-01-01T03:57:55.573Z",
 			};
 			await renderComponent({
+				overrideField: { trustProvidedFileMetadata: true },
 				overrideSchema: {
 					defaultValues: {
 						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
@@ -334,6 +338,7 @@ describe(UI_TYPE, () => {
 				},
 			};
 			await renderComponent({
+				overrideField: { trustProvidedFileMetadata: true },
 				overrideSchema: {
 					defaultValues: {
 						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
@@ -347,6 +352,30 @@ describe(UI_TYPE, () => {
 			expect(uploadSpy).not.toHaveBeenCalled();
 			await waitFor(() => {
 				expect(screen.getByText("582 KB")).toBeInTheDocument();
+			});
+		});
+
+		it("should reject prefilled file with no dataURL/fileUrl by default (trustProvidedFileMetadata unset)", async () => {
+			const uploadResponse = {
+				fileId: "f307b120-6c4d-4b2c-b278-33bb9aefbc6e",
+				fileName: "my-image.jpg",
+				fileSize: 595705,
+				mimeType: "image/jpeg",
+			};
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(uploadSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getAllByText(ERROR_MESSAGES.UPLOAD().GENERIC).length).toBe(2);
 			});
 		});
 
@@ -377,6 +406,7 @@ describe(UI_TYPE, () => {
 				uploadedAt: "2025-01-01T03:57:55.573Z",
 			};
 			await renderComponent({
+				overrideField: { trustProvidedFileMetadata: true },
 				overrideSchema: {
 					defaultValues: {
 						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
@@ -404,6 +434,7 @@ describe(UI_TYPE, () => {
 				},
 			};
 			await renderComponent({
+				overrideField: { trustProvidedFileMetadata: true },
 				overrideSchema: {
 					defaultValues: {
 						[COMPONENT_ID]: [{ fileId: FILE_1.name, fileName: FILE_1.name, uploadResponse }],
@@ -634,6 +665,7 @@ describe(UI_TYPE, () => {
 				async ({ type, validation, defaultValues }) => {
 					await renderComponent({
 						overrideField: {
+							trustProvidedFileMetadata: true,
 							uploadOnAddingFile: { type, url: UPLOAD_URL },
 							validation: [{ ...validation, errorMessage: ERROR_MESSAGE }],
 						},
@@ -685,6 +717,7 @@ describe(UI_TYPE, () => {
 				async ({ type, validation, defaultValues }) => {
 					await renderComponent({
 						overrideField: {
+							trustProvidedFileMetadata: true,
 							uploadOnAddingFile: { type, url: UPLOAD_URL },
 							validation: [{ ...validation, errorMessage: ERROR_MESSAGE }],
 						},

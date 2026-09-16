@@ -15,6 +15,10 @@ const SCHEMA: IFrontendEngineData = {
 						type: "base64",
 						url: "/api/upload",
 					},
+					// this demo prefills a file via uploadResponse only (no dataURL/fileUrl); since
+					// asgard-0014, that metadata is untrusted by default and the file is rejected as
+					// unverified unless the schema explicitly opts in
+					trustProvidedFileMetadata: true,
 				},
 			},
 		},
