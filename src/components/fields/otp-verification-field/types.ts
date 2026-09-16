@@ -51,6 +51,13 @@ export interface IOtpVerificationValue {
 	contact: string;
 	prefix?: string | undefined;
 	type: TOtpVerificationType;
+	/**
+	 * client-asserted, not a security boundary: the frontend sets this to "verified" once its own OTP
+	 * verification call succeeds, but the submitted form payload is just JSON a client controls. A
+	 * consuming backend must independently re-verify the OTP transaction (e.g. by its transaction ID)
+	 * before trusting a submission with state "verified" — never trust this field alone server-side.
+	 */
 	state: "sent" | "verified" | "default";
+	/** client-asserted, same caveat as `state` above — not independently verified by this component */
 	additionalData?: unknown;
 }
