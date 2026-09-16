@@ -372,6 +372,21 @@ describe("image-upload", () => {
 					})
 				);
 			});
+
+			it("should not hang on a pathological pattern with a long filename", async () => {
+				const maliciousFile = new File(["file"], `${"a".repeat(600)}!.jpg`, { type: "image/jpeg" });
+
+				const start = Date.now();
+				await renderComponent({
+					files: [maliciousFile],
+					overrideField: { validation: [{ matches: "/^(a+)+$/", errorMessage: ERROR_MESSAGE }] },
+					uploadType: "input",
+				});
+				await waitFor(() => expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument());
+
+				expect(Date.now() - start).toBeLessThan(1000);
+				expect(uploadSpy).not.toHaveBeenCalled();
+			});
 		});
 	});
 
