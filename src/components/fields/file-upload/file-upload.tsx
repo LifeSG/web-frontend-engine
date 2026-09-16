@@ -33,6 +33,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		isTouched,
 		value,
 		schema: {
+			allowedFileOrigins,
 			compressImages,
 			description,
 			hideThumbnail,
@@ -312,6 +313,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 		<>
 			<Suspense fallback={null}>
 				<FileUploadManager
+					allowedFileOrigins={allowedFileOrigins}
 					compressImages={!!compressImages}
 					fileTypeRule={fileTypeRuleRef.current}
 					fileExtensionRule={fileExtensionRuleRef.current}
