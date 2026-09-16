@@ -192,10 +192,31 @@ describe(UI_TYPE, () => {
 			);
 		});
 
-		it("should support default value based on fileUrl", async () => {
-			jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
-			const fileUrl = "dummy url";
+		it("should not fetch a prefilled fileUrl when allowedFileOrigins is not set", async () => {
+			const getSpy = jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+			const fileUrl = "https://example.com/path/to/file";
 			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileUrl, fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(getSpy).not.toHaveBeenCalled();
+			await waitFor(() => {
+				expect(screen.getByText("0 KB")).toBeInTheDocument();
+			});
+		});
+
+		it("should fetch fileUrl when its origin is in allowedFileOrigins", async () => {
+			jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+			const fileUrl = "https://trusted.example.com/path/to/file";
+			await renderComponent({
+				overrideField: { allowedFileOrigins: ["https://trusted.example.com"] },
 				overrideSchema: {
 					defaultValues: {
 						[COMPONENT_ID]: [{ fileUrl, fileId: FILE_1.name, fileName: FILE_1.name }],
@@ -220,6 +241,24 @@ describe(UI_TYPE, () => {
 					]),
 				})
 			);
+		});
+
+		it("should not fetch fileUrl when its origin is not in allowedFileOrigins", async () => {
+			const getSpy = jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+			const fileUrl = "https://untrusted.example.com/path/to/file";
+			await renderComponent({
+				overrideField: { allowedFileOrigins: ["https://trusted.example.com"] },
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileUrl, fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(getSpy).not.toHaveBeenCalled();
 		});
 
 		it("should support default value without dataURL and fileUrl", async () => {

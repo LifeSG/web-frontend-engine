@@ -33,6 +33,11 @@ export interface IFileUploadSchema<V = undefined>
 	};
 	warning?: string | undefined;
 	compressImages?: boolean | undefined;
+	/** origins allowed when fetching a prefilled `fileUrl`. Must be set for a prefilled fileUrl to be fetched at
+	 * all — when unset, the fetch is skipped and the file falls through to the same unverified-file handling as
+	 * a missing fileUrl. There is no permissive default: this codebase has no basis for guessing which origins
+	 * are safe for a given consumer's file storage backend. */
+	allowedFileOrigins?: string[] | undefined;
 }
 
 export enum EFileStatus {
