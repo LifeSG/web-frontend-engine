@@ -25,7 +25,11 @@ module.exports = async () => ({
 	],
 	verbose: true,
 	bail: false,
-	transformIgnorePatterns: ["/node_modules/(?!@lifesg/react-design-system|leaflet)"],
+	// sanitize-html >=2.15 pulls in htmlparser2 v12+, which is ESM-only (and its own
+	// deps domhandler/domutils/domelementtype/entities), so it needs to go through babel too
+	transformIgnorePatterns: [
+		"/node_modules/(?!@lifesg/react-design-system|leaflet|sanitize-html|htmlparser2|dom-serializer|domhandler|domutils|domelementtype|entities)",
+	],
 	transform: {
 		"\\.[jt]sx?$": ["babel-jest", { excludeJestPreset: true }],
 		"^.+\\.css$": "jest-transform-css",
