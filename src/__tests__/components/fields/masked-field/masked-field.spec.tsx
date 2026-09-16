@@ -99,6 +99,15 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
+	it("should not throw when maskRegex is malformed", () => {
+		expect(() =>
+			renderComponent(
+				{ maskRange: null, maskRegex: "not a /pattern/flags string [" },
+				{ defaultValues: { [COMPONENT_ID]: "hello" } }
+			)
+		).not.toThrow();
+	});
+
 	it("should render custom icons", () => {
 		const maskIcon = "AlbumFillIcon";
 		const unmaskIcon = "AlbumIcon";
