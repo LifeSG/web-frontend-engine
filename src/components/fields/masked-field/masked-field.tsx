@@ -4,7 +4,7 @@ import * as Icons from "@lifesg/react-icons";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { RegexHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
 import { Warning } from "../../shared";
 import { IMaskedFieldSchema } from "./types";
@@ -65,12 +65,11 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 	// =============================================================================
 	const getRegex = () => {
 		if (!maskRegex) return;
-		try {
-			const matches = maskRegex.match(/\/(.*)\/([a-z]+)?/);
-			return new RegExp(matches[1], matches[2]);
-		} catch (err) {
+		const regex = RegexHelper.parseMatchesPattern(maskRegex);
+		if (!regex) {
 			console.warn(`invalid regex pattern: ${maskRegex}`);
 		}
+		return regex;
 	};
 
 	// =============================================================================
