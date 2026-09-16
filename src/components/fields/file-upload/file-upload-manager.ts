@@ -15,6 +15,7 @@ import {
 } from "./types";
 
 interface IProps {
+	allowedFileOrigins?: string[] | undefined;
 	compressImages: boolean;
 	fileTypeRule: IFileUploadValidationRule;
 	fileExtensionRule: IFileUploadValidationRule;
@@ -28,11 +29,29 @@ interface IProps {
 
 const RESIZEABLE_IMAGE_TYPES = ["image/jpeg", "image/gif", "image/png"];
 
+const isAllowedFileOrigin = (url: string, allowedFileOrigins: string[] | undefined): boolean => {
+	if (!allowedFileOrigins?.length) {
+		if (process.env.NODE_ENV !== "production") {
+			// eslint-disable-next-line no-console
+			console.warn(
+				`FileUpload: rejecting fileUrl "${url}" — allowedFileOrigins must be set on the schema for a fileUrl to be fetched.`
+			);
+		}
+		return false;
+	}
+	try {
+		return allowedFileOrigins.includes(new URL(url).origin);
+	} catch {
+		return false;
+	}
+};
+
 const FileUploadManager = (props: IProps) => {
 	// =============================================================================
 	// CONST, STATE, REFS
 	// =============================================================================
 	const {
+		allowedFileOrigins,
 		compressImages,
 		fileTypeRule,
 		fileExtensionRule,
@@ -284,7 +303,7 @@ const FileUploadManager = (props: IProps) => {
 		if (fileToInject.dataURL) {
 			const blob = await FileHelper.dataUrlToBlob(fileToInject.dataURL);
 			rawFile = new File([blob], fileToInject.rawFile.name);
-		} else if (fileToInject.fileUrl) {
+		} else if (fileToInject.fileUrl && isAllowedFileOrigin(fileToInject.fileUrl, allowedFileOrigins)) {
 			const response: Blob = await new AxiosApiClient("", undefined, undefined, false, {
 				responseType: "blob",
 			}).get(fileToInject.fileUrl);
