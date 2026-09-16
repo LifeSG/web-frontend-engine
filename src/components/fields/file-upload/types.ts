@@ -38,6 +38,10 @@ export interface IFileUploadSchema<V = undefined>
 	 * a missing fileUrl. There is no permissive default: this codebase has no basis for guessing which origins
 	 * are safe for a given consumer's file storage backend. */
 	allowedFileOrigins?: string[] | undefined;
+	/** when true, prefilled files without a fetchable dataURL/fileUrl are validated against the caller-supplied
+	 * `uploadResponse` metadata (mimeType/ext/fileSize) as-is. Defaults to false, which treats such files as
+	 * unverified since that metadata is not independently checked */
+	trustProvidedFileMetadata?: boolean | undefined;
 }
 
 export enum EFileStatus {
