@@ -121,11 +121,17 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	// POSTMESSAGE HANDLERS
 	// =========================================================================
+	// only messages from the origin derived from `src` are accepted; a child iframe that
+	// navigates to a different origin before posting back will need to postMessage via the
+	// original src origin's window, or the message is dropped
+	const allowedOrigin = getTargetOriginFromSrc();
+
 	useIframeMessage(
 		EPostMessageEvent.TRIGGER_SYNC,
 		useCallback(() => {
 			iframePostMessage({ type: EPostMessageEvent.SYNC, payload: { error, id, value } });
-		}, [error, id, value, iframePostMessage])
+		}, [error, id, value, iframePostMessage]),
+		allowedOrigin
 	);
 
 	useIframeMessage<{ width?: number | undefined; height?: number | undefined }>(
@@ -135,7 +141,8 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 				width: e.data.payload?.width,
 				height: e.data.payload?.height,
 			});
-		}, [])
+		}, []),
+		allowedOrigin
 	);
 
 	useIframeMessage<unknown>(
@@ -145,7 +152,8 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 				formContext.setValue(id, e.data.payload, { shouldDirty: true });
 			},
 			[formContext, id]
-		)
+		),
+		allowedOrigin
 	);
 
 	useIframeMessage<boolean>(
@@ -160,14 +168,16 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 				clearAsyncValidation();
 			},
 			[clearAsyncValidation]
-		)
+		),
+		allowedOrigin
 	);
 
 	useIframeMessage(
 		EPostMessageEvent.LOADED,
 		useCallback(() => {
 			dispatchFieldEvent("loaded", id);
-		}, [dispatchFieldEvent, id])
+		}, [dispatchFieldEvent, id]),
+		allowedOrigin
 	);
 
 	// =========================================================================
