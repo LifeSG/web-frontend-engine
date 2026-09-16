@@ -26,6 +26,10 @@ module.exports = async () => ({
 	],
 	verbose: true,
 	bail: false,
-	// transformIgnorePatterns: ["/node_modules/(?!leaflet)"],
+	// sanitize-html >=2.15 pulls in htmlparser2 v12+, which is ESM-only (and its own
+	// deps domhandler/domutils/domelementtype/entities), so it needs to go through babel too
+	transformIgnorePatterns: [
+		"/node_modules/(?!.*(?:sanitize-html|htmlparser2|dom-serializer|domhandler|domutils|domelementtype|entities)/)",
+	],
 	reporters: ["default", ["jest-junit", { outputName: "junit.xml" }]],
 });
