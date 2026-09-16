@@ -41,10 +41,15 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 			attributes.maxLength = maxRule.max;
 		} else if (lengthRule?.length > 0) {
 			attributes.maxLength = lengthRule.length;
+		} else if (maskRegex) {
+			// maskRegex is tested against live keystrokes inside MaskedInput itself, which this codebase
+			// doesn't own, so a catastrophic-backtracking pattern can't be bounded there directly. Capping
+			// input length here is the only mitigation available without an upstream design-system change.
+			attributes.maxLength = RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH;
 		}
 		setDerivedAttributes(attributes);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
+	}, [validation, maskRegex]);
 
 	useEffect(() => {
 		if (value !== stateValue) {

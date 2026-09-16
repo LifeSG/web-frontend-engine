@@ -4,6 +4,7 @@ import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IMaskedFieldSchema } from "../../../../components/fields";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
+import { RegexHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -86,6 +87,18 @@ describe(UI_TYPE, () => {
 
 	it("should apply maxLength attribute if length validation is specified", () => {
 		renderComponent({ validation: [{ length: 5 }] });
+
+		expect(getMaskedField()).toHaveAttribute("maxLength", "5");
+	});
+
+	it("should default maxLength to the safe regex length bound when maskRegex is set with no max/length validation", () => {
+		renderComponent({ maskRange: null, maskRegex: "/^(hello)/g" });
+
+		expect(getMaskedField()).toHaveAttribute("maxLength", `${RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH}`);
+	});
+
+	it("should prefer an explicit max/length validation's maxLength over the maskRegex default", () => {
+		renderComponent({ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 5 }] });
 
 		expect(getMaskedField()).toHaveAttribute("maxLength", "5");
 	});
