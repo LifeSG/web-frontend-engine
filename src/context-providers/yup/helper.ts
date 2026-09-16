@@ -188,6 +188,14 @@ export namespace YupHelper {
 					break;
 				case !!rule.matches:
 					{
+						// "matches" tests the field's own value as a string. Applying it to a non-string
+						// schema (e.g. an array field) would run RegExp.test() against that value coerced
+						// to a string instead — near-guaranteed to fail and reject an otherwise-valid
+						// submission, not a meaningful validation of anything.
+						if (yupSchema.type !== "string") {
+							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+							break;
+						}
 						const regex = RegexHelper.parseMatchesPattern(rule.matches);
 						if (regex) {
 							yupSchema = (yupSchema as Yup.StringSchema).test({

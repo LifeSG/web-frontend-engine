@@ -154,7 +154,11 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 						);
 					}
 				),
-			validation
+			// `matches` is a per-image filename check already handled by ImageManager against each image's
+			// own name — it must not reach the generic Yup pipeline, which would test it against this
+			// field's whole array value (coerced to a string) instead of a filename, and reject valid
+			// submissions outright
+			validation?.filter((rule) => !("matches" in rule))
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);
