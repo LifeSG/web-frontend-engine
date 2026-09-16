@@ -248,6 +248,15 @@ describe("YupHelper", () => {
 			);
 		});
 
+		it("should not hang on a pathological matches pattern when input exceeds the safe length bound", () => {
+			const schema = YupHelper.mapRules(Yup.string(), [{ matches: "/^(a+)+$/", errorMessage: ERROR_MESSAGE }]);
+			const maliciousValue = `${"a".repeat(1000)}!`;
+
+			const start = Date.now();
+			expect(TestHelper.getError(() => schema.validateSync(maliciousValue))?.message).toBe(ERROR_MESSAGE);
+			expect(Date.now() - start).toBeLessThan(1000);
+		});
+
 		const generateMultipleFieldSchema = (type: "string" | "number" | "boolean" | "object" | "array") =>
 			YupHelper.buildSchema({
 				field1: { schema: YupHelper.mapSchemaType(type), validationRules: [] },
