@@ -61,7 +61,10 @@ export const Typography = (props: IGenericElementProps<ITypographySchema>) => {
 	// =============================================================================
 	const sanitizeOptions: IOptions = {
 		allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-		allowedAttributes: false,
+		allowedAttributes: {
+			...sanitizeHtml.defaults.allowedAttributes,
+			img: ["src", "alt", "width", "height"],
+		},
 	};
 
 	const renderText = (): JSX.Element[] | JSX.Element | string[] | string => {
