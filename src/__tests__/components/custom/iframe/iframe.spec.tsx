@@ -130,6 +130,30 @@ describe("iframe", () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello world" }));
 	});
 
+	describe("postMessage origin validation", () => {
+		const sendPostMessageFromOrigin = (origin: string, type: EPostMessageEvent, payload?: unknown) => {
+			fireEvent(window, new MessageEvent("message", { data: { type, payload }, origin }));
+		};
+
+		it("should ignore a setValue postMessage from an origin that does not match src", async () => {
+			renderComponent({ validationTimeout: -1 });
+
+			sendPostMessageFromOrigin("https://attacker.example", EPostMessageEvent.SET_VALUE, "hello world");
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith({});
+		});
+
+		it("should accept a setValue postMessage from the origin matching src", async () => {
+			renderComponent({ validationTimeout: -1 });
+
+			sendPostMessageFromOrigin(IFRAME_SRC, EPostMessageEvent.SET_VALUE, "hello world");
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello world" }));
+		});
+	});
+
 	describe("load", () => {
 		it("should fire a loading event when iframe starts loading", () => {
 			const testFn = jest.fn();
