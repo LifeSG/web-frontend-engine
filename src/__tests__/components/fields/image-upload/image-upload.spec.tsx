@@ -349,6 +349,22 @@ describe("image-upload", () => {
 				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
 			});
 
+			it("should be able to submit a valid file when a matches rule is configured", async () => {
+				await renderComponent({
+					files: [FILE_1], // "test.jpg" — lowercase alphanumeric + dot
+					overrideField: { validation: [{ matches: MATCHES_PATTERN, errorMessage: ERROR_MESSAGE }] },
+					uploadType: "input",
+				});
+
+				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						field: expect.arrayContaining([expect.objectContaining({ fileName: FILE_1.name })]),
+					})
+				);
+			});
+
 			it("should exclude invalid filename files from form submission", async () => {
 				await renderComponent({
 					files: [INVALID_FILE],

@@ -257,6 +257,14 @@ describe("YupHelper", () => {
 			expect(Date.now() - start).toBeLessThan(1000);
 		});
 
+		it("should skip a matches rule applied to a non-string schema instead of testing the value's string coercion", () => {
+			const schema = YupHelper.mapRules(Yup.array(), [{ matches: "/^[a-z]+$/", errorMessage: ERROR_MESSAGE }]);
+
+			// an array value stringifies to something that would never satisfy a filename-shaped pattern
+			// (e.g. "[object Object]") — applying the rule here must not reject the value on that basis
+			expect(() => schema.validateSync([{ fileName: "test.jpg" }])).not.toThrow();
+		});
+
 		const generateMultipleFieldSchema = (type: "string" | "number" | "boolean" | "object" | "array") =>
 			YupHelper.buildSchema({
 				field1: { schema: YupHelper.mapSchemaType(type), validationRules: [] },
