@@ -5,6 +5,8 @@ import { useFieldEvent } from "../../../utils/hooks";
 import { filterSchemaProps } from "../../../utils/prop-helper";
 import { IButtonSchema } from "./types";
 
+const ALLOWED_URL_SCHEMES = ["http:", "https:", "mailto:", "tel:"];
+
 export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 	// =============================================================================
 	// CONST, STATE, REF
@@ -45,7 +47,7 @@ export const ButtonField = (props: IGenericFieldProps<IButtonSchema>) => {
 
 	const isValidUrl = (url: string): boolean => {
 		try {
-			return !!new URL(url);
+			return ALLOWED_URL_SCHEMES.includes(new URL(url).protocol);
 		} catch {
 			return false;
 		}
