@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { ERROR_MESSAGES } from "../../components/shared";
+import { RegexHelper } from "../../utils";
 import {
 	IFieldYupConfig,
 	IYupConditionalValidationRule,
@@ -187,13 +188,15 @@ export namespace YupHelper {
 					break;
 				case !!rule.matches:
 					{
-						const matches = rule.matches.match(/\/(.*)\/([a-z]+)?/);
-						try {
-							yupSchema = (yupSchema as Yup.StringSchema).matches(
-								new RegExp(matches[1], matches[2]),
-								rule.errorMessage
-							);
-						} catch (error) {
+						const regex = RegexHelper.parseMatchesPattern(rule.matches);
+						if (regex) {
+							yupSchema = (yupSchema as Yup.StringSchema).test({
+								name: "matches",
+								message: rule.errorMessage,
+								test: (value) =>
+									value === undefined || value === null || RegexHelper.safeTestRegex(regex, value),
+							});
+						} else {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
 						}
 					}
