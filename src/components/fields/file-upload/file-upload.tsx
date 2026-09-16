@@ -38,6 +38,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 			description,
 			hideThumbnail,
 			label,
+			trustProvidedFileMetadata,
 			uploadOnAddingFile,
 			validation,
 			warning: schemaWarning,
@@ -323,6 +324,7 @@ export const FileUploadInner = (props: IGenericFieldProps<IFileUploadSchema>) =>
 					hideThumbnail={hideThumbnail}
 					id={id}
 					maxFileSizeRule={maxFileSizeRuleRef.current}
+					trustProvidedFileMetadata={!!trustProvidedFileMetadata}
 					upload={uploadOnAddingFile}
 					uploadRule={uploadRuleRef.current}
 					value={value}

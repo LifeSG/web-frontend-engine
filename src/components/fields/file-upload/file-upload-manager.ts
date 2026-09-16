@@ -22,6 +22,7 @@ interface IProps {
 	hideThumbnail?: boolean | undefined;
 	id: string;
 	maxFileSizeRule: IFileUploadValidationRule;
+	trustProvidedFileMetadata: boolean;
 	upload: IFileUploadSchema["uploadOnAddingFile"];
 	uploadRule: IFileUploadValidationRule;
 	value: IFileUploadValue[];
@@ -58,6 +59,7 @@ const FileUploadManager = (props: IProps) => {
 		hideThumbnail,
 		id,
 		maxFileSizeRule,
+		trustProvidedFileMetadata,
 		upload,
 		uploadRule,
 		value,
@@ -275,14 +277,20 @@ const FileUploadManager = (props: IProps) => {
 		}
 
 		// rawFile may not be available because some use cases is not able to return dataURL / fileUrl due to security concerns
-		// in such cases, we will rely on the uploadResponse for file info
-		const uploadData = fileToInject.uploadResponse?.["data"] || fileToInject.uploadResponse;
+		// in such cases, uploadResponse is only trusted for file info when the schema explicitly opts in via
+		// trustProvidedFileMetadata — that metadata is caller-supplied and not independently verified otherwise
+		const canTrustUploadResponse = !rawFile && trustProvidedFileMetadata;
+		const uploadData = canTrustUploadResponse
+			? fileToInject.uploadResponse?.["data"] || fileToInject.uploadResponse
+			: undefined;
 		const { errorMessage, fileType } = rawFile
 			? await readFile({ ...fileToInject, rawFile })
-			: validateFileType({
+			: canTrustUploadResponse
+			? validateFileType({
 					mime: uploadData?.["mimeType"],
 					ext: uploadData?.["ext"],
-			  });
+			  })
+			: { errorMessage: ERROR_MESSAGES.UPLOAD().GENERIC, fileType: undefined };
 
 		let size = rawFile?.size || uploadData?.["fileSize"] || 0;
 		if (isNaN(size)) {
