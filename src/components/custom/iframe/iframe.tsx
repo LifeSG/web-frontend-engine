@@ -51,8 +51,15 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	const getTargetOriginFromSrc = useCallback(() => {
 		try {
-			const parsedUrl = new URL(src);
-			return `${parsedUrl.protocol}//${parsedUrl.host}`;
+			// resolve against the embedding page so relative/protocol-relative src values (e.g. "/embedded/form",
+			// "//partner.example/form") derive a real origin instead of throwing — new URL(src) with no base
+			// always throws for those, which previously caused the origin check to fail open (accept any origin)
+			// for any iframe configured with a same-origin-relative src, a completely ordinary configuration
+			const parsedUrl = new URL(src, window.location.href);
+			if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+				return null;
+			}
+			return parsedUrl.origin;
 		} catch (error) {
 			console.error("Invalid URL:", error);
 			return null;

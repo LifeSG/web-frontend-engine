@@ -152,6 +152,47 @@ describe("iframe", () => {
 
 			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello world" }));
 		});
+
+		it("should derive the origin for a relative src (resolved against the current page) and still ignore mismatched origins", async () => {
+			// new URL("/embedded/form") with no base throws; resolving against window.location.href
+			// (http://localhost/ in this test environment) must derive "http://localhost", not fail open
+			renderComponent({ src: "/embedded/form", validationTimeout: -1 });
+
+			sendPostMessageFromOrigin("https://attacker.example", EPostMessageEvent.SET_VALUE, "hello world");
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith({});
+		});
+
+		it("should accept a setValue postMessage matching the origin derived from a relative src", async () => {
+			renderComponent({ src: "/embedded/form", validationTimeout: -1 });
+
+			sendPostMessageFromOrigin("http://localhost", EPostMessageEvent.SET_VALUE, "hello world");
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: "hello world" }));
+		});
+
+		it("should derive the origin for a protocol-relative src and still ignore mismatched origins", async () => {
+			renderComponent({ src: "//localhost/embedded/form", validationTimeout: -1 });
+
+			sendPostMessageFromOrigin("https://attacker.example", EPostMessageEvent.SET_VALUE, "hello world");
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith({});
+		});
+
+		it("should reject every postMessage (fail closed) when src cannot be resolved to a valid http(s) origin", async () => {
+			// a non-http(s) scheme parses fine as a URL but must not be trusted as a postMessage origin —
+			// and critically, when no valid origin can be established, messages must be rejected by
+			// default, not accepted by default
+			renderComponent({ src: "javascript:alert(1)", validationTimeout: -1 });
+
+			sendPostMessageFromOrigin("https://attacker.example", EPostMessageEvent.SET_VALUE, "hello world");
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+
+			expect(SUBMIT_FN).toHaveBeenCalledWith({});
+		});
 	});
 
 	describe("load", () => {
