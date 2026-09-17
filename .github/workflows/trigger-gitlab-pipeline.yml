@@ -24,7 +24,7 @@ jobs:
         run: |
           [[ $GITHUB_EVENT_NAME = "pull_request" ]] && BRANCH_NAME="$HEAD_REF" || BRANCH_NAME="$REF_NAME"
 
-          [[ $GITHUB_EVENT_NAME = "pull_request" ]] && COMMIT_MSG="$PR_TITLE" || COMMIT_MSG=$(echo -e "$HEAD_COMMIT_MSG" | head -n 1)
+          [[ $GITHUB_EVENT_NAME = "pull_request" ]] && COMMIT_MSG="$PR_TITLE" || COMMIT_MSG=$(printf '%s\n' "$HEAD_COMMIT_MSG" | awk 'NR>1{exit};1')
 
           PIPELINE_PROJECT_URL="github.com/$GITHUB_REPOSITORY.git"
 
