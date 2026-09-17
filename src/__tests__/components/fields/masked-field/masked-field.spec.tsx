@@ -103,6 +103,24 @@ describe(UI_TYPE, () => {
 		expect(getMaskedField()).toHaveAttribute("maxLength", "5");
 	});
 
+	it("should not hang on a pathological maskRegex when a long value arrives via defaultValues (bypassing the maxLength DOM attribute)", () => {
+		// the maxLength attribute only constrains typing through the native input — a defaultValue is set
+		// directly on stateValue and handed to MaskedInput regardless of that attribute, so the length bound
+		// must also be applied when the value is set programmatically, not just derived as a DOM attribute
+		const maliciousValue = `${"a".repeat(600)}!`;
+
+		const start = Date.now();
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(a+)+$/" },
+			{ defaultValues: { [COMPONENT_ID]: maliciousValue } }
+		);
+		expect(Date.now() - start).toBeLessThan(1000);
+
+		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
+			RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH
+		);
+	});
+
 	it("should support default value", async () => {
 		const defaultValue = "hello";
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
