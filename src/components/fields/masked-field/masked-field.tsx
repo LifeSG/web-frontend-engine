@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
 import { RegexHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { Warning } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IMaskedFieldSchema } from "./types";
 
 export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
@@ -38,23 +38,45 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		return RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH;
 	};
 
-	const clampValue = (val: string | undefined): string => {
-		const safeLength = getMaskRegexSafeLength();
-		return safeLength !== undefined ? (val || "").slice(0, safeLength) : val || "";
+	// recomputed every render (not memoized) so it always reflects the maskRegex/validation in effect
+	// for *this* render, not a stale value from before an async effect has caught up
+	const safeLength = getMaskRegexSafeLength();
+
+	const clampValue = (val: string | number | undefined): string => {
+		const stringVal = val !== undefined && val !== null ? `${val}` : "";
+		return safeLength !== undefined ? stringVal.slice(0, safeLength) : stringVal;
 	};
 
 	const [stateValue, setStateValue] = useState<string | number>(() => clampValue(value));
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 
+	// clamped at render time, not just in the effect below — an effect only runs after a render has
+	// already committed, so if maskRegex changes while stateValue is still a long, pre-existing value,
+	// the unclamped stateValue would otherwise reach MaskedInput's own regex-driven masking on that
+	// render, before the effect gets a chance to shorten it
+	const displayedValue = clampValue(stateValue);
+
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
-
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
+
+		let schema = Yup.string();
+		if (maskRegex && !maxRule && !lengthRule) {
+			// no author-specified max/length exists to validate against, so without this the implicit
+			// safe-length bound used for clamping/masking is never actually enforced as a real
+			// validation error - an oversized programmatic value would just be silently clamped for
+			// display while the full value remains in form state and gets submitted as-is
+			schema = schema.max(
+				RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH,
+				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH)
+			);
+		}
+		setFieldValidationConfig(id, schema, validation);
+
 		const attributes = { ...derivedAttributes };
 		if (maxRule?.max > 0) {
 			attributes.maxLength = maxRule.max;
@@ -73,7 +95,7 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 	useEffect(() => {
 		setStateValue(clampValue(value));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
+	}, [safeLength, value]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -110,11 +132,19 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 				{...otherSchema}
 				{...otherProps}
 				{...derivedAttributes}
+				// MaskedInput keeps its own internal raw-value tracking rather than always deriving it from
+				// the `value` prop on every render - when maskRegex newly appears while that internal state
+				// still holds a long pre-existing value, it re-masks against ITS stale internal value, not
+				// the (already-clamped) value passed this render, which reintroduces the catastrophic
+				// pattern regardless of our own clamping. Keying on maskRegex forces a full remount instead
+				// of an in-place update whenever it changes, so the fresh instance always initialises its
+				// internal state from the current, already-clamped displayedValue.
+				key={maskRegex ?? "no-mask-regex"}
 				id={id}
 				data-testid={TestHelper.generateId(id, uiType)}
 				label={formattedLabel}
 				onChange={handleChange}
-				value={stateValue}
+				value={displayedValue}
 				errorMessage={error?.message}
 				maskRegex={getRegex()}
 				iconMask={renderIcon(iconMask)}

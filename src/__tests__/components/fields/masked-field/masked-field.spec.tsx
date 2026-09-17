@@ -3,6 +3,7 @@ import cloneDeep from "lodash/cloneDeep";
 import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IMaskedFieldSchema } from "../../../../components/fields";
+import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import { RegexHelper } from "../../../../utils";
 import {
@@ -119,6 +120,61 @@ describe(UI_TYPE, () => {
 		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
 			RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH
 		);
+	});
+
+	it("should clamp an already-loaded long value at render time when maskRegex changes at runtime, not only when the value itself changes", () => {
+		// the effect that clamps stateValue is keyed on [safeLength, value] — but the render that
+		// introduces a new maskRegex happens before that effect runs. If MaskedInput were handed the
+		// unclamped stateValue on that render, a pathological pattern could reach it before the effect
+		// has any chance to shorten the value, so the render itself must derive a clamped value directly
+		const maliciousValue = `${"a".repeat(600)}!`;
+		const withoutMaskRegex: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), {
+			defaultValues: { [COMPONENT_ID]: maliciousValue },
+		});
+		const { rerender } = render(<FrontendEngine data={withoutMaskRegex} onSubmit={SUBMIT_FN} />);
+
+		const withMaskRegex: IFrontendEngineData = cloneDeep(withoutMaskRegex);
+		merge(withMaskRegex, {
+			sections: { section: { children: { [COMPONENT_ID]: { maskRange: null, maskRegex: "/^(a+)+$/" } } } },
+		});
+
+		const start = Date.now();
+		rerender(<FrontendEngine data={withMaskRegex} onSubmit={SUBMIT_FN} />);
+		expect(Date.now() - start).toBeLessThan(1000);
+
+		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
+			RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH
+		);
+	});
+
+	it("should reject an oversized programmatic value with a validation error when maskRegex is set but no explicit max/length rule governs the length", async () => {
+		const oversizedValue = "a".repeat(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH + 1);
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(hello)/g" },
+			{ defaultValues: { [COMPONENT_ID]: oversizedValue } }
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(
+			getErrorMessage(
+				false,
+				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH)
+			)
+		).toBeInTheDocument();
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
+	});
+
+	it("should not reject an oversized value when an explicit max validation rule already permits that length", async () => {
+		const value = "a".repeat(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH + 1);
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 1000 }] },
+			{ defaultValues: { [COMPONENT_ID]: value } }
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 	});
 
 	it("should support default value", async () => {
