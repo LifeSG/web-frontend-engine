@@ -40,20 +40,6 @@ export const ToggleWrapper = styled.div<IToggleWrapperProps>`
 	flex-direction: ${(props) => (props.$layoutType === "vertical" ? "column" : "row")};
 	flex-wrap: wrap;
 	gap: ${Spacing["spacing-16"]};
-
-	${(props) =>
-		props.$hasError &&
-		css`
-			/* No item selected — all items get error border */
-			&:not(:has(input:checked)) > * {
-				border-color: ${Colour["border-error"](props)};
-			}
-
-			/* An item is selected — unselected items revert to normal border */
-			&:has(input:checked) > *:not(:has(input:checked)) {
-				border-color: ${Colour.border(props)};
-			}
-		`}
 `;
 
 export const StyledToggle = styled(Toggle)<IStyledToggleProps>`
@@ -61,22 +47,4 @@ export const StyledToggle = styled(Toggle)<IStyledToggleProps>`
 		margin: 0;
 		padding: 0;
 	}
-
-	${(props) =>
-		props.$hasError &&
-		css`
-			&:has(input:checked) {
-				background: ${Colour["bg-error"](props)};
-				border-color: ${Colour["border-error"](props)};
-
-				label,
-				span {
-					color: ${Colour["text-error"](props)};
-				}
-
-				svg {
-					color: ${Colour["icon-error"](props)};
-				}
-			}
-		`}
 `;
