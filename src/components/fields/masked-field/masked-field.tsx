@@ -24,7 +24,26 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		warning,
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string>(value || "");
+	// maxLength as a DOM attribute only constrains what a user can type through the browser's native
+	// input handling — it does nothing to a value that arrives via defaultValues or a form reset, which
+	// sets stateValue (and therefore what MaskedInput evaluates maskRegex against) directly. Compute the
+	// same bound as a plain function (not state) so it's available synchronously wherever stateValue is
+	// set, not just once the derivedAttributes effect has run.
+	const getMaskRegexSafeLength = (): number | undefined => {
+		if (!maskRegex) return undefined;
+		const maxRule = validation?.find((rule) => "max" in rule);
+		const lengthRule = validation?.find((rule) => "length" in rule);
+		if (maxRule?.max > 0) return maxRule.max;
+		if (lengthRule?.length > 0) return lengthRule.length;
+		return RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH;
+	};
+
+	const clampValue = (val: string | undefined): string => {
+		const safeLength = getMaskRegexSafeLength();
+		return safeLength !== undefined ? (val || "").slice(0, safeLength) : val || "";
+	};
+
+	const [stateValue, setStateValue] = useState<string>(() => clampValue(value));
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
 	const { setFieldValidationConfig } = useValidationConfig();
 
@@ -52,9 +71,7 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 	}, [validation, maskRegex]);
 
 	useEffect(() => {
-		if (value !== stateValue) {
-			setStateValue(value || "");
-		}
+		setStateValue(clampValue(value));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
