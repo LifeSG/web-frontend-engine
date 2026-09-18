@@ -125,9 +125,11 @@ describe("button", () => {
 		});
 
 		it.each`
-			scenario                                           | href
-			${"should not navigate when href is not provided"} | ${undefined}
-			${"should not navigate when href is invalid"}      | ${"invalid-url"}
+			scenario                                                   | href
+			${"should not navigate when href is not provided"}         | ${undefined}
+			${"should not navigate when href is invalid"}              | ${"invalid-url"}
+			${"should not navigate when href uses javascript: scheme"} | ${"javascript:alert(1)"}
+			${"should not navigate when href uses data: scheme"}       | ${"data:text/html,<script>alert(1)</script>"}
 		`("$scenario", ({ href }) => {
 			renderComponent({ overrideButton: { ...(href && { href }) } });
 			fireEvent.click(getField("button", COMPONENT_LABEL));
