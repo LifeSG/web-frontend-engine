@@ -9,3 +9,5 @@ export * from "./object-helper";
 export * from "./test-helper";
 export * from "./types";
 export * from "./prop-helper";
+export * from "./regex-helper";
+export * from "./style-helper";

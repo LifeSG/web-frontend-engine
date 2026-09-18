@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { ERROR_MESSAGES } from "../../components/shared";
+import { RegexHelper } from "../../utils";
 import {
 	IFieldYupConfig,
 	IYupConditionalValidationRule,
@@ -41,25 +42,6 @@ export namespace YupHelper {
 		const whenDependencyMap = buildWhenDependencyMap(whenPairIds);
 
 		return Yup.object().meta({ yupId, whenDependencyMap }).shape(yupSchema, whenPairIds);
-	};
-
-	/**
-	 * Converts [dependentField, sourceField] pairs into a sourceField -> dependentFields[] map.
-	 * Used to determine which fields should revalidate when a source field changes.
-	 * @param whenPairIds array of [dependentFieldId, sourceFieldId] pairs
-	 * @returns map of sourceFieldId -> dependentFieldIds[]
-	 */
-	const buildWhenDependencyMap = (whenPairIds: [string, string][]): Record<string, string[]> => {
-		const map: Record<string, string[]> = {};
-		whenPairIds.forEach(([dependentField, sourceField]) => {
-			if (!map[sourceField]) {
-				map[sourceField] = [];
-			}
-			if (!map[sourceField].includes(dependentField)) {
-				map[sourceField].push(dependentField);
-			}
-		});
-		return map;
 	};
 
 	/**
@@ -210,13 +192,20 @@ export namespace YupHelper {
 					break;
 				case !!rule.matches:
 					{
-						const matches = rule.matches.match(/\/(.*)\/([a-z]+)?/);
-						try {
-							yupSchema = (yupSchema as Yup.StringSchema).matches(
-								new RegExp(matches[1], matches[2]),
-								rule.errorMessage
-							);
-						} catch (error) {
+						// "matches" tests the field's own value as a string; skip for non-string values
+						if (yupSchema.type !== "string") {
+							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+							break;
+						}
+						const regex = RegexHelper.compile(rule.matches);
+						if (regex) {
+							yupSchema = (yupSchema as Yup.StringSchema).test({
+								name: "matches",
+								message: rule.errorMessage,
+								test: (value) =>
+									value === undefined || value === null || value === "" || RegexHelper.safeTestRegex(regex, value),
+							});
+						} else {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
 						}
 					}
