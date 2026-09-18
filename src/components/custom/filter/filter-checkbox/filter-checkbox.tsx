@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import * as Yup from "yup";
+import sanitizeHtml from "sanitize-html";
 import { TestHelper, filterSchemaProps } from "../../../../utils";
 import { useValidationConfig } from "../../../../utils/hooks";
 import { Sanitize } from "../../../shared";
@@ -89,7 +90,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 			onSelect={handleChange}
 			valueExtractor={(item) => (isParentOption(item) ? item.key : item.value)}
 			labelExtractor={(item) => (
-				<Sanitize inline sanitizeOptions={{ allowedAttributes: false }}>
+				<Sanitize inline sanitizeOptions={{ allowedAttributes: sanitizeHtml.defaults.allowedAttributes }}>
 					{item.label}
 				</Sanitize>
 			)}
