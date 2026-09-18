@@ -33,7 +33,7 @@ describe("regex-helper", () => {
 		});
 
 		it("should return false when value exceeds the safe length bound", () => {
-			const maliciousValue = `${"a".repeat(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH + 1)}!`;
+			const maliciousValue = `${"a".repeat(RegexHelper.MAX_MATCHES_INPUT_LENGTH + 1)}!`;
 
 			const start = Date.now();
 			expect(RegexHelper.safeTestRegex(/^(a+)+$/, maliciousValue)).toBe(false);

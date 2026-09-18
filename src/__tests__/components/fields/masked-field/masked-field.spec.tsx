@@ -67,7 +67,7 @@ describe(UI_TYPE, () => {
 	it("should default maxLength to the safe regex length bound when maskRegex is set with no max/length validation", () => {
 		renderComponent({ maskRange: null, maskRegex: "/^(hello)/g" });
 
-		expect(getMaskedField()).toHaveAttribute("maxLength", `${RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH}`);
+		expect(getMaskedField()).toHaveAttribute("maxLength", `${RegexHelper.MAX_MATCHES_INPUT_LENGTH}`);
 	});
 
 	it("should prefer an explicit max/length validation's maxLength over the maskRegex default", () => {
@@ -87,7 +87,7 @@ describe(UI_TYPE, () => {
 		expect(Date.now() - start).toBeLessThan(1000);
 
 		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
-			RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH
+			RegexHelper.MAX_MATCHES_INPUT_LENGTH
 		);
 	});
 
@@ -108,12 +108,12 @@ describe(UI_TYPE, () => {
 		expect(Date.now() - start).toBeLessThan(1000);
 
 		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
-			RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH
+			RegexHelper.MAX_MATCHES_INPUT_LENGTH
 		);
 	});
 
 	it("should reject an oversized programmatic value with a validation error when maskRegex is set but no explicit max/length rule governs the length", async () => {
-		const oversizedValue = "a".repeat(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH + 1);
+		const oversizedValue = "a".repeat(RegexHelper.MAX_MATCHES_INPUT_LENGTH + 1);
 		renderComponent(
 			{ maskRange: null, maskRegex: "/^(hello)/g" },
 			{ defaultValues: { [COMPONENT_ID]: oversizedValue } }
@@ -124,14 +124,14 @@ describe(UI_TYPE, () => {
 		expect(
 			getErrorMessage(
 				false,
-				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH)
+				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_MATCHES_INPUT_LENGTH)
 			)
 		).toBeInTheDocument();
 		expect(SUBMIT_FN).not.toHaveBeenCalled();
 	});
 
 	it("should not reject an oversized value when an explicit max validation rule already permits that length", async () => {
-		const value = "a".repeat(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH + 1);
+		const value = "a".repeat(RegexHelper.MAX_MATCHES_INPUT_LENGTH + 1);
 		renderComponent(
 			{ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 1000 }] },
 			{ defaultValues: { [COMPONENT_ID]: value } }
