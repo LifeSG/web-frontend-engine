@@ -257,7 +257,7 @@ export const ImageManager = (props: IProps) => {
 	 * Converts a matches string (e.g. "/^abc$/i" or "^abc$") to a RegExp.
 	 * Returns undefined if the string is invalid.
 	 */
-	const resolveMatchesPattern = (matches: string): RegExp | undefined => RegexHelper.parseMatchesPattern(matches);
+	const resolveMatchesPattern = (matches: string): RegExp | undefined => RegexHelper.compile(matches);
 
 	const convertImage = async (index: number, image: IImage) => {
 		try {
