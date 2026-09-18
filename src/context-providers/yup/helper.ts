@@ -188,6 +188,7 @@ export namespace YupHelper {
 					break;
 				case !!rule.matches:
 					{
+						// "matches" tests the field's own value as a string; skip for non-string values
 						if (yupSchema.type !== "string") {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
 							break;
