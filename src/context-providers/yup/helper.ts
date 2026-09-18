@@ -193,7 +193,7 @@ export namespace YupHelper {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
 							break;
 						}
-						const regex = RegexHelper.parseMatchesPattern(rule.matches);
+						const regex = RegexHelper.compile(rule.matches);
 						if (regex) {
 							yupSchema = (yupSchema as Yup.StringSchema).test({
 								name: "matches",

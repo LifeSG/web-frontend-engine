@@ -1,9 +1,9 @@
 import { RegexHelper } from "../../utils";
 
 describe("regex-helper", () => {
-	describe("parseMatchesPattern", () => {
+	describe("compile", () => {
 		it("should parse a /pattern/flags string into a RegExp", () => {
-			const regex = RegexHelper.parseMatchesPattern("/^hello/i");
+			const regex = RegexHelper.compile("/^hello/i");
 
 			expect(regex).toBeInstanceOf(RegExp);
 			expect(regex.source).toBe("^hello");
@@ -11,14 +11,14 @@ describe("regex-helper", () => {
 		});
 
 		it("should fall back to treating the whole string as a pattern when it has no /pattern/flags wrapper", () => {
-			const regex = RegexHelper.parseMatchesPattern("hello");
+			const regex = RegexHelper.compile("hello");
 
 			expect(regex).toBeInstanceOf(RegExp);
 			expect(regex.source).toBe("hello");
 		});
 
 		it("should return undefined instead of throwing on an invalid pattern", () => {
-			expect(RegexHelper.parseMatchesPattern("/[/")).toBeUndefined();
+			expect(RegexHelper.compile("/[/")).toBeUndefined();
 		});
 	});
 

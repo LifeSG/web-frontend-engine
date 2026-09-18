@@ -91,7 +91,7 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 	// =============================================================================
 	const getRegex = () => {
 		if (!maskRegex) return;
-		const regex = RegexHelper.parseMatchesPattern(maskRegex);
+		const regex = RegexHelper.compile(maskRegex);
 		if (!regex) {
 			console.warn(`invalid regex pattern: ${maskRegex}`);
 		}
