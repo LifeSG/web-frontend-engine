@@ -199,7 +199,7 @@ export namespace YupHelper {
 								name: "matches",
 								message: rule.errorMessage,
 								test: (value) =>
-									value === undefined || value === null || RegexHelper.safeTestRegex(regex, value),
+									value === undefined || value === null || value === "" || RegexHelper.safeTestRegex(regex, value),
 							});
 						} else {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
