@@ -1,5 +1,9 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { FrontendEngine } from "../../../../components";
 import { IMaskedFieldSchema } from "../../../../components/fields";
+import { ERROR_MESSAGES } from "../../../../components/shared";
+import { IFrontendEngineData } from "../../../../components/types";
+import { RegexHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
 	createRenderComponent,
@@ -60,6 +64,84 @@ describe(UI_TYPE, () => {
 		expect(getMaskedField()).toHaveAttribute("maxLength", "5");
 	});
 
+	it("should default maxLength to the safe regex length bound when maskRegex is set with no max/length validation", () => {
+		renderComponent({ maskRange: null, maskRegex: "/^(hello)/g" });
+
+		expect(getMaskedField()).toHaveAttribute("maxLength", `${RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH}`);
+	});
+
+	it("should prefer an explicit max/length validation's maxLength over the maskRegex default", () => {
+		renderComponent({ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 5 }] });
+
+		expect(getMaskedField()).toHaveAttribute("maxLength", "5");
+	});
+
+	it("should not hang when a long value arrives via defaultValues", () => {
+		const maliciousValue = `${"a".repeat(600)}!`;
+
+		const start = Date.now();
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(a+)+$/" },
+			{ defaultValues: { [COMPONENT_ID]: maliciousValue } }
+		);
+		expect(Date.now() - start).toBeLessThan(1000);
+
+		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
+			RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH
+		);
+	});
+
+	it("should clamp an already-loaded long value at render time when maskRegex changes at runtime", () => {
+		const maliciousValue = `${"a".repeat(600)}!`;
+		const withoutMaskRegex: IFrontendEngineData = JSON.parse(JSON.stringify(schema));
+		Object.assign(withoutMaskRegex, { defaultValues: { [COMPONENT_ID]: maliciousValue } });
+		const { rerender } = render(<FrontendEngine data={withoutMaskRegex} onSubmit={SUBMIT_FN} />);
+
+		const withMaskRegex: IFrontendEngineData = JSON.parse(JSON.stringify(withoutMaskRegex));
+		Object.assign(withMaskRegex.sections.section.children[COMPONENT_ID] as object, {
+			maskRange: null,
+			maskRegex: "/^(a+)+$/",
+		});
+
+		const start = Date.now();
+		rerender(<FrontendEngine data={withMaskRegex} onSubmit={SUBMIT_FN} />);
+		expect(Date.now() - start).toBeLessThan(1000);
+
+		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
+			RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH
+		);
+	});
+
+	it("should reject an oversized programmatic value with a validation error when maskRegex is set but no explicit max/length rule governs the length", async () => {
+		const oversizedValue = "a".repeat(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH + 1);
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(hello)/g" },
+			{ defaultValues: { [COMPONENT_ID]: oversizedValue } }
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(
+			getErrorMessage(
+				false,
+				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH)
+			)
+		).toBeInTheDocument();
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
+	});
+
+	it("should not reject an oversized value when an explicit max validation rule already permits that length", async () => {
+		const value = "a".repeat(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH + 1);
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 1000 }] },
+			{ defaultValues: { [COMPONENT_ID]: value } }
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
+	});
+
 	it("should support default value", async () => {
 		const defaultValue = "hello";
 		renderComponent(undefined, { defaultValues: { [COMPONENT_ID]: defaultValue } });
@@ -97,6 +179,15 @@ describe(UI_TYPE, () => {
 
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
+	});
+
+	it("should not throw when maskRegex is malformed", () => {
+		expect(() =>
+			renderComponent(
+				{ maskRange: null, maskRegex: "not a /pattern/flags string [" },
+				{ defaultValues: { [COMPONENT_ID]: "hello" } }
+			)
+		).not.toThrow();
 	});
 
 	it("should render custom icons", () => {
