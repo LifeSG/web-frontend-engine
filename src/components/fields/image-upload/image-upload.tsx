@@ -154,7 +154,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 						);
 					}
 				),
-			validation
+			validation?.filter((rule) => !("matches" in rule))
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [validation]);

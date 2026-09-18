@@ -61,7 +61,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 			onExpandChange={setExpandedState}
 			onSelect={handleChange}
 			labelExtractor={(item) => (
-				<Sanitize inline sanitizeOptions={{ allowedAttributes: false }}>
+				<Sanitize inline>
 					{item.label}
 				</Sanitize>
 			)}

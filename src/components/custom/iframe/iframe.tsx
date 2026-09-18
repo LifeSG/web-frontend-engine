@@ -42,8 +42,11 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	const getTargetOriginFromSrc = useCallback(() => {
 		try {
-			const parsedUrl = new URL(src);
-			return `${parsedUrl.protocol}//${parsedUrl.host}`;
+			const parsedUrl = new URL(src, window.location.href);
+			if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+				return null;
+			}
+			return parsedUrl.origin;
 		} catch (error) {
 			console.error("Invalid URL:", error);
 			return null;
@@ -121,11 +124,14 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 	// =========================================================================
 	// POSTMESSAGE HANDLERS
 	// =========================================================================
+	const allowedOrigin = getTargetOriginFromSrc();
+
 	useIframeMessage(
 		EPostMessageEvent.TRIGGER_SYNC,
 		useCallback(() => {
 			iframePostMessage({ type: EPostMessageEvent.SYNC, payload: { error, id, value } });
-		}, [error, id, value, iframePostMessage])
+		}, [error, id, value, iframePostMessage]),
+		allowedOrigin
 	);
 
 	useIframeMessage<{ width?: number | undefined; height?: number | undefined }>(
@@ -135,7 +141,8 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 				width: e.data.payload?.width,
 				height: e.data.payload?.height,
 			});
-		}, [])
+		}, []),
+		allowedOrigin
 	);
 
 	useIframeMessage<unknown>(
@@ -145,7 +152,8 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 				formContext.setValue(id, e.data.payload, { shouldDirty: true });
 			},
 			[formContext, id]
-		)
+		),
+		allowedOrigin
 	);
 
 	useIframeMessage<boolean>(
@@ -160,14 +168,16 @@ export const Iframe = (props: IGenericCustomFieldProps<IIframeSchema>) => {
 				clearAsyncValidation();
 			},
 			[clearAsyncValidation]
-		)
+		),
+		allowedOrigin
 	);
 
 	useIframeMessage(
 		EPostMessageEvent.LOADED,
 		useCallback(() => {
 			dispatchFieldEvent("loaded", id);
-		}, [dispatchFieldEvent, id])
+		}, [dispatchFieldEvent, id]),
+		allowedOrigin
 	);
 
 	// =========================================================================
