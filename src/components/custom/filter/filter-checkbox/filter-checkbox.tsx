@@ -2,7 +2,6 @@ import { Filter } from "@lifesg/react-design-system/filter";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import sanitizeHtml from "sanitize-html";
 import { TestHelper } from "../../../../utils";
 import { Sanitize } from "../../../shared";
 import { IGenericCustomFieldProps } from "../../types";
@@ -62,7 +61,7 @@ export const FilterCheckbox = (props: IGenericCustomFieldProps<IFilterCheckboxSc
 			onExpandChange={setExpandedState}
 			onSelect={handleChange}
 			labelExtractor={(item) => (
-				<Sanitize inline sanitizeOptions={{ allowedAttributes: sanitizeHtml.defaults.allowedAttributes }}>
+				<Sanitize inline>
 					{item.label}
 				</Sanitize>
 			)}
