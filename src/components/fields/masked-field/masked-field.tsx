@@ -30,7 +30,7 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		const lengthRule = validation?.find((rule) => "length" in rule);
 		if (maxRule?.max > 0) return maxRule.max;
 		if (lengthRule?.length > 0) return lengthRule.length;
-		return RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH;
+		return RegexHelper.MAX_MATCHES_INPUT_LENGTH;
 	};
 
 	const safeLength = getMaskRegexSafeLength();
@@ -56,8 +56,8 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		let schema = Yup.string();
 		if (maskRegex && !maxRule && !lengthRule) {
 			schema = schema.max(
-				RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH,
-				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH)
+				RegexHelper.MAX_MATCHES_INPUT_LENGTH,
+				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_MATCHES_INPUT_LENGTH)
 			);
 		}
 		setFieldValidationConfig(id, schema, validation);
@@ -68,7 +68,7 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		} else if (lengthRule?.length > 0) {
 			attributes.maxLength = lengthRule.length;
 		} else if (maskRegex) {
-			attributes.maxLength = RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH;
+			attributes.maxLength = RegexHelper.MAX_MATCHES_INPUT_LENGTH;
 		}
 		setDerivedAttributes(attributes);
 		// eslint-disable-next-line react-hooks/exhaustive-deps

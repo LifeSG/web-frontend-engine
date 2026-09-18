@@ -28,7 +28,7 @@ YupHelper.addCondition("string", "notMatches", (value: string, regex: string) =>
 		console.warn(`invalid regex pattern: ${regex}`);
 		return true;
 	}
-	if (value.length > RegexHelper.MAX_SAFE_PATTERN_INPUT_LENGTH) {
+	if (value.length > RegexHelper.MAX_MATCHES_INPUT_LENGTH) {
 		return false;
 	}
 	return !parsedRegex.test(value);
