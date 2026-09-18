@@ -1,5 +1,6 @@
 import { Modal } from "@lifesg/react-design-system/modal";
 import styled from "styled-components";
+import { StyleHelper } from "../../../../utils";
 import { TPanelInputMode } from "../types";
 import { LocationPicker } from "./location-picker";
 import { Breakpoint, MediaQuery, Spacing } from "@lifesg/react-design-system/theme";
@@ -22,7 +23,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 	z-index: 1;
 
 	${({ locationModalStyles }) => {
-		if (locationModalStyles) return `${locationModalStyles}`;
+		if (locationModalStyles) return StyleHelper.sanitizeStyleString(locationModalStyles);
 	}}
 
 	${MediaQuery.MaxWidth.lg} {
