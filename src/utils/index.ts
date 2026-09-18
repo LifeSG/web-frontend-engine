@@ -10,3 +10,4 @@ export * from "./test-helper";
 export * from "./types";
 export * from "./window-helper";
 export * from "./regex-helper";
+export * from "./style-helper";
