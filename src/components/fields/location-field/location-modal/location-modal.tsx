@@ -10,7 +10,7 @@ import clsx from "clsx";
 import { isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OneMapError } from "../../../../services/onemap/types";
-import { GeoLocationHelper, TestHelper } from "../../../../utils";
+import { GeoLocationHelper, StyleHelper, TestHelper } from "../../../../utils";
 import { useFieldEvent } from "../../../../utils/hooks";
 import { Prompt } from "../../../shared";
 import { LocationHelper } from "../location-helper";
@@ -268,7 +268,7 @@ const LocationModal = ({
 
 	useEffect(() => {
 		if (modalBoxRef) {
-			modalBoxRef.style.cssText = locationModalStyles || "";
+			modalBoxRef.style.cssText = StyleHelper.sanitizeStyleString(locationModalStyles || "");
 		}
 	}, [locationModalStyles, modalBoxRef]);
 

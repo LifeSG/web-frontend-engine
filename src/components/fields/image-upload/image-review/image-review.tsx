@@ -14,7 +14,7 @@ import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import clsx from "clsx";
 import { Suspense, lazy, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { FileHelper, ImageHelper, TestHelper, generateRandomId } from "../../../../utils";
+import { FileHelper, ImageHelper, StyleHelper, TestHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import { ImageUploadHelper } from "../image-upload-helper";
@@ -131,7 +131,7 @@ export const ImageReview = (props: IProps) => {
 
 	useEffect(() => {
 		if (modalBoxRef) {
-			modalBoxRef.style.cssText = imageReviewModalStyles || "";
+			modalBoxRef.style.cssText = StyleHelper.sanitizeStyleString(imageReviewModalStyles || "");
 		}
 	}, [imageReviewModalStyles, modalBoxRef]);
 
