@@ -23,7 +23,7 @@ YupHelper.addCondition("string", "notMatches", (value: string, regex: string) =>
 	if (isEmptyValue(value)) {
 		return true;
 	}
-	const parsedRegex = RegexHelper.parseMatchesPattern(regex);
+	const parsedRegex = RegexHelper.compile(regex);
 	if (!parsedRegex) {
 		console.warn(`invalid regex pattern: ${regex}`);
 		return true;
