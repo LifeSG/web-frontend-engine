@@ -131,9 +131,9 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should not reject an oversized value when an explicit max validation rule already permits that length", async () => {
-		const value = "a".repeat(RegexHelper.MAX_MATCHES_INPUT_LENGTH + 1);
+		const value = "a".repeat(1001); // above MAX_MATCHES_INPUT_LENGTH (1000) but within explicit max: 1100
 		renderComponent(
-			{ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 1000 }] },
+			{ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 1100 }] },
 			{ defaultValues: { [COMPONENT_ID]: value } }
 		);
 
