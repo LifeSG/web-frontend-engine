@@ -1,5 +1,5 @@
-import { ArgTypes, Stories, Title } from "@storybook/addon-docs";
-import { Meta, StoryFn } from "@storybook/react";
+import { ArgTypes, Stories, Title } from "@storybook/addon-docs/blocks";
+import { Meta, StoryFn } from "@storybook/react-webpack5";
 import { useEffect, useRef } from "react";
 import { ILocationCoord, ILocationFieldSchema, ILocationFieldValues } from "../../../components/fields";
 import { IMapPin } from "../../../components/fields/location-field/location-modal/location-picker/types";
@@ -16,18 +16,19 @@ import {
 
 const recaptchaSiteKey = "6LfCjocsAAAAALM6wuZN3bqarbgbdaLuJIgFSrXT";
 
-const reverseGeocode = "https://api.dev.lifesg.io/onemap/revgeocode";
-const convertLatLngToXY = "https://api.dev.lifesg.io/onemap/4326to3414";
-const search = "https://api.dev.lifesg.io/onemap/search";
+const reverseGeocode = "https://api.dev.life.gov.sg/onemap/revgeocode";
+const convertLatLngToXY = "https://api.dev.life.gov.sg/onemap/4326to3414";
+const search = "https://api.dev.life.gov.sg/onemap/search";
 
 const defaultMapApi = {
 	reverseGeocode,
 	convertLatLngToXY,
 	search,
 	headers: {
-		"x-client-app": "LifeSG",
+		"x-client-app": "LIFESG",
 	},
 };
+
 const meta: Meta = {
 	title: "Field/LocationField",
 	parameters: {
@@ -185,6 +186,31 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
+		locationModalStyles: {
+			description: “CSS string applied directly to the location modal box via `style.cssText`. Note: `url()` and `@import` are stripped before application.”,
+			table: {
+				type: {
+					summary: “string”,
+				},
+			},
+			control: {
+				type: “text”,
+			},
+		},
+		restrictNonSGLocation: {
+			description:
+				“Prevents confirming and submitting locations that are outside Singapore. On confirming any selected location — a searched address (e.g. `CAUSEWAY (JOHOR)`), a map selection or an unresolvable `Pin location: <lat>, <lng>` value — its coordinates are checked against the coastal outlines of SLA's National Map Polygon dataset: if it falls on a neighbouring (JOHOR (MALAYSIA)) landmass or in waters outside Singapore, the “This location is outside Singapore.” prompt is shown and the location modal stays open. Areas within Singapore that simply have no addresses nearby (e.g. sea just off the coast, reservoirs) remain confirmable. Prefilled values that resolve to locations outside Singapore are cleared and such values fail validation on submission.”,
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: "false" },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -295,6 +321,19 @@ MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",
 	mustHavePostalCode: true,
+	mapApi: defaultMapApi,
+};
+
+export const RestrictNonSGLocation = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-restrict-non-sg-location",
+	false,
+	recaptchaSiteKey
+).bind({});
+RestrictNonSGLocation.args = {
+	uiType: "location-field",
+	label: "RestrictNonSGLocation",
+	restrictNonSGLocation: true,
+	validation: [{ required: true }],
 	mapApi: defaultMapApi,
 };
 
@@ -413,6 +452,7 @@ const IndicateCurrentLocationTemplate = () =>
 		const formRef = useRef<IFrontendEngineRef>();
 
 		useEffect(() => {
+			if (!formRef.current) return;
 			const currentFormRef = formRef.current;
 			currentFormRef.addFieldEventListener("location-field", "get-selectable-pins", id, getPins);
 
