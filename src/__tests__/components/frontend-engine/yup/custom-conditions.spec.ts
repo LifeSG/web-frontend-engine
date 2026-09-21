@@ -32,7 +32,7 @@ describe("notMatches", () => {
 
 	it("should reject an overly long value instead of testing it against the pattern", () => {
 		const schema = buildSchema("/^(a+)+$/");
-		const maliciousValue = `${"a".repeat(600)}!`;
+		const maliciousValue = `${"a".repeat(1000)}!`;
 
 		const start = Date.now();
 		expect(TestHelper.getError(() => schema.validateSync(maliciousValue)).message).toBe(ERROR_MESSAGE);
