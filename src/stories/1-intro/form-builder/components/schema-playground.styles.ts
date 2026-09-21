@@ -17,18 +17,41 @@ export const editorPanel = css`
 	min-height: 0;
 `;
 
-export const textarea = css`
+export const editorContainer = css`
 	flex: 1;
-	width: 100%;
-	resize: none;
-	padding: ${Spacing["spacing-16"]};
+	display: flex;
 	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	border-radius: ${Radius.sm};
+	overflow: hidden;
+	min-height: 0;
+`;
+
+export const lineGutter = css`
+	padding: ${Spacing["spacing-16"]} ${Spacing["spacing-8"]};
+	background: ${Colour["bg-primary-subtlest"]};
+	color: ${Colour["text-subtler"]};
+	font-family: monospace;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	text-align: right;
+	user-select: none;
+	overflow: hidden;
+	box-sizing: border-box;
+	min-width: 3rem;
+`;
+
+export const textarea = css`
+	flex: 1;
+	resize: none;
+	padding: ${Spacing["spacing-16"]};
+	border: none;
+	outline: none;
 	font-family: monospace;
 	font-size: 0.875rem;
 	line-height: 1.5;
 	overflow: auto;
 	box-sizing: border-box;
+	white-space: pre;
 `;
 
 export const previewPanel = css`

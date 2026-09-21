@@ -1,7 +1,7 @@
 import { Button } from "@lifesg/react-design-system/button";
 import { ThemeProvider } from "@lifesg/react-design-system/theme";
 import { Unstyled } from "@storybook/addon-docs/blocks";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IFrontendEngineData } from "../../../../components";
 import { FrontendEngine } from "../../../common";
 import { ErrorBoundary } from "./error-boundary";
@@ -47,6 +47,16 @@ export const SchemaPlayground = () => {
 	const [parsedData, setParsedData] = useState<IFrontendEngineData>(SAMPLE_SCHEMA);
 	const [parseError, setParseError] = useState<string | null>(null);
 	const [renderKey, setRenderKey] = useState(0);
+	const gutterRef = useRef<HTMLDivElement>(null);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+	const lineCount = schemaText.split("\n").length;
+
+	const handleScroll = () => {
+		if (gutterRef.current && textareaRef.current) {
+			gutterRef.current.scrollTop = textareaRef.current.scrollTop;
+		}
+	};
 
 	const handleRender = () => {
 		try {
@@ -64,12 +74,21 @@ export const SchemaPlayground = () => {
 			<Unstyled>
 				<div className={styles.wrapper}>
 					<div className={styles.editorPanel}>
-						<textarea
-							className={styles.textarea}
-							value={schemaText}
-							onChange={(e) => setSchemaText(e.target.value)}
-							spellCheck={false}
-						/>
+						<div className={styles.editorContainer}>
+							<div className={styles.lineGutter} ref={gutterRef}>
+								{Array.from({ length: lineCount }, (_, i) => (
+									<div key={i}>{i + 1}</div>
+								))}
+							</div>
+							<textarea
+								ref={textareaRef}
+								className={styles.textarea}
+								value={schemaText}
+								onChange={(e) => setSchemaText(e.target.value)}
+								onScroll={handleScroll}
+								spellCheck={false}
+							/>
+						</div>
 						<Button styleType="secondary" onClick={handleRender}>
 							Render
 						</Button>
