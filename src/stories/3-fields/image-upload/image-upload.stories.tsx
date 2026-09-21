@@ -189,6 +189,17 @@ const meta: Meta = {
 				defaultValue: { summary: null },
 			},
 		},
+		imageReviewModalStyles: {
+			description: "CSS string applied directly to the image review modal box via `style.cssText`. Note: `url()` and `@import` are stripped before application.",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
+			},
+		},
 	},
 };
 export default meta;

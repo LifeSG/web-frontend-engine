@@ -186,9 +186,20 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
+		locationModalStyles: {
+			description: “CSS string applied directly to the location modal box via `style.cssText`. Note: `url()` and `@import` are stripped before application.”,
+			table: {
+				type: {
+					summary: “string”,
+				},
+			},
+			control: {
+				type: “text”,
+			},
+		},
 		restrictNonSGLocation: {
 			description:
-				"Prevents confirming and submitting locations that are outside Singapore. On confirming any selected location — a searched address (e.g. `CAUSEWAY (JOHOR)`), a map selection or an unresolvable `Pin location: <lat>, <lng>` value — its coordinates are checked against the coastal outlines of SLA's National Map Polygon dataset: if it falls on a neighbouring (JOHOR (MALAYSIA)) landmass or in waters outside Singapore, the “This location is outside Singapore.” prompt is shown and the location modal stays open. Areas within Singapore that simply have no addresses nearby (e.g. sea just off the coast, reservoirs) remain confirmable. Prefilled values that resolve to locations outside Singapore are cleared and such values fail validation on submission.",
+				“Prevents confirming and submitting locations that are outside Singapore. On confirming any selected location — a searched address (e.g. `CAUSEWAY (JOHOR)`), a map selection or an unresolvable `Pin location: <lat>, <lng>` value — its coordinates are checked against the coastal outlines of SLA's National Map Polygon dataset: if it falls on a neighbouring (JOHOR (MALAYSIA)) landmass or in waters outside Singapore, the “This location is outside Singapore.” prompt is shown and the location modal stays open. Areas within Singapore that simply have no addresses nearby (e.g. sea just off the coast, reservoirs) remain confirmable. Prefilled values that resolve to locations outside Singapore are cleared and such values fail validation on submission.”,
 			table: {
 				type: {
 					summary: "boolean",
