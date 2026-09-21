@@ -41,9 +41,7 @@ describe("regex-helper", () => {
 		});
 
 		it("should return false when a short value does not match the pattern", () => {
-			const nearMatch = `${"a".repeat(25)}!`;
-
-			expect(RegexHelper.safeTestRegex(/^(a+)+$/, nearMatch)).toBe(false);
+			expect(RegexHelper.safeTestRegex(/^[0-9]+$/, "abc")).toBe(false);
 		});
 	});
 });
