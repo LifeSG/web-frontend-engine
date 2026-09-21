@@ -18,7 +18,7 @@ const preview: Preview = {
 			storySort: {
 				order: [
 					"Introduction",
-					["Getting Started", "Form Builder"],
+					["Getting Started", "Schema Playground"],
 					"Form",
 					["Frontend Engine", "Validation Schema", "Conditional Rendering"],
 				],

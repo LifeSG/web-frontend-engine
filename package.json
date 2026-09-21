@@ -74,7 +74,6 @@
 		"@floating-ui/react": "^0.26.23",
 		"@lifesg/react-design-system": "^4.0.0-alpha.6",
 		"@lifesg/react-icons": "^1.9.0",
-		"@lifesg/web-form-builder": "^1.0.0-alpha.4",
 		"@linaria/babel-preset": "^5.0.4",
 		"@linaria/core": "^7.0.0",
 		"@mihkeleidast/storybook-addon-source": "^1.0.1",
