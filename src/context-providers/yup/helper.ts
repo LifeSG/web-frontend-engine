@@ -45,6 +45,25 @@ export namespace YupHelper {
 	};
 
 	/**
+	 * Converts [dependentField, sourceField] pairs into a sourceField -> dependentFields[] map.
+	 * Used to determine which fields should revalidate when a source field changes.
+	 * @param whenPairIds array of [dependentFieldId, sourceFieldId] pairs
+	 * @returns map of sourceFieldId -> dependentFieldIds[]
+	 */
+	const buildWhenDependencyMap = (whenPairIds: [string, string][]): Record<string, string[]> => {
+		const map: Record<string, string[]> = {};
+		whenPairIds.forEach(([dependentField, sourceField]) => {
+			if (!map[sourceField]) {
+				map[sourceField] = [];
+			}
+			if (!map[sourceField].includes(dependentField)) {
+				map[sourceField].push(dependentField);
+			}
+		});
+		return map;
+	};
+
+	/**
 	 * Iterates through field configs to look for conditional validation rules (`when` condition)
 	 * For each conditional validation rule, it will refer to the source field to generate the corresponding yup schema
 	 * @param fieldConfigs config containing the yup schema and validation config on each field
