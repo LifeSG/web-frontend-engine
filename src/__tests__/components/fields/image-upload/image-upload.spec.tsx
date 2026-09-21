@@ -398,7 +398,7 @@ describe("image-upload", () => {
 			});
 
 			it("should not hang when matching a long filename against a regex pattern", async () => {
-				const maliciousFile = new File(["file"], `${"a".repeat(600)}!.jpg`, { type: "image/jpeg" });
+				const maliciousFile = new File(["file"], `${"a".repeat(1000)}!.jpg`, { type: "image/jpeg" });
 
 				const start = Date.now();
 				await renderComponent({
