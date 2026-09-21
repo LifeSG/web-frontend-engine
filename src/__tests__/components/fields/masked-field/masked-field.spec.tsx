@@ -77,7 +77,7 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should not hang when a long value arrives via defaultValues", () => {
-		const maliciousValue = `${"a".repeat(600)}!`;
+		const maliciousValue = `${"a".repeat(1000)}!`;
 
 		const start = Date.now();
 		renderComponent(
@@ -92,7 +92,7 @@ describe(UI_TYPE, () => {
 	});
 
 	it("should clamp an already-loaded long value at render time when maskRegex changes at runtime", () => {
-		const maliciousValue = `${"a".repeat(600)}!`;
+		const maliciousValue = `${"a".repeat(1000)}!`;
 		const withoutMaskRegex: IFrontendEngineData = JSON.parse(JSON.stringify(schema));
 		Object.assign(withoutMaskRegex, { defaultValues: { [COMPONENT_ID]: maliciousValue } });
 		const { rerender } = render(<FrontendEngine data={withoutMaskRegex} onSubmit={SUBMIT_FN} />);
