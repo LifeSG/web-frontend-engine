@@ -4,9 +4,9 @@ import * as Icons from "@lifesg/react-icons";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { IGenericFieldProps } from "..";
-import { TestHelper } from "../../../utils";
+import { RegexHelper, TestHelper } from "../../../utils";
 import { useValidationConfig } from "../../../utils/hooks";
-import { Warning } from "../../shared";
+import { ERROR_MESSAGES, Warning } from "../../shared";
 import { IMaskedFieldSchema } from "./types";
 
 export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
@@ -24,34 +24,60 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 		warning,
 	} = props;
 
-	const [stateValue, setStateValue] = useState<string>(value || "");
+	const getMaskRegexSafeLength = (): number | undefined => {
+		if (!maskRegex) return undefined;
+		const maxRule = validation?.find((rule) => "max" in rule);
+		const lengthRule = validation?.find((rule) => "length" in rule);
+		if (maxRule?.max > 0) return maxRule.max;
+		if (lengthRule?.length > 0) return lengthRule.length;
+		return RegexHelper.MAX_MATCHES_INPUT_LENGTH;
+	};
+
+	const safeLength = getMaskRegexSafeLength();
+
+	const clampValue = (val: string | undefined): string => {
+		const stringVal = val ?? "";
+		return safeLength !== undefined ? stringVal.slice(0, safeLength) : stringVal;
+	};
+
+	const [stateValue, setStateValue] = useState<string>(() => clampValue(value));
 	const [derivedAttributes, setDerivedAttributes] = useState<FormInputProps>({});
 	const { setFieldValidationConfig } = useValidationConfig();
+
+	const displayedValue = clampValue(stateValue);
 
 	// =============================================================================
 	// EFFECTS
 	// =============================================================================
 	useEffect(() => {
-		setFieldValidationConfig(id, Yup.string(), validation);
-
 		const maxRule = validation?.find((rule) => "max" in rule);
 		const lengthRule = validation?.find((rule) => "length" in rule);
+
+		let schema = Yup.string();
+		if (maskRegex && !maxRule && !lengthRule) {
+			schema = schema.max(
+				RegexHelper.MAX_MATCHES_INPUT_LENGTH,
+				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_MATCHES_INPUT_LENGTH)
+			);
+		}
+		setFieldValidationConfig(id, schema, validation);
+
 		const attributes = { ...derivedAttributes };
 		if (maxRule?.max > 0) {
 			attributes.maxLength = maxRule.max;
 		} else if (lengthRule?.length > 0) {
 			attributes.maxLength = lengthRule.length;
+		} else if (maskRegex) {
+			attributes.maxLength = RegexHelper.MAX_MATCHES_INPUT_LENGTH;
 		}
 		setDerivedAttributes(attributes);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [validation]);
+	}, [validation, maskRegex]);
 
 	useEffect(() => {
-		if (value !== stateValue) {
-			setStateValue(value || "");
-		}
+		setStateValue(clampValue(value));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
+	}, [safeLength, value]);
 
 	// =============================================================================
 	// EVENT HANDLERS
@@ -65,12 +91,11 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 	// =============================================================================
 	const getRegex = () => {
 		if (!maskRegex) return;
-		try {
-			const matches = maskRegex.match(/\/(.*)\/([a-z]+)?/);
-			return new RegExp(matches[1], matches[2]);
-		} catch (err) {
+		const regex = RegexHelper.compile(maskRegex);
+		if (!regex) {
 			console.warn(`invalid regex pattern: ${maskRegex}`);
 		}
+		return regex;
 	};
 
 	// =============================================================================
@@ -88,12 +113,13 @@ export const MaskedField = (props: IGenericFieldProps<IMaskedFieldSchema>) => {
 			<Form.MaskedInput
 				{...otherSchema}
 				{...derivedAttributes}
+				key={maskRegex ?? "no-mask-regex"}
 				id={id}
 				data-testid={TestHelper.generateId(id, uiType)}
 				label={formattedLabel}
 				onBlur={onBlur}
 				onChange={handleChange}
-				value={stateValue}
+				value={displayedValue}
 				errorMessage={error?.message}
 				maskRegex={getRegex()}
 				iconMask={renderIcon(iconMask)}

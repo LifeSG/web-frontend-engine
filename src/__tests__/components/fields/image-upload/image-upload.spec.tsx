@@ -35,6 +35,11 @@ const FILE_2 = new File(["file"], "test2.jpg", {
 });
 const COMPONENT_ID = "field";
 const UI_TYPE = "image-upload";
+const DELETE_PROMPT_TEXT = "Delete photo?";
+const DELETE_EXIT_PROMPT_TEXT = "Delete photo and exit?";
+const REVIEW_MODAL_TEXT = "Review photos";
+const REVIEW_PROMPT_TEXT = "Review photos?";
+const REVIEW_EXIT_PROMPT_TEXT = "Exit without saving?";
 const SUBMIT_FN = jest.fn();
 let uploadSpy: jest.SpyInstance;
 let extractMetadataSpy: jest.SpyInstance;
@@ -42,6 +47,8 @@ let extractMetadataSpy: jest.SpyInstance;
 const getSaveButton = (isQuery = false): HTMLElement => getField("button", "Save", isQuery);
 const getDragInputUploadField = (): HTMLElement => screen.getByTestId("field-drag-upload__hidden-input");
 const getReviewModalUploadField = (): HTMLElement => screen.getByTestId("field-image-thumbnails__file-input");
+
+const waitForUpload = async () => await new Promise((resolve) => setTimeout(resolve, 100));
 
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
 	eventType: string;
@@ -143,7 +150,7 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 				},
 			});
 			if (uploadType === "input") {
-				await new Promise((resolve) => setTimeout(resolve, 100));
+				await waitForUpload();
 				await flushPromise();
 			} else {
 				await flushPromise();
@@ -152,8 +159,9 @@ const renderComponent = async (options: IRenderAndPerformActionsOptions = {}) =>
 	});
 
 	if (reviewImage) {
-		await waitFor(() => fireEvent.click(getField("button", "Ok")));
-		await new Promise((resolve) => setTimeout(resolve));
+		await waitFor(() => expect(screen.getByText(REVIEW_PROMPT_TEXT)).toBeVisible());
+		fireEvent.click(getField("button", "Ok"));
+		await flushPromise();
 	}
 };
 
@@ -341,6 +349,22 @@ describe("image-upload", () => {
 				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
 			});
 
+			it("should be able to submit a valid file when a matches rule is configured", async () => {
+				await renderComponent({
+					files: [FILE_1], // "test.jpg" — lowercase alphanumeric + dot
+					overrideField: { validation: [{ matches: MATCHES_PATTERN, errorMessage: ERROR_MESSAGE }] },
+					uploadType: "input",
+				});
+
+				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+				expect(SUBMIT_FN).toHaveBeenCalledWith(
+					expect.objectContaining({
+						field: expect.arrayContaining([expect.objectContaining({ fileName: FILE_1.name })]),
+					})
+				);
+			});
+
 			it("should exclude invalid filename files from form submission", async () => {
 				await renderComponent({
 					files: [INVALID_FILE],
@@ -371,6 +395,21 @@ describe("image-upload", () => {
 						field: expect.arrayContaining([expect.objectContaining({ fileName: FILE_1.name })]),
 					})
 				);
+			});
+
+			it("should not hang when matching a long filename against a regex pattern", async () => {
+				const maliciousFile = new File(["file"], `${"a".repeat(1000)}!.jpg`, { type: "image/jpeg" });
+
+				const start = Date.now();
+				await renderComponent({
+					files: [maliciousFile],
+					overrideField: { validation: [{ matches: "/^(a+)+$/", errorMessage: ERROR_MESSAGE }] },
+					uploadType: "input",
+				});
+				await waitFor(() => expect(screen.getByText(ERROR_MESSAGE)).toBeInTheDocument());
+
+				expect(Date.now() - start).toBeLessThan(1000);
+				expect(uploadSpy).not.toHaveBeenCalled();
 			});
 		});
 	});
@@ -568,19 +607,21 @@ describe("image-upload", () => {
 					files: [FILE_1],
 					uploadType: inputType,
 				});
-				await flushPromise();
+				await act(async () => {
+					await flushPromise();
+				});
 
 				expect(compressSpy).not.toHaveBeenCalled();
 			});
 
 			it("should compress image if compress=true and max size is defined", async () => {
 				const compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
+					uploadType: inputType,
+				});
 				await act(async () => {
-					await renderComponent({
-						files: [FILE_1],
-						overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
-						uploadType: inputType,
-					});
 					await flushPromise();
 				});
 
@@ -590,12 +631,13 @@ describe("image-upload", () => {
 			it("Should extract image metadata", async () => {
 				jest.spyOn(ImageHelper, "compressImage").mockResolvedValue(FILE_1);
 
-				await waitFor(async () => {
-					await renderComponent({
-						files: [FILE_1],
-						overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
-						uploadType: inputType,
-					});
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
+					uploadType: inputType,
+				});
+				await act(async () => {
+					await flushPromise();
 				});
 
 				await waitFor(() => expect(extractMetadataSpy).toHaveBeenCalledTimes(1));
@@ -604,16 +646,16 @@ describe("image-upload", () => {
 
 			it("should resize image to fit dimensions when crop is false", async () => {
 				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: {
+						compress: true,
+						crop: false,
+						dimensions: { width: 500, height: 500 },
+					},
+					uploadType: inputType,
+				});
 				await act(async () => {
-					await renderComponent({
-						files: [FILE_1],
-						overrideField: {
-							compress: true,
-							crop: false,
-							dimensions: { width: 500, height: 500 },
-						},
-						uploadType: inputType,
-					});
 					await flushPromise();
 				});
 
@@ -623,16 +665,16 @@ describe("image-upload", () => {
 
 			it("should crop image to exact dimensions when crop is true", async () => {
 				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: {
+						compress: true,
+						crop: true,
+						dimensions: { width: 500, height: 500 },
+					},
+					uploadType: inputType,
+				});
 				await act(async () => {
-					await renderComponent({
-						files: [FILE_1],
-						overrideField: {
-							compress: true,
-							crop: true,
-							dimensions: { width: 500, height: 500 },
-						},
-						uploadType: inputType,
-					});
 					await flushPromise();
 				});
 
@@ -647,16 +689,16 @@ describe("image-upload", () => {
 			it("should not use crop when compress is false even if crop is true", async () => {
 				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
 				const convertSpy = jest.spyOn(ImageHelper, "convertBlob");
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: {
+						compress: false,
+						crop: true,
+						dimensions: { width: 500, height: 500 },
+					},
+					uploadType: inputType,
+				});
 				await act(async () => {
-					await renderComponent({
-						files: [FILE_1],
-						overrideField: {
-							compress: false,
-							crop: true,
-							dimensions: { width: 500, height: 500 },
-						},
-						uploadType: inputType,
-					});
 					await flushPromise();
 				});
 
@@ -674,6 +716,7 @@ describe("image-upload", () => {
 					files: [FILE_1],
 					overrideField: { editImage: true },
 				});
+				await waitFor(() => expect(screen.getByText(REVIEW_PROMPT_TEXT)).toBeVisible());
 			});
 
 			it("should not upload photo", () => {
@@ -681,9 +724,7 @@ describe("image-upload", () => {
 			});
 
 			it("should show confirmation prompt", async () => {
-				await waitFor(() => {
-					expect(screen.getByText("Review photos?")).toBeVisible();
-				});
+				expect(await screen.findByText(REVIEW_PROMPT_TEXT)).toBeVisible();
 			});
 
 			it("should show review modal after clicking ok in confirmation prompt", async () => {
@@ -693,9 +734,7 @@ describe("image-upload", () => {
 
 				fireEvent.click(getField("button", "Ok"));
 
-				await waitFor(() => {
-					expect(screen.getByText("Review photos")).toBeVisible();
-				});
+				expect(await screen.findByText(REVIEW_MODAL_TEXT)).toBeVisible();
 			});
 		});
 
@@ -714,10 +753,10 @@ describe("image-upload", () => {
 			});
 
 			it("should skip confirmation prompt and show review modal", async () => {
-				expect(screen.getByText("Review photos?")).not.toBeVisible();
 				await waitFor(() => {
-					expect(screen.getByText("Review photos")).toBeVisible();
+					expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeVisible();
 				});
+				expect(screen.queryByText(REVIEW_PROMPT_TEXT)).not.toBeVisible();
 			});
 		});
 	});
@@ -736,8 +775,10 @@ describe("image-upload", () => {
 				expect(uploadSpy).not.toHaveBeenCalled();
 			});
 
-			it("should show as many images", () => {
-				expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
+			it("should show as many images", async () => {
+				await waitFor(() => {
+					expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
+				});
 				expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
 			});
 
@@ -746,8 +787,13 @@ describe("image-upload", () => {
 			});
 
 			it("should upload as many images after clicking save", async () => {
-				await waitFor(() => fireEvent.click(getSaveButton()));
-				await flushPromise();
+				await waitFor(() => {
+					expect(getSaveButton()).toBeEnabled();
+				});
+				await act(async () => {
+					fireEvent.click(getSaveButton());
+					await flushPromise();
+				});
 
 				expect(uploadSpy).toHaveBeenCalledTimes(2);
 			});
@@ -766,14 +812,18 @@ describe("image-upload", () => {
 				});
 
 				jest.spyOn(FileHelper, "getType").mockResolvedValueOnce({ ext: "png", mime: "image/png" });
-				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
+				fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } });
 				await act(async () => {
-					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+					await waitForUpload();
 				});
 
-				expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
+				await waitFor(() => {
+					expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
+				});
 				expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MODAL.FILE_TYPE.TITLE)).toBeInTheDocument();
-				expect(getSaveButton()).toBeDisabled();
+				await waitFor(() => {
+					expect(getSaveButton()).toBeDisabled();
+				});
 			});
 		});
 
@@ -790,13 +840,15 @@ describe("image-upload", () => {
 				});
 
 				jest.spyOn(ImageHelper, "convertBlob").mockRejectedValue("error");
-				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
+				fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } });
 				await act(async () => {
-					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+					await waitForUpload();
 				});
 
 				expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MODAL.GENERIC_ERROR.TITLE)).toBeInTheDocument();
-				expect(getSaveButton()).toBeDisabled();
+				await waitFor(() => {
+					expect(getSaveButton()).toBeDisabled();
+				});
 			});
 		});
 
@@ -811,9 +863,9 @@ describe("image-upload", () => {
 				});
 
 				jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(`${JPG_BASE64}${JPG_BASE64}`);
-				await waitFor(() => fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } }));
+				fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1] } });
 				await act(async () => {
-					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+					await waitForUpload();
 				});
 			});
 
@@ -823,7 +875,9 @@ describe("image-upload", () => {
 
 			it("should show error and disable submit button if image exceeds max size", async () => {
 				expect(screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MODAL.MAX_FILE_SIZE.TITLE)).toBeInTheDocument();
-				expect(getSaveButton()).toBeDisabled();
+				await waitFor(() => {
+					expect(getSaveButton()).toBeDisabled();
+				});
 			});
 
 			it("Should extract image metadata", async () => {
@@ -839,7 +893,8 @@ describe("image-upload", () => {
 					overrideField: { editImage: true },
 					reviewImage: true,
 				});
-				await waitFor(() => fireEvent.click(getField("button", "Draw")));
+				const drawButton = await screen.findByRole("button", { name: "Draw" });
+				fireEvent.click(drawButton);
 			});
 
 			it("should hide the thumbnails and show the drawing toolbar", () => {
@@ -857,14 +912,13 @@ describe("image-upload", () => {
 				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
 				jest.spyOn(ImageHelper, "resampleImage").mockResolvedValue(FILE_1);
 
-				await act(async () => {
-					await waitFor(() => fireEvent.click(getField("button", "Save")));
-					await waitFor(() => getField("button", `thumbnail of ${FILE_1.name}`));
-				});
+				fireEvent.click(getField("button", "Save"));
 
-				expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
-				expect(getField("button", "eraser", true)).not.toBeInTheDocument();
-				expect(getField("button", /brush$/i, true)).not.toBeInTheDocument();
+				await waitFor(() => {
+					expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
+					expect(getField("button", "eraser", true)).not.toBeInTheDocument();
+					expect(getField("button", /brush$/i, true)).not.toBeInTheDocument();
+				});
 			});
 		});
 
@@ -886,10 +940,14 @@ describe("image-upload", () => {
 					reviewImage: true,
 				});
 
-				await waitFor(() => fireEvent.click(getField("button", "Draw")));
+				await waitFor(() => {
+					expect(getField("button", "Draw")).toBeInTheDocument();
+				});
+				expect(getField("button", "Save")).toBeInTheDocument();
 
 				await act(async () => {
-					await waitFor(() => fireEvent.click(getField("button", "Save")));
+					fireEvent.click(getField("button", "Draw"));
+					fireEvent.click(getField("button", "Save"));
 					await flushPromise();
 				});
 
@@ -911,29 +969,36 @@ describe("image-upload", () => {
 						overrideField: { editImage: true },
 						reviewImage: true,
 					});
-					await waitFor(() => fireEvent.click(getField("button", "Delete")));
+					await waitFor(() => {
+						fireEvent.click(getField("button", "Delete"));
+					});
+					await waitFor(() => {
+						expect(screen.getByText(DELETE_PROMPT_TEXT)).toBeVisible();
+					});
 				});
 
 				it("should show delete confirmation prompt on clicking the delete button", async () => {
-					await waitFor(() => {
-						expect(screen.getByText("Delete photo?")).toBeVisible();
-					});
+					expect(await screen.findByText(DELETE_PROMPT_TEXT)).toBeVisible();
 					expect(getField("button", "Cancel")).toBeVisible();
 					expect(getField("button", "Yes, delete")).toBeVisible();
 				});
 
 				it("should delete the image and hide the prompt on confirming delete", async () => {
-					await waitFor(() => fireEvent.click(getField("button", "Yes, delete")));
+					fireEvent.click(getField("button", "Yes, delete"));
 
-					expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(2);
-					expect(screen.getByText("Delete photo?")).not.toBeVisible();
+					await waitFor(() => expect(screen.getByText(DELETE_PROMPT_TEXT)).not.toBeVisible());
+					await waitFor(() => {
+						expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(2);
+					});
 				});
 
 				it("should not delete the image but dismiss the prompt on cancelling the confirmation prompt", async () => {
-					await waitFor(() => fireEvent.click(getField("button", "Cancel")));
+					fireEvent.click(getField("button", "Cancel"));
 
-					expect(screen.getByText("Delete photo?")).not.toBeVisible();
-					expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(3);
+					await waitFor(() => expect(screen.getByText(DELETE_PROMPT_TEXT)).not.toBeVisible());
+					await waitFor(() => {
+						expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(3);
+					});
 				});
 			});
 
@@ -944,31 +1009,36 @@ describe("image-upload", () => {
 						overrideField: { editImage: true },
 						reviewImage: true,
 					});
-					await waitFor(() => fireEvent.click(getField("button", "Delete")));
+					await waitFor(() => {
+						fireEvent.click(getField("button", "Delete"));
+					});
+					await waitFor(() => expect(screen.getByText(DELETE_EXIT_PROMPT_TEXT)).toBeVisible());
 				});
 
 				it("should show delete and exit confirmation prompt on attempting to delete the last photo", async () => {
-					await waitFor(() => {
-						expect(screen.getByText("Delete photo and exit?")).toBeVisible();
-					});
+					expect(await screen.findByText(DELETE_EXIT_PROMPT_TEXT)).toBeVisible();
 					expect(getField("button", "Cancel")).toBeVisible();
 					expect(getField("button", "Delete and exit")).toBeVisible();
 				});
 
 				it("should delete the image and close the review modal on deleting the last image", async () => {
-					await waitFor(() => fireEvent.click(getField("button", "Delete and exit")));
+					fireEvent.click(getField("button", "Delete and exit"));
 
-					expect(getField("button", /^thumbnail/i, true)).not.toBeInTheDocument();
-					expect(screen.queryByText("Delete photo and exit?")).not.toBeInTheDocument();
-					expect(screen.queryByText("Review photos")).not.toBeInTheDocument();
+					await waitFor(() => expect(screen.queryByText(DELETE_EXIT_PROMPT_TEXT)).not.toBeInTheDocument());
+					expect(screen.queryByText(REVIEW_MODAL_TEXT)).not.toBeInTheDocument();
+					await waitFor(() => {
+						expect(getField("button", /^thumbnail/i, true)).not.toBeInTheDocument();
+					});
 				});
 
 				it("should not delete the image and return to the review modal on cancelling the confirmation prompt", async () => {
-					await waitFor(() => fireEvent.click(getField("button", "Cancel")));
+					fireEvent.click(getField("button", "Cancel"));
 
-					expect(getField("button", /^thumbnail/i)).toBeInTheDocument();
-					expect(screen.getByText("Delete photo and exit?")).not.toBeVisible();
-					expect(screen.getByText("Review photos")).toBeInTheDocument();
+					await waitFor(() => expect(screen.getByText(DELETE_EXIT_PROMPT_TEXT)).not.toBeVisible());
+					expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeInTheDocument();
+					await waitFor(() => {
+						expect(getField("button", /^thumbnail/i)).toBeInTheDocument();
+					});
 				});
 			});
 		});
@@ -980,31 +1050,39 @@ describe("image-upload", () => {
 					overrideField: { editImage: true },
 					reviewImage: true,
 				});
-				await waitFor(() => fireEvent.click(getField("button", "exit review modal")));
+				await waitFor(() => {
+					expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeVisible();
+				});
+
+				await waitFor(() => {
+					fireEvent.click(getField("button", "exit review modal"));
+				});
+
+				await waitFor(() => expect(screen.getByText(REVIEW_EXIT_PROMPT_TEXT)).toBeVisible());
 			});
 
 			it("should show confirmation prompt", async () => {
-				await waitFor(() => {
-					expect(screen.getByText("Exit without saving?")).toBeVisible();
-				});
 				expect(screen.getByText("Yes, exit")).toBeVisible();
 				expect(getField("button", "Cancel")).toBeVisible();
 			});
 
 			it("should close review modal on confirmation", async () => {
-				await waitFor(() => fireEvent.click(getField("button", "Yes, exit")));
+				fireEvent.click(getField("button", "Yes, exit"));
 
-				expect(screen.queryByText("Exit without saving?")).not.toBeInTheDocument();
-				expect(screen.queryByText("Review photos")).not.toBeInTheDocument();
+				await waitFor(() => expect(screen.queryByText(REVIEW_EXIT_PROMPT_TEXT)).not.toBeInTheDocument());
+				expect(screen.queryByText(REVIEW_MODAL_TEXT)).not.toBeInTheDocument();
 				expect(getField("button", /^thumbnail/i, true)).not.toBeInTheDocument();
 			});
 
 			it("should not close review modal on cancelling the confirmation prompt", async () => {
-				await waitFor(() => fireEvent.click(getField("button", "Cancel")));
+				fireEvent.click(getField("button", "Cancel"));
 
-				expect(screen.getByText("Exit without saving?")).not.toBeVisible();
-				expect(screen.getByText("Review photos")).toBeInTheDocument();
-				expect(getField("button", /^thumbnail/i)).toBeInTheDocument();
+				await waitFor(() => expect(screen.getByText(REVIEW_EXIT_PROMPT_TEXT)).not.toBeVisible());
+				expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeInTheDocument();
+
+				await waitFor(() => {
+					expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
+				});
 			});
 		});
 	});
@@ -1141,7 +1219,8 @@ describe("image-upload", () => {
 				onClick: handleClick,
 			});
 
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+			const customButton = await screen.findByRole("button", { name: "Custom Button" });
+			fireEvent.click(customButton);
 
 			expect(handleDismissReviewModal).toHaveBeenCalled();
 		});
@@ -1160,7 +1239,8 @@ describe("image-upload", () => {
 				onClick: handleClick,
 			});
 
-			await waitFor(() => fireEvent.click(screen.getByRole("button", { name: "Custom Button" })));
+			const customButton = await screen.findByRole("button", { name: "Custom Button" });
+			fireEvent.click(customButton);
 
 			expect(saveReviewImageFn).toHaveBeenCalled();
 		});
@@ -1182,7 +1262,8 @@ describe("image-upload", () => {
 				onClick: handleClick,
 			});
 
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+			const customButton = await screen.findByRole("button", { name: "Custom Button" });
+			fireEvent.click(customButton);
 			const errMsg = screen.getAllByTestId("field-file-item-1__error-text")[0].innerHTML;
 			expect(errMsg).toBe(ERROR_MESSAGE);
 			expect(screen.getAllByTestId("field-file-item-1__error-text")[0]).toBeInTheDocument();
@@ -1395,12 +1476,11 @@ describe("image-upload", () => {
 				await waitFor(() =>
 					fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1, FILE_2] } })
 				);
-				await act(async () => {
-					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+				await waitFor(() => {
+					expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
+					expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
+					expect(getField("button", `thumbnail of test (1).jpg`)).toBeInTheDocument();
 				});
-				expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
-				expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
-				expect(getField("button", `thumbnail of test (1).jpg`)).toBeInTheDocument();
 			});
 
 			it("should show exceed error when add over the max number", async () => {
@@ -1412,10 +1492,9 @@ describe("image-upload", () => {
 				await waitFor(() =>
 					fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1, FILE_2] } })
 				);
-				await act(async () => {
-					await new Promise((resolve) => setTimeout(resolve, 100)); //add time-out due the the behavior change in the drag-upload
+				await waitFor(() => {
+					expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
 				});
-				expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
 				expect(
 					screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(1))
 				).toBeInTheDocument();
