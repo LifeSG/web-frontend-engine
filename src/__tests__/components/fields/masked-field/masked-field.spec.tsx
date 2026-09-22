@@ -1,33 +1,61 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import cloneDeep from "lodash/cloneDeep";
+import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IMaskedFieldSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
-import { IFrontendEngineData } from "../../../../components/types";
+import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
 import { RegexHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
-	createRenderComponent,
+	FRONTEND_ENGINE_ID,
+	FrontendEngineWithCustomButton,
+	TOverrideSchema,
 	getErrorMessage,
 	getField,
 	getResetButton,
+	getResetButtonProps,
 	getSubmitButton,
+	getSubmitButtonProps,
 } from "../../../common";
-import { dirtyStateTestSuite, labelTestSuite, warningTestSuite } from "../../../common/tests";
+import { labelTestSuite } from "../../../common/tests";
+import { warningTestSuite } from "../../../common/tests/warnings";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Masked field";
 const UI_TYPE = "masked-field";
-
-const { renderComponent, schema } = createRenderComponent<IMaskedFieldSchema>({
-	componentId: COMPONENT_ID,
-	baseSchema: {
-		label: COMPONENT_LABEL,
-		uiType: UI_TYPE,
-		maskRange: [0, 100],
+const JSON_SCHEMA: IFrontendEngineData = {
+	id: FRONTEND_ENGINE_ID,
+	sections: {
+		section: {
+			uiType: "section",
+			children: {
+				[COMPONENT_ID]: {
+					label: COMPONENT_LABEL,
+					uiType: UI_TYPE,
+					maskRange: [0, 100],
+				},
+				...getSubmitButtonProps(),
+				...getResetButtonProps(),
+			},
+		},
 	},
-	submitFn: SUBMIT_FN,
-});
+};
+
+const renderComponent = (overrideField?: Partial<IMaskedFieldSchema> | undefined, overrideSchema?: TOverrideSchema) => {
+	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
+	merge(json, {
+		sections: {
+			section: {
+				children: {
+					[COMPONENT_ID]: overrideField,
+				},
+			},
+		},
+	});
+	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
+};
 
 const getMaskedField = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
@@ -93,7 +121,7 @@ describe(UI_TYPE, () => {
 
 	it("should clamp an already-loaded long value at render time when maskRegex changes at runtime", () => {
 		const maliciousValue = `${"a".repeat(1000)}!`;
-		const withoutMaskRegex: IFrontendEngineData = JSON.parse(JSON.stringify(schema));
+		const withoutMaskRegex: IFrontendEngineData = JSON.parse(JSON.stringify(JSON_SCHEMA));
 		Object.assign(withoutMaskRegex, { defaultValues: { [COMPONENT_ID]: maliciousValue } });
 		const { rerender } = render(<FrontendEngine data={withoutMaskRegex} onSubmit={SUBMIT_FN} />);
 
@@ -152,20 +180,16 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
-	it("should pass disabled and placeholder props into the field", () => {
+	it("should pass other props into the field", () => {
 		renderComponent({
 			placeholder: "placeholder",
+			readOnly: true,
 			disabled: true,
 		});
 
 		expect(getMaskedField()).toHaveAttribute("placeholder", "placeholder");
-		expect(getMaskedField()).toHaveAttribute("aria-disabled", "true");
-	});
-
-	it("should render masked readonly state when readOnly is true", () => {
-		renderComponent({ readOnly: true });
-
-		expect(screen.getByTestId("masked-input-readonly-button")).toBeInTheDocument();
+		expect(getMaskedField()).toHaveAttribute("readonly");
+		expect(getMaskedField()).toBeDisabled();
 	});
 
 	it("should mask based on regex", async () => {
@@ -226,11 +250,65 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	dirtyStateTestSuite({
-		schema,
-		componentId: COMPONENT_ID,
-		defaultValue: "hello",
-		modifyField: () => fireEvent.change(getMaskedField(), { target: { value: "world" } }),
+	describe("dirty state", () => {
+		let formIsDirty: boolean;
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			formIsDirty = ref.current.isDirty;
+		};
+
+		beforeEach(() => {
+			formIsDirty = undefined;
+		});
+
+		it("should mount without setting field state as dirty", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should set form state as dirty if user modifies the field", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.change(getMaskedField(), { target: { value: "world" } });
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(true);
+		});
+
+		it("should support default value without setting form state as dirty", () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
+					onClick={handleClick}
+				/>
+			);
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset and revert form dirty state to false", () => {
+			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
+			fireEvent.change(getMaskedField(), { target: { value: "world" } });
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
+
+		it("should reset to default value without setting form state as dirty", () => {
+			render(
+				<FrontendEngineWithCustomButton
+					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
+					onClick={handleClick}
+				/>
+			);
+			fireEvent.change(getMaskedField(), { target: { value: "world" } });
+			fireEvent.click(getResetButton());
+			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
+
+			expect(formIsDirty).toBe(false);
+		});
 	});
 
 	labelTestSuite(renderComponent);
