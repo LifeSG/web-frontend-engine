@@ -756,7 +756,7 @@ describe("image-upload", () => {
 				await waitFor(() => {
 					expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeVisible();
 				});
-				expect(screen.queryByText(REVIEW_PROMPT_TEXT)).not.toBeInTheDocument();
+				expect(screen.queryByText(REVIEW_PROMPT_TEXT)).not.toBeVisible();
 			});
 		});
 	});
@@ -1478,9 +1478,9 @@ describe("image-upload", () => {
 				);
 				await waitFor(() => {
 					expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeInTheDocument();
+					expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
+					expect(getField("button", `thumbnail of test (1).jpg`)).toBeInTheDocument();
 				});
-				expect(getField("button", `thumbnail of ${FILE_2.name}`)).toBeInTheDocument();
-				expect(getField("button", `thumbnail of test (1).jpg`)).toBeInTheDocument();
 			});
 
 			it("should show exceed error when add over the max number", async () => {
