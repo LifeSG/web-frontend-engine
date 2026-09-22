@@ -85,6 +85,15 @@ describe(REFERENCE_KEY, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValues }));
 	});
 
+	it("should strip event handler attributes from option labels", () => {
+		renderComponent({
+			options: [{ label: '<span onclick="window.xssFired=true">Apple label</span>', value: "Apple" }],
+		});
+
+		const spanElement = screen.getByText("Apple label");
+		expect(spanElement).not.toHaveAttribute("onclick");
+	});
+
 	it("should be able to render hint", () => {
 		renderComponent({
 			label: {

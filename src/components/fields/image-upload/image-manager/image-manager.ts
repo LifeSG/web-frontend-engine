@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
-import { AxiosApiClient, FileHelper, ImageHelper, generateRandomId } from "../../../../utils";
+import { AxiosApiClient, FileHelper, ImageHelper, RegexHelper, generateRandomId } from "../../../../utils";
 import { useFieldEvent, usePrevious } from "../../../../utils/hooks";
 import { ImageContext } from "../image-context";
 import {
@@ -110,7 +110,7 @@ export const ImageManager = (props: IProps) => {
 					case EImageStatus.NONE:
 						if (filenameMatches) {
 							const pattern = resolveMatchesPattern(filenameMatches);
-							if (pattern && !pattern.test(image.name)) {
+							if (pattern && !RegexHelper.safeTestRegex(pattern, image.name)) {
 								setImages((prev) => {
 									const updatedImages = [...prev];
 									updatedImages[index] = {
@@ -257,14 +257,7 @@ export const ImageManager = (props: IProps) => {
 	 * Converts a matches string (e.g. "/^abc$/i" or "^abc$") to a RegExp.
 	 * Returns undefined if the string is invalid.
 	 */
-	const resolveMatchesPattern = (matches: string): RegExp | undefined => {
-		try {
-			const parsed = matches.match(/^\/(.+)\/([gimsuy]*)$/);
-			return parsed ? new RegExp(parsed[1], parsed[2] || "") : new RegExp(matches);
-		} catch {
-			return undefined;
-		}
-	};
+	const resolveMatchesPattern = (matches: string): RegExp | undefined => RegexHelper.compile(matches);
 
 	const convertImage = async (index: number, image: IImage) => {
 		try {

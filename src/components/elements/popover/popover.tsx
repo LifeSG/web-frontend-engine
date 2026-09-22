@@ -35,7 +35,10 @@ export const Popover = (props: IGenericElementProps<IPopoverSchema>) => {
 	const renderPopoverContent = () => {
 		const sanitizeOptions: IOptions = {
 			allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-			allowedAttributes: false,
+			allowedAttributes: {
+				...sanitizeHtml.defaults.allowedAttributes,
+				img: ["src", "alt", "width", "height"],
+			},
 		};
 		if (typeof hintContent === "string") {
 			return (

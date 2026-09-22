@@ -7,7 +7,7 @@ import { YupHelper } from "../helper";
 import "./html-safe";
 import "./uinfin";
 import "./uen";
-import { DateTimeHelper } from "../../../utils";
+import { DateTimeHelper, RegexHelper } from "../../../utils";
 import { IDaysRangeRule, IWhitespaceRule } from "../types";
 
 /**
@@ -23,8 +23,14 @@ YupHelper.addCondition("string", "notMatches", (value: string, regex: string) =>
 	if (isEmptyValue(value)) {
 		return true;
 	}
-	const matches = regex.match(/\/(.*)\/([a-z]+)?/);
-	const parsedRegex = new RegExp(matches[1], matches[2]);
+	const parsedRegex = RegexHelper.compile(regex);
+	if (!parsedRegex) {
+		console.warn(`invalid regex pattern: ${regex}`);
+		return true;
+	}
+	if (value.length > RegexHelper.MAX_MATCHES_INPUT_LENGTH) {
+		return false;
+	}
 	return !parsedRegex.test(value);
 });
 /** @deprecated */
