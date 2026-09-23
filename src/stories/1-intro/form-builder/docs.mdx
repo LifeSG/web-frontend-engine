@@ -1,7 +1,18 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { Wrapper } from "./components/form-builder-tool";
-import { FormBuilderTool } from "./components/form-builder-tool";
+import { SchemaPlayground } from "./components/schema-playground";
 
-<Meta title="Introduction/Form Builder (Beta)" />
+<Meta
+	title="Introduction/Schema Playground"
+/>
 
-<FormBuilderTool />
+{/* Applying layout parameters is not working, using custom CSS to override max-width */}
+<style>
+{`
+	.sbdocs-wrapper,
+	.sbdocs-content {
+		max-width: none !important;
+	}
+`}
+</style>
+
+<SchemaPlayground />
