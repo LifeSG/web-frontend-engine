@@ -8,6 +8,11 @@ export const wrapper = css`
 	width: 100%;
 	height: 80vh;
 	box-sizing: border-box;
+
+	@media (max-width: 768px) {
+		grid-template-columns: 1fr;
+		height: auto;
+	}
 `;
 
 export const editorPanel = css`
@@ -59,6 +64,10 @@ export const previewPanel = css`
 	padding: ${Spacing["spacing-16"]};
 	border: ${Border["width-010"]} ${Border.solid} ${Colour.border};
 	border-radius: ${Radius.sm};
+
+	@media (max-width: 768px) {
+		min-height: 50vh;
+	}
 `;
 
 export const parseError = css`

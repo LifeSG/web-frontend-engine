@@ -1,6 +1,18 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 import { SchemaPlayground } from "./components/schema-playground";
 
-<Meta title="Introduction/Schema Playground" />
+<Meta
+	title="Introduction/Schema Playground"
+/>
+
+{/* Applying layout parameters is not working, using custom CSS to override max-width */}
+<style>
+{`
+	.sbdocs-wrapper,
+	.sbdocs-content {
+		max-width: none !important;
+	}
+`}
+</style>
 
 <SchemaPlayground />
