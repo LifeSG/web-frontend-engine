@@ -14,7 +14,19 @@ import {
 	YUP_CONDITIONS,
 } from "./types";
 
+let conditionalValidationInProgress = false;
+
+export const setConditionalValidationInProgress = (value: boolean): void => {
+	conditionalValidationInProgress = value;
+};
+
+export const isConditionalValidationInProgress = (): boolean => conditionalValidationInProgress;
+
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
+
+interface IMapRulesOptions {
+	conditionalOnly?: boolean;
+}
 
 export namespace YupHelper {
 	const customYupConditions: string[] = [];
@@ -144,7 +156,12 @@ export namespace YupHelper {
 		yupSchemaField: Yup.AnySchema,
 		fieldValidationConfig: IYupCombinedRule[]
 	): Yup.AnySchema => {
-		return mapRules(yupSchemaField, fieldValidationConfig);
+		const fullSchema = mapRules(yupSchemaField.clone(), fieldValidationConfig);
+		const conditionalSchema = mapRules(yupSchemaField.clone(), fieldValidationConfig, { conditionalOnly: true });
+
+		return Yup.lazy(() =>
+			isConditionalValidationInProgress() ? conditionalSchema : fullSchema
+		) as unknown as Yup.AnySchema;
 	};
 
 	/**
@@ -174,10 +191,19 @@ export namespace YupHelper {
 	 * Adds Yup validation and constraints based on specified rules
 	 * @param yupSchema Yup schema that was previously created from specified validation type
 	 * @param schemaRules An array of validation rules to be mapped against validation type (e.g. a string schema might contain { maxLength: 255 })
+	 * @param options Options to control how rules are mapped
 	 * @returns yupSchema with added constraints and validations
 	 */
-	export const mapRules = <V extends IYupCombinedRule>(yupSchema: Yup.AnySchema, schemaRules: V[]): Yup.AnySchema => {
+	export const mapRules = <V extends IYupCombinedRule>(
+		yupSchema: Yup.AnySchema,
+		schemaRules: V[],
+		options: IMapRulesOptions = {}
+	): Yup.AnySchema => {
 		schemaRules.forEach((rule) => {
+			if (options.conditionalOnly && !rule.when) {
+				return;
+			}
+
 			const ruleKey = Object.keys(rule).filter((k) =>
 				YUP_CONDITIONS.includes(k as TYupCondition)
 			)?.[0] as TYupCondition;
@@ -222,7 +248,10 @@ export namespace YupHelper {
 								name: "matches",
 								message: rule.errorMessage,
 								test: (value) =>
-									value === undefined || value === null || value === "" || RegexHelper.safeTestRegex(regex, value),
+									value === undefined ||
+									value === null ||
+									value === "" ||
+									RegexHelper.safeTestRegex(regex, value),
 							});
 						} else {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
