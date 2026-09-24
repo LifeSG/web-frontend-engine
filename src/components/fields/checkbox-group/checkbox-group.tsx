@@ -150,7 +150,6 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 					className={clsx(
 						styles.toggleWrapper,
 						customOptions.layoutType === "vertical" && styles.toggleWrapperVertical,
-						error?.message && styles.toggleWrapperHasError,
 						className ? `${className}-checkbox-container` : undefined
 					)}
 				>
@@ -163,7 +162,7 @@ export const CheckboxGroup = (props: IGenericFieldProps<TCheckboxGroupSchema>) =
 								type="checkbox"
 								data-testid={TestHelper.generateId(id, "toggle")}
 								id={checkboxId}
-								className={clsx(styles.toggle, className, error?.message && styles.toggleHasError)}
+								className={clsx(styles.toggle, className)}
 								disabled={disabled ?? option.disabled}
 								focusableWhenDisabled={disabled}
 								name={checkboxId}
