@@ -7,9 +7,9 @@ updates:
     open-pull-requests-limit: 0
     labels:
       - "type: chore"
-    groups:
-      minor-and-patch:
-        applies-to: security-updates
-        update-types:
-          - "minor"
-          - "patch"
+  - package-ecosystem: "npm"
+    directory: "/e2e/nextjs-app"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "type: chore"
