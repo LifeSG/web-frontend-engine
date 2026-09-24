@@ -7,6 +7,7 @@
 	"typings": "dist/index.d.ts",
 	"scripts": {
 		"build": "npm run rollup",
+		"build-lib": "./scripts/build.sh",
 		"build-storybook": "storybook build",
 		"test-e2e": "npm run test-e2e:setup && playwright test --ui",
 		"test-e2e:docker": "docker compose up --build",
