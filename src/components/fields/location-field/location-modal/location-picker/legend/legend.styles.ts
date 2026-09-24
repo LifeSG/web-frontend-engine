@@ -48,6 +48,7 @@ export const legendIcon = css`
 export const closeButton = css`
 	padding: 0;
 	background-color: transparent;
+	min-height: unset;
 
 	height: ${Spacing["spacing-20"]};
 	width: ${Spacing["spacing-20"]};
