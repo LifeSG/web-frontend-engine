@@ -3,10 +3,15 @@ import * as Yup from "yup";
 import { SchemaDescription } from "yup/lib/schema";
 import { IWhitespaceRule, IYupValidationRule, TYupSchemaType, YupHelper } from "../../../../context-providers";
 import { TestHelper } from "../../../../utils";
+import { setConditionalValidationInProgress } from "../../../../context-providers/yup/helper";
 
 const ERROR_MESSAGE = "test error message";
 const ERROR_MESSAGE_2 = "test error message 2";
 const ERROR_MESSAGE_3 = "test error message 3";
+
+const resolveSchemaDescription = (schema: Yup.AnySchema, value?: unknown, parent?: unknown): SchemaDescription => {
+	return (schema as any).resolve({ value, parent }).describe() as SchemaDescription;
+};
 
 describe("YupHelper", () => {
 	describe("buildSchema", () => {
@@ -32,21 +37,22 @@ describe("YupHelper", () => {
 				},
 				field2: { schema: Yup.number(), validationRules: [{ min: 2, errorMessage: ERROR_MESSAGE_3 }] },
 			});
-			const schemaFields = schema.describe().fields;
-			const schemaTypeList = Object.keys(schemaFields).map((key) => schemaFields[key].type);
-			const schemaTestList = Object.keys(schemaFields).map(
-				(key) => (schemaFields[key] as SchemaDescription).tests
-			);
 
-			expect(schemaTypeList).toEqual(["string", "number"]);
+			const field1Description = resolveSchemaDescription((schema as any).fields.field1, values.field1, values);
+			const field2Description = resolveSchemaDescription((schema as any).fields.field2, values.field2, values);
+
+			expect([field1Description.type, field2Description.type]).toEqual(["string", "number"]);
 			expect(
-				isEqual(schemaTestList, [
+				isEqual(
+					[field1Description.tests, field2Description.tests],
 					[
-						{ name: "required", params: undefined },
-						{ name: "min", params: { min: 1 } },
-					],
-					[{ name: "min", params: { min: 2 } }],
-				])
+						[
+							{ name: "required", params: undefined },
+							{ name: "min", params: { min: 1 } },
+						],
+						[{ name: "min", params: { min: 2 } }],
+					]
+				)
 			).toBe(true);
 
 			const error = TestHelper.getError(() => schema.validateSync(values, { abortEarly: false }));
@@ -122,7 +128,7 @@ describe("YupHelper", () => {
 				{ required: true, errorMessage: ERROR_MESSAGE },
 				{ min: 1, errorMessage: ERROR_MESSAGE_2 },
 			]);
-			const fieldSchemaDescription = fieldSchema.describe();
+			const fieldSchemaDescription = resolveSchemaDescription(fieldSchema);
 
 			expect(fieldSchemaDescription.type).toBe("string");
 			expect(
@@ -143,7 +149,7 @@ describe("YupHelper", () => {
 				{ min: 1, errorMessage: ERROR_MESSAGE_2 },
 				{ myCustomRule: true, errorMessage: ERROR_MESSAGE } as IYupValidationRule,
 			]);
-			const fieldSchemaDescription = fieldSchema.describe();
+			const fieldSchemaDescription = resolveSchemaDescription(fieldSchema);
 
 			expect(fieldSchemaDescription.type).toBe("string");
 			expect(
@@ -481,5 +487,105 @@ describe("YupHelper", () => {
 			expect(() => schema.validateSync([1, 2, 3])).not.toThrow();
 			expect(TestHelper.getError(() => schema.validateSync([3, 2, 1])).message).toBe(ERROR_MESSAGE);
 		});
+	});
+});
+
+describe("conditional-only revalidation", () => {
+	afterEach(() => {
+		setConditionalValidationInProgress(false);
+	});
+
+	it("should skip non-conditional validation rules during conditional revalidation", () => {
+		const schema = YupHelper.buildSchema({
+			sourceField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [],
+			},
+			targetField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [
+					{ required: true, errorMessage: "Target is required" },
+					{
+						when: {
+							sourceField: {
+								is: "YES",
+								then: [{ matches: "/^VALID$/", errorMessage: "Target is invalid for source value" }],
+							},
+						},
+					},
+				],
+			},
+		});
+
+		setConditionalValidationInProgress(true);
+
+		expect(() =>
+			schema.validateSyncAt("targetField", {
+				sourceField: "NO",
+				targetField: "",
+			})
+		).not.toThrow();
+	});
+
+	it("should still run full validation outside conditional revalidation", () => {
+		const schema = YupHelper.buildSchema({
+			sourceField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [],
+			},
+			targetField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [
+					{ required: true, errorMessage: "Target is required" },
+					{
+						when: {
+							sourceField: {
+								is: "YES",
+								then: [{ matches: "/^VALID$/", errorMessage: "Target is invalid for source value" }],
+							},
+						},
+					},
+				],
+			},
+		});
+
+		expect(() =>
+			schema.validateSyncAt("targetField", {
+				sourceField: "NO",
+				targetField: "",
+			})
+		).toThrow("Target is required");
+	});
+
+	it("should still run conditional rules during conditional revalidation", () => {
+		const schema = YupHelper.buildSchema({
+			sourceField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [],
+			},
+			targetField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [
+					{ required: true, errorMessage: "Target is required" },
+					{
+						when: {
+							sourceField: {
+								is: "YES",
+								then: [{ matches: "/^VALID$/", errorMessage: "Target is invalid for source value" }],
+							},
+						},
+					},
+				],
+			},
+		});
+
+		setConditionalValidationInProgress(true);
+
+		expect(() =>
+			schema.validateSyncAt("targetField", {
+				sourceField: "YES",
+				targetField: "WRONG",
+			})
+		).toThrow("Target is invalid for source value");
 	});
 });
