@@ -20,8 +20,6 @@ export const setConditionalValidationInProgress = (value: boolean): void => {
 	conditionalValidationInProgress = value;
 };
 
-export const isConditionalValidationInProgress = (): boolean => conditionalValidationInProgress;
-
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 
 interface IMapRulesOptions {
@@ -160,7 +158,7 @@ export namespace YupHelper {
 		const conditionalSchema = mapRules(yupSchemaField.clone(), fieldValidationConfig, { conditionalOnly: true });
 
 		return Yup.lazy(() =>
-			isConditionalValidationInProgress() ? conditionalSchema : fullSchema
+			conditionalValidationInProgress ? conditionalSchema : fullSchema
 		) as unknown as Yup.AnySchema;
 	};
 
