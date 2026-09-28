@@ -430,6 +430,7 @@ export const ImageReview = (props: IProps) => {
 								className={clsx(styles.drawIcon, drawDeleteDisabled && styles.drawIconDisabled)}
 							/>
 						}
+						sizeType="small"
 					>
 						<Typography.BodySM
 							className={clsx(
@@ -452,6 +453,7 @@ export const ImageReview = (props: IProps) => {
 								className={clsx(styles.deleteIcon, drawDeleteDisabled && styles.deleteIconDisabled)}
 							/>
 						}
+						sizeType="small"
 					>
 						<Typography.BodySM
 							className={clsx(

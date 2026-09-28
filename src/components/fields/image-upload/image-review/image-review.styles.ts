@@ -121,11 +121,10 @@ export const drawDeleteButtonWrapper = css`
 export const drawDeleteButton = css`
 	padding: 0;
 	width: 5.4375rem;
-	height: 2.5rem;
 	gap: ${Spacing["spacing-4"]};
 	background-color: ${Colour.bg};
 	box-shadow: ${Shadow["sm-strong"]};
-	border-radius: 1.25rem;
+	border-radius: ${Radius.full};
 
 	&:first-child {
 		margin-bottom: ${Spacing["spacing-16"]};

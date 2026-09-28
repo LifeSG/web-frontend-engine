@@ -155,6 +155,7 @@ test.describe("ImageUpload", () => {
 
 			await test.step("Confirm review prompt and open modal", async () => {
 				await story.locators.reviewOkButton.click();
+				await story.waitForImageEditorCanvas();
 				await story.snapshot("review-modal", {
 					fullscreen: true,
 				});
