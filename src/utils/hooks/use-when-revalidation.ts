@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import { setConditionalValidationInProgress } from "../../context-providers/yup/helper";
 
 export const getSourceFieldsForDependent = (
 	fieldId: string,
@@ -39,6 +40,16 @@ export const useWhenRevalidation = (fieldId: string, whenDependencyMap: Record<s
 			return;
 		}
 
-		void trigger(fieldId);
+		const revalidateConditionally = async (): Promise<void> => {
+			setConditionalValidationInProgress(true);
+
+			try {
+				await trigger(fieldId);
+			} finally {
+				setConditionalValidationInProgress(false);
+			}
+		};
+
+		void revalidateConditionally();
 	}, [dependencies.length, fieldId, trigger, watchedValues]);
 };
