@@ -84,6 +84,11 @@ const getFieldOne = (): HTMLElement => {
 	return getField("textbox", FIELD_ONE_LABEL);
 };
 
+// title text is rendered twice, once in an aria-hidden measurer element and once in the actual tab button
+const getTabButton = (title: string): HTMLElement => {
+	return screen.getAllByText(title).find((element) => element.tagName === "BUTTON");
+};
+
 describe("Tab", () => {
 	afterEach(() => {
 		jest.resetAllMocks();
@@ -93,8 +98,8 @@ describe("Tab", () => {
 	it("should be able to render tab items", () => {
 		renderComponent();
 
-		expect(screen.getByRole("tab", { name: "Tab Title 1" })).toBeInTheDocument();
-		expect(screen.getByRole("tab", { name: "Tab Title 2" })).toBeInTheDocument();
+		expect(getTabButton("Tab Title 1")).toBeInTheDocument();
+		expect(getTabButton("Tab Title 2")).toBeInTheDocument();
 	});
 
 	it("should display the current active tab", () => {
@@ -107,7 +112,7 @@ describe("Tab", () => {
 	it("should switch to the selected tab", () => {
 		renderComponent({ currentActiveTabId: "tabItem2" });
 
-		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 1" }));
+		fireEvent.click(getTabButton("Tab Title 1"));
 
 		expect(screen.queryByText("Tab Body 1")).toBeInTheDocument();
 		expect(screen.queryByText("Tab Body 2")).not.toBeInTheDocument();
@@ -187,7 +192,7 @@ describe("Tab", () => {
 		const handleTabChange = jest.fn();
 		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handleTabChange);
 
-		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 2" }));
+		fireEvent.click(getTabButton("Tab Title 2"));
 
 		expect(screen.queryByText("Tab Body 1")).not.toBeInTheDocument();
 		expect(screen.queryByText("Tab Body 2")).toBeInTheDocument();
@@ -197,7 +202,7 @@ describe("Tab", () => {
 	it("should fire change event when switching tabs", () => {
 		const handleTabChange = jest.fn();
 		renderComponent({ currentActiveTabId: "tabItem2" }, undefined, undefined, "change", handleTabChange);
-		fireEvent.click(screen.getByRole("tab", { name: "Tab Title 1" }));
+		fireEvent.click(getTabButton("Tab Title 1"));
 		expect(screen.queryByText("Tab Body 1")).toBeInTheDocument();
 		expect(screen.queryByText("Tab Body 2")).not.toBeInTheDocument();
 		expect(handleTabChange).toHaveBeenCalledWith(
