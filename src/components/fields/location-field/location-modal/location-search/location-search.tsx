@@ -199,7 +199,7 @@ export const LocationSearch = ({
 		return () => {
 			removeFieldEventListener("set-current-location", id, setCurrentLocationHandler);
 		};
-	}, []);
+	}, [isRecaptchaReady]);
 
 	/**
 	 * Prefill based on lat lng or address with the appropriate api
