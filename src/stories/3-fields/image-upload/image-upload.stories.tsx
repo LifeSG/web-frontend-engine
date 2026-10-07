@@ -190,7 +190,8 @@ const meta: Meta = {
 			},
 		},
 		imageReviewModalStyles: {
-			description: "CSS string applied directly to the image review modal box via `style.cssText`. Note: `url()` and `@import` are stripped before application.",
+			description:
+				"CSS declarations applied to the image review modal box via `style.cssText`, e.g. `padding-top: 20px;`. Only layout properties are applied (`padding`, `margin`, `width`/`height` and their `min-`/`max-` variants, `top`/`right`/`bottom`/`left`, `border-radius`); anything else, including resource references such as `url()` and rules such as `@media`, is removed with a console warning.",
 			table: {
 				type: {
 					summary: "string",

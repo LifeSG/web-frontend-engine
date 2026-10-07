@@ -8,7 +8,7 @@ import { ERROR_SVG } from "../../../../components/fields/location-field/location
 import { errorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
 import { IMapPin } from "../../../../components/fields/location-field/location-modal/location-picker/types";
 import { ERROR_MESSAGES, Prompt } from "../../../../components/shared";
-import { GeoLocationHelper, TestHelper } from "../../../../utils";
+import { GeoLocationHelper, StyleHelper, TestHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -1763,6 +1763,31 @@ describe("location-input-group", () => {
 
 	describe("customisation", () => {
 		it.todo("should support placeholder texts");
+
+		describe("locationModalStyles", () => {
+			const getModalBox = () => screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "modal-box"));
+
+			it("should apply layout declarations to the modal box", async () => {
+				await renderComponent({
+					overrideField: { locationModalStyles: "padding-top: 50px; margin-right: 10px;" },
+				});
+
+				await waitFor(() => {
+					expect(getModalBox().style.paddingTop).toBe("50px");
+					expect(getModalBox().style.marginRight).toBe("10px");
+				});
+			});
+
+			// jsdom's CSS parser silently discards escaped url() / image-set(), unlike real browsers, so the bypass itself
+			// is covered in style-helper.spec.ts. here we only assert the modal box receives the sanitised output
+			it("should pass the styles through StyleHelper.sanitizeStyleString", async () => {
+				const sanitizeSpy = jest.spyOn(StyleHelper, "sanitizeStyleString");
+				await renderComponent({ overrideField: { locationModalStyles: "padding-top: 50px;" } });
+
+				await waitFor(() => expect(sanitizeSpy).toHaveBeenCalledWith("padding-top: 50px;"));
+				sanitizeSpy.mockRestore();
+			});
+		});
 	});
 
 	describe("validation", () => {
