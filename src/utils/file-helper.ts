@@ -154,7 +154,10 @@ export namespace FileHelper {
 	};
 
 	/**
-	 * reliably derive file type by checking magic number of the buffer
+	 * derive file type from the file's content (magic number)
+	 * text-based formats have no magic number, so their type falls back to the browser-declared mime type and the
+	 * file name's extension, both of which the uploader controls
+	 * this is a client-side check for the user's convenience, not a security boundary: the server must validate content
 	 */
 	export const getType = async (file: Blob | File) => {
 		const buffer = await file.arrayBuffer();
