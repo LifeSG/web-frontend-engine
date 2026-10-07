@@ -28,6 +28,7 @@ YupHelper.addCondition("string", "notMatches", (value: string, regex: string) =>
 		console.warn(`invalid regex pattern: ${regex}`);
 		return true;
 	}
+	// cap tested value length to bound polynomial regex backtracking cost
 	if (value.length > RegexHelper.MAX_MATCHES_INPUT_LENGTH) {
 		return false;
 	}
