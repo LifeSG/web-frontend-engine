@@ -122,10 +122,7 @@ describe(UI_TYPE, () => {
 		await waitFor(() => fireEvent.click(getSubmitButton()));
 
 		expect(
-			getErrorMessage(
-				false,
-				ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_MATCHES_INPUT_LENGTH)
-			)
+			getErrorMessage(false, ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_MATCHES_INPUT_LENGTH))
 		).toBeInTheDocument();
 		expect(SUBMIT_FN).not.toHaveBeenCalled();
 	});
