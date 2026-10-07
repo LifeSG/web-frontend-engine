@@ -206,7 +206,8 @@ DefaultValue.args = {
 };
 DefaultValue.argTypes = {
 	defaultValues: {
-		description: "Default value for the field, this is declared outside `sections`",
+		description:
+			"Default value for the field, this is declared outside `sections`.<br><br>A prefilled `fileUrl` is fetched by the browser; only `http(s)` urls are allowed. Restrict reachable hosts by listing them in your CSP `connect-src`, e.g. `connect-src 'self' https://api.example.gov.sg`.",
 		table: {
 			type: {
 				summary:
