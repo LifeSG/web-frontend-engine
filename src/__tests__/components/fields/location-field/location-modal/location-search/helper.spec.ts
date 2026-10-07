@@ -23,7 +23,11 @@ describe("boldResultsWithQuery", () => {
 	it("should complete within a reasonable time for any query string", () => {
 		const input = [buildResult("a".repeat(30) + "!")];
 		expect(() =>
-			vm.runInNewContext("fn(input, query)", { fn: boldResultsWithQuery, input, query: "(a+)+$" }, { timeout: 1000 })
+			vm.runInNewContext(
+				"fn(input, query)",
+				{ fn: boldResultsWithQuery, input, query: "(a+)+$" },
+				{ timeout: 1000 }
+			)
 		).not.toThrow();
 	});
 });
