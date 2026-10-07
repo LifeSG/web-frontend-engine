@@ -220,6 +220,21 @@ export namespace FileHelper {
 		return ext ? `${sanitized}.${ext}` : `${sanitized}`;
 	};
 
+	/**
+	 * whether a prefilled fileUrl may be fetched: http(s) only, relative urls resolve against the page
+	 * http is kept for local dev; https pages already block it (mixed content)
+	 * host restriction is left to the consumer's CSP connect-src
+	 */
+	export const isFetchableFileUrl = (url: unknown): boolean => {
+		if (typeof url !== "string" || !url.trim()) return false;
+		try {
+			const { protocol } = new URL(url, window.location.href);
+			return protocol === "https:" || protocol === "http:";
+		} catch {
+			return false;
+		}
+	};
+
 	export const blobToFile = (blob: Blob, metadata: { name: string; lastModified: number }): File => {
 		const { name, lastModified } = metadata;
 		return new File([blob], name, {

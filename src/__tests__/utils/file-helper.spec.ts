@@ -31,6 +31,36 @@ describe("FileHelper", () => {
 		});
 	});
 
+	describe("isFetchableFileUrl", () => {
+		it.each`
+			scenario                    | url
+			${"https"}                  | ${"https://example.com/files/1"}
+			${"http"}                   | ${"http://example.com/files/1"}
+			${"relative path"}          | ${"/api/files/1"}
+			${"relative without slash"} | ${"dummy url"}
+			${"protocol-relative"}      | ${"//example.com/files/1"}
+			${"uppercase scheme"}       | ${"HTTPS://example.com/files/1"}
+		`("should allow $scenario", ({ url }) => {
+			expect(FileHelper.isFetchableFileUrl(url)).toBe(true);
+		});
+
+		it.each`
+			scenario                | url
+			${"javascript:"}        | ${"javascript:alert(1)"}
+			${"data:"}              | ${"data:image/png;base64,iVBORw0KGgo="}
+			${"file:"}              | ${"file:///etc/passwd"}
+			${"blob:"}              | ${"blob:https://example.com/uuid"}
+			${"ftp:"}               | ${"ftp://example.com/file"}
+			${"padded javascript:"} | ${"  javascript:alert(1)"}
+			${"empty"}              | ${""}
+			${"whitespace"}         | ${"   "}
+			${"undefined"}          | ${undefined}
+			${"number"}             | ${123}
+		`("should reject $scenario", ({ url }) => {
+			expect(FileHelper.isFetchableFileUrl(url)).toBe(false);
+		});
+	});
+
 	describe("sanitizeFileName", () => {
 		it.each`
 			scenario                                   | input                         | expected
