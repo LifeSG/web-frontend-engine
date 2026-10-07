@@ -12,6 +12,7 @@ const SCHEMA: IFrontendEngineData = {
 					label: "Provide images",
 					editImage: true,
 					multiple: true,
+					// background is a disallowed declaration and should be stripped, padding/margin are layout and should apply
 					imageReviewModalStyles: "background: red;padding-top: 50px; margin-right: 10px;",
 				},
 			},

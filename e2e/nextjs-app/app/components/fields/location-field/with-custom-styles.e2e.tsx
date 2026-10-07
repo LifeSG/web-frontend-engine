@@ -10,6 +10,7 @@ const LOCATION_FIELD_SCHEMA: IFrontendEngineData = {
 				field: {
 					uiType: "location-field",
 					label: "Location With Custom Styles",
+					// background is a disallowed declaration and should be stripped, padding/margin are layout and should apply
 					locationModalStyles: "background: red;padding-top: 50px; margin-right: 10px;",
 					mapApi: {
 						reverseGeocode: "/api/onemap/revgeocode",

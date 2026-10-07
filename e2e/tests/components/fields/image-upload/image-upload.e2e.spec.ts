@@ -38,6 +38,7 @@ class ImageUploadPage extends StoryPage {
 		drawButton: Locator;
 		deleteButton: Locator;
 		closeButton: Locator;
+		reviewModalBox: Locator;
 		saveButton: Locator;
 		// Draw mode
 		saveDrawingButton: Locator;
@@ -60,6 +61,7 @@ class ImageUploadPage extends StoryPage {
 			drawButton: page.getByTestId("field__draw-button"),
 			deleteButton: page.getByTestId("field__delete-button"),
 			closeButton: page.getByTestId("field__close-button"),
+			reviewModalBox: page.getByTestId("field__review-modal-box"),
 			saveButton: page.getByTestId("field__save-button"),
 			saveDrawingButton: page.getByTestId("field__save-drawing"),
 			clearDrawingButton: page.getByTestId("field__clear-drawing-button"),
@@ -375,6 +377,12 @@ test.describe("ImageUpload", () => {
 			await story.goto();
 			await story.uploadFilesAndConfirmReview();
 			await story.waitForImageEditorCanvas();
+
+			// layout declarations are applied, disallowed ones (background) are stripped
+			await expect(story.locators.reviewModalBox).toHaveCSS("padding-top", "50px");
+			await expect(story.locators.reviewModalBox).toHaveCSS("margin-right", "10px");
+			await expect(story.locators.reviewModalBox).not.toHaveAttribute("style", /background/);
+
 			await story.snapshot("review-modal", { fullscreen: true });
 		});
 	});
