@@ -194,30 +194,34 @@ export namespace FileHelper {
 		}
 	};
 
+	/**
+	 * normalise an uploaded file's name before it is displayed and sent as the multipart filename
+	 * keeps letters, digits, space, _ - ( ) and inner dots, so non-ascii characters don't break multipart encoding and
+	 * path separators, traversal sequences and markup characters are removed
+	 *
+	 * this is not a security boundary: the client can be bypassed, so the server must not use the client-supplied
+	 * name to build storage paths (store under a generated id instead) and must escape it wherever it is displayed
+	 */
 	export const sanitizeFileName = (fileName: string): string => {
 		const parts = fileName.split(".");
-		let ext: string;
-		let name: string;
+
+		const cleanName = (value: string) =>
+			value
+				.replace(/[^A-Za-z0-9 _().-]/g, "") // allowlist, drops / \ < > : * ? " | and non-ascii
+				.replace(/\.{2,}/g, ".") // collapse ".." so traversal can't survive
+				.replace(/^[\s.]+|[\s.]+$/g, ""); // trim leading/trailing dots and spaces
+
+		const cleanExt = (value: string) => value.replace(/[^A-Za-z0-9]/g, ""); // letters and digits only
 
 		if (parts.length === 2 && parts[0] === "") {
-			// file without extension but with leading .
-			name = fileName;
-		} else if (parts.length > 1) {
-			// file with extension
-			ext = parts.pop();
-			name = parts.join(".");
-		} else {
-			// file without extension
-			name = parts.join(".");
+			const name = cleanExt(parts[1]); // dotfile without extension e.g. .env, kept as is
+			return name ? `.${name}` : "file";
 		}
 
-		// allow ascii characters only
-		let sanitized = name.replace(/[^\u0020-\u007E]*/g, "");
-		if (!sanitized) {
-			sanitized = "file";
-		}
+		const ext = parts.length > 1 ? cleanExt(parts.pop() ?? "") : ""; // last segment only, inner dots stay in the name
+		const name = cleanName(parts.join(".")) || "file"; // e.g. "✨.txt" -> "file.txt"
 
-		return ext ? `${sanitized}.${ext}` : `${sanitized}`;
+		return ext ? `${name}.${ext}` : name;
 	};
 
 	/**
