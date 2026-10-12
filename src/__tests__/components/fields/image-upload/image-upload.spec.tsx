@@ -1489,15 +1489,17 @@ describe("image-upload", () => {
 					overrideField: { multiple: true, editImage: true, validation: [{ max: 2 }] },
 					reviewImage: true,
 				});
-				await waitFor(() =>
-					fireEvent.change(getReviewModalUploadField(), { target: { files: [FILE_1, FILE_2] } })
-				);
-				await waitFor(() => {
-					expect(getField("button", `error with ${FILE_1.name}`)).toBeInTheDocument();
-				});
+				const uploadField = await screen.findByTestId("field-image-thumbnails__file-input");
+				fireEvent.change(uploadField, { target: { files: [FILE_1, FILE_2] } });
+
+				expect(await screen.findByRole("button", { name: `error with ${FILE_1.name}` })).toBeVisible();
 				expect(
-					screen.getByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(1))
-				).toBeInTheDocument();
+					await screen.findByText(ERROR_MESSAGES.UPLOAD("photo").MAX_FILES_WITH_REMAINING(1))
+				).toBeVisible();
+				expect(getField("button", `thumbnail of ${FILE_1.name}`)).toBeVisible();
+				expect(getField("button", `thumbnail of ${FILE_2.name}`, true)).not.toBeInTheDocument();
+				expect(getSaveButton()).toBeDisabled();
+				expect(uploadSpy).not.toHaveBeenCalled();
 			});
 		});
 	});
