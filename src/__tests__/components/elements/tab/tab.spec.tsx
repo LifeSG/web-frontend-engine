@@ -85,6 +85,11 @@ const getFieldOne = (): HTMLElement => {
 };
 
 describe("Tab", () => {
+	beforeEach(() => {
+		// jsdom cannot evaluate :has() selectors when the generated tab id starts with a digit.
+		jest.spyOn(Math, "random").mockReturnValue(0.5);
+	});
+
 	afterEach(() => {
 		jest.resetAllMocks();
 		jest.restoreAllMocks();

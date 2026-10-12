@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Canvas as FabricCanvas, FabricImage } from "fabric";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { useEffect, useRef } from "react";
 import { FrontendEngine } from "../../../../components";
@@ -30,6 +31,7 @@ const JPG_BASE64 =
 const FILE_1 = new File(["file"], "test.jpg", {
 	type: "image/jpeg",
 });
+const LARGE_FILE = new File([new Uint8Array(2048)], "large.jpg", { type: "image/jpeg" });
 const FILE_2 = new File(["file"], "test2.jpg", {
 	type: "image/jpeg",
 });
@@ -43,6 +45,12 @@ const REVIEW_EXIT_PROMPT_TEXT = "Exit without saving?";
 const SUBMIT_FN = jest.fn();
 let uploadSpy: jest.SpyInstance;
 let extractMetadataSpy: jest.SpyInstance;
+
+const createImage = () => {
+	const image = new Image(1000, 800);
+	Object.defineProperties(image, { naturalWidth: { value: 1000 }, naturalHeight: { value: 800 } });
+	return image;
+};
 
 const getSaveButton = (isQuery = false): HTMLElement => getField("button", "Save", isQuery);
 const getDragInputUploadField = (): HTMLElement => screen.getByTestId("field-drag-upload__hidden-input");
@@ -597,12 +605,16 @@ describe("image-upload", () => {
 
 		describe("image compression", () => {
 			beforeEach(() => {
-				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
-				jest.spyOn(ImageHelper, "resampleImage").mockResolvedValue(FILE_1);
+				jest.spyOn(ImageHelper, "blobToImage").mockResolvedValue(createImage());
+				jest.spyOn(FileHelper, "fileToDataUrl").mockResolvedValue(JPG_BASE64);
+				jest.spyOn(ImageHelper, "drawImageToCanvas").mockResolvedValue({
+					canvas: document.createElement("canvas"),
+					blob: FILE_1,
+				});
 			});
 
 			it("should not compress image by default", async () => {
-				const compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				const compressSpy = jest.spyOn(ImageHelper, "compressToTargetSize");
 				await renderComponent({
 					files: [FILE_1],
 					uploadType: inputType,
@@ -614,72 +626,103 @@ describe("image-upload", () => {
 				expect(compressSpy).not.toHaveBeenCalled();
 			});
 
-			it("should compress image if compress=true and max size is defined", async () => {
-				const compressSpy = jest.spyOn(ImageHelper, "compressImage");
-				await renderComponent({
-					files: [FILE_1],
-					overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
-					uploadType: inputType,
-				});
+			it("should compress image if compress=true and the resized image exceeds max size", async () => {
+				const canvas = document.createElement("canvas");
+				jest.spyOn(ImageHelper, "drawImageToCanvas").mockResolvedValue({ canvas, blob: LARGE_FILE });
+				const compressSpy = jest.spyOn(ImageHelper, "compressToTargetSize").mockResolvedValue(FILE_1);
 				await act(async () => {
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
+						uploadType: inputType,
+					});
 					await flushPromise();
 				});
 
-				expect(compressSpy).toHaveBeenCalled();
+				expect(compressSpy).toHaveBeenCalledWith(canvas, { fileSize: 1 });
+				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
 			});
 
 			it("Should extract image metadata", async () => {
-				jest.spyOn(ImageHelper, "compressImage").mockResolvedValue(FILE_1);
-
 				await renderComponent({
 					files: [FILE_1],
 					overrideField: { compress: true, validation: [{ maxSizeInKb: 1 }] },
 					uploadType: inputType,
-				});
-				await act(async () => {
-					await flushPromise();
 				});
 
 				await waitFor(() => expect(extractMetadataSpy).toHaveBeenCalledTimes(1));
 				expect(extractMetadataSpy).toHaveBeenCalledWith(FILE_1);
 			});
 
-			it("should resize image to fit dimensions when crop is false", async () => {
-				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+			it("should skip quality compression when the resized image fits the size limit", async () => {
+				const compressSpy = jest.spyOn(ImageHelper, "compressToTargetSize");
 				await renderComponent({
 					files: [FILE_1],
-					overrideField: {
-						compress: true,
-						crop: false,
-						dimensions: { width: 500, height: 500 },
-					},
+					overrideField: { compress: true, validation: [{ maxSizeInKb: FILE_1.size / 1024 }] },
 					uploadType: inputType,
 				});
+
+				await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
+				expect(ImageHelper.blobToImage).toHaveBeenCalledTimes(1);
+				expect(ImageHelper.blobToImage).toHaveBeenCalledWith(FILE_1);
+				expect(ImageHelper.drawImageToCanvas).toHaveBeenCalledWith(expect.any(Image), {
+					scale: expect.any(Number),
+				});
+				expect(compressSpy).not.toHaveBeenCalled();
+			});
+
+			it("should show a size error when compression cannot reach the limit", async () => {
+				jest.spyOn(ImageHelper, "drawImageToCanvas").mockResolvedValue({
+					canvas: document.createElement("canvas"),
+					blob: LARGE_FILE,
+				});
+				jest.spyOn(ImageHelper, "compressToTargetSize").mockResolvedValue(LARGE_FILE);
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: { compress: true, validation: [{ maxSizeInKb: 1, errorMessage: ERROR_MESSAGE }] },
+					uploadType: inputType,
+				});
+
+				expect(await screen.findByText(ERROR_MESSAGE)).toBeInTheDocument();
+				expect(uploadSpy).not.toHaveBeenCalled();
+			});
+
+			it("should resize image to fit dimensions when crop is false", async () => {
+				const drawSpy = jest.spyOn(ImageHelper, "drawImageToCanvas");
 				await act(async () => {
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: {
+							compress: true,
+							crop: false,
+							dimensions: { width: 500, height: 500 },
+						},
+						uploadType: inputType,
+					});
 					await flushPromise();
 				});
 
-				await waitFor(() => expect(resampleSpy).toHaveBeenCalled());
-				expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), { scale: expect.any(Number) });
+				await waitFor(() => expect(drawSpy).toHaveBeenCalled());
+				expect(drawSpy).toHaveBeenCalledWith(expect.any(Image), { scale: 0.5 });
 			});
 
 			it("should crop image to exact dimensions when crop is true", async () => {
-				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
-				await renderComponent({
-					files: [FILE_1],
-					overrideField: {
-						compress: true,
-						crop: true,
-						dimensions: { width: 500, height: 500 },
-					},
-					uploadType: inputType,
-				});
+				const drawSpy = jest.spyOn(ImageHelper, "drawImageToCanvas");
 				await act(async () => {
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: {
+							compress: true,
+							crop: true,
+							dimensions: { width: 500, height: 500 },
+						},
+						uploadType: inputType,
+					});
 					await flushPromise();
 				});
 
-				await waitFor(() => expect(resampleSpy).toHaveBeenCalled());
-				expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), {
+				await waitFor(() => expect(drawSpy).toHaveBeenCalled());
+				expect(drawSpy).toHaveBeenCalledWith(expect.any(Image), {
 					width: 500,
 					height: 500,
 					crop: true,
@@ -687,7 +730,7 @@ describe("image-upload", () => {
 			});
 
 			it("should not use crop when compress is false even if crop is true", async () => {
-				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage");
+				const drawSpy = jest.spyOn(ImageHelper, "drawImageToCanvas");
 				const convertSpy = jest.spyOn(ImageHelper, "convertBlob");
 				await renderComponent({
 					files: [FILE_1],
@@ -702,9 +745,9 @@ describe("image-upload", () => {
 					await flushPromise();
 				});
 
-				// convertImage is called instead of compressImage when compress=false
+				// Conversion skips resizing when compress=false
 				await waitFor(() => expect(convertSpy).toHaveBeenCalled());
-				expect(resampleSpy).not.toHaveBeenCalled();
+				expect(drawSpy).not.toHaveBeenCalled();
 			});
 		});
 	});
@@ -855,7 +898,7 @@ describe("image-upload", () => {
 		describe("when there is no need to compress", () => {
 			let compressSpy: jest.SpyInstance;
 			beforeEach(async () => {
-				compressSpy = jest.spyOn(ImageHelper, "compressImage");
+				compressSpy = jest.spyOn(ImageHelper, "compressToTargetSize");
 				await renderComponent({
 					files: [FILE_1],
 					overrideField: { editImage: true, validation: [{ maxSizeInKb: 0.15 }] },
@@ -909,7 +952,7 @@ describe("image-upload", () => {
 			});
 
 			it("should hide image editor when click on the save button", async () => {
-				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
+				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(createImage());
 				jest.spyOn(ImageHelper, "resampleImage").mockResolvedValue(FILE_1);
 
 				fireEvent.click(getField("button", "Save"));
@@ -924,9 +967,19 @@ describe("image-upload", () => {
 
 		describe("when editing image with crop enabled", () => {
 			it("should recompress with crop when crop is enabled and image is edited", async () => {
-				const resampleSpy = jest.spyOn(ImageHelper, "resampleImage").mockResolvedValue(FILE_1);
-				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(new Image());
-				jest.spyOn(ImageHelper, "compressImage").mockResolvedValue(FILE_1);
+				// jsdom does not load image URLs, so provide the editor's decoded background and export.
+				const backgroundSpy = jest
+					.spyOn(FabricImage, "fromURL")
+					.mockResolvedValue(new FabricImage(createImage()));
+				const exportSpy = jest.spyOn(FabricCanvas.prototype, "toDataURL").mockReturnValue(JPG_BASE64);
+				jest.spyOn(ImageHelper, "blobToImage").mockResolvedValue(createImage());
+				jest.spyOn(FileHelper, "fileToDataUrl").mockResolvedValue(JPG_BASE64);
+				const drawSpy = jest.spyOn(ImageHelper, "drawImageToCanvas").mockResolvedValue({
+					canvas: document.createElement("canvas"),
+					blob: FILE_1,
+				});
+				jest.spyOn(ImageHelper, "dataUrlToImage").mockResolvedValue(createImage());
+				jest.spyOn(ImageHelper, "resampleImage").mockResolvedValue(FILE_1);
 
 				await renderComponent({
 					files: [FILE_1],
@@ -940,19 +993,19 @@ describe("image-upload", () => {
 					reviewImage: true,
 				});
 
-				await waitFor(() => {
-					expect(getField("button", "Draw")).toBeInTheDocument();
-				});
-				expect(getField("button", "Save")).toBeInTheDocument();
+				drawSpy.mockClear();
+				await waitFor(() => fireEvent.click(getField("button", "Draw")));
+				await waitFor(() => expect(backgroundSpy).toHaveBeenCalled());
 
 				await act(async () => {
-					fireEvent.click(getField("button", "Draw"));
 					fireEvent.click(getField("button", "Save"));
 					await flushPromise();
 				});
 
+				expect(exportSpy).toHaveBeenCalled();
+				expect(ImageHelper.dataUrlToImage).toHaveBeenCalledWith(JPG_BASE64);
 				await waitFor(() =>
-					expect(resampleSpy).toHaveBeenCalledWith(expect.any(Image), {
+					expect(drawSpy).toHaveBeenCalledWith(expect.any(Image), {
 						width: 400,
 						height: 400,
 						crop: true,

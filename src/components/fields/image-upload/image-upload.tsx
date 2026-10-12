@@ -243,6 +243,7 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		return (
 			<ImageReview
 				accepts={acceptedFileTypes}
+				compress={!!compress}
 				dimensions={dimensions}
 				id={id}
 				className={className}

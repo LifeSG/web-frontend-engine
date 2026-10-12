@@ -4,6 +4,21 @@ import { IImageMetadata } from "../components/fields/image-upload";
 
 export namespace ImageHelper {
 	/**
+	 * converts HEIC/HEIF images to a browser-decodable blob
+	 */
+	export const convertHeicToBlob = async (blob: File | Blob, outputMimeType = "image/jpeg"): Promise<Blob> => {
+		const inputMimeType = (await FileHelper.getType(blob)).mime;
+		if (inputMimeType === "image/heic" || inputMimeType === "image/heif") {
+			const { heicTo } = await import("heic-to/csp");
+			return heicTo({
+				blob,
+				type: outputMimeType as `image/${string}`,
+			});
+		}
+		return blob;
+	};
+
+	/**
 	 * convert image type
 	 */
 	export const convertBlob = async (blob: File | Blob, outputMimeType = "image/jpeg") => {
@@ -68,13 +83,17 @@ export namespace ImageHelper {
 		height: number;
 		crop?: boolean | undefined;
 	}
+	const canvasToBlob = (canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> => {
+		return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), type, quality));
+	};
+
 	/**
-	 * resamples image by rendering it on canvas
+	 * resamples image by rendering it on canvas and returns both the rendered canvas and encoded blob
 	 */
-	export const resampleImage = async (
+	export const drawImageToCanvas = async (
 		image: HTMLImageElement,
 		options: IResampleOptionsWithScale | IResampleOptionsWithDimensions
-	): Promise<Blob> => {
+	): Promise<{ canvas: HTMLCanvasElement; blob: Blob }> => {
 		const { crop, scale, width, height, quality = 1, type = "image/jpeg" } = options;
 		const cvs = document.createElement("canvas");
 		const ctx = cvs.getContext("2d");
@@ -101,7 +120,66 @@ export namespace ImageHelper {
 			ctx.drawImage(image, sx, sy, sw, sh, 0, 0, width, height);
 		}
 
-		return new Promise((resolve) => cvs.toBlob((blob) => resolve(blob), type, quality));
+		return { canvas: cvs, blob: await canvasToBlob(cvs, type, quality) };
+	};
+
+	/**
+	 * resample image by rendering it on canvas
+	 */
+	export const resampleImage = async (
+		image: HTMLImageElement,
+		options: IResampleOptionsWithScale | IResampleOptionsWithDimensions
+	): Promise<Blob> => {
+		const { blob } = await drawImageToCanvas(image, options);
+		return blob;
+	};
+
+	/**
+	 * attempts to reach the desired filesize using binary search over encoding quality
+	 * accepts a pre-drawn canvas to skip decoding
+	 *
+	 * fileSize is in kb
+	 * returns the smallest encoded blob if the target cannot be reached within maxAttempts
+	 */
+	export const compressToTargetSize = async (
+		canvas: HTMLCanvasElement,
+		options: { fileSize: number; maxAttempts?: number }
+	): Promise<Blob> => {
+		const { fileSize, maxAttempts = 6 } = options;
+		const targetBytes = fileSize * 1024;
+		const maxIterations = Math.max(1, maxAttempts);
+
+		let minQuality = 0;
+		let maxQuality = 1;
+		let smallestBlob = await canvasToBlob(canvas, "image/jpeg", 0.5);
+		let bestFit: Blob | undefined;
+
+		if (smallestBlob.size <= targetBytes) {
+			bestFit = smallestBlob;
+			minQuality = 0.5;
+		} else {
+			maxQuality = 0.5;
+		}
+
+		for (let attempt = 1; attempt < maxIterations; attempt++) {
+			const quality = (minQuality + maxQuality) / 2;
+			const compressed = await canvasToBlob(canvas, "image/jpeg", quality);
+
+			if (compressed.size < smallestBlob.size) {
+				smallestBlob = compressed;
+			}
+
+			if (compressed.size <= targetBytes) {
+				bestFit = compressed;
+				minQuality = quality;
+			} else {
+				maxQuality = quality;
+			}
+
+			if (maxQuality - minQuality < 0.05) break;
+		}
+
+		return bestFit || smallestBlob;
 	};
 
 	/**

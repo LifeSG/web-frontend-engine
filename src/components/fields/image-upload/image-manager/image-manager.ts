@@ -117,10 +117,8 @@ export const ImageManager = (props: IProps) => {
 						if (filenameMatches) {
 							const pattern = resolveMatchesPattern(filenameMatches);
 							if (pattern && !RegexHelper.safeTestRegex(pattern, image.name)) {
-								setImages((prev) => {
-									const updatedImages = [...prev];
-									updatedImages[index] = {
-										...image,
+								setImages((prev) =>
+									updateImageById(prev, image.id, {
 										status: EImageStatus.ERROR_FILENAME,
 										customErrorMessage: filenameMatchesErrorMessage,
 									})
@@ -282,27 +280,20 @@ export const ImageManager = (props: IProps) => {
 
 	const compressImage = async (imageToCompress: IImage) => {
 		try {
-			const dataURL = await ImageHelper.convertBlob(
+			const decodableBlob = await ImageHelper.convertHeicToBlob(
 				imageToCompress.file,
 				FileHelper.fileExtensionToMimeType(outputType)
 			);
-			const image = await ImageHelper.dataUrlToImage(dataURL);
+			const image = await ImageHelper.blobToImage(decodableBlob);
 			const origDim = { w: image.naturalWidth, h: image.naturalHeight };
-			let compressed: Blob;
-			if (crop) {
-				compressed = await ImageHelper.resampleImage(image, {
-					width: dimensions.width,
-					height: dimensions.height,
-					crop: true,
-				});
-			} else {
-				const scale = getScale(origDim.w, origDim.h);
-				compressed = await ImageHelper.resampleImage(image, { scale });
-			}
-			if (maxSizeInKb) {
-				compressed = (await ImageHelper.compressImage(compressed, {
-					fileSize: maxSizeInKb,
-				})) as File;
+			const options = crop
+				? { width: dimensions.width, height: dimensions.height, crop: true }
+				: { scale: getScale(origDim.w, origDim.h) };
+			const { canvas, blob } = await ImageHelper.drawImageToCanvas(image, options);
+			let compressed = blob;
+
+			if (maxSizeInKb && compressed.size > maxSizeInKb * 1024) {
+				compressed = await ImageHelper.compressToTargetSize(canvas, { fileSize: maxSizeInKb });
 			}
 
 			if (maxSizeInKb && compressed.size > maxSizeInKb * 1024) {
@@ -328,18 +319,15 @@ export const ImageManager = (props: IProps) => {
 			try {
 				const image = await ImageHelper.dataUrlToImage(imageToCompress.drawingDataURL);
 				const origDim = { w: image.naturalWidth, h: image.naturalHeight };
-				let scaledFile: Blob;
-				if (crop) {
-					scaledFile = await ImageHelper.resampleImage(image, {
-						width: dimensions.width,
-						height: dimensions.height,
-						crop: true,
-					});
-				} else {
-					const scale = getScale(origDim.w, origDim.h);
-					scaledFile = await ImageHelper.resampleImage(image, { scale });
+				const options = crop
+					? { width: dimensions.width, height: dimensions.height, crop: true }
+					: { scale: getScale(origDim.w, origDim.h) };
+				const { canvas, blob } = await ImageHelper.drawImageToCanvas(image, options);
+				let scaledFile = blob;
+
+				if (scaledFile.size > maxSizeInKb * 1024) {
+					scaledFile = await ImageHelper.compressToTargetSize(canvas, { fileSize: maxSizeInKb });
 				}
-				scaledFile = (await ImageHelper.compressImage(scaledFile, { fileSize: maxSizeInKb })) as File;
 
 				if (scaledFile.size > maxSizeInKb * 1024) {
 					setImages((prev) => updateImageById(prev, imageToCompress.id, { status: EImageStatus.ERROR_SIZE }));
