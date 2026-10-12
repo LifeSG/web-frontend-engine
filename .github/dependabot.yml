@@ -2,14 +2,11 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    schedule:
-      interval: "weekly"
     open-pull-requests-limit: 0
     labels:
       - "type: chore"
   - package-ecosystem: "npm"
     directory: "/e2e/nextjs-app"
-    schedule:
-      interval: "weekly"
+    open-pull-requests-limit: 0
     labels:
       - "type: chore"
