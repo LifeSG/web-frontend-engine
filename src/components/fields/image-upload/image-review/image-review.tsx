@@ -272,6 +272,7 @@ export const ImageReview = (props: IProps) => {
 	};
 
 	const handleSaveDrawing = async () => {
+		const activeImageId = images[activeFileIndex]?.id;
 		const { dataURL: drawingDataURL, drawing } = imageEditorRef.current?.export() || {};
 		const image = await ImageHelper.dataUrlToImage(drawingDataURL);
 		const thumbnail = await ImageHelper.resampleImage(image, {
@@ -281,9 +282,11 @@ export const ImageReview = (props: IProps) => {
 		const thumbnailDataURL = await FileHelper.fileToDataUrl(thumbnail);
 
 		setImages((prev) => {
+			const index = prev.findIndex(({ id }) => id === activeImageId);
+			if (index === -1) return prev;
 			const updatedFiles = [...prev];
-			updatedFiles[activeFileIndex] = {
-				...updatedFiles[activeFileIndex],
+			updatedFiles[index] = {
+				...updatedFiles[index],
 				thumbnailDataURL,
 				drawingDataURL,
 				drawing,
