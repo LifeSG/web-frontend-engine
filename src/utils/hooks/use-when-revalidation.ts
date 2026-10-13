@@ -59,5 +59,7 @@ export const useWhenRevalidation = (
 		};
 
 		void revalidateConditionally();
-	}, [conditionalValidationRequests, dependencies.length, fieldId, trigger, watchedValues]);
+		// Spread so React compares values, not array reference — useWatch returns a new array each render.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [conditionalValidationRequests, dependencies.length, fieldId, trigger, ...watchedValues]);
 };
