@@ -2,8 +2,8 @@ import isEqual from "lodash/isEqual";
 import * as Yup from "yup";
 import { SchemaDescription } from "yup/lib/schema";
 import { IWhitespaceRule, IYupValidationRule, TYupSchemaType, YupHelper } from "../../../../context-providers";
+import { consumeConditionalValidationRequests } from "../../../../context-providers/when-dependency-map";
 import { TestHelper } from "../../../../utils";
-import { setConditionalValidationInProgress } from "../../../../context-providers/yup/helper";
 
 const ERROR_MESSAGE = "test error message";
 const ERROR_MESSAGE_2 = "test error message 2";
@@ -491,11 +491,11 @@ describe("YupHelper", () => {
 });
 
 describe("conditional-only revalidation", () => {
-	afterEach(() => {
-		setConditionalValidationInProgress(false);
-	});
+	const validationOptions = {
+		context: { conditionalValidationRequests: [{ fieldId: "targetField" }] },
+	};
 
-	it("should skip non-conditional validation rules during conditional revalidation", () => {
+	it("should skip non-conditional rules for the targeted field during conditional revalidation", () => {
 		const schema = YupHelper.buildSchema({
 			sourceField: {
 				schema: YupHelper.mapSchemaType("string"),
@@ -517,13 +517,15 @@ describe("conditional-only revalidation", () => {
 			},
 		});
 
-		setConditionalValidationInProgress(true);
-
 		expect(() =>
-			schema.validateSyncAt("targetField", {
-				sourceField: "NO",
-				targetField: "",
-			})
+			schema.validateSyncAt(
+				"targetField",
+				{
+					sourceField: "NO",
+					targetField: "",
+				},
+				validationOptions
+			)
 		).not.toThrow();
 	});
 
@@ -579,13 +581,144 @@ describe("conditional-only revalidation", () => {
 			},
 		});
 
-		setConditionalValidationInProgress(true);
+		expect(() =>
+			schema.validateSyncAt(
+				"targetField",
+				{
+					sourceField: "YES",
+					targetField: "WRONG",
+				},
+				validationOptions
+			)
+		).toThrow("Target is invalid for source value");
+	});
+
+	it("should skip standalone custom validation during conditional-only revalidation", () => {
+		YupHelper.addCondition("string", "conditionalOnlyCustomRule", (value) => value === "VALID");
+		const customRule: IYupValidationRule & { conditionalOnlyCustomRule: boolean } = {
+			conditionalOnlyCustomRule: true,
+			errorMessage: "Target custom validation failed",
+		};
+		const schema = YupHelper.buildSchema({
+			sourceField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [],
+			},
+			targetField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [
+					{ required: true, errorMessage: "Target is required" },
+					customRule,
+					{
+						when: {
+							sourceField: {
+								is: "YES",
+								then: [{ matches: "/^VALID$/", errorMessage: "Target is invalid for source value" }],
+							},
+						},
+					},
+				],
+			},
+		});
 
 		expect(() =>
-			schema.validateSyncAt("targetField", {
-				sourceField: "YES",
-				targetField: "WRONG",
-			})
-		).toThrow("Target is invalid for source value");
+			schema.validateSyncAt("targetField", { sourceField: "NO", targetField: "INVALID" }, validationOptions)
+		).not.toThrow();
+		expect(() =>
+			schema.validateSyncAt("targetField", { sourceField: "YES", targetField: "VALID" }, validationOptions)
+		).not.toThrow();
+		expect(() => schema.validateSyncAt("targetField", { sourceField: "NO", targetField: "INVALID" })).toThrow(
+			"Target custom validation failed"
+		);
+	});
+
+	it("should run custom validation nested in an active when branch", () => {
+		YupHelper.addCondition("string", "nestedConditionalCustomRule", (value) => value === "VALID");
+		const customRule: IYupValidationRule & { nestedConditionalCustomRule: boolean } = {
+			nestedConditionalCustomRule: true,
+			errorMessage: "Nested custom validation failed",
+		};
+		const schema = YupHelper.buildSchema({
+			sourceField: { schema: YupHelper.mapSchemaType("string"), validationRules: [] },
+			targetField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [{ when: { sourceField: { is: "YES", then: [customRule] } } }],
+			},
+		});
+
+		expect(() =>
+			schema.validateSyncAt("targetField", { sourceField: "NO", targetField: "INVALID" }, validationOptions)
+		).not.toThrow();
+		expect(() =>
+			schema.validateSyncAt("targetField", { sourceField: "YES", targetField: "INVALID" }, validationOptions)
+		).toThrow("Nested custom validation failed");
+	});
+
+	it("should keep full validation for unrelated fields during conditional revalidation", () => {
+		const schema = YupHelper.buildSchema({
+			sourceField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [],
+			},
+			targetField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [
+					{ required: true, errorMessage: "Target is required" },
+					{
+						when: {
+							sourceField: {
+								is: "YES",
+								then: [{ matches: "/^VALID$/", errorMessage: "Target is invalid for source value" }],
+							},
+						},
+					},
+				],
+			},
+			unrelatedField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [{ required: true, errorMessage: "Unrelated field is required" }],
+			},
+		});
+
+		const error = TestHelper.getError(() =>
+			schema.validateSync(
+				{ sourceField: "NO", targetField: "", unrelatedField: "" },
+				{ ...validationOptions, abortEarly: false }
+			)
+		) as Yup.ValidationError;
+
+		expect(error.inner.map(({ path }) => path)).toEqual(["unrelatedField"]);
+	});
+
+	it("should scope conditional-only mode to one resolver invocation", () => {
+		const context = { conditionalValidationRequests: [{ fieldId: "targetField" }] };
+		const validationContext = consumeConditionalValidationRequests(context);
+		const overlappingValidationContext = consumeConditionalValidationRequests(context);
+		const schema = YupHelper.buildSchema({
+			sourceField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [],
+			},
+			targetField: {
+				schema: YupHelper.mapSchemaType("string"),
+				validationRules: [
+					{ required: true, errorMessage: "Target is required" },
+					{
+						when: {
+							sourceField: {
+								is: "YES",
+								then: [{ matches: "/^VALID$/", errorMessage: "Target is invalid for source value" }],
+							},
+						},
+					},
+				],
+			},
+		});
+		const values = { sourceField: "NO", targetField: "" };
+
+		expect(() => schema.validateSyncAt("targetField", values, { context: validationContext })).not.toThrow();
+		expect(() => schema.validateSyncAt("targetField", values, { context: overlappingValidationContext })).toThrow(
+			"Target is required"
+		);
 	});
 });
