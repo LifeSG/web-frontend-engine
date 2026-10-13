@@ -2,6 +2,7 @@ import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { ERROR_MESSAGES } from "../../components/shared";
 import { RegexHelper } from "../../utils";
+import { IConditionalValidationContext } from "../when-dependency-map";
 import {
 	IFieldYupConfig,
 	IYupConditionalValidationRule,
@@ -13,12 +14,6 @@ import {
 	TYupSchemaType,
 	YUP_CONDITIONS,
 } from "./types";
-
-let conditionalValidationInProgress = false;
-
-export const setConditionalValidationInProgress = (value: boolean): void => {
-	conditionalValidationInProgress = value;
-};
 
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
 
@@ -44,7 +39,7 @@ export namespace YupHelper {
 		const [parsedYupSchemaConfig, whenPairIds] = parseWhenKeys(yupSchemaConfig);
 		Object.keys(parsedYupSchemaConfig).forEach((id) => {
 			const { schema, validationRules: fieldValidationConfig } = yupSchemaConfig[id];
-			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
+			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig, id);
 		});
 
 		// build reverse map: sourceField -> [dependentFields]
@@ -152,14 +147,20 @@ export namespace YupHelper {
 	 */
 	export const buildFieldSchema = (
 		yupSchemaField: Yup.AnySchema,
-		fieldValidationConfig: IYupCombinedRule[]
+		fieldValidationConfig: IYupCombinedRule[],
+		fieldId?: string
 	): Yup.AnySchema => {
 		const fullSchema = mapRules(yupSchemaField.clone(), fieldValidationConfig);
 		const conditionalSchema = mapRules(yupSchemaField.clone(), fieldValidationConfig, { conditionalOnly: true });
 
-		return Yup.lazy(() =>
-			conditionalValidationInProgress ? conditionalSchema : fullSchema
-		) as unknown as Yup.AnySchema;
+		return Yup.lazy((_value, options) => {
+			const validationContext = options.context as IConditionalValidationContext | undefined;
+			const hasConditionalValidationRequest = validationContext?.conditionalValidationRequests.some(
+				({ fieldId: requestedFieldId }) => requestedFieldId === fieldId
+			);
+
+			return fieldId && hasConditionalValidationRequest ? conditionalSchema : fullSchema;
+		}) as unknown as Yup.AnySchema;
 	};
 
 	/**
