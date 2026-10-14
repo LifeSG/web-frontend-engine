@@ -5,11 +5,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import {
 	ContextProviders,
+	IConditionalValidationContext,
 	IYupValidationRule,
 	TCustomValidationFunction,
 	TYupSchemaType,
 	WhenDependencyMapContext,
 	YupHelper,
+	consumeConditionalValidationRequests,
 } from "../../context-providers";
 import { TNoInfer, TestHelper } from "../../utils";
 import {
@@ -47,6 +49,9 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 	const { setCustomComponents } = useCustomComponents();
 	const { setSubmitHandler, setWrapInForm } = useFrontendEngineForm();
+	const conditionalValidationContext = useRef<IConditionalValidationContext>({
+		conditionalValidationRequests: [],
+	});
 	const {
 		addWarnings,
 		performSoftValidation,
@@ -60,10 +65,14 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		mode: validationMode,
 		reValidateMode: revalidationMode,
 		defaultValues,
+		context: conditionalValidationContext.current,
 		resolver: async (data, context, options) => {
+			const validationContext = consumeConditionalValidationRequests(
+				context ?? conditionalValidationContext.current
+			);
 			performSoftValidation(softValidationSchema, data);
 
-			return await yupResolver(hardValidationSchema)(data, context, options);
+			return await yupResolver(hardValidationSchema)(data, validationContext, options);
 		},
 	});
 	const { setFormSchema } = useFormSchema();
@@ -211,7 +220,12 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}
 
 	return (
-		<WhenDependencyMapContext.Provider value={whenDependencyMap}>
+		<WhenDependencyMapContext.Provider
+			value={{
+				whenDependencyMap,
+				conditionalValidationRequests: conditionalValidationContext.current.conditionalValidationRequests,
+			}}
+		>
 			<FormProvider {...formMethods}>
 				<InnerElement
 					id={formId}
