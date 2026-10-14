@@ -36,7 +36,6 @@ export const DummyLocationField = (props: IDummyLocationFieldProps) => {
 			tabIndex={disabled ? -1 : 0}
 			aria-disabled={disabled || undefined}
 			aria-haspopup="dialog"
-			aria-readonly={readOnly}
 		>
 			{placeholder && !value ? (
 				<LocationInputText $placeholder $disabled={disabled}>
