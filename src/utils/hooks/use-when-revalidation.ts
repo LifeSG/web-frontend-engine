@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { setConditionalValidationInProgress } from "../../context-providers/yup/helper";
+import { IConditionalValidationRequest } from "../../context-providers/when-dependency-map";
 
 export const getSourceFieldsForDependent = (
 	fieldId: string,
@@ -15,7 +15,11 @@ export const getSourceFieldsForDependent = (
 		.map(([sourceFieldId]) => sourceFieldId);
 };
 
-export const useWhenRevalidation = (fieldId: string, whenDependencyMap: Record<string, string[]> | undefined): void => {
+export const useWhenRevalidation = (
+	fieldId: string,
+	whenDependencyMap: Record<string, string[]> | undefined,
+	conditionalValidationRequests: IConditionalValidationRequest[]
+): void => {
 	const { trigger } = useFormContext();
 
 	const dependencies = useMemo(
@@ -41,15 +45,21 @@ export const useWhenRevalidation = (fieldId: string, whenDependencyMap: Record<s
 		}
 
 		const revalidateConditionally = async (): Promise<void> => {
-			setConditionalValidationInProgress(true);
+			const request = { fieldId };
+			conditionalValidationRequests.push(request);
 
 			try {
 				await trigger(fieldId);
 			} finally {
-				setConditionalValidationInProgress(false);
+				const requestIndex = conditionalValidationRequests.indexOf(request);
+				if (requestIndex !== -1) {
+					conditionalValidationRequests.splice(requestIndex, 1);
+				}
 			}
 		};
 
 		void revalidateConditionally();
-	}, [dependencies.length, fieldId, trigger, watchedValues]);
+		// Spread so React compares values, not array reference — useWatch returns a new array each render.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [conditionalValidationRequests, dependencies.length, fieldId, trigger, ...watchedValues]);
 };
