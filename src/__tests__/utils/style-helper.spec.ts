@@ -13,19 +13,22 @@ describe("style-helper", () => {
 		});
 
 		it.each`
-			scenario                            | input                                       | expected
-			${"single declaration"}             | ${"padding-top: 50px;"}                     | ${"padding-top: 50px;"}
-			${"multiple declarations"}          | ${"padding-top: 50px; margin-right: 10px;"} | ${"padding-top: 50px; margin-right: 10px;"}
-			${"declaration without trailing ;"} | ${"padding: 1rem"}                          | ${"padding: 1rem;"}
-			${"calc() values"}                  | ${"width: calc(100% - 40px)"}               | ${"width: calc(100% - 40px);"}
-			${"!important"}                     | ${"padding-top: 50px !important"}           | ${"padding-top: 50px !important;"}
-			${"uppercase property names"}       | ${"PADDING-TOP: 8px"}                       | ${"padding-top: 8px;"}
-			${"multi-value shorthand"}          | ${"margin: 0 auto 8px 4px"}                 | ${"margin: 0 auto 8px 4px;"}
-			${"border-radius"}                  | ${"border-radius: 0"}                       | ${"border-radius: 0;"}
-			${"comments are ignored"}           | ${"padding-top: 8px; /* note */ margin: 0"} | ${"padding-top: 8px; margin: 0;"}
-			${"background-color keyword"}       | ${"background-color: red"}                  | ${"background-color: red;"}
-			${"background-color hex"}           | ${"background-color: #fff"}                 | ${"background-color: #fff;"}
-			${"background-color rgb()"}         | ${"background-color: rgb(0, 0, 0)"}         | ${"background-color: rgb(0, 0, 0);"}
+			scenario                            | input                                        | expected
+			${"single declaration"}             | ${"padding-top: 50px;"}                      | ${"padding-top: 50px;"}
+			${"multiple declarations"}          | ${"padding-top: 50px; margin-right: 10px;"}  | ${"padding-top: 50px; margin-right: 10px;"}
+			${"declaration without trailing ;"} | ${"padding: 1rem"}                           | ${"padding: 1rem;"}
+			${"calc() values"}                  | ${"width: calc(100% - 40px)"}                | ${"width: calc(100% - 40px);"}
+			${"!important"}                     | ${"padding-top: 50px !important"}            | ${"padding-top: 50px !important;"}
+			${"uppercase property names"}       | ${"PADDING-TOP: 8px"}                        | ${"padding-top: 8px;"}
+			${"multi-value shorthand"}          | ${"margin: 0 auto 8px 4px"}                  | ${"margin: 0 auto 8px 4px;"}
+			${"border-radius"}                  | ${"border-radius: 0"}                        | ${"border-radius: 0;"}
+			${"comments are ignored"}           | ${"padding-top: 8px; /* note */ margin: 0"}  | ${"padding-top: 8px; margin: 0;"}
+			${"declarations on separate lines"} | ${"padding-top: 50px;\nmargin-right: 10px;"} | ${"padding-top: 50px; margin-right: 10px;"}
+			${"value split across lines"}       | ${"margin:\n  0 auto;"}                      | ${"margin: 0 auto;"}
+			${"crlf and tab indentation"}       | ${"\tpadding-top: 8px;\r\n\tmargin: 0;"}     | ${"padding-top: 8px; margin: 0;"}
+			${"background-color keyword"}       | ${"background-color: red"}                   | ${"background-color: red;"}
+			${"background-color hex"}           | ${"background-color: #fff"}                  | ${"background-color: #fff;"}
+			${"background-color rgb()"}         | ${"background-color: rgb(0, 0, 0)"}          | ${"background-color: rgb(0, 0, 0);"}
 		`("should keep layout declarations: $scenario", ({ input, expected }) => {
 			expect(StyleHelper.sanitizeStyleString(input)).toBe(expected);
 			expect(warnSpy).not.toHaveBeenCalled();
