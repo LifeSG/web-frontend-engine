@@ -163,10 +163,11 @@ export const ImageReview = (props: IProps) => {
 
 	const handleDeleteDecision = (decision: boolean) => {
 		if (decision) {
+			const activeImageId = images[activeFileIndex]?.id;
 			setImages((prev) =>
-				prev.map((image, i) => ({
+				prev.map((image) => ({
 					...image,
-					...(i === activeFileIndex ? { status: EImageStatus.TO_DELETE } : {}),
+					...(image.id === activeImageId ? { status: EImageStatus.TO_DELETE } : {}),
 				}))
 			);
 			setActiveFileIndex(Math.max(0, activeFileIndex - 1));

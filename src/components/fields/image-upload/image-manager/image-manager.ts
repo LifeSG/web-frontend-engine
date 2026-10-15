@@ -136,7 +136,7 @@ export const ImageManager = (props: IProps) => {
 									updatedImages[index] = {
 										...image,
 										name: FileHelper.deduplicateFileName(
-											images.map(({ name }) => name),
+											prev.map(({ name }) => name),
 											index,
 											FileHelper.sanitizeFileName(image.name)
 										),

@@ -48,6 +48,15 @@ const getSaveButton = (isQuery = false): HTMLElement => getField("button", "Save
 const getDragInputUploadField = (): HTMLElement => screen.getByTestId("field-drag-upload__hidden-input");
 const getReviewModalUploadField = (): HTMLElement => screen.getByTestId("field-image-thumbnails__file-input");
 
+// promise that stays pending until `resolve` is called, use for keep the image in processing status
+const controllablePromise = <T,>() => {
+	let resolve!: (value: T) => void;
+	const promise = new Promise<T>((res) => {
+		resolve = res;
+	});
+	return { promise, resolve };
+};
+
 const waitForUpload = async () => await new Promise((resolve) => setTimeout(resolve, 100));
 
 interface ICustomFrontendEngineProps extends IFrontendEngineProps {
@@ -246,6 +255,96 @@ describe("image-upload", () => {
 				]),
 			})
 		);
+	});
+
+	describe("default value with duplicate / missing fileId", () => {
+		const submitAndGetFileIds = async () => {
+			await act(async () => {
+				await flushPromise(100);
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+			});
+			const submitted = SUBMIT_FN.mock.calls[SUBMIT_FN.mock.calls.length - 1][0][COMPONENT_ID];
+			return submitted.map(({ fileId }: { fileId: string }) => fileId);
+		};
+
+		beforeEach(() => {
+			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
+		});
+
+		it("should assign unique ids to prefilled images with duplicate fileId", async () => {
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						field: [
+							{ fileId: "same", fileName: FILE_1.name, dataURL: JPG_BASE64 },
+							{ fileId: "same", fileName: FILE_2.name, dataURL: JPG_BASE64 },
+						],
+					},
+				},
+			});
+			const fileIds = await submitAndGetFileIds();
+
+			expect(fileIds).toHaveLength(2);
+			expect(fileIds[0]).toBe("same");
+			expect(fileIds[1]).toBeTruthy();
+			expect(fileIds[1]).not.toBe("same");
+			expect(screen.getByText(FILE_1.name)).toBeInTheDocument();
+			expect(screen.getByText(FILE_2.name)).toBeInTheDocument();
+		});
+
+		it("should assign unique ids to prefilled images with missing fileId", async () => {
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						field: [
+							{ fileName: FILE_1.name, dataURL: JPG_BASE64 },
+							{ fileName: FILE_2.name, dataURL: JPG_BASE64 },
+						],
+					},
+				},
+			});
+			const fileIds = await submitAndGetFileIds();
+
+			expect(fileIds).toHaveLength(2);
+			expect(fileIds[0]).toBeTruthy();
+			expect(fileIds[1]).toBeTruthy();
+			expect(fileIds[0]).not.toBe(fileIds[1]);
+		});
+	});
+
+	describe("image removed while another image is validating", () => {
+		it("should not create a ghost image when an earlier image is removed while a later image is validating", async () => {
+			await renderComponent({ overrideField: { multiple: true } });
+			const secondType = controllablePromise<{ ext: string; mime: string }>();
+			jest.spyOn(FileHelper, "getType").mockImplementation((file) =>
+				file === FILE_2 ? secondType.promise : Promise.resolve({ ext: "jpg", mime: "image/jpeg" })
+			);
+
+			await act(async () => {
+				fireEvent.change(getDragInputUploadField(), { target: { files: [FILE_1, FILE_2] } });
+				await waitForUpload();
+				await flushPromise();
+			});
+			await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(1));
+
+			// remove the first image so the pending second image shifts to index 0
+			await act(async () => {
+				fireEvent.click(getField("button", `remove ${FILE_1.name}`));
+				await flushPromise();
+			});
+			await act(async () => {
+				secondType.resolve({ ext: "jpg", mime: "image/jpeg" });
+				await flushPromise();
+			});
+
+			await waitFor(() => expect(uploadSpy).toHaveBeenCalledTimes(2));
+			expect(screen.queryByText(FILE_1.name)).not.toBeInTheDocument();
+			expect(screen.getAllByRole("button", { name: /^remove/i })).toHaveLength(1);
+			await waitFor(() => fireEvent.click(getSubmitButton()));
+			const submitted = SUBMIT_FN.mock.calls[SUBMIT_FN.mock.calls.length - 1][0][COMPONENT_ID];
+			expect(submitted).toHaveLength(1);
+			expect(submitted[0]).toEqual(expect.objectContaining({ fileName: FILE_2.name }));
+		});
 	});
 
 	describe("tooltip", () => {
@@ -999,6 +1098,32 @@ describe("image-upload", () => {
 					await waitFor(() => {
 						expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(3);
 					});
+				});
+			});
+
+			describe("prefilled images with duplicate fileId", () => {
+				it("should only delete the selected image", async () => {
+					jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
+					await renderComponent({
+						files: [FILE_1],
+						overrideField: { editImage: true },
+						overrideSchema: {
+							defaultValues: {
+								field: [
+									{ fileId: "same", fileName: FILE_1.name, dataURL: JPG_BASE64 },
+									{ fileId: "same", fileName: FILE_2.name, dataURL: JPG_BASE64 },
+								],
+							},
+						},
+						reviewImage: true,
+					});
+					await waitFor(() => expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(3));
+
+					fireEvent.click(getField("button", "Delete"));
+					await waitFor(() => expect(screen.getByText(DELETE_PROMPT_TEXT)).toBeVisible());
+					fireEvent.click(getField("button", "Yes, delete"));
+
+					await waitFor(() => expect(screen.getAllByRole("button", { name: /^thumbnail/i })).toHaveLength(2));
 				});
 			});
 

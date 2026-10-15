@@ -84,9 +84,16 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			}
 
 			const newImages: IImage[] = [];
+			const usedIds = new Set<string>();
 			valuesToHandle.forEach(({ fileId, fileName, dataURL, uploadResponse }, i) => {
+				let imageId = fileId;
+				while (!imageId || usedIds.has(imageId)) {
+					imageId = generateRandomId();
+				}
+				usedIds.add(imageId);
+
 				const newImage: IImage = {
-					id: fileId || generateRandomId(),
+					id: imageId,
 					file: {} as File,
 					name: fileName,
 					dimensions: { width: 10, height: 10 },
