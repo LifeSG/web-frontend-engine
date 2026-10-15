@@ -5,7 +5,7 @@ import { FrontendEngine } from "../../../../components";
 import { EImageStatus, IImageUploadSchema } from "../../../../components/fields";
 import { ERROR_MESSAGES } from "../../../../components/shared";
 import { IFrontendEngineData, IFrontendEngineProps, IFrontendEngineRef } from "../../../../components/types";
-import { AxiosApiClient, FileHelper, ImageHelper, StyleHelper } from "../../../../utils";
+import { AxiosApiClient, FileHelper, ImageHelper, StyleHelper, TestHelper } from "../../../../utils";
 import * as IdHelper from "../../../../utils/id-helper";
 import {
 	ERROR_MESSAGE,
@@ -739,6 +739,25 @@ describe("image-upload", () => {
 		});
 
 		describe("imageReviewModalStyles", () => {
+			it("should apply layout declarations and strip non-layout ones on the review modal box", async () => {
+				jest.spyOn(console, "warn").mockImplementation(() => undefined);
+				await renderComponent({
+					files: [FILE_1],
+					overrideField: {
+						editImage: true,
+						imageReviewModalStyles: "background: red;padding-top: 50px; margin-right: 10px;",
+					},
+					reviewImage: true,
+				});
+
+				await waitFor(() => expect(screen.getByText(REVIEW_MODAL_TEXT)).toBeVisible());
+				const modalBox = screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "review-modal-box"));
+				await waitFor(() => expect(modalBox.style.paddingTop).toBe("50px"));
+				expect(modalBox.style.marginRight).toBe("10px");
+				expect(modalBox.style.background).toBe("");
+				expect(modalBox.style.backgroundColor).toBe("");
+			});
+
 			it("should pass the styles through StyleHelper.sanitizeStyleString", async () => {
 				const sanitizeSpy = jest.spyOn(StyleHelper, "sanitizeStyleString");
 				await renderComponent({

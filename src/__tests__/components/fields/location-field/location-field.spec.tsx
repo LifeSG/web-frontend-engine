@@ -1778,6 +1778,17 @@ describe("location-input-group", () => {
 				});
 			});
 
+			it("should strip non-layout declarations from the modal box", async () => {
+				jest.spyOn(console, "warn").mockImplementation(() => undefined);
+				await renderComponent({
+					overrideField: { locationModalStyles: "background: red;padding-top: 50px; margin-right: 10px;" },
+				});
+
+				await waitFor(() => expect(getModalBox().style.paddingTop).toBe("50px"));
+				expect(getModalBox().style.background).toBe("");
+				expect(getModalBox().style.backgroundColor).toBe("");
+			});
+
 			// jsdom's CSS parser silently discards escaped url() / image-set(), unlike real browsers, so the bypass itself
 			// is covered in style-helper.spec.ts. here we only assert the modal box receives the sanitised output
 			it("should pass the styles through StyleHelper.sanitizeStyleString", async () => {

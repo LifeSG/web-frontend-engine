@@ -44,6 +44,7 @@ describe("style-helper", () => {
 			${"@import"}                              | ${'@import url("https://evil.example.com/x.css");'}
 			${"escaped @import"}                      | ${'@\\69mport "https://evil.example.com/x.css";'}
 			${"non-layout property"}                  | ${"color: red"}
+			${"background"}                           | ${"background: red"}
 			${"background-image"}                     | ${"background-image: linear-gradient(red, blue)"}
 			${"url() in background-color"}            | ${'background-color: url("https://evil.example.com/x.png")'}
 			${"escaped url() in background-color"}    | ${'background-color: \\75rl("https://evil.example.com/x.png")'}
