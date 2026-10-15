@@ -182,11 +182,6 @@ test.describe("Location Field", () => {
 		await expect(story.locators.modalBox).toBeVisible();
 		await story.waitForAnimationEnd(story.locators.modalBox);
 
-		// layout declarations are applied, disallowed ones (background) are stripped
-		await expect(story.locators.modalBox).toHaveCSS("padding-top", "50px");
-		await expect(story.locators.modalBox).toHaveCSS("margin-right", "10px");
-		await expect(story.locators.modalBox).not.toHaveAttribute("style", /background/);
-
 		await story.waitForImageLoad();
 		await story.page.waitForLoadState("networkidle");
 

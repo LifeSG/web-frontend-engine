@@ -1,7 +1,8 @@
 export namespace StyleHelper {
-	/** layout-only properties this styling hook is meant to support (e.g. padding-top to clear a masthead). Anything
-	 * outside this allowlist is dropped, so there is no property through which a resource can be loaded or the modal
-	 * repositioned over other content (background, cursor, list-style, position, z-index, etc.) */
+	/** layout properties this styling hook is meant to support (e.g. padding-top to clear a masthead), plus
+	 * background-color which only accepts a colour, never an image. Anything outside this allowlist is dropped, so there
+	 * is no property through which a resource can be loaded or the modal repositioned over other content (background,
+	 * background-image, cursor, list-style, position, z-index, etc.) */
 	const ALLOWED_PROPERTIES = new Set([
 		"padding",
 		"padding-top",
@@ -24,6 +25,7 @@ export namespace StyleHelper {
 		"bottom",
 		"left",
 		"border-radius",
+		"background-color",
 	]);
 
 	/** constructs that can reference an external resource or execute an expression, checked after CSS escapes are
@@ -113,7 +115,7 @@ export namespace StyleHelper {
 
 	/** sanitises a schema-authored CSS string before it is assigned to an element's style.cssText. Rather than stripping
 	 * known-bad tokens (bypassable with CSS escapes or non-url() resource functions like image-set()), only declarations
-	 * whose property is on a layout-only allowlist and whose value contains no resource-referencing construct are kept.
+	 * whose property is on a layout allowlist and whose value contains no resource-referencing construct are kept.
 	 * Rules and at-rules such as `@media` are not supported by style.cssText and are dropped.
 	 * Never throws: invalid input results in an empty string */
 	export const sanitizeStyleString = (value: unknown): string => {
@@ -135,7 +137,7 @@ export namespace StyleHelper {
 
 			if (dropped.length) {
 				console.warn(
-					`unsupported styles were removed, only layout declarations (e.g. padding-top) are applied: ${dropped.join(
+					`unsupported styles were removed, only layout declarations (e.g. padding-top) and background-color are applied: ${dropped.join(
 						"; "
 					)}`
 				);

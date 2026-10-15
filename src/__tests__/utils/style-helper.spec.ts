@@ -23,6 +23,9 @@ describe("style-helper", () => {
 			${"multi-value shorthand"}          | ${"margin: 0 auto 8px 4px"}                 | ${"margin: 0 auto 8px 4px;"}
 			${"border-radius"}                  | ${"border-radius: 0"}                       | ${"border-radius: 0;"}
 			${"comments are ignored"}           | ${"padding-top: 8px; /* note */ margin: 0"} | ${"padding-top: 8px; margin: 0;"}
+			${"background-color keyword"}       | ${"background-color: red"}                  | ${"background-color: red;"}
+			${"background-color hex"}           | ${"background-color: #fff"}                 | ${"background-color: #fff;"}
+			${"background-color rgb()"}         | ${"background-color: rgb(0, 0, 0)"}         | ${"background-color: rgb(0, 0, 0);"}
 		`("should keep layout declarations: $scenario", ({ input, expected }) => {
 			expect(StyleHelper.sanitizeStyleString(input)).toBe(expected);
 			expect(warnSpy).not.toHaveBeenCalled();
@@ -41,6 +44,10 @@ describe("style-helper", () => {
 			${"@import"}                              | ${'@import url("https://evil.example.com/x.css");'}
 			${"escaped @import"}                      | ${'@\\69mport "https://evil.example.com/x.css";'}
 			${"non-layout property"}                  | ${"color: red"}
+			${"background-image"}                     | ${"background-image: linear-gradient(red, blue)"}
+			${"url() in background-color"}            | ${'background-color: url("https://evil.example.com/x.png")'}
+			${"escaped url() in background-color"}    | ${'background-color: \\75rl("https://evil.example.com/x.png")'}
+			${"image-set() in background-color"}      | ${'background-color: image-set("https://evil.example.com/x.png" 1x)'}
 			${"position overlay"}                     | ${"position: fixed; z-index: 9999"}
 			${"opacity"}                              | ${"opacity: 0"}
 			${"invisible overlay"}                    | ${"position: fixed; z-index: 9999; opacity: 0"}
