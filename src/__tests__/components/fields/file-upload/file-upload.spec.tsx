@@ -231,6 +231,28 @@ describe(UI_TYPE, () => {
 			);
 		});
 
+		it.each`
+			scheme           | fileUrl
+			${"javascript:"} | ${"javascript:alert(1)"}
+			${"data:"}       | ${"data:image/png;base64,iVBORw0KGgo="}
+			${"file:"}       | ${"file:///etc/passwd"}
+		`("should not fetch a default value fileUrl with $scheme scheme", async ({ fileUrl }) => {
+			const getSpy = jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileUrl, fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(getSpy).not.toHaveBeenCalled();
+			expect(screen.getAllByText(ERROR_MESSAGES.UPLOAD().GENERIC).length).toBeGreaterThan(0);
+		});
+
 		it("should support default value without dataURL and fileUrl", async () => {
 			jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
 			await renderComponent({

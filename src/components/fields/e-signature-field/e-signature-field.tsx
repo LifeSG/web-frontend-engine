@@ -162,6 +162,9 @@ export const ESignatureField = (props: IGenericFieldProps<IESignatureFieldSchema
 
 		const fetchImage = async () => {
 			try {
+				if (!FileHelper.isFetchableFileUrl(fileUrl)) {
+					throw new Error(`unsupported fileUrl, only http(s) urls can be prefilled: ${fileUrl}`);
+				}
 				const request = await new AxiosApiClient("", undefined, undefined, true, {
 					responseType: "blob",
 				}).get<Blob>(fileUrl, { signal: controller.signal });
