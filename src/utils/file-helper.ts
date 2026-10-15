@@ -197,6 +197,14 @@ export namespace FileHelper {
 		}
 	};
 
+	const cleanFileNamePart = (value: string) =>
+		value
+			.replace(/[^A-Za-z0-9 _().-]/g, "") // allowlist, drops / \ < > : * ? " | and non-ascii
+			.replace(/\.{2,}/g, ".") // collapse ".." so traversal can't survive
+			.replace(/^[\s.]+|[\s.]+$/g, ""); // trim leading/trailing dots and spaces
+
+	const cleanFileExtension = (value: string) => value.replace(/[^A-Za-z0-9]/g, ""); // letters and digits only
+
 	/**
 	 * normalise an uploaded file's name before it is displayed and sent as the multipart filename
 	 * keeps letters, digits, space, _ - ( ) and inner dots, so non-ascii characters don't break multipart encoding and
@@ -208,21 +216,13 @@ export namespace FileHelper {
 	export const sanitizeFileName = (fileName: string): string => {
 		const parts = fileName.split(".");
 
-		const cleanName = (value: string) =>
-			value
-				.replace(/[^A-Za-z0-9 _().-]/g, "") // allowlist, drops / \ < > : * ? " | and non-ascii
-				.replace(/\.{2,}/g, ".") // collapse ".." so traversal can't survive
-				.replace(/^[\s.]+|[\s.]+$/g, ""); // trim leading/trailing dots and spaces
-
-		const cleanExt = (value: string) => value.replace(/[^A-Za-z0-9]/g, ""); // letters and digits only
-
 		if (parts.length === 2 && parts[0] === "") {
-			const name = cleanExt(parts[1]); // dotfile without extension e.g. .env, kept as is
+			const name = cleanFileExtension(parts[1]); // dotfile without extension e.g. .env, kept as is
 			return name ? `.${name}` : "file";
 		}
 
-		const ext = parts.length > 1 ? cleanExt(parts.pop() ?? "") : ""; // last segment only, inner dots stay in the name
-		const name = cleanName(parts.join(".")) || "file"; // e.g. "✨.txt" -> "file.txt"
+		const ext = parts.length > 1 ? cleanFileExtension(parts.pop() ?? "") : ""; // last segment only, inner dots stay in the name
+		const name = cleanFileNamePart(parts.join(".")) || "file"; // e.g. "✨.txt" -> "file.txt"
 
 		return ext ? `${name}.${ext}` : name;
 	};
