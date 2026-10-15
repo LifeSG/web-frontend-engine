@@ -49,7 +49,7 @@ const meta: Meta = {
 		upload: {
 			type: { name: "object", value: {} },
 			description:
-				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId (optional): To indicate which session it belongs to.</li></ul>",
+				"<div>API to POST to on adding file. This can be used to do AV scan and upload to server afterwards.<br><br></div><ul><li>type: upload as `base64` or `multipart` content-type. For multipart upload, API response should contain the url of the uploaded file `fileUrl`. The url will be submitted as part of the field values.</li><li>url: API endpoint to call.</li><li>headers (optional): Additional Axios headers.</li><li>sessionId (optional): To indicate which session it belongs to.</li></ul><div><br>Multipart upload response</div><ul><li>`fileUrl`: url of the uploaded file. It is also fetched by the browser when the field is prefilled, so only `http(s)` urls are allowed. Restrict reachable hosts by listing them in your CSP `connect-src`, e.g. `connect-src 'self' https://api.example.gov.sg`.</li></ul>",
 			table: {
 				type: {
 					summary:
@@ -86,8 +86,7 @@ DefaultValue.args = {
 };
 DefaultValue.argTypes = {
 	defaultValues: {
-		description:
-			"Default value for the field, this is declared outside `sections`.<br><br>A prefilled `fileUrl` is fetched by the browser; only `http(s)` urls are allowed. Restrict reachable hosts by listing them in your CSP `connect-src`, e.g. `connect-src 'self' https://api.example.gov.sg`.",
+		description: "Default value for the field, this is declared outside `sections`",
 		table: {
 			type: {
 				summary:
