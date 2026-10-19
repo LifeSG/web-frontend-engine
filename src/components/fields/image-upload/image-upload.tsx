@@ -84,9 +84,16 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 			}
 
 			const newImages: IImage[] = [];
+			const usedIds = new Set<string>();
 			valuesToHandle.forEach(({ fileId, fileName, dataURL, uploadResponse }, i) => {
+				let imageId = fileId;
+				while (!imageId || usedIds.has(imageId)) {
+					imageId = generateRandomId();
+				}
+				usedIds.add(imageId);
+
 				const newImage: IImage = {
-					id: fileId || generateRandomId(),
+					id: imageId,
 					file: {} as File,
 					name: fileName,
 					dimensions: { width: 10, height: 10 },
@@ -164,8 +171,8 @@ export const ImageUploadInner = (props: IGenericFieldProps<IImageUploadSchema>) 
 		const hasUnloadedImages = images.some((img) => img.status === EImageStatus.NONE);
 		if (hasUnloadedImages) return; // Waiting for all images to load
 
-		images.some((image, index) => {
-			const previousFile = previousImages?.[index];
+		images.some((image) => {
+			const previousFile = previousImages?.find(({ id }) => id === image.id);
 			if (image.status !== previousFile?.status || image.dataURL !== previousFile.dataURL) {
 				switch (image.status) {
 					case EImageStatus.COMPRESSED:
