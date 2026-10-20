@@ -545,6 +545,7 @@ export const ImageReview = (props: IProps) => {
 		>
 			<Modal.Box
 				elementRef={setModalBoxRef}
+				id={TestHelper.generateId(id, "review-modal-box")}
 				className={clsx(styles.modalBox, className && `${className}-review-modal-box`)}
 				showCloseButton={false}
 				data-mobile-landscape={!!isMobileLandscape}
