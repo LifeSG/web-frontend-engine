@@ -467,6 +467,7 @@ export const ImageReview = (props: IProps) => {
 			show={show}
 		>
 			<ModalBox
+				id={TestHelper.generateId(id, "review-modal-box")}
 				className={className ? `${className}-review-modal-box` : undefined}
 				imageReviewModalStyles={imageReviewModalStyles}
 				showCloseButton={false}
