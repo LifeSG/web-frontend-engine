@@ -23,6 +23,10 @@ export interface IESignatureFieldSchema<V = undefined>
 export interface IESignatureValue {
 	dataURL?: string | undefined;
 	fileId: string;
+	/**
+	 * fetched by the browser when prefilled, only http(s) urls are fetched
+	 * restrict reachable hosts by listing explicit https:// origins in CSP connect-src
+	 */
 	fileUrl?: string | undefined;
 	uploadResponse?: unknown | undefined;
 }

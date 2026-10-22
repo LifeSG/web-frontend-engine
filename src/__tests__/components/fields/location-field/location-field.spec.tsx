@@ -9,7 +9,7 @@ import { ERROR_SVG } from "../../../../components/fields/location-field/location
 import { ErrorImage } from "../../../../components/fields/location-field/location-modal/location-modal.styles";
 import { IMapPin } from "../../../../components/fields/location-field/location-modal/location-picker/types";
 import { ERROR_MESSAGES, Prompt } from "../../../../components/shared";
-import { GeoLocationHelper, TestHelper } from "../../../../utils";
+import { GeoLocationHelper, StyleHelper, TestHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
@@ -1815,6 +1815,44 @@ describe("location-input-group", () => {
 
 	describe("customisation", () => {
 		it.todo("should support placeholder texts");
+
+		describe("locationModalStyles", () => {
+			// styles are applied through the styled-components stylesheet, not inline, so read the computed style
+			const getModalBoxStyle = () =>
+				getComputedStyle(screen.getByTestId(TestHelper.generateId(COMPONENT_ID, "modal-box")));
+
+			it("should apply layout declarations to the modal box", async () => {
+				await renderComponent({
+					overrideField: { locationModalStyles: "padding-top: 50px; margin-right: 10px;" },
+				});
+
+				await waitFor(() => {
+					expect(getModalBoxStyle().paddingTop).toBe("50px");
+					expect(getModalBoxStyle().marginRight).toBe("10px");
+				});
+			});
+
+			it("should strip non-layout declarations from the modal box", async () => {
+				jest.spyOn(console, "warn").mockImplementation(() => undefined);
+				await renderComponent({
+					overrideField: { locationModalStyles: "background: red;padding-top: 50px; margin-right: 10px;" },
+				});
+
+				await waitFor(() => expect(getModalBoxStyle().paddingTop).toBe("50px"));
+				// the modal box keeps its own design system background, not the stripped red one
+				expect(getModalBoxStyle().backgroundColor).not.toMatch(/red|rgb\(255, 0, 0\)/);
+			});
+
+			// jsdom's CSS parser silently discards escaped url() / image-set(), unlike real browsers, so the bypass itself
+			// is covered in style-helper.spec.ts. here we only assert the modal box receives the sanitised output
+			it("should pass the styles through StyleHelper.sanitizeStyleString", async () => {
+				const sanitizeSpy = jest.spyOn(StyleHelper, "sanitizeStyleString");
+				await renderComponent({ overrideField: { locationModalStyles: "padding-top: 50px;" } });
+
+				await waitFor(() => expect(sanitizeSpy).toHaveBeenCalledWith("padding-top: 50px;"));
+				sanitizeSpy.mockRestore();
+			});
+		});
 	});
 
 	describe("validation", () => {

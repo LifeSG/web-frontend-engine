@@ -244,6 +244,27 @@ describe(UI_TYPE, () => {
 			expect(getTryAgainButton()).toBeInTheDocument();
 		});
 
+		it.each`
+			scheme           | fileUrl
+			${"javascript:"} | ${"javascript:alert(1)"}
+			${"data:"}       | ${"data:image/png;base64,iVBORw0KGgo="}
+			${"file:"}       | ${"file:///etc/passwd"}
+		`("should not fetch a default value fileUrl with $scheme scheme", async ({ fileUrl }) => {
+			const getSpy = jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+
+			renderComponent(
+				{ upload: uploadConfig },
+				{ defaultValues: { [COMPONENT_ID]: { ...defaultValue, fileUrl } } }
+			);
+
+			await act(async () => {
+				// wait for useEffect
+			});
+
+			expect(getSpy).not.toHaveBeenCalled();
+			expect(screen.getByText("Failed to load.")).toBeInTheDocument();
+		});
+
 		it("should show refresh page alert message if loading of image fails for 3 consecutive times", async () => {
 			jest.spyOn(AxiosApiClient.prototype, "get").mockRejectedValue({});
 
