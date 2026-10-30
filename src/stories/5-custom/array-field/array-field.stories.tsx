@@ -85,7 +85,7 @@ const meta: Meta = {
 
 				<ul>
 					<li>\`label\` prop overrides the text</li>
-					<li>\`icon\` prop overrides the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
+					<li>\`icon\` prop overrides the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/docs/collection--docs' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
 					<li>\`styleType\` prop sets the button style (\`default\`, \`secondary\`, \`light\`, \`link\`)</li>
 				</ul>
 			`,
@@ -101,7 +101,7 @@ const meta: Meta = {
 
 				<ul>
 					<li>\`label\` prop overrides the text</li>
-					<li>\`icon\` prop sets the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
+					<li>\`icon\` prop sets the icon, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/docs/collection--docs' target='_blank' rel='noopener noreferrer'>React Icons</a></li>
 					<li>\`styleType\` prop sets the button style (\`default\`, \`secondary\`, \`light\`, \`link\`)</li>
 					<li>\`position\` prop sets button position: \`top\` (default) or \`bottom\`</li>
 					<li>\`alignment\` prop sets button alignment: \`left\` or \`right\` (default)</li>

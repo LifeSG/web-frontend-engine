@@ -17,3 +17,25 @@ it.each`
 		expect(TestHelper.getError(() => schema.validateSync(invalidValue)).message).toBe(ERROR_MESSAGE)
 	);
 });
+
+describe("notMatches", () => {
+	const buildSchema = (regex: string) =>
+		YupHelper.buildFieldSchema(YupHelper.mapSchemaType("string"), [
+			{ notMatches: regex, errorMessage: ERROR_MESSAGE },
+		]);
+
+	it("should not throw when the regex string is malformed", () => {
+		const schema = buildSchema("not a /pattern/flags string [");
+
+		expect(() => schema.validateSync("hello")).not.toThrow();
+	});
+
+	it("should reject an overly long value instead of testing it against the pattern", () => {
+		const schema = buildSchema("/^(a+)+$/");
+		const maliciousValue = `${"a".repeat(1000)}!`;
+
+		const start = Date.now();
+		expect(TestHelper.getError(() => schema.validateSync(maliciousValue)).message).toBe(ERROR_MESSAGE);
+		expect(Date.now() - start).toBeLessThan(1000);
+	});
+});

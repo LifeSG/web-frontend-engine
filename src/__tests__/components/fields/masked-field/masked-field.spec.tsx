@@ -1,59 +1,33 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import cloneDeep from "lodash/cloneDeep";
-import merge from "lodash/merge";
 import { FrontendEngine } from "../../../../components";
 import { IMaskedFieldSchema } from "../../../../components/fields";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/types";
+import { ERROR_MESSAGES } from "../../../../components/shared";
+import { IFrontendEngineData } from "../../../../components/types";
+import { RegexHelper } from "../../../../utils";
 import {
 	ERROR_MESSAGE,
-	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
-	TOverrideSchema,
+	createRenderComponent,
 	getErrorMessage,
 	getField,
 	getResetButton,
-	getResetButtonProps,
 	getSubmitButton,
-	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
-import { warningTestSuite } from "../../../common/tests/warnings";
+import { dirtyStateTestSuite, labelTestSuite, warningTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const COMPONENT_LABEL = "Masked field";
 const UI_TYPE = "masked-field";
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: COMPONENT_LABEL,
-					uiType: UI_TYPE,
-					maskRange: [0, 100],
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
-		},
-	},
-};
 
-const renderComponent = (overrideField?: Partial<IMaskedFieldSchema> | undefined, overrideSchema?: TOverrideSchema) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+const { renderComponent, schema } = createRenderComponent<IMaskedFieldSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: COMPONENT_LABEL,
+		uiType: UI_TYPE,
+		maskRange: [0, 100],
+	},
+	submitFn: SUBMIT_FN,
+});
 
 const getMaskedField = (): HTMLElement => {
 	return getField("textbox", COMPONENT_LABEL);
@@ -88,6 +62,81 @@ describe(UI_TYPE, () => {
 		renderComponent({ validation: [{ length: 5 }] });
 
 		expect(getMaskedField()).toHaveAttribute("maxLength", "5");
+	});
+
+	it("should default maxLength to the safe regex length bound when maskRegex is set with no max/length validation", () => {
+		renderComponent({ maskRange: null, maskRegex: "/^(hello)/g" });
+
+		expect(getMaskedField()).toHaveAttribute("maxLength", `${RegexHelper.MAX_MATCHES_INPUT_LENGTH}`);
+	});
+
+	it("should prefer an explicit max/length validation's maxLength over the maskRegex default", () => {
+		renderComponent({ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 5 }] });
+
+		expect(getMaskedField()).toHaveAttribute("maxLength", "5");
+	});
+
+	it("should not hang when a long value arrives via defaultValues", () => {
+		const maliciousValue = `${"a".repeat(1000)}!`;
+
+		const start = Date.now();
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(a+)+$/" },
+			{ defaultValues: { [COMPONENT_ID]: maliciousValue } }
+		);
+		expect(Date.now() - start).toBeLessThan(1000);
+
+		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
+			RegexHelper.MAX_MATCHES_INPUT_LENGTH
+		);
+	});
+
+	it("should clamp an already-loaded long value at render time when maskRegex changes at runtime", () => {
+		const maliciousValue = `${"a".repeat(1000)}!`;
+		const withoutMaskRegex: IFrontendEngineData = JSON.parse(JSON.stringify(schema));
+		Object.assign(withoutMaskRegex, { defaultValues: { [COMPONENT_ID]: maliciousValue } });
+		const { rerender } = render(<FrontendEngine data={withoutMaskRegex} onSubmit={SUBMIT_FN} />);
+
+		const withMaskRegex: IFrontendEngineData = JSON.parse(JSON.stringify(withoutMaskRegex));
+		Object.assign(withMaskRegex.sections.section.children[COMPONENT_ID] as object, {
+			maskRange: null,
+			maskRegex: "/^(a+)+$/",
+		});
+
+		const start = Date.now();
+		rerender(<FrontendEngine data={withMaskRegex} onSubmit={SUBMIT_FN} />);
+		expect(Date.now() - start).toBeLessThan(1000);
+
+		expect((getMaskedField() as HTMLInputElement).value.length).toBeLessThanOrEqual(
+			RegexHelper.MAX_MATCHES_INPUT_LENGTH
+		);
+	});
+
+	it("should reject an oversized programmatic value with a validation error when maskRegex is set but no explicit max/length rule governs the length", async () => {
+		const oversizedValue = "a".repeat(RegexHelper.MAX_MATCHES_INPUT_LENGTH + 1);
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(hello)/g" },
+			{ defaultValues: { [COMPONENT_ID]: oversizedValue } }
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(
+			getErrorMessage(false, ERROR_MESSAGES.MASKED_FIELD.VALUE_TOO_LONG(RegexHelper.MAX_MATCHES_INPUT_LENGTH))
+		).toBeInTheDocument();
+		expect(SUBMIT_FN).not.toHaveBeenCalled();
+	});
+
+	it("should not reject an oversized value when an explicit max validation rule already permits that length", async () => {
+		const value = "a".repeat(1001); // above MAX_MATCHES_INPUT_LENGTH (1000) but within explicit max: 1100
+		renderComponent(
+			{ maskRange: null, maskRegex: "/^(hello)/g", validation: [{ max: 1100 }] },
+			{ defaultValues: { [COMPONENT_ID]: value } }
+		);
+
+		await waitFor(() => fireEvent.click(getSubmitButton()));
+
+		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: value }));
 	});
 
 	it("should support default value", async () => {
@@ -129,6 +178,15 @@ describe(UI_TYPE, () => {
 		expect(SUBMIT_FN).toHaveBeenCalledWith(expect.objectContaining({ [COMPONENT_ID]: defaultValue }));
 	});
 
+	it("should not throw when maskRegex is malformed", () => {
+		expect(() =>
+			renderComponent(
+				{ maskRange: null, maskRegex: "not a /pattern/flags string [" },
+				{ defaultValues: { [COMPONENT_ID]: "hello" } }
+			)
+		).not.toThrow();
+	});
+
 	it("should render custom icons", () => {
 		const maskIcon = "AlbumFillIcon";
 		const unmaskIcon = "AlbumIcon";
@@ -165,65 +223,11 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getMaskedField(), { target: { value: "world" } });
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.change(getMaskedField(), { target: { value: "world" } });
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: "hello" } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.change(getMaskedField(), { target: { value: "world" } });
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema,
+		componentId: COMPONENT_ID,
+		defaultValue: "hello",
+		modifyField: () => fireEvent.change(getMaskedField(), { target: { value: "world" } }),
 	});
 
 	labelTestSuite(renderComponent);

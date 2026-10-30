@@ -186,6 +186,32 @@ const meta: Meta = {
 				type: "object",
 			},
 		},
+		locationModalStyles: {
+			description:
+				"CSS declarations applied to the location modal box, e.g. `padding-top: 50px;`. Only layout properties and `background-color` are applied (`padding`, `margin`, `width`/`height` and their `min-`/`max-` variants, `top`/`right`/`bottom`/`left`, `border-radius`); anything else, including resource references such as `url()` and rules such as `@media`, is removed with a console warning. To apply styles at a breakpoint, decide in your app with `window.matchMedia` and pass the declaration only when it matches.",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
+			},
+		},
+		restrictNonSGLocation: {
+			description:
+				"Prevents confirming and submitting locations that are outside Singapore. On confirming any selected location — a searched address (e.g. `CAUSEWAY (JOHOR)`), a map selection or an unresolvable `Pin location: <lat>, <lng>` value — its coordinates are checked against the coastal outlines of SLA's National Map Polygon dataset: if it falls on a neighbouring (JOHOR (MALAYSIA)) landmass or in waters outside Singapore, the “This location is outside Singapore.” prompt is shown and the location modal stays open. Areas within Singapore that simply have no addresses nearby (e.g. sea just off the coast, reservoirs) remain confirmable. Prefilled values that resolve to locations outside Singapore are cleared and such values fail validation on submission.",
+			table: {
+				type: {
+					summary: "boolean",
+				},
+				defaultValue: { summary: "false" },
+			},
+			options: [true, false],
+			control: {
+				type: "boolean",
+			},
+		},
 	},
 };
 export default meta;
@@ -296,6 +322,19 @@ MustHavePostalCode.args = {
 	uiType: "location-field",
 	label: "MustHavePostalCode",
 	mustHavePostalCode: true,
+	mapApi: defaultMapApi,
+};
+
+export const RestrictNonSGLocation = DefaultStoryTemplate<ILocationFieldSchema>(
+	"location-field-restrict-non-sg-location",
+	false,
+	recaptchaSiteKey
+).bind({});
+RestrictNonSGLocation.args = {
+	uiType: "location-field",
+	label: "RestrictNonSGLocation",
+	restrictNonSGLocation: true,
+	validation: [{ required: true }],
 	mapApi: defaultMapApi,
 };
 

@@ -111,6 +111,18 @@ describe(UI_TYPE, () => {
 		expect(screen.getByText("This is a HTML string")).toBeInTheDocument();
 	});
 
+	it("should strip event handler attributes from an otherwise-allowed image tag", () => {
+		renderComponent({
+			className: "text-element",
+			children: '<img src="x" onerror="window.xssFired=true" alt=\'broken image\'>',
+		});
+
+		const imgElement = screen.getByAltText("broken image");
+		expect(imgElement).toBeInTheDocument();
+		expect(imgElement).not.toHaveAttribute("onerror");
+		expect(document.querySelector(".text-element").innerHTML).not.toContain("onerror");
+	});
+
 	it("should be able to sanitize HTML string", () => {
 		renderComponent({
 			className: "text-element",

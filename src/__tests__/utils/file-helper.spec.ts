@@ -31,14 +31,55 @@ describe("FileHelper", () => {
 		});
 	});
 
+	describe("isFetchableFileUrl", () => {
+		it.each`
+			scenario                    | url
+			${"https"}                  | ${"https://example.com/files/1"}
+			${"http"}                   | ${"http://example.com/files/1"}
+			${"relative path"}          | ${"/api/files/1"}
+			${"relative without slash"} | ${"dummy url"}
+			${"protocol-relative"}      | ${"//example.com/files/1"}
+			${"uppercase scheme"}       | ${"HTTPS://example.com/files/1"}
+		`("should allow $scenario", ({ url }) => {
+			expect(FileHelper.isFetchableFileUrl(url)).toBe(true);
+		});
+
+		it.each`
+			scenario                | url
+			${"javascript:"}        | ${"javascript:alert(1)"}
+			${"data:"}              | ${"data:image/png;base64,iVBORw0KGgo="}
+			${"file:"}              | ${"file:///etc/passwd"}
+			${"blob:"}              | ${"blob:https://example.com/uuid"}
+			${"ftp:"}               | ${"ftp://example.com/file"}
+			${"padded javascript:"} | ${"  javascript:alert(1)"}
+			${"empty"}              | ${""}
+			${"whitespace"}         | ${"   "}
+			${"undefined"}          | ${undefined}
+			${"number"}             | ${123}
+		`("should reject $scenario", ({ url }) => {
+			expect(FileHelper.isFetchableFileUrl(url)).toBe(false);
+		});
+	});
+
 	describe("sanitizeFileName", () => {
 		it.each`
-			scenario                                   | input                         | expected
-			${"keep allowed characters"}               | ${"Ok123_- !@#$%^&*()~..png"} | ${"Ok123_- !@#$%^&*()~..png"}
-			${"strip special characters"}              | ${"test\u00A0✨可.png"}       | ${"test.png"}
-			${"fallback to default with extension"}    | ${"✨.txt"}                   | ${"file.txt"}
-			${"fallback to default without extension"} | ${"✨"}                       | ${"file"}
-			${"handle file without extension"}         | ${".env"}                     | ${".env"}
+			scenario                                   | input                                        | expected
+			${"keep allowed characters"}               | ${"Ok123_- (1).png"}                         | ${"Ok123_- (1).png"}
+			${"strip other ascii characters"}          | ${"Ok123_- !@#$%^&*~..png"}                  | ${"Ok123_-.png"}
+			${"strip special characters"}              | ${"test ✨可.png"}                           | ${"test.png"}
+			${"fallback to default with extension"}    | ${"✨.txt"}                                  | ${"file.txt"}
+			${"fallback to default without extension"} | ${"✨"}                                      | ${"file"}
+			${"handle file without extension"}         | ${".env"}                                    | ${".env"}
+			${"keep dotfile"}                          | ${".htaccess"}                               | ${".htaccess"}
+			${"keep inner dots"}                       | ${"report.v2.final.pdf"}                     | ${"report.v2.final.pdf"}
+			${"collapse repeated dots"}                | ${"report..pdf"}                             | ${"report.pdf"}
+			${"strip unix path traversal"}             | ${"../../../etc/passwd"}                     | ${"file.etcpasswd"}
+			${"strip windows path traversal"}          | ${"..\\..\\win.ini"}                         | ${"win.ini"}
+			${"strip path separators"}                 | ${"a/b.png"}                                 | ${"ab.png"}
+			${"strip leading dots before a name"}      | ${"..secret"}                                | ${"file.secret"}
+			${"strip markup characters"}               | ${"<img src=x onerror=alert(1)>.png"}        | ${"img srcx onerroralert(1).png"}
+			${"strip reserved characters"}             | ${'a:b*c?"d|e.txt'}                          | ${"abcde.txt"}
+			${"keep macOS screenshot name"}            | ${"Screenshot 2025-06-06 at 4.08.20 PM.png"} | ${"Screenshot 2025-06-06 at 4.08.20PM.png"}
 		`("should $scenario", ({ input, expected }) => {
 			expect(FileHelper.sanitizeFileName(input)).toEqual(expected);
 		});

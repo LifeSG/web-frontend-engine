@@ -8,6 +8,7 @@ import { EraserIcon } from "@lifesg/react-icons/eraser";
 import { PencilIcon } from "@lifesg/react-icons/pencil";
 import { PencilStrokeIcon } from "@lifesg/react-icons/pencil-stroke";
 import styled, { css } from "styled-components";
+import { StyleHelper } from "../../../../utils";
 
 interface IModalBoxStyle {
 	imageReviewModalStyles?: string | undefined;
@@ -18,7 +19,7 @@ export const ModalBox = styled(Modal.Box)<IModalBoxStyle>`
 	max-height: fit-content;
 
 	${({ imageReviewModalStyles }) => {
-		if (imageReviewModalStyles) return `${imageReviewModalStyles}`;
+		if (imageReviewModalStyles) return StyleHelper.sanitizeStyleString(imageReviewModalStyles);
 	}}
 
 	${MediaQuery.MinWidth.xl} {

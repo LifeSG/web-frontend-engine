@@ -125,7 +125,7 @@ const meta: Meta = {
 		},
 		iconMask: {
 			description:
-				"The icon to mask the field, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a>",
+				"The icon to mask the field, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/docs/collection--docs' target='_blank' rel='noopener noreferrer'>React Icons</a>",
 			table: {
 				type: {
 					summary: "Refer to React Icons",
@@ -138,7 +138,7 @@ const meta: Meta = {
 		},
 		iconUnmask: {
 			description:
-				"The icon to unmask the field, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a>",
+				"The icon to unmask the field, based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/docs/collection--docs' target='_blank' rel='noopener noreferrer'>React Icons</a>",
 			table: {
 				type: {
 					summary: "Refer to React Icons",

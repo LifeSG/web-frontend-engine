@@ -35,4 +35,5 @@ export interface ILocationSearchProps {
 	disableSearch?: "disabled" | "readonly" | undefined;
 	searchBarIcon?: "search" | "location-pin";
 	bufferRadius?: number | undefined;
+	restrictNonSGLocation?: boolean | undefined;
 }

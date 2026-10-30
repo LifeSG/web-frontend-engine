@@ -20,7 +20,7 @@ const meta: Meta = {
 					<p>
 						Please refer to the{" "}
 						<a
-							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/modules-popoverv2-popoverinline--docs"
+							href="https://designsystem.life.gov.sg/react/index.html?path=/docs/overlays-popoverinline--docs"
 							target="_blank"
 							rel="noopener noreferrer"
 						>

@@ -20,6 +20,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
+import { dirtyStateTestSuite } from "../../../common/tests";
 
 const JPG_BASE64 =
 	"data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
@@ -228,6 +229,28 @@ describe(UI_TYPE, () => {
 					]),
 				})
 			);
+		});
+
+		it.each`
+			scheme           | fileUrl
+			${"javascript:"} | ${"javascript:alert(1)"}
+			${"data:"}       | ${"data:image/png;base64,iVBORw0KGgo="}
+			${"file:"}       | ${"file:///etc/passwd"}
+		`("should not fetch a default value fileUrl with $scheme scheme", async ({ fileUrl }) => {
+			const getSpy = jest.spyOn(AxiosApiClient.prototype, "get").mockResolvedValue(FILE_1);
+			await renderComponent({
+				overrideSchema: {
+					defaultValues: {
+						[COMPONENT_ID]: [{ fileUrl, fileId: FILE_1.name, fileName: FILE_1.name }],
+					},
+				},
+			});
+			await act(async () => {
+				await flushPromise(200);
+			});
+
+			expect(getSpy).not.toHaveBeenCalled();
+			expect(screen.getAllByText(ERROR_MESSAGES.UPLOAD().GENERIC).length).toBeGreaterThan(0);
 		});
 
 		it("should support default value without dataURL and fileUrl", async () => {
@@ -1227,12 +1250,8 @@ describe(UI_TYPE, () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-		const json: IFrontendEngineData = {
+	dirtyStateTestSuite({
+		schema: {
 			id: FRONTEND_ENGINE_ID,
 			sections: {
 				section: {
@@ -1251,23 +1270,19 @@ describe(UI_TYPE, () => {
 					},
 				},
 			},
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
+		},
+		componentId: COMPONENT_ID,
+		defaultValue: {
+			fileId: FILE_1.name,
+			fileName: FILE_1.name,
+			dataURL: JPG_BASE64,
+		},
+		beforeEach: () => {
 			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
 			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
-			fireEvent.click(getCustomButton());
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user adds a file", async () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
+			jest.spyOn(ImageHelper, "convertBlob").mockResolvedValue(JPG_BASE64);
+		},
+		modifyField: async () => {
 			await act(async () => {
 				fireEvent.change(getDragInputUploadField(), {
 					target: {
@@ -1278,42 +1293,42 @@ describe(UI_TYPE, () => {
 				await waitFor(() => expect(screen.getByTestId(/thumbnail$/)).toBeInTheDocument());
 				await flushPromise();
 			});
-			fireEvent.click(getCustomButton());
+		},
+	});
 
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...json,
-						defaultValues: {
-							[COMPONENT_ID]: [
-								{
-									fileName: FILE_1.name,
-									dataURL: JPG_BASE64,
-								},
-							],
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			await act(async () => {
-				await waitFor(() => expect(screen.getByTestId(/thumbnail$/)).toBeInTheDocument());
-				await flushPromise();
-			});
-			fireEvent.click(getCustomButton());
-
-			expect(formIsDirty).toBe(false);
+	describe("dirty state", () => {
+		let formIsDirty: boolean;
+		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
+			formIsDirty = ref.current.isDirty;
+		};
+		beforeEach(() => {
+			formIsDirty = undefined;
+			jest.spyOn(FileHelper, "dataUrlToBlob").mockResolvedValue(FILE_1);
+			jest.spyOn(FileHelper, "getType").mockResolvedValue({ ext: "jpg", mime: "image/jpeg" });
 		});
 
 		it("should set form state as dirty if user removes an image", async () => {
 			render(
 				<FrontendEngineWithCustomButton
 					data={{
-						...json,
+						id: FRONTEND_ENGINE_ID,
+						sections: {
+							section: {
+								uiType: "section",
+								children: {
+									[COMPONENT_ID]: {
+										label: "Upload",
+										uiType: UI_TYPE,
+										uploadOnAddingFile: {
+											type: "base64",
+											url: UPLOAD_URL,
+										},
+									},
+									...getSubmitButtonProps(),
+									...getResetButtonProps(),
+								},
+							},
+						},
 						defaultValues: {
 							[COMPONENT_ID]: [
 								{
@@ -1335,56 +1350,6 @@ describe(UI_TYPE, () => {
 			fireEvent.click(getCustomButton());
 
 			expect(formIsDirty).toBe(true);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={json} onClick={handleClick} />);
-			await act(async () => {
-				fireEvent.change(getDragInputUploadField(), {
-					target: {
-						files: [FILE_1],
-					},
-				});
-				await waitFor(() => expect(screen.getByTestId(/image$/)).toBeInTheDocument());
-				await flushPromise();
-				await waitFor(() => fireEvent.click(getResetButton()));
-			});
-			fireEvent.click(getCustomButton());
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{
-						...json,
-						defaultValues: {
-							[COMPONENT_ID]: [
-								{
-									fileName: FILE_1.name,
-									dataURL: JPG_BASE64,
-								},
-							],
-						},
-					}}
-					onClick={handleClick}
-				/>
-			);
-			await act(async () => {
-				fireEvent.change(getDragInputUploadField(), {
-					target: {
-						files: [FILE_2],
-					},
-				});
-				await waitFor(() => expect(screen.getAllByTestId(/image$/).length).toBe(2));
-				await flushPromise(200);
-				await waitFor(() => fireEvent.click(getResetButton()));
-				await flushPromise();
-			});
-			fireEvent.click(getCustomButton());
-
-			expect(formIsDirty).toBe(false);
 		});
 	});
 

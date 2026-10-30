@@ -16,8 +16,7 @@ import {
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
-import { warningTestSuite } from "../../../common/tests/warnings";
+import { labelTestSuite, warningTestSuite } from "../../../common/tests";
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
 const label = "Date";

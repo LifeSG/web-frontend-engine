@@ -1,6 +1,8 @@
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { ERROR_MESSAGES } from "../../components/shared";
+import { RegexHelper } from "../../utils";
+import { IConditionalValidationContext } from "../when-dependency-map";
 import {
 	IFieldYupConfig,
 	IYupConditionalValidationRule,
@@ -14,6 +16,10 @@ import {
 } from "./types";
 
 interface IYupCombinedRule extends IYupRenderRule, IYupValidationRule {}
+
+interface IMapRulesOptions {
+	conditionalOnly?: boolean;
+}
 
 export namespace YupHelper {
 	const customYupConditions: string[] = [];
@@ -33,10 +39,33 @@ export namespace YupHelper {
 		const [parsedYupSchemaConfig, whenPairIds] = parseWhenKeys(yupSchemaConfig);
 		Object.keys(parsedYupSchemaConfig).forEach((id) => {
 			const { schema, validationRules: fieldValidationConfig } = yupSchemaConfig[id];
-			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig);
+			yupSchema[id] = buildFieldSchema(schema, fieldValidationConfig, id);
 		});
 
-		return Yup.object().meta({ yupId }).shape(yupSchema, whenPairIds);
+		// build reverse map: sourceField -> [dependentFields]
+		// reuses the already-computed whenPairIds (same data Yup uses for cycle detection)
+		const whenDependencyMap = buildWhenDependencyMap(whenPairIds);
+
+		return Yup.object().meta({ yupId, whenDependencyMap }).shape(yupSchema, whenPairIds);
+	};
+
+	/**
+	 * Converts [dependentField, sourceField] pairs into a sourceField -> dependentFields[] map.
+	 * Used to determine which fields should revalidate when a source field changes.
+	 * @param whenPairIds array of [dependentFieldId, sourceFieldId] pairs
+	 * @returns map of sourceFieldId -> dependentFieldIds[]
+	 */
+	const buildWhenDependencyMap = (whenPairIds: [string, string][]): Record<string, string[]> => {
+		const map: Record<string, string[]> = {};
+		whenPairIds.forEach(([dependentField, sourceField]) => {
+			if (!map[sourceField]) {
+				map[sourceField] = [];
+			}
+			if (!map[sourceField].includes(dependentField)) {
+				map[sourceField].push(dependentField);
+			}
+		});
+		return map;
 	};
 
 	/**
@@ -118,9 +147,20 @@ export namespace YupHelper {
 	 */
 	export const buildFieldSchema = (
 		yupSchemaField: Yup.AnySchema,
-		fieldValidationConfig: IYupCombinedRule[]
+		fieldValidationConfig: IYupCombinedRule[],
+		fieldId?: string
 	): Yup.AnySchema => {
-		return mapRules(yupSchemaField, fieldValidationConfig);
+		const fullSchema = mapRules(yupSchemaField.clone(), fieldValidationConfig);
+		const conditionalSchema = mapRules(yupSchemaField.clone(), fieldValidationConfig, { conditionalOnly: true });
+
+		return Yup.lazy((_value, options) => {
+			const validationContext = options.context as IConditionalValidationContext | undefined;
+			const hasConditionalValidationRequest = validationContext?.conditionalValidationRequests.some(
+				({ fieldId: requestedFieldId }) => requestedFieldId === fieldId
+			);
+
+			return fieldId && hasConditionalValidationRequest ? conditionalSchema : fullSchema;
+		}) as unknown as Yup.AnySchema;
 	};
 
 	/**
@@ -150,10 +190,19 @@ export namespace YupHelper {
 	 * Adds Yup validation and constraints based on specified rules
 	 * @param yupSchema Yup schema that was previously created from specified validation type
 	 * @param schemaRules An array of validation rules to be mapped against validation type (e.g. a string schema might contain { maxLength: 255 })
+	 * @param options Options to control how rules are mapped
 	 * @returns yupSchema with added constraints and validations
 	 */
-	export const mapRules = <V extends IYupCombinedRule>(yupSchema: Yup.AnySchema, schemaRules: V[]): Yup.AnySchema => {
+	export const mapRules = <V extends IYupCombinedRule>(
+		yupSchema: Yup.AnySchema,
+		schemaRules: V[],
+		options: IMapRulesOptions = {}
+	): Yup.AnySchema => {
 		schemaRules.forEach((rule) => {
+			if (options.conditionalOnly && !rule.when) {
+				return;
+			}
+
 			const ruleKey = Object.keys(rule).filter((k) =>
 				YUP_CONDITIONS.includes(k as TYupCondition)
 			)?.[0] as TYupCondition;
@@ -187,13 +236,23 @@ export namespace YupHelper {
 					break;
 				case !!rule.matches:
 					{
-						const matches = rule.matches.match(/\/(.*)\/([a-z]+)?/);
-						try {
-							yupSchema = (yupSchema as Yup.StringSchema).matches(
-								new RegExp(matches[1], matches[2]),
-								rule.errorMessage
-							);
-						} catch (error) {
+						// "matches" tests the field's own value as a string; skip for non-string values
+						if (yupSchema.type !== "string") {
+							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
+							break;
+						}
+						const regex = RegexHelper.compile(rule.matches);
+						if (regex) {
+							yupSchema = (yupSchema as Yup.StringSchema).test({
+								name: "matches",
+								message: rule.errorMessage,
+								test: (value) =>
+									value === undefined ||
+									value === null ||
+									value === "" ||
+									RegexHelper.safeTestRegex(regex, value),
+							});
+						} else {
 							console.warn(`error applying "${ruleKey}" condition to ${yupSchema.type} schema`);
 						}
 					}

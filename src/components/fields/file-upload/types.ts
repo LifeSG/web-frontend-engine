@@ -63,6 +63,10 @@ export interface IFileUploadValue {
 	dataURL?: string | undefined;
 	fileId: string;
 	fileName: string;
+	/**
+	 * fetched by the browser when prefilled, only http(s) urls are fetched
+	 * restrict reachable hosts by listing explicit https:// origins in CSP connect-src
+	 */
 	fileUrl?: string | undefined;
 	uploadResponse?: unknown | undefined;
 }

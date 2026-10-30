@@ -5,10 +5,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import useDeepCompareEffect, { useDeepCompareEffectNoCheck } from "use-deep-compare-effect";
 import {
 	ContextProviders,
+	IConditionalValidationContext,
 	IYupValidationRule,
 	TCustomValidationFunction,
 	TYupSchemaType,
+	WhenDependencyMapContext,
 	YupHelper,
+	consumeConditionalValidationRequests,
 } from "../../context-providers";
 import { TNoInfer, TestHelper } from "../../utils";
 import {
@@ -46,11 +49,15 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	const { addFieldEventListener, dispatchFieldEvent, removeFieldEventListener } = useFieldEvent();
 	const { setCustomComponents } = useCustomComponents();
 	const { setSubmitHandler, setWrapInForm } = useFrontendEngineForm();
+	const conditionalValidationContext = useRef<IConditionalValidationContext>({
+		conditionalValidationRequests: [],
+	});
 	const {
 		addWarnings,
 		performSoftValidation,
 		softValidationSchema,
 		hardValidationSchema,
+		whenDependencyMap,
 		rebuildValidationSchema,
 		yupId,
 	} = useValidationSchema();
@@ -58,10 +65,14 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		mode: validationMode,
 		reValidateMode: revalidationMode,
 		defaultValues,
+		context: conditionalValidationContext.current,
 		resolver: async (data, context, options) => {
+			const validationContext = consumeConditionalValidationRequests(
+				context ?? conditionalValidationContext.current
+			);
 			performSoftValidation(softValidationSchema, data);
 
-			return await yupResolver(hardValidationSchema)(data, context, options);
+			return await yupResolver(hardValidationSchema)(data, validationContext, options);
 		},
 	});
 	const { setFormSchema } = useFormSchema();
@@ -76,7 +87,7 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 		clearErrors,
 	} = formMethods;
 	const { resetFields, setFields, getFormValues, registeredFields } = useFormValues(formMethods);
-	const registeredFieldsRef = useRef(registeredFields); // using ref ensures the latest values can be retrieved in setErrors and setWarnings
+	const registeredFieldsRef = useRef(registeredFields);
 	const { checkIsFormValid } = useFormChange(props, formMethods);
 
 	// =============================================================================
@@ -124,8 +135,6 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 
 	const handleSubmitError = useCallback(
 		(errors: TFrontendEngineValues): void => {
-			// NOTE: this delays the callback into the process tick, ensuring the dom has updated by then
-			// this allows for potential error handling targeting attribute tags like `aria-invalid`
 			setTimeout(() => onSubmitError?.(errors));
 		},
 		[onSubmitError]
@@ -211,18 +220,25 @@ const FrontendEngineInner = forwardRef<IFrontendEngineRef, IFrontendEngineProps>
 	}
 
 	return (
-		<FormProvider {...formMethods}>
-			<InnerElement
-				id={formId}
-				data-testid={id ? TestHelper.generateId(id, "frontend-engine") : formId}
-				className={formClassNames}
-				noValidate
-				onSubmit={reactFormHookSubmit(handleSubmit, handleSubmitError)}
-				ref={ref}
-			>
-				<Sections />
-			</InnerElement>
-		</FormProvider>
+		<WhenDependencyMapContext.Provider
+			value={{
+				whenDependencyMap,
+				conditionalValidationRequests: conditionalValidationContext.current.conditionalValidationRequests,
+			}}
+		>
+			<FormProvider {...formMethods}>
+				<InnerElement
+					id={formId}
+					data-testid={id ? TestHelper.generateId(id, "frontend-engine") : formId}
+					className={formClassNames}
+					noValidate
+					onSubmit={reactFormHookSubmit(handleSubmit, handleSubmitError)}
+					ref={ref}
+				>
+					<Sections />
+				</InnerElement>
+			</FormProvider>
+		</WhenDependencyMapContext.Provider>
 	);
 });
 

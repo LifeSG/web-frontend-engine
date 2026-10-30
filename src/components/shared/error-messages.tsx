@@ -125,6 +125,10 @@ export const ERROR_MESSAGES = {
 	},
 	LOCATION: {
 		MUST_HAVE_POSTAL_CODE: "Selected location must have postal code.",
+		NON_SG_LOCATION_NOT_ALLOWED: "Selected location must be within Singapore.",
+	},
+	MASKED_FIELD: {
+		VALUE_TOO_LONG: (maxLength: number) => `Value exceeds the maximum allowed length of ${maxLength} characters.`,
 	},
 	ARRAY_FIELD: {
 		INVALID: "One or more of the sections is incomplete",

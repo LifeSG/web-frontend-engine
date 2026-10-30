@@ -7,7 +7,14 @@ import {
 	TFrontendEngineFieldSchema,
 	TFrontendEngineValues,
 } from "../../components/frontend-engine";
-import { ERROR_MESSAGE, RESET_BUTTON_ID, RESET_BUTTON_LABEL, SUBMIT_BUTTON_ID, SUBMIT_BUTTON_LABEL } from "./data";
+import {
+	CUSTOM_BUTTON_LABEL,
+	ERROR_MESSAGE,
+	RESET_BUTTON_ID,
+	RESET_BUTTON_LABEL,
+	SUBMIT_BUTTON_ID,
+	SUBMIT_BUTTON_LABEL,
+} from "./data";
 import { useEffect, useRef } from "react";
 
 type TAriaRoles =
@@ -21,6 +28,10 @@ type TAriaRoles =
 	| "option"
 	| "treeitem"
 	| "combobox";
+
+export const getCustomButton = (): HTMLElement => {
+	return screen.getByRole("button", { name: CUSTOM_BUTTON_LABEL });
+};
 
 export const getSubmitButton = (): HTMLElement => {
 	return screen.getByRole("button", { name: SUBMIT_BUTTON_LABEL });
@@ -90,7 +101,7 @@ export const FrontendEngineWithCustomButton = (props: {
 		<>
 			<FrontendEngine {...overrideProps} data={data} ref={ref} onSubmit={onSubmit} />
 			<button type="button" onClick={() => onClick(ref)}>
-				Custom Button
+				{CUSTOM_BUTTON_LABEL}
 			</button>
 		</>
 	);

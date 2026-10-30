@@ -13,6 +13,7 @@ export interface ILocationModalProps
 			| "addressFieldPlaceholder"
 			| "searchBarIcon"
 			| "bufferRadius"
+			| "restrictNonSGLocation"
 		> {
 	id: string;
 	className: string;

@@ -4,4 +4,5 @@ export * from "./event";
 export * from "./form-schema";
 export * from "./form-values";
 export * from "./frontend-engine-form";
+export * from "./when-dependency-map";
 export * from "./yup";

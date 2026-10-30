@@ -30,7 +30,7 @@ const meta: Meta = {
 		},
 		layoutType: {
 			description:
-				"<div>Determines how the presentation of the children is structured and displayed.<ul><li><strong>default:</strong> Does not modify the layout.</li><li><strong>grid</strong>: Render children in <a href='https://designsystem.life.gov.sg/react/index.html?path=/story/getting-started-layout--grid-layout' target='_blank' rel='noopener noreferrer'>grid layout</a>.</li><li><strong>contain</strong>: Render children within <a href='https://designsystem.life.gov.sg/react/index.html?path=/docs/getting-started-layout--general-usage' target='_blank' rel='noopener noreferrer' >Layout.Content</a> within 1320px in block display.</li></ul></div>",
+				"<div>Determines how the presentation of the children is structured and displayed.<ul><li><strong>default:</strong> Does not modify the layout.</li><li><strong>grid</strong>: Render children in <a href='https://designsystem.life.gov.sg/react/index.html?path=/docs/core-layout--docs#grid-layout' target='_blank' rel='noopener noreferrer'>grid layout</a>.</li><li><strong>contain</strong>: Render children within <a href='https://designsystem.life.gov.sg/react/index.html?path=/docs/core-layout--docs#anatomy' target='_blank' rel='noopener noreferrer' >Layout.Content</a>.</li></ul></div>",
 			table: {
 				type: {
 					summary: "default | grid | contain",

@@ -64,7 +64,7 @@ const meta: Meta = {
 		},
 		startIcon: {
 			description:
-				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a> before the button label",
+				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/docs/collection--docs' target='_blank' rel='noopener noreferrer'>React Icons</a> before the button label",
 			table: {
 				type: {
 					summary: "Refer to React Icons",
@@ -77,7 +77,7 @@ const meta: Meta = {
 		},
 		endIcon: {
 			description:
-				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/story/collection--page' target='_blank' rel='noopener noreferrer'>React Icons</a> after the button label",
+				"Add an icon based on <a href='https://designsystem.life.gov.sg/reacticons/index.html?path=/docs/collection--docs' target='_blank' rel='noopener noreferrer'>React Icons</a> after the button label",
 			table: {
 				type: {
 					summary: "Refer to React Icons",

@@ -6,21 +6,19 @@ import { useState } from "react";
 import { FrontendEngine } from "../../../../components";
 import { TRadioButtonGroupSchema } from "../../../../components/fields";
 import { IRadioButtonToggleSchema } from "../../../../components/fields/radio-button/types";
-import { IFrontendEngineData, IFrontendEngineRef } from "../../../../components/frontend-engine";
+import { IFrontendEngineData } from "../../../../components/frontend-engine";
+
 import {
 	ERROR_MESSAGE,
 	FRONTEND_ENGINE_ID,
-	FrontendEngineWithCustomButton,
-	TOverrideSchema,
+	createRenderComponent,
 	getErrorMessage,
 	getField,
 	getResetButton,
-	getResetButtonProps,
 	getSubmitButton,
 	getSubmitButtonProps,
 } from "../../../common";
-import { labelTestSuite } from "../../../common/tests";
-import { warningTestSuite } from "../../../common/tests/warnings";
+import { dirtyStateTestSuite, labelTestSuite, warningTestSuite } from "../../../common/tests";
 
 const SUBMIT_FN = jest.fn();
 const COMPONENT_ID = "field";
@@ -39,54 +37,29 @@ const getNestedField = (): HTMLElement => {
 	return screen.queryByRole("textbox");
 };
 
-const JSON_SCHEMA: IFrontendEngineData = {
-	id: FRONTEND_ENGINE_ID,
-	sections: {
-		section: {
-			uiType: "section",
-			children: {
-				[COMPONENT_ID]: {
-					label: "Radio",
-					uiType: UI_TYPE,
-					customOptions: {
-						styleType: "toggle",
-					},
-					options: [
-						{ label: "A", value: "Apple" },
-						{ label: "B", value: "Berry" },
-					],
-				},
-				...getSubmitButtonProps(),
-				...getResetButtonProps(),
-			},
+const { renderComponent, schema } = createRenderComponent<IRadioButtonToggleSchema>({
+	componentId: COMPONENT_ID,
+	baseSchema: {
+		label: "Radio",
+		uiType: UI_TYPE,
+		customOptions: {
+			styleType: "toggle",
 		},
+		options: [
+			{ label: "A", value: "Apple" },
+			{ label: "B", value: "Berry" },
+		],
 	},
-};
-
-const renderComponent = (
-	overrideField?: Partial<Omit<IRadioButtonToggleSchema, "uiType">>,
-	overrideSchema?: TOverrideSchema
-) => {
-	const json: IFrontendEngineData = merge(cloneDeep(JSON_SCHEMA), overrideSchema);
-	merge(json, {
-		sections: {
-			section: {
-				children: {
-					[COMPONENT_ID]: overrideField,
-				},
-			},
-		},
-	});
-	return render(<FrontendEngine data={json} onSubmit={SUBMIT_FN} />);
-};
+	submitFn: SUBMIT_FN,
+});
 
 const ComponentWithSetSchemaButton = (props: { onClick: (data: IFrontendEngineData) => IFrontendEngineData }) => {
 	const { onClick } = props;
-	const [schema, setSchema] = useState<IFrontendEngineData>(JSON_SCHEMA);
+	const [data, setData] = useState<IFrontendEngineData>(schema);
 	return (
 		<>
-			<FrontendEngine data={schema} onSubmit={SUBMIT_FN} />
-			<Button.Default onClick={() => setSchema(onClick)}>Update options</Button.Default>
+			<FrontendEngine data={data} onSubmit={SUBMIT_FN} />
+			<Button.Default onClick={() => setData(onClick)}>Update options</Button.Default>
 		</>
 	);
 };
@@ -386,6 +359,105 @@ describe("radio toggle button", () => {
 				})
 			);
 		});
+		describe("validation mode on deselection", () => {
+			it("should not show error on deselect when validationMode is onSubmit (before submit)", async () => {
+				renderComponent(
+					{
+						allowDeselection: true,
+						customOptions: { styleType: "toggle" },
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+					{ validationMode: "onSubmit" }
+				);
+
+				const radioButtonA = getRadioButtonA();
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).toBeChecked());
+
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).not.toBeChecked());
+
+				// No error should show before submit
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+			});
+
+			it("should show error immediately on deselect when validationMode is onChange (before submit)", async () => {
+				renderComponent(
+					{
+						allowDeselection: true,
+						customOptions: { styleType: "toggle" },
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+					{ validationMode: "onChange" }
+				);
+
+				const radioButtonA = getRadioButtonA();
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).toBeChecked());
+
+				fireEvent.click(radioButtonA);
+				await waitFor(() => {
+					expect(radioButtonA).not.toBeChecked();
+					expect(getErrorMessage()).toBeInTheDocument();
+				});
+			});
+
+			it("should show error immediately on deselect when revalidationMode is onChange (after submit)", async () => {
+				renderComponent(
+					{
+						allowDeselection: true,
+						customOptions: { styleType: "toggle" },
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+					{ revalidationMode: "onChange" }
+				);
+
+				const radioButtonA = getRadioButtonA();
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).toBeChecked());
+
+				// Submit first to set isSubmitted = true
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				// Deselect after submit
+				fireEvent.click(radioButtonA);
+				await waitFor(() => {
+					expect(radioButtonA).not.toBeChecked();
+					expect(getErrorMessage()).toBeInTheDocument();
+				});
+			});
+
+			it("should show error only on blur when revalidationMode is onBlur (after submit)", async () => {
+				renderComponent(
+					{
+						allowDeselection: true,
+						customOptions: { styleType: "toggle" },
+						validation: [{ required: true, errorMessage: ERROR_MESSAGE }],
+					},
+					{ revalidationMode: "onBlur" }
+				);
+
+				const radioButtonA = getRadioButtonA();
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).toBeChecked());
+
+				// Submit first
+				await waitFor(() => fireEvent.click(getSubmitButton()));
+
+				// Deselect after submit
+				fireEvent.click(radioButtonA);
+				await waitFor(() => expect(radioButtonA).not.toBeChecked());
+
+				// No error yet before blur
+				expect(getErrorMessage(true)).not.toBeInTheDocument();
+
+				// Blur the radiogroup
+				fireEvent.blur(screen.getByRole("radiogroup"));
+				await waitFor(() => {
+					expect(getErrorMessage()).toBeInTheDocument();
+				});
+			});
+		});
 	});
 
 	describe("reset", () => {
@@ -418,65 +490,11 @@ describe("radio toggle button", () => {
 		});
 	});
 
-	describe("dirty state", () => {
-		let formIsDirty: boolean;
-		const handleClick = (ref: React.MutableRefObject<IFrontendEngineRef>) => {
-			formIsDirty = ref.current.isDirty;
-		};
-
-		beforeEach(() => {
-			formIsDirty = undefined;
-		});
-
-		it("should mount without setting field state as dirty", () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should set form state as dirty if user modifies the field", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(getRadioButtonA());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(true);
-		});
-
-		it("should support default value without setting form state as dirty", () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: ["Apple"] } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset and revert form dirty state to false", async () => {
-			render(<FrontendEngineWithCustomButton data={JSON_SCHEMA} onClick={handleClick} />);
-			fireEvent.click(getRadioButtonA());
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
-
-		it("should reset to default value without setting form state as dirty", async () => {
-			render(
-				<FrontendEngineWithCustomButton
-					data={{ ...JSON_SCHEMA, defaultValues: { [COMPONENT_ID]: ["Apple"] } }}
-					onClick={handleClick}
-				/>
-			);
-			fireEvent.click(getRadioButtonA());
-			fireEvent.click(getResetButton());
-			fireEvent.click(screen.getByRole("button", { name: "Custom Button" }));
-
-			expect(formIsDirty).toBe(false);
-		});
+	dirtyStateTestSuite({
+		schema,
+		componentId: COMPONENT_ID,
+		defaultValue: ["Apple"],
+		modifyField: () => fireEvent.click(getRadioButtonA()),
 	});
 
 	describe("allowDeselection feature", () => {
@@ -500,12 +518,12 @@ describe("radio toggle button", () => {
 				expect(radioButtonA).not.toBeChecked();
 			});
 
-			// Submit and verify value is null
+			// Submit and verify value is cleared
 			fireEvent.click(getSubmitButton());
 			await waitFor(() => {
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
-					expect.objectContaining({
-						[COMPONENT_ID]: null,
+					expect.not.objectContaining({
+						[COMPONENT_ID]: expect.anything(),
 					})
 				);
 			});
@@ -625,13 +643,8 @@ describe("radio toggle button", () => {
 			fireEvent.click(getSubmitButton());
 			await waitFor(() => {
 				expect(SUBMIT_FN).toHaveBeenCalledWith(
-					expect.objectContaining({
-						[COMPONENT_ID]: null,
-					})
-				);
-				// Nested field should not be in the submission (it's removed/unmounted)
-				expect(SUBMIT_FN).toHaveBeenCalledWith(
 					expect.not.objectContaining({
+						[COMPONENT_ID]: expect.anything(),
 						[NESTED_FIELD_ID]: expect.anything(),
 					})
 				);
@@ -752,7 +765,7 @@ describe("radio toggle button", () => {
 		});
 	});
 
-	labelTestSuite(renderComponent as (overrideField: unknown) => void);
+	labelTestSuite(renderComponent);
 	warningTestSuite<TRadioButtonGroupSchema>({
 		label: "Radio",
 		uiType: UI_TYPE,

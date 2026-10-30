@@ -69,6 +69,18 @@ describe(UI_TYPE, () => {
 		expect(screen.queryByTestId("popover").innerHTML.includes("script")).toBe(false);
 	});
 
+	it("should strip event handler attributes from an otherwise-allowed image tag in the hint", () => {
+		renderComponent({
+			hint: { content: '<img src="x" onerror="window.xssFired=true" alt=\'broken image\'>' },
+		});
+
+		fireEvent.click(screen.getByTestId("field__popover"));
+
+		const imgElement = screen.getByAltText("broken image");
+		expect(imgElement).toBeInTheDocument();
+		expect(imgElement).not.toHaveAttribute("onerror");
+	});
+
 	it("should render icon after text if specified", async () => {
 		renderComponent({ icon: "AlbumFillIcon" });
 

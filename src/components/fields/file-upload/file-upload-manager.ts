@@ -285,6 +285,9 @@ const FileUploadManager = (props: IProps) => {
 			const blob = await FileHelper.dataUrlToBlob(fileToInject.dataURL);
 			rawFile = new File([blob], fileToInject.rawFile.name);
 		} else if (fileToInject.fileUrl) {
+			if (!FileHelper.isFetchableFileUrl(fileToInject.fileUrl)) {
+				throw new Error(`unsupported fileUrl, only http(s) urls can be prefilled: ${fileToInject.fileUrl}`);
+			}
 			const response: Blob = await new AxiosApiClient("", undefined, undefined, false, {
 				responseType: "blob",
 			}).get(fileToInject.fileUrl);

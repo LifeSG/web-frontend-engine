@@ -189,6 +189,18 @@ const meta: Meta = {
 				defaultValue: { summary: null },
 			},
 		},
+		imageReviewModalStyles: {
+			description:
+				"CSS declarations applied to the image review modal box, e.g. `padding-top: 20px;`. Only layout properties and `background-color` are applied (`padding`, `margin`, `width`/`height` and their `min-`/`max-` variants, `top`/`right`/`bottom`/`left`, `border-radius`); anything else, including resource references such as `url()` and rules such as `@media`, is removed with a console warning. To apply styles at a breakpoint, decide in your app with `window.matchMedia` and pass the declaration only when it matches.",
+			table: {
+				type: {
+					summary: "string",
+				},
+			},
+			control: {
+				type: "text",
+			},
+		},
 	},
 };
 export default meta;

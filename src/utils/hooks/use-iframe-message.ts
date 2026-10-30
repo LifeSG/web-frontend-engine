@@ -2,9 +2,10 @@ import { useEffect } from "react";
 
 type MessageHandler<T = any> = (event: MessageEvent<{ payload: T }>) => void;
 
-export const useIframeMessage = <T>(eventType: string, handler: MessageHandler<T>) => {
+export const useIframeMessage = <T>(eventType: string, handler: MessageHandler<T>, allowedOrigin?: string | null) => {
 	useEffect(() => {
 		const eventHandler = (event: MessageEvent) => {
+			if (allowedOrigin !== undefined && event.origin !== allowedOrigin) return;
 			if (event.data.type === eventType) {
 				handler(event);
 			}
@@ -17,5 +18,5 @@ export const useIframeMessage = <T>(eventType: string, handler: MessageHandler<T
 		return () => {
 			window.removeEventListener("message", eventHandler);
 		};
-	}, [eventType, handler]);
+	}, [eventType, handler, allowedOrigin]);
 };
