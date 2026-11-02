@@ -89,20 +89,24 @@ export namespace ImageHelper {
 		crop?: boolean | undefined;
 	}
 
-	const canvasToBlob = (canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> => {
-		return new Promise((resolve, reject) => {
-			canvas.toBlob(
-				(blob) => {
-					if (blob) {
-						resolve(blob);
-					} else {
-						reject(new Error("canvasToBlob(): failed to encode canvas"));
-					}
-				},
-				type,
-				quality
-			);
-		});
+	/**
+	 * encodes canvas into blob synchronously
+	 *
+	 * avoids canvas.toBlob because chromium schedules jpeg/png encoding as an idle task
+	 * idle tasks only run when frames are produced, in some android webviews this delays encoding by up to 4s per call until user interacts with the page
+	 */
+	export const canvasToBlob = async (canvas: HTMLCanvasElement, type = "image/jpeg", quality = 1): Promise<Blob> => {
+		const dataURL = canvas.toDataURL(type, quality);
+		const [header, base64] = dataURL.split(",");
+		if (!base64) throw new Error("canvasToBlob(): failed to encode canvas");
+
+		const mimeType = header.match(/^data:(.*?);base64$/)?.[1] || type;
+		const binary = atob(base64);
+		const bytes = new Uint8Array(binary.length);
+		for (let i = 0; i < binary.length; i++) {
+			bytes[i] = binary.charCodeAt(i);
+		}
+		return new Blob([bytes], { type: mimeType });
 	};
 
 	/**
@@ -215,19 +219,23 @@ export namespace ImageHelper {
 	export const compressImage = async (
 		file: File | Blob,
 		options: { quality?: number; fileSize: number; attempts?: number; maxAttempts?: number }
-	) => {
+	): Promise<File | Blob> => {
 		const { quality = 1, fileSize, attempts = 0, maxAttempts } = options;
-		const image = await blobToImage(file);
-
 		if (file.size <= fileSize * 1024 || quality < 0) return file;
-		const compressed = await resampleImage(image, { scale: 1, quality });
 
-		if (compressed.size > fileSize * 1024) {
-			if (attempts < maxAttempts || !maxAttempts) {
-				return compressImage(file, { ...options, quality: quality - 0.1, attempts: attempts + 1 });
+		// decode once and reuse it for every attempt
+		const image = await blobToImage(file);
+		let currentQuality = quality;
+		let currentAttempts = attempts;
+		while (currentQuality >= 0) {
+			const compressed = await resampleImage(image, { scale: 1, quality: currentQuality });
+			if (compressed.size <= fileSize * 1024 || (maxAttempts && currentAttempts >= maxAttempts)) {
+				return compressed;
 			}
+			currentQuality -= 0.1;
+			currentAttempts++;
 		}
-		return compressed;
+		return file;
 	};
 
 	export const getMetadata = async (file: File): Promise<IImageMetadata> => {

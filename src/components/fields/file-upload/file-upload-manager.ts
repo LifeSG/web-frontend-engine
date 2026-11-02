@@ -447,18 +447,15 @@ const FileUploadManager = (props: IProps) => {
 			if (fileToCompress.rawFile.size > maxSizeInB) {
 				const fileType = await FileHelper.getType(fileToCompress.rawFile);
 				if (RESIZEABLE_IMAGE_TYPES.includes(fileType.mime)) {
-					let fileOrBlob = await ImageHelper.compressImage(fileToCompress.rawFile, {
+					const fileOrBlob = await ImageHelper.compressImage(fileToCompress.rawFile, {
 						fileSize: maxFileSizeRule.maxSizeInKb,
 					});
-					if (fileOrBlob instanceof Blob) {
-						fileOrBlob = FileHelper.blobToFile(fileOrBlob, {
-							name: fileToCompress.rawFile.name,
-							lastModified: fileToCompress.rawFile.lastModified,
-						});
-					}
 					return {
 						...fileToCompress,
-						rawFile: fileOrBlob,
+						rawFile: FileHelper.blobToFile(fileOrBlob, {
+							name: fileToCompress.rawFile.name,
+							lastModified: fileToCompress.rawFile.lastModified,
+						}),
 					};
 				}
 			}
