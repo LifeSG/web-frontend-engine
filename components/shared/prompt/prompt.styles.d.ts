@@ -1,0 +1,9 @@
+export declare const container: import("@linaria/core").LinariaClassName;
+export declare const containerLarge: import("@linaria/core").LinariaClassName;
+export declare const promptImage: import("@linaria/core").LinariaClassName;
+export declare const buttonContainer: import("@linaria/core").LinariaClassName;
+export declare const buttonContainerLarge: import("@linaria/core").LinariaClassName;
+export declare const labelContainer: import("@linaria/core").LinariaClassName;
+export declare const labelContainerLarge: import("@linaria/core").LinariaClassName;
+export declare const description: import("@linaria/core").LinariaClassName;
+export declare const title: import("@linaria/core").LinariaClassName;

@@ -1,0 +1,32 @@
+export declare const tokens: {
+    palette: {
+        color: string;
+    };
+};
+export declare const modalBox: import("@linaria/core").LinariaClassName;
+export declare const headerSection: import("@linaria/core").LinariaClassName;
+export declare const headerSectionDrawActive: import("@linaria/core").LinariaClassName;
+export declare const reviewCloseButton: import("@linaria/core").LinariaClassName;
+export declare const reviewTitle: import("@linaria/core").LinariaClassName;
+export declare const editHeaderButton: import("@linaria/core").LinariaClassName;
+export declare const contentSection: import("@linaria/core").LinariaClassName;
+export declare const loadingPreviewText: import("@linaria/core").LinariaClassName;
+export declare const drawDeleteButtonWrapper: import("@linaria/core").LinariaClassName;
+export declare const drawDeleteButton: import("@linaria/core").LinariaClassName;
+export declare const drawDeleteButtonText: import("@linaria/core").LinariaClassName;
+export declare const drawDeleteButtonTextDisabled: import("@linaria/core").LinariaClassName;
+export declare const drawIcon: import("@linaria/core").LinariaClassName;
+export declare const drawIconDisabled: import("@linaria/core").LinariaClassName;
+export declare const deleteIcon: import("@linaria/core").LinariaClassName;
+export declare const deleteIconDisabled: import("@linaria/core").LinariaClassName;
+export declare const imageEditorWrapper: import("@linaria/core").LinariaClassName;
+export declare const footerSection: import("@linaria/core").LinariaClassName;
+export declare const footerSaveButton: import("@linaria/core").LinariaClassName;
+export declare const eraserButton: import("@linaria/core").LinariaClassName;
+export declare const eraserButtonIcon: import("@linaria/core").LinariaClassName;
+export declare const eraserButtonIconEraseMode: import("@linaria/core").LinariaClassName;
+export declare const buttonIcon: import("@linaria/core").LinariaClassName;
+export declare const buttonIconColorSchemeLight: import("@linaria/core").LinariaClassName;
+export declare const paletteHolder: import("@linaria/core").LinariaClassName;
+export declare const palette: import("@linaria/core").LinariaClassName;
+export declare const paletteColorSchemeLight: import("@linaria/core").LinariaClassName;

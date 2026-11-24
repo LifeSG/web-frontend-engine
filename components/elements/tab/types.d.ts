@@ -1,0 +1,23 @@
+import { TabItemProps, TabProps } from "@lifesg/react-design-system/tab";
+import { TComponentOmitProps, TFrontendEngineFieldSchema } from "../../frontend-engine";
+import { IBaseElementSchema } from "../types";
+import { TWrapperSchema } from "../wrapper";
+import { TFieldEventListener } from "../../../utils";
+type TTabProps = Pick<TabProps, "fullWidthIndicatorLine">;
+export type ITabEventDetails = {
+    previousTabId: string;
+    currentTabId: string;
+};
+export interface ITabSchema<V = undefined, C = undefined> extends IBaseElementSchema<"tab">, TComponentOmitProps<TWrapperSchema>, TTabProps {
+    children: Record<string, ITabItemSchema<V, C>>;
+    currentActiveTabId?: string | undefined;
+}
+type TTabItemProps = Pick<TabItemProps, "width">;
+export interface ITabItemSchema<V = undefined, C = undefined> extends IBaseElementSchema<"tab-item">, TComponentOmitProps<TWrapperSchema>, TTabItemProps {
+    children: Record<string, TFrontendEngineFieldSchema<V, C>>;
+    title: string;
+}
+/** fired when active tab changes (semantic event: "change", not raw "click") */
+declare function tabChangeEvent(uiType: "tab", type: "change", id: string, listener: TFieldEventListener<ITabEventDetails>, options?: boolean | AddEventListenerOptions | undefined): void;
+export type TTabEvents = typeof tabChangeEvent;
+export {};
